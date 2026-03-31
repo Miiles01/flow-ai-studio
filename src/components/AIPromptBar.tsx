@@ -5,9 +5,10 @@ import { Plus, LayoutGrid, Mic, ArrowUp, Loader2 } from "lucide-react";
 type AIPromptBarProps = {
   onGenerate: (prompt: string) => void;
   isGenerating: boolean;
+  isInitial?: boolean;
 };
 
-const AIPromptBar = ({ onGenerate, isGenerating }: AIPromptBarProps) => {
+const AIPromptBar = ({ onGenerate, isGenerating, isInitial }: AIPromptBarProps) => {
   const [prompt, setPrompt] = useState("");
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -34,9 +35,15 @@ const AIPromptBar = ({ onGenerate, isGenerating }: AIPromptBarProps) => {
 
   return (
     <motion.div
+      layout
       initial={{ y: 40, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      className="absolute bottom-12 left-1/2 -translate-x-1/2 z-10 w-full max-w-3xl px-6"
+      animate={{ 
+        y: isInitial ? -20 : 0, 
+        top: isInitial ? "50%" : "auto",
+        bottom: isInitial ? "auto" : "48px",
+        opacity: 1 
+      }}
+      className="absolute left-1/2 -translate-x-1/2 z-10 w-full max-w-3xl px-6 transition-all duration-500"
     >
       <div className="bg-black rounded-xl p-5 shadow-sm transition-all duration-300">
         <textarea
@@ -46,7 +53,7 @@ const AIPromptBar = ({ onGenerate, isGenerating }: AIPromptBarProps) => {
           onChange={(e) => setPrompt(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Describe tu flujo o idea..."
-          className="w-full bg-transparent text-white font-light text-[15px] placeholder:text-miiles-gray-600 outline-none resize-none overflow-hidden min-h-[44px] leading-relaxed text-center"
+          className="w-full bg-transparent text-white font-light text-[15px] placeholder:text-miiles-gray-600 outline-none resize-none overflow-hidden min-h-[44px] leading-relaxed text-center placeholder:text-center"
           disabled={isGenerating}
         />
         

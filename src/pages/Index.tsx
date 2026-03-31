@@ -108,13 +108,15 @@ const Index = () => {
         className="bg-white"
       >
         <Background variant={BackgroundVariant.Dots} gap={32} size={1} color="#E5E7EB" />
-        <Controls position="bottom-left" showInteractive={false} />
-
-
+        {nodes.length > 0 && <Controls position="bottom-left" showInteractive={false} />}
       </ReactFlow>
 
-      <Toolbar onAddNode={handleAddNode} />
-      <AIPromptBar onGenerate={handleAIGenerate} isGenerating={isGenerating} />
+      {nodes.length > 0 && <Toolbar onAddNode={handleAddNode} />}
+      <AIPromptBar 
+        onGenerate={handleAIGenerate} 
+        isGenerating={isGenerating} 
+        isInitial={nodes.length === 0}
+      />
       <FlowSidebar
         currentNodes={nodes}
         currentEdges={edges}
