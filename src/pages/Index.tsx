@@ -115,7 +115,6 @@ const Index = () => {
       <AIPromptBar 
         onGenerate={handleAIGenerate} 
         isGenerating={isGenerating} 
-        isInitial={nodes.length === 0}
       />
       <FlowSidebar
         currentNodes={nodes}
