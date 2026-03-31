@@ -14,6 +14,7 @@ import {
 import "@xyflow/react/dist/style.css";
 import { motion } from "framer-motion";
 import { Workflow, Layers } from "lucide-react";
+import { toast } from "sonner";
 
 import FlowNode from "@/components/nodes/FlowNode";
 import Toolbar from "@/components/Toolbar";
@@ -22,10 +23,8 @@ import { generateFlowFromPrompt } from "@/lib/generateFlow";
 
 const nodeTypes = { flowNode: FlowNode };
 
-const initialNodes: Node[] = [];
-
 const Index = () => {
-  const [nodes, setNodes, onNodesChange] = useNodesState(initialNodes);
+  const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [isGenerating, setIsGenerating] = useState(false);
   const nodeCounter = useRef(0);
@@ -58,12 +57,18 @@ const Index = () => {
   const handleAIGenerate = useCallback(
     async (prompt: string) => {
       setIsGenerating(true);
-      // Simulate a small delay for UX
-      await new Promise((r) => setTimeout(r, 800));
-      const { nodes: newNodes, edges: newEdges } = generateFlowFromPrompt(prompt);
-      setNodes((prev) => [...prev, ...newNodes]);
-      setEdges((prev) => [...prev, ...newEdges]);
-      setIsGenerating(false);
+      try {
+        const { nodes: newNodes, edges: newEdges } = await generateFlowFromPrompt(prompt);
+        setNodes((prev) => [...prev, ...newNodes]);
+        setEdges((prev) => [...prev, ...newEdges]);
+        toast.success(`Diagrama generado con ${newNodes.length} nodos`);
+      } catch (err) {
+        const message = err instanceof Error ? err.message : "Error desconocido";
+        toast.error(message);
+        console.error("AI generation error:", err);
+      } finally {
+        setIsGenerating(false);
+      }
     },
     [setNodes, setEdges]
   );
@@ -87,10 +92,7 @@ const Index = () => {
           size={1}
           color="hsl(240 8% 14%)"
         />
-        <Controls
-          position="bottom-left"
-          showInteractive={false}
-        />
+        <Controls position="bottom-left" showInteractive={false} />
 
         <Panel position="top-left">
           <motion.div
