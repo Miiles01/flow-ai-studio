@@ -36,7 +36,7 @@ const Login = () => {
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-card border border-border mb-4">
             <Workflow size={24} className="text-primary" />
-            <span className="font-semibold text-foreground">FlowCraft</span>
+            <span className="font-semibold text-foreground">Miiles</span>
           </div>
           <h1 className="text-2xl font-bold text-foreground">Iniciar sesión</h1>
           <p className="text-sm text-muted-foreground mt-1">Accede a tus diagramas</p>
