@@ -198,7 +198,7 @@ const FlowSidebar = ({ currentNodes, currentEdges, onLoadFlow, onNewFlow }: Flow
                         {flow.name}
                       </p>
                       <div className="flex items-center gap-2 mt-1">
-                        <span className="text-[10px] font-light text-miiles-gray-400 uppercase tracking-wider">
+                        <span className="text-[10px] font-light text-miiles-gray-400 tracking-wider">
                           {new Date(flow.updated_at).toLocaleDateString("es", { month: 'short', day: 'numeric' })}
                         </span>
                         <span className="text-[10px] text-miiles-gray-200">/</span>

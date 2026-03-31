@@ -60,7 +60,7 @@ const AIPromptBar = ({ onGenerate, isGenerating }: AIPromptBarProps) => {
             </button>
             <div className="flex items-center gap-2 bg-white/10 h-8 px-3 rounded-full cursor-pointer hover:bg-white/15 transition-all group">
               <LayoutGrid size={14} className="text-miiles-gray-400 group-hover:text-white" />
-              <span className="text-[11px] font-light text-miiles-gray-400 group-hover:text-white uppercase tracking-wider">Apps</span>
+              <span className="text-[11px] font-light text-miiles-gray-400 group-hover:text-white tracking-wider">Apps</span>
             </div>
           </div>
 

@@ -32,7 +32,7 @@ const Toolbar = ({ onAddNode }: ToolbarProps) => {
           title={tool.label}
         >
           <tool.icon size={18} className="text-miiles-gray-400 group-hover:text-black transition-colors" />
-          <span className="text-[13px] font-light text-miiles-gray-600 group-hover:text-black uppercase tracking-tight">{tool.label}</span>
+          <span className="text-[13px] font-light text-miiles-gray-600 group-hover:text-black tracking-tight">{tool.label}</span>
         </button>
       ))}
     </motion.div>
