@@ -120,7 +120,7 @@ const Index = () => {
               <Workflow size={20} className="text-primary" />
             </div>
             <div>
-              <h1 className="text-sm font-semibold text-foreground tracking-tight">FlowCraft</h1>
+              <h1 className="text-sm font-semibold text-foreground tracking-tight">Miiles</h1>
               <p className="text-[10px] text-muted-foreground">Diagramas con IA</p>
             </div>
             <div className="ml-3 flex items-center gap-1.5 px-2 py-1 rounded-md bg-secondary">
