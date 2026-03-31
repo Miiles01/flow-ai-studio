@@ -37,13 +37,8 @@ const AIPromptBar = ({ onGenerate, isGenerating, isInitial }: AIPromptBarProps) 
     <motion.div
       layout
       initial={{ y: 40, opacity: 0 }}
-      animate={{ 
-        y: isInitial ? -20 : 0, 
-        top: isInitial ? "50%" : "auto",
-        bottom: isInitial ? "auto" : "48px",
-        opacity: 1 
-      }}
-      className="absolute left-1/2 -translate-x-1/2 z-10 w-full max-w-3xl px-6 transition-all duration-500"
+      animate={{ y: 0, opacity: 1 }}
+      className="absolute bottom-12 left-1/2 -translate-x-1/2 z-10 w-full max-w-3xl px-6 transition-all duration-500"
     >
       <div className="bg-black rounded-xl p-5 shadow-sm transition-all duration-300">
         <textarea
