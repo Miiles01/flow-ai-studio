@@ -46,7 +46,7 @@ const AIPromptBar = ({ onGenerate, isGenerating }: AIPromptBarProps) => {
           onChange={(e) => setPrompt(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Describe tu flujo o idea..."
-          className="w-full bg-transparent text-white font-light text-[15px] placeholder:text-miiles-gray-600 outline-none resize-none overflow-hidden min-h-[44px] leading-relaxed"
+          className="w-full bg-transparent text-white font-light text-[15px] placeholder:text-miiles-gray-600 outline-none resize-none overflow-hidden min-h-[44px] leading-relaxed text-center"
           disabled={isGenerating}
         />
         

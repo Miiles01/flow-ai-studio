@@ -129,7 +129,7 @@ const FlowSidebar = ({ currentNodes, currentEdges, onLoadFlow, onNewFlow }: Flow
         initial={{ x: -10, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         onClick={() => setOpen(!open)}
-        className="absolute top-6 right-6 z-20 w-12 h-12 flex items-center justify-center rounded-full bg-white shadow-sm text-black hover:bg-black hover:text-white transition-all duration-200 btn-hover-float"
+        className="absolute top-6 left-6 z-20 w-12 h-12 flex items-center justify-center rounded-full bg-white shadow-sm text-black hover:bg-black hover:text-white transition-all duration-200 btn-hover-float"
       >
         {open ? <PanelLeftClose size={20} /> : <PanelLeftOpen size={20} />}
       </motion.button>
@@ -138,11 +138,11 @@ const FlowSidebar = ({ currentNodes, currentEdges, onLoadFlow, onNewFlow }: Flow
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ x: 320, opacity: 0 }}
+            initial={{ x: -320, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            exit={{ x: 320, opacity: 0 }}
+            exit={{ x: -320, opacity: 0 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="absolute top-0 right-0 z-10 w-80 h-full bg-white shadow-md flex flex-col font-sans"
+            className="absolute top-0 left-0 z-10 w-80 h-full bg-white/80 backdrop-blur-xl shadow-md flex flex-col font-sans"
           >
             <div className="p-8 pb-4">
               <h2 className="text-xl font-normal text-black tracking-tight">Mis flujos</h2>
