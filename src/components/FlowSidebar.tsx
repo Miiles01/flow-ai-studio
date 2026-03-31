@@ -66,8 +66,8 @@ const FlowSidebar = ({ currentNodes, currentEdges, onLoadFlow, onNewFlow }: Flow
       const { error } = await supabase
         .from("flows")
         .update({
-          nodes: currentNodes as unknown as Record<string, unknown>[],
-          edges: currentEdges as unknown as Record<string, unknown>[],
+          nodes: JSON.parse(JSON.stringify(currentNodes)),
+          edges: JSON.parse(JSON.stringify(currentEdges)),
         })
         .eq("id", activeFlowId);
       if (error) toast.error("Error al guardar");
@@ -76,12 +76,14 @@ const FlowSidebar = ({ currentNodes, currentEdges, onLoadFlow, onNewFlow }: Flow
       const name = `Flujo ${new Date().toLocaleDateString("es")}`;
       const { data, error } = await supabase
         .from("flows")
-        .insert({
+        .insert([{
           user_id: user.id,
           name,
-          nodes: currentNodes as unknown as Record<string, unknown>[],
-          edges: currentEdges as unknown as Record<string, unknown>[],
-        })
+          nodes: JSON.parse(JSON.stringify(currentNodes)),
+          edges: JSON.parse(JSON.stringify(currentEdges)),
+        }])
+        .select()
+        .single();
         .select()
         .single();
       if (error) toast.error("Error al crear flujo");
