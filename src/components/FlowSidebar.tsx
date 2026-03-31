@@ -84,8 +84,6 @@ const FlowSidebar = ({ currentNodes, currentEdges, onLoadFlow, onNewFlow }: Flow
         }])
         .select()
         .single();
-        .select()
-        .single();
       if (error) toast.error("Error al crear flujo");
       else {
         toast.success("Flujo creado");
