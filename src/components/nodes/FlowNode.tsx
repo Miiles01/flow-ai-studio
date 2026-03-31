@@ -17,11 +17,11 @@ const typeStyles: Record<string, string> = {
 };
 
 const typeAccents: Record<string, string> = {
-  process: "bg-node-border",
-  decision: "bg-amber-500",
-  start: "bg-emerald-500",
-  end: "bg-rose-500",
-  action: "bg-primary",
+  process: "bg-miiles-blue",
+  decision: "bg-miiles-gray-400",
+  start: "bg-miiles-blue",
+  end: "bg-miiles-pink",
+  action: "bg-miiles-blue",
 };
 
 const FlowNode = ({ data, selected }: NodeProps) => {
@@ -30,39 +30,38 @@ const FlowNode = ({ data, selected }: NodeProps) => {
 
   return (
     <motion.div
-      initial={{ scale: 0.8, opacity: 0 }}
+      initial={{ scale: 0.95, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       className={`
-        relative px-5 py-3.5 rounded-xl bg-node-bg border-2 min-w-[160px] max-w-[240px]
-        backdrop-blur-sm transition-all duration-200
-        ${typeStyles[nodeType]}
-        ${selected ? "border-node-selected shadow-[0_0_24px_hsl(var(--glow-primary))]" : "shadow-lg shadow-black/30"}
+        relative px-6 py-5 rounded-md bg-white min-w-[180px] max-w-[260px]
+        transition-all duration-300 font-sans
+        ${selected ? "shadow-md ring-2 ring-miiles-blue" : "shadow-md"}
       `}
     >
       <Handle
         type="target"
         position={Position.Top}
-        className="!-top-1"
+        className="!w-2.5 !h-2.5 !bg-white !border-2 !border-miiles-blue !-top-1.5"
       />
       
-      <div className="flex items-start gap-2.5">
-        <div className={`w-2 h-2 rounded-full mt-1.5 shrink-0 ${typeAccents[nodeType]}`} />
-        <div className="min-w-0">
-          <p className="text-sm font-medium text-foreground truncate">
+      <div className="flex flex-col gap-2">
+        <div className="flex items-center justify-between gap-2">
+          <p className="text-[15px] font-normal text-black truncate tracking-tight">
             {nodeData.label}
           </p>
-          {nodeData.description && (
-            <p className="text-xs text-muted-foreground mt-1 line-clamp-2">
-              {nodeData.description}
-            </p>
-          )}
+          <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${typeAccents[nodeType]}`} />
         </div>
+        {nodeData.description && (
+          <p className="text-[13px] font-light text-miiles-gray-400 leading-relaxed">
+            {nodeData.description}
+          </p>
+        )}
       </div>
 
       <Handle
         type="source"
         position={Position.Bottom}
-        className="!-bottom-1"
+        className="!w-2.5 !h-2.5 !bg-white !border-2 !border-miiles-blue !-bottom-1.5"
       />
     </motion.div>
   );

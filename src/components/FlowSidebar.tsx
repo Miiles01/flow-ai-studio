@@ -129,9 +129,9 @@ const FlowSidebar = ({ currentNodes, currentEdges, onLoadFlow, onNewFlow }: Flow
         initial={{ x: -10, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
         onClick={() => setOpen(!open)}
-        className="absolute top-4 right-4 z-20 p-2.5 rounded-xl bg-card/90 backdrop-blur-xl border border-border shadow-xl shadow-black/30 text-muted-foreground hover:text-foreground transition-colors"
+        className="absolute top-6 right-6 z-20 w-12 h-12 flex items-center justify-center rounded-full bg-white shadow-sm text-black hover:bg-black hover:text-white transition-all duration-200 btn-hover-float"
       >
-        {open ? <PanelLeftClose size={18} /> : <PanelLeftOpen size={18} />}
+        {open ? <PanelLeftClose size={20} /> : <PanelLeftOpen size={20} />}
       </motion.button>
 
       {/* Sidebar panel */}
@@ -142,27 +142,27 @@ const FlowSidebar = ({ currentNodes, currentEdges, onLoadFlow, onNewFlow }: Flow
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: 320, opacity: 0 }}
             transition={{ type: "spring", damping: 25, stiffness: 300 }}
-            className="absolute top-0 right-0 z-10 w-80 h-full bg-card/95 backdrop-blur-xl border-l border-border shadow-2xl shadow-black/50 flex flex-col"
+            className="absolute top-0 right-0 z-10 w-80 h-full bg-white shadow-md flex flex-col font-sans"
           >
-            <div className="p-4 border-b border-border">
-              <h2 className="text-sm font-semibold text-foreground">Mis flujos</h2>
-              <p className="text-[10px] text-muted-foreground mt-0.5">
-                {flows.length} diagrama{flows.length !== 1 ? "s" : ""} guardado{flows.length !== 1 ? "s" : ""}
+            <div className="p-8 pb-4">
+              <h2 className="text-xl font-normal text-black tracking-tight">Mis flujos</h2>
+              <p className="text-xs font-light text-miiles-gray-400 mt-1">
+                {flows.length} diagrama{flows.length !== 1 ? "s" : ""} registrado{flows.length !== 1 ? "s" : ""}
               </p>
             </div>
 
             {/* Actions */}
-            <div className="p-3 flex gap-2">
+            <div className="p-8 pt-4 flex gap-3">
               <button
                 onClick={handleNew}
-                className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-secondary text-secondary-foreground text-xs hover:bg-secondary/80 transition-colors"
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-full bg-white text-black text-xs shadow-sm transition-all btn-hover-float hover:bg-black hover:text-white"
               >
                 <Plus size={14} /> Nuevo
               </button>
               <button
                 onClick={handleSave}
                 disabled={saving || currentNodes.length === 0}
-                className="flex-1 flex items-center justify-center gap-1.5 px-3 py-2 rounded-lg bg-primary text-primary-foreground text-xs hover:bg-primary/90 transition-colors disabled:opacity-40"
+                className="flex-1 flex items-center justify-center gap-2 px-4 py-3 rounded-full bg-black text-white text-xs transition-all btn-hover-float hover:bg-miiles-pink-light hover:text-miiles-pink disabled:opacity-20 disabled:transform-none"
               >
                 {saving ? <Loader2 size={14} className="animate-spin" /> : null}
                 {activeFlowId ? "Guardar" : "Crear"}
@@ -170,38 +170,40 @@ const FlowSidebar = ({ currentNodes, currentEdges, onLoadFlow, onNewFlow }: Flow
             </div>
 
             {/* Flow list */}
-            <div className="flex-1 overflow-y-auto px-3 pb-3 space-y-1.5">
+            <div className="flex-1 overflow-y-auto px-6 pb-8 space-y-3">
               {loading ? (
-                <div className="flex justify-center py-8">
-                  <Loader2 size={20} className="animate-spin text-muted-foreground" />
+                <div className="flex justify-center py-12">
+                  <Loader2 size={24} className="animate-spin text-miiles-blue" />
                 </div>
               ) : flows.length === 0 ? (
-                <div className="text-center py-8">
-                  <FileText size={32} className="mx-auto text-muted-foreground/30 mb-2" />
-                  <p className="text-xs text-muted-foreground">Sin flujos aún</p>
+                <div className="text-center py-12 bg-miiles-gray-50 rounded-lg">
+                  <FileText size={40} className="mx-auto text-miiles-gray-200 mb-3" />
+                  <p className="text-sm font-light text-miiles-gray-400">Sin flujos todavía</p>
                 </div>
               ) : (
                 flows.map((flow) => (
                   <motion.div
                     key={flow.id}
                     layout
-                    className={`group flex items-center gap-2 p-3 rounded-lg cursor-pointer transition-colors ${
+                    className={`group relative flex items-center gap-4 p-4 rounded-md cursor-pointer transition-all duration-300 ${
                       activeFlowId === flow.id
-                        ? "bg-primary/10 border border-primary/30"
-                        : "bg-secondary/50 hover:bg-secondary border border-transparent"
+                        ? "bg-miiles-gray-50"
+                        : "hover:bg-miiles-gray-50"
                     }`}
                     onClick={() => handleLoad(flow)}
                   >
-                    <FileText size={14} className="shrink-0 text-muted-foreground" />
+                    <div className={`w-2 h-2 rounded-full shrink-0 ${activeFlowId === flow.id ? "bg-miiles-blue" : "bg-miiles-gray-100"}`} />
                     <div className="min-w-0 flex-1">
-                      <p className="text-xs font-medium text-foreground truncate">{flow.name}</p>
-                      <div className="flex items-center gap-1 mt-0.5">
-                        <Clock size={10} className="text-muted-foreground" />
-                        <span className="text-[10px] text-muted-foreground">
-                          {new Date(flow.updated_at).toLocaleDateString("es")}
+                      <p className={`text-sm tracking-tight ${activeFlowId === flow.id ? "font-normal text-black" : "font-light text-miiles-gray-600"}`}>
+                        {flow.name}
+                      </p>
+                      <div className="flex items-center gap-2 mt-1">
+                        <span className="text-[10px] font-light text-miiles-gray-400 uppercase tracking-wider">
+                          {new Date(flow.updated_at).toLocaleDateString("es", { month: 'short', day: 'numeric' })}
                         </span>
-                        <span className="text-[10px] text-muted-foreground ml-1">
-                          · {(flow.nodes || []).length} nodos
+                        <span className="text-[10px] text-miiles-gray-200">/</span>
+                        <span className="text-[10px] font-light text-miiles-gray-400">
+                          {(flow.nodes || []).length} nodos
                         </span>
                       </div>
                     </div>
@@ -210,9 +212,9 @@ const FlowSidebar = ({ currentNodes, currentEdges, onLoadFlow, onNewFlow }: Flow
                         e.stopPropagation();
                         handleDelete(flow.id);
                       }}
-                      className="shrink-0 p-1.5 rounded-md opacity-0 group-hover:opacity-100 hover:bg-destructive/10 text-destructive transition-all"
+                      className="shrink-0 p-2 rounded-full opacity-0 group-hover:opacity-100 hover:bg-miiles-pink-light text-miiles-pink transition-all"
                     >
-                      <Trash2 size={13} />
+                      <Trash2 size={14} />
                     </button>
                   </motion.div>
                 ))

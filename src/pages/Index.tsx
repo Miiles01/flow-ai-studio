@@ -105,42 +105,46 @@ const Index = () => {
         nodeTypes={nodeTypes}
         fitView
         proOptions={{ hideAttribution: true }}
-        className="bg-canvas"
+        className="bg-white"
       >
-        <Background variant={BackgroundVariant.Dots} gap={24} size={1} color="hsl(240 8% 14%)" />
+        <Background variant={BackgroundVariant.Dots} gap={32} size={1} color="#E5E7EB" />
         <Controls position="bottom-left" showInteractive={false} />
 
         <Panel position="top-left">
           <motion.div
             initial={{ x: -20, opacity: 0 }}
             animate={{ x: 0, opacity: 1 }}
-            className="flex items-center gap-3 px-4 py-3 rounded-xl bg-card/90 backdrop-blur-xl border border-border shadow-2xl shadow-black/40"
+            className="flex items-center gap-6 px-6 py-4 rounded-full bg-white shadow-sm font-sans"
           >
-            <div className="p-2 rounded-lg bg-primary/10">
-              <Workflow size={20} className="text-primary" />
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-full flex items-center justify-center bg-black text-white">
+                <Workflow size={20} />
+              </div>
+              <div className="flex flex-col">
+                <h1 className="text-xl font-normal text-black tracking-tighter leading-none">Miiles</h1>
+                <p className="text-[10px] font-light text-miiles-gray-400 uppercase tracking-widest mt-1">Flow Studio</p>
+              </div>
             </div>
-            <div>
-              <h1 className="text-sm font-semibold text-foreground tracking-tight">Miiles</h1>
-              <p className="text-[10px] text-muted-foreground">Diagramas con IA</p>
+            
+            <div className="flex items-center gap-2 px-3 py-1.5 rounded-full bg-miiles-gray-50">
+              <Layers size={14} className="text-miiles-gray-400" />
+              <span className="text-xs font-light text-miiles-gray-800">{nodes.length} nodos</span>
             </div>
-            <div className="ml-3 flex items-center gap-1.5 px-2 py-1 rounded-md bg-secondary">
-              <Layers size={12} className="text-muted-foreground" />
-              <span className="text-[10px] text-muted-foreground font-mono">{nodes.length} nodos</span>
-            </div>
-            <div className="ml-2 flex items-center gap-1">
+
+            <div className="flex items-center gap-3 ml-2">
               <button
                 onClick={() => navigate("/profile")}
-                className="p-1.5 rounded-md hover:bg-secondary text-muted-foreground hover:text-foreground transition-colors"
+                className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-miiles-gray-50 text-miiles-gray-400 hover:text-black transition-all btn-hover-float"
                 title="Perfil"
               >
-                <User size={14} />
+                <User size={18} />
               </button>
               <button
                 onClick={handleSignOut}
-                className="p-1.5 rounded-md hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
+                className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-miiles-pink-light text-miiles-gray-400 hover:text-miiles-pink transition-all btn-hover-float"
                 title="Cerrar sesión"
               >
-                <LogOut size={14} />
+                <LogOut size={18} />
               </button>
             </div>
           </motion.div>

@@ -1,6 +1,6 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
-import { Sparkles, Send, Loader2 } from "lucide-react";
+import { Plus, LayoutGrid, Mic, ArrowUp, Loader2 } from "lucide-react";
 
 type AIPromptBarProps = {
   onGenerate: (prompt: string) => void;
@@ -9,51 +9,82 @@ type AIPromptBarProps = {
 
 const AIPromptBar = ({ onGenerate, isGenerating }: AIPromptBarProps) => {
   const [prompt, setPrompt] = useState("");
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  useEffect(() => {
+    if (textareaRef.current) {
+      textareaRef.current.style.height = "auto";
+      textareaRef.current.style.height = `${textareaRef.current.scrollHeight}px`;
+    }
+  }, [prompt]);
+
+  const handleSubmit = (e?: React.FormEvent) => {
+    e?.preventDefault();
     if (!prompt.trim() || isGenerating) return;
     onGenerate(prompt.trim());
     setPrompt("");
   };
 
+  const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
+      handleSubmit();
+    }
+  };
+
   return (
     <motion.div
-      initial={{ y: 20, opacity: 0 }}
+      initial={{ y: 40, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      transition={{ delay: 0.2 }}
-      className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 w-full max-w-2xl px-4"
+      className="absolute bottom-12 left-1/2 -translate-x-1/2 z-10 w-full max-w-3xl px-6"
     >
-      <form
-        onSubmit={handleSubmit}
-        className="flex items-center gap-3 px-4 py-3 rounded-2xl bg-card/90 backdrop-blur-xl border border-border shadow-2xl shadow-black/40"
-      >
-        <div className="shrink-0">
-          <Sparkles size={18} className="text-primary animate-pulse" />
-        </div>
-        <input
-          type="text"
+      <div className="bg-black rounded-xl p-5 shadow-sm transition-all duration-300">
+        <textarea
+          ref={textareaRef}
+          rows={1}
           value={prompt}
           onChange={(e) => setPrompt(e.target.value)}
-          placeholder="Describe tu flujo... ej: 'Proceso de registro de usuario con validación'"
-          className="flex-1 bg-transparent text-sm text-foreground placeholder:text-muted-foreground outline-none"
+          onKeyDown={handleKeyDown}
+          placeholder="Describe tu flujo o idea..."
+          className="w-full bg-transparent text-white font-light text-[15px] placeholder:text-miiles-gray-600 outline-none resize-none overflow-hidden min-h-[44px] leading-relaxed"
           disabled={isGenerating}
         />
-        <button
-          type="submit"
-          disabled={!prompt.trim() || isGenerating}
-          className="shrink-0 p-2 rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-40 disabled:cursor-not-allowed transition-all"
-        >
-          {isGenerating ? (
-            <Loader2 size={16} className="animate-spin" />
-          ) : (
-            <Send size={16} />
-          )}
-        </button>
-      </form>
-      <p className="text-center text-[10px] text-muted-foreground mt-2 opacity-60">
-        Usa IA para generar diagramas automáticamente
-      </p>
+        
+        <div className="flex items-center justify-between mt-4">
+          <div className="flex items-center gap-3">
+            <button 
+              type="button"
+              className="w-8 h-8 rounded-full flex items-center justify-center bg-white/10 text-miiles-gray-400 hover:bg-white/20 hover:text-white transition-all"
+            >
+              <Plus size={16} />
+            </button>
+            <div className="flex items-center gap-2 bg-white/10 h-8 px-3 rounded-full cursor-pointer hover:bg-white/15 transition-all group">
+              <LayoutGrid size={14} className="text-miiles-gray-400 group-hover:text-white" />
+              <span className="text-[11px] font-light text-miiles-gray-400 group-hover:text-white uppercase tracking-wider">Apps</span>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-3">
+            <button 
+              type="button"
+              className="w-8 h-8 rounded-full flex items-center justify-center bg-white/10 text-miiles-gray-400 hover:bg-white/20 hover:text-white transition-all"
+            >
+              <Mic size={16} />
+            </button>
+            <button
+              onClick={() => handleSubmit()}
+              disabled={!prompt.trim() || isGenerating}
+              className="w-9 h-9 rounded-full bg-white flex items-center justify-center text-black transition-all duration-300 hover:bg-miiles-pink-light hover:text-miiles-pink hover:-translate-y-1 disabled:opacity-10 disabled:transform-none"
+            >
+              {isGenerating ? (
+                <Loader2 size={16} className="animate-spin" />
+              ) : (
+                <ArrowUp size={18} />
+              )}
+            </button>
+          </div>
+        </div>
+      </div>
     </motion.div>
   );
 };

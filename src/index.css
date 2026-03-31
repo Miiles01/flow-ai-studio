@@ -2,128 +2,131 @@
 @tailwind components;
 @tailwind utilities;
 
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400&family=Playfair+Display:ital,wght@1,400;1,600&display=swap');
 
 @layer base {
   :root {
-    --background: 240 10% 4%;
-    --foreground: 220 14% 90%;
+    --background: 0 0% 100%;
+    --foreground: 0 0% 0%;
 
-    --card: 240 8% 8%;
-    --card-foreground: 220 14% 90%;
-
-    --popover: 240 8% 10%;
-    --popover-foreground: 220 14% 90%;
-
-    --primary: 217 91% 60%;
+    --primary: 0 0% 0%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 240 6% 14%;
-    --secondary-foreground: 220 14% 80%;
+    --secondary: 0 0% 100%;
+    --secondary-foreground: 0 0% 0%;
 
-    --muted: 240 6% 12%;
-    --muted-foreground: 220 10% 50%;
+    --muted: 240 5% 97%;
+    --muted-foreground: 240 10% 63%;
 
-    --accent: 270 80% 65%;
+    --accent: 231 87% 60%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 0 72% 55%;
-    --destructive-foreground: 0 0% 100%;
+    --destructive: 358 87% 85%;
+    --destructive-foreground: 358 87% 40%;
 
-    --border: 240 6% 18%;
-    --input: 240 6% 16%;
-    --ring: 217 91% 60%;
+    --border: transparent;
+    --input: 240 5% 97%;
+    --ring: 231 87% 60%;
 
-    --radius: 0.75rem;
+    --radius-xs: 6px;
+    --radius-sm: 10px;
+    --radius-md: 16px;
+    --radius-lg: 24px;
+    --radius-xl: 32px;
+    --radius-full: 9999px;
 
-    --canvas: 240 12% 5%;
-    --canvas-grid: 240 8% 10%;
-    --node-bg: 240 8% 10%;
-    --node-border: 240 6% 20%;
-    --node-selected: 217 91% 60%;
-    --surface-glass: 240 8% 8% / 0.8;
-    --glow-primary: 217 91% 60% / 0.15;
-    --glow-accent: 270 80% 65% / 0.15;
-
-    --sidebar-background: 240 8% 6%;
-    --sidebar-foreground: 220 14% 80%;
-    --sidebar-primary: 217 91% 60%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 6% 14%;
-    --sidebar-accent-foreground: 220 14% 90%;
-    --sidebar-border: 240 6% 16%;
-    --sidebar-ring: 217 91% 60%;
-
-    --font-sans: 'Inter', system-ui, sans-serif;
-    --font-mono: 'JetBrains Mono', monospace;
+    --font-sans: 'Poppins', system-ui, sans-serif;
+    --font-serif: 'Playfair Display', Georgia, serif;
   }
 }
 
 @layer base {
   * {
-    @apply border-border;
+    @apply border-none outline-none ring-offset-transparent;
   }
 
   body {
     @apply bg-background text-foreground antialiased;
     font-family: var(--font-sans);
+    font-weight: 300;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    font-weight: 400;
+  }
+
+  em {
+    font-family: var(--font-serif);
+    font-style: italic;
+    font-weight: 400;
   }
 }
 
-/* React Flow overrides */
+/* React Flow overrides for Miiles Branding */
 .react-flow__background {
-  background-color: hsl(var(--canvas)) !important;
+  background-color: white !important;
 }
 
 .react-flow__controls {
-  background: hsl(var(--card)) !important;
-  border: 1px solid hsl(var(--border)) !important;
-  border-radius: var(--radius) !important;
-  box-shadow: 0 8px 32px hsl(0 0% 0% / 0.4) !important;
+  background: white !important;
+  border: none !important;
+  border-radius: var(--radius-sm) !important;
+  box-shadow: 8px 6px 30px 0px rgba(24, 2, 56, 0.03) !important;
+  padding: 4px !important;
 }
 
 .react-flow__controls-button {
   background: transparent !important;
   border: none !important;
-  color: hsl(var(--foreground)) !important;
-  fill: hsl(var(--foreground)) !important;
+  color: black !important;
+  fill: black !important;
+  border-radius: var(--radius-xs) !important;
+  transition: all 0.2s ease !important;
 }
 
 .react-flow__controls-button:hover {
-  background: hsl(var(--secondary)) !important;
+  background: #EEEFF2 !important;
 }
 
 .react-flow__minimap {
-  background: hsl(var(--card)) !important;
-  border: 1px solid hsl(var(--border)) !important;
-  border-radius: var(--radius) !important;
+  background: white !important;
+  border: none !important;
+  border-radius: var(--radius-md) !important;
+  box-shadow: 0px 100px 170px 0px rgba(39, 39, 62, 0.05) !important;
 }
 
 .react-flow__edge-path {
-  stroke: hsl(var(--muted-foreground)) !important;
-  stroke-width: 2 !important;
+  stroke: #D9DBE3 !important;
+  stroke-width: 1.5 !important;
 }
 
 .react-flow__edge.selected .react-flow__edge-path {
-  stroke: hsl(var(--primary)) !important;
+  stroke: #4059F1 !important;
+  stroke-width: 2 !important;
 }
 
 .react-flow__handle {
-  width: 8px !important;
-  height: 8px !important;
-  background: hsl(var(--muted-foreground)) !important;
-  border: 2px solid hsl(var(--node-bg)) !important;
+  width: 10px !important;
+  height: 10px !important;
+  background: white !important;
+  border: 2px solid #4059F1 !important;
+  box-shadow: 8px 6px 30px 0px rgba(24, 2, 56, 0.03) !important;
 }
 
 .react-flow__handle:hover {
-  background: hsl(var(--primary)) !important;
+  background: #4059F1 !important;
+  transform: scale(1.2);
 }
 
-@keyframes glow-pulse {
-  0%, 100% { box-shadow: 0 0 20px hsl(var(--glow-primary)); }
-  50% { box-shadow: 0 0 40px hsl(var(--glow-primary)), 0 0 60px hsl(var(--glow-accent)); }
+/* Custom UI Utilities */
+.miiles-shadow-sm { box-shadow: 8px 6px 30px 0px rgba(24, 2, 56, 0.03); }
+.miiles-shadow-md { box-shadow: 0px 100px 170px 0px rgba(39, 39, 62, 0.05); }
+
+.btn-hover-float {
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-.animate-glow {
-  animation: glow-pulse 3s ease-in-out infinite;
+.btn-hover-float:hover {
+  transform: translateY(-8px);
 }
+
