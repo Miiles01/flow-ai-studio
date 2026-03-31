@@ -52,7 +52,7 @@ const AIPromptBar = ({ onGenerate, isGenerating, isInitial }: AIPromptBarProps) 
           disabled={isGenerating}
         />
         
-        <div className="flex items-center justify-between mt-4">
+        <div className="flex items-center justify-center gap-12 mt-4">
           <div className="flex items-center gap-3">
             <button 
               type="button"
