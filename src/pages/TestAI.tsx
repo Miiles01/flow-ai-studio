@@ -158,11 +158,17 @@ const TestAI = () => {
 
     setInput("");
 
+    const profileUrl = `https://www.instagram.com/${raw}/`;
+    const embedHtml = `[![@${raw}](https://www.instagram.com/${raw}/)](${profileUrl})\n\n🔗 [Ver perfil en Instagram](${profileUrl})`;
     const userMsg: Msg = { role: "user", content: `🔍 Analizando @${raw}...` };
-    setMessages((prev) => [...prev, userMsg]);
+    setMessages((prev) => [
+      ...prev,
+      userMsg,
+      { role: "assistant", content: embedHtml + "\n\n⏳ Analizando..." },
+    ]);
     setIsLoading(true);
 
-    const ref = { current: "" };
+    const ref = { current: embedHtml + "\n\n" };
     try {
       await analyzeInstagram({
         username: raw,
@@ -257,8 +263,18 @@ const TestAI = () => {
               }`}
             >
               {m.role === "assistant" ? (
-                <div className="prose prose-sm prose-invert max-w-none">
-                  <ReactMarkdown>{m.content}</ReactMarkdown>
+                <div className="prose prose-sm prose-invert max-w-none [&_a]:text-primary [&_a]:underline">
+                  <ReactMarkdown
+                    components={{
+                      a: ({ href, children }) => (
+                        <a href={href} target="_blank" rel="noopener noreferrer">
+                          {children}
+                        </a>
+                      ),
+                    }}
+                  >
+                    {m.content}
+                  </ReactMarkdown>
                 </div>
               ) : (
                 m.content
