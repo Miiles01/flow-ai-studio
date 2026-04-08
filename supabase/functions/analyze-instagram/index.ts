@@ -86,25 +86,29 @@ serve(async (req) => {
 
 async function analyzeWithAI(
   apiKey: string,
-  username: string,
+  label: string,
+  isUsername: boolean,
   content: string,
   corsHeaders: Record<string, string>
 ) {
-  const profileUrl = `https://www.instagram.com/${username}/`;
-  const systemPrompt = `Eres un experto en marketing de afiliados e influencer marketing. 
+  let systemPrompt: string;
+
+  if (isUsername) {
+    const profileUrl = `https://www.instagram.com/${label}/`;
+    systemPrompt = `Eres un experto en marketing de afiliados e influencer marketing. 
 Analiza la información recopilada sobre un perfil de Instagram y determina si esta persona/marca está buscando afiliados para vender sus productos.
 
 Responde SIEMPRE en español con el siguiente formato:
 
-## 📊 Análisis de @${username}
+## 📊 Análisis de @${label}
 
-🔗 **Perfil:** [instagram.com/${username}](${profileUrl})
+🔗 **Perfil:** [instagram.com/${label}](${profileUrl})
 
 ### Probabilidad de programa de afiliados
 [Alta / Media / Baja / No detectado]
 
 ### Señales detectadas
-- Lista de señales que indiquen que buscan afiliados (links en bio, menciones de "ambassador", "affiliate", "colaboración", "comisión", códigos de descuento, etc.)
+- Lista de señales que indiquen que buscan afiliados
 
 ### Tipo de negocio
 [Qué tipo de producto/servicio venden]
@@ -116,6 +120,17 @@ Responde SIEMPRE en español con el siguiente formato:
 [Resumen breve del perfil]
 
 Si no hay suficiente información, indícalo claramente y sugiere formas alternativas de investigar.`;
+  } else {
+    systemPrompt = `Eres un experto en marketing de afiliados e influencer marketing.
+Analiza la información recopilada de la búsqueda web y responde de forma útil y detallada.
+
+Responde SIEMPRE en español. Incluye links a fuentes relevantes cuando sea posible.
+Estructura tu respuesta con encabezados markdown claros.`;
+  }
+
+  const userContent = isUsername
+    ? `Analiza este perfil de Instagram (@${label}). Información recopilada:\n\n${content.slice(0, 8000)}`
+    : `Responde sobre: "${label}". Información recopilada:\n\n${content.slice(0, 8000)}`;
 
   const aiResp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
     method: "POST",
@@ -127,10 +142,7 @@ Si no hay suficiente información, indícalo claramente y sugiere formas alterna
       model: "google/gemini-3-flash-preview",
       messages: [
         { role: "system", content: systemPrompt },
-        {
-          role: "user",
-          content: `Analiza este perfil de Instagram (@${username}). Información recopilada de búsqueda web:\n\n${content.slice(0, 8000)}`,
-        },
+        { role: "user", content: userContent },
       ],
       stream: true,
     }),
