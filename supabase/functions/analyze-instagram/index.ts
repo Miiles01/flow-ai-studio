@@ -82,12 +82,15 @@ async function analyzeWithAI(
   content: string,
   corsHeaders: Record<string, string>
 ) {
+  const profileUrl = `https://www.instagram.com/${username}/`;
   const systemPrompt = `Eres un experto en marketing de afiliados e influencer marketing. 
 Analiza la información recopilada sobre un perfil de Instagram y determina si esta persona/marca está buscando afiliados para vender sus productos.
 
 Responde SIEMPRE en español con el siguiente formato:
 
 ## 📊 Análisis de @${username}
+
+🔗 **Perfil:** [instagram.com/${username}](${profileUrl})
 
 ### Probabilidad de programa de afiliados
 [Alta / Media / Baja / No detectado]

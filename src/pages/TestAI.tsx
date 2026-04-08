@@ -158,11 +158,17 @@ const TestAI = () => {
 
     setInput("");
 
+    const profileUrl = `https://www.instagram.com/${raw}/`;
+    const embedHtml = `[![@${raw}](https://www.instagram.com/${raw}/)](${profileUrl})\n\n🔗 [Ver perfil en Instagram](${profileUrl})`;
     const userMsg: Msg = { role: "user", content: `🔍 Analizando @${raw}...` };
-    setMessages((prev) => [...prev, userMsg]);
+    setMessages((prev) => [
+      ...prev,
+      userMsg,
+      { role: "assistant", content: embedHtml + "\n\n⏳ Analizando..." },
+    ]);
     setIsLoading(true);
 
-    const ref = { current: "" };
+    const ref = { current: embedHtml + "\n\n" };
     try {
       await analyzeInstagram({
         username: raw,
