@@ -186,35 +186,30 @@ const TestAI = () => {
   const placeholder = tab === "chat" ? "Escribe un mensaje..." : "Usuario o búsqueda (ej: nike, moda afiliados)";
 
   return (
-    <div className="flex flex-col h-screen bg-[#0A0A0F] text-white">
-      {/* Header */}
-      <header className="flex items-center gap-3 px-6 py-4 border-b border-white/10">
-        <Link to="/" className="text-white/50 hover:text-white transition-colors">
-          <ArrowLeft size={20} />
-        </Link>
-        <Bot size={22} className="text-primary" />
-        <h1 className="text-lg font-semibold tracking-tight">Miiles AI — Test</h1>
-
-        {/* Tabs */}
-        <div className="ml-auto flex gap-1 bg-white/5 rounded-lg p-1">
+    <div className="flex flex-col h-full bg-background text-foreground">
+      {/* Tabs */}
+      <div className="flex items-center gap-3 px-6 py-3 border-b border-miiles-gray-100">
+        <Bot size={20} className="text-accent" />
+        <span className="text-sm font-medium">Búsqueda IA</span>
+        <div className="ml-auto flex gap-1 bg-muted/50 rounded-sm p-1">
           <button
             onClick={() => setTab("chat")}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-              tab === "chat" ? "bg-primary text-white" : "text-white/50 hover:text-white"
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xs text-xs font-medium transition-colors ${
+              tab === "chat" ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"
             }`}
           >
             <Bot size={14} /> Chat
           </button>
           <button
             onClick={() => setTab("instagram")}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-              tab === "instagram" ? "bg-primary text-white" : "text-white/50 hover:text-white"
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xs text-xs font-medium transition-colors ${
+              tab === "instagram" ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"
             }`}
           >
-            <Search size={14} /> Instagram
+            <Search size={14} /> Búsqueda
           </button>
         </div>
-      </header>
+      </div>
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto px-4 py-6 space-y-4">
