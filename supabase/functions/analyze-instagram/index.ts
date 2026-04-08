@@ -12,8 +12,8 @@ serve(async (req) => {
   }
 
   try {
-    const FIRECRAWL_API_KEY = Deno.env.get("FIRECRAWL_API_KEY");
-    if (!FIRECRAWL_API_KEY) throw new Error("FIRECRAWL_API_KEY is not configured");
+    const TAVILY_API_KEY = Deno.env.get("TAVILY_API_KEY");
+    if (!TAVILY_API_KEY) throw new Error("TAVILY_API_KEY is not configured");
 
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
@@ -30,32 +30,33 @@ serve(async (req) => {
 
     console.log("Searching info for Instagram profile:", cleanUsername);
 
-    // Use Firecrawl search instead of direct scrape (Instagram is blocked)
-    const searchResp = await fetch("https://api.firecrawl.dev/v1/search", {
+    // Use Tavily search API
+    const searchResp = await fetch("https://api.tavily.com/search", {
       method: "POST",
       headers: {
-        Authorization: `Bearer ${FIRECRAWL_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
+        api_key: TAVILY_API_KEY,
         query: `"${cleanUsername}" Instagram profile bio affiliate program ambassador collaboration`,
-        limit: 5,
-        scrapeOptions: { formats: ["markdown"] },
+        max_results: 5,
+        include_raw_content: false,
+        search_depth: "advanced",
       }),
     });
 
     const searchData = await searchResp.json();
 
     if (!searchResp.ok) {
-      console.error("Firecrawl search error:", searchData);
+      console.error("Tavily search error:", searchData);
       return new Response(
         JSON.stringify({ error: searchData.error || "Error searching for Instagram profile" }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    const content = searchData.data
-      ?.map((r: any) => `## ${r.title || r.url}\n${r.markdown || r.description || ""}`)
+    const content = searchData.results
+      ?.map((r: any) => `## ${r.title || r.url}\n${r.content || ""}`)
       .join("\n\n") || "";
 
     if (content.length < 30) {
