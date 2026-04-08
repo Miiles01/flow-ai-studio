@@ -39,7 +39,7 @@ const App = () => (
             <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
             <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
             <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
-            <Route path="/test-ai" element={<ProtectedRoute><TestAI /></ProtectedRoute>} />
+            <Route path="/test-ai" element={<TestAI />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
