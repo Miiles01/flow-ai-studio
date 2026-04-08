@@ -19,16 +19,22 @@ serve(async (req) => {
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
     const { username } = await req.json();
-    if (!username || typeof username !== "string") {
-      return new Response(JSON.stringify({ error: "username is required" }), {
+    if (!username || typeof username !== "string" || username.trim().length < 2) {
+      return new Response(JSON.stringify({ error: "Se requiere un término de búsqueda" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    const cleanUsername = username.replace(/^@/, "").trim();
+    const input = username.trim();
+    const cleanUsername = input.replace(/^@/, "");
+    const isUsername = /^[a-zA-Z0-9._]{1,30}$/.test(cleanUsername);
 
-    console.log("Searching info for Instagram profile:", cleanUsername);
+    const query = isUsername
+      ? `"${cleanUsername}" Instagram profile bio affiliate program ambassador collaboration`
+      : `${input} Instagram affiliate program ambassador collaboration`;
+
+    console.log("Searching:", query, isUsername ? `(username: ${cleanUsername})` : "(free search)");
 
     // Use Tavily search API
     const searchResp = await fetch("https://api.tavily.com/search", {
@@ -38,7 +44,7 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         api_key: TAVILY_API_KEY,
-        query: `"${cleanUsername}" Instagram profile bio affiliate program ambassador collaboration`,
+        query,
         max_results: 5,
         include_raw_content: false,
         search_depth: "advanced",
@@ -61,13 +67,14 @@ serve(async (req) => {
 
     if (content.length < 30) {
       return new Response(
-        JSON.stringify({ error: `No se encontró información suficiente sobre @${cleanUsername}. Verifica que el nombre de usuario sea correcto.` }),
+        JSON.stringify({ error: `No se encontró información suficiente. Intenta con otros términos de búsqueda.` }),
         { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
     // Analyze with AI
-    return await analyzeWithAI(LOVABLE_API_KEY, cleanUsername, content, corsHeaders);
+    const label = isUsername ? cleanUsername : input;
+    return await analyzeWithAI(LOVABLE_API_KEY, label, isUsername, content, corsHeaders);
   } catch (e) {
     console.error("analyze-instagram error:", e);
     return new Response(
