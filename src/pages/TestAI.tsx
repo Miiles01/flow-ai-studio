@@ -147,18 +147,25 @@ const TestAI = () => {
   };
 
   const sendInstagram = async () => {
-    const text = input.trim();
-    if (!text || isLoading) return;
+    const raw = input.trim().replace(/^@/, "").trim();
+    if (!raw || isLoading) return;
+
+    // Validate: only allow valid Instagram usernames (letters, numbers, dots, underscores)
+    if (!/^[a-zA-Z0-9._]{1,30}$/.test(raw)) {
+      toast.error("Escribe solo el nombre de usuario de Instagram (ej: nike, gymshark)");
+      return;
+    }
+
     setInput("");
 
-    const userMsg: Msg = { role: "user", content: `🔍 Analizando @${text.replace(/^@/, "")}...` };
+    const userMsg: Msg = { role: "user", content: `🔍 Analizando @${raw}...` };
     setMessages((prev) => [...prev, userMsg]);
     setIsLoading(true);
 
     const ref = { current: "" };
     try {
       await analyzeInstagram({
-        username: text,
+        username: raw,
         onDelta: upsertAssistant(ref),
         onDone: () => setIsLoading(false),
       });
