@@ -1,6 +1,8 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Bot, User, ArrowLeft, Loader2, Search, Instagram } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Send, Bot, User, Loader2, Search } from "lucide-react";
+import ReactMarkdown from "react-markdown";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import ReactMarkdown from "react-markdown";
 import { toast } from "sonner";
 
