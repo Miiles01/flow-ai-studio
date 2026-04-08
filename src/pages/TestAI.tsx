@@ -263,8 +263,18 @@ const TestAI = () => {
               }`}
             >
               {m.role === "assistant" ? (
-                <div className="prose prose-sm prose-invert max-w-none">
-                  <ReactMarkdown>{m.content}</ReactMarkdown>
+                <div className="prose prose-sm prose-invert max-w-none [&_a]:text-primary [&_a]:underline">
+                  <ReactMarkdown
+                    components={{
+                      a: ({ href, children }) => (
+                        <a href={href} target="_blank" rel="noopener noreferrer">
+                          {children}
+                        </a>
+                      ),
+                    }}
+                  >
+                    {m.content}
+                  </ReactMarkdown>
                 </div>
               ) : (
                 m.content
