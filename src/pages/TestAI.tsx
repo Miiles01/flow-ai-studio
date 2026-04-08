@@ -3,7 +3,6 @@ import { Send, Bot, User, Loader2, Search } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import ReactMarkdown from "react-markdown";
 import { toast } from "sonner";
 
 type Msg = { role: "user" | "assistant"; content: string };
