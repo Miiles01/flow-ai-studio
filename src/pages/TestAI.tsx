@@ -169,7 +169,7 @@ const TestAI = () => {
   };
 
   const send = tab === "chat" ? sendChat : sendInstagram;
-  const placeholder = tab === "chat" ? "Escribe un mensaje..." : "Nombre de usuario de Instagram (ej: nike)";
+  const placeholder = tab === "chat" ? "Escribe un mensaje..." : "Solo el usuario (ej: nike, gymshark)";
 
   return (
     <div className="flex flex-col h-screen bg-[#0A0A0F] text-white">

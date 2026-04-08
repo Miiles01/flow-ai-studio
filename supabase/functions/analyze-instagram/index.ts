@@ -27,66 +27,46 @@ serve(async (req) => {
     }
 
     const cleanUsername = username.replace(/^@/, "").trim();
-    const igUrl = `https://www.instagram.com/${cleanUsername}/`;
 
-    console.log("Scraping Instagram profile:", igUrl);
+    console.log("Searching info for Instagram profile:", cleanUsername);
 
-    // Step 1: Scrape the Instagram profile with Firecrawl
-    const scrapeResp = await fetch("https://api.firecrawl.dev/v1/scrape", {
+    // Use Firecrawl search instead of direct scrape (Instagram is blocked)
+    const searchResp = await fetch("https://api.firecrawl.dev/v1/search", {
       method: "POST",
       headers: {
         Authorization: `Bearer ${FIRECRAWL_API_KEY}`,
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        url: igUrl,
-        formats: ["markdown"],
-        waitFor: 3000,
+        query: `"${cleanUsername}" Instagram profile bio affiliate program ambassador collaboration`,
+        limit: 5,
+        scrapeOptions: { formats: ["markdown"] },
       }),
     });
 
-    const scrapeData = await scrapeResp.json();
+    const searchData = await searchResp.json();
 
-    if (!scrapeResp.ok) {
-      console.error("Firecrawl error:", scrapeData);
+    if (!searchResp.ok) {
+      console.error("Firecrawl search error:", searchData);
       return new Response(
-        JSON.stringify({ error: scrapeData.error || "Error scraping Instagram profile" }),
+        JSON.stringify({ error: searchData.error || "Error searching for Instagram profile" }),
         { status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
-    const markdown = scrapeData.data?.markdown || scrapeData.markdown || "";
-    const metadata = scrapeData.data?.metadata || scrapeData.metadata || {};
+    const content = searchData.data
+      ?.map((r: any) => `## ${r.title || r.url}\n${r.markdown || r.description || ""}`)
+      .join("\n\n") || "";
 
-    if (!markdown || markdown.length < 50) {
-      // Fallback: search for the profile info using Firecrawl search
-      console.log("Direct scrape yielded little content, trying search...");
-      
-      const searchResp = await fetch("https://api.firecrawl.dev/v1/search", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${FIRECRAWL_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          query: `Instagram ${cleanUsername} profile bio affiliate program`,
-          limit: 5,
-          scrapeOptions: { formats: ["markdown"] },
-        }),
-      });
-
-      const searchData = await searchResp.json();
-      const searchMarkdown = searchData.data
-        ?.map((r: any) => `## ${r.title || r.url}\n${r.markdown || r.description || ""}`)
-        .join("\n\n") || "";
-
-      if (searchMarkdown.length > 50) {
-        return await analyzeWithAI(LOVABLE_API_KEY, cleanUsername, searchMarkdown, "search", corsHeaders);
-      }
+    if (content.length < 30) {
+      return new Response(
+        JSON.stringify({ error: `No se encontró información suficiente sobre @${cleanUsername}. Verifica que el nombre de usuario sea correcto.` }),
+        { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+      );
     }
 
-    // Step 2: Analyze with Gemini
-    return await analyzeWithAI(LOVABLE_API_KEY, cleanUsername, markdown, "scrape", corsHeaders);
+    // Analyze with AI
+    return await analyzeWithAI(LOVABLE_API_KEY, cleanUsername, content, corsHeaders);
   } catch (e) {
     console.error("analyze-instagram error:", e);
     return new Response(
@@ -100,11 +80,10 @@ async function analyzeWithAI(
   apiKey: string,
   username: string,
   content: string,
-  source: string,
   corsHeaders: Record<string, string>
 ) {
   const systemPrompt = `Eres un experto en marketing de afiliados e influencer marketing. 
-Analiza la información de un perfil de Instagram y determina si esta persona/marca está buscando afiliados para vender sus productos.
+Analiza la información recopilada sobre un perfil de Instagram y determina si esta persona/marca está buscando afiliados para vender sus productos.
 
 Responde SIEMPRE en español con el siguiente formato:
 
@@ -139,7 +118,7 @@ Si no hay suficiente información, indícalo claramente y sugiere formas alterna
         { role: "system", content: systemPrompt },
         {
           role: "user",
-          content: `Analiza este perfil de Instagram (@${username}). La información fue obtenida por ${source}:\n\n${content.slice(0, 8000)}`,
+          content: `Analiza este perfil de Instagram (@${username}). Información recopilada de búsqueda web:\n\n${content.slice(0, 8000)}`,
         },
       ],
       stream: true,
