@@ -147,28 +147,29 @@ const TestAI = () => {
   };
 
   const sendInstagram = async () => {
-    const raw = input.trim().replace(/^@/, "").trim();
+    const raw = input.trim();
     if (!raw || isLoading) return;
-
-    // Validate: only allow valid Instagram usernames (letters, numbers, dots, underscores)
-    if (!/^[a-zA-Z0-9._]{1,30}$/.test(raw)) {
-      toast.error("Escribe solo el nombre de usuario de Instagram (ej: nike, gymshark)");
-      return;
-    }
-
     setInput("");
 
-    const profileUrl = `https://www.instagram.com/${raw}/`;
-    const embedHtml = `[![@${raw}](https://www.instagram.com/${raw}/)](${profileUrl})\n\n🔗 [Ver perfil en Instagram](${profileUrl})`;
-    const userMsg: Msg = { role: "user", content: `🔍 Analizando @${raw}...` };
+    // Detect if it's a username (with or without @) or a free-text search
+    const cleanUsername = raw.replace(/^@/, "").trim();
+    const isUsername = /^[a-zA-Z0-9._]{1,30}$/.test(cleanUsername);
+
+    let prefix = "";
+    if (isUsername) {
+      const profileUrl = `https://www.instagram.com/${cleanUsername}/`;
+      prefix = `🔗 [Ver perfil en Instagram](${profileUrl})\n\n`;
+    }
+
+    const userMsg: Msg = { role: "user", content: isUsername ? `🔍 Analizando @${cleanUsername}...` : `🔍 Buscando: ${raw}` };
     setMessages((prev) => [
       ...prev,
       userMsg,
-      { role: "assistant", content: embedHtml + "\n\n⏳ Analizando..." },
+      { role: "assistant", content: prefix + "⏳ Buscando información..." },
     ]);
     setIsLoading(true);
 
-    const ref = { current: embedHtml + "\n\n" };
+    const ref = { current: prefix };
     try {
       await analyzeInstagram({
         username: raw,
@@ -182,7 +183,7 @@ const TestAI = () => {
   };
 
   const send = tab === "chat" ? sendChat : sendInstagram;
-  const placeholder = tab === "chat" ? "Escribe un mensaje..." : "Solo el usuario (ej: nike, gymshark)";
+  const placeholder = tab === "chat" ? "Escribe un mensaje..." : "Usuario o búsqueda (ej: nike, moda afiliados)";
 
   return (
     <div className="flex flex-col h-screen bg-[#0A0A0F] text-white">
