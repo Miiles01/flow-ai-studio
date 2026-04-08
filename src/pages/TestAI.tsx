@@ -1,12 +1,14 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Bot, User, ArrowLeft, Loader2 } from "lucide-react";
+import { Send, Bot, User, ArrowLeft, Loader2, Search, Instagram } from "lucide-react";
 import { Link } from "react-router-dom";
 import ReactMarkdown from "react-markdown";
 import { toast } from "sonner";
 
 type Msg = { role: "user" | "assistant"; content: string };
+type Tab = "chat" | "instagram";
 
 const CHAT_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/chat`;
+const IG_URL = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1/analyze-instagram`;
 
 async function streamChat({
   messages,
@@ -32,8 +34,42 @@ async function streamChat({
   }
 
   if (!resp.body) throw new Error("No stream body");
+  await readStream(resp.body, onDelta, onDone);
+}
 
-  const reader = resp.body.getReader();
+async function analyzeInstagram({
+  username,
+  onDelta,
+  onDone,
+}: {
+  username: string;
+  onDelta: (t: string) => void;
+  onDone: () => void;
+}) {
+  const resp = await fetch(IG_URL, {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${import.meta.env.VITE_SUPABASE_PUBLISHABLE_KEY}`,
+    },
+    body: JSON.stringify({ username }),
+  });
+
+  if (!resp.ok) {
+    const err = await resp.json().catch(() => ({ error: "Error desconocido" }));
+    throw new Error(err.error || `Error ${resp.status}`);
+  }
+
+  if (!resp.body) throw new Error("No stream body");
+  await readStream(resp.body, onDelta, onDone);
+}
+
+async function readStream(
+  body: ReadableStream<Uint8Array>,
+  onDelta: (t: string) => void,
+  onDone: () => void
+) {
+  const reader = body.getReader();
   const decoder = new TextDecoder();
   let buf = "";
 
@@ -64,6 +100,7 @@ async function streamChat({
 }
 
 const TestAI = () => {
+  const [tab, setTab] = useState<Tab>("instagram");
   const [messages, setMessages] = useState<Msg[]>([]);
   const [input, setInput] = useState("");
   const [isLoading, setIsLoading] = useState(false);
@@ -73,7 +110,21 @@ const TestAI = () => {
     endRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const send = async () => {
+  const upsertAssistant = (assistantSoFar: { current: string }) => (chunk: string) => {
+    assistantSoFar.current += chunk;
+    const content = assistantSoFar.current;
+    setMessages((prev) => {
+      const last = prev[prev.length - 1];
+      if (last?.role === "assistant") {
+        return prev.map((m, i) =>
+          i === prev.length - 1 ? { ...m, content } : m
+        );
+      }
+      return [...prev, { role: "assistant", content }];
+    });
+  };
+
+  const sendChat = async () => {
     const text = input.trim();
     if (!text || isLoading) return;
     setInput("");
@@ -82,32 +133,43 @@ const TestAI = () => {
     setMessages((prev) => [...prev, userMsg]);
     setIsLoading(true);
 
-    let assistantSoFar = "";
-    const upsert = (chunk: string) => {
-      assistantSoFar += chunk;
-      setMessages((prev) => {
-        const last = prev[prev.length - 1];
-        if (last?.role === "assistant") {
-          return prev.map((m, i) =>
-            i === prev.length - 1 ? { ...m, content: assistantSoFar } : m
-          );
-        }
-        return [...prev, { role: "assistant", content: assistantSoFar }];
-      });
-    };
-
+    const ref = { current: "" };
     try {
       await streamChat({
         messages: [...messages, userMsg],
-        onDelta: upsert,
+        onDelta: upsertAssistant(ref),
         onDone: () => setIsLoading(false),
       });
     } catch (e) {
-      const msg = e instanceof Error ? e.message : "Error";
-      toast.error(msg);
+      toast.error(e instanceof Error ? e.message : "Error");
       setIsLoading(false);
     }
   };
+
+  const sendInstagram = async () => {
+    const text = input.trim();
+    if (!text || isLoading) return;
+    setInput("");
+
+    const userMsg: Msg = { role: "user", content: `🔍 Analizando @${text.replace(/^@/, "")}...` };
+    setMessages((prev) => [...prev, userMsg]);
+    setIsLoading(true);
+
+    const ref = { current: "" };
+    try {
+      await analyzeInstagram({
+        username: text,
+        onDelta: upsertAssistant(ref),
+        onDone: () => setIsLoading(false),
+      });
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "Error");
+      setIsLoading(false);
+    }
+  };
+
+  const send = tab === "chat" ? sendChat : sendInstagram;
+  const placeholder = tab === "chat" ? "Escribe un mensaje..." : "Nombre de usuario de Instagram (ej: nike)";
 
   return (
     <div className="flex flex-col h-screen bg-[#0A0A0F] text-white">
@@ -118,14 +180,56 @@ const TestAI = () => {
         </Link>
         <Bot size={22} className="text-primary" />
         <h1 className="text-lg font-semibold tracking-tight">Miiles AI — Test</h1>
+
+        {/* Tabs */}
+        <div className="ml-auto flex gap-1 bg-white/5 rounded-lg p-1">
+          <button
+            onClick={() => setTab("chat")}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+              tab === "chat" ? "bg-primary text-white" : "text-white/50 hover:text-white"
+            }`}
+          >
+            <Bot size={14} /> Chat
+          </button>
+          <button
+            onClick={() => setTab("instagram")}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
+              tab === "instagram" ? "bg-primary text-white" : "text-white/50 hover:text-white"
+            }`}
+          >
+            <Search size={14} /> Instagram
+          </button>
+        </div>
       </header>
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto px-4 py-6 space-y-4">
         {messages.length === 0 && (
           <div className="flex flex-col items-center justify-center h-full text-white/30 gap-3">
-            <Bot size={48} />
-            <p className="text-sm">Escribe algo para comenzar a hablar con Gemini</p>
+            {tab === "chat" ? (
+              <>
+                <Bot size={48} />
+                <p className="text-sm">Escribe algo para comenzar a hablar con Gemini</p>
+              </>
+            ) : (
+              <>
+                <Search size={48} />
+                <p className="text-sm text-center max-w-md">
+                  Escribe un nombre de usuario de Instagram para analizar si busca afiliados
+                </p>
+                <div className="flex gap-2 mt-2">
+                  {["nike", "gymshark", "fashionnova"].map((ex) => (
+                    <button
+                      key={ex}
+                      onClick={() => setInput(ex)}
+                      className="px-3 py-1 rounded-full bg-white/5 text-white/40 text-xs hover:bg-white/10 hover:text-white/60 transition-colors"
+                    >
+                      @{ex}
+                    </button>
+                  ))}
+                </div>
+              </>
+            )}
           </div>
         )}
         {messages.map((m, i) => (
@@ -180,7 +284,7 @@ const TestAI = () => {
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && send()}
-            placeholder="Escribe un mensaje..."
+            placeholder={placeholder}
             className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-white/30 outline-none focus:border-primary/50 transition-colors"
             disabled={isLoading}
           />
@@ -189,7 +293,7 @@ const TestAI = () => {
             disabled={isLoading || !input.trim()}
             className="bg-primary hover:bg-primary/90 disabled:opacity-30 rounded-xl px-4 py-3 transition-colors"
           >
-            <Send size={18} />
+            {tab === "instagram" ? <Search size={18} /> : <Send size={18} />}
           </button>
         </div>
       </div>
