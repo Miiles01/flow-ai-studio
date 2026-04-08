@@ -38,7 +38,7 @@ function SidebarBody() {
   };
 
   return (
-    <Sidebar collapsible="icon" className="bg-background">
+    <Sidebar collapsible="icon" className="bg-background rounded-lg shadow-md m-3 h-[calc(100vh-24px)]">
       <SidebarContent className="flex flex-col h-full">
         {/* Logo */}
         <div className="px-4 py-6 flex items-center gap-3">
