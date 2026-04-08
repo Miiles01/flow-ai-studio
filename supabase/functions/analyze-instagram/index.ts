@@ -19,16 +19,22 @@ serve(async (req) => {
     if (!LOVABLE_API_KEY) throw new Error("LOVABLE_API_KEY is not configured");
 
     const { username } = await req.json();
-    if (!username || typeof username !== "string") {
-      return new Response(JSON.stringify({ error: "username is required" }), {
+    if (!username || typeof username !== "string" || username.trim().length < 2) {
+      return new Response(JSON.stringify({ error: "Se requiere un término de búsqueda" }), {
         status: 400,
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    const cleanUsername = username.replace(/^@/, "").trim();
+    const input = username.trim();
+    const cleanUsername = input.replace(/^@/, "");
+    const isUsername = /^[a-zA-Z0-9._]{1,30}$/.test(cleanUsername);
 
-    console.log("Searching info for Instagram profile:", cleanUsername);
+    const query = isUsername
+      ? `"${cleanUsername}" Instagram profile bio affiliate program ambassador collaboration`
+      : `${input} Instagram affiliate program ambassador collaboration`;
+
+    console.log("Searching:", query, isUsername ? `(username: ${cleanUsername})` : "(free search)");
 
     // Use Tavily search API
     const searchResp = await fetch("https://api.tavily.com/search", {
@@ -38,7 +44,7 @@ serve(async (req) => {
       },
       body: JSON.stringify({
         api_key: TAVILY_API_KEY,
-        query: `"${cleanUsername}" Instagram profile bio affiliate program ambassador collaboration`,
+        query,
         max_results: 5,
         include_raw_content: false,
         search_depth: "advanced",
@@ -61,13 +67,14 @@ serve(async (req) => {
 
     if (content.length < 30) {
       return new Response(
-        JSON.stringify({ error: `No se encontró información suficiente sobre @${cleanUsername}. Verifica que el nombre de usuario sea correcto.` }),
+        JSON.stringify({ error: `No se encontró información suficiente. Intenta con otros términos de búsqueda.` }),
         { status: 404, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
 
     // Analyze with AI
-    return await analyzeWithAI(LOVABLE_API_KEY, cleanUsername, content, corsHeaders);
+    const label = isUsername ? cleanUsername : input;
+    return await analyzeWithAI(LOVABLE_API_KEY, label, isUsername, content, corsHeaders);
   } catch (e) {
     console.error("analyze-instagram error:", e);
     return new Response(
@@ -79,25 +86,29 @@ serve(async (req) => {
 
 async function analyzeWithAI(
   apiKey: string,
-  username: string,
+  label: string,
+  isUsername: boolean,
   content: string,
   corsHeaders: Record<string, string>
 ) {
-  const profileUrl = `https://www.instagram.com/${username}/`;
-  const systemPrompt = `Eres un experto en marketing de afiliados e influencer marketing. 
+  let systemPrompt: string;
+
+  if (isUsername) {
+    const profileUrl = `https://www.instagram.com/${label}/`;
+    systemPrompt = `Eres un experto en marketing de afiliados e influencer marketing. 
 Analiza la información recopilada sobre un perfil de Instagram y determina si esta persona/marca está buscando afiliados para vender sus productos.
 
 Responde SIEMPRE en español con el siguiente formato:
 
-## 📊 Análisis de @${username}
+## 📊 Análisis de @${label}
 
-🔗 **Perfil:** [instagram.com/${username}](${profileUrl})
+🔗 **Perfil:** [instagram.com/${label}](${profileUrl})
 
 ### Probabilidad de programa de afiliados
 [Alta / Media / Baja / No detectado]
 
 ### Señales detectadas
-- Lista de señales que indiquen que buscan afiliados (links en bio, menciones de "ambassador", "affiliate", "colaboración", "comisión", códigos de descuento, etc.)
+- Lista de señales que indiquen que buscan afiliados
 
 ### Tipo de negocio
 [Qué tipo de producto/servicio venden]
@@ -109,6 +120,17 @@ Responde SIEMPRE en español con el siguiente formato:
 [Resumen breve del perfil]
 
 Si no hay suficiente información, indícalo claramente y sugiere formas alternativas de investigar.`;
+  } else {
+    systemPrompt = `Eres un experto en marketing de afiliados e influencer marketing.
+Analiza la información recopilada de la búsqueda web y responde de forma útil y detallada.
+
+Responde SIEMPRE en español. Incluye links a fuentes relevantes cuando sea posible.
+Estructura tu respuesta con encabezados markdown claros.`;
+  }
+
+  const userContent = isUsername
+    ? `Analiza este perfil de Instagram (@${label}). Información recopilada:\n\n${content.slice(0, 8000)}`
+    : `Responde sobre: "${label}". Información recopilada:\n\n${content.slice(0, 8000)}`;
 
   const aiResp = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
     method: "POST",
@@ -120,10 +142,7 @@ Si no hay suficiente información, indícalo claramente y sugiere formas alterna
       model: "google/gemini-3-flash-preview",
       messages: [
         { role: "system", content: systemPrompt },
-        {
-          role: "user",
-          content: `Analiza este perfil de Instagram (@${username}). Información recopilada de búsqueda web:\n\n${content.slice(0, 8000)}`,
-        },
+        { role: "user", content: userContent },
       ],
       stream: true,
     }),
