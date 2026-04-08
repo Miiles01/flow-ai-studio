@@ -3,7 +3,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
-import { Workflow, Mail, Lock, User, Loader2 } from "lucide-react";
+import { Mail, Lock, User, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 
@@ -41,46 +41,48 @@ const Register = () => {
         animate={{ y: 0, opacity: 1 }}
         className="w-full max-w-sm"
       >
-        <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-xl bg-card border border-border mb-4">
-            <Workflow size={24} className="text-primary" />
-            <span className="font-semibold text-foreground">Miiles</span>
+        <div className="text-center mb-10">
+          <div className="inline-flex items-center gap-2 mb-6">
+            <div className="w-8 h-8 rounded-sm bg-foreground flex items-center justify-center">
+              <span className="text-background font-normal text-sm">M</span>
+            </div>
+            <span className="font-normal text-foreground">Miiles</span>
           </div>
-          <h1 className="text-2xl font-bold text-foreground">Crear cuenta</h1>
-          <p className="text-sm text-muted-foreground mt-1">Empieza a crear diagramas con IA</p>
+          <h1 className="text-2xl font-normal text-foreground">Crear cuenta</h1>
+          <p className="text-sm text-miiles-gray-400 font-light mt-2">Empieza a gestionar tus colaboraciones</p>
         </div>
 
         <form onSubmit={handleRegister} className="space-y-4">
           <div className="relative">
-            <User size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+            <User size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-miiles-gray-400" />
             <Input
               type="text"
               placeholder="Tu nombre"
               value={displayName}
               onChange={(e) => setDisplayName(e.target.value)}
-              className="pl-10 bg-card border-border"
+              className="pl-10"
               required
             />
           </div>
           <div className="relative">
-            <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+            <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-miiles-gray-400" />
             <Input
               type="email"
               placeholder="tu@email.com"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="pl-10 bg-card border-border"
+              className="pl-10"
               required
             />
           </div>
           <div className="relative">
-            <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+            <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-miiles-gray-400" />
             <Input
               type="password"
               placeholder="Contraseña (mín. 6 caracteres)"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="pl-10 bg-card border-border"
+              className="pl-10"
               minLength={6}
               required
             />
@@ -91,9 +93,9 @@ const Register = () => {
           </Button>
         </form>
 
-        <p className="text-center text-sm text-muted-foreground mt-6">
+        <p className="text-center text-sm text-miiles-gray-400 font-light mt-8">
           ¿Ya tienes cuenta?{" "}
-          <Link to="/login" className="text-primary hover:underline">
+          <Link to="/login" className="text-accent hover:underline">
             Inicia sesión
           </Link>
         </p>
