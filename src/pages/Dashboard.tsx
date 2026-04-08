@@ -94,7 +94,7 @@ export default function Dashboard() {
         ))}
       </div>
 
-      {/* Categories */}
+      {/* Categories - disabled for now
       <div>
         <div className="flex items-center justify-between mb-5">
           <h2 className="text-lg font-normal">Categorías</h2>
@@ -115,6 +115,7 @@ export default function Dashboard() {
           ))}
         </div>
       </div>
+      */}
 
       {/* Featured programs */}
       <div>
