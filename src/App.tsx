@@ -46,8 +46,8 @@ const App = () => (
           <Routes>
             <Route path="/" element={<DashboardRoute><Dashboard /></DashboardRoute>} />
             <Route path="/programs" element={<DashboardRoute><Programs /></DashboardRoute>} />
-            <Route path="/search" element={<DashboardRoute><SearchAI /></DashboardRoute>} />
-            <Route path="/flows" element={<DashboardRoute><Index /></DashboardRoute>} />
+            {/* <Route path="/search" element={<DashboardRoute><SearchAI /></DashboardRoute>} /> */}
+            {/* <Route path="/flows" element={<DashboardRoute><Index /></DashboardRoute>} /> */}
             <Route path="/profile" element={<DashboardRoute><Profile /></DashboardRoute>} />
             <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
             <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
