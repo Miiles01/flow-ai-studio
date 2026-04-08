@@ -16,17 +16,32 @@
     --secondary-foreground: 0 0% 0%;
 
     --muted: 240 5% 97%;
-    --muted-foreground: 240 10% 63%;
+    --muted-foreground: 233 10% 63%;
 
     --accent: 231 87% 60%;
     --accent-foreground: 0 0% 100%;
 
-    --destructive: 358 87% 85%;
-    --destructive-foreground: 358 87% 40%;
+    --destructive: 355 93% 86%;
+    --destructive-foreground: 355 93% 50%;
 
     --border: transparent;
-    --input: 240 5% 97%;
+    --input: 0 0% 100%;
     --ring: 231 87% 60%;
+
+    --card: 0 0% 100%;
+    --card-foreground: 0 0% 0%;
+
+    --popover: 0 0% 100%;
+    --popover-foreground: 0 0% 0%;
+
+    /* Miiles brand colors */
+    --miiles-pink: #FCB5B9;
+    --miiles-pink-light: #FEEDED;
+    --miiles-blue: #4059F1;
+    --miiles-blue-light: #E8ECFE;
+    --gradient-brand: linear-gradient(135deg, #FCB5B9 0%, #B8A4F8 50%, #4059F1 100%);
+    --gradient-brand-soft: linear-gradient(135deg, #fde4e5 0%, #e8e4fd 50%, #dce2fc 100%);
+    --gradient-card: linear-gradient(to right, #FDFDFD, #F8F9FD);
 
     --radius-xs: 6px;
     --radius-sm: 10px;
@@ -34,6 +49,9 @@
     --radius-lg: 24px;
     --radius-xl: 32px;
     --radius-full: 9999px;
+
+    --shadow-sm: 8px 6px 30px 0px rgba(24, 2, 56, 0.03);
+    --shadow-md: 0px 100px 170px 0px rgba(39, 39, 62, 0.05);
 
     --font-sans: 'Poppins', system-ui, sans-serif;
     --font-serif: 'Playfair Display', Georgia, serif;
@@ -49,6 +67,7 @@
     @apply bg-background text-foreground antialiased;
     font-family: var(--font-sans);
     font-weight: 300;
+    color: #000000;
   }
 
   h1, h2, h3, h4, h5, h6 {
@@ -62,7 +81,7 @@
   }
 }
 
-/* React Flow overrides for Miiles Branding */
+/* React Flow overrides */
 .react-flow__background {
   background-color: white !important;
 }
@@ -71,7 +90,7 @@
   background: white !important;
   border: none !important;
   border-radius: var(--radius-sm) !important;
-  box-shadow: 8px 6px 30px 0px rgba(24, 2, 56, 0.03) !important;
+  box-shadow: var(--shadow-sm) !important;
   padding: 4px !important;
 }
 
@@ -92,7 +111,7 @@
   background: white !important;
   border: none !important;
   border-radius: var(--radius-md) !important;
-  box-shadow: 0px 100px 170px 0px rgba(39, 39, 62, 0.05) !important;
+  box-shadow: var(--shadow-md) !important;
 }
 
 .react-flow__edge-path {
@@ -110,7 +129,7 @@
   height: 10px !important;
   background: white !important;
   border: 2px solid #4059F1 !important;
-  box-shadow: 8px 6px 30px 0px rgba(24, 2, 56, 0.03) !important;
+  box-shadow: var(--shadow-sm) !important;
 }
 
 .react-flow__handle:hover {
@@ -118,15 +137,22 @@
   transform: scale(1.2);
 }
 
-/* Custom UI Utilities */
-.miiles-shadow-sm { box-shadow: 8px 6px 30px 0px rgba(24, 2, 56, 0.03); }
-.miiles-shadow-md { box-shadow: 0px 100px 170px 0px rgba(39, 39, 62, 0.05); }
-
-.btn-hover-float {
-  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+/* Miiles button hover animation */
+.btn-miiles {
+  transition: all 0.2s ease;
 }
 
-.btn-hover-float:hover {
+.btn-miiles:hover {
   transform: translateY(-8px);
 }
 
+/* Suggestion card */
+.suggestion-card {
+  background: var(--gradient-card);
+  transition: all 0.6s ease;
+}
+
+.suggestion-card:hover {
+  background: #000000;
+  color: #FFFFFF;
+}
