@@ -64,7 +64,7 @@ export default function Dashboard() {
       {/* Greeting */}
       <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
         <h1 className="text-2xl md:text-3xl font-normal">
-          {getGreeting()}, <em className="text-accent">{displayName}</em>
+          {getGreeting()}, <span className="text-accent">{displayName}</span>
         </h1>
         <p className="text-miiles-gray-400 mt-2 text-sm font-light">
           Encuentra y gestiona tus colaboraciones con marcas
