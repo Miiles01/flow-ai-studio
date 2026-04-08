@@ -1,7 +1,8 @@
 import { useState, useRef, useEffect } from "react";
-import { Send, Bot, User, ArrowLeft, Loader2, Search, Instagram } from "lucide-react";
-import { Link } from "react-router-dom";
+import { Send, Bot, User, Loader2, Search } from "lucide-react";
 import ReactMarkdown from "react-markdown";
+import { Input } from "@/components/ui/input";
+import { Button } from "@/components/ui/button";
 import { toast } from "sonner";
 
 type Msg = { role: "user" | "assistant"; content: string };
@@ -186,48 +187,43 @@ const TestAI = () => {
   const placeholder = tab === "chat" ? "Escribe un mensaje..." : "Usuario o búsqueda (ej: nike, moda afiliados)";
 
   return (
-    <div className="flex flex-col h-screen bg-[#0A0A0F] text-white">
-      {/* Header */}
-      <header className="flex items-center gap-3 px-6 py-4 border-b border-white/10">
-        <Link to="/" className="text-white/50 hover:text-white transition-colors">
-          <ArrowLeft size={20} />
-        </Link>
-        <Bot size={22} className="text-primary" />
-        <h1 className="text-lg font-semibold tracking-tight">Miiles AI — Test</h1>
-
-        {/* Tabs */}
-        <div className="ml-auto flex gap-1 bg-white/5 rounded-lg p-1">
+    <div className="flex flex-col h-full bg-background text-foreground">
+      {/* Tabs */}
+      <div className="flex items-center gap-3 px-6 py-3 border-b border-miiles-gray-100">
+        <Bot size={20} className="text-accent" />
+        <span className="text-sm font-medium">Búsqueda IA</span>
+        <div className="ml-auto flex gap-1 bg-muted/50 rounded-sm p-1">
           <button
             onClick={() => setTab("chat")}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-              tab === "chat" ? "bg-primary text-white" : "text-white/50 hover:text-white"
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xs text-xs font-medium transition-colors ${
+              tab === "chat" ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"
             }`}
           >
             <Bot size={14} /> Chat
           </button>
           <button
             onClick={() => setTab("instagram")}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium transition-colors ${
-              tab === "instagram" ? "bg-primary text-white" : "text-white/50 hover:text-white"
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xs text-xs font-medium transition-colors ${
+              tab === "instagram" ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"
             }`}
           >
-            <Search size={14} /> Instagram
+            <Search size={14} /> Búsqueda
           </button>
         </div>
-      </header>
+      </div>
 
       {/* Messages */}
       <div className="flex-1 overflow-y-auto px-4 py-6 space-y-4">
         {messages.length === 0 && (
-          <div className="flex flex-col items-center justify-center h-full text-white/30 gap-3">
+          <div className="flex flex-col items-center justify-center h-full text-muted-foreground gap-3">
             {tab === "chat" ? (
               <>
-                <Bot size={48} />
+                <Bot size={48} className="text-muted-foreground/30" />
                 <p className="text-sm">Escribe algo para comenzar a hablar con Gemini</p>
               </>
             ) : (
               <>
-                <Search size={48} />
+                <Search size={48} className="text-muted-foreground/30" />
                 <p className="text-sm text-center max-w-md">
                   Busca un perfil de Instagram o cualquier tema relacionado con afiliados
                 </p>
@@ -236,7 +232,7 @@ const TestAI = () => {
                     <button
                       key={ex}
                       onClick={() => setInput(ex)}
-                      className="px-3 py-1 rounded-full bg-white/5 text-white/40 text-xs hover:bg-white/10 hover:text-white/60 transition-colors"
+                      className="px-3 py-1 rounded-full bg-muted/50 text-muted-foreground text-xs hover:bg-muted hover:text-foreground transition-colors"
                     >
                       {ex.includes(" ") ? ex : `@${ex}`}
                     </button>
@@ -252,19 +248,19 @@ const TestAI = () => {
             className={`flex gap-3 max-w-3xl mx-auto ${m.role === "user" ? "justify-end" : "justify-start"}`}
           >
             {m.role === "assistant" && (
-              <div className="w-7 h-7 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-1">
-                <Bot size={16} className="text-primary" />
+              <div className="w-7 h-7 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0 mt-1">
+                <Bot size={16} className="text-accent" />
               </div>
             )}
             <div
-              className={`rounded-2xl px-4 py-3 max-w-[80%] text-sm leading-relaxed ${
+              className={`rounded-md px-4 py-3 max-w-[80%] text-sm leading-relaxed ${
                 m.role === "user"
-                  ? "bg-primary text-white"
-                  : "bg-white/5 text-white/90"
+                  ? "bg-foreground text-background"
+                  : "bg-muted/50 text-foreground"
               }`}
             >
               {m.role === "assistant" ? (
-                <div className="prose prose-sm prose-invert max-w-none [&_a]:text-primary [&_a]:underline">
+                <div className="prose prose-sm max-w-none [&_a]:text-accent [&_a]:underline">
                   <ReactMarkdown
                     components={{
                       a: ({ href, children }) => (
@@ -282,19 +278,19 @@ const TestAI = () => {
               )}
             </div>
             {m.role === "user" && (
-              <div className="w-7 h-7 rounded-full bg-white/10 flex items-center justify-center flex-shrink-0 mt-1">
-                <User size={16} className="text-white/60" />
+              <div className="w-7 h-7 rounded-full bg-muted flex items-center justify-center flex-shrink-0 mt-1">
+                <User size={16} className="text-muted-foreground" />
               </div>
             )}
           </div>
         ))}
         {isLoading && messages[messages.length - 1]?.role === "user" && (
           <div className="flex gap-3 max-w-3xl mx-auto">
-            <div className="w-7 h-7 rounded-full bg-primary/20 flex items-center justify-center flex-shrink-0 mt-1">
-              <Bot size={16} className="text-primary" />
+            <div className="w-7 h-7 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0 mt-1">
+              <Bot size={16} className="text-accent" />
             </div>
-            <div className="rounded-2xl px-4 py-3 bg-white/5">
-              <Loader2 size={16} className="animate-spin text-white/40" />
+            <div className="rounded-md px-4 py-3 bg-muted/50">
+              <Loader2 size={16} className="animate-spin text-muted-foreground" />
             </div>
           </div>
         )}
@@ -302,23 +298,23 @@ const TestAI = () => {
       </div>
 
       {/* Input */}
-      <div className="px-4 pb-6 pt-2">
+      <div className="px-4 pb-4 pt-2">
         <div className="max-w-3xl mx-auto flex gap-2">
-          <input
+          <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && send()}
             placeholder={placeholder}
-            className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-white/30 outline-none focus:border-primary/50 transition-colors"
+            className="flex-1 bg-muted/50 border-none"
             disabled={isLoading}
           />
-          <button
+          <Button
             onClick={send}
             disabled={isLoading || !input.trim()}
-            className="bg-primary hover:bg-primary/90 disabled:opacity-30 rounded-xl px-4 py-3 transition-colors"
+            size="icon"
           >
             {tab === "instagram" ? <Search size={18} /> : <Send size={18} />}
-          </button>
+          </Button>
         </div>
       </div>
     </div>
