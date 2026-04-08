@@ -229,16 +229,16 @@ const TestAI = () => {
               <>
                 <Search size={48} />
                 <p className="text-sm text-center max-w-md">
-                  Escribe un nombre de usuario de Instagram para analizar si busca afiliados
+                  Busca un perfil de Instagram o cualquier tema relacionado con afiliados
                 </p>
-                <div className="flex gap-2 mt-2">
-                  {["nike", "gymshark", "fashionnova"].map((ex) => (
+                <div className="flex gap-2 mt-2 flex-wrap justify-center">
+                  {["nike", "gymshark", "marcas de moda con afiliados"].map((ex) => (
                     <button
                       key={ex}
                       onClick={() => setInput(ex)}
                       className="px-3 py-1 rounded-full bg-white/5 text-white/40 text-xs hover:bg-white/10 hover:text-white/60 transition-colors"
                     >
-                      @{ex}
+                      {ex.includes(" ") ? ex : `@${ex}`}
                     </button>
                   ))}
                 </div>
