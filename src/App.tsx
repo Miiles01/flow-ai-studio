@@ -4,12 +4,15 @@ import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
-import Index from "./pages/Index.tsx";
-import Login from "./pages/Login.tsx";
-import Register from "./pages/Register.tsx";
-import Profile from "./pages/Profile.tsx";
-import NotFound from "./pages/NotFound.tsx";
-import TestAI from "./pages/TestAI.tsx";
+import DashboardLayout from "@/components/DashboardLayout";
+import Dashboard from "./pages/Dashboard";
+import Programs from "./pages/Programs";
+import SearchAI from "./pages/SearchAI";
+import Index from "./pages/Index";
+import Login from "./pages/Login";
+import Register from "./pages/Register";
+import Profile from "./pages/Profile";
+import NotFound from "./pages/NotFound";
 
 const queryClient = new QueryClient();
 
@@ -27,6 +30,12 @@ const PublicRoute = ({ children }: { children: React.ReactNode }) => {
   return <>{children}</>;
 };
 
+const DashboardRoute = ({ children }: { children: React.ReactNode }) => (
+  <ProtectedRoute>
+    <DashboardLayout>{children}</DashboardLayout>
+  </ProtectedRoute>
+);
+
 const App = () => (
   <QueryClientProvider client={queryClient}>
     <TooltipProvider>
@@ -35,11 +44,13 @@ const App = () => (
       <BrowserRouter>
         <AuthProvider>
           <Routes>
-            <Route path="/" element={<ProtectedRoute><Index /></ProtectedRoute>} />
-            <Route path="/profile" element={<ProtectedRoute><Profile /></ProtectedRoute>} />
+            <Route path="/" element={<DashboardRoute><Dashboard /></DashboardRoute>} />
+            <Route path="/programs" element={<DashboardRoute><Programs /></DashboardRoute>} />
+            <Route path="/search" element={<DashboardRoute><SearchAI /></DashboardRoute>} />
+            <Route path="/flows" element={<DashboardRoute><Index /></DashboardRoute>} />
+            <Route path="/profile" element={<DashboardRoute><Profile /></DashboardRoute>} />
             <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
             <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
-            <Route path="/test-ai" element={<TestAI />} />
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
