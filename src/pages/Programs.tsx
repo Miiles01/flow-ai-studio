@@ -67,27 +67,27 @@ export default function Programs() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-full">
-        <Loader2 size={24} className="animate-spin text-muted-foreground" />
+        <Loader2 size={24} className="animate-spin text-miiles-gray-400" />
       </div>
     );
   }
 
   return (
-    <div className="p-6 md:p-10 max-w-5xl mx-auto space-y-6">
+    <div className="p-8 md:p-12 max-w-5xl mx-auto space-y-8">
       <div>
-        <h1 className="text-2xl font-semibold">Programas de marcas</h1>
-        <p className="text-sm text-muted-foreground mt-1">Encuentra y guarda programas de afiliados y colaboraciones</p>
+        <h1 className="text-2xl font-normal">Programas de marcas</h1>
+        <p className="text-sm text-miiles-gray-400 font-light mt-2">Encuentra y guarda programas de afiliados y colaboraciones</p>
       </div>
 
       {/* Filters */}
-      <div className="flex flex-col sm:flex-row gap-3">
+      <div className="flex flex-col sm:flex-row gap-4">
         <div className="relative flex-1">
-          <Search size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+          <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-miiles-gray-400" />
           <Input
             placeholder="Buscar marca..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            className="pl-9 bg-muted/50 border-none"
+            className="pl-10"
           />
         </div>
         <div className="flex gap-2 flex-wrap">
@@ -95,8 +95,10 @@ export default function Programs() {
             <button
               key={c}
               onClick={() => { setCategory(c); setSearchParams(c === "todos" ? {} : { category: c }); }}
-              className={`px-3 py-1.5 rounded-full text-xs font-medium transition-colors capitalize ${
-                category === c ? "bg-foreground text-background" : "bg-muted/50 text-muted-foreground hover:bg-muted"
+              className={`px-4 py-2 rounded-full text-xs transition-all duration-200 capitalize font-light ${
+                category === c
+                  ? "bg-foreground text-background"
+                  : "bg-background text-miiles-gray-400 shadow-sm hover:-translate-y-1 hover:bg-foreground hover:text-background"
               }`}
             >
               {c}
@@ -106,38 +108,38 @@ export default function Programs() {
       </div>
 
       {/* Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
         {filtered.map((p, i) => (
           <motion.div
             key={p.id}
             initial={{ y: 8, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: i * 0.03 }}
-            className="p-5 rounded-md bg-muted/30 hover:bg-muted/50 transition-colors group"
+            className="p-6 rounded-lg shadow-md transition-shadow duration-200"
           >
             <div className="flex items-start justify-between">
               <div className="flex-1 min-w-0">
-                <p className="font-medium">{p.brand_name}</p>
-                <p className="text-xs text-muted-foreground mt-0.5">{p.name}</p>
+                <p className="font-normal">{p.brand_name}</p>
+                <p className="text-xs text-miiles-gray-400 font-light mt-0.5">{p.name}</p>
               </div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-shrink-0">
                 {p.commission_rate && (
-                  <span className="text-xs bg-accent/10 text-accent px-2 py-1 rounded-full whitespace-nowrap">
+                  <span className="text-xs bg-miiles-blue-light text-miiles-blue px-3 py-1 rounded-full font-light">
                     {p.commission_rate}
                   </span>
                 )}
-                <span className="text-[10px] bg-muted text-muted-foreground px-2 py-0.5 rounded-full capitalize">
+                <span className="text-[10px] bg-miiles-pink-light text-miiles-pink px-2 py-0.5 rounded-full capitalize font-light">
                   {p.category}
                 </span>
               </div>
             </div>
-            <p className="text-sm text-muted-foreground mt-3 line-clamp-2">{p.description}</p>
-            <div className="flex items-center gap-2 mt-4">
+            <p className="text-sm text-miiles-gray-400 font-light mt-4 line-clamp-2">{p.description}</p>
+            <div className="flex items-center gap-3 mt-5">
               <Button
                 size="sm"
-                variant={savedIds.has(p.id) ? "default" : "outline"}
+                variant={savedIds.has(p.id) ? "default" : "secondary"}
                 onClick={() => toggleSave(p.id)}
-                className="text-xs h-8"
+                className="text-xs"
               >
                 {savedIds.has(p.id) ? <BookmarkCheck size={14} className="mr-1" /> : <Bookmark size={14} className="mr-1" />}
                 {savedIds.has(p.id) ? "Guardado" : "Guardar"}
@@ -147,7 +149,7 @@ export default function Programs() {
                   href={p.program_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-xs text-accent hover:underline inline-flex items-center gap-1"
+                  className="text-xs text-accent hover:underline inline-flex items-center gap-1 font-light"
                 >
                   Visitar <ExternalLink size={12} />
                 </a>
@@ -158,7 +160,7 @@ export default function Programs() {
       </div>
 
       {filtered.length === 0 && (
-        <div className="text-center py-16 text-muted-foreground">
+        <div className="text-center py-20 text-miiles-gray-400 font-light">
           <p>No se encontraron programas</p>
         </div>
       )}

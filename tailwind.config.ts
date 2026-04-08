@@ -14,9 +14,13 @@ export default {
     },
     extend: {
       fontFamily: {
-        sans: ['Poppins', 'Inter', 'system-ui', 'sans-serif'],
+        sans: ['Poppins', 'system-ui', 'sans-serif'],
         serif: ['Playfair Display', 'Georgia', 'serif'],
         mono: ['JetBrains Mono', 'monospace'],
+      },
+      fontWeight: {
+        light: '300',
+        normal: '400',
       },
       colors: {
         border: "transparent",
@@ -26,6 +30,7 @@ export default {
         foreground: "#000000",
         miiles: {
           blue: "#4059F1",
+          "blue-light": "#E8ECFE",
           pink: "#FCB5B9",
           "pink-light": "#FEEDED",
           gray: {
@@ -46,8 +51,8 @@ export default {
           foreground: "#000000",
         },
         destructive: {
-          DEFAULT: "#FCB5B9",
-          foreground: "#FFFFFF",
+          DEFAULT: "#FEEDED",
+          foreground: "#FCB5B9",
         },
         muted: {
           DEFAULT: "#F7F7F8",
@@ -68,7 +73,7 @@ export default {
         sidebar: {
           DEFAULT: "#FFFFFF",
           foreground: "#000000",
-          primary: "#4059F1",
+          primary: "#000000",
           "primary-foreground": "#FFFFFF",
           accent: "#F7F7F8",
           "accent-foreground": "#000000",
@@ -97,15 +102,10 @@ export default {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-        "float-up": {
-          "0%": { transform: "translateY(0)" },
-          "100%": { transform: "translateY(-8px)" }
-        }
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        "float-up": "float-up 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards",
       },
     },
   },

@@ -1,6 +1,6 @@
 import { ReactNode } from "react";
 import { useNavigate } from "react-router-dom";
-import { Home, ShoppingBag, Search, Workflow, User, LogOut, Settings } from "lucide-react";
+import { Home, ShoppingBag, Search, Workflow, User, LogOut } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { NavLink } from "@/components/NavLink";
 import {
@@ -16,7 +16,6 @@ import {
   SidebarTrigger,
   useSidebar,
 } from "@/components/ui/sidebar";
-import { Separator } from "@/components/ui/separator";
 
 const mainNav = [
   { title: "Inicio", url: "/", icon: Home },
@@ -41,21 +40,18 @@ function SidebarBody() {
   };
 
   return (
-    <Sidebar collapsible="icon" className="border-r border-miiles-gray-100">
+    <Sidebar collapsible="icon" className="bg-background">
       <SidebarContent className="flex flex-col h-full">
         {/* Logo */}
-        <div className="px-4 py-5 flex items-center gap-2">
-          <div className="w-8 h-8 rounded-sm bg-accent flex items-center justify-center flex-shrink-0">
-            <span className="text-white font-semibold text-sm">M</span>
+        <div className="px-4 py-6 flex items-center gap-3">
+          <div className="w-8 h-8 rounded-sm bg-foreground flex items-center justify-center flex-shrink-0">
+            <span className="text-background font-normal text-sm">M</span>
           </div>
-          {!collapsed && <span className="text-lg font-semibold tracking-tight">Miiles</span>}
+          {!collapsed && <span className="text-base font-normal tracking-tight">Miiles</span>}
         </div>
 
         {/* Main navigation */}
         <SidebarGroup>
-          <SidebarGroupLabel className="text-muted-foreground text-[11px] uppercase tracking-wider">
-            {!collapsed && "Menu"}
-          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {mainNav.map((item) => (
@@ -64,11 +60,11 @@ function SidebarBody() {
                     <NavLink
                       to={item.url}
                       end={item.url === "/"}
-                      className="hover:bg-muted/50 text-muted-foreground"
-                      activeClassName="bg-muted text-foreground font-medium"
+                      className="text-miiles-gray-400 hover:text-foreground hover:bg-muted transition-all duration-200 rounded-sm"
+                      activeClassName="bg-muted text-foreground"
                     >
                       <item.icon className="mr-2 h-4 w-4" />
-                      {!collapsed && <span>{item.title}</span>}
+                      {!collapsed && <span className="font-light">{item.title}</span>}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -81,7 +77,6 @@ function SidebarBody() {
 
         {/* Bottom nav */}
         <SidebarGroup>
-          <Separator className="mb-2 bg-miiles-gray-100" />
           <SidebarGroupContent>
             <SidebarMenu>
               {bottomNav.map((item) => (
@@ -89,11 +84,11 @@ function SidebarBody() {
                   <SidebarMenuButton asChild>
                     <NavLink
                       to={item.url}
-                      className="hover:bg-muted/50 text-muted-foreground"
-                      activeClassName="bg-muted text-foreground font-medium"
+                      className="text-miiles-gray-400 hover:text-foreground hover:bg-muted transition-all duration-200 rounded-sm"
+                      activeClassName="bg-muted text-foreground"
                     >
                       <item.icon className="mr-2 h-4 w-4" />
-                      {!collapsed && <span>{item.title}</span>}
+                      {!collapsed && <span className="font-light">{item.title}</span>}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -101,10 +96,10 @@ function SidebarBody() {
               <SidebarMenuItem>
                 <SidebarMenuButton
                   onClick={handleSignOut}
-                  className="hover:bg-muted/50 text-muted-foreground cursor-pointer"
+                  className="text-miiles-gray-400 hover:text-foreground hover:bg-muted transition-all duration-200 rounded-sm cursor-pointer"
                 >
                   <LogOut className="mr-2 h-4 w-4" />
-                  {!collapsed && <span>Cerrar sesión</span>}
+                  {!collapsed && <span className="font-light">Cerrar sesión</span>}
                 </SidebarMenuButton>
               </SidebarMenuItem>
             </SidebarMenu>
@@ -121,7 +116,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       <div className="min-h-screen flex w-full bg-background">
         <SidebarBody />
         <div className="flex-1 flex flex-col min-w-0">
-          <header className="h-12 flex items-center border-b border-miiles-gray-100 px-4">
+          <header className="h-12 flex items-center px-4">
             <SidebarTrigger />
           </header>
           <main className="flex-1 overflow-y-auto">{children}</main>

@@ -189,22 +189,22 @@ const TestAI = () => {
   return (
     <div className="flex flex-col h-full bg-background text-foreground">
       {/* Tabs */}
-      <div className="flex items-center gap-3 px-6 py-3 border-b border-miiles-gray-100">
-        <Bot size={20} className="text-accent" />
-        <span className="text-sm font-medium">Búsqueda IA</span>
-        <div className="ml-auto flex gap-1 bg-muted/50 rounded-sm p-1">
+      <div className="flex items-center gap-3 px-6 py-4">
+        <Bot size={20} className="text-miiles-blue" />
+        <span className="text-sm font-normal">Búsqueda IA</span>
+        <div className="ml-auto flex gap-1 bg-background shadow-sm rounded-full p-1">
           <button
             onClick={() => setTab("chat")}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xs text-xs font-medium transition-colors ${
-              tab === "chat" ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"
+            className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-light transition-all duration-200 ${
+              tab === "chat" ? "bg-foreground text-background" : "text-miiles-gray-400 hover:text-foreground"
             }`}
           >
             <Bot size={14} /> Chat
           </button>
           <button
             onClick={() => setTab("instagram")}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xs text-xs font-medium transition-colors ${
-              tab === "instagram" ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"
+            className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-light transition-all duration-200 ${
+              tab === "instagram" ? "bg-foreground text-background" : "text-miiles-gray-400 hover:text-foreground"
             }`}
           >
             <Search size={14} /> Búsqueda
@@ -215,24 +215,24 @@ const TestAI = () => {
       {/* Messages */}
       <div className="flex-1 overflow-y-auto px-4 py-6 space-y-4">
         {messages.length === 0 && (
-          <div className="flex flex-col items-center justify-center h-full text-muted-foreground gap-3">
+          <div className="flex flex-col items-center justify-center h-full text-miiles-gray-400 gap-3">
             {tab === "chat" ? (
               <>
-                <Bot size={48} className="text-muted-foreground/30" />
-                <p className="text-sm">Escribe algo para comenzar a hablar con Gemini</p>
+                <Bot size={48} className="text-miiles-gray-200" />
+                <p className="text-sm font-light">Escribe algo para comenzar a hablar con Gemini</p>
               </>
             ) : (
               <>
-                <Search size={48} className="text-muted-foreground/30" />
-                <p className="text-sm text-center max-w-md">
+                <Search size={48} className="text-miiles-gray-200" />
+                <p className="text-sm text-center max-w-md font-light">
                   Busca un perfil de Instagram o cualquier tema relacionado con afiliados
                 </p>
-                <div className="flex gap-2 mt-2 flex-wrap justify-center">
+                <div className="flex gap-2 mt-3 flex-wrap justify-center">
                   {["nike", "gymshark", "marcas de moda con afiliados"].map((ex) => (
                     <button
                       key={ex}
                       onClick={() => setInput(ex)}
-                      className="px-3 py-1 rounded-full bg-muted/50 text-muted-foreground text-xs hover:bg-muted hover:text-foreground transition-colors"
+                      className="px-4 py-1.5 rounded-full bg-background shadow-sm text-miiles-gray-400 text-xs font-light hover:-translate-y-1 hover:bg-foreground hover:text-background transition-all duration-200"
                     >
                       {ex.includes(" ") ? ex : `@${ex}`}
                     </button>
@@ -248,19 +248,19 @@ const TestAI = () => {
             className={`flex gap-3 max-w-3xl mx-auto ${m.role === "user" ? "justify-end" : "justify-start"}`}
           >
             {m.role === "assistant" && (
-              <div className="w-7 h-7 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0 mt-1">
-                <Bot size={16} className="text-accent" />
+              <div className="w-7 h-7 rounded-full bg-miiles-blue-light flex items-center justify-center flex-shrink-0 mt-1">
+                <Bot size={16} className="text-miiles-blue" />
               </div>
             )}
             <div
-              className={`rounded-md px-4 py-3 max-w-[80%] text-sm leading-relaxed ${
+              className={`rounded-lg px-4 py-3 max-w-[80%] text-sm leading-relaxed font-light ${
                 m.role === "user"
-                  ? "bg-foreground text-background"
-                  : "bg-muted/50 text-foreground"
+                  ? "bg-foreground text-background rounded-full"
+                  : "shadow-md"
               }`}
             >
               {m.role === "assistant" ? (
-                <div className="prose prose-sm max-w-none [&_a]:text-accent [&_a]:underline">
+                <div className="prose prose-sm max-w-none [&_a]:text-miiles-blue [&_a]:underline">
                   <ReactMarkdown
                     components={{
                       a: ({ href, children }) => (
@@ -278,43 +278,43 @@ const TestAI = () => {
               )}
             </div>
             {m.role === "user" && (
-              <div className="w-7 h-7 rounded-full bg-muted flex items-center justify-center flex-shrink-0 mt-1">
-                <User size={16} className="text-muted-foreground" />
+              <div className="w-7 h-7 rounded-full bg-miiles-gray-50 shadow-sm flex items-center justify-center flex-shrink-0 mt-1">
+                <User size={16} className="text-miiles-gray-400" />
               </div>
             )}
           </div>
         ))}
         {isLoading && messages[messages.length - 1]?.role === "user" && (
           <div className="flex gap-3 max-w-3xl mx-auto">
-            <div className="w-7 h-7 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0 mt-1">
-              <Bot size={16} className="text-accent" />
+            <div className="w-7 h-7 rounded-full bg-miiles-blue-light flex items-center justify-center flex-shrink-0 mt-1">
+              <Bot size={16} className="text-miiles-blue" />
             </div>
-            <div className="rounded-md px-4 py-3 bg-muted/50">
-              <Loader2 size={16} className="animate-spin text-muted-foreground" />
+            <div className="rounded-lg px-4 py-3 shadow-md">
+              <Loader2 size={16} className="animate-spin text-miiles-gray-400" />
             </div>
           </div>
         )}
         <div ref={endRef} />
       </div>
 
-      {/* Input */}
-      <div className="px-4 pb-4 pt-2">
-        <div className="max-w-3xl mx-auto flex gap-2">
-          <Input
+      {/* Chat input - black bg per design system */}
+      <div className="px-4 pb-6 pt-2">
+        <div className="max-w-3xl mx-auto flex items-center gap-2 bg-foreground rounded-xl px-4 py-3 shadow-sm">
+          <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && send()}
             placeholder={placeholder}
-            className="flex-1 bg-muted/50 border-none"
+            className="flex-1 bg-transparent text-background text-sm font-light placeholder:text-miiles-gray-600 outline-none"
             disabled={isLoading}
           />
-          <Button
+          <button
             onClick={send}
             disabled={isLoading || !input.trim()}
-            size="icon"
+            className="w-8 h-8 rounded-full bg-background text-foreground flex items-center justify-center disabled:opacity-30 hover:bg-miiles-pink-light hover:text-miiles-pink transition-all duration-200"
           >
-            {tab === "instagram" ? <Search size={18} /> : <Send size={18} />}
-          </Button>
+            {tab === "instagram" ? <Search size={16} /> : <Send size={16} />}
+          </button>
         </div>
       </div>
     </div>

@@ -39,7 +39,6 @@ export default function Dashboard() {
 
   useEffect(() => {
     if (!user) return;
-
     Promise.all([
       supabase.from("profiles").select("display_name").eq("user_id", user.id).single(),
       supabase.from("brand_programs").select("*").eq("is_featured", true).limit(4),
@@ -55,27 +54,27 @@ export default function Dashboard() {
   if (loading) {
     return (
       <div className="flex items-center justify-center h-full">
-        <Loader2 size={24} className="animate-spin text-muted-foreground" />
+        <Loader2 size={24} className="animate-spin text-miiles-gray-400" />
       </div>
     );
   }
 
   return (
-    <div className="p-6 md:p-10 max-w-5xl mx-auto space-y-10">
+    <div className="p-8 md:p-12 max-w-5xl mx-auto space-y-12">
       {/* Greeting */}
       <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
-        <h1 className="text-2xl md:text-3xl font-semibold">
-          {getGreeting()}, <span className="text-accent">{displayName}</span>
+        <h1 className="text-2xl md:text-3xl font-normal">
+          {getGreeting()}, <em className="text-accent">{displayName}</em>
         </h1>
-        <p className="text-muted-foreground mt-1 text-sm">
+        <p className="text-miiles-gray-400 mt-2 text-sm font-light">
           Encuentra y gestiona tus colaboraciones con marcas
         </p>
       </motion.div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-5">
         {[
-          { label: "Programas disponibles", value: featured.length + "+", icon: ShoppingBag },
+          { label: "Programas disponibles", value: "10+", icon: ShoppingBag },
           { label: "Guardados", value: savedCount, icon: Bookmark },
           { label: "Tendencia", value: "Deportes", icon: TrendingUp },
         ].map((s, i) => (
@@ -84,20 +83,22 @@ export default function Dashboard() {
             initial={{ y: 10, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: i * 0.05 }}
-            className="p-4 rounded-md bg-muted/50"
+            className="p-5 rounded-lg shadow-md"
           >
-            <s.icon size={18} className="text-muted-foreground mb-2" />
-            <p className="text-2xl font-semibold">{s.value}</p>
-            <p className="text-xs text-muted-foreground">{s.label}</p>
+            <div className="w-8 h-8 rounded-sm bg-background shadow-sm flex items-center justify-center mb-3">
+              <s.icon size={16} className="text-miiles-blue" />
+            </div>
+            <p className="text-2xl font-normal">{s.value}</p>
+            <p className="text-xs text-miiles-gray-400 font-light mt-1">{s.label}</p>
           </motion.div>
         ))}
       </div>
 
       {/* Categories */}
       <div>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold">Categorías</h2>
-          <Link to="/programs" className="text-xs text-accent hover:underline flex items-center gap-1">
+        <div className="flex items-center justify-between mb-5">
+          <h2 className="text-lg font-normal">Categorías</h2>
+          <Link to="/programs" className="text-xs text-accent hover:underline flex items-center gap-1 font-light">
             Ver todas <ArrowRight size={12} />
           </Link>
         </div>
@@ -106,7 +107,7 @@ export default function Dashboard() {
             <Link
               key={c.value}
               to={`/programs?category=${c.value}`}
-              className="px-4 py-3 rounded-sm bg-muted/50 hover:bg-muted transition-colors text-sm flex items-center gap-2"
+              className="suggestion-card px-5 py-4 rounded-lg text-sm font-light flex items-center gap-2 transition-all duration-600"
             >
               <span className="text-lg">{c.emoji}</span>
               {c.label}
@@ -117,36 +118,36 @@ export default function Dashboard() {
 
       {/* Featured programs */}
       <div>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className="text-lg font-semibold">Programas destacados</h2>
-          <Link to="/programs" className="text-xs text-accent hover:underline flex items-center gap-1">
+        <div className="flex items-center justify-between mb-5">
+          <h2 className="text-lg font-normal">Programas destacados</h2>
+          <Link to="/programs" className="text-xs text-accent hover:underline flex items-center gap-1 font-light">
             Ver todos <ArrowRight size={12} />
           </Link>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
           {featured.map((p, i) => (
             <motion.div
               key={p.id}
               initial={{ y: 10, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: i * 0.05 }}
-              className="p-5 rounded-md bg-muted/30 hover:bg-muted/50 transition-colors"
+              className="p-6 rounded-lg shadow-md hover:shadow-sm transition-shadow duration-200"
             >
               <div className="flex items-start justify-between">
                 <div>
-                  <p className="font-medium">{p.brand_name}</p>
-                  <p className="text-xs text-muted-foreground mt-0.5">{p.name}</p>
+                  <p className="font-normal">{p.brand_name}</p>
+                  <p className="text-xs text-miiles-gray-400 font-light mt-0.5">{p.name}</p>
                 </div>
                 {p.commission_rate && (
-                  <span className="text-xs bg-accent/10 text-accent px-2 py-1 rounded-full">
+                  <span className="text-xs bg-miiles-blue-light text-miiles-blue px-3 py-1 rounded-full font-light">
                     {p.commission_rate}
                   </span>
                 )}
               </div>
-              <p className="text-sm text-muted-foreground mt-3 line-clamp-2">{p.description}</p>
+              <p className="text-sm text-miiles-gray-400 font-light mt-4 line-clamp-2">{p.description}</p>
               <Link
                 to={`/programs?highlight=${p.id}`}
-                className="text-xs text-accent mt-3 inline-flex items-center gap-1 hover:underline"
+                className="text-xs text-accent mt-4 inline-flex items-center gap-1 hover:underline font-light"
               >
                 Ver detalles <ArrowRight size={12} />
               </Link>
