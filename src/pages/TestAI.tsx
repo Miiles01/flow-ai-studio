@@ -297,23 +297,23 @@ const TestAI = () => {
       </div>
 
       {/* Input */}
-      <div className="px-4 pb-6 pt-2">
+      <div className="px-4 pb-4 pt-2">
         <div className="max-w-3xl mx-auto flex gap-2">
-          <input
+          <Input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && send()}
             placeholder={placeholder}
-            className="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm text-white placeholder:text-white/30 outline-none focus:border-primary/50 transition-colors"
+            className="flex-1 bg-muted/50 border-none"
             disabled={isLoading}
           />
-          <button
+          <Button
             onClick={send}
             disabled={isLoading || !input.trim()}
-            className="bg-primary hover:bg-primary/90 disabled:opacity-30 rounded-xl px-4 py-3 transition-colors"
+            size="icon"
           >
             {tab === "instagram" ? <Search size={18} /> : <Send size={18} />}
-          </button>
+          </Button>
         </div>
       </div>
     </div>
