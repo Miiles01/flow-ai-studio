@@ -297,24 +297,24 @@ const TestAI = () => {
         <div ref={endRef} />
       </div>
 
-      {/* Input */}
-      <div className="px-4 pb-4 pt-2">
-        <div className="max-w-3xl mx-auto flex gap-2">
-          <Input
+      {/* Chat input - black bg per design system */}
+      <div className="px-4 pb-6 pt-2">
+        <div className="max-w-3xl mx-auto flex items-center gap-2 bg-foreground rounded-xl px-4 py-3 shadow-sm">
+          <input
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === "Enter" && !e.shiftKey && send()}
             placeholder={placeholder}
-            className="flex-1 bg-muted/50 border-none"
+            className="flex-1 bg-transparent text-background text-sm font-light placeholder:text-miiles-gray-600 outline-none"
             disabled={isLoading}
           />
-          <Button
+          <button
             onClick={send}
             disabled={isLoading || !input.trim()}
-            size="icon"
+            className="w-8 h-8 rounded-full bg-background text-foreground flex items-center justify-center disabled:opacity-30 hover:bg-miiles-pink-light hover:text-miiles-pink transition-all duration-200"
           >
-            {tab === "instagram" ? <Search size={18} /> : <Send size={18} />}
-          </Button>
+            {tab === "instagram" ? <Search size={16} /> : <Send size={16} />}
+          </button>
         </div>
       </div>
     </div>
