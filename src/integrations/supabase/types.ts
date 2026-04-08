@@ -14,6 +14,48 @@ export type Database = {
   }
   public: {
     Tables: {
+      brand_programs: {
+        Row: {
+          brand_name: string
+          category: string
+          commission_rate: string | null
+          created_at: string
+          description: string
+          id: string
+          is_featured: boolean
+          logo_url: string | null
+          name: string
+          program_url: string | null
+          updated_at: string
+        }
+        Insert: {
+          brand_name: string
+          category?: string
+          commission_rate?: string | null
+          created_at?: string
+          description?: string
+          id?: string
+          is_featured?: boolean
+          logo_url?: string | null
+          name: string
+          program_url?: string | null
+          updated_at?: string
+        }
+        Update: {
+          brand_name?: string
+          category?: string
+          commission_rate?: string | null
+          created_at?: string
+          description?: string
+          id?: string
+          is_featured?: boolean
+          logo_url?: string | null
+          name?: string
+          program_url?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       flows: {
         Row: {
           created_at: string
@@ -47,29 +89,70 @@ export type Database = {
       profiles: {
         Row: {
           avatar_url: string | null
+          bio: string | null
           created_at: string
           display_name: string | null
           id: string
+          instagram_handle: string | null
+          niche: string | null
           updated_at: string
           user_id: string
         }
         Insert: {
           avatar_url?: string | null
+          bio?: string | null
           created_at?: string
           display_name?: string | null
           id?: string
+          instagram_handle?: string | null
+          niche?: string | null
           updated_at?: string
           user_id: string
         }
         Update: {
           avatar_url?: string | null
+          bio?: string | null
           created_at?: string
           display_name?: string | null
           id?: string
+          instagram_handle?: string | null
+          niche?: string | null
           updated_at?: string
           user_id?: string
         }
         Relationships: []
+      }
+      user_applications: {
+        Row: {
+          created_at: string
+          id: string
+          program_id: string
+          status: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          program_id: string
+          status?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          program_id?: string
+          status?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_applications_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: false
+            referencedRelation: "brand_programs"
+            referencedColumns: ["id"]
+          },
+        ]
       }
     }
     Views: {
