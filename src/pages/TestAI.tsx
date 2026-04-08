@@ -189,22 +189,22 @@ const TestAI = () => {
   return (
     <div className="flex flex-col h-full bg-background text-foreground">
       {/* Tabs */}
-      <div className="flex items-center gap-3 px-6 py-3 border-b border-miiles-gray-100">
-        <Bot size={20} className="text-accent" />
-        <span className="text-sm font-medium">Búsqueda IA</span>
-        <div className="ml-auto flex gap-1 bg-muted/50 rounded-sm p-1">
+      <div className="flex items-center gap-3 px-6 py-4">
+        <Bot size={20} className="text-miiles-blue" />
+        <span className="text-sm font-normal">Búsqueda IA</span>
+        <div className="ml-auto flex gap-1 bg-background shadow-sm rounded-full p-1">
           <button
             onClick={() => setTab("chat")}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xs text-xs font-medium transition-colors ${
-              tab === "chat" ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"
+            className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-light transition-all duration-200 ${
+              tab === "chat" ? "bg-foreground text-background" : "text-miiles-gray-400 hover:text-foreground"
             }`}
           >
             <Bot size={14} /> Chat
           </button>
           <button
             onClick={() => setTab("instagram")}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xs text-xs font-medium transition-colors ${
-              tab === "instagram" ? "bg-foreground text-background" : "text-muted-foreground hover:text-foreground"
+            className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-light transition-all duration-200 ${
+              tab === "instagram" ? "bg-foreground text-background" : "text-miiles-gray-400 hover:text-foreground"
             }`}
           >
             <Search size={14} /> Búsqueda
