@@ -225,7 +225,7 @@ export default function Programs() {
           >
             {isAdmin && (
               <button
-                onClick={() => handleDeleteProgram(p.id)}
+                onClick={(e) => { e.stopPropagation(); handleDeleteProgram(p.id); }}
                 className="absolute top-3 right-3 p-1 rounded-full hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
                 title="Eliminar programa"
               >
@@ -253,7 +253,7 @@ export default function Programs() {
               <Button
                 size="sm"
                 variant={savedIds.has(p.id) ? "default" : "secondary"}
-                onClick={() => toggleSave(p.id)}
+                onClick={(e) => { e.stopPropagation(); toggleSave(p.id); }}
                 className="text-xs"
               >
                 {savedIds.has(p.id) ? <BookmarkCheck size={14} className="mr-1" /> : <Bookmark size={14} className="mr-1" />}
