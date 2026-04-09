@@ -65,10 +65,11 @@ const Onboarding = () => {
 
   // Form state
   const [bio, setBio] = useState("");
-  const [instagramHandle, setInstagramHandle] = useState("");
-  const [tiktokHandle, setTiktokHandle] = useState("");
-  const [youtubeHandle, setYoutubeHandle] = useState("");
-  const [twitterHandle, setTwitterHandle] = useState("");
+  const [socialLinks, setSocialLinks] = useState([
+    { platform: "Instagram", url: "" },
+    { platform: "TikTok", url: "" },
+    { platform: "YouTube", url: "" },
+  ]);
   const [videoUrl1, setVideoUrl1] = useState("");
   const [videoUrl2, setVideoUrl2] = useState("");
   const [videoUrl3, setVideoUrl3] = useState("");
