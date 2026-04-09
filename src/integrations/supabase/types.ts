@@ -16,6 +16,7 @@ export type Database = {
     Tables: {
       brand_programs: {
         Row: {
+          banner_position: number
           banner_url: string | null
           brand_name: string
           category: string
@@ -30,6 +31,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          banner_position?: number
           banner_url?: string | null
           brand_name: string
           category?: string
@@ -44,6 +46,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          banner_position?: number
           banner_url?: string | null
           brand_name?: string
           category?: string

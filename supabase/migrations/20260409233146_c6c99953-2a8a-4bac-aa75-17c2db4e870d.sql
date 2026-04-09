@@ -1,0 +1,1 @@
+ALTER TABLE public.brand_programs ADD COLUMN banner_position integer NOT NULL DEFAULT 50;
