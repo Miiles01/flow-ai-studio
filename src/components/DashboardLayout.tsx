@@ -1,6 +1,7 @@
 import { ReactNode, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Home, ShoppingBag, User, LogOut } from "lucide-react";
+import logoImg from "@/assets/logo.png";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { NavLink } from "@/components/NavLink";
