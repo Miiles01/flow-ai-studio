@@ -77,7 +77,14 @@ const Onboarding = () => {
 
   const displayName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Usuario";
 
-  const next = () => { setDir(1); setStep((s) => Math.min(s + 1, TOTAL_STEPS - 1)); };
+  const hasAtLeastOneLink = socialLinks.some((l) => l.url.trim() !== "");
+  const next = () => {
+    if (step === 2 && !hasAtLeastOneLink) {
+      toast.error("Agrega al menos un link de red social");
+      return;
+    }
+    setDir(1); setStep((s) => Math.min(s + 1, TOTAL_STEPS - 1));
+  };
   const prev = () => { setDir(-1); setStep((s) => Math.max(s - 1, 0)); };
 
   const handleFinish = async () => {
