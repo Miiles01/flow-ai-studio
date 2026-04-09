@@ -60,7 +60,7 @@ function SidebarBody() {
       <SidebarContent className="flex flex-col h-full">
         {/* Logo */}
         <div className="px-5 pt-6 pb-2">
-          <h2 className="text-xl font-normal tracking-tight">miiles</h2>
+          <h2 className="text-xl font-normal tracking-tight">{collapsed ? "m" : "miiles"}</h2>
         </div>
 
         {/* Main navigation */}
