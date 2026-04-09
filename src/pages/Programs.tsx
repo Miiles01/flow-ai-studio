@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useSearchParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
@@ -25,6 +25,7 @@ const categoryOptions = ["todos", "deportes", "moda", "belleza", "tech", "genera
 
 export default function Programs() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [programs, setPrograms] = useState<Program[]>([]);
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
@@ -219,11 +220,12 @@ export default function Programs() {
             initial={{ y: 8, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: i * 0.03 }}
-            className="p-6 rounded-lg shadow-md transition-shadow duration-200 relative"
+            className="p-6 rounded-lg shadow-md transition-shadow duration-200 relative cursor-pointer hover:-translate-y-1 transition-transform"
+            onClick={() => navigate(`/programs/${p.id}`)}
           >
             {isAdmin && (
               <button
-                onClick={() => handleDeleteProgram(p.id)}
+                onClick={(e) => { e.stopPropagation(); handleDeleteProgram(p.id); }}
                 className="absolute top-3 right-3 p-1 rounded-full hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
                 title="Eliminar programa"
               >
@@ -251,7 +253,7 @@ export default function Programs() {
               <Button
                 size="sm"
                 variant={savedIds.has(p.id) ? "default" : "secondary"}
-                onClick={() => toggleSave(p.id)}
+                onClick={(e) => { e.stopPropagation(); toggleSave(p.id); }}
                 className="text-xs"
               >
                 {savedIds.has(p.id) ? <BookmarkCheck size={14} className="mr-1" /> : <Bookmark size={14} className="mr-1" />}
