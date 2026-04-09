@@ -224,27 +224,49 @@ const Onboarding = () => {
                 </div>
               )}
 
-              {/* Step 3: Videos */}
+              {/* Step 3: Portafolio */}
               {step === 3 && (
                 <div className="space-y-6">
                   <div>
-                    <h1 className="text-2xl font-light">Tus mejores videos</h1>
+                    <h1 className="text-2xl font-light">Portafolio</h1>
                     <p className="text-muted-foreground font-light text-sm mt-1">
-                      Pega los links de tus 3 videos más importantes.
+                      Agrega hasta 3 videos que representen tu mejor trabajo.
                     </p>
                   </div>
-                  <div className="space-y-5">
+                  <div className="grid grid-cols-3 gap-3">
                     {[
-                      { val: videoUrl1, set: setVideoUrl1, n: 1 },
-                      { val: videoUrl2, set: setVideoUrl2, n: 2 },
-                      { val: videoUrl3, set: setVideoUrl3, n: 3 },
-                    ].map(({ val, set, n }) => (
-                      <div key={n} className="space-y-2">
-                        <label className="text-xs text-muted-foreground font-light">Video {n}</label>
-                        <Input value={val} onChange={(e) => set(e.target.value)} placeholder="https://youtube.com/watch?v=..." className="shadow-sm border-none" />
-                        <VideoPreview url={val} />
-                      </div>
-                    ))}
+                      { val: videoUrl1, set: setVideoUrl1 },
+                      { val: videoUrl2, set: setVideoUrl2 },
+                      { val: videoUrl3, set: setVideoUrl3 },
+                    ].map(({ val, set }, i) => {
+                      const embedUrl = getVideoEmbedUrl(val);
+                      return (
+                        <div key={i} className="flex flex-col gap-2">
+                          <div className="aspect-[9/16] rounded-xl overflow-hidden shadow-sm bg-muted/40 relative group">
+                            {embedUrl ? (
+                              <iframe
+                                src={embedUrl}
+                                className="w-full h-full"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                                title={`Video ${i + 1}`}
+                              />
+                            ) : (
+                              <label className="flex flex-col items-center justify-center h-full cursor-pointer text-muted-foreground hover:text-foreground transition-colors">
+                                <Plus size={20} />
+                                <span className="text-[10px] font-light mt-1">Video {i + 1}</span>
+                              </label>
+                            )}
+                          </div>
+                          <Input
+                            value={val}
+                            onChange={(e) => set(e.target.value)}
+                            placeholder="Pega el link..."
+                            className="shadow-sm border-none text-xs h-8"
+                          />
+                        </div>
+                      );
+                    })}
                   </div>
                   <button
                     type="button"
