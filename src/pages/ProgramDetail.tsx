@@ -18,6 +18,7 @@ type Program = {
   is_featured: boolean;
   logo_url: string | null;
   banner_url: string | null;
+  banner_position: number;
 };
 
 type ApplicationStatus = "none" | "saved" | "applied";
@@ -112,6 +113,7 @@ export default function ProgramDetail() {
             src={program.banner_url}
             alt={program.brand_name}
             className="w-full h-48 object-cover rounded-lg mb-8"
+            style={{ objectPosition: `center ${program.banner_position}%` }}
             loading="lazy"
           />
         )}
