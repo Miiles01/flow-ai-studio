@@ -20,6 +20,7 @@ type Program = {
   program_url: string | null;
   is_featured: boolean;
   banner_url: string | null;
+  banner_position: number;
 };
 
 const categoryOptions = ["todos", "deportes", "moda", "belleza", "tech", "general"];
@@ -33,6 +34,7 @@ type ProgramFormData = {
   program_url: string;
   is_featured: boolean;
   banner_url: string;
+  banner_position: number;
 };
 
 const emptyForm: ProgramFormData = {
@@ -44,6 +46,7 @@ const emptyForm: ProgramFormData = {
   program_url: "",
   is_featured: false,
   banner_url: "",
+  banner_position: 50,
 };
 
 function ProgramFormDialog({
