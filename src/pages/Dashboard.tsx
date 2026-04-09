@@ -18,6 +18,8 @@ type Program = {
   category: string;
   commission_rate: string | null;
   is_featured: boolean;
+  banner_url: string | null;
+  banner_position: number;
 };
 
 type Notification = {
@@ -357,8 +359,18 @@ export default function Dashboard() {
               initial={{ y: 10, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: i * 0.05 }}
-              className="p-6 rounded-lg shadow-md hover:shadow-sm transition-shadow duration-200"
+              className="rounded-lg shadow-md hover:shadow-sm transition-shadow duration-200 overflow-hidden"
             >
+              {p.banner_url && (
+                <img
+                  src={p.banner_url}
+                  alt={p.brand_name}
+                  className="w-full h-36 object-cover"
+                  style={{ objectPosition: `center ${p.banner_position}%` }}
+                  loading="lazy"
+                />
+              )}
+              <div className="p-6">
               <div className="flex items-start justify-between">
                 <div>
                   <p className="font-normal">{p.brand_name}</p>
@@ -377,6 +389,7 @@ export default function Dashboard() {
               >
                 Ver detalles <ArrowRight size={12} />
               </Link>
+              </div>
             </motion.div>
           ))}
         </div>
