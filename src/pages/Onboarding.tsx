@@ -120,11 +120,6 @@ const Onboarding = () => {
 
       <div className="flex-1 flex items-center justify-center p-6">
         <div className="w-full max-w-md">
-          {/* Logo */}
-          <div className="flex items-center gap-2 mb-12 justify-center">
-            <img src={logoImg} alt="miiles" className="h-7 w-7" />
-            <span className="text-xl font-normal tracking-tight">miiles</span>
-          </div>
 
           <AnimatePresence mode="wait" custom={dir}>
             <motion.div
