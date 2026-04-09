@@ -152,7 +152,6 @@ function ProgramFormDialog({
               </div>
             )}
           </div>
-          </div>
           <label className="flex items-center gap-2 text-sm font-light cursor-pointer">
             <input
               type="checkbox"
