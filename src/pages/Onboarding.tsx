@@ -298,26 +298,41 @@ const Onboarding = () => {
           </AnimatePresence>
 
           {/* Navigation buttons */}
-          {step > 0 && (
-            <div className="flex gap-3 mt-10">
-              <Button variant="outline" onClick={prev} className="flex-1 shadow-sm border-none bg-muted/50">
-                <ArrowLeft size={16} className="mr-2" /> Atrás
-              </Button>
-              {step < TOTAL_STEPS - 1 ? (
-                <Button onClick={next} className="flex-1">
-                  Siguiente <ArrowRight size={16} className="ml-2" />
+          <AnimatePresence mode="wait">
+            {step > 0 && (
+              <motion.div
+                key={`nav-${step}`}
+                initial={{ y: 20, opacity: 0 }}
+                animate={{ y: 0, opacity: 1 }}
+                exit={{ y: 20, opacity: 0 }}
+                transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1], delay: 0.15 }}
+                className="flex gap-3 mt-10"
+              >
+                <Button variant="outline" onClick={prev} className="flex-1 shadow-sm border-none bg-muted/50">
+                  <ArrowLeft size={16} className="mr-2" /> Atrás
                 </Button>
-              ) : (
-                <Button onClick={handleFinish} className="flex-1" disabled={saving}>
-                  {saving && <Loader2 size={16} className="animate-spin mr-2" />}
-                  Finalizar
-                </Button>
-              )}
-            </div>
-          )}
+                {step < TOTAL_STEPS - 1 ? (
+                  <Button onClick={next} className="flex-1">
+                    Siguiente <ArrowRight size={16} className="ml-2" />
+                  </Button>
+                ) : (
+                  <Button onClick={handleFinish} className="flex-1" disabled={saving}>
+                    {saving && <Loader2 size={16} className="animate-spin mr-2" />}
+                    Finalizar
+                  </Button>
+                )}
+              </motion.div>
+            )}
+          </AnimatePresence>
 
           {/* Step indicator dots */}
-          <div className="flex justify-center gap-1.5 mt-8">
+          <motion.div
+            key={`dots-${step}`}
+            initial={{ y: 15, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1], delay: 0.25 }}
+            className="flex justify-center gap-1.5 mt-8"
+          >
             {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
               <div
                 key={i}
@@ -326,7 +341,7 @@ const Onboarding = () => {
                 }`}
               />
             ))}
-          </div>
+          </motion.div>
         </div>
       </div>
     </div>
