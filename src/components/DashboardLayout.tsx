@@ -1,6 +1,7 @@
 import { ReactNode, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Home, ShoppingBag, User, LogOut } from "lucide-react";
+import logoImg from "@/assets/logo.png";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { NavLink } from "@/components/NavLink";
@@ -59,8 +60,9 @@ function SidebarBody() {
     >
       <SidebarContent className="flex flex-col h-full">
         {/* Logo */}
-        <div className="px-5 pt-6 pb-2">
-          <h2 className="text-xl font-normal tracking-tight">{collapsed ? "m" : "miiles"}</h2>
+        <div className="px-5 pt-6 pb-2 flex items-center gap-2">
+          <img src={logoImg} alt="miiles" className={collapsed ? "h-6 w-6" : "h-7 w-7"} />
+          {!collapsed && <span className="text-xl font-normal tracking-tight">miiles</span>}
         </div>
 
         {/* Main navigation */}
