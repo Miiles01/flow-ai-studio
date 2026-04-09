@@ -95,8 +95,16 @@ export type Database = {
           id: string
           instagram_handle: string | null
           niche: string | null
+          onboarding_completed: boolean
+          phone: string | null
+          tiktok_handle: string | null
+          twitter_handle: string | null
           updated_at: string
           user_id: string
+          video_url_1: string | null
+          video_url_2: string | null
+          video_url_3: string | null
+          youtube_handle: string | null
         }
         Insert: {
           avatar_url?: string | null
@@ -106,8 +114,16 @@ export type Database = {
           id?: string
           instagram_handle?: string | null
           niche?: string | null
+          onboarding_completed?: boolean
+          phone?: string | null
+          tiktok_handle?: string | null
+          twitter_handle?: string | null
           updated_at?: string
           user_id: string
+          video_url_1?: string | null
+          video_url_2?: string | null
+          video_url_3?: string | null
+          youtube_handle?: string | null
         }
         Update: {
           avatar_url?: string | null
@@ -117,8 +133,16 @@ export type Database = {
           id?: string
           instagram_handle?: string | null
           niche?: string | null
+          onboarding_completed?: boolean
+          phone?: string | null
+          tiktok_handle?: string | null
+          twitter_handle?: string | null
           updated_at?: string
           user_id?: string
+          video_url_1?: string | null
+          video_url_2?: string | null
+          video_url_3?: string | null
+          youtube_handle?: string | null
         }
         Relationships: []
       }

@@ -29,7 +29,7 @@ const Register = () => {
       toast.error(error.message);
     } else {
       toast.success("¡Cuenta creada! Revisa tu email para confirmar.");
-      navigate("/login");
+      navigate("/onboarding");
     }
     setLoading(false);
   };
