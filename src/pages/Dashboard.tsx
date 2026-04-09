@@ -365,7 +365,7 @@ export default function Dashboard() {
                 <img
                   src={p.banner_url}
                   alt={p.brand_name}
-                  className="w-full h-36 object-cover"
+                  className="w-full h-44 object-cover"
                   style={{ objectPosition: `center ${p.banner_position}%` }}
                   loading="lazy"
                 />
