@@ -16,6 +16,7 @@ export type Database = {
     Tables: {
       brand_programs: {
         Row: {
+          banner_url: string | null
           brand_name: string
           category: string
           commission_rate: string | null
@@ -29,6 +30,7 @@ export type Database = {
           updated_at: string
         }
         Insert: {
+          banner_url?: string | null
           brand_name: string
           category?: string
           commission_rate?: string | null
@@ -42,6 +44,7 @@ export type Database = {
           updated_at?: string
         }
         Update: {
+          banner_url?: string | null
           brand_name?: string
           category?: string
           commission_rate?: string | null

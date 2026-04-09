@@ -17,6 +17,7 @@ type Program = {
   program_url: string | null;
   is_featured: boolean;
   logo_url: string | null;
+  banner_url: string | null;
 };
 
 type ApplicationStatus = "none" | "saved" | "applied";
@@ -104,6 +105,16 @@ export default function ProgramDetail() {
           <ArrowLeft size={16} />
           Volver a programas
         </button>
+
+        {/* Banner */}
+        {program.banner_url && (
+          <img
+            src={program.banner_url}
+            alt={program.brand_name}
+            className="w-full h-48 object-cover rounded-lg mb-8"
+            loading="lazy"
+          />
+        )}
 
         {/* Header */}
         <div className="space-y-3">

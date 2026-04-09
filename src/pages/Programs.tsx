@@ -19,6 +19,7 @@ type Program = {
   commission_rate: string | null;
   program_url: string | null;
   is_featured: boolean;
+  banner_url: string | null;
 };
 
 const categoryOptions = ["todos", "deportes", "moda", "belleza", "tech", "general"];
@@ -31,6 +32,7 @@ type ProgramFormData = {
   commission_rate: string;
   program_url: string;
   is_featured: boolean;
+  banner_url: string;
 };
 
 const emptyForm: ProgramFormData = {
@@ -41,6 +43,7 @@ const emptyForm: ProgramFormData = {
   commission_rate: "",
   program_url: "",
   is_featured: false,
+  banner_url: "",
 };
 
 function ProgramFormDialog({
@@ -116,6 +119,19 @@ function ProgramFormDialog({
           <div className="space-y-2">
             <Label className="font-light">URL del programa</Label>
             <Input type="url" placeholder="https://..." value={form.program_url} onChange={(e) => setForm({ ...form, program_url: e.target.value })} />
+          </div>
+          <div className="space-y-2">
+            <Label className="font-light">Banner (URL de imagen)</Label>
+            <Input type="url" placeholder="https://ejemplo.com/banner.jpg" value={form.banner_url} onChange={(e) => setForm({ ...form, banner_url: e.target.value })} />
+            {form.banner_url && (
+              <img
+                src={form.banner_url}
+                alt="Preview"
+                className="w-full h-24 object-cover rounded-md mt-1"
+                loading="lazy"
+                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
+              />
+            )}
           </div>
           <label className="flex items-center gap-2 text-sm font-light cursor-pointer">
             <input
@@ -195,6 +211,7 @@ export default function Programs() {
       commission_rate: data.commission_rate || null,
       program_url: data.program_url || null,
       is_featured: data.is_featured,
+      banner_url: data.banner_url || null,
     });
     if (error) {
       toast.error("Error al añadir programa");
@@ -217,6 +234,7 @@ export default function Programs() {
       commission_rate: data.commission_rate || null,
       program_url: data.program_url || null,
       is_featured: data.is_featured,
+      banner_url: data.banner_url || null,
     }).eq("id", editProgram.id);
     if (error) {
       toast.error("Error al actualizar programa");
@@ -304,9 +322,18 @@ export default function Programs() {
             initial={{ y: 8, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: i * 0.03 }}
-            className="p-6 rounded-lg shadow-md transition-shadow duration-200 relative cursor-pointer hover:-translate-y-1 transition-transform"
+            className="rounded-lg shadow-md transition-shadow duration-200 relative cursor-pointer hover:-translate-y-1 transition-transform overflow-hidden"
             onClick={() => navigate(`/programs/${p.id}`)}
           >
+            {p.banner_url && (
+              <img
+                src={p.banner_url}
+                alt={p.brand_name}
+                className="w-full h-32 object-cover"
+                loading="lazy"
+              />
+            )}
+            <div className="p-6">
             {isAdmin && (
               <div className="absolute top-3 right-3 flex gap-1">
                 <button
@@ -368,6 +395,7 @@ export default function Programs() {
                 </a>
               )}
             </div>
+            </div>
           </motion.div>
         ))}
       </div>
@@ -402,6 +430,7 @@ export default function Programs() {
             commission_rate: editProgram.commission_rate || "",
             program_url: editProgram.program_url || "",
             is_featured: editProgram.is_featured,
+            banner_url: editProgram.banner_url || "",
           }}
           onSubmit={handleEdit}
           saving={saving}
