@@ -389,6 +389,7 @@ export default function Dashboard() {
               >
                 Ver detalles <ArrowRight size={12} />
               </Link>
+              </div>
             </motion.div>
           ))}
         </div>
