@@ -25,6 +25,7 @@ const categoryOptions = ["todos", "deportes", "moda", "belleza", "tech", "genera
 
 export default function Programs() {
   const { user } = useAuth();
+  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [programs, setPrograms] = useState<Program[]>([]);
   const [savedIds, setSavedIds] = useState<Set<string>>(new Set());
@@ -219,7 +220,8 @@ export default function Programs() {
             initial={{ y: 8, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: i * 0.03 }}
-            className="p-6 rounded-lg shadow-md transition-shadow duration-200 relative"
+            className="p-6 rounded-lg shadow-md transition-shadow duration-200 relative cursor-pointer hover:-translate-y-1 transition-transform"
+            onClick={() => navigate(`/programs/${p.id}`)}
           >
             {isAdmin && (
               <button
