@@ -1,14 +1,14 @@
-import { ReactNode } from "react";
+import { ReactNode, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Home, ShoppingBag, Search, Workflow, User, LogOut } from "lucide-react";
+import { Home, ShoppingBag, User, LogOut } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 import { NavLink } from "@/components/NavLink";
 import {
   Sidebar,
   SidebarContent,
   SidebarGroup,
   SidebarGroupContent,
-  SidebarGroupLabel,
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
@@ -22,34 +22,49 @@ const mainNav = [
   { title: "Programas", url: "/programs", icon: ShoppingBag },
 ];
 
-const bottomNav = [
-  { title: "Mi Perfil", url: "/profile", icon: User },
-];
-
 function SidebarBody() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
-  const { signOut } = useAuth();
+  const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const [displayName, setDisplayName] = useState("");
+
+  useEffect(() => {
+    if (!user) return;
+    supabase
+      .from("profiles")
+      .select("display_name")
+      .eq("user_id", user.id)
+      .single()
+      .then(({ data }) => {
+        setDisplayName(data?.display_name || user.email?.split("@")[0] || "");
+      });
+  }, [user]);
 
   const handleSignOut = async () => {
     await signOut();
     navigate("/login");
   };
 
+  const initials = displayName
+    ? displayName.charAt(0).toUpperCase()
+    : user?.email?.charAt(0).toUpperCase() || "M";
+
   return (
-    <Sidebar collapsible="icon" variant="floating" className="rounded-lg" style={{ background: 'linear-gradient(to bottom, #FDFDFD, #F8F9FD)' }}>
+    <Sidebar
+      collapsible="icon"
+      variant="floating"
+      className="rounded-lg border-none"
+      style={{ background: "linear-gradient(to bottom, #FDFDFD, #F8F9FD)" }}
+    >
       <SidebarContent className="flex flex-col h-full">
         {/* Logo */}
-        <div className="px-4 py-6 flex items-center gap-3">
-          <div className="w-8 h-8 rounded-sm bg-foreground flex items-center justify-center flex-shrink-0">
-            <span className="text-background font-normal text-sm">M</span>
-          </div>
-          {!collapsed && <span className="text-base font-normal tracking-tight">Miiles</span>}
+        <div className="px-5 pt-6 pb-2">
+          <h2 className="text-xl font-normal tracking-tight">miiles</h2>
         </div>
 
         {/* Main navigation */}
-        <SidebarGroup>
+        <SidebarGroup className="mt-2">
           <SidebarGroupContent>
             <SidebarMenu>
               {mainNav.map((item) => (
@@ -58,7 +73,7 @@ function SidebarBody() {
                     <NavLink
                       to={item.url}
                       end={item.url === "/"}
-                      className="text-miiles-gray-400 hover:text-foreground hover:bg-muted transition-all duration-200 rounded-sm"
+                      className="text-muted-foreground hover:text-foreground hover:bg-muted transition-all duration-200 rounded-sm"
                       activeClassName="bg-muted text-foreground"
                     >
                       <item.icon className="mr-2 h-4 w-4" />
@@ -73,28 +88,14 @@ function SidebarBody() {
 
         <div className="flex-1" />
 
-        {/* Bottom nav */}
+        {/* Sign out */}
         <SidebarGroup>
           <SidebarGroupContent>
             <SidebarMenu>
-              {bottomNav.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
-                    <NavLink
-                      to={item.url}
-                      className="text-miiles-gray-400 hover:text-foreground hover:bg-muted transition-all duration-200 rounded-sm"
-                      activeClassName="bg-muted text-foreground"
-                    >
-                      <item.icon className="mr-2 h-4 w-4" />
-                      {!collapsed && <span className="font-light">{item.title}</span>}
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
               <SidebarMenuItem>
                 <SidebarMenuButton
                   onClick={handleSignOut}
-                  className="text-miiles-gray-400 hover:text-foreground hover:bg-muted transition-all duration-200 rounded-sm cursor-pointer"
+                  className="text-muted-foreground hover:text-foreground hover:bg-muted transition-all duration-200 rounded-sm cursor-pointer"
                 >
                   <LogOut className="mr-2 h-4 w-4" />
                   {!collapsed && <span className="font-light">Cerrar sesión</span>}
@@ -103,6 +104,22 @@ function SidebarBody() {
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
+
+        {/* User profile card at bottom */}
+        {!collapsed && (
+          <div
+            className="mx-3 mb-4 px-4 py-3 rounded-lg flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
+            onClick={() => navigate("/profile")}
+          >
+            <div className="w-9 h-9 rounded-full bg-foreground flex items-center justify-center flex-shrink-0">
+              <span className="text-background text-sm font-normal">{initials}</span>
+            </div>
+            <div className="min-w-0">
+              <p className="text-sm font-normal truncate">{displayName || "Usuario"}</p>
+              <p className="text-xs text-muted-foreground font-light">Plan Gratis</p>
+            </div>
+          </div>
+        )}
       </SidebarContent>
     </Sidebar>
   );
