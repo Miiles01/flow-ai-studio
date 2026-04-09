@@ -350,7 +350,7 @@ export default function Programs() {
               <img
                 src={p.banner_url}
                 alt={p.brand_name}
-                className="w-full h-44 object-cover"
+                className="w-full h-32 object-cover"
                 style={{ objectPosition: `center ${p.banner_position}%` }}
                 loading="lazy"
               />
