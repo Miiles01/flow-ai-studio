@@ -136,7 +136,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       <div className="min-h-screen flex w-full bg-background">
         <SidebarBody />
         <div className="flex-1 flex flex-col min-w-0">
-          <header className="h-12 flex items-center px-4">
+          <header className="h-12 flex items-center px-4 sticky top-0 z-10 bg-background">
             <SidebarTrigger />
           </header>
           <main className="flex-1 overflow-y-auto">{children}</main>
