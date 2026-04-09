@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
+import { Plus, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowRight, ArrowLeft, Loader2, SkipForward } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -64,10 +65,11 @@ const Onboarding = () => {
 
   // Form state
   const [bio, setBio] = useState("");
-  const [instagramHandle, setInstagramHandle] = useState("");
-  const [tiktokHandle, setTiktokHandle] = useState("");
-  const [youtubeHandle, setYoutubeHandle] = useState("");
-  const [twitterHandle, setTwitterHandle] = useState("");
+  const [socialLinks, setSocialLinks] = useState([
+    { platform: "Instagram", url: "" },
+    { platform: "TikTok", url: "" },
+    { platform: "YouTube", url: "" },
+  ]);
   const [videoUrl1, setVideoUrl1] = useState("");
   const [videoUrl2, setVideoUrl2] = useState("");
   const [videoUrl3, setVideoUrl3] = useState("");
@@ -75,7 +77,14 @@ const Onboarding = () => {
 
   const displayName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Usuario";
 
-  const next = () => { setDir(1); setStep((s) => Math.min(s + 1, TOTAL_STEPS - 1)); };
+  const hasAtLeastOneLink = socialLinks.some((l) => l.url.trim() !== "");
+  const next = () => {
+    if (step === 2 && !hasAtLeastOneLink) {
+      toast.error("Agrega al menos un link de red social");
+      return;
+    }
+    setDir(1); setStep((s) => Math.min(s + 1, TOTAL_STEPS - 1));
+  };
   const prev = () => { setDir(-1); setStep((s) => Math.max(s - 1, 0)); };
 
   const handleFinish = async () => {
@@ -85,10 +94,10 @@ const Onboarding = () => {
       .from("profiles")
       .update({
         bio,
-        instagram_handle: instagramHandle,
-        tiktok_handle: tiktokHandle,
-        youtube_handle: youtubeHandle,
-        twitter_handle: twitterHandle,
+        instagram_handle: socialLinks.find(l => l.platform === "Instagram")?.url || null,
+        tiktok_handle: socialLinks.find(l => l.platform === "TikTok")?.url || null,
+        youtube_handle: socialLinks.find(l => l.platform === "YouTube")?.url || null,
+        twitter_handle: socialLinks.find(l => l.platform === "X (Twitter)")?.url || null,
         video_url_1: videoUrl1 || null,
         video_url_2: videoUrl2 || null,
         video_url_3: videoUrl3 || null,
@@ -178,22 +187,39 @@ const Onboarding = () => {
                     </p>
                   </div>
                   <div className="space-y-4">
-                    <div>
-                      <label className="text-xs text-muted-foreground mb-1.5 block font-light">Instagram</label>
-                      <Input value={instagramHandle} onChange={(e) => setInstagramHandle(e.target.value)} placeholder="@tuusuario" className="shadow-sm border-none" />
-                    </div>
-                    <div>
-                      <label className="text-xs text-muted-foreground mb-1.5 block font-light">TikTok</label>
-                      <Input value={tiktokHandle} onChange={(e) => setTiktokHandle(e.target.value)} placeholder="@tuusuario" className="shadow-sm border-none" />
-                    </div>
-                    <div>
-                      <label className="text-xs text-muted-foreground mb-1.5 block font-light">YouTube</label>
-                      <Input value={youtubeHandle} onChange={(e) => setYoutubeHandle(e.target.value)} placeholder="@tucanal" className="shadow-sm border-none" />
-                    </div>
-                    <div>
-                      <label className="text-xs text-muted-foreground mb-1.5 block font-light">X (Twitter)</label>
-                      <Input value={twitterHandle} onChange={(e) => setTwitterHandle(e.target.value)} placeholder="@tuusuario" className="shadow-sm border-none" />
-                    </div>
+                    {socialLinks.map((link, i) => (
+                      <div key={i} className="flex items-center gap-2">
+                        <div className="flex-1 space-y-1.5">
+                          <label className="text-xs text-muted-foreground font-light">{link.platform}</label>
+                          <Input
+                            value={link.url}
+                            onChange={(e) => {
+                              const updated = [...socialLinks];
+                              updated[i] = { ...updated[i], url: e.target.value };
+                              setSocialLinks(updated);
+                            }}
+                            placeholder={`https://${link.platform.toLowerCase().replace(/\s|\(|\)/g, "")}.com/tuusuario`}
+                            className="shadow-sm border-none"
+                          />
+                        </div>
+                        {i >= 3 && (
+                          <button
+                            type="button"
+                            onClick={() => setSocialLinks(socialLinks.filter((_, j) => j !== i))}
+                            className="mt-5 p-1.5 text-muted-foreground hover:text-foreground transition-colors"
+                          >
+                            <X size={14} />
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                    <button
+                      type="button"
+                      onClick={() => setSocialLinks([...socialLinks, { platform: `Otro`, url: "" }])}
+                      className="flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors font-light"
+                    >
+                      <Plus size={14} /> Agregar otra red
+                    </button>
                   </div>
                 </div>
               )}
