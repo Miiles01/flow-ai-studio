@@ -3,8 +3,8 @@ import { useSearchParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
-import { Search, Bookmark, BookmarkCheck, ExternalLink, Loader2, Plus, X } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
+import { Search, Bookmark, BookmarkCheck, ExternalLink, Loader2, Plus, X, Pencil } from "lucide-react";
+import { motion } from "framer-motion";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
@@ -23,6 +23,119 @@ type Program = {
 
 const categoryOptions = ["todos", "deportes", "moda", "belleza", "tech", "general"];
 
+type ProgramFormData = {
+  name: string;
+  brand_name: string;
+  description: string;
+  category: string;
+  commission_rate: string;
+  program_url: string;
+  is_featured: boolean;
+};
+
+const emptyForm: ProgramFormData = {
+  name: "",
+  brand_name: "",
+  description: "",
+  category: "general",
+  commission_rate: "",
+  program_url: "",
+  is_featured: false,
+};
+
+function ProgramFormDialog({
+  open,
+  onOpenChange,
+  initialData,
+  onSubmit,
+  saving,
+  title,
+  submitLabel,
+}: {
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+  initialData: ProgramFormData;
+  onSubmit: (data: ProgramFormData) => void;
+  saving: boolean;
+  title: string;
+  submitLabel: string;
+}) {
+  const [form, setForm] = useState(initialData);
+
+  useEffect(() => {
+    setForm(initialData);
+  }, [initialData, open]);
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-md">
+        <DialogHeader>
+          <DialogTitle className="font-normal">{title}</DialogTitle>
+        </DialogHeader>
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            onSubmit(form);
+          }}
+          className="space-y-4 mt-2"
+        >
+          <div className="space-y-2">
+            <Label className="font-light">Marca</Label>
+            <Input value={form.brand_name} onChange={(e) => setForm({ ...form, brand_name: e.target.value })} required />
+          </div>
+          <div className="space-y-2">
+            <Label className="font-light">Nombre del programa</Label>
+            <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
+          </div>
+          <div className="space-y-2">
+            <Label className="font-light">Descripción</Label>
+            <textarea
+              value={form.description}
+              onChange={(e) => setForm({ ...form, description: e.target.value })}
+              className="w-full rounded-md bg-background shadow-sm px-3 py-2 text-sm font-light min-h-[80px] resize-none focus:outline-none"
+            />
+          </div>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="space-y-2">
+              <Label className="font-light">Categoría</Label>
+              <select
+                value={form.category}
+                onChange={(e) => setForm({ ...form, category: e.target.value })}
+                className="w-full rounded-md bg-background shadow-sm px-3 py-2 text-sm"
+              >
+                {categoryOptions.filter((c) => c !== "todos").map((c) => (
+                  <option key={c} value={c}>{c}</option>
+                ))}
+              </select>
+            </div>
+            <div className="space-y-2">
+              <Label className="font-light">Comisión</Label>
+              <Input placeholder="ej: 10%" value={form.commission_rate} onChange={(e) => setForm({ ...form, commission_rate: e.target.value })} />
+            </div>
+          </div>
+          <div className="space-y-2">
+            <Label className="font-light">URL del programa</Label>
+            <Input type="url" placeholder="https://..." value={form.program_url} onChange={(e) => setForm({ ...form, program_url: e.target.value })} />
+          </div>
+          <label className="flex items-center gap-2 text-sm font-light cursor-pointer">
+            <input
+              type="checkbox"
+              checked={form.is_featured}
+              onChange={(e) => setForm({ ...form, is_featured: e.target.checked })}
+              className="rounded"
+            />
+            Destacado
+          </label>
+          <Button type="submit" className="w-full" disabled={saving}>
+            {saving ? <Loader2 size={14} className="animate-spin mr-2" /> : null}
+            {submitLabel}
+          </Button>
+        </form>
+      </DialogContent>
+    </Dialog>
+  );
+}
+
 export default function Programs() {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -33,16 +146,14 @@ export default function Programs() {
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState(searchParams.get("category") || "todos");
   const [isAdmin, setIsAdmin] = useState(false);
-  const [dialogOpen, setDialogOpen] = useState(false);
+
+  // Add dialog
+  const [addOpen, setAddOpen] = useState(false);
   const [saving, setSaving] = useState(false);
-  const [newProgram, setNewProgram] = useState({
-    name: "",
-    brand_name: "",
-    description: "",
-    category: "general",
-    commission_rate: "",
-    program_url: "",
-  });
+
+  // Edit dialog
+  const [editOpen, setEditOpen] = useState(false);
+  const [editProgram, setEditProgram] = useState<Program | null>(null);
 
   useEffect(() => {
     loadData();
@@ -74,29 +185,51 @@ export default function Programs() {
     }
   }
 
-  async function handleAddProgram(e: React.FormEvent) {
-    e.preventDefault();
+  async function handleAdd(data: ProgramFormData) {
     setSaving(true);
     const { error } = await supabase.from("brand_programs").insert({
-      name: newProgram.name,
-      brand_name: newProgram.brand_name,
-      description: newProgram.description,
-      category: newProgram.category,
-      commission_rate: newProgram.commission_rate || null,
-      program_url: newProgram.program_url || null,
+      name: data.name,
+      brand_name: data.brand_name,
+      description: data.description,
+      category: data.category,
+      commission_rate: data.commission_rate || null,
+      program_url: data.program_url || null,
+      is_featured: data.is_featured,
     });
     if (error) {
       toast.error("Error al añadir programa");
     } else {
       toast.success("Programa añadido");
-      setNewProgram({ name: "", brand_name: "", description: "", category: "general", commission_rate: "", program_url: "" });
-      setDialogOpen(false);
+      setAddOpen(false);
       loadData();
     }
     setSaving(false);
   }
 
-  async function handleDeleteProgram(programId: string) {
+  async function handleEdit(data: ProgramFormData) {
+    if (!editProgram) return;
+    setSaving(true);
+    const { error } = await supabase.from("brand_programs").update({
+      name: data.name,
+      brand_name: data.brand_name,
+      description: data.description,
+      category: data.category,
+      commission_rate: data.commission_rate || null,
+      program_url: data.program_url || null,
+      is_featured: data.is_featured,
+    }).eq("id", editProgram.id);
+    if (error) {
+      toast.error("Error al actualizar programa");
+    } else {
+      toast.success("Programa actualizado");
+      setEditOpen(false);
+      setEditProgram(null);
+      loadData();
+    }
+    setSaving(false);
+  }
+
+  async function handleDelete(programId: string) {
     const { error } = await supabase.from("brand_programs").delete().eq("id", programId);
     if (error) {
       toast.error("Error al eliminar programa");
@@ -128,59 +261,10 @@ export default function Programs() {
           <p className="text-sm text-miiles-gray-400 font-light mt-2">Encuentra y guarda programas de afiliados y colaboraciones</p>
         </div>
         {isAdmin && (
-          <Dialog open={dialogOpen} onOpenChange={setDialogOpen}>
-            <DialogTrigger asChild>
-              <Button size="sm" className="gap-1.5">
-                <Plus size={14} />
-                Añadir programa
-              </Button>
-            </DialogTrigger>
-            <DialogContent className="sm:max-w-md">
-              <DialogHeader>
-                <DialogTitle className="font-normal">Nuevo programa</DialogTitle>
-              </DialogHeader>
-              <form onSubmit={handleAddProgram} className="space-y-4 mt-2">
-                <div className="space-y-2">
-                  <Label className="font-light">Marca</Label>
-                  <Input value={newProgram.brand_name} onChange={(e) => setNewProgram({ ...newProgram, brand_name: e.target.value })} required />
-                </div>
-                <div className="space-y-2">
-                  <Label className="font-light">Nombre del programa</Label>
-                  <Input value={newProgram.name} onChange={(e) => setNewProgram({ ...newProgram, name: e.target.value })} required />
-                </div>
-                <div className="space-y-2">
-                  <Label className="font-light">Descripción</Label>
-                  <Input value={newProgram.description} onChange={(e) => setNewProgram({ ...newProgram, description: e.target.value })} />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <Label className="font-light">Categoría</Label>
-                    <select
-                      value={newProgram.category}
-                      onChange={(e) => setNewProgram({ ...newProgram, category: e.target.value })}
-                      className="w-full rounded-md border border-input bg-background px-3 py-2 text-sm"
-                    >
-                      {categoryOptions.filter(c => c !== "todos").map(c => (
-                        <option key={c} value={c}>{c}</option>
-                      ))}
-                    </select>
-                  </div>
-                  <div className="space-y-2">
-                    <Label className="font-light">Comisión</Label>
-                    <Input placeholder="ej: 10%" value={newProgram.commission_rate} onChange={(e) => setNewProgram({ ...newProgram, commission_rate: e.target.value })} />
-                  </div>
-                </div>
-                <div className="space-y-2">
-                  <Label className="font-light">URL del programa</Label>
-                  <Input type="url" placeholder="https://..." value={newProgram.program_url} onChange={(e) => setNewProgram({ ...newProgram, program_url: e.target.value })} />
-                </div>
-                <Button type="submit" className="w-full" disabled={saving}>
-                  {saving ? <Loader2 size={14} className="animate-spin mr-2" /> : null}
-                  Añadir
-                </Button>
-              </form>
-            </DialogContent>
-          </Dialog>
+          <Button size="sm" className="gap-1.5" onClick={() => setAddOpen(true)}>
+            <Plus size={14} />
+            Añadir programa
+          </Button>
         )}
       </div>
 
@@ -224,15 +308,28 @@ export default function Programs() {
             onClick={() => navigate(`/programs/${p.id}`)}
           >
             {isAdmin && (
-              <button
-                onClick={(e) => { e.stopPropagation(); handleDeleteProgram(p.id); }}
-                className="absolute top-3 right-3 p-1 rounded-full hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
-                title="Eliminar programa"
-              >
-                <X size={14} />
-              </button>
+              <div className="absolute top-3 right-3 flex gap-1">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setEditProgram(p);
+                    setEditOpen(true);
+                  }}
+                  className="p-1 rounded-full hover:bg-miiles-blue-light text-muted-foreground hover:text-miiles-blue transition-colors"
+                  title="Editar programa"
+                >
+                  <Pencil size={14} />
+                </button>
+                <button
+                  onClick={(e) => { e.stopPropagation(); handleDelete(p.id); }}
+                  className="p-1 rounded-full hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
+                  title="Eliminar programa"
+                >
+                  <X size={14} />
+                </button>
+              </div>
             )}
-            <div className="flex items-start justify-between pr-6">
+            <div className="flex items-start justify-between pr-12">
               <div className="flex-1 min-w-0">
                 <p className="font-normal">{p.brand_name}</p>
                 <p className="text-xs text-miiles-gray-400 font-light mt-0.5">{p.name}</p>
@@ -264,6 +361,7 @@ export default function Programs() {
                   href={p.program_url}
                   target="_blank"
                   rel="noopener noreferrer"
+                  onClick={(e) => e.stopPropagation()}
                   className="text-xs text-accent hover:underline inline-flex items-center gap-1 font-light"
                 >
                   Visitar <ExternalLink size={12} />
@@ -278,6 +376,38 @@ export default function Programs() {
         <div className="text-center py-20 text-miiles-gray-400 font-light">
           <p>No se encontraron programas</p>
         </div>
+      )}
+
+      {/* Add program dialog */}
+      <ProgramFormDialog
+        open={addOpen}
+        onOpenChange={setAddOpen}
+        initialData={emptyForm}
+        onSubmit={handleAdd}
+        saving={saving}
+        title="Nuevo programa"
+        submitLabel="Añadir"
+      />
+
+      {/* Edit program dialog */}
+      {editProgram && (
+        <ProgramFormDialog
+          open={editOpen}
+          onOpenChange={(v) => { setEditOpen(v); if (!v) setEditProgram(null); }}
+          initialData={{
+            name: editProgram.name,
+            brand_name: editProgram.brand_name,
+            description: editProgram.description,
+            category: editProgram.category,
+            commission_rate: editProgram.commission_rate || "",
+            program_url: editProgram.program_url || "",
+            is_featured: editProgram.is_featured,
+          }}
+          onSubmit={handleEdit}
+          saving={saving}
+          title="Editar programa"
+          submitLabel="Guardar cambios"
+        />
       )}
     </div>
   );
