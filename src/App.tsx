@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import DashboardLayout from "@/components/DashboardLayout";
 import Dashboard from "./pages/Dashboard";
 import Programs from "./pages/Programs";
+import ProgramDetail from "./pages/ProgramDetail";
 import SearchAI from "./pages/SearchAI";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
@@ -71,6 +72,7 @@ const App = () => (
           <Routes>
             <Route path="/" element={<DashboardRoute><Dashboard /></DashboardRoute>} />
             <Route path="/programs" element={<DashboardRoute><Programs /></DashboardRoute>} />
+            <Route path="/programs/:id" element={<DashboardRoute><ProgramDetail /></DashboardRoute>} />
             {/* <Route path="/search" element={<DashboardRoute><SearchAI /></DashboardRoute>} /> */}
             {/* <Route path="/flows" element={<DashboardRoute><Index /></DashboardRoute>} /> */}
             <Route path="/profile" element={<DashboardRoute><Profile /></DashboardRoute>} />
