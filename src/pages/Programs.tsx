@@ -20,6 +20,7 @@ type Program = {
   program_url: string | null;
   is_featured: boolean;
   banner_url: string | null;
+  banner_position: number;
 };
 
 const categoryOptions = ["todos", "deportes", "moda", "belleza", "tech", "general"];
@@ -33,6 +34,7 @@ type ProgramFormData = {
   program_url: string;
   is_featured: boolean;
   banner_url: string;
+  banner_position: number;
 };
 
 const emptyForm: ProgramFormData = {
@@ -44,6 +46,7 @@ const emptyForm: ProgramFormData = {
   program_url: "",
   is_featured: false,
   banner_url: "",
+  banner_position: 50,
 };
 
 function ProgramFormDialog({
@@ -124,13 +127,29 @@ function ProgramFormDialog({
             <Label className="font-light">Banner (URL de imagen)</Label>
             <Input type="url" placeholder="https://ejemplo.com/banner.jpg" value={form.banner_url} onChange={(e) => setForm({ ...form, banner_url: e.target.value })} />
             {form.banner_url && (
-              <img
-                src={form.banner_url}
-                alt="Preview"
-                className="w-full h-24 object-cover rounded-md mt-1"
-                loading="lazy"
-                onError={(e) => { (e.target as HTMLImageElement).style.display = 'none'; }}
-              />
+              <div className="space-y-2 mt-1">
+                <div className="w-full h-24 rounded-md overflow-hidden relative">
+                  <img
+                    src={form.banner_url}
+                    alt="Preview"
+                    className="w-full h-full object-cover"
+                    style={{ objectPosition: `center ${form.banner_position}%` }}
+                    loading="lazy"
+                    onError={(e) => { (e.target as HTMLImageElement).parentElement!.style.display = 'none'; }}
+                  />
+                </div>
+                <div className="flex items-center gap-3">
+                  <span className="text-xs text-muted-foreground font-light shrink-0">Posición</span>
+                  <input
+                    type="range"
+                    min={0}
+                    max={100}
+                    value={form.banner_position}
+                    onChange={(e) => setForm({ ...form, banner_position: Number(e.target.value) })}
+                    className="w-full accent-primary h-1"
+                  />
+                </div>
+              </div>
             )}
           </div>
           <label className="flex items-center gap-2 text-sm font-light cursor-pointer">
@@ -212,6 +231,7 @@ export default function Programs() {
       program_url: data.program_url || null,
       is_featured: data.is_featured,
       banner_url: data.banner_url || null,
+      banner_position: data.banner_position,
     });
     if (error) {
       toast.error("Error al añadir programa");
@@ -235,6 +255,7 @@ export default function Programs() {
       program_url: data.program_url || null,
       is_featured: data.is_featured,
       banner_url: data.banner_url || null,
+      banner_position: data.banner_position,
     }).eq("id", editProgram.id);
     if (error) {
       toast.error("Error al actualizar programa");
@@ -330,6 +351,7 @@ export default function Programs() {
                 src={p.banner_url}
                 alt={p.brand_name}
                 className="w-full h-32 object-cover"
+                style={{ objectPosition: `center ${p.banner_position}%` }}
                 loading="lazy"
               />
             )}
@@ -431,6 +453,7 @@ export default function Programs() {
             program_url: editProgram.program_url || "",
             is_featured: editProgram.is_featured,
             banner_url: editProgram.banner_url || "",
+            banner_position: editProgram.banner_position ?? 50,
           }}
           onSubmit={handleEdit}
           saving={saving}
