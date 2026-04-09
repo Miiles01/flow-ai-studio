@@ -5,7 +5,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { Plus, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, ArrowLeft, Loader2, SkipForward, Sparkles } from "lucide-react";
+import { ArrowRight, ArrowLeft, Loader2, SkipForward, HandMetal } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -143,7 +143,7 @@ const Onboarding = () => {
               {/* Step 0: Welcome */}
               {step === 0 && (
                 <div className="text-center space-y-4">
-                  <Sparkles size={32} className="mx-auto text-foreground mb-2" strokeWidth={1.5} />
+                  <HandMetal size={32} className="mx-auto text-foreground mb-2" strokeWidth={1.5} />
                   <h1 className="text-3xl font-light">
                     Hola, <span className="font-normal">{displayName}</span>
                   </h1>
