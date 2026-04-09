@@ -112,7 +112,7 @@ export default function ProgramDetail() {
           <img
             src={program.banner_url}
             alt={program.brand_name}
-            className="w-full h-48 object-cover rounded-lg mb-8"
+            className="w-full h-56 object-cover rounded-lg mb-8"
             style={{ objectPosition: `center ${program.banner_position}%` }}
             loading="lazy"
           />
