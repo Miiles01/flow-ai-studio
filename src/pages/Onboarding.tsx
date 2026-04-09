@@ -138,7 +138,7 @@ const Onboarding = () => {
               initial="enter"
               animate="center"
               exit="exit"
-              transition={{ duration: 0.3, ease: "easeInOut" }}
+              transition={{ duration: 0.5, type: "spring", stiffness: 200, damping: 25 }}
             >
               {/* Step 0: Welcome */}
               {step === 0 && (
@@ -302,10 +302,10 @@ const Onboarding = () => {
             {step > 0 && (
               <motion.div
                 key={`nav-${step}`}
-                initial={{ y: 20, opacity: 0 }}
+                initial={{ y: 30, opacity: 0 }}
                 animate={{ y: 0, opacity: 1 }}
-                exit={{ y: 20, opacity: 0 }}
-                transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1], delay: 0.15 }}
+                exit={{ y: 30, opacity: 0 }}
+                transition={{ duration: 0.6, type: "spring", stiffness: 180, damping: 22, delay: 0.2 }}
                 className="flex gap-3 mt-10"
               >
                 <Button variant="outline" onClick={prev} className="flex-1 shadow-sm border-none bg-muted/50">
@@ -328,9 +328,9 @@ const Onboarding = () => {
           {/* Step indicator dots */}
           <motion.div
             key={`dots-${step}`}
-            initial={{ y: 15, opacity: 0 }}
+            initial={{ y: 20, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.5, ease: [0.25, 0.1, 0.25, 1], delay: 0.25 }}
+            transition={{ duration: 0.6, type: "spring", stiffness: 180, damping: 22, delay: 0.35 }}
             className="flex justify-center gap-1.5 mt-8"
           >
             {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
