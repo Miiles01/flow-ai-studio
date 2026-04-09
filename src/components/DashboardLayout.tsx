@@ -54,7 +54,7 @@ function SidebarBody() {
     <Sidebar
       collapsible="icon"
       variant="floating"
-      className="rounded-lg border-none"
+      className="rounded-2xl border-none"
       style={{ background: "linear-gradient(to bottom, #FDFDFD, #F8F9FD)" }}
     >
       <SidebarContent className="flex flex-col h-full">
@@ -107,18 +107,21 @@ function SidebarBody() {
 
         {/* User profile card at bottom */}
         {!collapsed && (
-          <div
-            className="mx-3 mb-4 px-4 py-3 rounded-lg flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
-            onClick={() => navigate("/profile")}
-          >
-            <div className="w-9 h-9 rounded-full bg-foreground flex items-center justify-center flex-shrink-0">
-              <span className="text-background text-sm font-normal">{initials}</span>
+          <>
+            <div className="mx-5 border-t border-muted-foreground/10" />
+            <div
+              className="mx-3 mb-4 mt-3 px-4 py-3 flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
+              onClick={() => navigate("/profile")}
+            >
+              <div className="w-9 h-9 rounded-full bg-foreground flex items-center justify-center flex-shrink-0">
+                <span className="text-background text-sm font-normal">{initials}</span>
+              </div>
+              <div className="min-w-0">
+                <p className="text-sm font-normal truncate">{displayName || "Usuario"}</p>
+                <p className="text-xs text-muted-foreground font-light">Plan Gratis</p>
+              </div>
             </div>
-            <div className="min-w-0">
-              <p className="text-sm font-normal truncate">{displayName || "Usuario"}</p>
-              <p className="text-xs text-muted-foreground font-light">Plan Gratis</p>
-            </div>
-          </div>
+          </>
         )}
       </SidebarContent>
     </Sidebar>
