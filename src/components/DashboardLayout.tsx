@@ -60,7 +60,7 @@ function SidebarBody() {
     >
       <SidebarContent className="flex flex-col h-full">
         {/* Logo */}
-        <div className="px-5 pt-6 pb-2 flex items-center gap-2">
+        <div className={`pt-6 pb-2 flex items-center ${collapsed ? "justify-center px-2" : "px-5 gap-2"}`}>
           <img src={logoImg} alt="miiles" className={collapsed ? "h-6 w-6" : "h-7 w-7"} />
           {!collapsed && <span className="text-xl font-normal tracking-tight">miiles</span>}
         </div>
