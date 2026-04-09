@@ -1,51 +1,36 @@
 
 
-## Onboarding System for Miiles
+## Plan: Página de detalle de programa con postulación
 
-### What We're Building
-A multi-step onboarding flow that appears after registration (and for existing users who haven't completed it). Steps:
+### Resumen
+Crear una página de detalle `/programs/:id` donde el usuario ve toda la información del programa y puede postularse. En la lista de programas, cada tarjeta será clickeable y llevará a esta página.
 
-1. **Bienvenida** — Greeting screen with the user's name
-2. **Sobre ti** — Text area for bio/description of what they do
-3. **Redes sociales** — Instagram, TikTok, YouTube, Twitter handles
-4. **Tus videos** — 3 video link inputs with live preview (embed). "Saltar" button for non-creators
-5. **Contacto** — Phone number input
+### Cambios
 
-A progress indicator at the top shows which step the user is on. Clean, minimal design following the Miiles design system.
+**1. Nueva página `src/pages/ProgramDetail.tsx`**
+- Recibe el `id` del programa desde la URL (`useParams`)
+- Carga el programa desde `brand_programs` por ID
+- Muestra: marca, nombre, descripción completa, categoría, comisión, URL externa
+- Botón "Postularme" que inserta en `user_applications` con status `"applied"`
+- Si ya se postuló, muestra estado actual ("Postulado", "Guardado")
+- Botón para volver a la lista
 
-### Database Changes
-Add columns to the `profiles` table via migration:
-- `tiktok_handle` (text, nullable)
-- `youtube_handle` (text, nullable)
-- `twitter_handle` (text, nullable)
-- `phone` (text, nullable)
-- `video_url_1` (text, nullable)
-- `video_url_2` (text, nullable)
-- `video_url_3` (text, nullable)
-- `onboarding_completed` (boolean, default false)
+**2. Modificar `src/pages/Programs.tsx`**
+- Hacer cada tarjeta de programa clickeable con `useNavigate` hacia `/programs/:id`
+- Mantener el botón guardar pero el clic en la tarjeta navega al detalle
 
-### Files to Create/Edit
+**3. Modificar `src/App.tsx`**
+- Añadir ruta `/programs/:id` con `DashboardRoute` apuntando a `ProgramDetail`
 
-**New: `src/pages/Onboarding.tsx`**
-- Multi-step form component with 5 steps
-- Step progress bar at top (thin line, Miiles style)
-- Framer Motion transitions between steps
-- Video preview: parse YouTube/TikTok/Instagram URLs and render embed iframes
-- "Saltar" (skip) button on the video step
-- Saves all data to `profiles` table on completion, sets `onboarding_completed = true`
+**4. Base de datos**
+- No se necesitan cambios de esquema. La tabla `user_applications` ya tiene `status` como texto libre, se usará `"applied"` para postulaciones.
 
-**Edit: `src/App.tsx`**
-- Add `/onboarding` route as a protected route (no sidebar layout)
-- Redirect users to `/onboarding` if `onboarding_completed` is false
-
-**Edit: `src/pages/Register.tsx`**
-- After successful registration, navigate to `/onboarding` instead of `/login`
-
-### Design
-- Full-screen, centered layout (no sidebar)
-- Miiles logo at top
-- Large heading per step, light subtitle
-- Inputs: white bg, no border, shadow-sm (per design system)
-- Black primary button, Poppins 300/400 only
-- Smooth step transitions with framer-motion
+### Diseño de la página de detalle
+- Header con marca y nombre del programa
+- Badges de categoría y comisión
+- Descripción completa (sin truncar)
+- Enlace externo al programa si existe
+- Botón principal "Postularme" (o estado si ya aplicó)
+- Botón secundario "Volver a programas"
+- Animaciones de entrada consistentes con el resto de la app
 
