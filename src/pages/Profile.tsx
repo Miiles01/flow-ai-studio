@@ -15,7 +15,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import AvatarUpload from "@/components/AvatarUpload";
-import { supabase as sb } from "@/integrations/supabase/client";
+
 
 const Profile = () => {
   const { user, signOut } = useAuth();
