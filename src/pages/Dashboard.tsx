@@ -63,6 +63,7 @@ export default function Dashboard() {
   const [notifOpen, setNotifOpen] = useState(false);
   const [selectedNotif, setSelectedNotif] = useState<Notification | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
   // Admin send notification state
   const [sendOpen, setSendOpen] = useState(false);
