@@ -2,10 +2,10 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { Bell, TrendingUp, Bookmark, ArrowRight, Loader2, Send, X } from "lucide-react";
+import { Bell, Heart, ArrowRight, Loader2, Send, X, Trash2 } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
@@ -42,11 +42,22 @@ function getGreeting() {
   return "Buenas noches";
 }
 
+type UserApplication = {
+  id: string;
+  program_id: string;
+  status: string;
+  created_at: string;
+  program_name?: string;
+  brand_name?: string;
+};
+
 export default function Dashboard() {
   const { user } = useAuth();
   const [displayName, setDisplayName] = useState("");
   const [featured, setFeatured] = useState<Program[]>([]);
   const [savedCount, setSavedCount] = useState(0);
+  const [applications, setApplications] = useState<UserApplication[]>([]);
+  const [appsOpen, setAppsOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [notifOpen, setNotifOpen] = useState(false);
@@ -70,12 +81,34 @@ export default function Dashboard() {
       supabase.from("user_applications").select("id", { count: "exact" }).eq("user_id", user.id),
       supabase.from("notifications").select("*").eq("recipient_id", user.id).order("created_at", { ascending: false }).limit(50),
       supabase.from("user_roles").select("role").eq("user_id", user.id).eq("role", "admin").maybeSingle(),
-    ]).then(([profileRes, programsRes, appsRes, notifRes, roleRes]) => {
+    ]).then(async ([profileRes, programsRes, appsRes, notifRes, roleRes]) => {
       setDisplayName(profileRes.data?.display_name || user.email?.split("@")[0] || "");
       setFeatured((programsRes.data as Program[]) || []);
       setSavedCount(appsRes.count || 0);
       setNotifications((notifRes.data as Notification[]) || []);
       setIsAdmin(!!roleRes.data);
+
+      // Load applications with program names
+      const { data: appsData } = await supabase
+        .from("user_applications")
+        .select("id, program_id, status, created_at")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false });
+
+      if (appsData && appsData.length > 0) {
+        const programIds = [...new Set(appsData.map((a) => a.program_id))];
+        const { data: programs } = await supabase
+          .from("brand_programs")
+          .select("id, name, brand_name")
+          .in("id", programIds);
+
+        const merged = appsData.map((a) => {
+          const p = programs?.find((pr) => pr.id === a.program_id);
+          return { ...a, program_name: p?.name || "", brand_name: p?.brand_name || "" };
+        });
+        setApplications(merged);
+      }
+
       setLoading(false);
     });
   }, [user]);
@@ -157,7 +190,7 @@ export default function Dashboard() {
       </motion.div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-5">
+      <div className="grid grid-cols-2 gap-5">
         {/* Notifications card */}
         <motion.div
           initial={{ y: 10, opacity: 0 }}
@@ -181,26 +214,14 @@ export default function Dashboard() {
           initial={{ y: 10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.05 }}
-          className="p-5 rounded-lg shadow-md"
+          className="p-5 rounded-lg shadow-md cursor-pointer hover:-translate-y-1 transition-transform duration-200"
+          onClick={() => setAppsOpen(true)}
         >
           <div className="w-8 h-8 rounded-sm bg-background shadow-sm flex items-center justify-center mb-3">
-            <Bookmark size={16} className="text-miiles-blue" />
+            <Heart size={16} className="text-miiles-pink" />
           </div>
           <p className="text-2xl font-normal">{savedCount}</p>
-          <p className="text-xs text-miiles-gray-400 font-light mt-1">Guardados</p>
-        </motion.div>
-
-        <motion.div
-          initial={{ y: 10, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.1 }}
-          className="p-5 rounded-lg shadow-md"
-        >
-          <div className="w-8 h-8 rounded-sm bg-background shadow-sm flex items-center justify-center mb-3">
-            <TrendingUp size={16} className="text-miiles-blue" />
-          </div>
-          <p className="text-2xl font-normal">Deportes</p>
-          <p className="text-xs text-miiles-gray-400 font-light mt-1">Tendencia</p>
+          <p className="text-xs text-miiles-gray-400 font-light mt-1">Proyectos</p>
         </motion.div>
       </div>
 
@@ -275,7 +296,66 @@ export default function Dashboard() {
         </DialogContent>
       </Dialog>
 
-      {/* Admin: send notification dialog */}
+      {/* Projects / Applications popup */}
+      <Dialog open={appsOpen} onOpenChange={setAppsOpen}>
+        <DialogContent className="sm:max-w-md max-h-[70vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="font-normal">Mis proyectos</DialogTitle>
+          </DialogHeader>
+          {applications.length === 0 ? (
+            <p className="text-sm text-miiles-gray-400 font-light py-8 text-center">No tienes postulaciones aún</p>
+          ) : (
+            <div className="space-y-2">
+              {applications.map((app) => (
+                <div
+                  key={app.id}
+                  className="flex items-center justify-between p-3 rounded-md hover:bg-muted/50 transition-colors"
+                >
+                  <Link
+                    to={`/programs/${app.program_id}`}
+                    className="flex-1 min-w-0"
+                    onClick={() => setAppsOpen(false)}
+                  >
+                    <p className="text-sm font-normal truncate">{app.brand_name}</p>
+                    <p className="text-[10px] text-miiles-gray-400 font-light mt-0.5">{app.program_name}</p>
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className={`text-[10px] px-2 py-0.5 rounded-full font-light ${
+                        app.status === "applied"
+                          ? "bg-miiles-blue-light text-miiles-blue"
+                          : "bg-muted text-muted-foreground"
+                      }`}>
+                        {app.status === "applied" ? "Postulado" : "Guardado"}
+                      </span>
+                      <span className="text-[10px] text-miiles-gray-400 font-light">
+                        {new Date(app.created_at).toLocaleDateString("es-ES", { day: "numeric", month: "short" })}
+                      </span>
+                    </div>
+                  </Link>
+                  <button
+                    onClick={async () => {
+                      const { error } = await supabase
+                        .from("user_applications")
+                        .delete()
+                        .eq("id", app.id);
+                      if (!error) {
+                        setApplications((prev) => prev.filter((a) => a.id !== app.id));
+                        setSavedCount((c) => Math.max(0, c - 1));
+                        toast.success("Postulación eliminada");
+                      } else {
+                        toast.error("Error al eliminar");
+                      }
+                    }}
+                    className="p-2 text-miiles-gray-400 hover:text-destructive-foreground transition-colors flex-shrink-0"
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
       <Dialog open={sendOpen} onOpenChange={setSendOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
