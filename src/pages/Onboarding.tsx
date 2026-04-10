@@ -11,19 +11,9 @@ import { Textarea } from "@/components/ui/textarea";
 import AvatarUpload from "@/components/AvatarUpload";
 import onboardingHero from "@/assets/onboarding-hero.png";
 import onboardingDone from "@/assets/onboarding-done.png";
+import { getVideoEmbedUrl } from "@/lib/videoEmbed";
 
 const TOTAL_STEPS = 7;
-
-function getVideoEmbedUrl(url: string): string | null {
-  if (!url.trim()) return null;
-  const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/);
-  if (ytMatch) return `https://www.youtube.com/embed/${ytMatch[1]}`;
-  const ttMatch = url.match(/tiktok\.com\/@[^/]+\/video\/(\d+)/);
-  if (ttMatch) return `https://www.tiktok.com/embed/v2/${ttMatch[1]}`;
-  const igMatch = url.match(/instagram\.com\/(?:reel|p)\/([a-zA-Z0-9_-]+)/);
-  if (igMatch) return `https://www.instagram.com/p/${igMatch[1]}/embed`;
-  return null;
-}
 
 /* TikTok & X icons (not in lucide) */
 const TikTokIcon = ({ size = 20 }: { size?: number }) => (
