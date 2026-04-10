@@ -335,7 +335,7 @@ const Onboarding = () => {
                 <div className="text-center space-y-6 max-w-md mx-auto">
                   <AnimatedText text="Tu foto de perfil" className="text-2xl font-semibold" />
                   <p className="text-muted-foreground font-light text-sm">
-                    Agrega una foto para que las marcas te reconozcan.
+                    Agrega una foto para que las marcas te reconozcan. Tu foto de perfil también se muestra en el sidebar.
                   </p>
                   <div className="flex flex-col items-center gap-3 py-4">
                     <AvatarUpload
