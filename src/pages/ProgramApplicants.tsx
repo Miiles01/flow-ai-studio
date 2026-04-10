@@ -135,9 +135,10 @@ export default function ProgramApplicants() {
             ))}
           </div>
         )}
-      </motion.div>
+        </motion.div>
 
-      <ApplicantProfile applicant={selected} open={!!selected} onOpenChange={(v) => !v && setSelected(null)} />
+        <ApplicantProfile applicant={selected} open={!!selected} onOpenChange={(v) => !v && setSelected(null)} />
+      </div>
     </div>
   );
 }
