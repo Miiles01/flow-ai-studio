@@ -29,16 +29,18 @@ function SidebarBody() {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
   const [displayName, setDisplayName] = useState("");
+  const [avatarUrl, setAvatarUrl] = useState("");
 
   useEffect(() => {
     if (!user) return;
     supabase
       .from("profiles")
-      .select("display_name")
+      .select("display_name, avatar_url")
       .eq("user_id", user.id)
       .single()
       .then(({ data }) => {
         setDisplayName(data?.display_name || user.email?.split("@")[0] || "");
+        setAvatarUrl(data?.avatar_url || "");
       });
   }, [user]);
 
@@ -99,8 +101,12 @@ function SidebarBody() {
               className="mx-3 mb-4 mt-3 px-4 py-3 flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
               onClick={() => navigate("/profile")}
             >
-              <div className="w-9 h-9 rounded-full bg-foreground flex items-center justify-center flex-shrink-0">
-                <span className="text-background text-sm font-normal">{initials}</span>
+              <div className="w-9 h-9 rounded-full bg-foreground flex items-center justify-center flex-shrink-0 overflow-hidden">
+                {avatarUrl ? (
+                  <img src={avatarUrl} alt={displayName || "Usuario"} className="w-full h-full object-cover" />
+                ) : (
+                  <span className="text-background text-sm font-normal">{initials}</span>
+                )}
               </div>
               <div className="min-w-0">
                 <p className="text-sm font-normal truncate">{displayName || "Usuario"}</p>
