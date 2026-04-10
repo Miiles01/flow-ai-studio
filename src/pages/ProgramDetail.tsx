@@ -24,6 +24,7 @@ type Program = {
   logo_url: string | null;
   banner_url: string | null;
   banner_position: number;
+  avg_sales: number;
   price_min: number | null;
   price_max: number | null;
   gallery_images: string[];
@@ -130,6 +131,7 @@ export default function ProgramDetail() {
             commissionRate={program.commission_rate}
             priceMin={program.price_min}
             priceMax={program.price_max}
+            avgSales={program.avg_sales}
           />
           {isAdmin && (
             <button
@@ -258,12 +260,14 @@ function AdminEditDialog({
   const [priceMin, setPriceMin] = useState(String(program.price_min ?? ""));
   const [priceMax, setPriceMax] = useState(String(program.price_max ?? ""));
   const [commissionRate, setCommissionRate] = useState(program.commission_rate ?? "");
+  const [avgSales, setAvgSales] = useState(String(program.avg_sales ?? 20));
   const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     setPriceMin(String(program.price_min ?? ""));
     setPriceMax(String(program.price_max ?? ""));
     setCommissionRate(program.commission_rate ?? "");
+    setAvgSales(String(program.avg_sales ?? 20));
   }, [program, open]);
 
   async function handleSave() {
@@ -272,12 +276,14 @@ function AdminEditDialog({
       price_min: priceMin ? Number(priceMin) : null,
       price_max: priceMax ? Number(priceMax) : null,
       commission_rate: commissionRate || null,
+      avg_sales: avgSales ? Number(avgSales) : 20,
     } as any).eq("id", program.id);
     if (!error) {
       onSave({
         price_min: priceMin ? Number(priceMin) : null,
         price_max: priceMax ? Number(priceMax) : null,
         commission_rate: commissionRate || null,
+        avg_sales: avgSales ? Number(avgSales) : 20,
       });
       onOpenChange(false);
       toast.success("Datos actualizados");
@@ -307,6 +313,10 @@ function AdminEditDialog({
           <div className="space-y-1.5">
             <Label className="font-light text-xs">Comisión</Label>
             <Input value={commissionRate} onChange={(e) => setCommissionRate(e.target.value)} placeholder="ej: 10%" />
+          </div>
+          <div className="space-y-1.5">
+            <Label className="font-light text-xs">Ventas promedio por afiliado</Label>
+            <Input type="number" value={avgSales} onChange={(e) => setAvgSales(e.target.value)} placeholder="20" />
           </div>
           <Button onClick={handleSave} disabled={saving} className="w-full">
             {saving ? <Loader2 size={14} className="animate-spin mr-2" /> : null}
