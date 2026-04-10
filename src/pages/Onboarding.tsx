@@ -488,6 +488,13 @@ const Onboarding = () => {
                   >
                     <SkipForward size={14} /> No soy creador de contenido
                   </button>
+                  {(videoUrl1 || videoUrl2 || videoUrl3) && (
+                    <div className="flex justify-center">
+                      <Button onClick={next} className="rounded-full px-8 text-sm">
+                        Continuar
+                      </Button>
+                    </div>
+                  )}
                 </div>
               )}
 
