@@ -113,7 +113,7 @@ const Profile = () => {
   const handleAvatarUploaded = async (url: string) => {
     setAvatarUrl(url);
     if (user) {
-      await supabase.from("profiles").update({ avatar_url: url } as any).eq("user_id", user.id);
+      await supabase.from("profiles").update({ avatar_url: url }).eq("user_id", user.id);
     }
   };
 
