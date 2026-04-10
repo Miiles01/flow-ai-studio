@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { forwardRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -50,10 +50,11 @@ const slideVariants = {
 };
 
 /* Custom SplitText using framer-motion matching requested GSAP curve */
-export const AnimatedText = ({ text, className = "" }: { text: string; className?: string }) => {
+export const AnimatedText = forwardRef<HTMLDivElement, { text: string; className?: string }>(({ text, className = "" }, ref) => {
   const words = text.split(" ");
   return (
     <motion.div
+      ref={ref}
       initial="hidden"
       animate="visible"
       className={className}
@@ -69,10 +70,10 @@ export const AnimatedText = ({ text, className = "" }: { text: string; className
           className="inline-block mr-[0.25em]"
           variants={{
             hidden: { y: 40, opacity: 0 },
-            visible: { 
-              y: 0, 
-              opacity: 1, 
-              transition: { duration: 0.8, ease: "easeOut" } 
+            visible: {
+              y: 0,
+              opacity: 1,
+              transition: { duration: 0.8, ease: "easeOut" }
             }
           }}
         >
@@ -81,7 +82,9 @@ export const AnimatedText = ({ text, className = "" }: { text: string; className
       ))}
     </motion.div>
   );
-};
+});
+
+AnimatedText.displayName = "AnimatedText";
 
 /* Floating input for adding/editing a video link */
 function VideoLinkPopover({
@@ -111,10 +114,13 @@ function VideoLinkPopover({
           placeholder="https://youtube.com/watch?v=..."
           className="bg-background/10 border-none shadow-none text-background placeholder:text-background/40 text-base h-12"
         />
+        <p className="text-xs text-background/60">
+          Acepta links públicos de YouTube, TikTok, Instagram, Facebook, Vimeo y Loom.
+        </p>
         <div className="flex gap-3">
           <button
             type="button"
-            onClick={() => onSave(draft)}
+            onClick={() => onSave(draft.trim())}
             className="flex-1 text-sm py-2.5 rounded-xl bg-background text-foreground font-medium"
           >
             Guardar
@@ -495,34 +501,27 @@ const Onboarding = () => {
                       const isEditing = editingVideo === i;
                       return (
                         <div key={i} className="relative">
-                          <div className="aspect-[9/16] rounded-xl overflow-hidden shadow-sm bg-muted/40 relative group">
+                          <div className="aspect-[9/16] rounded-xl overflow-hidden shadow-sm bg-muted/40 relative">
                             {embedUrl ? (
-                              <>
-                                <iframe
-                                  src={embedUrl}
-                                  className="w-full h-full"
-                                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                  allowFullScreen
-                                  title={`Video ${i + 1}`}
-                                />
-                                {/* Edit / remove overlay */}
-                                <div className="absolute inset-0 bg-foreground/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                                  <button
-                                    type="button"
-                                    onClick={() => setEditingVideo(i)}
-                                    className="p-2 rounded-full bg-background/90 text-foreground"
-                                  >
-                                    <Pencil size={14} />
-                                  </button>
-                                  <button
-                                    type="button"
-                                    onClick={() => { set(""); setEditingVideo(null); }}
-                                    className="p-2 rounded-full bg-background/90 text-foreground"
-                                  >
-                                    <X size={14} />
-                                  </button>
-                                </div>
-                              </>
+                              <iframe
+                                src={embedUrl}
+                                className="w-full h-full"
+                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                allowFullScreen
+                                loading="lazy"
+                                referrerPolicy="strict-origin-when-cross-origin"
+                                title={`Video ${i + 1}`}
+                              />
+                            ) : val.trim() ? (
+                              <button
+                                type="button"
+                                onClick={() => setEditingVideo(i)}
+                                className="flex h-full w-full flex-col items-center justify-center gap-2 px-4 text-center text-muted-foreground hover:text-foreground transition-colors"
+                              >
+                                <Pencil size={18} />
+                                <span className="text-xs font-light">No se pudo generar el preview</span>
+                                <span className="text-[10px] font-light opacity-80">Edita el link o usa un enlace público.</span>
+                              </button>
                             ) : (
                               <button
                                 type="button"
@@ -532,6 +531,25 @@ const Onboarding = () => {
                                 <Plus size={20} />
                                 <span className="text-[10px] font-light mt-1">Video {i + 1}</span>
                               </button>
+                            )}
+
+                            {val.trim() && (
+                              <div className="absolute right-2 top-2 z-10 flex items-center gap-2">
+                                <button
+                                  type="button"
+                                  onClick={() => setEditingVideo(i)}
+                                  className="p-2 rounded-full bg-background/90 text-foreground shadow-sm"
+                                >
+                                  <Pencil size={14} />
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => { set(""); setEditingVideo(null); }}
+                                  className="p-2 rounded-full bg-background/90 text-foreground shadow-sm"
+                                >
+                                  <X size={14} />
+                                </button>
+                              </div>
                             )}
                           </div>
                           {/* Floating dark input */}

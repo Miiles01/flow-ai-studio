@@ -268,25 +268,27 @@ const Profile = () => {
                   const embedUrl = getVideoEmbedUrl(val);
                   return (
                     <div key={i} className="relative">
-                      <div className="aspect-[9/16] rounded-xl overflow-hidden bg-muted/40 relative group">
+                      <div className="aspect-[9/16] rounded-xl overflow-hidden bg-muted/40 relative">
                         {embedUrl ? (
-                          <>
-                            <iframe
-                              src={embedUrl}
-                              className="w-full h-full"
-                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                              allowFullScreen
-                              title={`Video ${i + 1}`}
-                            />
-                            <div className="absolute inset-0 bg-foreground/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
-                              <button type="button" onClick={() => setEditingVideo(i)} className="p-2 rounded-full bg-background/90 text-foreground">
-                                <Pencil size={14} />
-                              </button>
-                              <button type="button" onClick={() => { set(""); setEditingVideo(null); }} className="p-2 rounded-full bg-background/90 text-foreground">
-                                <X size={14} />
-                              </button>
-                            </div>
-                          </>
+                          <iframe
+                            src={embedUrl}
+                            className="w-full h-full"
+                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                            allowFullScreen
+                            loading="lazy"
+                            referrerPolicy="strict-origin-when-cross-origin"
+                            title={`Video ${i + 1}`}
+                          />
+                        ) : val.trim() ? (
+                          <button
+                            type="button"
+                            onClick={() => setEditingVideo(i)}
+                            className="flex h-full w-full flex-col items-center justify-center gap-2 px-4 text-center text-muted-foreground hover:text-foreground transition-colors"
+                          >
+                            <Pencil size={18} />
+                            <span className="text-xs font-light">No se pudo generar el preview</span>
+                            <span className="text-[10px] font-light opacity-80">Edita el link o usa un enlace público.</span>
+                          </button>
                         ) : (
                           <button
                             type="button"
@@ -296,6 +298,17 @@ const Profile = () => {
                             <Plus size={20} />
                             <span className="text-[10px] font-light mt-1">Video {i + 1}</span>
                           </button>
+                        )}
+
+                        {val.trim() && (
+                          <div className="absolute right-2 top-2 z-10 flex items-center gap-2">
+                            <button type="button" onClick={() => setEditingVideo(i)} className="p-2 rounded-full bg-background/90 text-foreground shadow-sm">
+                              <Pencil size={14} />
+                            </button>
+                            <button type="button" onClick={() => { set(""); setEditingVideo(null); }} className="p-2 rounded-full bg-background/90 text-foreground shadow-sm">
+                              <X size={14} />
+                            </button>
+                          </div>
                         )}
                       </div>
                       <AnimatePresence>
