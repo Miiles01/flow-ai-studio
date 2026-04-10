@@ -135,7 +135,8 @@ export default function ProgramDetail() {
             style={{ objectPosition: `center ${program.banner_position}%` }}
             loading="lazy"
           />
-        )
+        )}
+
 
         {/* Header */}
         <div className="space-y-3">
