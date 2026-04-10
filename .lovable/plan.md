@@ -1,36 +1,18 @@
 
+## Plan: Fix portfolio video input size & make onboarding mobile-friendly
 
-## Plan: Rediseñar Perfil y mover "Cerrar sesión"
+### Problems identified
+1. **VideoLinkPopover input** is too small (`text-xs h-8`) — hard to use on mobile
+2. **Portfolio grid** uses `grid-cols-3` always — cramped on small screens
+3. **Medios de contacto** uses `flex-row` on desktop but the overall layout isn't optimized for mobile padding/spacing
+4. **General mobile issues**: the container uses `p-6` which eats space on small screens, and `max-w-2xl` doesn't adapt
 
-### Cambios
+### Changes (single file: `src/pages/Onboarding.tsx`)
 
-**1. Sidebar (`DashboardLayout.tsx`)**
-- Eliminar el botón "Cerrar sesión" del sidebar
-- Mantener solo la tarjeta de usuario que navega a `/profile`
-
-**2. Migración de base de datos**
-- Agregar columna `portfolio_url` (text, nullable) a la tabla `profiles`
-- Renombrar conceptualmente "avatar_url" a usarse internamente para avatar, y el campo visible será "Portafolio URL"
-
-**3. Rediseñar Profile.tsx completamente**
-- **Header**: Avatar con iniciales, nombre, email, nicho como badge
-- **Secciones organizadas con cards**:
-  - **Información personal**: Nombre, Bio, Nicho, Teléfono
-  - **Redes sociales**: Instagram, TikTok, Twitter/X, YouTube (todos ya existen en la DB)
-  - **Links**: URL de portafolio (nuevo campo), avatar URL se mantiene interno
-- **Botón "Cerrar sesión"** al final de la página con estilo destructivo
-- Usar separadores y cards para mejor estructura visual
-- Cargar y guardar todos los campos existentes (`phone`, `twitter_handle`, `youtube_handle`, `tiktok_handle`) que actualmente no se usan en el form
-
-### Archivos a modificar
-| Archivo | Cambio |
-|---------|--------|
-| `supabase/migrations/...` | Agregar `portfolio_url` a profiles |
-| `src/pages/Profile.tsx` | Rediseño completo con secciones, más campos, cerrar sesión |
-| `src/components/DashboardLayout.tsx` | Eliminar botón "Cerrar sesión" |
-
-### Detalle técnico
-- La tabla `profiles` ya tiene: `instagram_handle`, `tiktok_handle`, `twitter_handle`, `youtube_handle`, `phone` -- solo falta `portfolio_url`
-- Se eliminan los casts `as any` del Profile aprovechando que los tipos ya reconocen estos campos
-- El campo "URL del avatar" se reemplaza visualmente por "URL de portafolio" (nuevo campo `portfolio_url`)
-
+1. **VideoLinkPopover** — increase input size from `text-xs h-8` to `text-sm h-10`, increase padding, make buttons bigger
+2. **Portfolio grid** — change from `grid-cols-3` to `grid-cols-2 sm:grid-cols-3` so videos are larger on mobile
+3. **Main container padding** — reduce from `p-6` to `p-4 sm:p-6`
+4. **Welcome step image** — add responsive sizing (`max-w-[280px] sm:max-w-sm`)
+5. **Bio card** — ensure textarea and card have comfortable mobile padding
+6. **Medios de contacto** — already uses `flex-col md:flex-row`, verify input rows don't clip on small screens
+7. **Top arrows** — slightly reduce padding on mobile (`px-4 sm:px-6`)
