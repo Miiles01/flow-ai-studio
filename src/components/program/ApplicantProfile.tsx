@@ -27,6 +27,15 @@ function getVideoEmbedUrl(url: string): string | null {
   return null;
 }
 
+function getSocialUrl(label: string, value: string): string {
+  if (label === "Instagram") return `https://instagram.com/${value.replace(/^@/, "")}`;
+  if (label === "TikTok") return `https://tiktok.com/@${value.replace(/^@/, "")}`;
+  if (label === "YouTube") return `https://youtube.com/@${value.replace(/^@/, "")}`;
+  if (label === "X") return `https://x.com/${value.replace(/^@/, "")}`;
+  if (label === "Portafolio") return value.startsWith("http") ? value : `https://${value}`;
+  return "#";
+}
+
 export default function ApplicantProfile({
   applicant,
   open,
@@ -49,23 +58,26 @@ export default function ApplicantProfile({
   ].filter(Boolean) as { icon: any; label: string; value: string }[];
 
   return (
-    <Sheet open={open} onOpenChange={onOpenChange}>
-      <SheetContent side="right" className="w-full sm:max-w-md overflow-y-auto">
+    <Sheet open={open} onOpenChange={onOpenChange} modal={false}>
+      <SheetContent side="right" className="w-full sm:max-w-md overflow-y-auto border-l border-border/40 bg-background/95 backdrop-blur-sm" onInteractOutside={(e) => e.preventDefault()}>
         <SheetHeader>
           <SheetTitle className="font-normal">Perfil del postulante</SheetTitle>
         </SheetHeader>
         <div className="space-y-6 mt-4">
-          {/* Header */}
-          <div className="flex items-center gap-4">
-            <Avatar className="h-16 w-16">
-              {applicant.avatar_url && <AvatarImage src={applicant.avatar_url} alt={applicant.display_name || ""} />}
-              <AvatarFallback className="bg-foreground text-background text-lg">{initials}</AvatarFallback>
-            </Avatar>
-            <div>
-              <p className="text-lg font-normal">{applicant.display_name || "Sin nombre"}</p>
-              {applicant.niche && (
-                <Badge variant="secondary" className="text-xs font-light mt-1">{applicant.niche}</Badge>
-              )}
+          {/* Info personal */}
+          <div>
+            <p className="text-[10px] text-muted-foreground font-light uppercase tracking-wider mb-3">Información personal</p>
+            <div className="flex items-center gap-4">
+              <Avatar className="h-16 w-16">
+                {applicant.avatar_url && <AvatarImage src={applicant.avatar_url} alt={applicant.display_name || ""} />}
+                <AvatarFallback className="bg-foreground text-background text-lg">{initials}</AvatarFallback>
+              </Avatar>
+              <div>
+                <p className="text-lg font-normal">{applicant.display_name || "Sin nombre"}</p>
+                {applicant.niche && (
+                  <Badge variant="secondary" className="text-xs font-light mt-1">{applicant.niche}</Badge>
+                )}
+              </div>
             </div>
           </div>
 
@@ -80,14 +92,20 @@ export default function ApplicantProfile({
           {/* Socials */}
           {socials.length > 0 && (
             <div>
-              <p className="text-[10px] text-muted-foreground font-light uppercase tracking-wider mb-2">Contacto</p>
+              <p className="text-[10px] text-muted-foreground font-light uppercase tracking-wider mb-2">Redes sociales</p>
               <div className="space-y-2">
                 {socials.map(({ icon: Icon, label, value }, i) => (
-                  <div key={i} className="flex items-center gap-2 text-sm font-light">
+                  <a
+                    key={i}
+                    href={getSocialUrl(label, value)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center gap-2 text-sm font-light hover:text-primary transition-colors"
+                  >
                     <Icon size={14} className="text-muted-foreground flex-shrink-0" />
                     <span className="text-muted-foreground text-xs w-16">{label}</span>
                     <span className="truncate">{value}</span>
-                  </div>
+                  </a>
                 ))}
               </div>
             </div>
@@ -96,7 +114,7 @@ export default function ApplicantProfile({
           {/* Videos */}
           {videos.length > 0 && (
             <div>
-              <p className="text-[10px] text-muted-foreground font-light uppercase tracking-wider mb-2">Portafolio</p>
+              <p className="text-[10px] text-muted-foreground font-light uppercase tracking-wider mb-2">Portafolio de videos</p>
               <div className="grid grid-cols-2 gap-3">
                 {videos.map((url, i) => {
                   const embed = getVideoEmbedUrl(url);
