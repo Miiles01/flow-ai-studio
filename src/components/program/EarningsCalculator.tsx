@@ -1,12 +1,12 @@
 import { useState, useMemo, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Slider } from "@/components/ui/slider";
-import { TrendingUp, DollarSign, Calendar, ShoppingCart } from "lucide-react";
+import { TrendingUp, DollarSign, ShoppingCart } from "lucide-react";
 
 type Props = {
   commissionRate: string | null;
   priceMin: number | null;
   priceMax: number | null;
+  avgSales: number;
 };
 
 function parseCommission(rate: string | null): number {
@@ -15,34 +15,30 @@ function parseCommission(rate: string | null): number {
   return match ? parseFloat(match[1]) : 10;
 }
 
-export default function EarningsCalculator({ commissionRate, priceMin, priceMax }: Props) {
-  const [salesCount, setSalesCount] = useState(20);
-  const [days, setDays] = useState(30);
+const DAYS = 30;
+
+export default function EarningsCalculator({ commissionRate, priceMin, priceMax, avgSales }: Props) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [animProgress, setAnimProgress] = useState(0);
 
   const commission = parseCommission(commissionRate);
   const avgPrice = priceMin && priceMax ? (priceMin + priceMax) / 2 : priceMin || priceMax || 50;
   const earningsPerSale = (avgPrice * commission) / 100;
-  const totalEarnings = earningsPerSale * salesCount;
-  const dailyRate = days > 0 ? totalEarnings / days : 0;
-  const monthlyEarnings = dailyRate * 30;
+  const totalEarnings = earningsPerSale * avgSales;
+  const monthlyEarnings = totalEarnings;
 
-  // Generate chart data points
   const chartData = useMemo(() => {
     const points: { day: number; earnings: number }[] = [];
-    const numPoints = Math.min(days, 12);
+    const numPoints = 12;
     for (let i = 0; i <= numPoints; i++) {
-      const day = Math.round((i / numPoints) * days);
+      const day = Math.round((i / numPoints) * DAYS);
       const progress = i / numPoints;
-      // Slightly curved growth
       const earned = totalEarnings * Math.pow(progress, 0.85);
       points.push({ day, earnings: earned });
     }
     return points;
-  }, [salesCount, days, totalEarnings]);
+  }, [avgSales, totalEarnings]);
 
-  // Animate on data change
   useEffect(() => {
     setAnimProgress(0);
     let start: number;
@@ -54,9 +50,8 @@ export default function EarningsCalculator({ commissionRate, priceMin, priceMax 
       if (p < 1) requestAnimationFrame(step);
     }
     requestAnimationFrame(step);
-  }, [salesCount, days, commission, avgPrice]);
+  }, [avgSales, commission, avgPrice]);
 
-  // Draw chart on canvas
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas || chartData.length < 2) return;
@@ -79,7 +74,6 @@ export default function EarningsCalculator({ commissionRate, priceMin, priceMax 
 
     ctx.clearRect(0, 0, w, h);
 
-    // Draw animated line
     const visiblePoints = chartData.length;
     const drawUpTo = Math.floor(animProgress * (visiblePoints - 1));
     const partialFrac = (animProgress * (visiblePoints - 1)) - drawUpTo;
@@ -90,18 +84,15 @@ export default function EarningsCalculator({ commissionRate, priceMin, priceMax 
       return { x, y };
     }
 
-    // Gradient fill
     const gradient = ctx.createLinearGradient(0, padTop, 0, h);
     gradient.addColorStop(0, "rgba(64, 89, 241, 0.12)");
     gradient.addColorStop(1, "rgba(64, 89, 241, 0)");
 
-    // Fill area
     ctx.beginPath();
     ctx.moveTo(padX, padTop + chartH);
     for (let i = 0; i <= drawUpTo; i++) {
       const { x, y } = getXY(i);
-      if (i === 0) ctx.lineTo(x, y);
-      else ctx.lineTo(x, y);
+      ctx.lineTo(x, y);
     }
     if (drawUpTo < visiblePoints - 1 && partialFrac > 0) {
       const a = getXY(drawUpTo);
@@ -116,7 +107,6 @@ export default function EarningsCalculator({ commissionRate, priceMin, priceMax 
     ctx.fillStyle = gradient;
     ctx.fill();
 
-    // Line
     ctx.beginPath();
     for (let i = 0; i <= drawUpTo; i++) {
       const { x, y } = getXY(i);
@@ -134,7 +124,6 @@ export default function EarningsCalculator({ commissionRate, priceMin, priceMax 
     ctx.lineCap = "round";
     ctx.stroke();
 
-    // Dots
     for (let i = 0; i <= drawUpTo; i++) {
       const { x, y } = getXY(i);
       const dotScale = Math.min(1, (animProgress * (visiblePoints - 1) - i + 1));
@@ -153,55 +142,26 @@ export default function EarningsCalculator({ commissionRate, priceMin, priceMax 
   return (
     <div className="rounded-md overflow-hidden" style={{ background: "linear-gradient(to right, #FDFDFD, #F8F9FD)" }}>
       <div className="p-6 md:p-8">
-        {/* Title */}
         <div className="flex items-center gap-2 mb-6">
           <TrendingUp size={18} className="text-miiles-blue" />
           <h3 className="text-sm font-normal">Proyección de ganancias</h3>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Left — controls */}
-          <div className="space-y-6">
-            {/* Sales slider */}
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <label className="text-xs text-miiles-gray-400 font-light flex items-center gap-1.5">
-                  <ShoppingCart size={13} />
-                  Ventas estimadas
-                </label>
-                <span className="text-sm font-normal text-miiles-blue">{salesCount}</span>
+          {/* Left — stats */}
+          <div className="space-y-4">
+            {/* Avg sales stat */}
+            <div className="rounded-sm p-3" style={{ background: "rgba(64, 89, 241, 0.04)" }}>
+              <div className="flex items-center gap-1.5 mb-1">
+                <ShoppingCart size={13} className="text-miiles-gray-400" />
+                <p className="text-[10px] text-miiles-gray-400 font-light">Ventas promedio de afiliados actuales</p>
               </div>
-              <Slider
-                value={[salesCount]}
-                onValueChange={(v) => setSalesCount(v[0])}
-                min={1}
-                max={200}
-                step={1}
-                className="[&_[role=slider]]:bg-miiles-blue [&_[role=slider]]:border-miiles-blue [&_[data-orientation=horizontal]>span:first-child>span]:bg-miiles-blue"
-              />
-            </div>
-
-            {/* Days slider */}
-            <div className="space-y-3">
-              <div className="flex items-center justify-between">
-                <label className="text-xs text-miiles-gray-400 font-light flex items-center gap-1.5">
-                  <Calendar size={13} />
-                  Periodo (días)
-                </label>
-                <span className="text-sm font-normal text-miiles-blue">{days}</span>
-              </div>
-              <Slider
-                value={[days]}
-                onValueChange={(v) => setDays(v[0])}
-                min={7}
-                max={180}
-                step={1}
-                className="[&_[role=slider]]:bg-miiles-blue [&_[role=slider]]:border-miiles-blue [&_[data-orientation=horizontal]>span:first-child>span]:bg-miiles-blue"
-              />
+              <p className="text-lg font-normal text-miiles-blue">{avgSales}</p>
+              <p className="text-[10px] text-miiles-gray-400 font-light">por mes (30 días)</p>
             </div>
 
             {/* Info cards */}
-            <div className="grid grid-cols-2 gap-3 pt-2">
+            <div className="grid grid-cols-2 gap-3">
               {priceMin != null && priceMax != null && (
                 <div className="rounded-sm p-3" style={{ background: "rgba(64, 89, 241, 0.04)" }}>
                   <p className="text-[10px] text-miiles-gray-400 font-light">Rango de precio</p>
@@ -213,35 +173,33 @@ export default function EarningsCalculator({ commissionRate, priceMin, priceMax 
                 <p className="text-sm font-normal mt-0.5">{commission}%</p>
               </div>
               <div className="rounded-sm p-3" style={{ background: "rgba(64, 89, 241, 0.04)" }}>
-                <p className="text-[10px] text-miiles-gray-400 font-light">Costo mensual</p>
-                <p className="text-sm font-normal mt-0.5">${monthlyEarnings.toFixed(2)}</p>
+                <p className="text-[10px] text-miiles-gray-400 font-light">Ganancia por venta</p>
+                <p className="text-sm font-normal mt-0.5">${earningsPerSale.toFixed(2)}</p>
               </div>
             </div>
           </div>
 
           {/* Right — chart + total */}
           <div className="flex flex-col">
-            {/* Total earnings */}
             <div className="mb-4">
-              <p className="text-[10px] text-miiles-gray-400 font-light uppercase tracking-wider">Ganancia estimada</p>
+              <p className="text-[10px] text-miiles-gray-400 font-light uppercase tracking-wider">Ganancia mensual estimada</p>
               <AnimatePresence mode="wait">
                 <motion.p
-                  key={totalEarnings.toFixed(2)}
+                  key={monthlyEarnings.toFixed(2)}
                   initial={{ opacity: 0, y: 6 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -6 }}
                   className="text-2xl font-normal text-miiles-blue mt-1"
                 >
                   <DollarSign size={20} className="inline -mt-1" />
-                  {totalEarnings.toFixed(2)}
+                  {monthlyEarnings.toFixed(2)}
                 </motion.p>
               </AnimatePresence>
               <p className="text-[10px] text-miiles-gray-400 font-light mt-0.5">
-                ${earningsPerSale.toFixed(2)} por venta · {days} días
+                ${earningsPerSale.toFixed(2)} × {avgSales} ventas · 30 días
               </p>
             </div>
 
-            {/* Canvas chart */}
             <div className="flex-1 min-h-[160px] relative">
               <canvas
                 ref={canvasRef}
