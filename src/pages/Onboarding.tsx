@@ -297,7 +297,7 @@ const Onboarding = () => {
               {step === 1 && (
                 <div className="max-w-lg mx-auto space-y-8">
                   <h1 className="text-2xl font-semibold">Cuéntanos sobre ti</h1>
-                  <div className="rounded-2xl bg-gradient-to-b from-[#FDFDFD] to-[#F8F9FD] p-6 shadow-[0px_100px_170px_0px_rgba(39,39,62,0.05)]">
+                  <div className="bg-gradient-to-b from-[#FDFDFD] to-[#F8F9FD] p-6">
                     <Textarea
                       value={bio}
                       onChange={(e) => setBio(e.target.value)}
