@@ -492,7 +492,10 @@ const Onboarding = () => {
                   <div>
                     <AnimatedText text="Portafolio" className="text-2xl font-semibold" />
                     <p className="text-muted-foreground font-light text-sm mt-1">
-                      Agrega hasta 3 videos que representen tu mejor trabajo.
+                      Agrega hasta 3 videos que representen tu mejor trabajo.{" "}
+                      <span className="font-semibold text-foreground">
+                        Esto puede ayudar a ver mejor los resultados que has conseguido.
+                      </span>
                     </p>
                   </div>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
