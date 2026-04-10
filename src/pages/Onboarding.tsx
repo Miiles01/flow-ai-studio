@@ -434,7 +434,7 @@ const Onboarding = () => {
                   </div>
                   <div>
                     <label className="text-xs text-muted-foreground mb-1.5 block font-light">Teléfono / WhatsApp</label>
-                    <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+52 55 1234 5678" <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+52 55 1234 5678" className="shadow-none border-none bg-muted" type="tel" /> />
+                    <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+52 55 1234 5678" className="shadow-none border-none bg-muted" type="tel" />
                   </div>
                 </div>
               )}
