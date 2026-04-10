@@ -1,90 +1,40 @@
 
 
-# Plan: Estadísticas, Postulaciones Públicas y Avatar
+# Plan: Link corto y página pública para detalle de programa
 
-## Resumen
-Reorganizar la sección de estadísticas en el detalle del programa, crear un sistema de postulaciones visible para admins con link público compartible, y habilitar subida de foto de perfil.
+## Problema
+1. El link de compartir usa UUID largo (`/programs/9b59d827-d7ab-420a-a792-108ced0dab6e`) — difícil de compartir.
+2. Usuarios no autenticados son redirigidos al login al intentar ver la página (probablemente porque el Supabase client sin sesión no tiene el rol `anon` configurado correctamente, o hay un problema con la query).
 
----
+## Solución
 
-## 1. Reorganizar ProgramDetail.tsx
-- Mover `EarningsCalculator` debajo de los badges (14% / belleza), no arriba del banner
-- Renombrar título interno de "Proyección de ganancias" a "Estadísticas"
+### 1. Slug corto para programas
+- Agregar columna `slug` (text, unique) a `brand_programs` via migración.
+- Poblar slugs desde `brand_name` existentes (ej: "Glossier" → "glossier").
+- Crear ruta `/p/:slug` que renderiza ProgramDetail buscando por slug.
+- El botón "Compartir" copiará la URL corta `/p/glossier` en vez del UUID.
+- Mantener la ruta `/programs/:id` existente para compatibilidad interna.
 
-## 2. Subida de avatar (foto de perfil)
-- **Migración**: Crear bucket de storage `avatars` (público)
-- **RLS en storage**: Usuarios autenticados pueden subir/actualizar su propio avatar
-- **Onboarding**: Agregar paso o sección para subir foto
-- **Profile.tsx**: Agregar upload de avatar con preview
-- Optimizar imagen en frontend antes de subir (resize a max 400x400, compresión)
-- Guardar URL en `profiles.avatar_url`
+### 2. Asegurar acceso público
+- La ruta `/programs/:id` ya NO está envuelta en `ProtectedRoute`, pero el componente usa `useAuth` que puede causar problemas si `loading` bloquea el render. Ajustar ProgramDetail para no depender de que auth termine de cargar antes de mostrar el contenido del programa.
+- Cargar datos del programa inmediatamente sin esperar auth. Solo las funciones de postulación requieren usuario.
+- La RLS de `brand_programs` ya permite SELECT para `anon`, así que la query debería funcionar sin sesión.
 
-## 3. Sistema de postulaciones para admin
-- **Migración**: Agregar columna `public_token` (uuid, unique) a `brand_programs` para el link público compartible
-- **Nueva página `ProgramApplicants.tsx`**: 
-  - Ruta: `/programs/:id/applicants` (protegida, solo admin)
-  - Muestra cards de cada persona postulada con: avatar, nombre, redes sociales
-  - Click en card abre perfil completo (bio, videos, teléfono, portafolio)
-  - Botón para copiar link público
-- **Nueva página `PublicApplicants.tsx`**:
-  - Ruta: `/applicants/:token` (pública, sin auth)
-  - Misma vista de cards pero accesible con el token
-  - No requiere login
+### 3. Archivos a modificar
+- **Migración SQL**: Agregar `slug` a `brand_programs`, poblar valores, agregar unique constraint.
+- **`src/App.tsx`**: Agregar ruta `/p/:slug`.
+- **`src/pages/ProgramDetail.tsx`**: Aceptar tanto `id` como `slug`, separar fetch de programa del fetch de auth/admin, copiar URL corta.
 
-## 4. RLS y seguridad
-- `user_applications`: Agregar policy SELECT para admins (pueden ver todas las postulaciones)
-- `profiles`: Agregar policy SELECT para admins (pueden ver perfiles de postulantes)
-- Crear función SQL para acceso público por token (security definer)
+### Detalles técnicos
 
-## 5. Notificación al admin
-- Cuando alguien se postula, insertar registro en `notifications` para todos los admins del sistema
-
----
-
-## Detalle técnico
-
-### Base de datos (migraciones)
 ```sql
--- Storage bucket
-INSERT INTO storage.buckets (id, name, public) VALUES ('avatars', 'avatars', true);
-
--- Storage RLS
-CREATE POLICY "Users upload own avatar" ON storage.objects FOR INSERT TO authenticated
-  WITH CHECK (bucket_id = 'avatars' AND (storage.foldername(name))[1] = auth.uid()::text);
-
-CREATE POLICY "Users update own avatar" ON storage.objects FOR UPDATE TO authenticated
-  USING (bucket_id = 'avatars' AND (storage.foldername(name))[1] = auth.uid()::text);
-
-CREATE POLICY "Public avatar read" ON storage.objects FOR SELECT TO public
-  USING (bucket_id = 'avatars');
-
--- Public token for shareable link
-ALTER TABLE brand_programs ADD COLUMN public_token uuid DEFAULT gen_random_uuid() UNIQUE;
-
--- Admin can view all applications
-CREATE POLICY "Admins can view all applications" ON user_applications FOR SELECT TO authenticated
-  USING (has_role(auth.uid(), 'admin'));
-
--- Admin can view all profiles
-CREATE POLICY "Admins can view all profiles" ON profiles FOR SELECT TO authenticated
-  USING (has_role(auth.uid(), 'admin'));
-
--- Function for public access by token
-CREATE FUNCTION get_program_applicants_by_token(p_token uuid)
-RETURNS TABLE(...) SECURITY DEFINER ...
+ALTER TABLE brand_programs ADD COLUMN slug text UNIQUE;
+UPDATE brand_programs SET slug = lower(regexp_replace(brand_name, '[^a-zA-Z0-9]', '-', 'g'));
 ```
 
-### Nuevos archivos
-- `src/pages/ProgramApplicants.tsx` — vista admin
-- `src/pages/PublicApplicants.tsx` — vista pública por token
-- `src/components/program/ApplicantCard.tsx` — card reutilizable
-- `src/components/program/ApplicantProfile.tsx` — perfil completo en dialog
-
-### Archivos modificados
-- `src/App.tsx` — nuevas rutas
-- `src/pages/ProgramDetail.tsx` — reordenar secciones, link a postulaciones para admin
-- `src/components/program/EarningsCalculator.tsx` — renombrar título
-- `src/pages/Profile.tsx` — upload avatar
-- `src/pages/Onboarding.tsx` — upload avatar
-- `src/pages/ProgramDetail.tsx` — al postularse, crear notificación para admins
+En ProgramDetail:
+- Detectar si el param es UUID o slug
+- Buscar por `id` o por `slug` según corresponda
+- El `useEffect` para datos del programa no dependerá de `user`
+- Un segundo `useEffect` para admin/application status sí dependerá de `user`
 
