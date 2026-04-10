@@ -214,7 +214,36 @@ const Profile = () => {
             </CardContent>
           </Card>
 
-          {/* Links */}
+          {/* Portafolio de videos */}
+          <Card>
+            <CardHeader className="pb-4">
+              <CardTitle className="text-base">Portafolio de videos</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <label className="text-xs text-muted-foreground mb-1.5 block font-light">Video 1</label>
+                <div className="relative">
+                  <Video size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                  <Input value={videoUrl1} onChange={(e) => setVideoUrl1(e.target.value)} placeholder="https://tiktok.com/..." className="pl-9" />
+                </div>
+              </div>
+              <div>
+                <label className="text-xs text-muted-foreground mb-1.5 block font-light">Video 2</label>
+                <div className="relative">
+                  <Video size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                  <Input value={videoUrl2} onChange={(e) => setVideoUrl2(e.target.value)} placeholder="https://instagram.com/reel/..." className="pl-9" />
+                </div>
+              </div>
+              <div>
+                <label className="text-xs text-muted-foreground mb-1.5 block font-light">Video 3</label>
+                <div className="relative">
+                  <Video size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                  <Input value={videoUrl3} onChange={(e) => setVideoUrl3(e.target.value)} placeholder="https://youtube.com/watch?v=..." className="pl-9" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
           <Card>
             <CardHeader className="pb-4">
               <CardTitle className="text-base">Links</CardTitle>
