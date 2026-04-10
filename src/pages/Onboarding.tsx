@@ -347,7 +347,7 @@ const Onboarding = () => {
               )}
 
               {/* Step 2: Medios de contacto — two column */}
-              {step === 2 && (
+              {step === 3 && (
                 <div className="flex flex-col md:flex-row gap-10 items-start">
                   {/* Left */}
                   <div className="md:w-2/5 space-y-4">
@@ -445,7 +445,7 @@ const Onboarding = () => {
               )}
 
               {/* Step 3: Portafolio — floating input on click */}
-              {step === 3 && (
+              {step === 4 && (
                 <div className="max-w-md mx-auto space-y-6">
                   <div>
                     <h1 className="text-2xl font-semibold">Portafolio</h1>
@@ -530,7 +530,7 @@ const Onboarding = () => {
               )}
 
               {/* Step 4: Phone */}
-              {step === 4 && (
+              {step === 5 && (
                 <div className="max-w-md mx-auto space-y-6">
                   <div>
                     <h1 className="text-2xl font-semibold">Contacto</h1>
@@ -606,7 +606,7 @@ const Onboarding = () => {
               )}
 
               {/* Step 5: Done */}
-              {step === 5 && (
+              {step === 6 && (
                 <div className="text-center space-y-6 max-w-md mx-auto">
                   <div className="mx-auto w-28 h-28">
                     <img src={onboardingDone} alt="Listo" className="w-full h-full object-contain" />
@@ -627,7 +627,7 @@ const Onboarding = () => {
 
 
           {/* Step indicator dots */}
-          {step < 5 && (
+          {step < 6 && (
             <motion.div
               key={`dots-${step}`}
               initial={{ y: 20, opacity: 0 }}
