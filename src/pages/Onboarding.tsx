@@ -88,8 +88,8 @@ const Onboarding = () => {
   };
   const prev = () => { setDir(-1); setStep((s) => Math.max(s - 1, 0)); };
 
-  const handleFinish = async () => {
-    if (!user) return;
+  const saveProfile = async () => {
+    if (!user) return false;
     setSaving(true);
     const { error } = await supabase
       .from("profiles")
@@ -106,13 +106,24 @@ const Onboarding = () => {
         onboarding_completed: true,
       } as any)
       .eq("user_id", user.id);
+    setSaving(false);
     if (error) {
       toast.error("Error al guardar tu perfil");
-    } else {
-      toast.success("¡Bienvenido a Miiles!");
-      navigate("/", { replace: true });
+      return false;
     }
-    setSaving(false);
+    return true;
+  };
+
+  const handleNextFromContact = async () => {
+    const ok = await saveProfile();
+    if (ok) {
+      setDir(1);
+      setStep(5);
+    }
+  };
+
+  const handleFinish = () => {
+    navigate("/", { replace: true });
   };
 
   const progress = ((step + 1) / TOTAL_STEPS) * 100;
