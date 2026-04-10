@@ -345,7 +345,48 @@ export default function Dashboard() {
         </DialogContent>
       </Dialog>
 
-      <Dialog open={sendOpen} onOpenChange={setSendOpen}>
+      {/* Confirm delete dialog */}
+      <Dialog open={!!confirmDeleteId} onOpenChange={(v) => !v && setConfirmDeleteId(null)}>
+        <DialogContent className="sm:max-w-sm">
+          <DialogHeader>
+            <DialogTitle className="font-normal text-center">Cancelar postulación</DialogTitle>
+          </DialogHeader>
+          <p className="text-sm text-muted-foreground font-light text-center py-2">
+            ¿Estás seguro que quieres cancelar esta postulación?
+          </p>
+          <div className="flex gap-3 mt-2">
+            <Button
+              variant="outline"
+              className="flex-1"
+              onClick={() => setConfirmDeleteId(null)}
+            >
+              No, volver
+            </Button>
+            <Button
+              variant="destructive"
+              className="flex-1"
+              onClick={async () => {
+                if (!confirmDeleteId) return;
+                const { error } = await supabase
+                  .from("user_applications")
+                  .delete()
+                  .eq("id", confirmDeleteId);
+                if (!error) {
+                  setApplications((prev) => prev.filter((a) => a.id !== confirmDeleteId));
+                  setSavedCount((c) => Math.max(0, c - 1));
+                  toast.success("Postulación cancelada");
+                } else {
+                  toast.error("Error al cancelar");
+                }
+                setConfirmDeleteId(null);
+              }}
+            >
+              Sí, cancelar
+            </Button>
+          </div>
+        </DialogContent>
+      </Dialog>
+
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="font-normal">Enviar notificación</DialogTitle>
