@@ -43,10 +43,10 @@ export default function ProgramApplicants() {
 
         if (apps && apps.length > 0) {
           const userIds = apps.map((a: any) => a.user_id);
-          const { data: profs } = await supabase.from("profiles").select("id, video_url_1, video_url_2, video_url_3").in("id", userIds);
+          const { data: profs } = await supabase.from("profiles").select("user_id, video_url_1, video_url_2, video_url_3").in("user_id", userIds);
 
           const merged: Applicant[] = apps.map((a: any) => {
-            const p = profs?.find(prof => prof.id === a.user_id);
+            const p = profs?.find(prof => prof.user_id === a.user_id);
             return {
               application_id: a.application_id,
               user_id: a.user_id,
