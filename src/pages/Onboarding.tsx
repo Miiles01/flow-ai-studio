@@ -10,8 +10,9 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import onboardingHero from "@/assets/onboarding-hero.png";
+import onboardingDone from "@/assets/onboarding-done.png";
 
-const TOTAL_STEPS = 5;
+const TOTAL_STEPS = 6;
 
 function getVideoEmbedUrl(url: string): string | null {
   if (!url.trim()) return null;
