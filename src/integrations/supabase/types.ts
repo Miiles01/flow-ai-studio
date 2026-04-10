@@ -33,6 +33,7 @@ export type Database = {
           price_min: number | null
           program_url: string | null
           public_token: string | null
+          slug: string
           updated_at: string
         }
         Insert: {
@@ -53,6 +54,7 @@ export type Database = {
           price_min?: number | null
           program_url?: string | null
           public_token?: string | null
+          slug: string
           updated_at?: string
         }
         Update: {
@@ -73,6 +75,7 @@ export type Database = {
           price_min?: number | null
           program_url?: string | null
           public_token?: string | null
+          slug?: string
           updated_at?: string
         }
         Relationships: []
