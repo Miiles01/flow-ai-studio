@@ -471,7 +471,7 @@ const Onboarding = () => {
                                   </div>
                                   <Button
                                     size="sm"
-                                    className="rounded-xl px-6 h-10 text-xs w-full sm:w-auto"
+                                    className="rounded-xl px-6 h-10 text-xs w-full sm:w-auto hover:translate-y-0"
                                     onClick={() => {
                                       setSocials({ ...socials, [key]: socialDraft });
                                       setEditingSocial(null);
