@@ -16,7 +16,48 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import AvatarUpload from "@/components/AvatarUpload";
 
+function getVideoEmbedUrl(url: string): string | null {
+  if (!url.trim()) return null;
+  const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/);
+  if (ytMatch) return `https://www.youtube.com/embed/${ytMatch[1]}`;
+  const ttMatch = url.match(/tiktok\.com\/@[^/]+\/video\/(\d+)/);
+  if (ttMatch) return `https://www.tiktok.com/embed/v2/${ttMatch[1]}`;
+  const igMatch = url.match(/instagram\.com\/(?:reel|p)\/([a-zA-Z0-9_-]+)/);
+  if (igMatch) return `https://www.instagram.com/p/${igMatch[1]}/embed`;
+  return null;
+}
 
+function VideoLinkPopover({ value, onSave, onCancel }: { value: string; onSave: (v: string) => void; onCancel: () => void }) {
+  const [draft, setDraft] = useState(value);
+  return (
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40" onClick={onCancel}>
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 40 }}
+        onClick={(e) => e.stopPropagation()}
+        className="w-full max-w-md mx-4 mb-4 sm:mb-0 p-5 rounded-2xl bg-foreground space-y-4"
+      >
+        <p className="text-background text-sm font-medium">Pega el link del video</p>
+        <Input
+          autoFocus
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          placeholder="https://youtube.com/watch?v=..."
+          className="bg-background/10 border-none shadow-none text-background placeholder:text-background/40 text-base h-12"
+        />
+        <div className="flex gap-3">
+          <button type="button" onClick={() => onSave(draft)} className="flex-1 text-sm py-2.5 rounded-xl bg-background text-foreground font-medium">
+            Guardar
+          </button>
+          <button type="button" onClick={onCancel} className="text-sm py-2.5 px-5 rounded-xl text-background/70 hover:text-background">
+            Cancelar
+          </button>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
 const Profile = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
