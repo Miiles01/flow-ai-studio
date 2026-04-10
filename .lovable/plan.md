@@ -1,40 +1,26 @@
 
 
-# Plan: Link corto y página pública para detalle de programa
+# Plan: Postulaciones pública + perfil en sidebar lateral
 
-## Problema
-1. El link de compartir usa UUID largo (`/programs/9b59d827-d7ab-420a-a792-108ced0dab6e`) — difícil de compartir.
-2. Usuarios no autenticados son redirigidos al login al intentar ver la página (probablemente porque el Supabase client sin sesión no tiene el rol `anon` configurado correctamente, o hay un problema con la query).
+## Cambios
 
-## Solución
+### 1. Página de Postulaciones accesible públicamente
+- Quitar `<ProtectedRoute>` del wrapper de `/programs/:id/applicants` en `App.tsx` — dejarlo como ruta pública igual que `PublicApplicants`.
+- Modificar `ProgramApplicants.tsx`: eliminar la verificación de admin y el check de `useAuth` para cargar datos. Usar la misma RPC `get_program_applicants_by_token` o hacer la query directamente (los datos del programa ya son públicos vía RLS).
+- Eliminar el botón "Volver al programa".
 
-### 1. Slug corto para programas
-- Agregar columna `slug` (text, unique) a `brand_programs` via migración.
-- Poblar slugs desde `brand_name` existentes (ej: "Glossier" → "glossier").
-- Crear ruta `/p/:slug` que renderiza ProgramDetail buscando por slug.
-- El botón "Compartir" copiará la URL corta `/p/glossier` en vez del UUID.
-- Mantener la ruta `/programs/:id` existente para compatibilidad interna.
+### 2. Perfil del postulante en sidebar lateral (no popup)
+- Reemplazar el `Dialog` en `ApplicantProfile.tsx` por un `Sheet` (de shadcn) que se abre desde la derecha.
+- El Sheet mostrará el perfil completo: avatar, nombre, niche, bio, redes sociales, portafolio de videos, fecha de postulación.
+- **Excluir** el número de teléfono del panel visible.
+- Aplicar el mismo cambio en `PublicApplicants.tsx` (ya usa el mismo componente `ApplicantProfile`).
 
-### 2. Asegurar acceso público
-- La ruta `/programs/:id` ya NO está envuelta en `ProtectedRoute`, pero el componente usa `useAuth` que puede causar problemas si `loading` bloquea el render. Ajustar ProgramDetail para no depender de que auth termine de cargar antes de mostrar el contenido del programa.
-- Cargar datos del programa inmediatamente sin esperar auth. Solo las funciones de postulación requieren usuario.
-- La RLS de `brand_programs` ya permite SELECT para `anon`, así que la query debería funcionar sin sesión.
+### Archivos a modificar
+- **`src/App.tsx`**: Quitar `ProtectedRoute` de la ruta `/programs/:id/applicants`.
+- **`src/pages/ProgramApplicants.tsx`**: Eliminar check de admin, eliminar botón "Volver al programa", cargar datos sin depender de auth.
+- **`src/components/program/ApplicantProfile.tsx`**: Cambiar `Dialog` → `Sheet` (side="right"), ocultar teléfono.
 
-### 3. Archivos a modificar
-- **Migración SQL**: Agregar `slug` a `brand_programs`, poblar valores, agregar unique constraint.
-- **`src/App.tsx`**: Agregar ruta `/p/:slug`.
-- **`src/pages/ProgramDetail.tsx`**: Aceptar tanto `id` como `slug`, separar fetch de programa del fetch de auth/admin, copiar URL corta.
-
-### Detalles técnicos
-
-```sql
-ALTER TABLE brand_programs ADD COLUMN slug text UNIQUE;
-UPDATE brand_programs SET slug = lower(regexp_replace(brand_name, '[^a-zA-Z0-9]', '-', 'g'));
-```
-
-En ProgramDetail:
-- Detectar si el param es UUID o slug
-- Buscar por `id` o por `slug` según corresponda
-- El `useEffect` para datos del programa no dependerá de `user`
-- Un segundo `useEffect` para admin/application status sí dependerá de `user`
+### Detalle técnico
+- El `Sheet` usará `side="right"` con ancho ~400px, scroll interno, y el mismo contenido visual actual (avatar, bio, socials sin phone, videos, fecha).
+- La página cargará applicants usando la query directa a `user_applications` + `profiles` con el `program_id` del param (RLS permite SELECT anon en `brand_programs`, pero `user_applications` y `profiles` no tienen policy para anon). Para resolver esto, reutilizaremos el `public_token` del programa y la RPC `get_program_applicants_by_token` — la página obtendrá primero el `public_token` del programa (query pública a `brand_programs`) y luego llamará la RPC.
 
