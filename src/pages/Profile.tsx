@@ -37,8 +37,11 @@ function VideoLinkPopover({ value, onSave, onCancel }: { value: string; onSave: 
           placeholder="https://youtube.com/watch?v=..."
           className="bg-background/10 border-none shadow-none text-background placeholder:text-background/40 text-base h-12"
         />
+        <p className="text-xs text-background/60">
+          Acepta links públicos de YouTube, TikTok, Instagram, Facebook, Vimeo y Loom.
+        </p>
         <div className="flex gap-3">
-          <button type="button" onClick={() => onSave(draft)} className="flex-1 text-sm py-2.5 rounded-xl bg-background text-foreground font-medium">
+          <button type="button" onClick={() => onSave(draft.trim())} className="flex-1 text-sm py-2.5 rounded-xl bg-background text-foreground font-medium">
             Guardar
           </button>
           <button type="button" onClick={onCancel} className="text-sm py-2.5 px-5 rounded-xl text-background/70 hover:text-background">
