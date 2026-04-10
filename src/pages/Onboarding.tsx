@@ -74,27 +74,27 @@ function VideoLinkPopover({
       initial={{ opacity: 0, y: 8 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 8 }}
-      className="absolute inset-x-0 bottom-0 z-10 p-3 rounded-xl bg-foreground"
+      className="absolute inset-x-0 bottom-0 z-10 p-4 rounded-xl bg-foreground"
     >
       <Input
         autoFocus
         value={draft}
         onChange={(e) => setDraft(e.target.value)}
         placeholder="Pega el link del video..."
-        className="bg-background/10 border-none shadow-none text-background placeholder:text-background/50 text-xs h-8 mb-2"
+        className="bg-background/10 border-none shadow-none text-background placeholder:text-background/50 text-sm h-10 mb-3"
       />
       <div className="flex gap-2">
         <button
           type="button"
           onClick={() => onSave(draft)}
-          className="flex-1 text-xs py-1.5 rounded-lg bg-background text-foreground font-normal"
+          className="flex-1 text-sm py-2 rounded-lg bg-background text-foreground font-normal"
         >
           Guardar
         </button>
         <button
           type="button"
           onClick={onCancel}
-          className="text-xs py-1.5 px-3 rounded-lg text-background/70 hover:text-background"
+          className="text-sm py-2 px-4 rounded-lg text-background/70 hover:text-background"
         >
           Cancelar
         </button>
@@ -203,7 +203,7 @@ const Onboarding = () => {
       </div>
       {/* Top navigation arrows */}
       {step > 0 && step < 5 && (
-        <div className="flex items-center justify-between px-6 py-4">
+        <div className="flex items-center justify-between px-4 sm:px-6 py-4">
           <button type="button" onClick={prev} className="p-2 rounded-full hover:bg-muted transition-colors text-foreground">
             <ArrowLeft size={20} />
           </button>
@@ -224,7 +224,7 @@ const Onboarding = () => {
         </div>
       )}
 
-      <div className="flex-1 flex items-center justify-center p-6">
+      <div className="flex-1 flex items-center justify-center p-4 sm:p-6">
         <div className="w-full max-w-2xl">
           <AnimatePresence mode="wait" custom={dir}>
             <motion.div
@@ -239,7 +239,7 @@ const Onboarding = () => {
               {/* Step 0: Welcome */}
               {step === 0 && (
                 <div className="text-center space-y-6 max-w-md mx-auto">
-                  <img src={onboardingHero} alt="Miiles" className="mx-auto w-full max-w-sm rounded-2xl" />
+                  <img src={onboardingHero} alt="Miiles" className="mx-auto w-full max-w-[280px] sm:max-w-sm rounded-2xl" />
                   <h1 className="text-3xl font-semibold">¡Hola {displayName}!</h1>
                   <p className="text-muted-foreground font-light text-base max-w-xs mx-auto">
                     Presentamos Miiles: una nueva forma para crear colaboraciones.
@@ -376,7 +376,7 @@ const Onboarding = () => {
                       Agrega hasta 3 videos que representen tu mejor trabajo.
                     </p>
                   </div>
-                  <div className="grid grid-cols-3 gap-3">
+                  <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                     {videos.map(({ val, set }, i) => {
                       const embedUrl = getVideoEmbedUrl(val);
                       const isEditing = editingVideo === i;
