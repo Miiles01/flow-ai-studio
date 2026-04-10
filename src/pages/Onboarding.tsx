@@ -27,8 +27,8 @@ function getVideoEmbedUrl(url: string): string | null {
 
 /* TikTok & X icons (not in lucide) */
 const TikTokIcon = ({ size = 20 }: { size?: number }) => (
-  <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-    <path d="M9 12a4 4 0 1 0 4 4V4a5 5 0 0 0 5 5" />
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64 2.93 2.93 0 0 1 .88.13V9.4a6.84 6.84 0 0 0-1-.05A6.33 6.33 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43v-7a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.1z"/>
   </svg>
 );
 const XIcon = ({ size = 20 }: { size?: number }) => (
@@ -57,6 +57,40 @@ const slideVariants = {
   enter: (dir: number) => ({ x: dir > 0 ? 120 : -120, opacity: 0, scale: 0.96 }),
   center: { x: 0, opacity: 1, scale: 1 },
   exit: (dir: number) => ({ x: dir > 0 ? -120 : 120, opacity: 0, scale: 0.96 }),
+};
+
+/* Custom SplitText using framer-motion matching requested GSAP curve */
+export const AnimatedText = ({ text, className = "" }: { text: string; className?: string }) => {
+  const words = text.split(" ");
+  return (
+    <motion.div
+      initial="hidden"
+      animate="visible"
+      className={className}
+      variants={{
+        visible: {
+          transition: { staggerChildren: 0.15 }
+        }
+      }}
+    >
+      {words.map((word, i) => (
+        <motion.span
+          key={i}
+          className="inline-block mr-[0.25em]"
+          variants={{
+            hidden: { y: 40, opacity: 0 },
+            visible: { 
+              y: 0, 
+              opacity: 1, 
+              transition: { duration: 0.8, ease: "easeOut" } 
+            }
+          }}
+        >
+          {word}
+        </motion.span>
+      ))}
+    </motion.div>
+  );
 };
 
 /* Floating input for adding/editing a video link */
@@ -284,10 +318,8 @@ const Onboarding = () => {
               {step === 0 && (
                 <div className="text-center space-y-6 max-w-md mx-auto">
                   <img src={onboardingHero} alt="Miiles" className="mx-auto w-full max-w-[280px] sm:max-w-sm rounded-2xl" />
-                  <h1 className="text-3xl font-semibold">¡Hola {displayName}!</h1>
-                  <p className="text-muted-foreground font-light text-base max-w-xs mx-auto">
-                    Presentamos Miiles: una nueva forma para crear colaboraciones.
-                  </p>
+                  <AnimatedText text={`¡Hola ${displayName}!`} className="text-3xl font-semibold" />
+                  <AnimatedText text="Presentamos Miiles: una nueva forma para crear colaboraciones." className="text-muted-foreground font-light text-base max-w-xs mx-auto" />
                   <div className="pt-2">
                     <Button onClick={next} className="px-10 rounded-full">
                       Continuar
@@ -299,10 +331,8 @@ const Onboarding = () => {
               {/* Step 1: Avatar upload */}
               {step === 1 && (
                 <div className="text-center space-y-6 max-w-md mx-auto">
-                  <h1 className="text-2xl font-semibold">Tu foto de perfil</h1>
-                  <p className="text-muted-foreground font-light text-sm">
-                    Agrega una foto para que las marcas te reconozcan.
-                  </p>
+                  <AnimatedText text="Tu foto de perfil" className="text-2xl font-semibold" />
+                  <AnimatedText text="Agrega una foto para que las marcas te reconozcan." className="text-muted-foreground font-light text-sm" />
                   <div className="flex flex-col items-center gap-3 py-4">
                     <AvatarUpload
                       userId={user?.id || ""}
@@ -327,13 +357,13 @@ const Onboarding = () => {
               {/* Step 1: Bio — card style like reference */}
               {step === 2 && (
                 <div className="max-w-lg mx-auto space-y-8">
-                  <h1 className="text-2xl font-semibold">Cuéntanos sobre ti</h1>
-                  <div className="bg-gradient-to-b from-[#FDFDFD] to-[#F8F9FD] p-6">
+                  <AnimatedText text="Cuéntanos sobre ti" className="text-2xl font-semibold" />
+                  <div className="w-full">
                     <Textarea
                       value={bio}
                       onChange={(e) => setBio(e.target.value)}
                       placeholder="Me dedico a..."
-                      className="min-h-[140px] font-light bg-transparent border-none shadow-none resize-none focus-visible:ring-0 p-0 text-base"
+                      className="min-h-[140px] font-light bg-transparent border-none shadow-none resize-none focus-visible:ring-0 focus:ring-0 p-0 text-base rounded-none outline-none"
                       maxLength={200}
                     />
                     <div className="flex items-center justify-between mt-4">
@@ -348,30 +378,32 @@ const Onboarding = () => {
 
               {/* Step 2: Medios de contacto — two column */}
               {step === 3 && (
-                <div className="flex flex-col md:flex-row gap-10 items-start">
+                <div className="flex flex-col md:flex-row gap-8 md:gap-10 items-start w-full">
                   {/* Left */}
-                  <div className="md:w-2/5 space-y-4">
-                    <h1 className="text-2xl font-semibold">Medios de contacto</h1>
+                  <div className="w-full md:w-2/5 space-y-4">
+                    <AnimatedText text="Medios de contacto" className="text-2xl font-semibold" />
                     <p className="text-muted-foreground font-light text-sm">
                       Agrega al menos <span className="font-normal text-foreground">3 medios de contacto</span>.
                     </p>
                     {filledSocialsCount >= 3 && (
-                      <Button onClick={next} className="rounded-full px-8 text-sm">
-                        Continuar
-                      </Button>
+                      <div className="pt-2 sm:pt-6">
+                        <Button onClick={next} className="rounded-full px-8 text-sm w-full md:w-auto">
+                          Continuar
+                        </Button>
+                      </div>
                     )}
                   </div>
                   {/* Right — platform list */}
-                  <div className="flex-1 rounded-2xl bg-gradient-to-b from-[#FDFDFD] to-[#F8F9FD] shadow-[0px_100px_170px_0px_rgba(39,39,62,0.05)] divide-y divide-muted/40">
+                  <div className="flex-1 w-full rounded-[2rem] bg-[#F8F9FD] p-3 sm:p-6 flex flex-col gap-2.5 shadow-[0px_20px_40px_-10px_rgba(0,0,0,0.02)]">
                     {SOCIAL_PLATFORMS.map(({ key, label, icon: Icon }) => {
                       const hasValue = socials[key]?.trim();
                       const isEditing = editingSocial === key;
                       return (
-                        <div key={key}>
-                          <div className="flex items-center justify-between px-5 py-4">
+                        <div key={key} className="bg-white rounded-2xl w-full border border-black/[0.03] shadow-[0_2px_8px_-4px_rgba(0,0,0,0.02)] overflow-hidden transition-all">
+                          <div className="flex items-center justify-between px-4 sm:px-5 py-4">
                             <div className="flex items-center gap-3">
                               <Icon size={20} className="text-foreground" />
-                              <span className="text-sm font-normal">{label}</span>
+                              <span className="text-[15px] font-normal">{label}</span>
                             </div>
                             <button
                               type="button"
@@ -383,7 +415,7 @@ const Onboarding = () => {
                                   setEditingSocial(key);
                                 }
                               }}
-                              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+                              className="text-[13px] text-muted-foreground hover:text-foreground transition-colors font-light"
                             >
                               {hasValue ? "Editar" : "Añadir"}
                             </button>
@@ -396,23 +428,38 @@ const Onboarding = () => {
                                 exit={{ height: 0, opacity: 0 }}
                                 className="overflow-hidden"
                               >
-                                <div className="px-5 pb-4 flex gap-2">
-                                  <Input
-                                    autoFocus
-                                    value={socialDraft}
-                                    onChange={(e) => setSocialDraft(e.target.value)}
-                                    placeholder={`Tu ${label}`}
-                                    className="flex-1 h-9 text-sm border-none shadow-none bg-muted focus-visible:ring-0"
-                                    onKeyDown={(e) => {
-                                      if (e.key === "Enter") {
-                                        setSocials({ ...socials, [key]: socialDraft });
-                                        setEditingSocial(null);
-                                      }
-                                    }}
-                                  />
+                                <div className="px-4 sm:px-5 pb-4 pt-1 flex flex-col sm:flex-row gap-2">
+                                  <div className="flex flex-1 gap-2">
+                                    <Input
+                                      autoFocus
+                                      value={socialDraft}
+                                      onChange={(e) => setSocialDraft(e.target.value)}
+                                      placeholder={`Tu ${label}`}
+                                      className="flex-1 h-10 text-sm border-none shadow-none bg-muted focus-visible:ring-0 rounded-xl px-4"
+                                      onKeyDown={(e) => {
+                                        if (e.key === "Enter") {
+                                          setSocials({ ...socials, [key]: socialDraft });
+                                          setEditingSocial(null);
+                                        }
+                                      }}
+                                    />
+                                    {hasValue && (
+                                      <button
+                                        type="button"
+                                        onClick={() => {
+                                          setSocials({ ...socials, [key]: "" });
+                                          setSocialDraft("");
+                                          setEditingSocial(null);
+                                        }}
+                                        className="h-10 w-10 shrink-0 rounded-xl bg-muted text-muted-foreground hover:text-foreground transition-colors flex items-center justify-center"
+                                      >
+                                        <X size={16} />
+                                      </button>
+                                    )}
+                                  </div>
                                   <Button
                                     size="sm"
-                                    className="rounded-full px-4 h-9 text-xs"
+                                    className="rounded-xl px-6 h-10 text-xs w-full sm:w-auto"
                                     onClick={() => {
                                       setSocials({ ...socials, [key]: socialDraft });
                                       setEditingSocial(null);
@@ -420,19 +467,6 @@ const Onboarding = () => {
                                   >
                                     OK
                                   </Button>
-                                  {hasValue && (
-                                    <button
-                                      type="button"
-                                      onClick={() => {
-                                        setSocials({ ...socials, [key]: "" });
-                                        setSocialDraft("");
-                                        setEditingSocial(null);
-                                      }}
-                                      className="p-2 text-muted-foreground hover:text-foreground"
-                                    >
-                                      <X size={14} />
-                                    </button>
-                                  )}
                                 </div>
                               </motion.div>
                             )}
@@ -448,10 +482,8 @@ const Onboarding = () => {
               {step === 4 && (
                 <div className="max-w-md mx-auto space-y-6">
                   <div>
-                    <h1 className="text-2xl font-semibold">Portafolio</h1>
-                    <p className="text-muted-foreground font-light text-sm mt-1">
-                      Agrega hasta 3 videos que representen tu mejor trabajo.
-                    </p>
+                    <AnimatedText text="Portafolio" className="text-2xl font-semibold" />
+                    <AnimatedText text="Agrega hasta 3 videos que representen tu mejor trabajo." className="text-muted-foreground font-light text-sm mt-1" />
                   </div>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                     {videos.map(({ val, set }, i) => {
@@ -533,10 +565,8 @@ const Onboarding = () => {
               {step === 5 && (
                 <div className="max-w-md mx-auto space-y-6">
                   <div>
-                    <h1 className="text-2xl font-semibold">Contacto</h1>
-                    <p className="text-muted-foreground font-light text-sm mt-1">
-                      ¿Cómo pueden contactarte las marcas?
-                    </p>
+                    <AnimatedText text="Contacto" className="text-2xl font-semibold" />
+                    <AnimatedText text="¿Cómo pueden contactarte?" className="text-muted-foreground font-light text-sm mt-1" />
                   </div>
                   <div>
                     <label className="text-xs text-muted-foreground mb-1.5 block font-light">Número celular</label>
@@ -611,10 +641,8 @@ const Onboarding = () => {
                   <div className="mx-auto w-28 h-28">
                     <img src={onboardingDone} alt="Listo" className="w-full h-full object-contain" />
                   </div>
-                  <h1 className="text-3xl font-semibold">¡Todo listo!</h1>
-                  <p className="text-muted-foreground font-light text-base max-w-xs mx-auto">
-                    Es hora de descubrir oportunidades y pasar al siguiente nivel.
-                  </p>
+                  <AnimatedText text="¡Todo listo!" className="text-3xl font-semibold" />
+                  <AnimatedText text="Es hora de descubrir oportunidades y pasar al siguiente nivel." className="text-muted-foreground font-light text-base max-w-xs mx-auto" />
                   <div className="pt-2">
                     <Button onClick={handleFinish} className="px-10 rounded-full">
                       Empezar a descubrir
