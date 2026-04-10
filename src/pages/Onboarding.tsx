@@ -274,7 +274,7 @@ const Onboarding = () => {
                     onClick={next}
                     className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors font-light mx-auto"
                   >
-                    <SkipForward size={14} /> Saltar este paso
+                    <SkipForward size={14} /> No soy creador de contenido
                   </button>
                 </div>
               )}
