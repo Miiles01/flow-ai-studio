@@ -324,6 +324,11 @@ const Onboarding = () => {
                     <p className="text-muted-foreground font-light text-sm">
                       Agrega al menos <span className="font-normal text-foreground">3 medios de contacto</span>.
                     </p>
+                    {filledSocialsCount >= 3 && (
+                      <Button onClick={next} className="rounded-full px-8 text-sm">
+                        Continuar
+                      </Button>
+                    )}
                   </div>
                   {/* Right — platform list */}
                   <div className="flex-1 rounded-2xl bg-gradient-to-b from-[#FDFDFD] to-[#F8F9FD] shadow-[0px_100px_170px_0px_rgba(39,39,62,0.05)] divide-y divide-muted/40">
