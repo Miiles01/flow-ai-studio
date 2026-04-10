@@ -333,23 +333,7 @@ export default function Dashboard() {
                     </div>
                   </Link>
                   <button
-                    onClick={() => {
-                      if (window.confirm("¿Estás seguro que quieres cancelar esta postulación?")) {
-                        (async () => {
-                          const { error } = await supabase
-                            .from("user_applications")
-                            .delete()
-                            .eq("id", app.id);
-                          if (!error) {
-                            setApplications((prev) => prev.filter((a) => a.id !== app.id));
-                            setSavedCount((c) => Math.max(0, c - 1));
-                            toast.success("Postulación eliminada");
-                          } else {
-                            toast.error("Error al eliminar");
-                          }
-                        })();
-                      }
-                    }}
+                    onClick={() => setConfirmDeleteId(app.id)}
                     className="p-2 text-miiles-gray-400 hover:text-destructive-foreground transition-colors flex-shrink-0"
                   >
                     <Trash2 size={14} />
