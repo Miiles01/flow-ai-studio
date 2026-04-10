@@ -5,11 +5,11 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import { Plus, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowRight, ArrowLeft, Loader2, SkipForward, HandMetal } from "lucide-react";
+import { ArrowRight, ArrowLeft, Loader2, SkipForward } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import logoImg from "@/assets/logo.png";
+import onboardingHero from "@/assets/onboarding-hero.png";
 
 const TOTAL_STEPS = 5;
 
@@ -142,17 +142,21 @@ const Onboarding = () => {
             >
               {/* Step 0: Welcome */}
               {step === 0 && (
-                <div className="text-center space-y-4">
-                  <HandMetal size={32} className="mx-auto text-foreground mb-2" strokeWidth={1.5} />
-                  <h1 className="text-3xl font-light">
-                    Hola, <span className="font-normal">{displayName}</span>
+                <div className="text-center space-y-6">
+                  <img
+                    src={onboardingHero}
+                    alt="Miiles"
+                    className="mx-auto w-full max-w-sm rounded-2xl"
+                  />
+                  <h1 className="text-3xl font-semibold">
+                    ¡Hola {displayName}!
                   </h1>
-                  <p className="text-muted-foreground font-light text-sm">
-                    Vamos a configurar tu perfil para que las marcas te encuentren.
+                  <p className="text-muted-foreground font-light text-base max-w-xs mx-auto">
+                    Presentamos Miiles: una nueva forma para crear colaboraciones.
                   </p>
-                  <div className="pt-6">
-                    <Button onClick={next} className="w-full">
-                      Comenzar <ArrowRight size={16} className="ml-2" />
+                  <div className="pt-2">
+                    <Button onClick={next} className="px-10 rounded-full">
+                      Continuar
                     </Button>
                   </div>
                 </div>
