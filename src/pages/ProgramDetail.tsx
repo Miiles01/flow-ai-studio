@@ -3,9 +3,14 @@ import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
-import { ArrowLeft, ExternalLink, Loader2, CheckCircle2, Bookmark, Share2, Copy, Check } from "lucide-react";
+import { ArrowLeft, ExternalLink, Loader2, CheckCircle2, Bookmark, Share2, Check, Pencil } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import EarningsCalculator from "@/components/program/EarningsCalculator";
+import ProgramGallery from "@/components/program/ProgramGallery";
 
 type Program = {
   id: string;
@@ -19,6 +24,9 @@ type Program = {
   logo_url: string | null;
   banner_url: string | null;
   banner_position: number;
+  price_min: number | null;
+  price_max: number | null;
+  gallery_images: string[];
 };
 
 type ApplicationStatus = "none" | "saved" | "applied";
@@ -32,10 +40,11 @@ export default function ProgramDetail() {
   const [appStatus, setAppStatus] = useState<ApplicationStatus>("none");
   const [applying, setApplying] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false);
+  const [editOpen, setEditOpen] = useState(false);
 
   const handleCopyLink = () => {
-    const url = window.location.href;
-    navigator.clipboard.writeText(url).then(() => {
+    navigator.clipboard.writeText(window.location.href).then(() => {
       setCopied(true);
       toast.success("Link copiado al portapapeles");
       setTimeout(() => setCopied(false), 2000);
@@ -46,10 +55,20 @@ export default function ProgramDetail() {
     if (!id) return;
     const fetchData = async () => {
       const progRes = await supabase.from("brand_programs").select("*").eq("id", id).single();
-      setProgram(progRes.data as Program | null);
+      const data = progRes.data as any;
+      if (data) {
+        setProgram({
+          ...data,
+          gallery_images: Array.isArray(data.gallery_images) ? data.gallery_images : [],
+        });
+      }
       if (user) {
-        const appRes = await supabase.from("user_applications").select("status").eq("user_id", user.id).eq("program_id", id).maybeSingle();
+        const [appRes, roleRes] = await Promise.all([
+          supabase.from("user_applications").select("status").eq("user_id", user.id).eq("program_id", id).maybeSingle(),
+          supabase.from("user_roles").select("role").eq("user_id", user.id).eq("role", "admin").maybeSingle(),
+        ]);
         setAppStatus((appRes.data?.status as ApplicationStatus) || "none");
+        setIsAdmin(!!roleRes.data);
       }
       setLoading(false);
     };
@@ -61,28 +80,14 @@ export default function ProgramDetail() {
     setApplying(true);
     if (appStatus === "none") {
       const { error } = await supabase.from("user_applications").insert({
-        user_id: user.id,
-        program_id: id,
-        status: "applied",
+        user_id: user.id, program_id: id, status: "applied",
       });
-      if (!error) {
-        setAppStatus("applied");
-        toast.success("¡Te has postulado correctamente!");
-      } else {
-        toast.error("Error al postularte");
-      }
+      if (!error) { setAppStatus("applied"); toast.success("¡Te has postulado correctamente!"); }
+      else toast.error("Error al postularte");
     } else if (appStatus === "saved") {
-      const { error } = await supabase
-        .from("user_applications")
-        .update({ status: "applied" })
-        .eq("user_id", user.id)
-        .eq("program_id", id);
-      if (!error) {
-        setAppStatus("applied");
-        toast.success("¡Te has postulado correctamente!");
-      } else {
-        toast.error("Error al postularte");
-      }
+      const { error } = await supabase.from("user_applications").update({ status: "applied" }).eq("user_id", user.id).eq("program_id", id);
+      if (!error) { setAppStatus("applied"); toast.success("¡Te has postulado correctamente!"); }
+      else toast.error("Error al postularte");
     }
     setApplying(false);
   }
@@ -118,6 +123,24 @@ export default function ProgramDetail() {
           <ArrowLeft size={16} />
           Volver a programas
         </button>
+
+        {/* Earnings Calculator — top */}
+        <div className="mb-8">
+          <EarningsCalculator
+            commissionRate={program.commission_rate}
+            priceMin={program.price_min}
+            priceMax={program.price_max}
+          />
+          {isAdmin && (
+            <button
+              onClick={() => setEditOpen(true)}
+              className="inline-flex items-center gap-1 text-xs text-miiles-blue font-light mt-2 hover:underline"
+            >
+              <Pencil size={12} />
+              Editar datos del calculador
+            </button>
+          )}
+        </div>
 
         {/* Banner */}
         {program.banner_url && (
@@ -187,13 +210,10 @@ export default function ProgramDetail() {
             </div>
           ) : (
             <Button onClick={handleApply} disabled={applying} className="px-6">
-              {applying ? (
-                <Loader2 size={14} className="animate-spin mr-2" />
-              ) : null}
+              {applying ? <Loader2 size={14} className="animate-spin mr-2" /> : null}
               Postularme
             </Button>
           )}
-
           {appStatus === "saved" && (
             <span className="inline-flex items-center gap-1.5 text-xs text-miiles-gray-400 font-light">
               <Bookmark size={14} />
@@ -201,7 +221,99 @@ export default function ProgramDetail() {
             </span>
           )}
         </div>
+
+        {/* Gallery — bottom */}
+        <ProgramGallery
+          programId={program.id}
+          images={program.gallery_images}
+          isAdmin={isAdmin}
+          onUpdate={(imgs) => setProgram({ ...program, gallery_images: imgs })}
+        />
       </motion.div>
+
+      {/* Admin edit dialog for calculator data */}
+      {isAdmin && (
+        <AdminEditDialog
+          open={editOpen}
+          onOpenChange={setEditOpen}
+          program={program}
+          onSave={(updated) => setProgram({ ...program, ...updated })}
+        />
+      )}
     </div>
+  );
+}
+
+function AdminEditDialog({
+  open,
+  onOpenChange,
+  program,
+  onSave,
+}: {
+  open: boolean;
+  onOpenChange: (v: boolean) => void;
+  program: Program;
+  onSave: (data: Partial<Program>) => void;
+}) {
+  const [priceMin, setPriceMin] = useState(String(program.price_min ?? ""));
+  const [priceMax, setPriceMax] = useState(String(program.price_max ?? ""));
+  const [commissionRate, setCommissionRate] = useState(program.commission_rate ?? "");
+  const [saving, setSaving] = useState(false);
+
+  useEffect(() => {
+    setPriceMin(String(program.price_min ?? ""));
+    setPriceMax(String(program.price_max ?? ""));
+    setCommissionRate(program.commission_rate ?? "");
+  }, [program, open]);
+
+  async function handleSave() {
+    setSaving(true);
+    const { error } = await supabase.from("brand_programs").update({
+      price_min: priceMin ? Number(priceMin) : null,
+      price_max: priceMax ? Number(priceMax) : null,
+      commission_rate: commissionRate || null,
+    } as any).eq("id", program.id);
+    if (!error) {
+      onSave({
+        price_min: priceMin ? Number(priceMin) : null,
+        price_max: priceMax ? Number(priceMax) : null,
+        commission_rate: commissionRate || null,
+      });
+      onOpenChange(false);
+      toast.success("Datos actualizados");
+    } else {
+      toast.error("Error al actualizar");
+    }
+    setSaving(false);
+  }
+
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent className="sm:max-w-sm">
+        <DialogHeader>
+          <DialogTitle className="font-normal">Datos del calculador</DialogTitle>
+        </DialogHeader>
+        <div className="space-y-4 mt-2">
+          <div className="grid grid-cols-2 gap-3">
+            <div className="space-y-1.5">
+              <Label className="font-light text-xs">Precio mínimo ($)</Label>
+              <Input type="number" value={priceMin} onChange={(e) => setPriceMin(e.target.value)} placeholder="0" />
+            </div>
+            <div className="space-y-1.5">
+              <Label className="font-light text-xs">Precio máximo ($)</Label>
+              <Input type="number" value={priceMax} onChange={(e) => setPriceMax(e.target.value)} placeholder="0" />
+            </div>
+          </div>
+          <div className="space-y-1.5">
+            <Label className="font-light text-xs">Comisión</Label>
+            <Input value={commissionRate} onChange={(e) => setCommissionRate(e.target.value)} placeholder="ej: 10%" />
+          </div>
+          <Button onClick={handleSave} disabled={saving} className="w-full">
+            {saving ? <Loader2 size={14} className="animate-spin mr-2" /> : null}
+            Guardar
+          </Button>
+        </div>
+      </DialogContent>
+    </Dialog>
   );
 }
