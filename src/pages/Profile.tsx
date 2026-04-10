@@ -80,7 +80,10 @@ const Profile = () => {
         niche,
         phone,
         portfolio_url: portfolioUrl,
-      } as any)
+        video_url_1: videoUrl1,
+        video_url_2: videoUrl2,
+        video_url_3: videoUrl3,
+      })
       .eq("user_id", user.id);
     if (error) {
       toast.error("Error al guardar");
