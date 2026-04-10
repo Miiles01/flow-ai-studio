@@ -169,7 +169,6 @@ const Onboarding = () => {
   const [countryCode, setCountryCode] = useState(COUNTRY_CODES[0]);
   const [showCountryPicker, setShowCountryPicker] = useState(false);
   const [countrySearch, setCountrySearch] = useState("");
-  const [phone, setPhone] = useState("");
 
   const displayName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Usuario";
 
