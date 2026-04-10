@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Home, ShoppingBag, User, LogOut } from "lucide-react";
+import { Home, ShoppingBag, User } from "lucide-react";
 import logoImg from "@/assets/logo.png";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -90,22 +90,6 @@ function SidebarBody() {
 
         <div className="flex-1" />
 
-        {/* Sign out */}
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  onClick={handleSignOut}
-                  className="text-muted-foreground hover:text-foreground hover:bg-muted transition-all duration-200 rounded-sm cursor-pointer"
-                >
-                  <LogOut className="mr-2 h-4 w-4" />
-                  {!collapsed && <span className="font-light">Cerrar sesión</span>}
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
 
         {/* User profile card at bottom */}
         {!collapsed && (
