@@ -15,7 +15,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import AvatarUpload from "@/components/AvatarUpload";
-import { supabase as sb } from "@/integrations/supabase/client";
+
 
 const Profile = () => {
   const { user, signOut } = useAuth();
@@ -30,6 +30,9 @@ const Profile = () => {
   const [niche, setNiche] = useState("");
   const [phone, setPhone] = useState("");
   const [portfolioUrl, setPortfolioUrl] = useState("");
+  const [videoUrl1, setVideoUrl1] = useState("");
+  const [videoUrl2, setVideoUrl2] = useState("");
+  const [videoUrl3, setVideoUrl3] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -51,7 +54,10 @@ const Profile = () => {
           setBio(data.bio || "");
           setNiche(data.niche || "");
           setPhone(data.phone || "");
-          setPortfolioUrl((data as any).portfolio_url || "");
+          setPortfolioUrl(data.portfolio_url || "");
+          setVideoUrl1(data.video_url_1 || "");
+          setVideoUrl2(data.video_url_2 || "");
+          setVideoUrl3(data.video_url_3 || "");
         }
         setLoading(false);
       });
@@ -74,7 +80,10 @@ const Profile = () => {
         niche,
         phone,
         portfolio_url: portfolioUrl,
-      } as any)
+        video_url_1: videoUrl1,
+        video_url_2: videoUrl2,
+        video_url_3: videoUrl3,
+      })
       .eq("user_id", user.id);
     if (error) {
       toast.error("Error al guardar");
@@ -104,7 +113,7 @@ const Profile = () => {
   const handleAvatarUploaded = async (url: string) => {
     setAvatarUrl(url);
     if (user) {
-      await supabase.from("profiles").update({ avatar_url: url } as any).eq("user_id", user.id);
+      await supabase.from("profiles").update({ avatar_url: url }).eq("user_id", user.id);
     }
   };
 
@@ -205,7 +214,36 @@ const Profile = () => {
             </CardContent>
           </Card>
 
-          {/* Links */}
+          {/* Portafolio de videos */}
+          <Card>
+            <CardHeader className="pb-4">
+              <CardTitle className="text-base">Portafolio de videos</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div>
+                <label className="text-xs text-muted-foreground mb-1.5 block font-light">Video 1</label>
+                <div className="relative">
+                  <Video size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                  <Input value={videoUrl1} onChange={(e) => setVideoUrl1(e.target.value)} placeholder="https://tiktok.com/..." className="pl-9" />
+                </div>
+              </div>
+              <div>
+                <label className="text-xs text-muted-foreground mb-1.5 block font-light">Video 2</label>
+                <div className="relative">
+                  <Video size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                  <Input value={videoUrl2} onChange={(e) => setVideoUrl2(e.target.value)} placeholder="https://instagram.com/reel/..." className="pl-9" />
+                </div>
+              </div>
+              <div>
+                <label className="text-xs text-muted-foreground mb-1.5 block font-light">Video 3</label>
+                <div className="relative">
+                  <Video size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+                  <Input value={videoUrl3} onChange={(e) => setVideoUrl3(e.target.value)} placeholder="https://youtube.com/watch?v=..." className="pl-9" />
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+
           <Card>
             <CardHeader className="pb-4">
               <CardTitle className="text-base">Links</CardTitle>
