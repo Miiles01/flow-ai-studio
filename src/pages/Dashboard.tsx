@@ -42,11 +42,22 @@ function getGreeting() {
   return "Buenas noches";
 }
 
+type UserApplication = {
+  id: string;
+  program_id: string;
+  status: string;
+  created_at: string;
+  program_name?: string;
+  brand_name?: string;
+};
+
 export default function Dashboard() {
   const { user } = useAuth();
   const [displayName, setDisplayName] = useState("");
   const [featured, setFeatured] = useState<Program[]>([]);
   const [savedCount, setSavedCount] = useState(0);
+  const [applications, setApplications] = useState<UserApplication[]>([]);
+  const [appsOpen, setAppsOpen] = useState(false);
   const [loading, setLoading] = useState(true);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [notifOpen, setNotifOpen] = useState(false);
@@ -70,12 +81,34 @@ export default function Dashboard() {
       supabase.from("user_applications").select("id", { count: "exact" }).eq("user_id", user.id),
       supabase.from("notifications").select("*").eq("recipient_id", user.id).order("created_at", { ascending: false }).limit(50),
       supabase.from("user_roles").select("role").eq("user_id", user.id).eq("role", "admin").maybeSingle(),
-    ]).then(([profileRes, programsRes, appsRes, notifRes, roleRes]) => {
+    ]).then(async ([profileRes, programsRes, appsRes, notifRes, roleRes]) => {
       setDisplayName(profileRes.data?.display_name || user.email?.split("@")[0] || "");
       setFeatured((programsRes.data as Program[]) || []);
       setSavedCount(appsRes.count || 0);
       setNotifications((notifRes.data as Notification[]) || []);
       setIsAdmin(!!roleRes.data);
+
+      // Load applications with program names
+      const { data: appsData } = await supabase
+        .from("user_applications")
+        .select("id, program_id, status, created_at")
+        .eq("user_id", user.id)
+        .order("created_at", { ascending: false });
+
+      if (appsData && appsData.length > 0) {
+        const programIds = [...new Set(appsData.map((a) => a.program_id))];
+        const { data: programs } = await supabase
+          .from("brand_programs")
+          .select("id, name, brand_name")
+          .in("id", programIds);
+
+        const merged = appsData.map((a) => {
+          const p = programs?.find((pr) => pr.id === a.program_id);
+          return { ...a, program_name: p?.name || "", brand_name: p?.brand_name || "" };
+        });
+        setApplications(merged);
+      }
+
       setLoading(false);
     });
   }, [user]);
