@@ -296,7 +296,66 @@ export default function Dashboard() {
         </DialogContent>
       </Dialog>
 
-      {/* Admin: send notification dialog */}
+      {/* Projects / Applications popup */}
+      <Dialog open={appsOpen} onOpenChange={setAppsOpen}>
+        <DialogContent className="sm:max-w-md max-h-[70vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle className="font-normal">Mis proyectos</DialogTitle>
+          </DialogHeader>
+          {applications.length === 0 ? (
+            <p className="text-sm text-miiles-gray-400 font-light py-8 text-center">No tienes postulaciones aún</p>
+          ) : (
+            <div className="space-y-2">
+              {applications.map((app) => (
+                <div
+                  key={app.id}
+                  className="flex items-center justify-between p-3 rounded-md hover:bg-muted/50 transition-colors"
+                >
+                  <Link
+                    to={`/programs/${app.program_id}`}
+                    className="flex-1 min-w-0"
+                    onClick={() => setAppsOpen(false)}
+                  >
+                    <p className="text-sm font-normal truncate">{app.brand_name}</p>
+                    <p className="text-[10px] text-miiles-gray-400 font-light mt-0.5">{app.program_name}</p>
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className={`text-[10px] px-2 py-0.5 rounded-full font-light ${
+                        app.status === "applied"
+                          ? "bg-miiles-blue-light text-miiles-blue"
+                          : "bg-muted text-muted-foreground"
+                      }`}>
+                        {app.status === "applied" ? "Postulado" : "Guardado"}
+                      </span>
+                      <span className="text-[10px] text-miiles-gray-400 font-light">
+                        {new Date(app.created_at).toLocaleDateString("es-ES", { day: "numeric", month: "short" })}
+                      </span>
+                    </div>
+                  </Link>
+                  <button
+                    onClick={async () => {
+                      const { error } = await supabase
+                        .from("user_applications")
+                        .delete()
+                        .eq("id", app.id);
+                      if (!error) {
+                        setApplications((prev) => prev.filter((a) => a.id !== app.id));
+                        setSavedCount((c) => Math.max(0, c - 1));
+                        toast.success("Postulación eliminada");
+                      } else {
+                        toast.error("Error al eliminar");
+                      }
+                    }}
+                    className="p-2 text-miiles-gray-400 hover:text-destructive-foreground transition-colors flex-shrink-0"
+                  >
+                    <Trash2 size={14} />
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+        </DialogContent>
+      </Dialog>
+
       <Dialog open={sendOpen} onOpenChange={setSendOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
