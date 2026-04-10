@@ -74,8 +74,15 @@ const Profile = () => {
   const [videoUrl1, setVideoUrl1] = useState("");
   const [videoUrl2, setVideoUrl2] = useState("");
   const [videoUrl3, setVideoUrl3] = useState("");
+  const [editingVideo, setEditingVideo] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+
+  const videos = [
+    { val: videoUrl1, set: setVideoUrl1 },
+    { val: videoUrl2, set: setVideoUrl2 },
+    { val: videoUrl3, set: setVideoUrl3 },
+  ];
 
   useEffect(() => {
     if (!user) return;
