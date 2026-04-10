@@ -33,15 +33,17 @@ export default function ProgramDetail() {
   const [applying, setApplying] = useState(false);
 
   useEffect(() => {
-    if (!user || !id) return;
-    Promise.all([
-      supabase.from("brand_programs").select("*").eq("id", id).single(),
-      supabase.from("user_applications").select("status").eq("user_id", user.id).eq("program_id", id).maybeSingle(),
-    ]).then(([progRes, appRes]) => {
+    if (!id) return;
+    const fetchData = async () => {
+      const progRes = await supabase.from("brand_programs").select("*").eq("id", id).single();
       setProgram(progRes.data as Program | null);
-      setAppStatus((appRes.data?.status as ApplicationStatus) || "none");
+      if (user) {
+        const appRes = await supabase.from("user_applications").select("status").eq("user_id", user.id).eq("program_id", id).maybeSingle();
+        setAppStatus((appRes.data?.status as ApplicationStatus) || "none");
+      }
       setLoading(false);
-    });
+    };
+    fetchData();
   }, [user, id]);
 
   async function handleApply() {
@@ -155,7 +157,11 @@ export default function ProgramDetail() {
 
         {/* Action area */}
         <div className="mt-10 flex items-center gap-4">
-          {appStatus === "applied" ? (
+          {!user ? (
+            <Button onClick={() => navigate("/login")} className="px-6">
+              Iniciar sesión para postularme
+            </Button>
+          ) : appStatus === "applied" ? (
             <div className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full bg-miiles-blue-light text-miiles-blue text-sm font-light">
               <CheckCircle2 size={16} />
               Postulado
