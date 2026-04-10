@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   User, Save, Loader2, Instagram, Tag, Phone, Globe,
-  LogOut, Twitter, Youtube, Video
+  LogOut, Twitter, Youtube, Video, Plus, Pencil, X
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -16,7 +16,48 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import AvatarUpload from "@/components/AvatarUpload";
 
+function getVideoEmbedUrl(url: string): string | null {
+  if (!url.trim()) return null;
+  const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/);
+  if (ytMatch) return `https://www.youtube.com/embed/${ytMatch[1]}`;
+  const ttMatch = url.match(/tiktok\.com\/@[^/]+\/video\/(\d+)/);
+  if (ttMatch) return `https://www.tiktok.com/embed/v2/${ttMatch[1]}`;
+  const igMatch = url.match(/instagram\.com\/(?:reel|p)\/([a-zA-Z0-9_-]+)/);
+  if (igMatch) return `https://www.instagram.com/p/${igMatch[1]}/embed`;
+  return null;
+}
 
+function VideoLinkPopover({ value, onSave, onCancel }: { value: string; onSave: (v: string) => void; onCancel: () => void }) {
+  const [draft, setDraft] = useState(value);
+  return (
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40" onClick={onCancel}>
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 40 }}
+        onClick={(e) => e.stopPropagation()}
+        className="w-full max-w-md mx-4 mb-4 sm:mb-0 p-5 rounded-2xl bg-foreground space-y-4"
+      >
+        <p className="text-background text-sm font-medium">Pega el link del video</p>
+        <Input
+          autoFocus
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          placeholder="https://youtube.com/watch?v=..."
+          className="bg-background/10 border-none shadow-none text-background placeholder:text-background/40 text-base h-12"
+        />
+        <div className="flex gap-3">
+          <button type="button" onClick={() => onSave(draft)} className="flex-1 text-sm py-2.5 rounded-xl bg-background text-foreground font-medium">
+            Guardar
+          </button>
+          <button type="button" onClick={onCancel} className="text-sm py-2.5 px-5 rounded-xl text-background/70 hover:text-background">
+            Cancelar
+          </button>
+        </div>
+      </motion.div>
+    </div>
+  );
+}
 const Profile = () => {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
@@ -33,8 +74,15 @@ const Profile = () => {
   const [videoUrl1, setVideoUrl1] = useState("");
   const [videoUrl2, setVideoUrl2] = useState("");
   const [videoUrl3, setVideoUrl3] = useState("");
+  const [editingVideo, setEditingVideo] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+
+  const videos = [
+    { val: videoUrl1, set: setVideoUrl1 },
+    { val: videoUrl2, set: setVideoUrl2 },
+    { val: videoUrl3, set: setVideoUrl3 },
+  ];
 
   useEffect(() => {
     if (!user) return;
@@ -218,28 +266,56 @@ const Profile = () => {
           <Card>
             <CardHeader className="pb-4">
               <CardTitle className="text-base">Portafolio de videos</CardTitle>
+              <p className="text-xs text-muted-foreground font-light mt-1">Agrega hasta 3 videos que representen tu mejor trabajo.</p>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <label className="text-xs text-muted-foreground mb-1.5 block font-light">Video 1</label>
-                <div className="relative">
-                  <Video size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                  <Input value={videoUrl1} onChange={(e) => setVideoUrl1(e.target.value)} placeholder="https://tiktok.com/..." className="pl-9" />
-                </div>
-              </div>
-              <div>
-                <label className="text-xs text-muted-foreground mb-1.5 block font-light">Video 2</label>
-                <div className="relative">
-                  <Video size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                  <Input value={videoUrl2} onChange={(e) => setVideoUrl2(e.target.value)} placeholder="https://instagram.com/reel/..." className="pl-9" />
-                </div>
-              </div>
-              <div>
-                <label className="text-xs text-muted-foreground mb-1.5 block font-light">Video 3</label>
-                <div className="relative">
-                  <Video size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                  <Input value={videoUrl3} onChange={(e) => setVideoUrl3(e.target.value)} placeholder="https://youtube.com/watch?v=..." className="pl-9" />
-                </div>
+            <CardContent>
+              <div className="grid grid-cols-3 gap-3">
+                {videos.map(({ val, set }, i) => {
+                  const embedUrl = getVideoEmbedUrl(val);
+                  return (
+                    <div key={i} className="relative">
+                      <div className="aspect-[9/16] rounded-xl overflow-hidden bg-muted/40 relative group">
+                        {embedUrl ? (
+                          <>
+                            <iframe
+                              src={embedUrl}
+                              className="w-full h-full"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                              allowFullScreen
+                              title={`Video ${i + 1}`}
+                            />
+                            <div className="absolute inset-0 bg-foreground/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                              <button type="button" onClick={() => setEditingVideo(i)} className="p-2 rounded-full bg-background/90 text-foreground">
+                                <Pencil size={14} />
+                              </button>
+                              <button type="button" onClick={() => { set(""); setEditingVideo(null); }} className="p-2 rounded-full bg-background/90 text-foreground">
+                                <X size={14} />
+                              </button>
+                            </div>
+                          </>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => setEditingVideo(i)}
+                            className="flex flex-col items-center justify-center w-full h-full text-muted-foreground hover:text-foreground transition-colors"
+                          >
+                            <Plus size={20} />
+                            <span className="text-[10px] font-light mt-1">Video {i + 1}</span>
+                          </button>
+                        )}
+                      </div>
+                      <AnimatePresence>
+                        {editingVideo === i && (
+                          <VideoLinkPopover
+                            value={val}
+                            onSave={(v) => { set(v); setEditingVideo(null); }}
+                            onCancel={() => setEditingVideo(null)}
+                          />
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  );
+                })}
               </div>
             </CardContent>
           </Card>
