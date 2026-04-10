@@ -70,36 +70,40 @@ function VideoLinkPopover({
 }) {
   const [draft, setDraft] = useState(value);
   return (
-    <motion.div
-      initial={{ opacity: 0, y: 8 }}
-      animate={{ opacity: 1, y: 0 }}
-      exit={{ opacity: 0, y: 8 }}
-      className="absolute inset-x-0 bottom-0 z-10 p-4 rounded-xl bg-foreground"
-    >
-      <Input
-        autoFocus
-        value={draft}
-        onChange={(e) => setDraft(e.target.value)}
-        placeholder="Pega el link del video..."
-        className="bg-background/10 border-none shadow-none text-background placeholder:text-background/50 text-sm h-10 mb-3"
-      />
-      <div className="flex gap-2">
-        <button
-          type="button"
-          onClick={() => onSave(draft)}
-          className="flex-1 text-sm py-2 rounded-lg bg-background text-foreground font-normal"
-        >
-          Guardar
-        </button>
-        <button
-          type="button"
-          onClick={onCancel}
-          className="text-sm py-2 px-4 rounded-lg text-background/70 hover:text-background"
-        >
-          Cancelar
-        </button>
-      </div>
-    </motion.div>
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40" onClick={onCancel}>
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        animate={{ opacity: 1, y: 0 }}
+        exit={{ opacity: 0, y: 40 }}
+        onClick={(e) => e.stopPropagation()}
+        className="w-full max-w-md mx-4 mb-4 sm:mb-0 p-5 rounded-2xl bg-foreground space-y-4"
+      >
+        <p className="text-background text-sm font-medium">Pega el link del video</p>
+        <Input
+          autoFocus
+          value={draft}
+          onChange={(e) => setDraft(e.target.value)}
+          placeholder="https://youtube.com/watch?v=..."
+          className="bg-background/10 border-none shadow-none text-background placeholder:text-background/40 text-base h-12"
+        />
+        <div className="flex gap-3">
+          <button
+            type="button"
+            onClick={() => onSave(draft)}
+            className="flex-1 text-sm py-2.5 rounded-xl bg-background text-foreground font-medium"
+          >
+            Guardar
+          </button>
+          <button
+            type="button"
+            onClick={onCancel}
+            className="text-sm py-2.5 px-5 rounded-xl text-background/70 hover:text-background"
+          >
+            Cancelar
+          </button>
+        </div>
+      </motion.div>
+    </div>
   );
 }
 
