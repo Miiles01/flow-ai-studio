@@ -15,6 +15,8 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import Onboarding from "./pages/Onboarding";
+import ProgramApplicants from "./pages/ProgramApplicants";
+import PublicApplicants from "./pages/PublicApplicants";
 import NotFound from "./pages/NotFound";
 import { useEffect, useState } from "react";
 
@@ -76,6 +78,8 @@ const App = () => (
             {/* <Route path="/search" element={<DashboardRoute><SearchAI /></DashboardRoute>} /> */}
             {/* <Route path="/flows" element={<DashboardRoute><Index /></DashboardRoute>} /> */}
             <Route path="/profile" element={<DashboardRoute><Profile /></DashboardRoute>} />
+            <Route path="/programs/:id/applicants" element={<ProtectedRoute><ProgramApplicants /></ProtectedRoute>} />
+            <Route path="/applicants/:token" element={<PublicApplicants />} />
             <Route path="/onboarding" element={<ProtectedOnboardingRoute><Onboarding /></ProtectedOnboardingRoute>} />
             <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
             <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
