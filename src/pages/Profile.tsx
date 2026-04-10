@@ -54,7 +54,10 @@ const Profile = () => {
           setBio(data.bio || "");
           setNiche(data.niche || "");
           setPhone(data.phone || "");
-          setPortfolioUrl((data as any).portfolio_url || "");
+          setPortfolioUrl(data.portfolio_url || "");
+          setVideoUrl1(data.video_url_1 || "");
+          setVideoUrl2(data.video_url_2 || "");
+          setVideoUrl3(data.video_url_3 || "");
         }
         setLoading(false);
       });
