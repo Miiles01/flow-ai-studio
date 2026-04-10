@@ -332,7 +332,7 @@ const Onboarding = () => {
                                     value={socialDraft}
                                     onChange={(e) => setSocialDraft(e.target.value)}
                                     placeholder={`Tu ${label}`}
-                                    className="flex-1 h-9 text-sm border-none shadow-none bg-muted"
+                                    className="flex-1 h-9 text-sm border-none shadow-none bg-muted focus-visible:ring-0"
                                     onKeyDown={(e) => {
                                       if (e.key === "Enter") {
                                         setSocials({ ...socials, [key]: socialDraft });
