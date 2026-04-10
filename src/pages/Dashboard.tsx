@@ -214,26 +214,14 @@ export default function Dashboard() {
           initial={{ y: 10, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.05 }}
-          className="p-5 rounded-lg shadow-md"
+          className="p-5 rounded-lg shadow-md cursor-pointer hover:-translate-y-1 transition-transform duration-200"
+          onClick={() => setAppsOpen(true)}
         >
           <div className="w-8 h-8 rounded-sm bg-background shadow-sm flex items-center justify-center mb-3">
-            <Bookmark size={16} className="text-miiles-blue" />
+            <Heart size={16} className="text-miiles-pink" />
           </div>
           <p className="text-2xl font-normal">{savedCount}</p>
-          <p className="text-xs text-miiles-gray-400 font-light mt-1">Guardados</p>
-        </motion.div>
-
-        <motion.div
-          initial={{ y: 10, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.1 }}
-          className="p-5 rounded-lg shadow-md"
-        >
-          <div className="w-8 h-8 rounded-sm bg-background shadow-sm flex items-center justify-center mb-3">
-            <TrendingUp size={16} className="text-miiles-blue" />
-          </div>
-          <p className="text-2xl font-normal">Deportes</p>
-          <p className="text-xs text-miiles-gray-400 font-light mt-1">Tendencia</p>
+          <p className="text-xs text-miiles-gray-400 font-light mt-1">Proyectos</p>
         </motion.div>
       </div>
 
