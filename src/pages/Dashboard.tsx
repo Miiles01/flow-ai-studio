@@ -459,7 +459,7 @@ export default function Dashboard() {
       <div>
         <div className="flex items-center justify-between mb-5">
           <h2 className="text-lg font-normal">Programas destacados</h2>
-          <Link to="/programs" className="text-xs text-accent hover:underline flex items-center gap-1 font-light">
+          <Link to="/programs" className="hidden text-xs text-accent hover:underline items-center gap-1 font-light">
             Ver todos <ArrowRight size={12} />
           </Link>
         </div>
