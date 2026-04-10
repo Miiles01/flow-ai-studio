@@ -190,7 +190,7 @@ export default function Dashboard() {
       </motion.div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 md:grid-cols-3 gap-5">
+      <div className="grid grid-cols-2 gap-5">
         {/* Notifications card */}
         <motion.div
           initial={{ y: 10, opacity: 0 }}
