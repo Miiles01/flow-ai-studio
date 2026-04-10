@@ -90,22 +90,6 @@ function SidebarBody() {
 
         <div className="flex-1" />
 
-        {/* Sign out */}
-        <SidebarGroup>
-          <SidebarGroupContent>
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  onClick={handleSignOut}
-                  className="text-muted-foreground hover:text-foreground hover:bg-muted transition-all duration-200 rounded-sm cursor-pointer"
-                >
-                  <LogOut className="mr-2 h-4 w-4" />
-                  {!collapsed && <span className="font-light">Cerrar sesión</span>}
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarGroupContent>
-        </SidebarGroup>
 
         {/* User profile card at bottom */}
         {!collapsed && (
