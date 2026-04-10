@@ -13,6 +13,8 @@ import onboardingHero from "@/assets/onboarding-hero.png";
 import onboardingDone from "@/assets/onboarding-done.png";
 import { getVideoEmbedUrl } from "@/lib/videoEmbed";
 
+const TOTAL_STEPS = 7;
+
 /* TikTok & X icons (not in lucide) */
 const TikTokIcon = ({ size = 20 }: { size?: number }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
