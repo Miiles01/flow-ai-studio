@@ -42,26 +42,32 @@ export default function ProgramApplicants() {
         });
 
         if (apps && apps.length > 0) {
-          const merged: Applicant[] = apps.map((a: any) => ({
-            application_id: a.application_id,
-            user_id: a.user_id,
-            status: a.status,
-            applied_at: a.applied_at,
-            display_name: a.display_name || null,
-            avatar_url: a.avatar_url || null,
-            bio: a.bio || null,
-            instagram_handle: a.instagram_handle || null,
-            tiktok_handle: a.tiktok_handle || null,
-            youtube_handle: a.youtube_handle || null,
-            twitter_handle: a.twitter_handle || null,
-            phone: a.phone || null,
-            portfolio_url: a.portfolio_url || null,
-            video_url_1: a.video_url_1 || null,
-            video_url_2: a.video_url_2 || null,
-            video_url_3: a.video_url_3 || null,
-            niche: a.niche || null,
-            liked: a.liked ?? false,
-          }));
+          const userIds = apps.map((a: any) => a.user_id);
+          const { data: profs } = await supabase.from("profiles").select("id, video_url_1, video_url_2, video_url_3").in("id", userIds);
+
+          const merged: Applicant[] = apps.map((a: any) => {
+            const p = profs?.find(prof => prof.id === a.user_id);
+            return {
+              application_id: a.application_id,
+              user_id: a.user_id,
+              status: a.status,
+              applied_at: a.applied_at,
+              display_name: a.display_name || null,
+              avatar_url: a.avatar_url || null,
+              bio: a.bio || null,
+              instagram_handle: a.instagram_handle || null,
+              tiktok_handle: a.tiktok_handle || null,
+              youtube_handle: a.youtube_handle || null,
+              twitter_handle: a.twitter_handle || null,
+              phone: a.phone || null,
+              portfolio_url: a.portfolio_url || null,
+              video_url_1: a.video_url_1 || p?.video_url_1 || null,
+              video_url_2: a.video_url_2 || p?.video_url_2 || null,
+              video_url_3: a.video_url_3 || p?.video_url_3 || null,
+              niche: a.niche || null,
+              liked: a.liked ?? false,
+            };
+          });
           setApplicants(merged);
         }
       }
