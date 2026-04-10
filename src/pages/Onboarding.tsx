@@ -201,6 +201,28 @@ const Onboarding = () => {
           transition={{ duration: 0.4, ease: "easeInOut" }}
         />
       </div>
+      {/* Top navigation arrows */}
+      {step > 0 && step < 5 && (
+        <div className="flex items-center justify-between px-6 py-4">
+          <button type="button" onClick={prev} className="p-2 rounded-full hover:bg-muted transition-colors text-foreground">
+            <ArrowLeft size={20} />
+          </button>
+          {step < 4 ? (
+            <button type="button" onClick={next} className="p-2 rounded-full hover:bg-muted transition-colors text-foreground">
+              <ArrowRight size={20} />
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={handleNextFromContact}
+              disabled={saving}
+              className="p-2 rounded-full hover:bg-muted transition-colors text-foreground disabled:opacity-50"
+            >
+              {saving ? <Loader2 size={20} className="animate-spin" /> : <ArrowRight size={20} />}
+            </button>
+          )}
+        </div>
+      )}
 
       <div className="flex-1 flex items-center justify-center p-6">
         <div className="w-full max-w-2xl">
