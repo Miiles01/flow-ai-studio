@@ -80,8 +80,6 @@ export default function ApplicantProfile({
               </div>
             </div>
           </div>
-            </div>
-          </div>
 
           {/* Bio */}
           {applicant.bio && (
