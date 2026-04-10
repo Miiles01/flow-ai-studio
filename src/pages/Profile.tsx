@@ -16,16 +16,7 @@ import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import AvatarUpload from "@/components/AvatarUpload";
 
-function getVideoEmbedUrl(url: string): string | null {
-  if (!url.trim()) return null;
-  const ytMatch = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/shorts\/)([a-zA-Z0-9_-]{11})/);
-  if (ytMatch) return `https://www.youtube.com/embed/${ytMatch[1]}`;
-  const ttMatch = url.match(/tiktok\.com\/@[^/]+\/video\/(\d+)/);
-  if (ttMatch) return `https://www.tiktok.com/embed/v2/${ttMatch[1]}`;
-  const igMatch = url.match(/instagram\.com\/(?:reel|p)\/([a-zA-Z0-9_-]+)/);
-  if (igMatch) return `https://www.instagram.com/p/${igMatch[1]}/embed`;
-  return null;
-}
+import { getVideoEmbedUrl } from "@/lib/videoEmbed";
 
 function VideoLinkPopover({ value, onSave, onCancel }: { value: string; onSave: (v: string) => void; onCancel: () => void }) {
   const [draft, setDraft] = useState(value);
