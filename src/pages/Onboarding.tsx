@@ -310,12 +310,30 @@ const Onboarding = () => {
                   </div>
                 </div>
               )}
+
+              {/* Step 5: Done */}
+              {step === 5 && (
+                <div className="text-center space-y-6">
+                  <div className="mx-auto w-28 h-28">
+                    <img src={onboardingDone} alt="Listo" className="w-full h-full object-contain" />
+                  </div>
+                  <h1 className="text-3xl font-semibold">¡Todo listo!</h1>
+                  <p className="text-muted-foreground font-light text-base max-w-xs mx-auto">
+                    Es hora de descubrir oportunidades y pasar al siguiente nivel.
+                  </p>
+                  <div className="pt-2">
+                    <Button onClick={handleFinish} className="px-10 rounded-full">
+                      Empezar a descubrir
+                    </Button>
+                  </div>
+                </div>
+              )}
             </motion.div>
           </AnimatePresence>
 
           {/* Navigation buttons */}
           <AnimatePresence mode="wait">
-            {step > 0 && (
+            {step > 0 && step < 5 && (
               <motion.div
                 key={`nav-${step}`}
                 initial={{ y: 30, opacity: 0 }}
@@ -327,12 +345,12 @@ const Onboarding = () => {
                 <Button variant="outline" onClick={prev} className="flex-1 shadow-sm border-none bg-muted/50">
                   <ArrowLeft size={16} className="mr-2" /> Atrás
                 </Button>
-                {step < TOTAL_STEPS - 1 ? (
+                {step < 4 ? (
                   <Button onClick={next} className="flex-1">
                     Siguiente <ArrowRight size={16} className="ml-2" />
                   </Button>
                 ) : (
-                  <Button onClick={handleFinish} className="flex-1" disabled={saving}>
+                  <Button onClick={handleNextFromContact} className="flex-1" disabled={saving}>
                     {saving && <Loader2 size={16} className="animate-spin mr-2" />}
                     Finalizar
                   </Button>
@@ -342,6 +360,7 @@ const Onboarding = () => {
           </AnimatePresence>
 
           {/* Step indicator dots */}
+          {step < 5 && (
           <motion.div
             key={`dots-${step}`}
             initial={{ y: 20, opacity: 0 }}
