@@ -231,7 +231,7 @@ export default function EarningsCalculator({ commissionRate, priceMin, priceMax,
               </AnimatePresence>
             </div>
 
-            <div className="flex-1 min-h-[160px] relative">
+            <div className="flex-1 min-h-[180px] relative">
               <canvas
                 ref={canvasRef}
                 className="w-full h-full"
