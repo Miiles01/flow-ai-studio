@@ -494,7 +494,7 @@ const Onboarding = () => {
                     <p className="text-muted-foreground font-light text-sm mt-1">
                       Agrega hasta 3 videos que representen tu mejor trabajo.{" "}
                       <span className="font-semibold text-foreground">
-                        Esto puede ayudar a ver mejor los resultados que has conseguido.
+                        Esto puede ayudar a conocer mejor tus resultados.
                       </span>
                     </p>
                   </div>
