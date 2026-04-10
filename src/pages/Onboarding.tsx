@@ -74,7 +74,7 @@ function VideoLinkPopover({
         value={draft}
         onChange={(e) => setDraft(e.target.value)}
         placeholder="Pega el link del video..."
-        className="bg-background/10 border-none text-background placeholder:text-background/50 text-xs h-8 mb-2"
+        className="bg-background/10 border-none shadow-none text-background placeholder:text-background/50 text-xs h-8 mb-2"
       />
       <div className="flex gap-2">
         <button
@@ -303,7 +303,7 @@ const Onboarding = () => {
                                     value={socialDraft}
                                     onChange={(e) => setSocialDraft(e.target.value)}
                                     placeholder={`Tu ${label}`}
-                                    className="flex-1 h-9 text-sm border-none shadow-sm"
+                                    className="flex-1 h-9 text-sm border-none shadow-none bg-muted"
                                     onKeyDown={(e) => {
                                       if (e.key === "Enter") {
                                         setSocials({ ...socials, [key]: socialDraft });
@@ -434,7 +434,7 @@ const Onboarding = () => {
                   </div>
                   <div>
                     <label className="text-xs text-muted-foreground mb-1.5 block font-light">Teléfono / WhatsApp</label>
-                    <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+52 55 1234 5678" className="shadow-sm border-none" type="tel" />
+                    <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+52 55 1234 5678" <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+52 55 1234 5678" className="shadow-none border-none bg-muted" type="tel" /> />
                   </div>
                 </div>
               )}
