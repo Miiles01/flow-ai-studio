@@ -207,6 +207,7 @@ export type Database = {
         Row: {
           created_at: string
           id: string
+          liked: boolean
           program_id: string
           status: string
           user_id: string
@@ -214,6 +215,7 @@ export type Database = {
         Insert: {
           created_at?: string
           id?: string
+          liked?: boolean
           program_id: string
           status?: string
           user_id: string
@@ -221,6 +223,7 @@ export type Database = {
         Update: {
           created_at?: string
           id?: string
+          liked?: boolean
           program_id?: string
           status?: string
           user_id?: string
@@ -267,6 +270,7 @@ export type Database = {
           bio: string
           display_name: string
           instagram_handle: string
+          liked: boolean
           niche: string
           phone: string
           portfolio_url: string
@@ -285,6 +289,10 @@ export type Database = {
           _role: Database["public"]["Enums"]["app_role"]
           _user_id: string
         }
+        Returns: boolean
+      }
+      toggle_applicant_like: {
+        Args: { p_application_id: string }
         Returns: boolean
       }
     }

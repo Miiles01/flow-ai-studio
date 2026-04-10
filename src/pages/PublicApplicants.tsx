@@ -46,7 +46,16 @@ export default function PublicApplicants() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {applicants.map((a) => (
-              <ApplicantCard key={a.application_id} applicant={a} onClick={() => setSelected(a)} />
+              <ApplicantCard
+                key={a.application_id}
+                applicant={a}
+                onClick={() => setSelected(a)}
+                onLikeToggle={(id, val) =>
+                  setApplicants((prev) =>
+                    prev.map((x) => (x.application_id === id ? { ...x, liked: val } : x))
+                  )
+                }
+              />
             ))}
           </div>
         )}

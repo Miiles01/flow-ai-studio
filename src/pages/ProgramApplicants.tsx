@@ -56,6 +56,7 @@ export default function ProgramApplicants() {
             video_url_2: a.video_url_2 || null,
             video_url_3: a.video_url_3 || null,
             niche: a.niche || null,
+            liked: a.liked ?? false,
           }));
           setApplicants(merged);
         }
@@ -104,7 +105,16 @@ export default function ProgramApplicants() {
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             {applicants.map((a) => (
-              <ApplicantCard key={a.application_id} applicant={a} onClick={() => setSelected(a)} />
+              <ApplicantCard
+                key={a.application_id}
+                applicant={a}
+                onClick={() => setSelected(a)}
+                onLikeToggle={(id, val) =>
+                  setApplicants((prev) =>
+                    prev.map((x) => (x.application_id === id ? { ...x, liked: val } : x))
+                  )
+                }
+              />
             ))}
           </div>
         )}

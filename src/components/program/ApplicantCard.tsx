@@ -1,5 +1,6 @@
-import { Instagram, Youtube } from "lucide-react";
+import { Instagram, Youtube, Heart } from "lucide-react";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
+import { supabase } from "@/integrations/supabase/client";
 
 const TikTokIcon = ({ size = 14 }: { size?: number }) => (
   <svg width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -31,14 +32,17 @@ export type Applicant = {
   video_url_2: string | null;
   video_url_3: string | null;
   niche: string | null;
+  liked: boolean;
 };
 
 export default function ApplicantCard({
   applicant,
   onClick,
+  onLikeToggle,
 }: {
   applicant: Applicant;
   onClick: () => void;
+  onLikeToggle: (applicationId: string, newVal: boolean) => void;
 }) {
   const initials = applicant.display_name?.charAt(0).toUpperCase() || "?";
   const socials = [
@@ -48,11 +52,29 @@ export default function ApplicantCard({
     applicant.twitter_handle && { icon: XIcon, handle: applicant.twitter_handle },
   ].filter(Boolean) as { icon: any; handle: string }[];
 
+  const handleLike = async (e: React.MouseEvent) => {
+    e.stopPropagation();
+    const { data } = await supabase.rpc("toggle_applicant_like", {
+      p_application_id: applicant.application_id,
+    });
+    if (data !== null) onLikeToggle(applicant.application_id, data as boolean);
+  };
+
   return (
     <button
       onClick={onClick}
-      className="w-full text-left p-5 rounded-xl bg-gradient-to-r from-[#FDFDFD] to-[#F8F9FD] hover:shadow-md transition-all duration-200 space-y-3"
+      className="relative w-full text-left p-5 rounded-xl bg-gradient-to-r from-[#FDFDFD] to-[#F8F9FD] hover:shadow-md transition-all duration-200 space-y-3"
     >
+      <button
+        onClick={handleLike}
+        className="absolute top-3 right-3 p-1 rounded-full hover:bg-muted/50 transition-colors"
+        aria-label="Like"
+      >
+        <Heart
+          size={16}
+          className={applicant.liked ? "fill-red-500 text-red-500" : "text-muted-foreground"}
+        />
+      </button>
       <div className="flex items-center gap-3">
         <Avatar className="h-12 w-12">
           {applicant.avatar_url && <AvatarImage src={applicant.avatar_url} alt={applicant.display_name || ""} />}
