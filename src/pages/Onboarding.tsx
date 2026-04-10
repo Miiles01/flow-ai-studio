@@ -377,6 +377,7 @@ const Onboarding = () => {
               />
             ))}
           </motion.div>
+          )}
         </div>
       </div>
     </div>
