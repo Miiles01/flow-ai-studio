@@ -283,7 +283,16 @@ const Onboarding = () => {
               {/* Step 0: Welcome */}
               {step === 0 && (
                 <div className="text-center space-y-6 max-w-md mx-auto">
-                  <img src={onboardingHero} alt="Miiles" className="mx-auto w-full max-w-[280px] sm:max-w-sm rounded-2xl" />
+                  <div className="flex flex-col items-center gap-4">
+                    <AvatarUpload
+                      userId={user?.id || ""}
+                      avatarUrl={avatarUrl}
+                      fallback={displayName.charAt(0).toUpperCase()}
+                      onUploaded={(url) => setAvatarUrl(url)}
+                      size="lg"
+                    />
+                    <p className="text-xs text-muted-foreground font-light">Toca para agregar tu foto</p>
+                  </div>
                   <h1 className="text-3xl font-semibold">¡Hola {displayName}!</h1>
                   <p className="text-muted-foreground font-light text-base max-w-xs mx-auto">
                     Presentamos Miiles: una nueva forma para crear colaboraciones.
