@@ -79,7 +79,7 @@ const App = () => (
             {/* <Route path="/search" element={<DashboardRoute><SearchAI /></DashboardRoute>} /> */}
             {/* <Route path="/flows" element={<DashboardRoute><Index /></DashboardRoute>} /> */}
             <Route path="/profile" element={<DashboardRoute><Profile /></DashboardRoute>} />
-            <Route path="/programs/:id/applicants" element={<ProtectedRoute><ProgramApplicants /></ProtectedRoute>} />
+            <Route path="/programs/:id/applicants" element={<ProgramApplicants />} />
             <Route path="/applicants/:token" element={<PublicApplicants />} />
             <Route path="/onboarding" element={<ProtectedOnboardingRoute><Onboarding /></ProtectedOnboardingRoute>} />
             <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
