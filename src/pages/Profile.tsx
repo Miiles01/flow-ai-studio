@@ -3,10 +3,10 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import {
   User, Save, Loader2, Instagram, Tag, Phone, Globe,
-  LogOut, Twitter, Youtube, Video
+  LogOut, Twitter, Youtube, Video, Plus, Pencil, X
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
