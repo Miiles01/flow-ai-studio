@@ -12,7 +12,7 @@ import AvatarUpload from "@/components/AvatarUpload";
 import onboardingHero from "@/assets/onboarding-hero.png";
 import onboardingDone from "@/assets/onboarding-done.png";
 
-const TOTAL_STEPS = 6;
+const TOTAL_STEPS = 7;
 
 function getVideoEmbedUrl(url: string): string | null {
   if (!url.trim()) return null;
@@ -176,7 +176,7 @@ const Onboarding = () => {
 
   const filledSocialsCount = Object.values(socials).filter((v) => v.trim()).length;
   const next = () => {
-    if (step === 2 && filledSocialsCount < 1) {
+    if (step === 3 && filledSocialsCount < 1) {
       toast.error("Agrega al menos un medio de contacto");
       return;
     }
@@ -220,7 +220,7 @@ const Onboarding = () => {
     const ok = await saveProfile();
     if (ok) {
       setDir(1);
-      setStep(5);
+      setStep(6);
     }
   };
 
@@ -246,12 +246,12 @@ const Onboarding = () => {
         />
       </div>
       {/* Top navigation arrows */}
-      {step > 0 && step < 5 && (
+      {step > 0 && step < 6 && (
         <div className="flex items-center justify-between px-4 sm:px-6 py-4">
           <button type="button" onClick={prev} className="p-2 rounded-full hover:bg-muted transition-colors text-foreground">
             <ArrowLeft size={20} />
           </button>
-          {step < 4 ? (
+          {step < 5 ? (
             <button type="button" onClick={next} className="p-2 rounded-full hover:bg-muted transition-colors text-foreground">
               <ArrowRight size={20} />
             </button>
@@ -283,16 +283,7 @@ const Onboarding = () => {
               {/* Step 0: Welcome */}
               {step === 0 && (
                 <div className="text-center space-y-6 max-w-md mx-auto">
-                  <div className="flex flex-col items-center gap-4">
-                    <AvatarUpload
-                      userId={user?.id || ""}
-                      avatarUrl={avatarUrl}
-                      fallback={displayName.charAt(0).toUpperCase()}
-                      onUploaded={(url) => setAvatarUrl(url)}
-                      size="lg"
-                    />
-                    <p className="text-xs text-muted-foreground font-light">Toca para agregar tu foto</p>
-                  </div>
+                  <img src={onboardingHero} alt="Miiles" className="mx-auto w-full max-w-[280px] sm:max-w-sm rounded-2xl" />
                   <h1 className="text-3xl font-semibold">¡Hola {displayName}!</h1>
                   <p className="text-muted-foreground font-light text-base max-w-xs mx-auto">
                     Presentamos Miiles: una nueva forma para crear colaboraciones.
@@ -305,8 +296,36 @@ const Onboarding = () => {
                 </div>
               )}
 
-              {/* Step 1: Bio — card style like reference */}
+              {/* Step 1: Avatar upload */}
               {step === 1 && (
+                <div className="text-center space-y-6 max-w-md mx-auto">
+                  <h1 className="text-2xl font-semibold">Tu foto de perfil</h1>
+                  <p className="text-muted-foreground font-light text-sm">
+                    Agrega una foto para que las marcas te reconozcan.
+                  </p>
+                  <div className="flex flex-col items-center gap-3 py-4">
+                    <AvatarUpload
+                      userId={user?.id || ""}
+                      avatarUrl={avatarUrl}
+                      fallback={displayName.charAt(0).toUpperCase()}
+                      onUploaded={(url) => setAvatarUrl(url)}
+                      size="lg"
+                    />
+                    <p className="text-xs text-muted-foreground font-light">Toca para subir tu foto</p>
+                  </div>
+                  <div className="flex flex-col items-center gap-2 pt-2">
+                    <Button onClick={next} className="px-10 rounded-full">
+                      Continuar
+                    </Button>
+                    <button type="button" onClick={next} className="text-xs text-muted-foreground hover:text-foreground font-light">
+                      Omitir por ahora
+                    </button>
+                  </div>
+                </div>
+              )}
+
+              {/* Step 1: Bio — card style like reference */}
+              {step === 2 && (
                 <div className="max-w-lg mx-auto space-y-8">
                   <h1 className="text-2xl font-semibold">Cuéntanos sobre ti</h1>
                   <div className="bg-gradient-to-b from-[#FDFDFD] to-[#F8F9FD] p-6">
