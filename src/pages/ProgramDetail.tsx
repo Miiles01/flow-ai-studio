@@ -3,7 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
-import { ArrowLeft, ExternalLink, Loader2, CheckCircle2, Bookmark } from "lucide-react";
+import { ArrowLeft, ExternalLink, Loader2, CheckCircle2, Bookmark, Share2, Copy, Check } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 
@@ -31,6 +31,16 @@ export default function ProgramDetail() {
   const [loading, setLoading] = useState(true);
   const [appStatus, setAppStatus] = useState<ApplicationStatus>("none");
   const [applying, setApplying] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  const handleCopyLink = () => {
+    const url = window.location.href;
+    navigator.clipboard.writeText(url).then(() => {
+      setCopied(true);
+      toast.success("Link copiado al portapapeles");
+      setTimeout(() => setCopied(false), 2000);
+    });
+  };
 
   useEffect(() => {
     if (!id) return;
@@ -122,7 +132,16 @@ export default function ProgramDetail() {
 
         {/* Header */}
         <div className="space-y-3">
-          <h1 className="text-2xl font-normal">{program.brand_name}</h1>
+          <div className="flex items-center justify-between">
+            <h1 className="text-2xl font-normal">{program.brand_name}</h1>
+            <button
+              onClick={handleCopyLink}
+              className="inline-flex items-center gap-1.5 text-sm text-miiles-gray-400 hover:text-foreground transition-colors duration-200 font-light"
+            >
+              {copied ? <Check size={16} /> : <Share2 size={16} />}
+              {copied ? "Copiado" : "Compartir"}
+            </button>
+          </div>
           <p className="text-sm text-miiles-gray-400 font-light">{program.name}</p>
           <div className="flex items-center gap-2 pt-1">
             {program.commission_rate && (
