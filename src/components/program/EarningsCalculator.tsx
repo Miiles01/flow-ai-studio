@@ -144,7 +144,7 @@ export default function EarningsCalculator({ commissionRate, priceMin, priceMax,
       <div className="p-6 md:p-8">
         <div className="flex items-center gap-2 mb-6">
           <TrendingUp size={18} className="text-miiles-blue" />
-          <h3 className="text-sm font-normal">Proyección de ganancias</h3>
+          <h3 className="text-sm font-normal">Estadísticas</h3>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
