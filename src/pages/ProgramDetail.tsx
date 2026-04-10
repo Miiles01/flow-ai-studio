@@ -193,7 +193,7 @@ export default function ProgramDetail() {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-1.5 text-sm text-miiles-blue hover:underline mt-6 font-light"
           >
-            Ver página del programa <ExternalLink size={14} />
+            Página del negocio <ExternalLink size={14} />
           </a>
         )}
 
