@@ -23,10 +23,13 @@ export type Database = {
           commission_rate: string | null
           created_at: string
           description: string
+          gallery_images: Json
           id: string
           is_featured: boolean
           logo_url: string | null
           name: string
+          price_max: number | null
+          price_min: number | null
           program_url: string | null
           updated_at: string
         }
@@ -38,10 +41,13 @@ export type Database = {
           commission_rate?: string | null
           created_at?: string
           description?: string
+          gallery_images?: Json
           id?: string
           is_featured?: boolean
           logo_url?: string | null
           name: string
+          price_max?: number | null
+          price_min?: number | null
           program_url?: string | null
           updated_at?: string
         }
@@ -53,10 +59,13 @@ export type Database = {
           commission_rate?: string | null
           created_at?: string
           description?: string
+          gallery_images?: Json
           id?: string
           is_featured?: boolean
           logo_url?: string | null
           name?: string
+          price_max?: number | null
+          price_min?: number | null
           program_url?: string | null
           updated_at?: string
         }
