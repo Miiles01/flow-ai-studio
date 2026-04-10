@@ -387,6 +387,7 @@ export default function Dashboard() {
         </DialogContent>
       </Dialog>
 
+      <Dialog open={sendOpen} onOpenChange={setSendOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
             <DialogTitle className="font-normal">Enviar notificación</DialogTitle>
