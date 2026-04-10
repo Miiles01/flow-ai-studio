@@ -7,6 +7,7 @@ import { motion } from "framer-motion";
 import { Mail, Lock, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import logoImg from "@/assets/logo.png";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -47,9 +48,7 @@ const Login = () => {
       >
         <div className="text-center mb-10">
           <div className="inline-flex items-center gap-2 mb-6">
-            <div className="w-8 h-8 rounded-sm bg-foreground flex items-center justify-center">
-              <span className="text-background font-normal text-sm">M</span>
-            </div>
+            <img src={logoImg} alt="Miiles" className="w-8 h-8" />
             <span className="font-normal text-foreground">Miiles</span>
           </div>
           <h1 className="text-2xl font-normal text-foreground">Iniciar sesión</h1>
