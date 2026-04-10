@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
-import { Plus, X, Instagram, Youtube, Linkedin, Globe, SkipForward, ArrowRight, ArrowLeft, Loader2, Pencil } from "lucide-react";
+import { Plus, X, Instagram, Youtube, Globe, SkipForward, ArrowRight, ArrowLeft, Loader2, Pencil } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -36,11 +36,18 @@ const XIcon = ({ size = 20 }: { size?: number }) => (
   </svg>
 );
 
+/* LinkedIn icon (2024 style) */
+const LinkedInIcon = ({ size = 20 }: { size?: number }) => (
+  <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor">
+    <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+  </svg>
+);
+
 const SOCIAL_PLATFORMS = [
   { key: "instagram", label: "Instagram", icon: Instagram },
   { key: "tiktok", label: "TikTok", icon: TikTokIcon },
   { key: "portfolio", label: "Portafolio", icon: Globe },
-  { key: "linkedin", label: "LinkedIn", icon: Linkedin },
+  { key: "linkedin", label: "LinkedIn", icon: LinkedInIcon },
   { key: "twitter", label: "X", icon: XIcon },
   { key: "youtube", label: "YouTube", icon: Youtube },
 ] as const;
@@ -194,6 +201,28 @@ const Onboarding = () => {
           transition={{ duration: 0.4, ease: "easeInOut" }}
         />
       </div>
+      {/* Top navigation arrows */}
+      {step > 0 && step < 5 && (
+        <div className="flex items-center justify-between px-6 py-4">
+          <button type="button" onClick={prev} className="p-2 rounded-full hover:bg-muted transition-colors text-foreground">
+            <ArrowLeft size={20} />
+          </button>
+          {step < 4 ? (
+            <button type="button" onClick={next} className="p-2 rounded-full hover:bg-muted transition-colors text-foreground">
+              <ArrowRight size={20} />
+            </button>
+          ) : (
+            <button
+              type="button"
+              onClick={handleNextFromContact}
+              disabled={saving}
+              className="p-2 rounded-full hover:bg-muted transition-colors text-foreground disabled:opacity-50"
+            >
+              {saving ? <Loader2 size={20} className="animate-spin" /> : <ArrowRight size={20} />}
+            </button>
+          )}
+        </div>
+      )}
 
       <div className="flex-1 flex items-center justify-center p-6">
         <div className="w-full max-w-2xl">
@@ -254,16 +283,9 @@ const Onboarding = () => {
                     <p className="text-muted-foreground font-light text-sm">
                       Agrega al menos <span className="font-normal text-foreground">3 medios de contacto</span>.
                     </p>
-                    <button
-                      type="button"
-                      onClick={next}
-                      className="text-sm text-muted-foreground hover:text-foreground transition-colors font-light"
-                    >
-                      Continuar
-                    </button>
                   </div>
                   {/* Right — platform list */}
-                  <div className="flex-1 rounded-2xl bg-gradient-to-b from-[#FDFDFD] to-[#F8F9FD] shadow-[0px_100px_170px_0px_rgba(39,39,62,0.05)] divide-y divide-muted/40 overflow-hidden">
+                  <div className="flex-1 rounded-2xl bg-gradient-to-b from-[#FDFDFD] to-[#F8F9FD] shadow-[0px_100px_170px_0px_rgba(39,39,62,0.05)] divide-y divide-muted/40">
                     {SOCIAL_PLATFORMS.map(({ key, label, icon: Icon }) => {
                       const hasValue = socials[key]?.trim();
                       const isEditing = editingSocial === key;
@@ -303,7 +325,7 @@ const Onboarding = () => {
                                     value={socialDraft}
                                     onChange={(e) => setSocialDraft(e.target.value)}
                                     placeholder={`Tu ${label}`}
-                                    className="flex-1 h-9 text-sm border-none shadow-none bg-muted"
+                                    className="flex-1 h-9 text-sm border-none shadow-none bg-muted focus-visible:ring-0"
                                     onKeyDown={(e) => {
                                       if (e.key === "Enter") {
                                         setSocials({ ...socials, [key]: socialDraft });
@@ -459,33 +481,6 @@ const Onboarding = () => {
             </motion.div>
           </AnimatePresence>
 
-          {/* Navigation buttons — only for steps 1 (not bio since it has inline), 3, 4 */}
-          <AnimatePresence mode="wait">
-            {step > 0 && step < 5 && step !== 1 && step !== 2 && (
-              <motion.div
-                key={`nav-${step}`}
-                initial={{ y: 30, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: 30, opacity: 0 }}
-                transition={{ duration: 0.6, type: "spring", stiffness: 180, damping: 22, delay: 0.2 }}
-                className="flex gap-3 mt-10 max-w-md mx-auto"
-              >
-                <Button variant="outline" onClick={prev} className="flex-1 shadow-sm border-none bg-muted/50">
-                  <ArrowLeft size={16} className="mr-2" /> Atrás
-                </Button>
-                {step < 4 ? (
-                  <Button onClick={next} className="flex-1">
-                    Siguiente <ArrowRight size={16} className="ml-2" />
-                  </Button>
-                ) : (
-                  <Button onClick={handleNextFromContact} className="flex-1" disabled={saving}>
-                    {saving && <Loader2 size={16} className="animate-spin mr-2" />}
-                    Finalizar
-                  </Button>
-                )}
-              </motion.div>
-            )}
-          </AnimatePresence>
 
           {/* Step indicator dots */}
           {step < 5 && (
