@@ -488,33 +488,6 @@ const Onboarding = () => {
             </motion.div>
           </AnimatePresence>
 
-          {/* Navigation buttons — only for steps 1 (not bio since it has inline), 3, 4 */}
-          <AnimatePresence mode="wait">
-            {step > 0 && step < 5 && step !== 1 && step !== 2 && (
-              <motion.div
-                key={`nav-${step}`}
-                initial={{ y: 30, opacity: 0 }}
-                animate={{ y: 0, opacity: 1 }}
-                exit={{ y: 30, opacity: 0 }}
-                transition={{ duration: 0.6, type: "spring", stiffness: 180, damping: 22, delay: 0.2 }}
-                className="flex gap-3 mt-10 max-w-md mx-auto"
-              >
-                <Button variant="outline" onClick={prev} className="flex-1 shadow-sm border-none bg-muted/50">
-                  <ArrowLeft size={16} className="mr-2" /> Atrás
-                </Button>
-                {step < 4 ? (
-                  <Button onClick={next} className="flex-1">
-                    Siguiente <ArrowRight size={16} className="ml-2" />
-                  </Button>
-                ) : (
-                  <Button onClick={handleNextFromContact} className="flex-1" disabled={saving}>
-                    {saving && <Loader2 size={16} className="animate-spin mr-2" />}
-                    Finalizar
-                  </Button>
-                )}
-              </motion.div>
-            )}
-          </AnimatePresence>
 
           {/* Step indicator dots */}
           {step < 5 && (
