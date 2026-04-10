@@ -347,13 +347,33 @@ const Onboarding = () => {
                     />
                     <p className="text-xs text-muted-foreground font-light">Toca para subir tu foto</p>
                   </div>
-                  <div className="flex flex-col items-center gap-2 pt-2">
-                    <Button onClick={next} className="px-10 rounded-full">
-                      Continuar
-                    </Button>
-                    <button type="button" onClick={next} className="text-xs text-muted-foreground hover:text-foreground font-light">
-                      Omitir por ahora
-                    </button>
+                  <div className="flex flex-col items-center gap-2 pt-2 min-h-[64px] justify-center">
+                    <AnimatePresence mode="popLayout">
+                      {avatarUrl ? (
+                        <motion.div
+                          key="continuar"
+                          initial={{ opacity: 0, y: 10 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          exit={{ opacity: 0, y: -10 }}
+                        >
+                          <Button onClick={next} className="px-10 rounded-full">
+                            Continuar
+                          </Button>
+                        </motion.div>
+                      ) : (
+                        <motion.button
+                          key="omitir"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{ opacity: 0 }}
+                          type="button"
+                          onClick={next}
+                          className="text-xs text-muted-foreground hover:text-foreground font-light py-2"
+                        >
+                          Omitir por ahora
+                        </motion.button>
+                      )}
+                    </AnimatePresence>
                   </div>
                 </div>
               )}
