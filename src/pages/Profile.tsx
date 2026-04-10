@@ -30,6 +30,9 @@ const Profile = () => {
   const [niche, setNiche] = useState("");
   const [phone, setPhone] = useState("");
   const [portfolioUrl, setPortfolioUrl] = useState("");
+  const [videoUrl1, setVideoUrl1] = useState("");
+  const [videoUrl2, setVideoUrl2] = useState("");
+  const [videoUrl3, setVideoUrl3] = useState("");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
