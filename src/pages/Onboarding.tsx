@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import AvatarUpload from "@/components/AvatarUpload";
 import onboardingHero from "@/assets/onboarding-hero.png";
 import onboardingDone from "@/assets/onboarding-done.png";
 
@@ -166,6 +167,7 @@ const Onboarding = () => {
   const [videoUrl3, setVideoUrl3] = useState("");
   const [editingVideo, setEditingVideo] = useState<number | null>(null);
   const [phone, setPhone] = useState("");
+  const [avatarUrl, setAvatarUrl] = useState("");
   const [countryCode, setCountryCode] = useState(COUNTRY_CODES[0]);
   const [showCountryPicker, setShowCountryPicker] = useState(false);
   const [countrySearch, setCountrySearch] = useState("");
@@ -193,6 +195,7 @@ const Onboarding = () => {
       .from("profiles")
       .update({
         bio,
+        avatar_url: avatarUrl || null,
         instagram_handle: socials.instagram || null,
         tiktok_handle: socials.tiktok || null,
         youtube_handle: socials.youtube || null,
