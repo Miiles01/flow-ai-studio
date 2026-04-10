@@ -201,7 +201,7 @@ const Onboarding = () => {
         video_url_1: videoUrl1 || null,
         video_url_2: videoUrl2 || null,
         video_url_3: videoUrl3 || null,
-        phone,
+        phone: phone ? `${countryCode.code} ${phone}` : null,
         onboarding_completed: true,
       } as any)
       .eq("user_id", user.id);
