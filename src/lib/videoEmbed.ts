@@ -14,7 +14,7 @@ export function getVideoEmbedUrl(url: string): string | null {
   if (igMatch) return `https://www.instagram.com/p/${igMatch[1]}/embed`;
 
   // Facebook video / reel / watch
-  const fbMatch = url.match(/facebook\.com\/.+\/(videos|reel|watch)/);
+  const fbMatch = url.match(/facebook\.com\/(.+\/(videos|reel|watch)|share\/(r|v)\/)/);
   if (fbMatch) return `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false`;
 
   // Fallback: if it looks like a valid URL, try to embed it directly
