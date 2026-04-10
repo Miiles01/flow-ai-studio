@@ -1,9 +1,8 @@
 import { useEffect, useState } from "react";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
-import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
-import { ArrowLeft, Copy, Check, Loader2, Users } from "lucide-react";
+import { Copy, Check, Loader2, Users } from "lucide-react";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import ApplicantCard, { type Applicant } from "@/components/program/ApplicantCard";
@@ -11,8 +10,6 @@ import ApplicantProfile from "@/components/program/ApplicantProfile";
 
 export default function ProgramApplicants() {
   const { id } = useParams<{ id: string }>();
-  const { user } = useAuth();
-  const navigate = useNavigate();
   const [applicants, setApplicants] = useState<Applicant[]>([]);
   const [loading, setLoading] = useState(true);
   const [programName, setProgramName] = useState("");
@@ -21,69 +18,58 @@ export default function ProgramApplicants() {
   const [selected, setSelected] = useState<Applicant | null>(null);
 
   useEffect(() => {
-    if (!id || !user) return;
-    const fetch = async () => {
-      // Check admin
-      const { data: role } = await supabase
-        .from("user_roles").select("role").eq("user_id", user.id).eq("role", "admin").maybeSingle();
-      if (!role) { navigate("/"); return; }
+    if (!id) return;
+    const fetchData = async () => {
+      // Get program info (public via RLS)
+      const { data: prog } = await supabase
+        .from("brand_programs")
+        .select("name, public_token")
+        .eq("id", id)
+        .single();
 
-      // Get program info
-      const { data: prog } = await supabase.from("brand_programs").select("name, public_token").eq("id", id).single();
-      if (prog) {
-        setProgramName((prog as any).name);
-        setPublicToken((prog as any).public_token);
-      }
+      if (!prog) { setLoading(false); return; }
+      setProgramName(prog.name);
+      setPublicToken(prog.public_token);
 
-      // Get applicants with profiles
-      const { data: apps } = await supabase
-        .from("user_applications")
-        .select("id, user_id, status, created_at, program_id")
-        .eq("program_id", id)
-        .eq("status", "applied");
+      // Use RPC with public_token to get applicants (works for anon)
+      if (prog.public_token) {
+        const { data: apps } = await supabase.rpc("get_program_applicants_by_token", {
+          p_token: prog.public_token,
+        });
 
-      if (apps && apps.length > 0) {
-        const userIds = apps.map((a) => a.user_id);
-        const { data: profiles } = await supabase
-          .from("profiles")
-          .select("*")
-          .in("user_id", userIds);
-
-        const merged: Applicant[] = apps.map((a) => {
-          const p = profiles?.find((pr) => pr.user_id === a.user_id);
-          return {
-            application_id: a.id,
+        if (apps && apps.length > 0) {
+          const merged: Applicant[] = apps.map((a: any) => ({
+            application_id: a.application_id,
             user_id: a.user_id,
             status: a.status,
-            applied_at: a.created_at,
-            display_name: p?.display_name || null,
-            avatar_url: p?.avatar_url || null,
-            bio: p?.bio || null,
-            instagram_handle: p?.instagram_handle || null,
-            tiktok_handle: p?.tiktok_handle || null,
-            youtube_handle: p?.youtube_handle || null,
-            twitter_handle: p?.twitter_handle || null,
-            phone: p?.phone || null,
-            portfolio_url: p?.portfolio_url || null,
-            video_url_1: p?.video_url_1 || null,
-            video_url_2: p?.video_url_2 || null,
-            video_url_3: p?.video_url_3 || null,
-            niche: p?.niche || null,
-          };
-        });
-        setApplicants(merged);
+            applied_at: a.applied_at,
+            display_name: a.display_name || null,
+            avatar_url: a.avatar_url || null,
+            bio: a.bio || null,
+            instagram_handle: a.instagram_handle || null,
+            tiktok_handle: a.tiktok_handle || null,
+            youtube_handle: a.youtube_handle || null,
+            twitter_handle: a.twitter_handle || null,
+            phone: a.phone || null,
+            portfolio_url: a.portfolio_url || null,
+            video_url_1: a.video_url_1 || null,
+            video_url_2: a.video_url_2 || null,
+            video_url_3: a.video_url_3 || null,
+            niche: a.niche || null,
+          }));
+          setApplicants(merged);
+        }
       }
       setLoading(false);
     };
-    fetch();
-  }, [id, user, navigate]);
+    fetchData();
+  }, [id]);
 
   const handleCopyLink = () => {
-    if (!publicToken) return;
-    const url = `${window.location.origin}/applicants/${publicToken}`;
+    const url = window.location.href;
     navigator.clipboard.writeText(url).then(() => {
       setCopied(true);
-      toast.success("Link público copiado");
+      toast.success("Link copiado");
       setTimeout(() => setCopied(false), 2000);
     });
   };
@@ -99,13 +85,6 @@ export default function ProgramApplicants() {
   return (
     <div className="p-6 md:p-10 max-w-3xl mx-auto">
       <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-        <button
-          onClick={() => navigate(`/programs/${id}`)}
-          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-6 font-light"
-        >
-          <ArrowLeft size={16} /> Volver al programa
-        </button>
-
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-xl font-normal">Postulaciones</h1>

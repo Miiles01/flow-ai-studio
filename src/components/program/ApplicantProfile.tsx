@@ -1,7 +1,7 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { Sheet, SheetContent, SheetHeader, SheetTitle } from "@/components/ui/sheet";
 import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
-import { Instagram, Youtube, Globe, Phone } from "lucide-react";
+import { Instagram, Youtube, Globe } from "lucide-react";
 import type { Applicant } from "./ApplicantCard";
 
 const TikTokIcon = ({ size = 16 }: { size?: number }) => (
@@ -46,16 +46,15 @@ export default function ApplicantProfile({
     applicant.youtube_handle && { icon: Youtube, label: "YouTube", value: applicant.youtube_handle },
     applicant.twitter_handle && { icon: XIcon, label: "X", value: applicant.twitter_handle },
     applicant.portfolio_url && { icon: Globe, label: "Portafolio", value: applicant.portfolio_url },
-    applicant.phone && { icon: Phone, label: "Teléfono", value: applicant.phone },
   ].filter(Boolean) as { icon: any; label: string; value: string }[];
 
   return (
-    <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="sm:max-w-lg max-h-[85vh] overflow-y-auto">
-        <DialogHeader>
-          <DialogTitle className="font-normal">Perfil del postulante</DialogTitle>
-        </DialogHeader>
-        <div className="space-y-6 mt-2">
+    <Sheet open={open} onOpenChange={onOpenChange}>
+      <SheetContent side="right" className="w-full sm:max-w-md overflow-y-auto">
+        <SheetHeader>
+          <SheetTitle className="font-normal">Perfil del postulante</SheetTitle>
+        </SheetHeader>
+        <div className="space-y-6 mt-4">
           {/* Header */}
           <div className="flex items-center gap-4">
             <Avatar className="h-16 w-16">
@@ -98,7 +97,7 @@ export default function ApplicantProfile({
           {videos.length > 0 && (
             <div>
               <p className="text-[10px] text-muted-foreground font-light uppercase tracking-wider mb-2">Portafolio</p>
-              <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+              <div className="grid grid-cols-2 gap-3">
                 {videos.map((url, i) => {
                   const embed = getVideoEmbedUrl(url);
                   return embed ? (
@@ -115,7 +114,7 @@ export default function ApplicantProfile({
             Postulado el {new Date(applicant.applied_at).toLocaleDateString("es-MX", { day: "numeric", month: "long", year: "numeric" })}
           </p>
         </div>
-      </DialogContent>
-    </Dialog>
+      </SheetContent>
+    </Sheet>
   );
 }
