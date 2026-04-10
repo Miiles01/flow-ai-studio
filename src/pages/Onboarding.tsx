@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
-import { Plus, X, Instagram, Youtube, Globe, SkipForward, ArrowRight, ArrowLeft, Loader2, Pencil } from "lucide-react";
+import { Plus, X, Instagram, Youtube, Globe, SkipForward, ArrowRight, ArrowLeft, Loader2, Pencil, ChevronDown, Search } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -107,6 +107,40 @@ function VideoLinkPopover({
   );
 }
 
+const COUNTRY_CODES = [
+  { code: "+52", country: "México", flag: "🇲🇽" },
+  { code: "+1", country: "Estados Unidos", flag: "🇺🇸" },
+  { code: "+1", country: "Canadá", flag: "🇨🇦" },
+  { code: "+54", country: "Argentina", flag: "🇦🇷" },
+  { code: "+55", country: "Brasil", flag: "🇧🇷" },
+  { code: "+56", country: "Chile", flag: "🇨🇱" },
+  { code: "+57", country: "Colombia", flag: "🇨🇴" },
+  { code: "+506", country: "Costa Rica", flag: "🇨🇷" },
+  { code: "+593", country: "Ecuador", flag: "🇪🇨" },
+  { code: "+503", country: "El Salvador", flag: "🇸🇻" },
+  { code: "+34", country: "España", flag: "🇪🇸" },
+  { code: "+502", country: "Guatemala", flag: "🇬🇹" },
+  { code: "+504", country: "Honduras", flag: "🇭🇳" },
+  { code: "+505", country: "Nicaragua", flag: "🇳🇮" },
+  { code: "+507", country: "Panamá", flag: "🇵🇦" },
+  { code: "+595", country: "Paraguay", flag: "🇵🇾" },
+  { code: "+51", country: "Perú", flag: "🇵🇪" },
+  { code: "+1", country: "Puerto Rico", flag: "🇵🇷" },
+  { code: "+1", country: "Rep. Dominicana", flag: "🇩🇴" },
+  { code: "+598", country: "Uruguay", flag: "🇺🇾" },
+  { code: "+58", country: "Venezuela", flag: "🇻🇪" },
+  { code: "+44", country: "Reino Unido", flag: "🇬🇧" },
+  { code: "+33", country: "Francia", flag: "🇫🇷" },
+  { code: "+49", country: "Alemania", flag: "🇩🇪" },
+  { code: "+39", country: "Italia", flag: "🇮🇹" },
+  { code: "+351", country: "Portugal", flag: "🇵🇹" },
+  { code: "+81", country: "Japón", flag: "🇯🇵" },
+  { code: "+82", country: "Corea del Sur", flag: "🇰🇷" },
+  { code: "+91", country: "India", flag: "🇮🇳" },
+  { code: "+86", country: "China", flag: "🇨🇳" },
+  { code: "+61", country: "Australia", flag: "🇦🇺" },
+];
+
 const Onboarding = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -131,6 +165,10 @@ const Onboarding = () => {
   const [videoUrl2, setVideoUrl2] = useState("");
   const [videoUrl3, setVideoUrl3] = useState("");
   const [editingVideo, setEditingVideo] = useState<number | null>(null);
+  const [phone, setPhone] = useState("");
+  const [countryCode, setCountryCode] = useState(COUNTRY_CODES[0]);
+  const [showCountryPicker, setShowCountryPicker] = useState(false);
+  const [countrySearch, setCountrySearch] = useState("");
   const [phone, setPhone] = useState("");
 
   const displayName = user?.user_metadata?.full_name || user?.email?.split("@")[0] || "Usuario";
@@ -459,8 +497,68 @@ const Onboarding = () => {
                     </p>
                   </div>
                   <div>
-                    <label className="text-xs text-muted-foreground mb-1.5 block font-light">Teléfono / WhatsApp</label>
-                    <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+52 55 1234 5678" className="shadow-none border-none bg-muted" type="tel" />
+                    <label className="text-xs text-muted-foreground mb-1.5 block font-light">Número celular</label>
+                    <div className="flex gap-2">
+                      {/* Country code selector */}
+                      <div className="relative">
+                        <button
+                          type="button"
+                          onClick={() => { setShowCountryPicker(!showCountryPicker); setCountrySearch(""); }}
+                          className="flex items-center gap-1.5 h-10 px-3 rounded-md bg-muted text-sm whitespace-nowrap"
+                        >
+                          <span>{countryCode.flag}</span>
+                          <span>{countryCode.code}</span>
+                          <ChevronDown size={14} className="text-muted-foreground" />
+                        </button>
+                        <AnimatePresence>
+                          {showCountryPicker && (
+                            <motion.div
+                              initial={{ opacity: 0, y: 4 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              exit={{ opacity: 0, y: 4 }}
+                              className="absolute top-12 left-0 z-50 w-64 max-h-60 overflow-hidden rounded-xl bg-popover border border-border shadow-lg flex flex-col"
+                            >
+                              <div className="p-2 border-b border-border">
+                                <div className="flex items-center gap-2 px-2 rounded-lg bg-muted">
+                                  <Search size={14} className="text-muted-foreground" />
+                                  <input
+                                    autoFocus
+                                    value={countrySearch}
+                                    onChange={(e) => setCountrySearch(e.target.value)}
+                                    placeholder="Buscar país..."
+                                    className="flex-1 bg-transparent border-none outline-none text-sm py-2 placeholder:text-muted-foreground"
+                                  />
+                                </div>
+                              </div>
+                              <div className="overflow-y-auto flex-1">
+                                {COUNTRY_CODES.filter(c =>
+                                  c.country.toLowerCase().includes(countrySearch.toLowerCase()) ||
+                                  c.code.includes(countrySearch)
+                                ).map((c, i) => (
+                                  <button
+                                    key={`${c.code}-${c.country}-${i}`}
+                                    type="button"
+                                    onClick={() => { setCountryCode(c); setShowCountryPicker(false); }}
+                                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-muted transition-colors text-left"
+                                  >
+                                    <span>{c.flag}</span>
+                                    <span className="flex-1">{c.country}</span>
+                                    <span className="text-muted-foreground">{c.code}</span>
+                                  </button>
+                                ))}
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </div>
+                      <Input
+                        value={phone}
+                        onChange={(e) => setPhone(e.target.value.replace(/[^0-9\s]/g, ""))}
+                        placeholder="55 1234 5678"
+                        className="flex-1 shadow-none border-none bg-muted"
+                        type="tel"
+                      />
+                    </div>
                   </div>
                 </div>
               )}
