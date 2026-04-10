@@ -65,45 +65,27 @@ export default function EarningsCalculator({ commissionRate, priceMin, priceMax,
     canvas.height = h * dpr;
     ctx.scale(dpr, dpr);
 
-    const padLeft = 40;
-    const padRight = 12;
-    const padTop = 14;
-    const padBottom = 24;
+    const padLeft = 8;
+    const padRight = 8;
+    const padTop = 10;
+    const padBottom = 8;
     const chartW = w - padLeft - padRight;
     const chartH = h - padTop - padBottom;
     const maxEarn = totalEarnings || 1;
 
     ctx.clearRect(0, 0, w, h);
 
-    // Draw Y axis labels & grid lines
+    // Grid lines only (no labels)
     const yTicks = 4;
-    ctx.textAlign = "right";
-    ctx.textBaseline = "middle";
-    ctx.font = "10px sans-serif";
     for (let i = 0; i <= yTicks; i++) {
-      const val = (maxEarn / yTicks) * i;
       const y = padTop + chartH - (i / yTicks) * chartH;
-      // Grid line
       ctx.strokeStyle = "rgba(0,0,0,0.06)";
       ctx.lineWidth = 1;
       ctx.beginPath();
       ctx.moveTo(padLeft, y);
       ctx.lineTo(padLeft + chartW, y);
       ctx.stroke();
-      // Label
-      ctx.fillStyle = "rgba(0,0,0,0.35)";
-      ctx.fillText(`$${Math.round(val)}`, padLeft - 6, y);
     }
-
-    // Draw X axis labels
-    const xLabels = ["0", "10", "20", "30"];
-    ctx.textAlign = "center";
-    ctx.textBaseline = "top";
-    xLabels.forEach((label, i) => {
-      const x = padLeft + (i / (xLabels.length - 1)) * chartW;
-      ctx.fillStyle = "rgba(0,0,0,0.35)";
-      ctx.fillText(`D${label}`, x, padTop + chartH + 6);
-    });
 
     const visiblePoints = chartData.length;
     const drawUpTo = Math.floor(animProgress * (visiblePoints - 1));
