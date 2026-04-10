@@ -29,13 +29,16 @@ type Program = {
   price_min: number | null;
   price_max: number | null;
   gallery_images: string[];
+  slug: string;
 };
 
 type ApplicationStatus = "none" | "saved" | "applied";
 
+const isUUID = (s: string) => /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(s);
+
 export default function ProgramDetail() {
-  const { id } = useParams<{ id: string }>();
-  const { user } = useAuth();
+  const { id, slug } = useParams<{ id?: string; slug?: string }>();
+  const { user, loading: authLoading } = useAuth();
   const navigate = useNavigate();
   const [program, setProgram] = useState<Program | null>(null);
   const [loading, setLoading] = useState(true);
@@ -45,49 +48,63 @@ export default function ProgramDetail() {
   const [isAdmin, setIsAdmin] = useState(false);
   const [editOpen, setEditOpen] = useState(false);
 
+  const identifier = id || slug;
+
   const handleCopyLink = () => {
-    navigator.clipboard.writeText(window.location.href).then(() => {
+    const shortUrl = `${window.location.origin}/p/${program?.slug || ""}`;
+    navigator.clipboard.writeText(shortUrl).then(() => {
       setCopied(true);
       toast.success("Link copiado al portapapeles");
       setTimeout(() => setCopied(false), 2000);
     });
   };
 
+  // Fetch program data — does NOT depend on auth
   useEffect(() => {
-    if (!id) return;
-    const fetchData = async () => {
-      const progRes = await supabase.from("brand_programs").select("*").eq("id", id).single();
-      const data = progRes.data as any;
+    if (!identifier) return;
+    const fetchProgram = async () => {
+      const isId = id && isUUID(id);
+      const query = isId
+        ? supabase.from("brand_programs").select("*").eq("id", id).single()
+        : supabase.from("brand_programs").select("*").eq("slug", identifier).single();
+
+      const { data } = await query;
       if (data) {
         setProgram({
-          ...data,
-          gallery_images: Array.isArray(data.gallery_images) ? data.gallery_images : [],
+          ...(data as any),
+          gallery_images: Array.isArray((data as any).gallery_images) ? (data as any).gallery_images : [],
         });
-      }
-      if (user) {
-        const [appRes, roleRes] = await Promise.all([
-          supabase.from("user_applications").select("status").eq("user_id", user.id).eq("program_id", id).maybeSingle(),
-          supabase.from("user_roles").select("role").eq("user_id", user.id).eq("role", "admin").maybeSingle(),
-        ]);
-        setAppStatus((appRes.data?.status as ApplicationStatus) || "none");
-        setIsAdmin(!!roleRes.data);
       }
       setLoading(false);
     };
-    fetchData();
-  }, [user, id]);
+    fetchProgram();
+  }, [identifier, id]);
+
+  // Fetch user-specific data (application status, admin) — depends on auth
+  useEffect(() => {
+    if (authLoading || !user || !program) return;
+    const fetchUserData = async () => {
+      const [appRes, roleRes] = await Promise.all([
+        supabase.from("user_applications").select("status").eq("user_id", user.id).eq("program_id", program.id).maybeSingle(),
+        supabase.from("user_roles").select("role").eq("user_id", user.id).eq("role", "admin").maybeSingle(),
+      ]);
+      setAppStatus((appRes.data?.status as ApplicationStatus) || "none");
+      setIsAdmin(!!roleRes.data);
+    };
+    fetchUserData();
+  }, [user, authLoading, program?.id]);
 
   async function handleApply() {
-    if (!user || !id) return;
+    if (!user || !program) return;
     setApplying(true);
     if (appStatus === "none") {
       const { error } = await supabase.from("user_applications").insert({
-        user_id: user.id, program_id: id, status: "applied",
+        user_id: user.id, program_id: program.id, status: "applied",
       });
       if (!error) { setAppStatus("applied"); toast.success("¡Te has postulado correctamente!"); }
       else toast.error("Error al postularte");
     } else if (appStatus === "saved") {
-      const { error } = await supabase.from("user_applications").update({ status: "applied" }).eq("user_id", user.id).eq("program_id", id);
+      const { error } = await supabase.from("user_applications").update({ status: "applied" }).eq("user_id", user.id).eq("program_id", program.id);
       if (!error) { setAppStatus("applied"); toast.success("¡Te has postulado correctamente!"); }
       else toast.error("Error al postularte");
     }
@@ -96,7 +113,7 @@ export default function ProgramDetail() {
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-full">
+      <div className="flex items-center justify-center h-full min-h-screen">
         <Loader2 size={24} className="animate-spin text-miiles-gray-400" />
       </div>
     );
@@ -104,7 +121,7 @@ export default function ProgramDetail() {
 
   if (!program) {
     return (
-      <div className="flex flex-col items-center justify-center h-full gap-4">
+      <div className="flex flex-col items-center justify-center h-full min-h-screen gap-4">
         <p className="text-miiles-gray-400 font-light">Programa no encontrado</p>
         <Button variant="secondary" onClick={() => navigate("/programs")}>
           <ArrowLeft size={14} className="mr-2" />
@@ -137,7 +154,6 @@ export default function ProgramDetail() {
           />
         )}
 
-
         {/* Header */}
         <div className="space-y-3">
           <div className="flex items-center justify-between">
@@ -163,7 +179,7 @@ export default function ProgramDetail() {
           </div>
         </div>
 
-        {/* Estadísticas — below badges */}
+        {/* Estadísticas */}
         <div className="mt-8">
           <EarningsCalculator
             commissionRate={program.commission_rate}
@@ -235,7 +251,7 @@ export default function ProgramDetail() {
           )}
         </div>
 
-        {/* Gallery — bottom */}
+        {/* Gallery */}
         <ProgramGallery
           programId={program.id}
           images={program.gallery_images}
@@ -244,7 +260,7 @@ export default function ProgramDetail() {
         />
       </motion.div>
 
-      {/* Admin edit dialog for calculator data */}
+      {/* Admin edit dialog */}
       {isAdmin && (
         <AdminEditDialog
           open={editOpen}

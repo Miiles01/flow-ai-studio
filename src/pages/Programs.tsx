@@ -222,6 +222,7 @@ export default function Programs() {
 
   async function handleAdd(data: ProgramFormData) {
     setSaving(true);
+    const slug = data.brand_name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
     const { error } = await supabase.from("brand_programs").insert({
       name: data.name,
       brand_name: data.brand_name,
@@ -232,7 +233,8 @@ export default function Programs() {
       is_featured: data.is_featured,
       banner_url: data.banner_url || null,
       banner_position: data.banner_position,
-    });
+      slug,
+    } as any);
     if (error) {
       toast.error("Error al añadir programa");
     } else {
