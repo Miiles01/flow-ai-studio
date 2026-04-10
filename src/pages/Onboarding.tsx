@@ -319,7 +319,9 @@ const Onboarding = () => {
                 <div className="text-center space-y-6 max-w-md mx-auto">
                   <img src={onboardingHero} alt="Miiles" className="mx-auto w-full max-w-[280px] sm:max-w-sm rounded-2xl" />
                   <AnimatedText text={`¡Hola ${displayName}!`} className="text-3xl font-semibold" />
-                  <AnimatedText text="Presentamos Miiles: una nueva forma para crear colaboraciones." className="text-muted-foreground font-light text-base max-w-xs mx-auto" />
+                  <p className="text-muted-foreground font-light text-base max-w-xs mx-auto">
+                    Presentamos Miiles: una nueva forma para crear colaboraciones.
+                  </p>
                   <div className="pt-2">
                     <Button onClick={next} className="px-10 rounded-full">
                       Continuar
@@ -332,7 +334,9 @@ const Onboarding = () => {
               {step === 1 && (
                 <div className="text-center space-y-6 max-w-md mx-auto">
                   <AnimatedText text="Tu foto de perfil" className="text-2xl font-semibold" />
-                  <AnimatedText text="Agrega una foto para que las marcas te reconozcan." className="text-muted-foreground font-light text-sm" />
+                  <p className="text-muted-foreground font-light text-sm">
+                    Agrega una foto para que las marcas te reconozcan.
+                  </p>
                   <div className="flex flex-col items-center gap-3 py-4">
                     <AvatarUpload
                       userId={user?.id || ""}
@@ -483,7 +487,9 @@ const Onboarding = () => {
                 <div className="max-w-md mx-auto space-y-6">
                   <div>
                     <AnimatedText text="Portafolio" className="text-2xl font-semibold" />
-                    <AnimatedText text="Agrega hasta 3 videos que representen tu mejor trabajo." className="text-muted-foreground font-light text-sm mt-1" />
+                    <p className="text-muted-foreground font-light text-sm mt-1">
+                      Agrega hasta 3 videos que representen tu mejor trabajo.
+                    </p>
                   </div>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                     {videos.map(({ val, set }, i) => {
@@ -566,7 +572,9 @@ const Onboarding = () => {
                 <div className="max-w-md mx-auto space-y-6">
                   <div>
                     <AnimatedText text="Contacto" className="text-2xl font-semibold" />
-                    <AnimatedText text="¿Cómo pueden contactarte?" className="text-muted-foreground font-light text-sm mt-1" />
+                    <p className="text-muted-foreground font-light text-sm mt-1">
+                      ¿Cómo pueden contactarte?
+                    </p>
                   </div>
                   <div>
                     <label className="text-xs text-muted-foreground mb-1.5 block font-light">Número celular</label>
@@ -642,7 +650,9 @@ const Onboarding = () => {
                     <img src={onboardingDone} alt="Listo" className="w-full h-full object-contain" />
                   </div>
                   <AnimatedText text="¡Todo listo!" className="text-3xl font-semibold" />
-                  <AnimatedText text="Es hora de descubrir oportunidades y pasar al siguiente nivel." className="text-muted-foreground font-light text-base max-w-xs mx-auto" />
+                  <p className="text-muted-foreground font-light text-base max-w-xs mx-auto">
+                    Es hora de descubrir oportunidades y pasar al siguiente nivel.
+                  </p>
                   <div className="pt-2">
                     <Button onClick={handleFinish} className="px-10 rounded-full">
                       Empezar a descubrir
