@@ -59,7 +59,7 @@ export default function ApplicantProfile({
 
   return (
     <Sheet open={open} onOpenChange={onOpenChange} modal={false}>
-      <SheetContent side="right" className="w-full sm:max-w-md overflow-y-auto border-l border-border/40 bg-background/95 backdrop-blur-sm" onInteractOutside={(e) => e.preventDefault()}>
+      <SheetContent side="right" className="w-full sm:w-[500px] sm:max-w-none overflow-y-auto border-l border-border/40 bg-background/95 backdrop-blur-sm shadow-none" onInteractOutside={(e) => e.preventDefault()}>
         <SheetHeader>
           <SheetTitle className="font-normal">Perfil del postulante</SheetTitle>
         </SheetHeader>
@@ -78,6 +78,8 @@ export default function ApplicantProfile({
                   <Badge variant="secondary" className="text-xs font-light mt-1">{applicant.niche}</Badge>
                 )}
               </div>
+            </div>
+          </div>
             </div>
           </div>
 

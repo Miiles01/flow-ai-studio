@@ -13,6 +13,8 @@ export default function ProgramApplicants() {
   const [applicants, setApplicants] = useState<Applicant[]>([]);
   const [loading, setLoading] = useState(true);
   const [programName, setProgramName] = useState("");
+  const [bannerUrl, setBannerUrl] = useState<string | null>(null);
+  const [bannerPosition, setBannerPosition] = useState(50);
   const [publicToken, setPublicToken] = useState<string | null>(null);
   const [copied, setCopied] = useState(false);
   const [selected, setSelected] = useState<Applicant | null>(null);
@@ -20,16 +22,18 @@ export default function ProgramApplicants() {
   useEffect(() => {
     if (!id) return;
     const fetchData = async () => {
-      // Get program info (public via RLS)
+      // Get program info with banner fields
       const { data: prog } = await supabase
         .from("brand_programs")
-        .select("name, public_token")
+        .select("name, public_token, banner_url, banner_position")
         .eq("id", id)
         .single();
 
       if (!prog) { setLoading(false); return; }
       setProgramName(prog.name);
       setPublicToken(prog.public_token);
+      setBannerUrl(prog.banner_url);
+      setBannerPosition(prog.banner_position);
 
       // Use RPC with public_token to get applicants (works for anon)
       if (prog.public_token) {
@@ -84,18 +88,31 @@ export default function ProgramApplicants() {
   }
 
   return (
-    <div className="p-6 md:p-10 max-w-3xl mx-auto">
-      <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
-        <div className="flex items-center justify-between mb-8">
-          <div>
-            <h1 className="text-xl font-normal">Postulaciones</h1>
-            <p className="text-sm text-muted-foreground font-light mt-0.5">{programName}</p>
-          </div>
-          <Button variant="outline" size="sm" onClick={handleCopyLink} className="gap-1.5">
-            {copied ? <Check size={14} /> : <Copy size={14} />}
-            {copied ? "Copiado" : "Compartir link"}
-          </Button>
+    <div className="relative min-h-screen bg-background pb-12">
+      {bannerUrl && (
+        <div className="w-full h-40 sm:h-56 relative overflow-hidden -mt-4">
+          <img 
+            src={bannerUrl} 
+            alt={programName} 
+            className="w-full h-full object-cover"
+            style={{ objectPosition: `center ${bannerPosition}%` }}
+          />
+          <div className="absolute inset-0 bg-gradient-to-t from-background via-background/40 to-transparent" />
         </div>
+      )}
+
+      <div className={`p-6 md:p-10 mx-auto transition-all duration-300 ${selected ? 'lg:pr-[520px] max-w-[1200px]' : 'max-w-3xl'}`}>
+        <motion.div initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }}>
+          <div className="flex items-center justify-between mb-8 relative z-10">
+            <div>
+              <h1 className="text-xl font-normal">Postulaciones</h1>
+              <p className="text-sm text-muted-foreground font-light mt-0.5">{programName}</p>
+            </div>
+            <Button variant="outline" size="sm" onClick={handleCopyLink} className="gap-1.5">
+              {copied ? <Check size={14} /> : <Copy size={14} />}
+              {copied ? "Copiado" : "Compartir link"}
+            </Button>
+          </div>
 
         {applicants.length === 0 ? (
           <div className="text-center py-16 space-y-3">
