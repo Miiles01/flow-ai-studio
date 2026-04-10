@@ -266,28 +266,56 @@ const Profile = () => {
           <Card>
             <CardHeader className="pb-4">
               <CardTitle className="text-base">Portafolio de videos</CardTitle>
+              <p className="text-xs text-muted-foreground font-light mt-1">Agrega hasta 3 videos que representen tu mejor trabajo.</p>
             </CardHeader>
-            <CardContent className="space-y-4">
-              <div>
-                <label className="text-xs text-muted-foreground mb-1.5 block font-light">Video 1</label>
-                <div className="relative">
-                  <Video size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                  <Input value={videoUrl1} onChange={(e) => setVideoUrl1(e.target.value)} placeholder="https://tiktok.com/..." className="pl-9" />
-                </div>
-              </div>
-              <div>
-                <label className="text-xs text-muted-foreground mb-1.5 block font-light">Video 2</label>
-                <div className="relative">
-                  <Video size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                  <Input value={videoUrl2} onChange={(e) => setVideoUrl2(e.target.value)} placeholder="https://instagram.com/reel/..." className="pl-9" />
-                </div>
-              </div>
-              <div>
-                <label className="text-xs text-muted-foreground mb-1.5 block font-light">Video 3</label>
-                <div className="relative">
-                  <Video size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
-                  <Input value={videoUrl3} onChange={(e) => setVideoUrl3(e.target.value)} placeholder="https://youtube.com/watch?v=..." className="pl-9" />
-                </div>
+            <CardContent>
+              <div className="grid grid-cols-3 gap-3">
+                {videos.map(({ val, set }, i) => {
+                  const embedUrl = getVideoEmbedUrl(val);
+                  return (
+                    <div key={i} className="relative">
+                      <div className="aspect-[9/16] rounded-xl overflow-hidden bg-muted/40 relative group">
+                        {embedUrl ? (
+                          <>
+                            <iframe
+                              src={embedUrl}
+                              className="w-full h-full"
+                              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                              allowFullScreen
+                              title={`Video ${i + 1}`}
+                            />
+                            <div className="absolute inset-0 bg-foreground/60 opacity-0 group-hover:opacity-100 transition-opacity flex items-center justify-center gap-2">
+                              <button type="button" onClick={() => setEditingVideo(i)} className="p-2 rounded-full bg-background/90 text-foreground">
+                                <Pencil size={14} />
+                              </button>
+                              <button type="button" onClick={() => { set(""); setEditingVideo(null); }} className="p-2 rounded-full bg-background/90 text-foreground">
+                                <X size={14} />
+                              </button>
+                            </div>
+                          </>
+                        ) : (
+                          <button
+                            type="button"
+                            onClick={() => setEditingVideo(i)}
+                            className="flex flex-col items-center justify-center w-full h-full text-muted-foreground hover:text-foreground transition-colors"
+                          >
+                            <Plus size={20} />
+                            <span className="text-[10px] font-light mt-1">Video {i + 1}</span>
+                          </button>
+                        )}
+                      </div>
+                      <AnimatePresence>
+                        {editingVideo === i && (
+                          <VideoLinkPopover
+                            value={val}
+                            onSave={(v) => { set(v); setEditingVideo(null); }}
+                            onCancel={() => setEditingVideo(null)}
+                          />
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  );
+                })}
               </div>
             </CardContent>
           </Card>
