@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import AvatarUpload from "@/components/AvatarUpload";
 import onboardingHero from "@/assets/onboarding-hero.png";
 import onboardingDone from "@/assets/onboarding-done.png";
 
@@ -166,6 +167,7 @@ const Onboarding = () => {
   const [videoUrl3, setVideoUrl3] = useState("");
   const [editingVideo, setEditingVideo] = useState<number | null>(null);
   const [phone, setPhone] = useState("");
+  const [avatarUrl, setAvatarUrl] = useState("");
   const [countryCode, setCountryCode] = useState(COUNTRY_CODES[0]);
   const [showCountryPicker, setShowCountryPicker] = useState(false);
   const [countrySearch, setCountrySearch] = useState("");
@@ -193,6 +195,7 @@ const Onboarding = () => {
       .from("profiles")
       .update({
         bio,
+        avatar_url: avatarUrl || null,
         instagram_handle: socials.instagram || null,
         tiktok_handle: socials.tiktok || null,
         youtube_handle: socials.youtube || null,
@@ -280,7 +283,16 @@ const Onboarding = () => {
               {/* Step 0: Welcome */}
               {step === 0 && (
                 <div className="text-center space-y-6 max-w-md mx-auto">
-                  <img src={onboardingHero} alt="Miiles" className="mx-auto w-full max-w-[280px] sm:max-w-sm rounded-2xl" />
+                  <div className="flex flex-col items-center gap-4">
+                    <AvatarUpload
+                      userId={user?.id || ""}
+                      avatarUrl={avatarUrl}
+                      fallback={displayName.charAt(0).toUpperCase()}
+                      onUploaded={(url) => setAvatarUrl(url)}
+                      size="lg"
+                    />
+                    <p className="text-xs text-muted-foreground font-light">Toca para agregar tu foto</p>
+                  </div>
                   <h1 className="text-3xl font-semibold">¡Hola {displayName}!</h1>
                   <p className="text-muted-foreground font-light text-base max-w-xs mx-auto">
                     Presentamos Miiles: una nueva forma para crear colaboraciones.

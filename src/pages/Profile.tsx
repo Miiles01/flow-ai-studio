@@ -14,6 +14,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
+import AvatarUpload from "@/components/AvatarUpload";
+import { supabase as sb } from "@/integrations/supabase/client";
 
 const Profile = () => {
   const { user, signOut } = useAuth();
@@ -99,14 +101,27 @@ const Profile = () => {
     ? displayName.charAt(0).toUpperCase()
     : user?.email?.charAt(0).toUpperCase() || "M";
 
+  const handleAvatarUploaded = async (url: string) => {
+    setAvatarUrl(url);
+    if (user) {
+      await supabase.from("profiles").update({ avatar_url: url } as any).eq("user_id", user.id);
+    }
+  };
+
   return (
     <div className="p-6 md:p-10 max-w-2xl mx-auto">
       <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
         {/* Header */}
         <div className="flex items-center gap-5 mb-10">
-          <div className="w-16 h-16 rounded-full bg-foreground flex items-center justify-center flex-shrink-0">
-            <span className="text-background text-xl font-normal">{initials}</span>
-          </div>
+          {user && (
+            <AvatarUpload
+              userId={user.id}
+              avatarUrl={avatarUrl}
+              fallback={initials}
+              onUploaded={handleAvatarUploaded}
+              size="lg"
+            />
+          )}
           <div className="min-w-0">
             <h1 className="text-xl font-normal truncate">{displayName || "Usuario"}</h1>
             <p className="text-xs text-muted-foreground font-light">{user?.email}</p>

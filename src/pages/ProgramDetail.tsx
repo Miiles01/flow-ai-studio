@@ -3,8 +3,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
-import { ArrowLeft, ExternalLink, Loader2, CheckCircle2, Bookmark, Share2, Check, Pencil } from "lucide-react";
+import { ArrowLeft, ExternalLink, Loader2, CheckCircle2, Bookmark, Share2, Check, Pencil, Users } from "lucide-react";
 import { motion } from "framer-motion";
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -125,25 +126,6 @@ export default function ProgramDetail() {
           Volver a programas
         </button>
 
-        {/* Earnings Calculator — top */}
-        <div className="mb-8">
-          <EarningsCalculator
-            commissionRate={program.commission_rate}
-            priceMin={program.price_min}
-            priceMax={program.price_max}
-            avgSales={program.avg_sales}
-          />
-          {isAdmin && (
-            <button
-              onClick={() => setEditOpen(true)}
-              className="inline-flex items-center gap-1 text-xs text-miiles-blue font-light mt-2 hover:underline"
-            >
-              <Pencil size={12} />
-              Editar datos del calculador
-            </button>
-          )}
-        </div>
-
         {/* Banner */}
         {program.banner_url && (
           <img
@@ -154,6 +136,7 @@ export default function ProgramDetail() {
             loading="lazy"
           />
         )}
+
 
         {/* Header */}
         <div className="space-y-3">
@@ -178,6 +161,34 @@ export default function ProgramDetail() {
               {program.category}
             </span>
           </div>
+        </div>
+
+        {/* Estadísticas — below badges */}
+        <div className="mt-8">
+          <EarningsCalculator
+            commissionRate={program.commission_rate}
+            priceMin={program.price_min}
+            priceMax={program.price_max}
+            avgSales={program.avg_sales}
+          />
+          {isAdmin && (
+            <div className="flex items-center gap-4 mt-2">
+              <button
+                onClick={() => setEditOpen(true)}
+                className="inline-flex items-center gap-1 text-xs text-miiles-blue font-light hover:underline"
+              >
+                <Pencil size={12} />
+                Editar datos del calculador
+              </button>
+              <Link
+                to={`/programs/${program.id}/applicants`}
+                className="inline-flex items-center gap-1 text-xs text-miiles-blue font-light hover:underline"
+              >
+                <Users size={12} />
+                Ver postulaciones
+              </Link>
+            </div>
+          )}
         </div>
 
         {/* Description */}

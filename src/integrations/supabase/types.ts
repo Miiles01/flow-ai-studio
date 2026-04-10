@@ -32,6 +32,7 @@ export type Database = {
           price_max: number | null
           price_min: number | null
           program_url: string | null
+          public_token: string | null
           updated_at: string
         }
         Insert: {
@@ -51,6 +52,7 @@ export type Database = {
           price_max?: number | null
           price_min?: number | null
           program_url?: string | null
+          public_token?: string | null
           updated_at?: string
         }
         Update: {
@@ -70,6 +72,7 @@ export type Database = {
           price_max?: number | null
           price_min?: number | null
           program_url?: string | null
+          public_token?: string | null
           updated_at?: string
         }
         Relationships: []
@@ -252,6 +255,28 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      get_program_applicants_by_token: {
+        Args: { p_token: string }
+        Returns: {
+          application_id: string
+          applied_at: string
+          avatar_url: string
+          bio: string
+          display_name: string
+          instagram_handle: string
+          niche: string
+          phone: string
+          portfolio_url: string
+          status: string
+          tiktok_handle: string
+          twitter_handle: string
+          user_id: string
+          video_url_1: string
+          video_url_2: string
+          video_url_3: string
+          youtube_handle: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
