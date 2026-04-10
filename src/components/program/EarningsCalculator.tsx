@@ -195,9 +195,6 @@ export default function EarningsCalculator({ commissionRate, priceMin, priceMax,
                   {monthlyEarnings.toFixed(2)}
                 </motion.p>
               </AnimatePresence>
-              <p className="text-[10px] text-miiles-gray-400 font-light mt-0.5">
-                ${earningsPerSale.toFixed(2)} × {avgSales} ventas · 30 días
-              </p>
             </div>
 
             <div className="flex-1 min-h-[160px] relative">
