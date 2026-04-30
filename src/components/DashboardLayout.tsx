@@ -35,6 +35,8 @@ function SidebarBody() {
   const navigate = useNavigate();
   const [displayName, setDisplayName] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
+  const [conversations, setConversations] = useState<Conversation[]>([]);
+  const location = useLocation();
 
   useEffect(() => {
     if (!user) return;
@@ -48,6 +50,36 @@ function SidebarBody() {
         setAvatarUrl(data?.avatar_url || "");
       });
   }, [user]);
+
+  const loadConversations = useCallback(async () => {
+    if (!user) return;
+    const { data } = await supabase
+      .from("ai_conversations")
+      .select("id, title, updated_at")
+      .eq("user_id", user.id)
+      .order("updated_at", { ascending: false })
+      .limit(30);
+    setConversations(data ?? []);
+  }, [user]);
+
+  useEffect(() => {
+    loadConversations();
+    const handler = () => loadConversations();
+    window.addEventListener("ai-conversations-changed", handler);
+    return () => window.removeEventListener("ai-conversations-changed", handler);
+  }, [loadConversations]);
+
+  const handleDeleteConversation = async (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    e.preventDefault();
+    const { error } = await supabase.from("ai_conversations").delete().eq("id", id);
+    if (error) {
+      toast.error("No se pudo eliminar");
+      return;
+    }
+    setConversations((prev) => prev.filter((c) => c.id !== id));
+    if (location.pathname === `/search/${id}`) navigate("/search");
+  };
 
   const handleSignOut = async () => {
     await signOut();
