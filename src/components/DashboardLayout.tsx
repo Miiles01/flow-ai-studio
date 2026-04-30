@@ -23,7 +23,10 @@ import {
 const mainNav = [
   { title: "Inicio", url: "/", icon: Home },
   { title: "Programas", url: "/programs", icon: ShoppingBag },
+  { title: "Búsqueda IA", url: "/search", icon: Bot },
 ];
+
+type Conversation = { id: string; title: string; updated_at: string };
 
 function SidebarBody() {
   const { state } = useSidebar();
