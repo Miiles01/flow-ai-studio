@@ -127,7 +127,56 @@ function SidebarBody() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        <div className="flex-1" />
+        {/* AI Chat history */}
+        {!collapsed && (
+          <SidebarGroup className="mt-2 min-h-0 flex-1 overflow-hidden flex flex-col">
+            <div className="flex items-center justify-between px-3 pr-2">
+              <SidebarGroupLabel className="text-[10px] uppercase tracking-wider text-muted-foreground/70">
+                Historial IA
+              </SidebarGroupLabel>
+              <button
+                onClick={() => navigate("/search")}
+                className="p-1 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
+                title="Nuevo chat"
+              >
+                <Plus className="h-3.5 w-3.5" />
+              </button>
+            </div>
+            <SidebarGroupContent className="overflow-y-auto">
+              <SidebarMenu>
+                {conversations.length === 0 && (
+                  <p className="px-3 py-2 text-xs font-light text-muted-foreground/60">Sin conversaciones</p>
+                )}
+                {conversations.map((c) => {
+                  const active = location.pathname === `/search/${c.id}`;
+                  return (
+                    <SidebarMenuItem key={c.id}>
+                      <SidebarMenuButton asChild>
+                        <button
+                          onClick={() => navigate(`/search/${c.id}`)}
+                          className={`w-full group flex items-center gap-2 text-left rounded-sm transition-all duration-200 ${
+                            active
+                              ? "bg-muted text-foreground"
+                              : "text-muted-foreground hover:text-foreground hover:bg-muted"
+                          }`}
+                        >
+                          <MessageSquare className="h-3.5 w-3.5 flex-shrink-0" />
+                          <span className="font-light text-xs truncate flex-1">{c.title}</span>
+                          <Trash2
+                            onClick={(e) => handleDeleteConversation(e, c.id)}
+                            className="h-3 w-3 opacity-0 group-hover:opacity-60 hover:!opacity-100 flex-shrink-0"
+                          />
+                        </button>
+                      </SidebarMenuButton>
+                    </SidebarMenuItem>
+                  );
+                })}
+              </SidebarMenu>
+            </SidebarGroupContent>
+          </SidebarGroup>
+        )}
+
+        {collapsed && <div className="flex-1" />}
 
 
         {/* User profile card at bottom */}
