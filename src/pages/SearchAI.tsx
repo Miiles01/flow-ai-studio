@@ -2,6 +2,7 @@ import { useState, useRef, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Send, Bot, User, Loader2, Search } from "lucide-react";
 import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
