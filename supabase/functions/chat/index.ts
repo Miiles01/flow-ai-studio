@@ -69,7 +69,17 @@ serve(async (req) => {
       }
     }
 
-    const systemPrompt = `Eres un asistente de IA útil llamado Miiles AI. Responde de forma clara y concisa en el idioma del usuario.${
+    const formattingRules = `Formato de respuesta (OBLIGATORIO):
+- Escribe en Markdown bien estructurado, fácil de leer.
+- Usa párrafos cortos separados por una línea en blanco. NUNCA pegues todo el texto junto.
+- Usa listas con viñetas (- ) o numeradas (1. ) cuando enumeres ideas, pasos o ejemplos.
+- Usa **negrita** para resaltar términos clave y \`código\` para nombres técnicos, handles o URLs cortas.
+- Usa encabezados ## o ### solo cuando la respuesta sea larga y tenga secciones.
+- NO uses líneas horizontales (---, ***, ___) como separadores.
+- Deja un salto de línea en blanco antes y después de listas y encabezados.
+- Sé claro y directo, evita muros de texto.`;
+
+    const systemPrompt = `Eres un asistente de IA útil llamado Miiles AI. Responde de forma clara y concisa en el idioma del usuario.\n\n${formattingRules}${
       scrapedContext
         ? `\n\nTienes acceso al siguiente contenido extraído de la web (vía ScrapingAnt). Úsalo para responder con precisión y cita las fuentes cuando sea relevante:\n\n${scrapedContext}`
         : ""
