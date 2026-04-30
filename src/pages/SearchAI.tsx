@@ -266,21 +266,37 @@ export default function SearchAI() {
               }`}
             >
               {m.role === "assistant" ? (
-                <div className="prose prose-sm max-w-none [&_a]:text-miiles-blue [&_a]:underline">
+                <div className="prose prose-sm max-w-none text-foreground
+                  [&_a]:text-miiles-blue [&_a]:underline
+                  [&_p]:my-2 [&_p]:leading-relaxed
+                  [&_ul]:my-2 [&_ul]:pl-5 [&_ul]:list-disc [&_ul]:space-y-1
+                  [&_ol]:my-2 [&_ol]:pl-5 [&_ol]:list-decimal [&_ol]:space-y-1
+                  [&_li]:leading-relaxed [&_li>p]:my-0
+                  [&_h1]:text-base [&_h1]:font-medium [&_h1]:mt-3 [&_h1]:mb-1
+                  [&_h2]:text-sm [&_h2]:font-medium [&_h2]:mt-3 [&_h2]:mb-1
+                  [&_h3]:text-sm [&_h3]:font-medium [&_h3]:mt-2 [&_h3]:mb-1
+                  [&_strong]:font-medium
+                  [&_code]:bg-muted [&_code]:px-1 [&_code]:py-0.5 [&_code]:rounded [&_code]:text-xs
+                  [&_pre]:bg-muted [&_pre]:p-2 [&_pre]:rounded [&_pre]:my-2 [&_pre]:overflow-x-auto
+                  [&_hr]:hidden
+                  [&_blockquote]:border-l-2 [&_blockquote]:border-muted [&_blockquote]:pl-3 [&_blockquote]:text-muted-foreground [&_blockquote]:my-2"
+                >
                   <ReactMarkdown
+                    remarkPlugins={[remarkGfm]}
                     components={{
                       a: ({ href, children }) => (
                         <a href={href} target="_blank" rel="noopener noreferrer">
                           {children}
                         </a>
                       ),
+                      hr: () => null,
                     }}
                   >
                     {m.content}
                   </ReactMarkdown>
                 </div>
               ) : (
-                m.content
+                <span className="whitespace-pre-wrap">{m.content}</span>
               )}
             </div>
             {m.role === "user" && (
