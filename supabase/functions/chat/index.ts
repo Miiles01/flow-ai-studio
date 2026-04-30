@@ -12,23 +12,60 @@ const SCRAPINGANT_API_KEY = Deno.env.get("SCRAPINGANT_API_KEY");
 function extractUrls(text: string): string[] {
   const urlRegex = /(https?:\/\/[^\s<>"]+)/gi;
   const matches = text.match(urlRegex) || [];
-  return [...new Set(matches)].slice(0, 3); // Max 3 URLs
+  return [...new Set(matches)].slice(0, 3);
 }
 
 // Scrape a URL using ScrapingAnt and return clean text
 async function scrapeUrl(url: string): Promise<string> {
   if (!SCRAPINGANT_API_KEY) throw new Error("SCRAPINGANT_API_KEY no configurada");
-
   const endpoint = `https://api.scrapingant.com/v2/general?url=${encodeURIComponent(url)}&x-api-key=${SCRAPINGANT_API_KEY}&return_text=true`;
-
   const resp = await fetch(endpoint, { method: "GET" });
   if (!resp.ok) {
     const t = await resp.text();
     throw new Error(`ScrapingAnt ${resp.status}: ${t.slice(0, 200)}`);
   }
   const text = await resp.text();
-  // Clean & truncate to keep token usage sane
-  return text.replace(/\s+/g, " ").trim().slice(0, 8000);
+  return text.replace(/\s+/g, " ").trim().slice(0, 6000);
+}
+
+// Use ScrapingAnt to fetch DuckDuckGo HTML results and extract top URLs
+async function searchWeb(query: string): Promise<string[]> {
+  if (!SCRAPINGANT_API_KEY) return [];
+  const ddg = `https://html.duckduckgo.com/html/?q=${encodeURIComponent(query)}`;
+  const endpoint = `https://api.scrapingant.com/v2/general?url=${encodeURIComponent(ddg)}&x-api-key=${SCRAPINGANT_API_KEY}`;
+  try {
+    const resp = await fetch(endpoint, { method: "GET" });
+    if (!resp.ok) {
+      console.error("DuckDuckGo search failed", resp.status);
+      return [];
+    }
+    const html = await resp.text();
+    // DuckDuckGo HTML wraps real URLs in /l/?uddg=<encoded>
+    const urls: string[] = [];
+    const re = /\/l\/\?uddg=([^"&]+)/gi;
+    let m: RegExpExecArray | null;
+    while ((m = re.exec(html)) !== null) {
+      try {
+        const decoded = decodeURIComponent(m[1]);
+        if (decoded.startsWith("http") && !urls.includes(decoded)) urls.push(decoded);
+      } catch { /* ignore */ }
+      if (urls.length >= 3) break;
+    }
+    // Fallback: direct hrefs
+    if (urls.length === 0) {
+      const re2 = /href="(https?:\/\/[^"]+)"/gi;
+      while ((m = re2.exec(html)) !== null) {
+        const u = m[1];
+        if (u.includes("duckduckgo.com")) continue;
+        if (!urls.includes(u)) urls.push(u);
+        if (urls.length >= 3) break;
+      }
+    }
+    return urls;
+  } catch (e) {
+    console.error("searchWeb error", e);
+    return [];
+  }
 }
 
 serve(async (req) => {
@@ -48,42 +85,60 @@ serve(async (req) => {
       });
     }
 
-    // Look at the latest user message — if it contains URLs, scrape them
     const lastUser = [...messages].reverse().find((m: any) => m.role === "user");
     let scrapedContext = "";
+    let sourcesUsed: string[] = [];
 
-    if (lastUser?.content) {
-      const urls = extractUrls(String(lastUser.content));
-      if (urls.length > 0 && SCRAPINGANT_API_KEY) {
+    if (lastUser?.content && SCRAPINGANT_API_KEY) {
+      const userText = String(lastUser.content);
+      let urls = extractUrls(userText);
+
+      // If no URL provided, search the web first (vía ScrapingAnt + DuckDuckGo)
+      if (urls.length === 0) {
+        console.log("No URL in message — searching web for:", userText.slice(0, 100));
+        urls = await searchWeb(userText);
+        console.log("Search results:", urls);
+      }
+
+      if (urls.length > 0) {
         console.log("Scraping URLs:", urls);
         const results = await Promise.allSettled(urls.map(scrapeUrl));
         const parts: string[] = [];
         results.forEach((r, i) => {
-          if (r.status === "fulfilled") {
-            parts.push(`### Contenido de ${urls[i]}\n${r.value}`);
+          if (r.status === "fulfilled" && r.value.length > 50) {
+            parts.push(`### Fuente: ${urls[i]}\n${r.value}`);
+            sourcesUsed.push(urls[i]);
           } else {
-            parts.push(`### Error scraping ${urls[i]}\n${r.reason?.message || "desconocido"}`);
+            console.warn("Scrape failed for", urls[i], r.status === "rejected" ? r.reason : "empty");
           }
         });
         scrapedContext = parts.join("\n\n");
       }
     }
 
-    const formattingRules = `Formato de respuesta (OBLIGATORIO):
-- Escribe en Markdown bien estructurado, fácil de leer.
-- Usa párrafos cortos separados por una línea en blanco. NUNCA pegues todo el texto junto.
-- Usa listas con viñetas (- ) o numeradas (1. ) cuando enumeres ideas, pasos o ejemplos.
-- Usa **negrita** para resaltar términos clave y \`código\` para nombres técnicos, handles o URLs cortas.
-- Usa encabezados ## o ### solo cuando la respuesta sea larga y tenga secciones.
-- NO uses líneas horizontales (---, ***, ___) como separadores.
-- Deja un salto de línea en blanco antes y después de listas y encabezados.
-- Sé claro y directo, evita muros de texto.`;
+    const formattingRules = `Formato (OBLIGATORIO):
+- Markdown bien estructurado y fácil de leer.
+- Párrafos cortos separados por línea en blanco. NUNCA pegues el texto.
+- Listas con - o 1. cuando enumeres ideas o pasos.
+- **Negrita** para términos clave, \`código\` para handles/URLs cortas.
+- Encabezados ## o ### solo si la respuesta es larga y tiene secciones.
+- NO uses líneas horizontales (---, ***, ___).
+- Deja una línea en blanco antes y después de listas y encabezados.`;
 
-    const systemPrompt = `Eres un asistente de IA útil llamado Miiles AI. Responde de forma clara y concisa en el idioma del usuario.\n\n${formattingRules}${
-      scrapedContext
-        ? `\n\nTienes acceso al siguiente contenido extraído de la web (vía ScrapingAnt). Úsalo para responder con precisión y cita las fuentes cuando sea relevante:\n\n${scrapedContext}`
-        : ""
-    }`;
+    const groundingRules = scrapedContext
+      ? `REGLAS ESTRICTAS DE CONTENIDO (OBLIGATORIO):
+- TODA tu respuesta debe basarse ÚNICAMENTE en el "Contexto web" que sigue. Fue obtenido en tiempo real con ScrapingAnt.
+- PROHIBIDO inventar datos, cifras, nombres, URLs, comisiones, fechas o citas que NO aparezcan literalmente en el contexto.
+- Si el contexto no contiene la respuesta, di exactamente: "No encontré información confiable sobre eso en la web." y NADA más sobre ese punto.
+- Cita las fuentes al final con una sección **Fuentes:** y lista los enlaces usados como bullets.
+- No menciones "ScrapingAnt", "scraping" ni cómo obtuviste la info; sólo úsala.
+
+Contexto web (única fuente de verdad):
+
+${scrapedContext}`
+      : `REGLA: No tienes acceso a internet en este turno. Si el usuario pide datos actuales, específicos, precios, métricas o información que cambia con el tiempo, responde: "No encontré información confiable sobre eso en la web." y sugiere que reformule la pregunta o incluya una URL. NO INVENTES datos.`;
+
+    const systemPrompt = `Eres Miiles AI, un asistente que responde con datos reales obtenidos de la web.\n\n${formattingRules}\n\n${groundingRules}`;
 
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
@@ -120,7 +175,11 @@ serve(async (req) => {
     }
 
     return new Response(response.body, {
-      headers: { ...corsHeaders, "Content-Type": "text/event-stream" },
+      headers: {
+        ...corsHeaders,
+        "Content-Type": "text/event-stream",
+        "x-sources-count": String(sourcesUsed.length),
+      },
     });
   } catch (e) {
     console.error("chat error:", e);
