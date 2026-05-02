@@ -173,8 +173,8 @@ const Landing = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* COL 1 — Encuentra colaboraciones */}
-              <motion.div variants={fadeUp} custom={1} className="flex flex-col">
-                <div className="rounded-3xl overflow-hidden bg-[#F5F5F8] mb-8">
+              <motion.div variants={fadeUp} custom={1} className="flex flex-col bg-white rounded-3xl p-6 cursor-pointer transition-all duration-300 hover:-translate-y-3 hover:shadow-[0_20px_60px_rgba(0,0,0,0.08)]">
+                <div className="rounded-2xl overflow-hidden bg-[#F5F5F8] mb-8">
                   <img
                     src="https://wearemiiles.com/wp-content/uploads/2026/01/3232-932x1024.png"
                     alt="Encuentra colaboraciones"
@@ -190,8 +190,8 @@ const Landing = () => {
               </motion.div>
 
               {/* COL 2 — Haz que tu idea suene */}
-              <motion.div variants={fadeUp} custom={2} className="flex flex-col">
-                <div className="rounded-3xl overflow-hidden bg-[#F5F5F8] mb-8">
+              <motion.div variants={fadeUp} custom={2} className="flex flex-col bg-white rounded-3xl p-6 cursor-pointer transition-all duration-300 hover:-translate-y-3 hover:shadow-[0_20px_60px_rgba(0,0,0,0.08)]">
+                <div className="rounded-2xl overflow-hidden bg-[#F5F5F8] mb-8">
                   <img
                     src="https://wearemiiles.com/wp-content/uploads/2026/01/new233-933x1024.png"
                     alt="Haz que tu idea suene"
