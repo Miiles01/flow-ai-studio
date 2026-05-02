@@ -6,6 +6,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
 import logoImg from "@/assets/logo.png";
+import logotipoSvg from "@/assets/miiles/logotipo.svg";
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
