@@ -117,11 +117,7 @@ const Landing = () => {
 
         {/* HERO */}
         <section className="min-h-screen flex flex-col items-center justify-center text-center px-6 pt-20 relative">
-          <motion.div
-            initial="hidden"
-            animate="visible"
-            className="max-w-4xl mx-auto"
-          >
+          <div className="max-w-4xl mx-auto">
             <h1
               data-anim-heading
               className="text-6xl md:text-8xl lg:text-9xl font-normal leading-none tracking-tight mb-8"
@@ -139,11 +135,7 @@ const Landing = () => {
               En Miiles encontrarás oportunidades únicas para impulsar tu marca y hacer que otros vendedores en todo el mundo también ofrezcan lo tuyo.
             </p>
 
-            <motion.div
-              variants={fadeUp}
-              custom={3}
-              className="flex items-center justify-center gap-4 flex-wrap"
-            >
+            <div data-anim-heading className="flex items-center justify-center gap-4 flex-wrap">
               <Link
                 to="/login"
                 className="px-8 py-4 rounded-full bg-black text-white text-sm font-light hover:-translate-y-2 transition-transform duration-300"
@@ -156,8 +148,8 @@ const Landing = () => {
               >
                 Ver funciones →
               </a>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
 
           {/* gradient blob con parallax */}
           <div
@@ -187,12 +179,7 @@ const Landing = () => {
 
         {/* VALUE PROP + 2 COLUMNS */}
         <section className="py-32 px-6">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-100px" }}
-            className="max-w-6xl mx-auto"
-          >
+          <div className="max-w-6xl mx-auto">
             <h2
               data-anim-heading
               className="text-5xl md:text-7xl font-normal leading-tight tracking-tight text-center mb-20"
@@ -203,7 +190,7 @@ const Landing = () => {
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* COL 1 — Encuentra colaboraciones */}
-              <motion.div variants={fadeUp} custom={1} className="flex flex-col bg-white rounded-3xl p-6 cursor-pointer transition-all duration-300 hover:-translate-y-3 hover:shadow-[0_20px_60px_rgba(0,0,0,0.08)]">
+              <div data-anim-heading className="flex flex-col bg-white rounded-3xl p-6 cursor-pointer transition-all duration-300 hover:-translate-y-3 hover:shadow-[0_20px_60px_rgba(0,0,0,0.08)]">
                 <div className="rounded-2xl overflow-hidden bg-[#F5F5F8] mb-8">
                   <img
                     src="https://wearemiiles.com/wp-content/uploads/2026/01/3232-932x1024.png"
@@ -217,10 +204,10 @@ const Landing = () => {
                 <p data-split className="text-sm font-light text-gray-500 text-center leading-relaxed max-w-sm mx-auto">
                   En Miiles encontrarás oportunidades únicas para impulsar tu marca.
                 </p>
-              </motion.div>
+              </div>
 
               {/* COL 2 — Haz que tu idea suene */}
-              <motion.div variants={fadeUp} custom={2} className="flex flex-col bg-white rounded-3xl p-6 cursor-pointer transition-all duration-300 hover:-translate-y-3 hover:shadow-[0_20px_60px_rgba(0,0,0,0.08)]">
+              <div data-anim-heading className="flex flex-col bg-white rounded-3xl p-6 cursor-pointer transition-all duration-300 hover:-translate-y-3 hover:shadow-[0_20px_60px_rgba(0,0,0,0.08)]">
                 <div className="rounded-2xl overflow-hidden bg-[#F5F5F8] mb-8">
                   <img
                     src="https://wearemiiles.com/wp-content/uploads/2026/01/new233-933x1024.png"
@@ -234,20 +221,14 @@ const Landing = () => {
                 <p data-split className="text-sm font-light text-gray-500 text-center leading-relaxed max-w-sm mx-auto">
                   Si tu marca vende servicios o productos, haz que otros vendedores en todo el mundo también los ofrezcan.
                 </p>
-              </motion.div>
+              </div>
             </div>
-          </motion.div>
+          </div>
         </section>
-
 
         {/* TESTIMONIAL */}
         <section className="py-32 px-6">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-80px" }}
-            className="max-w-3xl mx-auto text-center"
-          >
+          <div className="max-w-3xl mx-auto text-center">
             <p
               data-split-heading
               data-speed="0.95"
@@ -255,27 +236,19 @@ const Landing = () => {
             >
               "Luce realmente asombroso"
             </p>
-            <motion.div variants={fadeUp} custom={1} className="flex items-center justify-center gap-3">
-              <div
-                className="w-10 h-10 rounded-full"
-                style={{ background: "linear-gradient(135deg, #FCB5B9, #B8A4F8)" }}
-              />
+            <div data-anim-heading className="flex items-center justify-center gap-3">
+              <div className="w-10 h-10 rounded-full" style={{ background: "linear-gradient(135deg, #FCB5B9, #B8A4F8)" }} />
               <div className="text-left">
                 <p className="text-sm font-normal">Karol Wegner</p>
                 <p className="text-xs font-light text-gray-400">CEO de BeeSpeaker</p>
               </div>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         </section>
 
         {/* FINAL CTA */}
         <section className="py-32 px-6">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true, margin: "-80px" }}
-            className="max-w-4xl mx-auto text-center"
-          >
+          <div className="max-w-4xl mx-auto text-center">
             <h2
               data-anim-heading
               className="text-5xl md:text-7xl font-normal leading-tight tracking-tight mb-10"
@@ -285,16 +258,15 @@ const Landing = () => {
                 automatizado
               </span>
             </h2>
-
-            <motion.div variants={fadeUp} custom={1}>
+            <div data-anim-heading>
               <Link
                 to="/login"
                 className="inline-block px-10 py-5 rounded-full bg-black text-white text-sm font-light hover:-translate-y-2 transition-transform duration-300"
               >
                 Prueba Miiles gratis
               </Link>
-            </motion.div>
-          </motion.div>
+            </div>
+          </div>
         </section>
 
         {/* FOOTER */}
