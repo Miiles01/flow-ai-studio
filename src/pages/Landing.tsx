@@ -109,7 +109,7 @@ const Landing = () => {
           </div>
 
           <Link
-            to="/register"
+            to="/login"
             className="text-sm font-light px-5 py-2 rounded-full bg-black text-white hover:-translate-y-1 transition-transform duration-200"
           >
             Prueba gratis
@@ -146,7 +146,7 @@ const Landing = () => {
               className="flex items-center justify-center gap-4 flex-wrap"
             >
               <Link
-                to="/register"
+                to="/login"
                 className="px-8 py-4 rounded-full bg-black text-white text-sm font-light hover:-translate-y-2 transition-transform duration-300"
               >
                 Prueba gratis
@@ -289,7 +289,7 @@ const Landing = () => {
 
             <motion.div variants={fadeUp} custom={1}>
               <Link
-                to="/register"
+                to="/login"
                 className="inline-block px-10 py-5 rounded-full bg-black text-white text-sm font-light hover:-translate-y-2 transition-transform duration-300"
               >
                 Prueba Miiles gratis
