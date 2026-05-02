@@ -153,23 +153,80 @@ const Landing = () => {
           </div>
         </section>
 
-        {/* VALUE PROP */}
+        {/* VALUE PROP + CARDS */}
         <section className="py-32 px-6">
           <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-100px" }}
-            className="max-w-5xl mx-auto"
+            className="max-w-6xl mx-auto"
           >
             <motion.h2
               variants={fadeUp}
-              custom={1}
-              className="text-5xl md:text-7xl font-normal leading-tight tracking-tight text-center"
+              custom={0}
+              className="text-5xl md:text-7xl font-normal leading-tight tracking-tight text-center mb-16"
             >
               Un sistema.
               <br />
               Más <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>ganancias.</span>
             </motion.h2>
+
+            {/* 3 CARDS */}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              {[
+                {
+                  img: "https://wearemiiles.com/wp-content/uploads/2026/01/232-932x1024.png",
+                  category: "Redes sociales",
+                  name: "Manychat",
+                },
+                {
+                  img: "https://wearemiiles.com/wp-content/uploads/2026/01/2323-932x1024.png",
+                  category: "Idiomas",
+                  name: "Open English",
+                },
+                {
+                  img: "https://wearemiiles.com/wp-content/uploads/2026/01/3232-932x1024.png",
+                  category: "Ecommerce",
+                  name: "Mercado libre",
+                },
+              ].map((card, i) => (
+                <motion.div
+                  key={card.name}
+                  variants={fadeUp}
+                  custom={i + 1}
+                  className="bg-white rounded-3xl overflow-hidden"
+                  style={{ boxShadow: "0 2px 24px 0 rgba(24,2,56,0.06)" }}
+                >
+                  {/* imagen */}
+                  <div className="rounded-2xl overflow-hidden mx-3 mt-3" style={{ background: "#F0EEFF" }}>
+                    <img
+                      src={card.img}
+                      alt={card.name}
+                      className="w-full object-cover"
+                    />
+                  </div>
+
+                  {/* info */}
+                  <div className="px-5 py-5 flex items-end justify-between">
+                    <div>
+                      <p className="text-xs font-light mb-1" style={{ color: "#FCB5B9" }}>{card.category}</p>
+                      <p className="text-base font-normal">{card.name}</p>
+                      {/* avatars */}
+                      <div className="flex items-center mt-3 -space-x-2">
+                        <div className="w-8 h-8 rounded-full bg-pink-100 border-2 border-white flex items-center justify-center text-xs">✳</div>
+                        <div className="w-8 h-8 rounded-full bg-blue-400 border-2 border-white overflow-hidden">
+                          <div className="w-full h-full bg-gradient-to-br from-blue-300 to-purple-400" />
+                        </div>
+                        <div className="w-8 h-8 rounded-full bg-pink-100 border-2 border-white flex items-center justify-center text-sm text-gray-400">+</div>
+                      </div>
+                    </div>
+                    <button className="flex items-center gap-1.5 px-4 py-2.5 rounded-full bg-black text-white text-sm font-light">
+                      <span>✦</span> Unirse
+                    </button>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
           </motion.div>
         </section>
 
