@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import videoHome from "@/assets/miiles/videohome.mp4";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import gsap from "gsap";
@@ -19,6 +20,7 @@ const fadeUp = {
 
 const Landing = () => {
   const smootherRef = useRef<ScrollSmoother | null>(null);
+  const videoWrapRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     smootherRef.current = ScrollSmoother.create({
@@ -27,6 +29,24 @@ const Landing = () => {
       smooth: 1.4,
       effects: true,
     });
+
+    // Video expand on scroll
+    if (videoWrapRef.current) {
+      gsap.fromTo(
+        videoWrapRef.current,
+        { width: "40%" },
+        {
+          width: "80%",
+          ease: "none",
+          scrollTrigger: {
+            trigger: videoWrapRef.current,
+            start: "top 80%",
+            end: "top 20%",
+            scrub: true,
+          },
+        }
+      );
+    }
 
     return () => {
       smootherRef.current?.kill();
@@ -113,6 +133,24 @@ const Landing = () => {
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-10 blur-3xl pointer-events-none -z-10"
             style={{ background: "linear-gradient(135deg, #FCB5B9 0%, #B8A4F8 50%, #4059F1 100%)" }}
           />
+        </section>
+
+        {/* VIDEO */}
+        <section className="py-24 flex justify-center items-center overflow-hidden">
+          <div
+            ref={videoWrapRef}
+            style={{ width: "40%" }}
+            className="rounded-2xl overflow-hidden shadow-xl"
+          >
+            <video
+              src={videoHome}
+              autoPlay
+              muted
+              loop
+              playsInline
+              className="w-full h-full object-cover"
+            />
+          </div>
         </section>
 
         {/* VALUE PROP */}
