@@ -67,14 +67,6 @@ const Landing = () => {
             animate="visible"
             className="max-w-4xl mx-auto"
           >
-            <motion.p
-              variants={fadeUp}
-              custom={0}
-              className="text-xs font-light tracking-widest uppercase text-gray-400 mb-8"
-            >
-              Plataforma de colaboraciones
-            </motion.p>
-
             <motion.h1
               variants={fadeUp}
               custom={1}
@@ -131,12 +123,6 @@ const Landing = () => {
             viewport={{ once: true, margin: "-100px" }}
             className="max-w-5xl mx-auto"
           >
-            <motion.p
-              variants={fadeUp}
-              className="text-xs font-light tracking-widest uppercase text-gray-400 mb-6"
-            >
-              Por qué Miiles
-            </motion.p>
             <motion.h2
               variants={fadeUp}
               custom={1}
