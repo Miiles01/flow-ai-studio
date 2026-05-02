@@ -50,43 +50,33 @@ const Landing = () => {
       );
     }
 
-    // GSAP simple — headings con spans/br anidados (sin SplitText)
-    document.querySelectorAll("[data-anim-heading]").forEach((el) => {
-      gsap.from(el, {
-        y: 40,
-        opacity: 0,
-        duration: 0.8,
-        ease: "power2.out",
+    // GSAP simple — headings con spans/br anidados (sin SplitText, evita conflicto React)
+    const animated: HTMLElement[] = [];
+    document.querySelectorAll<HTMLElement>("[data-anim-heading]").forEach((el) => {
+      animated.push(el);
+      gsap.fromTo(el, { opacity: 0, y: 40 }, {
+        opacity: 1, y: 0, duration: 0.8, ease: "power2.out",
         scrollTrigger: { trigger: el, start: "top 85%", once: true },
       });
     });
 
-    // SplitText por palabras — headings texto puro
+    // SplitText — headings texto puro (sin spans ni br anidados)
     const splits: InstanceType<typeof SplitText>[] = [];
-
     document.querySelectorAll("[data-split-heading]").forEach((el) => {
       const split = SplitText.create(el as HTMLElement, { type: "words" });
       splits.push(split);
       gsap.from(split.words, {
-        y: 40,
-        opacity: 0,
-        stagger: 0.15,
-        duration: 0.8,
-        ease: "power2.out",
+        y: 40, opacity: 0, stagger: 0.15, duration: 0.8, ease: "power2.out",
         scrollTrigger: { trigger: el, start: "top 85%", once: true },
       });
     });
 
-    // SplitText por palabras — párrafos texto puro
+    // SplitText — párrafos texto puro
     document.querySelectorAll("[data-split]").forEach((el) => {
       const split = SplitText.create(el as HTMLElement, { type: "words" });
       splits.push(split);
       gsap.from(split.words, {
-        opacity: 0,
-        y: 15,
-        stagger: 0.06,
-        duration: 0.5,
-        ease: "power2.out",
+        opacity: 0, y: 15, stagger: 0.06, duration: 0.5, ease: "power2.out",
         scrollTrigger: { trigger: el, start: "top 85%", once: true },
       });
     });
@@ -95,6 +85,7 @@ const Landing = () => {
       smootherRef.current?.kill();
       ScrollTrigger.getAll().forEach((t) => t.kill());
       splits.forEach((s) => s.revert());
+      gsap.set(animated, { clearProps: "all" });
     };
   }, []);
 
