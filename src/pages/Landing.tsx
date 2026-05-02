@@ -209,63 +209,6 @@ const Landing = () => {
           </motion.div>
         </section>
 
-        {/* FEATURES */}
-        <section id="funciones" className="py-24 px-6 bg-[#F8F9FD]">
-          <div className="max-w-5xl mx-auto grid md:grid-cols-2 gap-8">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-80px" }}
-              variants={fadeUp}
-              className="bg-white rounded-3xl p-10"
-            >
-              <div
-                className="w-10 h-10 rounded-2xl mb-6"
-                style={{ background: "linear-gradient(135deg, #FCB5B9, #B8A4F8)" }}
-              />
-              <h3 className="text-2xl font-normal mb-3">Encuentra colaboraciones</h3>
-              <p className="text-sm font-light text-gray-500 leading-relaxed">
-                En Miiles encontrarás oportunidades únicas para impulsar tu marca con las personas correctas en el momento correcto.
-              </p>
-            </motion.div>
-
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-80px" }}
-              variants={fadeUp}
-              custom={1}
-              className="bg-white rounded-3xl p-10"
-            >
-              <div
-                className="w-10 h-10 rounded-2xl mb-6"
-                style={{ background: "linear-gradient(135deg, #B8A4F8, #4059F1)" }}
-              />
-              <h3 className="text-2xl font-normal mb-3">Fuerza de ventas global</h3>
-              <p className="text-sm font-light text-gray-500 leading-relaxed">
-                Si tu marca vende servicios o productos, haz que otros vendedores en todo el mundo también los ofrezcan. Sin fricción.
-              </p>
-            </motion.div>
-
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true, margin: "-80px" }}
-              variants={fadeUp}
-              custom={2}
-              className="bg-white rounded-3xl p-10 md:col-span-2"
-            >
-              <div
-                className="w-10 h-10 rounded-2xl mb-6"
-                style={{ background: "linear-gradient(135deg, #FCB5B9, #4059F1)" }}
-              />
-              <h3 className="text-2xl font-normal mb-3">Haz que tu idea suene</h3>
-              <p className="text-sm font-light text-gray-500 leading-relaxed max-w-lg">
-                Haz que tu idea suene con fuerza de ventas. Conecta tu propuesta con una red que ya está lista para moverla.
-              </p>
-            </motion.div>
-          </div>
-        </section>
 
         {/* TESTIMONIAL */}
         <section className="py-32 px-6">
