@@ -306,13 +306,8 @@ const Landing = () => {
           </div>
 
           {/* logotipo grande */}
-          <div className="w-full overflow-hidden">
-            <h2
-              className="w-full text-center font-normal leading-none tracking-tighter"
-              style={{ fontSize: "clamp(6rem, 28vw, 28rem)" }}
-            >
-              miiles
-            </h2>
+          <div className="w-full">
+            <img src={logotipoSvg} alt="miiles" className="w-full block" />
           </div>
         </footer>
 
