@@ -271,7 +271,7 @@ const Landing = () => {
         </section>
 
         {/* FOOTER */}
-        <footer className="pt-10 pb-0 overflow-hidden">
+        <footer className="pt-10 pb-0">
           {/* top row */}
           <div className="flex items-center justify-between px-10 pb-8">
             {/* social icons */}
@@ -310,8 +310,7 @@ const Landing = () => {
             <img
               src={logotipoSvg}
               alt="miiles"
-              className="w-full object-contain block"
-              style={{ maxHeight: "260px" }}
+              className="w-full block"
             />
           </div>
         </footer>
