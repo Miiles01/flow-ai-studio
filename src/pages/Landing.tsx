@@ -5,10 +5,11 @@ import { motion, type Variants } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
+import { SplitText } from "gsap/SplitText";
 import logoImg from "@/assets/logo.png";
 import logotipoSvg from "@/assets/miiles/logotipo.svg";
 
-gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
+gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText);
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 32 },
@@ -49,9 +50,43 @@ const Landing = () => {
       );
     }
 
+    // SplitText — párrafos
+    const paragraphs = document.querySelectorAll("[data-split]");
+    const splits: InstanceType<typeof SplitText>[] = [];
+
+    paragraphs.forEach((el) => {
+      const split = SplitText.create(el as HTMLElement, { type: "words" });
+      splits.push(split);
+      gsap.from(split.words, {
+        opacity: 0,
+        y: 15,
+        stagger: 0.06,
+        duration: 0.5,
+        ease: "power2.out",
+        scrollTrigger: { trigger: el, start: "top 85%", once: true },
+      });
+    });
+
+    // SplitText — headings
+    const headings = document.querySelectorAll("[data-split-heading]");
+
+    headings.forEach((el) => {
+      const split = SplitText.create(el as HTMLElement, { type: "words" });
+      splits.push(split);
+      gsap.from(split.words, {
+        y: 40,
+        opacity: 0,
+        stagger: 0.15,
+        duration: 0.8,
+        ease: "power2.out",
+        scrollTrigger: { trigger: el, start: "top 85%", once: true },
+      });
+    });
+
     return () => {
       smootherRef.current?.kill();
       ScrollTrigger.getAll().forEach((t) => t.kill());
+      splits.forEach((s) => s.revert());
     };
   }, []);
 
@@ -88,25 +123,22 @@ const Landing = () => {
             animate="visible"
             className="max-w-4xl mx-auto"
           >
-            <motion.h1
-              variants={fadeUp}
-              custom={1}
+            <h1
+              data-split-heading
               className="text-6xl md:text-8xl lg:text-9xl font-normal leading-none tracking-tight mb-8"
             >
-              Trabaja más
-              <br />
+              Trabaja más{" "}
               <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic", color: "#000" }}>
                 inteligente
               </span>
-            </motion.h1>
+            </h1>
 
-            <motion.p
-              variants={fadeUp}
-              custom={2}
+            <p
+              data-split
               className="text-lg font-light text-gray-500 max-w-xl mx-auto mb-12"
             >
               En Miiles encontrarás oportunidades únicas para impulsar tu marca y hacer que otros vendedores en todo el mundo también ofrezcan lo tuyo.
-            </motion.p>
+            </p>
 
             <motion.div
               variants={fadeUp}
@@ -162,15 +194,13 @@ const Landing = () => {
             viewport={{ once: true, margin: "-100px" }}
             className="max-w-6xl mx-auto"
           >
-            <motion.h2
-              variants={fadeUp}
-              custom={0}
+            <h2
+              data-split-heading
               className="text-5xl md:text-7xl font-normal leading-tight tracking-tight text-center mb-20"
             >
-              Un sistema.
-              <br />
+              Un sistema.{" "}
               Más <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>ganancias.</span>
-            </motion.h2>
+            </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
               {/* COL 1 — Encuentra colaboraciones */}
@@ -182,10 +212,10 @@ const Landing = () => {
                     className="w-full object-cover"
                   />
                 </div>
-                <h3 className="text-3xl md:text-4xl font-normal text-center mb-4 leading-tight">
-                  Encuentra<br />colaboraciones
+                <h3 data-split-heading className="text-3xl md:text-4xl font-normal text-center mb-4 leading-tight">
+                  Encuentra colaboraciones
                 </h3>
-                <p className="text-sm font-light text-gray-500 text-center leading-relaxed max-w-sm mx-auto">
+                <p data-split className="text-sm font-light text-gray-500 text-center leading-relaxed max-w-sm mx-auto">
                   En Miiles encontrarás oportunidades únicas para impulsar tu marca.
                 </p>
               </motion.div>
@@ -199,10 +229,10 @@ const Landing = () => {
                     className="w-full object-cover"
                   />
                 </div>
-                <h3 className="text-3xl md:text-4xl font-normal text-center mb-4 leading-tight">
-                  Haz que tu idea suene<br />con fuerza de ventas
+                <h3 data-split-heading className="text-3xl md:text-4xl font-normal text-center mb-4 leading-tight">
+                  Haz que tu idea suene con fuerza de ventas
                 </h3>
-                <p className="text-sm font-light text-gray-500 text-center leading-relaxed max-w-sm mx-auto">
+                <p data-split className="text-sm font-light text-gray-500 text-center leading-relaxed max-w-sm mx-auto">
                   Si tu marca vende servicios o productos, haz que otros vendedores en todo el mundo también los ofrezcan.
                 </p>
               </motion.div>
@@ -219,13 +249,13 @@ const Landing = () => {
             viewport={{ once: true, margin: "-80px" }}
             className="max-w-3xl mx-auto text-center"
           >
-            <motion.p
-              variants={fadeUp}
-              className="text-3xl md:text-5xl font-normal leading-tight mb-10"
+            <p
+              data-split-heading
               data-speed="0.95"
+              className="text-3xl md:text-5xl font-normal leading-tight mb-10"
             >
               "Luce realmente asombroso"
-            </motion.p>
+            </p>
             <motion.div variants={fadeUp} custom={1} className="flex items-center justify-center gap-3">
               <div
                 className="w-10 h-10 rounded-full"
@@ -247,17 +277,15 @@ const Landing = () => {
             viewport={{ once: true, margin: "-80px" }}
             className="max-w-4xl mx-auto text-center"
           >
-            <motion.h2
-              variants={fadeUp}
+            <h2
+              data-split-heading
               className="text-5xl md:text-7xl font-normal leading-tight tracking-tight mb-10"
             >
-              Vamos a construir
-              <br />tu nuevo negocio
-              <br />
+              Vamos a construir tu nuevo negocio{" "}
               <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic", color: "#000" }}>
                 automatizado
               </span>
-            </motion.h2>
+            </h2>
 
             <motion.div variants={fadeUp} custom={1}>
               <Link
