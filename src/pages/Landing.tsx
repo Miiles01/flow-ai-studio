@@ -164,7 +164,7 @@ const Landing = () => {
             <motion.h2
               variants={fadeUp}
               custom={1}
-              className="text-5xl md:text-7xl font-normal leading-tight tracking-tight"
+              className="text-5xl md:text-7xl font-normal leading-tight tracking-tight text-center"
             >
               Un sistema.
               <br />
