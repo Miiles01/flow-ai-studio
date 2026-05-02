@@ -198,7 +198,7 @@ const Landing = () => {
               data-split-heading
               className="text-5xl md:text-7xl font-normal leading-tight tracking-tight text-center mb-20"
             >
-              Un sistema.{" "}
+              Un sistema.<br />
               Más <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>ganancias.</span>
             </h2>
 
