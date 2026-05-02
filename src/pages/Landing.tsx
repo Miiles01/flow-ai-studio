@@ -144,9 +144,7 @@ const Landing = () => {
             >
               Un sistema.
               <br />
-              <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic", color: "#000" }}>
-                Más ganancias.
-              </span>
+              Más <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>ganancias.</span>
             </motion.h2>
           </motion.div>
         </section>
