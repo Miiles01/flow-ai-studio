@@ -50,27 +50,21 @@ const Landing = () => {
       );
     }
 
-    // SplitText — párrafos
-    const paragraphs = document.querySelectorAll("[data-split]");
-    const splits: InstanceType<typeof SplitText>[] = [];
-
-    paragraphs.forEach((el) => {
-      const split = SplitText.create(el as HTMLElement, { type: "words" });
-      splits.push(split);
-      gsap.from(split.words, {
+    // GSAP simple — headings con spans/br anidados (sin SplitText)
+    document.querySelectorAll("[data-anim-heading]").forEach((el) => {
+      gsap.from(el, {
+        y: 40,
         opacity: 0,
-        y: 15,
-        stagger: 0.06,
-        duration: 0.5,
+        duration: 0.8,
         ease: "power2.out",
         scrollTrigger: { trigger: el, start: "top 85%", once: true },
       });
     });
 
-    // SplitText — headings
-    const headings = document.querySelectorAll("[data-split-heading]");
+    // SplitText por palabras — headings texto puro
+    const splits: InstanceType<typeof SplitText>[] = [];
 
-    headings.forEach((el) => {
+    document.querySelectorAll("[data-split-heading]").forEach((el) => {
       const split = SplitText.create(el as HTMLElement, { type: "words" });
       splits.push(split);
       gsap.from(split.words, {
@@ -78,6 +72,20 @@ const Landing = () => {
         opacity: 0,
         stagger: 0.15,
         duration: 0.8,
+        ease: "power2.out",
+        scrollTrigger: { trigger: el, start: "top 85%", once: true },
+      });
+    });
+
+    // SplitText por palabras — párrafos texto puro
+    document.querySelectorAll("[data-split]").forEach((el) => {
+      const split = SplitText.create(el as HTMLElement, { type: "words" });
+      splits.push(split);
+      gsap.from(split.words, {
+        opacity: 0,
+        y: 15,
+        stagger: 0.06,
+        duration: 0.5,
         ease: "power2.out",
         scrollTrigger: { trigger: el, start: "top 85%", once: true },
       });
@@ -124,7 +132,7 @@ const Landing = () => {
             className="max-w-4xl mx-auto"
           >
             <h1
-              data-split-heading
+              data-anim-heading
               className="text-6xl md:text-8xl lg:text-9xl font-normal leading-none tracking-tight mb-8"
             >
               Trabaja más{" "}
@@ -195,7 +203,7 @@ const Landing = () => {
             className="max-w-6xl mx-auto"
           >
             <h2
-              data-split-heading
+              data-anim-heading
               className="text-5xl md:text-7xl font-normal leading-tight tracking-tight text-center mb-20"
             >
               Un sistema.<br />
@@ -278,7 +286,7 @@ const Landing = () => {
             className="max-w-4xl mx-auto text-center"
           >
             <h2
-              data-split-heading
+              data-anim-heading
               className="text-5xl md:text-7xl font-normal leading-tight tracking-tight mb-10"
             >
               Vamos a construir tu nuevo negocio{" "}
