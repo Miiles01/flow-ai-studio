@@ -61,7 +61,7 @@ const Landing = () => {
             <br />
             <span
               className="inline-block"
-              style={{ background: "linear-gradient(135deg, #FCB5B9 0%, #B8A4F8 50%, #4059F1 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}
+              style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic", background: "linear-gradient(135deg, #FCB5B9 0%, #B8A4F8 50%, #4059F1 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}
             >
               inteligente
             </span>
@@ -124,7 +124,7 @@ const Landing = () => {
             Un sistema.
             <br />
             <span
-              style={{ background: "linear-gradient(135deg, #FCB5B9 0%, #B8A4F8 50%, #4059F1 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}
+              style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic", background: "linear-gradient(135deg, #FCB5B9 0%, #B8A4F8 50%, #4059F1 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}
             >
               Más ganancias.
             </span>
@@ -233,7 +233,7 @@ const Landing = () => {
             <br />tu nuevo negocio
             <br />
             <span
-              style={{ background: "linear-gradient(135deg, #FCB5B9 0%, #B8A4F8 50%, #4059F1 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}
+              style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic", background: "linear-gradient(135deg, #FCB5B9 0%, #B8A4F8 50%, #4059F1 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}
             >
               automatizado
             </span>
