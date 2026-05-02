@@ -23,7 +23,7 @@ const Login = () => {
       toast.error(error.message);
     } else {
       toast.success("¡Bienvenido de vuelta!");
-      navigate("/");
+      navigate("/dashboard");
     }
     setLoading(false);
   };
@@ -36,7 +36,7 @@ const Login = () => {
       toast.error("Error al iniciar sesión con Google");
     }
     if (result.redirected) return;
-    navigate("/");
+    navigate("/dashboard");
   };
 
   return (
