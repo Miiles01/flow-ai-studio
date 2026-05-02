@@ -34,7 +34,7 @@ const Landing = () => {
     if (videoWrapRef.current) {
       gsap.fromTo(
         videoWrapRef.current,
-        { width: "40%" },
+        { width: "65%" },
         {
           width: "80%",
           ease: "none",
@@ -139,8 +139,8 @@ const Landing = () => {
         <section className="py-24 flex justify-center items-center overflow-hidden">
           <div
             ref={videoWrapRef}
-            style={{ width: "40%" }}
-            className="rounded-2xl overflow-hidden shadow-xl"
+            style={{ width: "65%" }}
+            className="rounded-2xl overflow-hidden"
           >
             <video
               src={videoHome}
