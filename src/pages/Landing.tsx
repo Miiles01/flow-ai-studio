@@ -50,43 +50,33 @@ const Landing = () => {
       );
     }
 
-    // SplitText — párrafos
-    const paragraphs = document.querySelectorAll("[data-split]");
-    const splits: InstanceType<typeof SplitText>[] = [];
+    // Simple fade-in via ScrollTrigger (no DOM mutation, avoids React reconciliation conflicts)
+    const animated: HTMLElement[] = [];
 
-    paragraphs.forEach((el) => {
-      const split = SplitText.create(el as HTMLElement, { type: "words" });
-      splits.push(split);
-      gsap.from(split.words, {
-        opacity: 0,
-        y: 15,
-        stagger: 0.06,
-        duration: 0.5,
-        ease: "power2.out",
-        scrollTrigger: { trigger: el, start: "top 85%", once: true },
+    const animate = (selector: string, opts: { y: number; duration: number; stagger?: number }) => {
+      document.querySelectorAll<HTMLElement>(selector).forEach((el) => {
+        animated.push(el);
+        gsap.fromTo(
+          el,
+          { opacity: 0, y: opts.y },
+          {
+            opacity: 1,
+            y: 0,
+            duration: opts.duration,
+            ease: "power2.out",
+            scrollTrigger: { trigger: el, start: "top 85%", once: true },
+          }
+        );
       });
-    });
+    };
 
-    // SplitText — headings
-    const headings = document.querySelectorAll("[data-split-heading]");
-
-    headings.forEach((el) => {
-      const split = SplitText.create(el as HTMLElement, { type: "words" });
-      splits.push(split);
-      gsap.from(split.words, {
-        y: 40,
-        opacity: 0,
-        stagger: 0.15,
-        duration: 0.8,
-        ease: "power2.out",
-        scrollTrigger: { trigger: el, start: "top 85%", once: true },
-      });
-    });
+    animate("[data-split]", { y: 15, duration: 0.6 });
+    animate("[data-split-heading]", { y: 40, duration: 0.9 });
 
     return () => {
       smootherRef.current?.kill();
       ScrollTrigger.getAll().forEach((t) => t.kill());
-      splits.forEach((s) => s.revert());
+      gsap.set(animated, { clearProps: "all" });
     };
   }, []);
 
