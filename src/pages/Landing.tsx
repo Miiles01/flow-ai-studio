@@ -306,7 +306,7 @@ const Landing = () => {
           </div>
 
           {/* logotipo grande */}
-          <div className="w-full">
+          <div className="w-full px-6">
             <img
               src={logotipoSvg}
               alt="miiles"
