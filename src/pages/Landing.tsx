@@ -36,7 +36,7 @@ const Landing = () => {
 
   return (
     <div id="smooth-wrapper" style={{ overflow: "hidden", position: "fixed", width: "100%", height: "100%", top: 0, left: 0 }}>
-      <div id="smooth-content" className="bg-white text-black font-sans">
+      <div id="smooth-content" className="bg-white text-black font-sans overflow-x-visible">
 
         {/* NAV — fuera del scroll para que quede fixed sobre el smoother */}
         <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-5 bg-white/80 backdrop-blur-md">
@@ -82,10 +82,7 @@ const Landing = () => {
             >
               Trabaja más
               <br />
-              <span
-                className="inline-block"
-                style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic", background: "linear-gradient(135deg, #FCB5B9 0%, #B8A4F8 50%, #4059F1 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}
-              >
+              <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic", color: "#000" }}>
                 inteligente
               </span>
             </motion.h1>
@@ -147,9 +144,7 @@ const Landing = () => {
             >
               Un sistema.
               <br />
-              <span
-                style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic", background: "linear-gradient(135deg, #FCB5B9 0%, #B8A4F8 50%, #4059F1 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}
-              >
+              <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic", color: "#000" }}>
                 Más ganancias.
               </span>
             </motion.h2>
@@ -257,9 +252,7 @@ const Landing = () => {
               Vamos a construir
               <br />tu nuevo negocio
               <br />
-              <span
-                style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic", background: "linear-gradient(135deg, #FCB5B9 0%, #B8A4F8 50%, #4059F1 100%)", WebkitBackgroundClip: "text", WebkitTextFillColor: "transparent", backgroundClip: "text" }}
-              >
+              <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic", color: "#000" }}>
                 automatizado
               </span>
             </motion.h2>
