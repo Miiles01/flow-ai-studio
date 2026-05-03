@@ -138,9 +138,9 @@ const Landing = () => {
           <div className="max-w-4xl mx-auto">
             <h1
               data-split-heading
-              className="text-5xl md:text-6xl lg:text-7xl font-normal leading-none tracking-tight mb-8"
+              className="text-5xl md:text-6xl lg:text-7xl font-normal leading-tight tracking-tight mb-8"
             >
-              <span className="block">Trabaja más</span>
+              <span className="block">Trabaja más <br /></span>
               <span className="block" style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic", color: "#000" }}>
                 inteligente
               </span>
@@ -212,7 +212,8 @@ const Landing = () => {
             <h2 className="text-5xl md:text-7xl font-normal leading-tight tracking-tight text-center mb-20">
               <span data-split-heading className="block">Un sistema.</span>
               <span data-split-heading className="block">
-                Más <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>ganancias.</span>
+                Más <br />
+                <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>ganancias.</span>
               </span>
             </h2>
 
@@ -298,42 +299,42 @@ const Landing = () => {
         </section>
 
         {/* FOOTER */}
-        <footer className="pt-10 pb-0">
-          {/* top row */}
-          <div className="flex items-center justify-between px-10 pb-8">
-            {/* social icons */}
-            <div className="flex items-center gap-5">
-              <a href="https://www.threads.net/@wearemiiles" target="_blank" rel="noopener noreferrer" className="hover:opacity-50 transition-opacity">
-                {/* Threads */}
-                <svg width="20" height="20" viewBox="0 0 192 192" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M141.537 88.988a66.667 66.667 0 0 0-2.518-1.143c-1.482-27.307-16.403-42.94-41.457-43.1h-.34c-14.986 0-27.449 6.396-35.12 18.036l13.779 9.452c5.73-8.695 14.724-10.548 21.348-10.548h.23c8.248.054 14.474 2.452 18.502 7.13 2.932 3.405 4.893 8.11 5.864 14.05-7.314-1.243-15.224-1.626-23.68-1.14-23.82 1.372-39.134 15.265-38.105 34.569.522 9.792 5.4 18.216 13.735 23.719 7.047 4.652 16.124 6.927 25.557 6.412 12.458-.683 22.231-5.436 29.049-14.127 5.178-6.6 8.453-15.153 9.899-25.93 5.937 3.583 10.337 8.298 12.767 13.966 4.132 9.635 4.373 25.468-8.546 38.376-11.319 11.308-24.925 16.2-45.488 16.35-22.809-.169-40.06-7.483-51.275-21.741C35.236 139.966 29.808 120.682 29.605 96c.203-24.682 5.63-43.966 16.133-57.317C56.954 24.425 74.206 17.11 97.015 16.941c22.975.17 40.526 7.52 52.171 21.848 5.71 7.025 9.986 15.81 12.787 26.151l16.21-4.36c-3.44-12.68-8.853-23.606-16.232-32.668C147.35 9.956 125.465.195 97.109 0h-.113C68.685.195 47.08 9.99 32.534 29.11 19.63 46.21 12.999 70.546 12.75 96.04v.92c.249 25.494 6.88 49.83 19.784 66.94C47.08 182.01 68.685 191.805 96.996 192h.113c24.925-.173 42.554-6.708 57.048-21.189 18.963-18.945 18.392-42.692 12.142-57.27-4.484-10.454-13.033-18.945-24.762-24.553Zm-43.181 40.871c-10.44.588-21.286-4.098-21.82-14.135-.397-7.442 5.296-15.746 22.461-16.735 1.966-.113 3.895-.169 5.79-.169 6.235 0 12.068.606 17.37 1.765-1.978 24.702-13.58 28.713-23.801 29.274Z" fill="#000"/>
-                </svg>
-              </a>
-              <a href="https://www.instagram.com/wearemiiles" target="_blank" rel="noopener noreferrer" className="hover:opacity-50 transition-opacity">
-                {/* Instagram */}
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069Zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0Zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324ZM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8Zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881Z" fill="#000"/>
-                </svg>
-              </a>
-              <a href="https://www.tiktok.com/@wearemiiles" target="_blank" rel="noopener noreferrer" className="hover:opacity-50 transition-opacity">
-                {/* TikTok */}
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.77a4.85 4.85 0 0 1-1.01-.08Z" fill="#000"/>
-                </svg>
-              </a>
+        <footer className="pt-24 pb-0">
+          <div className="max-w-7xl mx-auto px-10">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-20 mb-24">
+              {/* Left side */}
+              <div className="flex flex-col justify-between h-full min-h-[200px]">
+                <h2 className="text-3xl font-normal leading-tight max-w-xs">
+                  Diseñado para mentes creativas
+                </h2>
+                <p className="text-[10px] md:text-xs font-light text-gray-400 mt-10 md:mt-0">
+                  © Miiles, todos los derechos reservados, 2026
+                </p>
+              </div>
+
+              {/* Right side */}
+              <div className="flex gap-20 md:gap-40">
+                <div className="space-y-6">
+                  <h4 className="text-[10px] font-normal text-gray-400 uppercase tracking-widest">Compañía</h4>
+                  <div className="flex flex-col gap-4 text-sm font-light">
+                    <Link to="/" className="hover:opacity-50 transition-opacity">Términos y condiciones</Link>
+                    <Link to="/" className="hover:opacity-50 transition-opacity">Política de privacidad</Link>
+                  </div>
+                </div>
+                <div className="space-y-6">
+                  <h4 className="text-[10px] font-normal text-gray-400 uppercase tracking-widest">Redes Sociales</h4>
+                  <div className="flex flex-col gap-4 text-sm font-light">
+                    <a href="https://instagram.com/wearemiiles" target="_blank" rel="noopener noreferrer" className="hover:opacity-50 transition-opacity">Instagram</a>
+                    <a href="https://tiktok.com/@wearemiiles" target="_blank" rel="noopener noreferrer" className="hover:opacity-50 transition-opacity">Tiktok</a>
+                    <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-50 transition-opacity">Youtube</a>
+                  </div>
+                </div>
+              </div>
             </div>
-
-            {/* términos */}
-            <a href="#" className="text-sm font-light text-gray-400 hover:text-black transition-colors">
-              Términos y condiciones
-            </a>
-
-            {/* copyright */}
-            <span className="text-sm font-light text-gray-400">© 2025 Miiles</span>
           </div>
 
           {/* logotipo grande */}
-          <div className="w-full px-6">
+          <div className="w-full px-4 md:px-10">
             <img src={logotipoSvg} alt="miiles" className="w-full block" />
           </div>
         </footer>
