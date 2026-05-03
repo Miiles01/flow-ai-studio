@@ -1,7 +1,7 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import videoHome from "@/assets/miiles/videohome.mp4";
 import { Link } from "react-router-dom";
-import { motion, type Variants } from "framer-motion";
+import { motion, AnimatePresence, type Variants } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
@@ -33,6 +33,7 @@ const fadeUp: Variants = {
 };
 
 const Landing = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const smootherRef = useRef<ScrollSmoother | null>(null);
   const videoWrapRef = useRef<HTMLDivElement>(null);
 
@@ -111,27 +112,75 @@ const Landing = () => {
     <div id="smooth-wrapper" style={{ overflow: "hidden", position: "fixed", width: "100%", height: "100%", top: 0, left: 0 }}>
       <div id="smooth-content" className="bg-white text-black font-sans overflow-x-visible">
 
-        {/* NAV — fuera del scroll para que quede fixed sobre el smoother */}
-        <nav className="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-5 bg-white/80 backdrop-blur-md">
+        {/* NAV — flotante estilo glass */}
+        <nav className="fixed top-6 left-1/2 -translate-x-1/2 w-[90%] md:w-full md:max-w-4xl z-50 flex items-center justify-between px-6 py-3 bg-white/40 backdrop-blur-2xl border border-white/20 rounded-full shadow-[0_8px_32px_0_rgba(0,0,0,0.05)]">
           <Link to="/" className="flex items-center gap-2">
-            <img src={logoImg} alt="Miiles" className="w-7 h-7" />
-            <span className="font-normal text-base tracking-tight">Miiles</span>
+            <img src={logoImg} alt="Miiles" className="w-6 h-6" />
+            <span className="font-normal text-sm tracking-tight">Miiles</span>
           </Link>
 
-          <div className="hidden md:flex items-center gap-8 text-sm font-light">
-            <Link to="/" className="hover:opacity-60 transition-opacity">Inicio</Link>
-            <a href="#funciones" className="hover:opacity-60 transition-opacity">Funciones IA</a>
-            <a href="#sobre" className="hover:opacity-60 transition-opacity">Sobre</a>
-            <a href="#blog" className="hover:opacity-60 transition-opacity">Blog</a>
+          <div className="flex items-center gap-6">
+            <button 
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="text-sm font-normal hover:opacity-50 transition-opacity tracking-tight"
+            >
+              {isMenuOpen ? "Cerrar" : "Menu"}
+            </button>
+            <Link
+              to="/login"
+              className="text-xs font-normal px-5 py-2.5 rounded-full bg-black text-white hover:scale-105 transition-transform duration-300"
+            >
+              Unirse
+            </Link>
           </div>
-
-          <Link
-            to="/login"
-            className="text-sm font-light px-5 py-2 rounded-full bg-black text-white hover:-translate-y-1 transition-transform duration-200"
-          >
-            Prueba gratis
-          </Link>
         </nav>
+
+        {/* MENU DESPLEGABLE — estilo glass negro */}
+        <AnimatePresence>
+          {isMenuOpen && (
+            <>
+              {/* Overlay para cerrar al hacer clic fuera */}
+              <motion.div 
+                initial={{ opacity: 0 }}
+                animate={{ opacity: 1 }}
+                exit={{ opacity: 0 }}
+                onClick={() => setIsMenuOpen(false)}
+                className="fixed inset-0 z-40 bg-black/5"
+              />
+              <motion.div 
+                initial={{ opacity: 0, y: -20, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: -20, scale: 0.95 }}
+                transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+                className="fixed top-24 left-1/2 -translate-x-1/2 w-[90%] md:w-full md:max-w-4xl z-40 bg-black/80 backdrop-blur-3xl border border-white/10 rounded-[32px] p-10 shadow-[0_20px_50px_rgba(0,0,0,0.3)] overflow-hidden"
+              >
+                <div className="flex flex-col gap-8">
+                  <Link 
+                    to="/" 
+                    onClick={() => setIsMenuOpen(false)}
+                    className="text-4xl md:text-5xl font-normal text-white hover:opacity-50 transition-opacity tracking-tighter"
+                  >
+                    Inicio
+                  </Link>
+                  <Link 
+                    to="/" 
+                    onClick={() => setIsMenuOpen(false)}
+                    className="text-4xl md:text-5xl font-normal text-white hover:opacity-50 transition-opacity tracking-tighter"
+                  >
+                    Acerca de
+                  </Link>
+                  <Link 
+                    to="/" 
+                    onClick={() => setIsMenuOpen(false)}
+                    className="text-4xl md:text-5xl font-normal text-white hover:opacity-50 transition-opacity tracking-tighter"
+                  >
+                    Precios
+                  </Link>
+                </div>
+              </motion.div>
+            </>
+          )}
+        </AnimatePresence>
 
         {/* HERO */}
         <section className="min-h-[85vh] flex flex-col items-center justify-center text-center px-6 pt-32 pb-10 relative">
