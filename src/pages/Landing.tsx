@@ -266,7 +266,11 @@ const Landing = () => {
               "Luce realmente asombroso"
             </p>
             <div data-anim-heading className="flex items-center justify-center gap-3">
-              <div className="w-10 h-10 rounded-full" style={{ background: "linear-gradient(135deg, #FCB5B9, #B8A4F8)" }} />
+              <img 
+                src="https://wearemiiles.com/wp-content/uploads/2025/03/Frame-2085662063.png" 
+                alt="Karol Wegner" 
+                className="w-10 h-10 rounded-full object-cover"
+              />
               <div className="text-left">
                 <p className="text-sm font-normal">Karol Wegner</p>
                 <p className="text-xs font-light text-gray-400">CEO de BeeSpeaker</p>
