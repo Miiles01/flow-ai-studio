@@ -120,7 +120,7 @@ const Landing = () => {
           <div className="max-w-4xl mx-auto">
             <h1
               data-split-heading
-              className="text-6xl md:text-8xl lg:text-9xl font-normal leading-none tracking-tight mb-8"
+              className="text-5xl md:text-6xl lg:text-7xl font-normal leading-none tracking-tight mb-8"
             >
               Trabaja más{" "}
               <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic", color: "#000" }}>
