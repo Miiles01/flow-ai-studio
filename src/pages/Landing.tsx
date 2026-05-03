@@ -5,6 +5,8 @@ import { motion, type Variants } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
+import { SplitText } from "gsap/SplitText";
+import { CustomEase } from "gsap/CustomEase";
 import logoImg from "@/assets/logo.png";
 import logotipoSvg from "@/assets/miiles/logotipo.svg";
 import brand1 from "@/assets/miiles/brands/brand1.svg";
@@ -16,7 +18,10 @@ import brand6 from "@/assets/miiles/brands/brand6.svg";
 
 const brandLogos = [brand1, brand2, brand3, brand4, brand5, brand6];
 
-gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
+gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText, CustomEase);
+if (!CustomEase.get("osmo-ease")) {
+  CustomEase.create("osmo-ease", "0.625, 0.05, 0, 1");
+}
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 32 },
@@ -57,7 +62,7 @@ const Landing = () => {
       );
     }
 
-    // Animaciones simples (sin SplitText) para evitar conflictos con React
+    // Animaciones para descripciones (no headings)
     const animated: HTMLElement[] = [];
     const animate = (selector: string, y: number, duration: number) => {
       document.querySelectorAll<HTMLElement>(selector).forEach((el) => {
@@ -69,12 +74,35 @@ const Landing = () => {
       });
     };
     animate("[data-anim-heading]", 40, 0.8);
-    animate("[data-split-heading]", 40, 0.8);
     animate("[data-split]", 15, 0.5);
+
+    // SplitText line reveal en h1/h2/h3
+    const splits: SplitText[] = [];
+    const runSplit = () => {
+      document.querySelectorAll<HTMLElement>("#smooth-content h1, #smooth-content h2, #smooth-content h3").forEach((el) => {
+        const split = SplitText.create(el, { type: "lines", mask: "lines", linesClass: "line" });
+        splits.push(split);
+        gsap.fromTo(
+          split.lines,
+          { yPercent: 110 },
+          {
+            yPercent: 0,
+            duration: 0.9,
+            stagger: 0.08,
+            ease: "osmo-ease",
+            scrollTrigger: { trigger: el, start: "top 88%", once: true },
+          }
+        );
+      });
+    };
+    const fontsReady = (document as Document & { fonts?: { ready: Promise<unknown> } }).fonts?.ready;
+    if (fontsReady) fontsReady.then(runSplit);
+    else runSplit();
 
     return () => {
       smootherRef.current?.kill();
       ScrollTrigger.getAll().forEach((t) => t.kill());
+      splits.forEach((s) => s.revert());
       gsap.set(animated, { clearProps: "all" });
     };
   }, []);
