@@ -178,8 +178,8 @@ const Landing = () => {
         </section>
 
         {/* BRAND CAROUSEL */}
-        <section className="py-12 overflow-hidden">
-          <div className="relative w-full" style={{ maskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)" }}>
+        <section className="py-12 px-[10%] md:px-[20%] overflow-hidden">
+          <div className="relative w-full" style={{ maskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)" }}>
             <div className="flex w-max animate-marquee gap-20 items-center">
               {[...brandLogos, ...brandLogos].map((logo, i) => (
                 <img key={i} src={logo} alt="" className="h-6 md:h-7 w-auto opacity-70 shrink-0" />
