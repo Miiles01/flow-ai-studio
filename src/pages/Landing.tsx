@@ -5,11 +5,10 @@ import { motion, type Variants } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
-import { SplitText } from "gsap/SplitText";
 import logoImg from "@/assets/logo.png";
 import logotipoSvg from "@/assets/miiles/logotipo.svg";
 
-gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText);
+gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
 const fadeUp: Variants = {
   hidden: { opacity: 0, y: 32 },
@@ -50,41 +49,24 @@ const Landing = () => {
       );
     }
 
-    // GSAP simple — headings con spans/br anidados (sin SplitText, evita conflicto React)
+    // Animaciones simples (sin SplitText) para evitar conflictos con React
     const animated: HTMLElement[] = [];
-    document.querySelectorAll<HTMLElement>("[data-anim-heading]").forEach((el) => {
-      animated.push(el);
-      gsap.fromTo(el, { opacity: 0, y: 40 }, {
-        opacity: 1, y: 0, duration: 0.8, ease: "power2.out",
-        scrollTrigger: { trigger: el, start: "top 85%", once: true },
+    const animate = (selector: string, y: number, duration: number) => {
+      document.querySelectorAll<HTMLElement>(selector).forEach((el) => {
+        animated.push(el);
+        gsap.fromTo(el, { opacity: 0, y }, {
+          opacity: 1, y: 0, duration, ease: "power2.out",
+          scrollTrigger: { trigger: el, start: "top 85%", once: true },
+        });
       });
-    });
-
-    // SplitText — headings texto puro (sin spans ni br anidados)
-    const splits: InstanceType<typeof SplitText>[] = [];
-    document.querySelectorAll("[data-split-heading]").forEach((el) => {
-      const split = SplitText.create(el as HTMLElement, { type: "words" });
-      splits.push(split);
-      gsap.from(split.words, {
-        y: 40, opacity: 0, stagger: 0.15, duration: 0.8, ease: "power2.out",
-        scrollTrigger: { trigger: el, start: "top 85%", once: true },
-      });
-    });
-
-    // SplitText — párrafos texto puro
-    document.querySelectorAll("[data-split]").forEach((el) => {
-      const split = SplitText.create(el as HTMLElement, { type: "words" });
-      splits.push(split);
-      gsap.from(split.words, {
-        opacity: 0, y: 15, stagger: 0.06, duration: 0.5, ease: "power2.out",
-        scrollTrigger: { trigger: el, start: "top 85%", once: true },
-      });
-    });
+    };
+    animate("[data-anim-heading]", 40, 0.8);
+    animate("[data-split-heading]", 40, 0.8);
+    animate("[data-split]", 15, 0.5);
 
     return () => {
       smootherRef.current?.kill();
       ScrollTrigger.getAll().forEach((t) => t.kill());
-      splits.forEach((s) => s.revert());
       gsap.set(animated, { clearProps: "all" });
     };
   }, []);
