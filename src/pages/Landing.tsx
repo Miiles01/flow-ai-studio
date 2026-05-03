@@ -334,8 +334,8 @@ const Landing = () => {
           </div>
 
           {/* logotipo grande */}
-          <div className="w-full px-4 md:px-10">
-            <img src={logotipoSvg} alt="miiles" className="w-full block" />
+          <div className="w-full px-4 md:px-10 flex justify-center">
+            <img src={logotipoSvg} alt="miiles" className="w-full md:w-[95%] block mx-auto" />
           </div>
         </footer>
 
