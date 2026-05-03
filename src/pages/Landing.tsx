@@ -180,13 +180,11 @@ const Landing = () => {
         {/* VALUE PROP + 2 COLUMNS */}
         <section className="py-32 px-6">
           <div className="max-w-6xl mx-auto">
-            <h2
-              data-split-heading
-              className="text-5xl md:text-7xl font-normal leading-tight tracking-tight text-center mb-20"
-              style={{ whiteSpace: "pre-line" }}
-            >
-              {"Un sistema.\nMás "}
-              <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>ganancias.</span>
+            <h2 className="text-5xl md:text-7xl font-normal leading-tight tracking-tight text-center mb-20">
+              <span data-split-heading className="block">Un sistema.</span>
+              <span data-split-heading className="block">
+                Más <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>ganancias.</span>
+              </span>
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
