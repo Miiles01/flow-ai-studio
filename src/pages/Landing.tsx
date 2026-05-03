@@ -119,7 +119,7 @@ const Landing = () => {
         <section className="min-h-screen flex flex-col items-center justify-center text-center px-6 pt-20 relative">
           <div className="max-w-4xl mx-auto">
             <h1
-              data-anim-heading
+              data-split-heading
               className="text-6xl md:text-8xl lg:text-9xl font-normal leading-none tracking-tight mb-8"
             >
               Trabaja más{" "}
@@ -181,11 +181,12 @@ const Landing = () => {
         <section className="py-32 px-6">
           <div className="max-w-6xl mx-auto">
             <h2
-              data-anim-heading
+              data-split-heading
               className="text-5xl md:text-7xl font-normal leading-tight tracking-tight text-center mb-20"
+              style={{ whiteSpace: "pre-line" }}
             >
-              Un sistema.<br />
-              Más <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>ganancias.</span>
+              {"Un sistema.\nMás "}
+              <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>ganancias.</span>
             </h2>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
@@ -250,7 +251,7 @@ const Landing = () => {
         <section className="py-32 px-6">
           <div className="max-w-4xl mx-auto text-center">
             <h2
-              data-anim-heading
+              data-split-heading
               className="text-5xl md:text-7xl font-normal leading-tight tracking-tight mb-10"
             >
               Vamos a construir tu nuevo negocio{" "}
