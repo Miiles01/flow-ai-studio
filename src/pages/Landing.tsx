@@ -212,8 +212,7 @@ const Landing = () => {
             <h2 className="text-5xl md:text-7xl font-normal leading-tight tracking-tight text-center mb-20">
               <span data-split-heading className="block">Un sistema.</span>
               <span data-split-heading className="block">
-                Más <br />
-                <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>ganancias.</span>
+                Más <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>ganancias.</span>
               </span>
             </h2>
 
