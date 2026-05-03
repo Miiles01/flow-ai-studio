@@ -134,7 +134,7 @@ const Landing = () => {
         </nav>
 
         {/* HERO */}
-        <section className="min-h-screen flex flex-col items-center justify-center text-center px-6 pt-20 relative">
+        <section className="min-h-[85vh] flex flex-col items-center justify-center text-center px-6 pt-32 pb-10 relative">
           <div className="max-w-4xl mx-auto">
             <h1
               data-split-heading
@@ -178,7 +178,7 @@ const Landing = () => {
         </section>
 
         {/* BRAND CAROUSEL */}
-        <section className="py-12 px-[10%] md:px-[20%] overflow-hidden">
+        <section className="py-8 px-[10%] md:px-[20%] overflow-hidden">
           <div className="relative w-full" style={{ maskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)" }}>
             <div className="flex w-max animate-marquee gap-20 items-center">
               {[...brandLogos, ...brandLogos].map((logo, i) => (
