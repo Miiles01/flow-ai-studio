@@ -7,6 +7,14 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
 import logoImg from "@/assets/logo.png";
 import logotipoSvg from "@/assets/miiles/logotipo.svg";
+import brand1 from "@/assets/miiles/brands/brand1.svg";
+import brand2 from "@/assets/miiles/brands/brand2.svg";
+import brand3 from "@/assets/miiles/brands/brand3.svg";
+import brand4 from "@/assets/miiles/brands/brand4.svg";
+import brand5 from "@/assets/miiles/brands/brand5.svg";
+import brand6 from "@/assets/miiles/brands/brand6.svg";
+
+const brandLogos = [brand1, brand2, brand3, brand4, brand5, brand6];
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
@@ -139,6 +147,17 @@ const Landing = () => {
             className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-10 blur-3xl pointer-events-none -z-10"
             style={{ background: "linear-gradient(135deg, #FCB5B9 0%, #B8A4F8 50%, #4059F1 100%)" }}
           />
+        </section>
+
+        {/* BRAND CAROUSEL */}
+        <section className="py-12 overflow-hidden">
+          <div className="relative w-full" style={{ maskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 10%, black 90%, transparent)" }}>
+            <div className="flex w-max animate-marquee gap-20 items-center">
+              {[...brandLogos, ...brandLogos].map((logo, i) => (
+                <img key={i} src={logo} alt="" className="h-6 md:h-7 w-auto opacity-70 shrink-0" />
+              ))}
+            </div>
+          </div>
         </section>
 
         {/* VIDEO */}
