@@ -215,7 +215,7 @@ const Landing = () => {
 
             <p
               data-split
-              className="text-lg font-light text-gray-500 max-w-xl mx-auto mb-12"
+              className="text-base font-light text-gray-500 max-w-xl mx-auto mb-12"
             >
               En Miiles encontrarás oportunidades únicas para impulsar tu marca y hacer que otros vendedores en todo el mundo también ofrezcan lo tuyo.
             </p>
