@@ -207,7 +207,7 @@ const Landing = () => {
               data-anim-heading 
               src={logoImg} 
               alt="Miiles" 
-              className="w-10 h-10 mx-auto mb-6" 
+              className="w-14 h-14 mx-auto mb-6" 
             />
             <h1
               data-split-heading
