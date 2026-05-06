@@ -145,28 +145,40 @@ const Landing = () => {
               transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
               className="w-full bg-black/80 backdrop-blur-3xl border border-white/10 rounded-3xl p-6 shadow-[0_20px_50px_rgba(0,0,0,0.3)] overflow-hidden"
             >
-              <div className="flex flex-col gap-4 text-center">
-                <Link 
-                  to="/" 
-                  onClick={() => setIsMenuOpen(false)}
-                  className="text-lg font-normal text-white hover:opacity-50 transition-opacity tracking-tight"
-                >
-                  Inicio
-                </Link>
-                <Link 
-                  to="/" 
-                  onClick={() => setIsMenuOpen(false)}
-                  className="text-lg font-normal text-white hover:opacity-50 transition-opacity tracking-tight"
-                >
-                  Acerca de
-                </Link>
-                <Link 
-                  to="/" 
-                  onClick={() => setIsMenuOpen(false)}
-                  className="text-lg font-normal text-white hover:opacity-50 transition-opacity tracking-tight"
-                >
-                  Precios
-                </Link>
+              <div className="flex flex-col gap-6 text-left">
+                <div className="overflow-hidden">
+                  <motion.div initial={{ y: "110%" }} animate={{ y: "0%" }} transition={{ duration: 0.9, ease: [0.625, 0.05, 0, 1] }}>
+                    <Link 
+                      to="/" 
+                      onClick={() => setIsMenuOpen(false)}
+                      className="block text-3xl md:text-4xl font-normal text-white hover:opacity-50 transition-opacity tracking-tight"
+                    >
+                      Inicio
+                    </Link>
+                  </motion.div>
+                </div>
+                <div className="overflow-hidden">
+                  <motion.div initial={{ y: "110%" }} animate={{ y: "0%" }} transition={{ duration: 0.9, ease: [0.625, 0.05, 0, 1], delay: 0.08 }}>
+                    <Link 
+                      to="/" 
+                      onClick={() => setIsMenuOpen(false)}
+                      className="block text-3xl md:text-4xl font-normal text-white hover:opacity-50 transition-opacity tracking-tight"
+                    >
+                      Acerca de
+                    </Link>
+                  </motion.div>
+                </div>
+                <div className="overflow-hidden">
+                  <motion.div initial={{ y: "110%" }} animate={{ y: "0%" }} transition={{ duration: 0.9, ease: [0.625, 0.05, 0, 1], delay: 0.16 }}>
+                    <Link 
+                      to="/" 
+                      onClick={() => setIsMenuOpen(false)}
+                      className="block text-3xl md:text-4xl font-normal text-white hover:opacity-50 transition-opacity tracking-tight"
+                    >
+                      Precios
+                    </Link>
+                  </motion.div>
+                </div>
               </div>
             </motion.div>
           )}
