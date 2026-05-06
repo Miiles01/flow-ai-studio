@@ -110,73 +110,79 @@ const Landing = () => {
 
   return (
     <>
-      {/* NAV — flotante estilo glass */}
-      <nav className="fixed top-6 left-1/2 -translate-x-1/2 w-max z-50 flex items-center gap-16 px-8 py-2.5 bg-white/40 backdrop-blur-2xl border border-white/20 rounded-full">
-        <Link to="/" className="flex items-center gap-2">
-          <img src={logoImg} alt="Miiles" className="w-6 h-6" />
-          <span className="font-normal text-sm tracking-tight">Miiles</span>
-        </Link>
-
-        <div className="flex items-center gap-6">
-          <button 
-            onClick={() => setIsMenuOpen(!isMenuOpen)}
-            className="text-sm font-normal hover:opacity-50 transition-opacity tracking-tight"
-          >
-            {isMenuOpen ? "Cerrar" : "Menu"}
-          </button>
-          <Link
-            to="/login"
-            className="text-xs font-normal px-5 py-2.5 rounded-full bg-black text-white hover:scale-105 transition-transform duration-300"
-          >
-            Unirse
+      {/* WRAPPER PARA NAV Y MENÚ */}
+      <div className="fixed top-6 left-1/2 -translate-x-1/2 w-max z-50 flex flex-col gap-2">
+        {/* NAV — flotante estilo glass */}
+        <nav className="w-full flex items-center justify-between gap-16 px-8 py-2.5 bg-white/40 backdrop-blur-2xl border border-white/20 rounded-full">
+          <Link to="/" className="flex items-center gap-2 shrink-0">
+            <img src={logoImg} alt="Miiles" className="w-6 h-6" />
+            <span className="font-normal text-sm tracking-tight">Miiles</span>
           </Link>
-        </div>
-      </nav>
 
-      {/* MENU DESPLEGABLE — estilo glass negro */}
-      <AnimatePresence>
-        {isMenuOpen && (
-          <>
-            {/* Overlay para cerrar al hacer clic fuera */}
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsMenuOpen(false)}
-              className="fixed inset-0 z-40 bg-black/5"
-            />
-            <motion.div 
-              initial={{ opacity: 0, y: -20, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -20, scale: 0.95 }}
-              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-              className="fixed top-24 left-1/2 -translate-x-1/2 w-[90%] md:w-full md:max-w-4xl z-40 bg-black/80 backdrop-blur-3xl border border-white/10 rounded-[32px] p-10 shadow-[0_20px_50px_rgba(0,0,0,0.3)] overflow-hidden"
+          <div className="flex items-center gap-6 shrink-0">
+            <button 
+              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              className="text-sm font-normal hover:opacity-50 transition-opacity tracking-tight"
             >
-              <div className="flex flex-col gap-8">
+              {isMenuOpen ? "Cerrar" : "Menu"}
+            </button>
+            <Link
+              to="/login"
+              className="text-xs font-normal px-5 py-2.5 rounded-full bg-black text-white hover:scale-105 transition-transform duration-300"
+            >
+              Unirse
+            </Link>
+          </div>
+        </nav>
+
+        {/* MENU DESPLEGABLE — estilo glass negro */}
+        <AnimatePresence>
+          {isMenuOpen && (
+            <motion.div 
+              initial={{ opacity: 0, y: -10, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -10, scale: 0.95 }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              className="w-full bg-black/80 backdrop-blur-3xl border border-white/10 rounded-3xl p-6 shadow-[0_20px_50px_rgba(0,0,0,0.3)] overflow-hidden"
+            >
+              <div className="flex flex-col gap-4 text-center">
                 <Link 
                   to="/" 
                   onClick={() => setIsMenuOpen(false)}
-                  className="text-4xl md:text-5xl font-normal text-white hover:opacity-50 transition-opacity tracking-tighter"
+                  className="text-lg font-normal text-white hover:opacity-50 transition-opacity tracking-tight"
                 >
                   Inicio
                 </Link>
                 <Link 
                   to="/" 
                   onClick={() => setIsMenuOpen(false)}
-                  className="text-4xl md:text-5xl font-normal text-white hover:opacity-50 transition-opacity tracking-tighter"
+                  className="text-lg font-normal text-white hover:opacity-50 transition-opacity tracking-tight"
                 >
                   Acerca de
                 </Link>
                 <Link 
                   to="/" 
                   onClick={() => setIsMenuOpen(false)}
-                  className="text-4xl md:text-5xl font-normal text-white hover:opacity-50 transition-opacity tracking-tighter"
+                  className="text-lg font-normal text-white hover:opacity-50 transition-opacity tracking-tight"
                 >
                   Precios
                 </Link>
               </div>
             </motion.div>
-          </>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* Overlay para cerrar al hacer clic fuera */}
+      <AnimatePresence>
+        {isMenuOpen && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsMenuOpen(false)}
+            className="fixed inset-0 z-40 bg-black/5"
+          />
         )}
       </AnimatePresence>
 
