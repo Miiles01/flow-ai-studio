@@ -190,7 +190,7 @@ const Landing = () => {
               data-split-heading
               className="text-5xl md:text-6xl lg:text-7xl font-normal leading-tight tracking-tight mb-8"
             >
-              <span className="block">Trabaja más <br /></span>
+              <span className="block">Trabaja más</span>
               <span className="block" style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic", color: "#000" }}>
                 inteligente
               </span>
