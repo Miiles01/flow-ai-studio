@@ -198,10 +198,10 @@ const Landing = () => {
       </AnimatePresence>
 
       <div id="smooth-wrapper" style={{ overflow: "hidden", position: "fixed", width: "100%", height: "100%", top: 0, left: 0 }}>
-        <div id="smooth-content" className="bg-white text-black font-sans overflow-x-visible">
+        <div id="smooth-content" className="bg-white text-black font-sans overflow-hidden">
 
           {/* HERO */}
-          <section className="min-h-[85vh] flex flex-col items-center justify-center text-center px-6 pt-32 pb-10 relative">
+          <section className="min-h-[85vh] flex flex-col items-center justify-center text-center px-6 pt-32 pb-10 relative overflow-hidden">
           <div className="max-w-4xl mx-auto">
             <img 
               data-anim-heading 
