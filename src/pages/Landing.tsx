@@ -203,6 +203,12 @@ const Landing = () => {
           {/* HERO */}
           <section className="min-h-[85vh] flex flex-col items-center justify-center text-center px-6 pt-32 pb-10 relative">
           <div className="max-w-4xl mx-auto">
+            <img 
+              data-anim-heading 
+              src={logoImg} 
+              alt="Miiles" 
+              className="w-10 h-10 mx-auto mb-6" 
+            />
             <h1
               data-split-heading
               className="text-5xl md:text-6xl lg:text-7xl font-normal leading-tight tracking-tight mb-8"
