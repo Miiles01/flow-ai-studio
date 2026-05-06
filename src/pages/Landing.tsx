@@ -394,6 +394,7 @@ const Landing = () => {
 
       </div>
     </div>
+    </>
   );
 };
 
