@@ -111,7 +111,7 @@ const Landing = () => {
   return (
     <>
       {/* NAV — flotante estilo glass */}
-      <nav className="fixed top-6 left-1/2 -translate-x-1/2 w-[90%] md:w-full md:max-w-4xl z-50 flex items-center justify-between px-6 py-3 bg-white/40 backdrop-blur-2xl border border-white/20 rounded-full shadow-[0_8px_32px_0_rgba(0,0,0,0.05)]">
+      <nav className="fixed top-6 left-1/2 -translate-x-1/2 w-[90%] md:w-full md:max-w-2xl z-50 flex items-center justify-between px-6 py-3 bg-white/40 backdrop-blur-2xl border border-white/20 rounded-full shadow-[0_8px_32px_0_rgba(0,0,0,0.05)]">
         <Link to="/" className="flex items-center gap-2">
           <img src={logoImg} alt="Miiles" className="w-6 h-6" />
           <span className="font-normal text-sm tracking-tight">Miiles</span>
