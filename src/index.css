@@ -2,8 +2,21 @@
 
 @font-face {
   font-family: 'Welth Catritz';
-  src: url('/src/assets/miiles/Welth Catritz Italic.otf') format('opentype');
-  font-weight: normal;
+  src: url('/fonts/WelthCatritz-Italic.woff2') format('woff2'),
+       url('/fonts/WelthCatritz-Italic.woff') format('woff'),
+       url('/fonts/WelthCatritz-Italic.otf') format('opentype');
+  font-weight: 100 900;
+  font-style: italic;
+  font-display: swap;
+}
+
+/* Alias sin espacios para máxima compatibilidad */
+@font-face {
+  font-family: 'WelthCatritz';
+  src: url('/fonts/WelthCatritz-Italic.woff2') format('woff2'),
+       url('/fonts/WelthCatritz-Italic.woff') format('woff'),
+       url('/fonts/WelthCatritz-Italic.otf') format('opentype');
+  font-weight: 100 900;
   font-style: italic;
   font-display: swap;
 }
