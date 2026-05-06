@@ -224,8 +224,11 @@ const Landing = () => {
             <div data-anim-heading className="flex items-center justify-center gap-4 flex-wrap">
               <Link
                 to="/login"
-                className="px-8 py-4 rounded-full bg-black text-white text-sm font-light hover:-translate-y-2 transition-transform duration-300"
+                className="px-8 py-4 rounded-full bg-black text-white text-sm font-light hover:-translate-y-2 transition-transform duration-300 flex items-center gap-2"
               >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 0C12.3 8.8 15.2 11.7 24 12C15.2 12.3 12.3 15.2 12 24C11.7 15.2 8.8 12.3 0 12C8.8 11.7 11.7 8.8 12 0Z" />
+                </svg>
                 Prueba gratis
               </Link>
               <a
