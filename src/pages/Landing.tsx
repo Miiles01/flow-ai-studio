@@ -114,9 +114,8 @@ const Landing = () => {
       <div className="fixed top-6 left-1/2 -translate-x-1/2 w-max z-50 flex flex-col gap-2">
         {/* NAV — flotante estilo glass */}
         <nav className="w-full flex items-center justify-between gap-16 px-8 py-2.5 bg-white/40 backdrop-blur-2xl border border-white/20 rounded-full">
-          <Link to="/" className="flex items-center gap-2 shrink-0">
-            <img src={logoImg} alt="Miiles" className="w-6 h-6" />
-            <span className="font-normal text-sm tracking-tight">Miiles</span>
+          <Link to="/" className="flex items-center shrink-0">
+            <img src={logotipoSvg} alt="Miiles" className="h-5 w-auto" />
           </Link>
 
           <div className="flex items-center gap-6 shrink-0">
