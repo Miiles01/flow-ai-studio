@@ -81,7 +81,7 @@ const Pricing = () => {
 
           <section className="min-h-[60vh] flex flex-col items-center justify-center text-center px-6 pt-32 pb-12">
             <h1 className="text-5xl md:text-7xl font-normal leading-tight tracking-tight mb-8 max-w-4xl">
-              Precios <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>simples</span>
+              Todo un ecosistema de IA. <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>Un solo pago.</span>
             </h1>
             <p className="text-lg font-light text-gray-500 max-w-2xl">
               Elige el plan que mejor se adapte a tu marca. Sin sorpresas, sin permanencia.
