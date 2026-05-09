@@ -24,8 +24,8 @@ gsap.registerEffect({
     duration: 0.7,
     rotationY: 0,
     rotationX: 90,
-    transformOrigin: "100% 0",
-    ease: "back(2.3)",
+    transformOrigin: "50% 0",
+    ease: "back.out(2.3)",
   },
   effect: (targets: any, config: any) => {
     let tl = gsap.timeline();
@@ -35,13 +35,14 @@ gsap.registerEffect({
       rotationX: config.rotationX,
       transformOrigin: config.transformOrigin,
       ease: config.ease,
-      stagger: 0.04,
+      stagger: 0.03,
+      force3D: true
     });
     tl.from(targets, {
       duration: 0.3,
       autoAlpha: 0,
       ease: "none",
-      stagger: 0.03,
+      stagger: 0.02,
     }, 0);
     return tl;
   },
@@ -53,11 +54,11 @@ gsap.registerEffect({
   defaults: {
     duration: 0.5,
     x: 0,
-    y: 20,
+    y: 15,
     rotationY: 0,
-    rotationX: -100,
+    rotationX: -90,
     rotationZ: 0,
-    transformOrigin: "100% 100%",
+    transformOrigin: "50% 100%",
     ease: "power1.in",
   },
   effect: (targets: any, config: any) => {
@@ -71,6 +72,7 @@ gsap.registerEffect({
       transformOrigin: config.transformOrigin,
       ease: config.ease,
       stagger: 0.03,
+      force3D: true
     });
     tl.to(targets, {
       duration: 0.3,
@@ -110,11 +112,9 @@ const plans = [
   },
 ];
 
-// Componente para el efecto de rotación 3D del precio sincronizado
+// Componente para el efecto de rotación 3D del precio ultra-estable
 const RotatingPrice = ({ value }: { value: string }) => {
   const containerRef = useRef<HTMLDivElement>(null);
-  const currentRef = useRef<HTMLSpanElement>(null);
-  const nextRef = useRef<HTMLSpanElement>(null);
   const [prices, setPrices] = useState({ current: value, next: "" });
   const isAnimating = useRef(false);
 
@@ -124,16 +124,22 @@ const RotatingPrice = ({ value }: { value: string }) => {
   }, [value, prices.current]);
 
   useEffect(() => {
-    if (!prices.next || !containerRef.current || !currentRef.current || !nextRef.current) return;
+    if (!prices.next || !containerRef.current) return;
 
     isAnimating.current = true;
-    
-    // Medir anchos
-    const nextWidth = nextRef.current.offsetWidth;
-
     const ctx = gsap.context(() => {
-      const splitCurrent = new SplitText(currentRef.current, { type: "chars" });
-      const splitNext = new SplitText(nextRef.current, { type: "chars" });
+      const currentEl = containerRef.current?.querySelector(".current-price");
+      const nextEl = containerRef.current?.querySelector(".next-price");
+      
+      if (!currentEl || !nextEl) return;
+
+      // Medir el ancho del elemento invisible "next"
+      gsap.set(nextEl, { display: "inline-block", opacity: 0, position: "relative" });
+      const nextWidth = (nextEl as HTMLElement).offsetWidth;
+      gsap.set(nextEl, { position: "absolute", opacity: 0 });
+
+      const splitCurrent = new SplitText(currentEl, { type: "chars", charsClass: "price-char" });
+      const splitNext = new SplitText(nextEl, { type: "chars", charsClass: "price-char" });
 
       const tl = gsap.timeline({
         onComplete: () => {
@@ -145,17 +151,17 @@ const RotatingPrice = ({ value }: { value: string }) => {
         }
       });
 
-      // Animación de ancho del contenedor síncrona
+      // 1. Animar el ancho del contenedor global
       tl.to(containerRef.current, {
         width: nextWidth,
-        duration: 0.8,
-        ease: "elastic.out(1, 0.8)"
+        duration: 0.6,
+        ease: "expo.out"
       }, 0);
 
-      // Animación de los números
-      gsap.set(nextRef.current, { autoAlpha: 1 });
-      (tl as any).rotateOut(splitCurrent.chars, {}, 0)
-        .rotateIn(splitNext.chars, { rotationX: 90, transformOrigin: "100% 0" }, 0.1);
+      // 2. Animar los caracteres
+      gsap.set(nextEl, { autoAlpha: 1 });
+      (tl as any).rotateOut(splitCurrent.chars, { duration: 0.4 }, 0)
+        .rotateIn(splitNext.chars, { duration: 0.6 }, 0.1);
 
     }, containerRef);
 
@@ -163,10 +169,14 @@ const RotatingPrice = ({ value }: { value: string }) => {
   }, [prices.next, value]);
 
   return (
-    <div ref={containerRef} className="relative inline-flex items-baseline justify-start overflow-visible h-[1.1em]" style={{ perspective: "1000px" }}>
-      <span ref={currentRef} className="current-price inline-block">{prices.current}</span>
+    <div 
+      ref={containerRef} 
+      className="relative inline-flex items-baseline justify-start overflow-visible h-[1.1em] transition-all" 
+      style={{ perspective: "1000px" }}
+    >
+      <span className="current-price inline-block whitespace-nowrap">{prices.current}</span>
       {prices.next && (
-        <span ref={nextRef} className="next-price absolute left-0 top-0 inline-block opacity-0 whitespace-nowrap">{prices.next}</span>
+        <span className="next-price absolute left-0 top-0 inline-block opacity-0 whitespace-nowrap">{prices.next}</span>
       )}
     </div>
   );
