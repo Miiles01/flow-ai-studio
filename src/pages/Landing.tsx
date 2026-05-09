@@ -228,26 +228,6 @@ const Landing = () => {
             </div>
           </section>
 
-          {/* ACERCA DE */}
-          <section id="acerca-de" className="py-32 px-6 bg-[#F9F9FB] scroll-mt-24">
-            <div className="max-w-4xl mx-auto">
-              <div className="text-center mb-16">
-                <span data-anim-heading className="text-[10px] uppercase tracking-widest text-gray-400 mb-4 block">Nuestra visión</span>
-                <h2 className="text-4xl md:text-6xl font-normal tracking-tight mb-8">
-                  Rediseñando la forma de <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>colaborar</span>
-                </h2>
-              </div>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-12 text-sm font-light leading-relaxed text-gray-600">
-                <p data-split>
-                  Miiles nace con la convicción de que el talento no tiene fronteras. Creamos una plataforma donde las ideas creativas y las fuerzas de ventas se encuentran para escalar negocios de manera automatizada y eficiente.
-                </p>
-                <p data-split>
-                  Nuestro ecosistema utiliza inteligencia artificial para emparejar marcas con los colaboradores ideales, asegurando que cada conexión genere un valor real y sostenible en el tiempo.
-                </p>
-              </div>
-            </div>
-          </section>
-
           {/* PRECIOS */}
           <section id="precios" className="py-32 px-6 scroll-mt-24">
             <div className="max-w-6xl mx-auto">
