@@ -8,6 +8,7 @@ import { SplitText } from "gsap/SplitText";
 import { CustomEase } from "gsap/CustomEase";
 import logotipoSvg from "@/assets/miiles/logotipo.svg";
 import LandingNavbar from "@/components/LandingNavbar";
+import LandingFooter from "@/components/LandingFooter";
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText, CustomEase);
 if (!CustomEase.get("osmo-ease")) {
@@ -59,8 +60,8 @@ const Features = () => {
     <>
       <LandingNavbar />
       <div id="smooth-wrapper-features" style={{ overflow: "hidden", position: "fixed", width: "100%", height: "100%", top: 0, left: 0 }}>
-        <div id="smooth-content-features" className="bg-white text-black font-sans">
-          <section className="min-h-[60vh] flex flex-col items-center justify-center text-center px-6 pt-32 pb-12">
+        <div id="smooth-content-features" className="bg-white text-black font-sans pb-0">
+          <section className="min-h-[60vh] flex flex-col items-center justify-center text-center px-6 pt-40 pb-12">
             <h1 className="text-5xl md:text-7xl font-normal leading-tight tracking-tight mb-8 max-w-4xl">
               Todas las{" "}
               <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>funciones</span>
@@ -84,9 +85,7 @@ const Features = () => {
             </div>
           </section>
 
-          <footer className="py-16 px-6 text-center text-xs text-gray-400">
-            © Miiles, todos los derechos reservados, 2026
-          </footer>
+          <LandingFooter />
         </div>
       </div>
     </>

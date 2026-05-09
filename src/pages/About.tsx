@@ -6,6 +6,7 @@ import { ScrollSmoother } from "gsap/ScrollSmoother";
 import { SplitText } from "gsap/SplitText";
 import { CustomEase } from "gsap/CustomEase";
 import LandingNavbar from "@/components/LandingNavbar";
+import LandingFooter from "@/components/LandingFooter";
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText, CustomEase);
 if (!CustomEase.get("osmo-ease")) {
@@ -80,9 +81,7 @@ const About = () => {
             </div>
           </section>
 
-          <footer className="py-16 px-6 text-center text-xs text-gray-400">
-            © Miiles, todos los derechos reservados, 2026
-          </footer>
+          <LandingFooter />
         </div>
       </div>
     </>

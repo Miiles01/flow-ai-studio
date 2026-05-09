@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import videoHome from "@/assets/miiles/videohome.mp4";
 import { Link } from "react-router-dom";
-import { motion, AnimatePresence, type Variants } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
@@ -16,6 +16,7 @@ import brand4 from "@/assets/miiles/brands/brand4.svg";
 import brand5 from "@/assets/miiles/brands/brand5.svg";
 import brand6 from "@/assets/miiles/brands/brand6.svg";
 import LandingNavbar from "@/components/LandingNavbar";
+import LandingFooter from "@/components/LandingFooter";
 
 const brandLogos = [brand1, brand2, brand3, brand4, brand5, brand6];
 
@@ -134,15 +135,14 @@ const Landing = () => {
                   </svg>
                   Prueba gratis
                 </Link>
-                <a
-                  href="#funciones"
+                <Link
+                  to="/funciones"
                   className="px-8 py-4 rounded-full border border-gray-200 text-sm font-light hover:-translate-y-2 transition-transform duration-300"
                 >
                   Ver funciones →
-                </a>
+                </Link>
               </div>
             </div>
-
           </section>
 
           {/* BRAND CAROUSEL */}
@@ -175,7 +175,7 @@ const Landing = () => {
           </section>
 
           {/* VALUE PROP + 2 COLUMNS (FUNCIONES) */}
-          <section id="funciones" className="py-32 px-6 scroll-mt-24">
+          <section className="py-32 px-6 scroll-mt-24">
             <div className="max-w-6xl mx-auto">
               <h2 className="text-5xl md:text-7xl font-normal leading-tight tracking-tight text-center mb-20">
                 <span className="block">Un sistema.</span>
@@ -222,92 +222,7 @@ const Landing = () => {
             </div>
           </section>
 
-          {/* TESTIMONIAL */}
-          <section className="py-32 px-6">
-            <div className="max-w-3xl mx-auto text-center">
-              <p
-                data-speed="0.95"
-                className="text-3xl md:text-5xl font-normal leading-tight mb-10"
-              >
-                "Luce realmente asombroso"
-              </p>
-              <div data-anim-heading className="flex items-center justify-center gap-3">
-                <img 
-                  src="https://wearemiiles.com/wp-content/uploads/2025/03/Frame-2085662063.png" 
-                  alt="Karol Wegner" 
-                  className="h-12 w-auto object-contain"
-                />
-                <div className="text-left">
-                  <p className="text-sm font-normal">Karol Wegner</p>
-                  <p className="text-xs font-light text-gray-400">CEO de BeeSpeaker</p>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* FINAL CTA */}
-          <section className="py-32 px-6">
-            <div className="max-w-4xl mx-auto text-center">
-              <h2
-                className="text-5xl md:text-7xl font-normal leading-tight tracking-tight mb-10"
-              >
-                Vamos a construir tu nuevo negocio{" "}
-                <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic", color: "#000" }}>
-                  automatizado
-                </span>
-              </h2>
-              <div data-anim-heading>
-                <Link
-                  to="/login"
-                  className="inline-block px-10 py-5 rounded-full bg-black text-white text-sm font-light hover:-translate-y-2 transition-transform duration-300"
-                >
-                  Prueba Miiles gratis
-                </Link>
-              </div>
-            </div>
-          </section>
-
-          {/* FOOTER */}
-          <footer className="pt-24 pb-0">
-            <div className="max-w-7xl mx-auto px-10">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-20 mb-24">
-                {/* Left side */}
-                <div className="flex flex-col justify-between h-full min-h-[200px]">
-                  <h2 className="text-3xl font-normal leading-tight max-w-xs">
-                    Diseñado para mentes creativas
-                  </h2>
-                  <p className="text-[10px] md:text-xs font-light text-gray-400 mt-10 md:mt-0">
-                    © Miiles, todos los derechos reservados, 2026
-                  </p>
-                </div>
-
-                {/* Right side */}
-                <div className="flex gap-20 md:gap-40">
-                  <div className="space-y-6">
-                    <h4 className="text-[10px] font-normal text-gray-400 uppercase tracking-widest">Compañía</h4>
-                    <div className="flex flex-col gap-4 text-sm font-light">
-                      <Link to="/" className="hover:opacity-50 transition-opacity">Términos y condiciones</Link>
-                      <Link to="/" className="hover:opacity-50 transition-opacity">Política de privacidad</Link>
-                    </div>
-                  </div>
-                  <div className="space-y-6">
-                    <h4 className="text-[10px] font-normal text-gray-400 uppercase tracking-widest">Redes Sociales</h4>
-                    <div className="flex flex-col gap-4 text-sm font-light">
-                      <a href="https://instagram.com/wearemiiles" target="_blank" rel="noopener noreferrer" className="hover:opacity-50 transition-opacity">Instagram</a>
-                      <a href="https://tiktok.com/@wearemiiles" target="_blank" rel="noopener noreferrer" className="hover:opacity-50 transition-opacity">Tiktok</a>
-                      <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-50 transition-opacity">Youtube</a>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* logotipo grande */}
-            <div className="w-full max-w-7xl mx-auto px-4 md:px-10 flex justify-center">
-              <img src={logotipoSvg} alt="miiles" className="w-full object-contain object-center block mx-auto" />
-            </div>
-          </footer>
-
+          <LandingFooter />
         </div>
       </div>
     </>

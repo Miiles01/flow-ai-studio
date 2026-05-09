@@ -6,15 +6,15 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
 import { SplitText } from "gsap/SplitText";
 import { CustomEase } from "gsap/CustomEase";
+import logotipoSvg from "@/assets/miiles/logotipo.svg";
 import LandingNavbar from "@/components/LandingNavbar";
+import LandingFooter from "@/components/LandingFooter";
 
-// Registro de plugins de GSAP
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText, CustomEase);
 if (!CustomEase.get("osmo-ease")) {
   CustomEase.create("osmo-ease", "0.625, 0.05, 0, 1");
 }
 
-// Configuración de planes
 const plans = [
   {
     name: "Free",
@@ -43,7 +43,6 @@ const plans = [
   },
 ];
 
-// Componente para el efecto de texto descifrado (Scramble)
 const ScramblePrice = ({ value }: { value: string }) => {
   const [displayValue, setDisplayValue] = useState(value);
   const characters = "0123456789X%&$#@";
@@ -103,7 +102,7 @@ const Pricing = () => {
     <>
       <LandingNavbar />
       <div id="smooth-wrapper-pricing" style={{ overflow: "hidden", position: "fixed", width: "100%", height: "100%", top: 0, left: 0 }}>
-        <div id="smooth-content-pricing" className="bg-white text-black font-sans pb-32">
+        <div id="smooth-content-pricing" className="bg-white text-black font-sans pb-0">
           
           <section className="min-h-[50vh] flex flex-col items-center justify-center text-center px-6 pt-40 pb-12">
             <h1 className="text-5xl md:text-7xl font-normal leading-tight tracking-tight mb-8 max-w-4xl">
@@ -113,7 +112,6 @@ const Pricing = () => {
               Potencia tu marca con la flexibilidad que necesitas. Sin letras pequeñas, solo el impulso que mereces.
             </p>
 
-            {/* TOGGLE PREMIUM */}
             <div className="relative flex w-64 p-1 bg-[#F5F5F8] rounded-full mx-auto cursor-pointer border border-gray-100 shadow-inner">
               <motion.div
                 className="absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] bg-black rounded-full"
@@ -135,7 +133,7 @@ const Pricing = () => {
             </div>
           </section>
 
-          <section className="px-6">
+          <section className="px-6 mb-32">
             <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
               {plans.map((plan) => (
                 <div
@@ -180,9 +178,7 @@ const Pricing = () => {
             </div>
           </section>
 
-          <footer className="pt-24 pb-8 px-6 text-center text-[10px] text-gray-300 uppercase tracking-widest">
-            © Miiles, todos los derechos reservados, 2026
-          </footer>
+          <LandingFooter />
         </div>
       </div>
     </>
