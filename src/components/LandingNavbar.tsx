@@ -36,7 +36,7 @@ const LandingNavbar = ({ onMenuAction }: LandingNavbarProps) => {
       {/* WRAPPER PARA NAV Y MENÚ */}
       <div className="fixed top-6 left-1/2 -translate-x-1/2 w-[95vw] md:w-max z-50 flex flex-col gap-2">
         {/* NAV — flotante estilo glass */}
-        <nav className="w-full flex items-center justify-between gap-4 md:gap-16 px-6 md:px-8 py-2.5 bg-white/40 backdrop-blur-2xl border border-white/20 rounded-full">
+        <nav className="w-full flex items-center justify-between gap-4 md:gap-16 px-6 md:px-8 py-2.5 bg-white/10 backdrop-blur-2xl border border-white/20 rounded-full">
           <Link to="/" className="flex items-center shrink-0">
             <img src="/logotipo.svg" alt="Miiles" className="h-5 w-auto" />
           </Link>
