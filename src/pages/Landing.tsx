@@ -15,6 +15,7 @@ import brand3 from "@/assets/miiles/brands/brand3.svg";
 import brand4 from "@/assets/miiles/brands/brand4.svg";
 import brand5 from "@/assets/miiles/brands/brand5.svg";
 import brand6 from "@/assets/miiles/brands/brand6.svg";
+import LandingNavbar from "@/components/LandingNavbar";
 
 const brandLogos = [brand1, brand2, brand3, brand4, brand5, brand6];
 
@@ -23,17 +24,7 @@ if (!CustomEase.get("osmo-ease")) {
   CustomEase.create("osmo-ease", "0.625, 0.05, 0, 1");
 }
 
-const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 32 },
-  visible: (i: number = 0) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.6, delay: i * 0.1, ease: [0.22, 1, 0.36, 1] as [number, number, number, number] },
-  }),
-};
-
 const Landing = () => {
-  const [isMenuOpen, setIsMenuOpen] = useState(false);
   const smootherRef = useRef<ScrollSmoother | null>(null);
   const videoWrapRef = useRef<HTMLDivElement>(null);
 
@@ -110,296 +101,300 @@ const Landing = () => {
 
   return (
     <>
-      {/* WRAPPER PARA NAV Y MENÚ */}
-      <div className="fixed top-6 left-1/2 -translate-x-1/2 w-[95vw] md:w-max z-50 flex flex-col gap-2">
-        {/* NAV — flotante estilo glass */}
-        <nav className="w-full flex items-center justify-between gap-4 md:gap-16 px-6 md:px-8 py-2.5 bg-white/40 backdrop-blur-2xl border border-white/20 rounded-full">
-          <Link to="/" className="flex items-center shrink-0">
-            <img src={logotipoSvg} alt="Miiles" className="h-5 w-auto" />
-          </Link>
-
-          <div className="flex items-center gap-4 md:gap-6 shrink-0">
-            <button 
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-sm font-normal hover:opacity-50 transition-opacity tracking-tight"
-            >
-              {isMenuOpen ? "Cerrar" : "Menu"}
-            </button>
-            <Link
-              to="/login"
-              className="text-xs font-normal px-5 py-2.5 rounded-full bg-black text-white hover:scale-105 transition-transform duration-300"
-            >
-              Unirse
-            </Link>
-          </div>
-        </nav>
-
-        {/* MENU DESPLEGABLE — estilo glass negro */}
-        <AnimatePresence>
-          {isMenuOpen && (
-            <motion.div 
-              initial={{ opacity: 0, y: -10, scale: 0.95 }}
-              animate={{ opacity: 1, y: 0, scale: 1 }}
-              exit={{ opacity: 0, y: -10, scale: 0.95 }}
-              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
-              className="w-full bg-black/40 backdrop-blur-3xl border border-white/10 rounded-3xl p-10 shadow-[0_20px_50px_rgba(0,0,0,0.3)] overflow-hidden"
-            >
-              <div className="flex flex-col gap-6 text-left">
-                {[
-                  { to: "/", label: "Inicio" },
-                  { to: "/acerca-de", label: "Acerca de" },
-                  { to: "/precios", label: "Precios" },
-                  { to: "/funciones", label: "Funciones" },
-                ].map((item, i) => (
-                  <div key={item.label} className="overflow-hidden">
-                    <motion.div initial={{ y: "110%" }} animate={{ y: "0%" }} transition={{ duration: 0.9, ease: [0.625, 0.05, 0, 1], delay: i * 0.08 }}>
-                      <Link
-                        to={item.to}
-                        onClick={() => setIsMenuOpen(false)}
-                        className="block text-3xl md:text-4xl font-normal text-white hover:opacity-50 transition-opacity tracking-tight"
-                      >
-                        {item.label}
-                      </Link>
-                    </motion.div>
-                  </div>
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
-      {/* Overlay para cerrar al hacer clic fuera */}
-      <AnimatePresence>
-        {isMenuOpen && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            onClick={() => setIsMenuOpen(false)}
-            className="fixed inset-0 z-40 bg-black/5"
-          />
-        )}
-      </AnimatePresence>
+      <LandingNavbar />
 
       <div id="smooth-wrapper" style={{ overflow: "hidden", position: "fixed", width: "100%", height: "100%", top: 0, left: 0 }}>
         <div id="smooth-content" className="bg-white text-black font-sans overflow-hidden">
 
           {/* HERO */}
           <section className="min-h-[85vh] flex flex-col items-center justify-center text-center px-6 pt-32 pb-10 relative overflow-hidden">
-          <div className="max-w-4xl mx-auto">
-            <img 
-              data-anim-heading 
-              src={logoImg} 
-              alt="Miiles" 
-              className="w-14 h-14 mx-auto mb-6" 
-            />
-            <h1
-              data-split-heading
-              className="text-5xl md:text-6xl lg:text-7xl font-normal leading-tight tracking-tight mb-8"
-            >
-              <span className="block">Trabaja más</span>
-              <span className="block" style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic", color: "#000" }}>
-                inteligente
-              </span>
-            </h1>
-
-
-
-            <div data-anim-heading className="flex items-center justify-center gap-4 flex-wrap">
-              <Link
-                to="/login"
-                className="px-8 py-4 rounded-full bg-black text-white text-sm font-light hover:-translate-y-2 transition-transform duration-300 flex items-center gap-2"
-              >
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 0C12.3 8.8 15.2 11.7 24 12C15.2 12.3 12.3 15.2 12 24C11.7 15.2 8.8 12.3 0 12C8.8 11.7 11.7 8.8 12 0Z" />
-                </svg>
-                Prueba gratis
-              </Link>
-              <a
-                href="#funciones"
-                className="px-8 py-4 rounded-full border border-gray-200 text-sm font-light hover:-translate-y-2 transition-transform duration-300"
-              >
-                Ver funciones →
-              </a>
-            </div>
-          </div>
-
-          {/* gradient blob con parallax */}
-          <div
-            data-speed="0.8"
-            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-10 blur-3xl pointer-events-none -z-10"
-            style={{ background: "linear-gradient(135deg, #FCB5B9 0%, #B8A4F8 50%, #4059F1 100%)" }}
-          />
-        </section>
-
-        {/* BRAND CAROUSEL */}
-        <section className="py-8 px-[10%] md:px-[20%] overflow-hidden">
-          <div className="relative w-full" style={{ maskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)" }}>
-            <div className="flex w-max animate-marquee gap-20 items-center">
-              {[...brandLogos, ...brandLogos].map((logo, i) => (
-                <img key={i} src={logo} alt="" className="h-6 md:h-7 w-auto opacity-70 shrink-0" />
-              ))}
-            </div>
-          </div>
-        </section>
-
-        {/* VIDEO */}
-        <section className="py-24 flex justify-center items-center overflow-hidden">
-          <div
-            ref={videoWrapRef}
-            style={{ width: "65%" }}
-            className="rounded-2xl overflow-hidden"
-          >
-            <video
-              src={videoHome}
-              autoPlay
-              muted
-              loop
-              playsInline
-              className="w-full h-full object-cover"
-            />
-          </div>
-        </section>
-
-        {/* VALUE PROP + 2 COLUMNS */}
-        <section className="py-32 px-6">
-          <div className="max-w-6xl mx-auto">
-            <h2 className="text-5xl md:text-7xl font-normal leading-tight tracking-tight text-center mb-20">
-              <span data-split-heading className="block">Un sistema.</span>
-              <span data-split-heading className="block">
-                Más&nbsp;<span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>ganancias.</span>
-              </span>
-            </h2>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* COL 1 — Encuentra colaboraciones */}
-              <div data-anim-heading className="flex flex-col bg-white rounded-3xl p-6 cursor-pointer transition-all duration-300 hover:-translate-y-3 hover:shadow-[0_20px_60px_rgba(0,0,0,0.08)]">
-                <div className="rounded-2xl overflow-hidden bg-[#F5F5F8] mb-8">
-                  <img
-                    src="https://wearemiiles.com/wp-content/uploads/2026/01/3232-932x1024.png"
-                    alt="Encuentra colaboraciones"
-                    className="w-full object-cover"
-                  />
-                </div>
-                <h3 data-split-heading className="text-3xl md:text-4xl font-normal text-center mb-4 leading-tight">
-                  Encuentra colaboraciones
-                </h3>
-                <p data-split className="text-sm font-light text-gray-500 text-center leading-relaxed max-w-sm mx-auto">
-                  En Miiles encontrarás oportunidades únicas para impulsar tu marca.
-                </p>
-              </div>
-
-              {/* COL 2 — Haz que tu idea suene */}
-              <div data-anim-heading className="flex flex-col bg-white rounded-3xl p-6 cursor-pointer transition-all duration-300 hover:-translate-y-3 hover:shadow-[0_20px_60px_rgba(0,0,0,0.08)]">
-                <div className="rounded-2xl overflow-hidden bg-[#F5F5F8] mb-8">
-                  <img
-                    src="https://wearemiiles.com/wp-content/uploads/2026/01/new233-933x1024.png"
-                    alt="Haz que tu idea suene"
-                    className="w-full object-cover"
-                  />
-                </div>
-                <h3 data-split-heading className="text-3xl md:text-4xl font-normal text-center mb-4 leading-tight">
-                  Haz que tu idea suene con fuerza de ventas
-                </h3>
-                <p data-split className="text-sm font-light text-gray-500 text-center leading-relaxed max-w-sm mx-auto">
-                  Si tu marca vende servicios o productos, haz que otros vendedores en todo el mundo también los ofrezcan.
-                </p>
-              </div>
-            </div>
-          </div>
-        </section>
-
-        {/* TESTIMONIAL */}
-        <section className="py-32 px-6">
-          <div className="max-w-3xl mx-auto text-center">
-            <p
-              data-split-heading
-              data-speed="0.95"
-              className="text-3xl md:text-5xl font-normal leading-tight mb-10"
-            >
-              "Luce realmente asombroso"
-            </p>
-            <div data-anim-heading className="flex items-center justify-center gap-3">
+            <div className="max-w-4xl mx-auto">
               <img 
-                src="https://wearemiiles.com/wp-content/uploads/2025/03/Frame-2085662063.png" 
-                alt="Karol Wegner" 
-                className="h-12 w-auto object-contain"
+                data-anim-heading 
+                src={logoImg} 
+                alt="Miiles" 
+                className="w-14 h-14 mx-auto mb-6" 
               />
-              <div className="text-left">
-                <p className="text-sm font-normal">Karol Wegner</p>
-                <p className="text-xs font-light text-gray-400">CEO de BeeSpeaker</p>
+              <h1
+                className="text-5xl md:text-6xl lg:text-7xl font-normal leading-tight tracking-tight mb-8"
+              >
+                <span className="block">Trabaja más</span>
+                <span className="block" style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic", color: "#000" }}>
+                  inteligente
+                </span>
+              </h1>
+
+              <div data-anim-heading className="flex items-center justify-center gap-4 flex-wrap">
+                <Link
+                  to="/login"
+                  className="px-8 py-4 rounded-full bg-black text-white text-sm font-light hover:-translate-y-2 transition-transform duration-300 flex items-center gap-2"
+                >
+                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 0C12.3 8.8 15.2 11.7 24 12C15.2 12.3 12.3 15.2 12 24C11.7 15.2 8.8 12.3 0 12C8.8 11.7 11.7 8.8 12 0Z" />
+                  </svg>
+                  Prueba gratis
+                </Link>
+                <a
+                  href="#funciones"
+                  className="px-8 py-4 rounded-full border border-gray-200 text-sm font-light hover:-translate-y-2 transition-transform duration-300"
+                >
+                  Ver funciones →
+                </a>
               </div>
             </div>
-          </div>
-        </section>
 
-        {/* FINAL CTA */}
-        <section className="py-32 px-6">
-          <div className="max-w-4xl mx-auto text-center">
-            <h2
-              data-split-heading
-              className="text-5xl md:text-7xl font-normal leading-tight tracking-tight mb-10"
-            >
-              Vamos a construir tu nuevo negocio{" "}
-              <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic", color: "#000" }}>
-                automatizado
-              </span>
-            </h2>
-            <div data-anim-heading>
-              <Link
-                to="/login"
-                className="inline-block px-10 py-5 rounded-full bg-black text-white text-sm font-light hover:-translate-y-2 transition-transform duration-300"
-              >
-                Prueba Miiles gratis
-              </Link>
+            {/* gradient blob con parallax */}
+            <div
+              data-speed="0.8"
+              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-10 blur-3xl pointer-events-none -z-10"
+              style={{ background: "linear-gradient(135deg, #FCB5B9 0%, #B8A4F8 50%, #4059F1 100%)" }}
+            />
+          </section>
+
+          {/* BRAND CAROUSEL */}
+          <section className="py-8 px-[10%] md:px-[20%] overflow-hidden">
+            <div className="relative w-full" style={{ maskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)" }}>
+              <div className="flex w-max animate-marquee gap-20 items-center">
+                {[...brandLogos, ...brandLogos].map((logo, i) => (
+                  <img key={i} src={logo} alt="" className="h-6 md:h-7 w-auto opacity-70 shrink-0" />
+                ))}
+              </div>
             </div>
-          </div>
-        </section>
+          </section>
 
-        {/* FOOTER */}
-        <footer className="pt-24 pb-0">
-          <div className="max-w-7xl mx-auto px-10">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-20 mb-24">
-              {/* Left side */}
-              <div className="flex flex-col justify-between h-full min-h-[200px]">
-                <h2 className="text-3xl font-normal leading-tight max-w-xs">
-                  Diseñado para mentes creativas
+          {/* VIDEO */}
+          <section className="py-24 flex justify-center items-center overflow-hidden">
+            <div
+              ref={videoWrapRef}
+              style={{ width: "65%" }}
+              className="rounded-2xl overflow-hidden shadow-2xl"
+            >
+              <video
+                src={videoHome}
+                autoPlay
+                muted
+                loop
+                playsInline
+                className="w-full h-full object-cover"
+              />
+            </div>
+          </section>
+
+          {/* VALUE PROP + 2 COLUMNS (FUNCIONES) */}
+          <section id="funciones" className="py-32 px-6 scroll-mt-24">
+            <div className="max-w-6xl mx-auto">
+              <h2 className="text-5xl md:text-7xl font-normal leading-tight tracking-tight text-center mb-20">
+                <span className="block">Un sistema.</span>
+                <span className="block">
+                  Más&nbsp;<span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>ganancias.</span>
+                </span>
+              </h2>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                {/* COL 1 — Encuentra colaboraciones */}
+                <div data-anim-heading className="flex flex-col bg-white rounded-3xl p-6 cursor-pointer transition-all duration-300 hover:-translate-y-3 hover:shadow-[0_20px_60px_rgba(0,0,0,0.08)] group">
+                  <div className="rounded-2xl overflow-hidden bg-[#F5F5F8] mb-8">
+                    <img
+                      src="https://wearemiiles.com/wp-content/uploads/2026/01/3232-932x1024.png"
+                      alt="Encuentra colaboraciones"
+                      className="w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                  </div>
+                  <h3 className="text-3xl md:text-4xl font-normal text-center mb-4 leading-tight">
+                    Encuentra colaboraciones
+                  </h3>
+                  <p data-split className="text-sm font-light text-gray-500 text-center leading-relaxed max-w-sm mx-auto">
+                    En Miiles encontrarás oportunidades únicas para impulsar tu marca.
+                  </p>
+                </div>
+
+                {/* COL 2 — Haz que tu idea suene */}
+                <div data-anim-heading className="flex flex-col bg-white rounded-3xl p-6 cursor-pointer transition-all duration-300 hover:-translate-y-3 hover:shadow-[0_20px_60px_rgba(0,0,0,0.08)] group">
+                  <div className="rounded-2xl overflow-hidden bg-[#F5F5F8] mb-8">
+                    <img
+                      src="https://wearemiiles.com/wp-content/uploads/2026/01/new233-933x1024.png"
+                      alt="Haz que tu idea suene"
+                      className="w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    />
+                  </div>
+                  <h3 className="text-3xl md:text-4xl font-normal text-center mb-4 leading-tight">
+                    Haz que tu idea suene con fuerza de ventas
+                  </h3>
+                  <p data-split className="text-sm font-light text-gray-500 text-center leading-relaxed max-w-sm mx-auto">
+                    Si tu marca vende servicios o productos, haz que otros vendedores en todo el mundo también los ofrezcan.
+                  </p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* ACERCA DE */}
+          <section id="acerca-de" className="py-32 px-6 bg-[#F9F9FB] scroll-mt-24">
+            <div className="max-w-4xl mx-auto">
+              <div className="text-center mb-16">
+                <span data-anim-heading className="text-[10px] uppercase tracking-widest text-gray-400 mb-4 block">Nuestra visión</span>
+                <h2 className="text-4xl md:text-6xl font-normal tracking-tight mb-8">
+                  Rediseñando la forma de <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>colaborar</span>
                 </h2>
-                <p className="text-[10px] md:text-xs font-light text-gray-400 mt-10 md:mt-0">
-                  © Miiles, todos los derechos reservados, 2026
+              </div>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-12 text-sm font-light leading-relaxed text-gray-600">
+                <p data-split>
+                  Miiles nace con la convicción de que el talento no tiene fronteras. Creamos una plataforma donde las ideas creativas y las fuerzas de ventas se encuentran para escalar negocios de manera automatizada y eficiente.
+                </p>
+                <p data-split>
+                  Nuestro ecosistema utiliza inteligencia artificial para emparejar marcas con los colaboradores ideales, asegurando que cada conexión genere un valor real y sostenible en el tiempo.
                 </p>
               </div>
+            </div>
+          </section>
 
-              {/* Right side */}
-              <div className="flex gap-20 md:gap-40">
-                <div className="space-y-6">
-                  <h4 className="text-[10px] font-normal text-gray-400 uppercase tracking-widest">Compañía</h4>
-                  <div className="flex flex-col gap-4 text-sm font-light">
-                    <Link to="/" className="hover:opacity-50 transition-opacity">Términos y condiciones</Link>
-                    <Link to="/" className="hover:opacity-50 transition-opacity">Política de privacidad</Link>
+          {/* PRECIOS */}
+          <section id="precios" className="py-32 px-6 scroll-mt-24">
+            <div className="max-w-6xl mx-auto">
+              <div className="text-center mb-20">
+                <h2 className="text-5xl md:text-7xl font-normal tracking-tight mb-6">Planes para <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>todos.</span></h2>
+                <p data-anim-heading className="text-gray-500 font-light">Elige el plan que mejor se adapte a tu etapa actual.</p>
+              </div>
+
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+                {/* Plan 1 */}
+                <div data-anim-heading className="p-10 rounded-[2.5rem] bg-white border border-gray-100 flex flex-col h-full hover:shadow-2xl transition-all duration-500">
+                  <h4 className="text-xl mb-2">Básico</h4>
+                  <div className="flex items-baseline gap-1 mb-8">
+                    <span className="text-4xl font-normal">$0</span>
+                    <span className="text-xs text-gray-400 font-light">/mes</span>
                   </div>
+                  <ul className="space-y-4 mb-10 flex-1 text-sm font-light text-gray-500">
+                    <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-black" /> 5 colaboraciones/mes</li>
+                    <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-black" /> Acceso a comunidad</li>
+                    <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-black" /> Soporte estándar</li>
+                  </ul>
+                  <Link to="/login" className="w-full py-4 rounded-full border border-gray-200 text-center text-sm font-light hover:bg-black hover:text-white transition-colors duration-300">Empezar gratis</Link>
                 </div>
-                <div className="space-y-6">
-                  <h4 className="text-[10px] font-normal text-gray-400 uppercase tracking-widest">Redes Sociales</h4>
-                  <div className="flex flex-col gap-4 text-sm font-light">
-                    <a href="https://instagram.com/wearemiiles" target="_blank" rel="noopener noreferrer" className="hover:opacity-50 transition-opacity">Instagram</a>
-                    <a href="https://tiktok.com/@wearemiiles" target="_blank" rel="noopener noreferrer" className="hover:opacity-50 transition-opacity">Tiktok</a>
-                    <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-50 transition-opacity">Youtube</a>
+
+                {/* Plan 2 - Pro */}
+                <div data-anim-heading className="p-10 rounded-[2.5rem] bg-black text-white flex flex-col h-full shadow-2xl scale-105 relative overflow-hidden">
+                  <div className="absolute top-6 right-8 text-[10px] uppercase tracking-widest opacity-50">Popular</div>
+                  <h4 className="text-xl mb-2">Pro</h4>
+                  <div className="flex items-baseline gap-1 mb-8">
+                    <span className="text-4xl font-normal">$29</span>
+                    <span className="text-xs opacity-50 font-light">/mes</span>
+                  </div>
+                  <ul className="space-y-4 mb-10 flex-1 text-sm font-light opacity-80">
+                    <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-white" /> Colaboraciones ilimitadas</li>
+                    <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-white" /> IA Matching Avanzado</li>
+                    <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-white" /> Estadísticas en tiempo real</li>
+                    <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-white" /> Soporte prioritario 24/7</li>
+                  </ul>
+                  <Link to="/login" className="w-full py-4 rounded-full bg-white text-black text-center text-sm font-light hover:opacity-90 transition-opacity duration-300">Suscribirse</Link>
+                </div>
+
+                {/* Plan 3 */}
+                <div data-anim-heading className="p-10 rounded-[2.5rem] bg-white border border-gray-100 flex flex-col h-full hover:shadow-2xl transition-all duration-500">
+                  <h4 className="text-xl mb-2">Empresa</h4>
+                  <div className="flex items-baseline gap-1 mb-8">
+                    <span className="text-4xl font-normal">$99</span>
+                    <span className="text-xs text-gray-400 font-light">/mes</span>
+                  </div>
+                  <ul className="space-y-4 mb-10 flex-1 text-sm font-light text-gray-500">
+                    <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-black" /> Todo lo de Pro</li>
+                    <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-black" /> White label</li>
+                    <li className="flex items-center gap-2"><div className="w-1 h-1 rounded-full bg-black" /> API personalizada</li>
+                  </ul>
+                  <Link to="/login" className="w-full py-4 rounded-full border border-gray-200 text-center text-sm font-light hover:bg-black hover:text-white transition-colors duration-300">Contactar ventas</Link>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* TESTIMONIAL */}
+          <section className="py-32 px-6">
+            <div className="max-w-3xl mx-auto text-center">
+              <p
+                data-speed="0.95"
+                className="text-3xl md:text-5xl font-normal leading-tight mb-10"
+              >
+                "Luce realmente asombroso"
+              </p>
+              <div data-anim-heading className="flex items-center justify-center gap-3">
+                <img 
+                  src="https://wearemiiles.com/wp-content/uploads/2025/03/Frame-2085662063.png" 
+                  alt="Karol Wegner" 
+                  className="h-12 w-auto object-contain"
+                />
+                <div className="text-left">
+                  <p className="text-sm font-normal">Karol Wegner</p>
+                  <p className="text-xs font-light text-gray-400">CEO de BeeSpeaker</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* FINAL CTA */}
+          <section className="py-32 px-6">
+            <div className="max-w-4xl mx-auto text-center">
+              <h2
+                className="text-5xl md:text-7xl font-normal leading-tight tracking-tight mb-10"
+              >
+                Vamos a construir tu nuevo negocio{" "}
+                <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic", color: "#000" }}>
+                  automatizado
+                </span>
+              </h2>
+              <div data-anim-heading>
+                <Link
+                  to="/login"
+                  className="inline-block px-10 py-5 rounded-full bg-black text-white text-sm font-light hover:-translate-y-2 transition-transform duration-300"
+                >
+                  Prueba Miiles gratis
+                </Link>
+              </div>
+            </div>
+          </section>
+
+          {/* FOOTER */}
+          <footer className="pt-24 pb-0">
+            <div className="max-w-7xl mx-auto px-10">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-20 mb-24">
+                {/* Left side */}
+                <div className="flex flex-col justify-between h-full min-h-[200px]">
+                  <h2 className="text-3xl font-normal leading-tight max-w-xs">
+                    Diseñado para mentes creativas
+                  </h2>
+                  <p className="text-[10px] md:text-xs font-light text-gray-400 mt-10 md:mt-0">
+                    © Miiles, todos los derechos reservados, 2026
+                  </p>
+                </div>
+
+                {/* Right side */}
+                <div className="flex gap-20 md:gap-40">
+                  <div className="space-y-6">
+                    <h4 className="text-[10px] font-normal text-gray-400 uppercase tracking-widest">Compañía</h4>
+                    <div className="flex flex-col gap-4 text-sm font-light">
+                      <Link to="/" className="hover:opacity-50 transition-opacity">Términos y condiciones</Link>
+                      <Link to="/" className="hover:opacity-50 transition-opacity">Política de privacidad</Link>
+                    </div>
+                  </div>
+                  <div className="space-y-6">
+                    <h4 className="text-[10px] font-normal text-gray-400 uppercase tracking-widest">Redes Sociales</h4>
+                    <div className="flex flex-col gap-4 text-sm font-light">
+                      <a href="https://instagram.com/wearemiiles" target="_blank" rel="noopener noreferrer" className="hover:opacity-50 transition-opacity">Instagram</a>
+                      <a href="https://tiktok.com/@wearemiiles" target="_blank" rel="noopener noreferrer" className="hover:opacity-50 transition-opacity">Tiktok</a>
+                      <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-50 transition-opacity">Youtube</a>
+                    </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* logotipo grande */}
-          <div className="w-full max-w-7xl mx-auto px-4 md:px-10 flex justify-center">
-            <img src={logotipoSvg} alt="miiles" className="w-full object-contain object-center block mx-auto" />
-          </div>
-        </footer>
+            {/* logotipo grande */}
+            <div className="w-full max-w-7xl mx-auto px-4 md:px-10 flex justify-center">
+              <img src={logotipoSvg} alt="miiles" className="w-full object-contain object-center block mx-auto" />
+            </div>
+          </footer>
 
+        </div>
       </div>
-    </div>
     </>
   );
 };
