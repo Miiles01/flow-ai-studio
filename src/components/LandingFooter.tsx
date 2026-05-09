@@ -38,8 +38,8 @@ const LandingFooter = () => {
       </div>
 
       {/* logotipo grande */}
-      <div className="w-full max-w-7xl mx-auto px-4 md:px-10 flex justify-center overflow-hidden">
-        <img src={logotipoSvg} alt="miiles" className="w-full object-contain object-center block mx-auto translate-y-1/4 opacity-[0.03] grayscale" />
+      <div className="w-full max-w-7xl mx-auto px-4 md:px-10 flex justify-center mt-12">
+        <img src={logotipoSvg} alt="miiles" className="w-full h-auto object-contain object-center block mx-auto" />
       </div>
     </footer>
   );
