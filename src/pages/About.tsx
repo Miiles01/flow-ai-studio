@@ -84,7 +84,7 @@ const About = () => {
           </section>
 
           {/* CÓMO EMPEZÓ (STORY) */}
-          <section className="py-32 px-6 bg-[#F5F5F8]">
+          <section className="py-32 px-6 bg-white">
             <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
               <div className="rounded-[3rem] overflow-hidden aspect-[4/5] fade-up shadow-2xl">
                 <img 
