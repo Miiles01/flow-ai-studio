@@ -220,6 +220,39 @@ const Landing = () => {
               </div>
             </div>
           </section>
+          {/* LUCE REALMENTE ASOMBROSO */}
+          <section className="py-32 px-6">
+            <div className="max-w-6xl mx-auto text-center">
+              <h2 className="text-5xl md:text-8xl font-normal leading-tight tracking-tight mb-12">
+                Luce realmente <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>asombroso</span>
+              </h2>
+              <div className="relative rounded-[3rem] overflow-hidden bg-[#F5F5F8] aspect-video md:aspect-[21/9]">
+                <img 
+                  src="https://wearemiiles.com/wp-content/uploads/2026/01/2121-1024x576.png" 
+                  alt="Asombroso" 
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </div>
+          </section>
+
+          {/* CTA FINAL */}
+          <section className="py-32 px-6 bg-white">
+            <div className="max-w-4xl mx-auto text-center">
+              <h2 className="text-4xl md:text-6xl font-normal leading-tight tracking-tight mb-12">
+                Vamos a construir tu nuevo negocio <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>automatizado</span>
+              </h2>
+              <Link
+                to="/register"
+                className="inline-flex items-center gap-2 px-10 py-5 rounded-full bg-black text-white text-base font-light hover:-translate-y-2 transition-transform duration-300"
+              >
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 0C12.3 8.8 15.2 11.7 24 12C15.2 12.3 12.3 15.2 12 24C11.7 15.2 8.8 12.3 0 12C8.8 11.7 11.7 8.8 12 0Z" />
+                </svg>
+                Prueba Miiles gratis
+              </Link>
+            </div>
+          </section>
 
           <LandingFooter />
         </div>
