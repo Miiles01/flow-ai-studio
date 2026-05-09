@@ -145,39 +145,24 @@ const Landing = () => {
               className="w-full bg-black/40 backdrop-blur-3xl border border-white/10 rounded-3xl p-10 shadow-[0_20px_50px_rgba(0,0,0,0.3)] overflow-hidden"
             >
               <div className="flex flex-col gap-6 text-left">
-                <div className="overflow-hidden">
-                  <motion.div initial={{ y: "110%" }} animate={{ y: "0%" }} transition={{ duration: 0.9, ease: [0.625, 0.05, 0, 1] }}>
-                    <Link 
-                      to="/" 
-                      onClick={() => setIsMenuOpen(false)}
-                      className="block text-3xl md:text-4xl font-normal text-white hover:opacity-50 transition-opacity tracking-tight"
-                    >
-                      Inicio
-                    </Link>
-                  </motion.div>
-                </div>
-                <div className="overflow-hidden">
-                  <motion.div initial={{ y: "110%" }} animate={{ y: "0%" }} transition={{ duration: 0.9, ease: [0.625, 0.05, 0, 1], delay: 0.08 }}>
-                    <Link 
-                      to="/" 
-                      onClick={() => setIsMenuOpen(false)}
-                      className="block text-3xl md:text-4xl font-normal text-white hover:opacity-50 transition-opacity tracking-tight"
-                    >
-                      Acerca de
-                    </Link>
-                  </motion.div>
-                </div>
-                <div className="overflow-hidden">
-                  <motion.div initial={{ y: "110%" }} animate={{ y: "0%" }} transition={{ duration: 0.9, ease: [0.625, 0.05, 0, 1], delay: 0.16 }}>
-                    <Link 
-                      to="/" 
-                      onClick={() => setIsMenuOpen(false)}
-                      className="block text-3xl md:text-4xl font-normal text-white hover:opacity-50 transition-opacity tracking-tight"
-                    >
-                      Precios
-                    </Link>
-                  </motion.div>
-                </div>
+                {[
+                  { to: "/", label: "Inicio" },
+                  { to: "/acerca-de", label: "Acerca de" },
+                  { to: "/precios", label: "Precios" },
+                  { to: "/funciones", label: "Funciones" },
+                ].map((item, i) => (
+                  <div key={item.label} className="overflow-hidden">
+                    <motion.div initial={{ y: "110%" }} animate={{ y: "0%" }} transition={{ duration: 0.9, ease: [0.625, 0.05, 0, 1], delay: i * 0.08 }}>
+                      <Link
+                        to={item.to}
+                        onClick={() => setIsMenuOpen(false)}
+                        className="block text-3xl md:text-4xl font-normal text-white hover:opacity-50 transition-opacity tracking-tight"
+                      >
+                        {item.label}
+                      </Link>
+                    </motion.div>
+                  </div>
+                ))}
               </div>
             </motion.div>
           )}

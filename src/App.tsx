@@ -7,6 +7,9 @@ import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import DashboardLayout from "@/components/DashboardLayout";
 import Landing from "./pages/Landing";
+import About from "./pages/About";
+import Pricing from "./pages/Pricing";
+import Features from "./pages/Features";
 import Dashboard from "./pages/Dashboard";
 import Programs from "./pages/Programs";
 import ProgramDetail from "./pages/ProgramDetail";
@@ -74,6 +77,9 @@ const App = () => (
         <AuthProvider>
           <Routes>
             <Route path="/" element={<Landing />} />
+            <Route path="/acerca-de" element={<About />} />
+            <Route path="/precios" element={<Pricing />} />
+            <Route path="/funciones" element={<Features />} />
             <Route path="/dashboard" element={<DashboardRoute><Dashboard /></DashboardRoute>} />
             <Route path="/programs" element={<DashboardRoute><Programs /></DashboardRoute>} />
             <Route path="/programs/:id" element={<ProgramDetail />} />
