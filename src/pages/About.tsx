@@ -191,7 +191,7 @@ const About = () => {
           <section className="py-40 px-6">
             <div className="max-w-4xl mx-auto text-center flex flex-col items-center">
               <h2 className="text-5xl md:text-8xl font-normal tracking-tighter mb-12">
-                Miiles ya está <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>activo.</span>
+                Únete a la <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>revolución.</span>
               </h2>
               <Link
                 to="/register"
