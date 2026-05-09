@@ -2,7 +2,7 @@ import { Link } from "react-router-dom";
 
 const LandingFooter = () => {
   return (
-    <footer className="pt-24 pb-0 bg-white border-t border-gray-50">
+    <footer className="pt-24 pb-16 bg-white border-t border-gray-50">
       <div className="max-w-7xl mx-auto px-10">
         <div className="grid grid-cols-1 md:grid-cols-2 gap-20 mb-24">
           {/* Left side */}
