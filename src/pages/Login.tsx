@@ -66,7 +66,7 @@ const Login = () => {
                 placeholder="tu@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="pl-10"
+                className="pl-10 bg-white"
                 required
               />
             </div>
@@ -77,7 +77,7 @@ const Login = () => {
                 placeholder="Contraseña"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="pl-10"
+                className="pl-10 bg-white"
                 required
               />
             </div>

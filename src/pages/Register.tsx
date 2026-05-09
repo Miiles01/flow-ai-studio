@@ -74,7 +74,7 @@ const Register = () => {
                 placeholder="Tu nombre"
                 value={displayName}
                 onChange={(e) => setDisplayName(e.target.value)}
-                className="pl-10"
+                className="pl-10 bg-white"
                 required
               />
             </div>
@@ -85,7 +85,7 @@ const Register = () => {
                 placeholder="tu@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="pl-10"
+                className="pl-10 bg-white"
                 required
               />
             </div>
@@ -96,7 +96,7 @@ const Register = () => {
                 placeholder="Contraseña (mín. 6 caracteres)"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="pl-10"
+                className="pl-10 bg-white"
                 minLength={6}
                 required
               />
