@@ -34,7 +34,7 @@ const plans = [
     highlighted: true,
   },
   {
-    name: "Business",
+    name: "Negocios",
     monthlyPrice: "99",
     annualPrice: "79",
     description: "Para equipos y empresas",
