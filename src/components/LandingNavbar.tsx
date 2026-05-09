@@ -12,9 +12,10 @@ const LandingNavbar = ({ onMenuAction }: LandingNavbarProps) => {
 
   const menuItems = [
     { label: "Inicio", href: "/" },
-    { label: "Acerca de", href: "/#acerca-de" },
-    { label: "Funciones", href: "/#funciones" },
-    { label: "Precios", href: "/#precios" },
+    { label: "Acerca de", href: "/acerca-de" },
+    { label: "Funciones", href: "/funciones" },
+    { label: "Precios", href: "/precios" },
+    { label: "Contacto", href: "/contacto" },
   ];
 
   const handleLinkClick = (href: string) => {
@@ -76,20 +77,13 @@ const LandingNavbar = ({ onMenuAction }: LandingNavbarProps) => {
                       animate={{ y: "0%" }} 
                       transition={{ duration: 0.9, ease: [0.625, 0.05, 0, 1], delay: i * 0.08 }}
                     >
-                      <a 
-                        href={item.href}
-                        onClick={(e) => {
-                          if (item.href.startsWith("/#")) {
-                            e.preventDefault();
-                            handleLinkClick(item.href);
-                          } else {
-                            setIsMenuOpen(false);
-                          }
-                        }}
+                      <Link 
+                        to={item.href}
+                        onClick={() => setIsMenuOpen(false)}
                         className="block text-3xl md:text-4xl font-normal text-white hover:opacity-50 transition-opacity tracking-tight"
                       >
                         {item.label}
-                      </a>
+                      </Link>
                     </motion.div>
                   </div>
                 ))}

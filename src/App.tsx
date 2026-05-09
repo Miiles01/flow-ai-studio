@@ -10,6 +10,7 @@ import Landing from "./pages/Landing";
 import About from "./pages/About";
 import Pricing from "./pages/Pricing";
 import Features from "./pages/Features";
+import Contact from "./pages/Contact";
 import Dashboard from "./pages/Dashboard";
 import Programs from "./pages/Programs";
 import ProgramDetail from "./pages/ProgramDetail";
@@ -80,6 +81,7 @@ const App = () => (
             <Route path="/acerca-de" element={<About />} />
             <Route path="/precios" element={<Pricing />} />
             <Route path="/funciones" element={<Features />} />
+            <Route path="/contacto" element={<Contact />} />
             <Route path="/dashboard" element={<DashboardRoute><Dashboard /></DashboardRoute>} />
             <Route path="/programs" element={<DashboardRoute><Programs /></DashboardRoute>} />
             <Route path="/programs/:id" element={<ProgramDetail />} />

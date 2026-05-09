@@ -6,6 +6,7 @@ import { ScrollSmoother } from "gsap/ScrollSmoother";
 import { SplitText } from "gsap/SplitText";
 import { CustomEase } from "gsap/CustomEase";
 import logotipoSvg from "@/assets/miiles/logotipo.svg";
+import LandingNavbar from "@/components/LandingNavbar";
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText, CustomEase);
 if (!CustomEase.get("osmo-ease")) {
@@ -73,70 +74,67 @@ const Pricing = () => {
   }, []);
 
   return (
-    <div id="smooth-wrapper-pricing" style={{ overflow: "hidden", position: "fixed", width: "100%", height: "100%", top: 0, left: 0 }}>
-      <div id="smooth-content-pricing" className="bg-white text-black font-sans">
-        <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
-          <nav className="flex items-center gap-8 px-6 py-2.5 bg-white/40 backdrop-blur-2xl border border-white/20 rounded-full">
-            <Link to="/"><img src={logotipoSvg} alt="Miiles" className="h-5 w-auto" /></Link>
-            <Link to="/" className="text-sm">Inicio</Link>
-          </nav>
-        </div>
+    <>
+      <LandingNavbar />
+      <div id="smooth-wrapper-pricing" style={{ overflow: "hidden", position: "fixed", width: "100%", height: "100%", top: 0, left: 0 }}>
+        <div id="smooth-content-pricing" className="bg-white text-black font-sans">
 
-        <section className="min-h-[60vh] flex flex-col items-center justify-center text-center px-6 pt-32 pb-12">
-          <h1 className="text-5xl md:text-7xl font-normal leading-tight tracking-tight mb-8 max-w-4xl">
-            Precios <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>simples</span>
-          </h1>
-          <p className="text-lg font-light text-gray-500 max-w-2xl">
-            Elige el plan que mejor se adapte a tu marca. Sin sorpresas, sin permanencia.
-          </p>
-        </section>
+          <section className="min-h-[60vh] flex flex-col items-center justify-center text-center px-6 pt-32 pb-12">
+            <h1 className="text-5xl md:text-7xl font-normal leading-tight tracking-tight mb-8 max-w-4xl">
+              Precios <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>simples</span>
+            </h1>
+            <p className="text-lg font-light text-gray-500 max-w-2xl">
+              Elige el plan que mejor se adapte a tu marca. Sin sorpresas, sin permanencia.
+            </p>
+          </section>
 
-        <section className="pb-32 px-6">
-          <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
-            {plans.map((plan) => (
-              <div
-                key={plan.name}
-                className={`flex flex-col rounded-3xl p-8 transition-all duration-300 hover:-translate-y-2 ${
-                  plan.highlighted
-                    ? "bg-black text-white shadow-[0_20px_60px_rgba(0,0,0,0.15)]"
-                    : "bg-[#F5F5F8] text-black"
-                }`}
-              >
-                <h3 className="text-2xl font-normal mb-2">{plan.name}</h3>
-                <p className={`text-sm font-light mb-6 ${plan.highlighted ? "text-gray-300" : "text-gray-500"}`}>
-                  {plan.description}
-                </p>
-                <div className="flex items-baseline gap-1 mb-8">
-                  <span className="text-5xl font-normal">{plan.price}</span>
-                  <span className={`text-sm font-light ${plan.highlighted ? "text-gray-300" : "text-gray-500"}`}>
-                    {plan.period}
-                  </span>
-                </div>
-                <ul className="flex flex-col gap-3 mb-8 flex-1">
-                  {plan.features.map((f) => (
-                    <li key={f} className="text-sm font-light flex items-center gap-2">
-                      <span className={plan.highlighted ? "text-white" : "text-black"}>✦</span> {f}
-                    </li>
-                  ))}
-                </ul>
-                <Link
-                  to="/login"
-                  className={`text-center px-6 py-3 rounded-full text-sm font-light transition-transform duration-300 hover:-translate-y-1 ${
-                    plan.highlighted ? "bg-white text-black" : "bg-black text-white"
+          <section className="pb-32 px-6">
+            <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
+              {plans.map((plan) => (
+                <div
+                  key={plan.name}
+                  className={`flex flex-col rounded-3xl p-8 transition-all duration-300 hover:-translate-y-2 ${
+                    plan.highlighted
+                      ? "bg-black text-white shadow-[0_20px_60px_rgba(0,0,0,0.15)]"
+                      : "bg-[#F5F5F8] text-black"
                   }`}
                 >
-                  {plan.cta}
-                </Link>
-              </div>
-            ))}
-          </div>
-        </section>
+                  <h3 className="text-2xl font-normal mb-2">{plan.name}</h3>
+                  <p className={`text-sm font-light mb-6 ${plan.highlighted ? "text-gray-300" : "text-gray-500"}`}>
+                    {plan.description}
+                  </p>
+                  <div className="flex items-baseline gap-1 mb-8">
+                    <span className="text-5xl font-normal">{plan.price}</span>
+                    <span className={`text-sm font-light ${plan.highlighted ? "text-gray-300" : "text-gray-500"}`}>
+                      {plan.period}
+                    </span>
+                  </div>
+                  <ul className="flex flex-col gap-3 mb-8 flex-1">
+                    {plan.features.map((f) => (
+                      <li key={f} className="text-sm font-light flex items-center gap-2">
+                        <span className={plan.highlighted ? "text-white" : "text-black"}>✦</span> {f}
+                      </li>
+                    ))}
+                  </ul>
+                  <Link
+                    to="/login"
+                    className={`text-center px-6 py-3 rounded-full text-sm font-light transition-transform duration-300 hover:-translate-y-1 ${
+                      plan.highlighted ? "bg-white text-black" : "bg-black text-white"
+                    }`}
+                  >
+                    {plan.cta}
+                  </Link>
+                </div>
+              ))}
+            </div>
+          </section>
 
-        <footer className="py-16 px-6 text-center text-xs text-gray-400">
-          © Miiles, todos los derechos reservados, 2026
-        </footer>
+          <footer className="py-16 px-6 text-center text-xs text-gray-400">
+            © Miiles, todos los derechos reservados, 2026
+          </footer>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
