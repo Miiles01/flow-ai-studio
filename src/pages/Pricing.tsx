@@ -16,7 +16,7 @@ if (!CustomEase.get("osmo-ease")) {
   CustomEase.create("osmo-ease", "0.625, 0.05, 0, 1");
 }
 
-// Registro de efectos personalizados inspirados en el ejemplo del usuario
+// Registro de efectos personalizados
 gsap.registerEffect({
   name: "rotateIn",
   extendTimeline: true,
@@ -110,9 +110,11 @@ const plans = [
   },
 ];
 
-// Componente para el efecto de rotación 3D del precio (Sin Parpadeo)
+// Componente para el efecto de rotación 3D del precio sincronizado
 const RotatingPrice = ({ value }: { value: string }) => {
   const containerRef = useRef<HTMLDivElement>(null);
+  const currentRef = useRef<HTMLSpanElement>(null);
+  const nextRef = useRef<HTMLSpanElement>(null);
   const [prices, setPrices] = useState({ current: value, next: "" });
   const isAnimating = useRef(false);
 
@@ -122,17 +124,16 @@ const RotatingPrice = ({ value }: { value: string }) => {
   }, [value, prices.current]);
 
   useEffect(() => {
-    if (!prices.next || !containerRef.current) return;
+    if (!prices.next || !containerRef.current || !currentRef.current || !nextRef.current) return;
 
     isAnimating.current = true;
-    const ctx = gsap.context(() => {
-      const currentEl = containerRef.current?.querySelector(".current-price");
-      const nextEl = containerRef.current?.querySelector(".next-price");
-      
-      if (!currentEl || !nextEl) return;
+    
+    // Medir anchos
+    const nextWidth = nextRef.current.offsetWidth;
 
-      const splitCurrent = new SplitText(currentEl, { type: "chars" });
-      const splitNext = new SplitText(nextEl, { type: "chars" });
+    const ctx = gsap.context(() => {
+      const splitCurrent = new SplitText(currentRef.current, { type: "chars" });
+      const splitNext = new SplitText(nextRef.current, { type: "chars" });
 
       const tl = gsap.timeline({
         onComplete: () => {
@@ -140,15 +141,21 @@ const RotatingPrice = ({ value }: { value: string }) => {
           isAnimating.current = false;
           splitCurrent.revert();
           splitNext.revert();
+          gsap.set(containerRef.current, { width: "auto" });
         }
       });
 
-      // Asegurar que el siguiente valor esté listo pero invisible inicialmente
-      gsap.set(nextEl, { autoAlpha: 1 });
-      
-      // Transición cruzada: Uno sale, otro entra
-      (tl as any).rotateOut(splitCurrent.chars)
-        .rotateIn(splitNext.chars, { rotationX: 90, transformOrigin: "100% 0" }, "-=0.35");
+      // Animación de ancho del contenedor síncrona
+      tl.to(containerRef.current, {
+        width: nextWidth,
+        duration: 0.8,
+        ease: "elastic.out(1, 0.8)"
+      }, 0);
+
+      // Animación de los números
+      gsap.set(nextRef.current, { autoAlpha: 1 });
+      (tl as any).rotateOut(splitCurrent.chars, {}, 0)
+        .rotateIn(splitNext.chars, { rotationX: 90, transformOrigin: "100% 0" }, 0.1);
 
     }, containerRef);
 
@@ -156,10 +163,10 @@ const RotatingPrice = ({ value }: { value: string }) => {
   }, [prices.next, value]);
 
   return (
-    <div ref={containerRef} className="relative inline-flex items-baseline justify-start overflow-visible h-[1.1em] min-w-[0.6em]" style={{ perspective: "1000px" }}>
-      <span className="current-price inline-block">{prices.current}</span>
+    <div ref={containerRef} className="relative inline-flex items-baseline justify-start overflow-visible h-[1.1em]" style={{ perspective: "1000px" }}>
+      <span ref={currentRef} className="current-price inline-block">{prices.current}</span>
       {prices.next && (
-        <span className="next-price absolute left-0 top-0 inline-block opacity-0 whitespace-nowrap">{prices.next}</span>
+        <span ref={nextRef} className="next-price absolute left-0 top-0 inline-block opacity-0 whitespace-nowrap">{prices.next}</span>
       )}
     </div>
   );
@@ -244,24 +251,15 @@ const Pricing = () => {
                   <p className={`text-xs font-light mb-8 ${plan.highlighted ? "text-gray-400" : "text-gray-500"}`}>
                     {plan.description}
                   </p>
-                  <motion.div layout className="flex items-baseline gap-1 mb-10">
-                    <motion.div layout className="text-5xl font-normal tracking-tight flex items-baseline">
-                      <motion.span layout>$</motion.span>
-                      <motion.div 
-                        layout 
-                        transition={{ type: "spring", stiffness: 500, damping: 25, mass: 1 }}
-                      >
-                        <RotatingPrice value={cycle === "monthly" ? plan.monthlyPrice : plan.annualPrice} />
-                      </motion.div>
-                    </motion.div>
-                    <motion.span 
-                      layout
-                      transition={{ type: "spring", stiffness: 500, damping: 25, mass: 1 }}
-                      className={`text-xs font-light ${plan.highlighted ? "text-gray-500" : "text-gray-400"}`}
-                    >
+                  <div className="flex items-baseline gap-1 mb-10">
+                    <div className="text-5xl font-normal tracking-tight flex items-baseline">
+                      <span>$</span>
+                      <RotatingPrice value={cycle === "monthly" ? plan.monthlyPrice : plan.annualPrice} />
+                    </div>
+                    <span className={`text-xs font-light ${plan.highlighted ? "text-gray-500" : "text-gray-400"}`}>
                       /mes
-                    </motion.span>
-                  </motion.div>
+                    </span>
+                  </div>
                   <ul className="flex flex-col gap-4 mb-10 flex-1">
                     {plan.features.map((f) => (
                       <li key={f} className="text-xs font-light flex items-center gap-2">
