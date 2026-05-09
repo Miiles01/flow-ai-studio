@@ -1,19 +1,86 @@
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
+import { motion } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
 import { SplitText } from "gsap/SplitText";
 import { CustomEase } from "gsap/CustomEase";
-import logotipoSvg from "@/assets/miiles/logotipo.svg";
 import LandingNavbar from "@/components/LandingNavbar";
 import LandingFooter from "@/components/LandingFooter";
 
+// Registro de plugins de GSAP
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText, CustomEase);
+
 if (!CustomEase.get("osmo-ease")) {
   CustomEase.create("osmo-ease", "0.625, 0.05, 0, 1");
 }
+
+// Registro de efectos personalizados inspirados en el ejemplo del usuario
+gsap.registerEffect({
+  name: "rotateIn",
+  extendTimeline: true,
+  defaults: {
+    duration: 0.8,
+    rotationY: 0,
+    rotationX: 90,
+    transformOrigin: "100% 0",
+    ease: "back(2.3)",
+  },
+  effect: (targets: any, config: any) => {
+    let tl = gsap.timeline();
+    tl.from(targets, {
+      duration: config.duration,
+      rotationY: config.rotationY,
+      rotationX: config.rotationX,
+      transformOrigin: config.transformOrigin,
+      ease: config.ease,
+      stagger: 0.04,
+    });
+    tl.from(targets, {
+      duration: 0.3,
+      autoAlpha: 0,
+      ease: "none",
+      stagger: 0.03,
+    }, 0);
+    return tl;
+  },
+});
+
+gsap.registerEffect({
+  name: "rotateOut",
+  extendTimeline: true,
+  defaults: {
+    duration: 0.5,
+    x: 0,
+    y: 20,
+    rotationY: 0,
+    rotationX: -100,
+    rotationZ: 0,
+    transformOrigin: "100% 100%",
+    ease: "power1.in",
+  },
+  effect: (targets: any, config: any) => {
+    let tl = gsap.timeline();
+    tl.to(targets, {
+      x: config.x,
+      y: config.y,
+      rotationY: config.rotationY,
+      rotationX: config.rotationX,
+      rotationZ: config.rotationZ,
+      transformOrigin: config.transformOrigin,
+      ease: config.ease,
+      stagger: 0.03,
+    });
+    tl.to(targets, {
+      duration: 0.3,
+      opacity: 0,
+      ease: "none",
+      stagger: 0.02,
+    }, 0);
+    return tl;
+  },
+});
 
 const plans = [
   {
@@ -43,30 +110,52 @@ const plans = [
   },
 ];
 
-const ScramblePrice = ({ value }: { value: string }) => {
+// Componente para el efecto de rotación 3D del precio
+const RotatingPrice = ({ value }: { value: string }) => {
+  const elRef = useRef<HTMLSpanElement>(null);
   const [displayValue, setDisplayValue] = useState(value);
-  const characters = "0123456789X%&$#@";
+  const isFirstRender = useRef(true);
 
   useEffect(() => {
-    let frame = 0;
-    const maxFrames = 10;
-    const interval = setInterval(() => {
-      if (frame >= maxFrames) {
+    if (isFirstRender.current) {
+      isFirstRender.current = false;
+      return;
+    }
+
+    if (!elRef.current) return;
+
+    // Split actual
+    const split = new SplitText(elRef.current, { type: "chars" });
+    const tl = gsap.timeline({
+      onComplete: () => {
         setDisplayValue(value);
-        clearInterval(interval);
-        return;
+        split.revert();
+        
+        // Animación de entrada para el nuevo valor
+        requestAnimationFrame(() => {
+          if (!elRef.current) return;
+          const newSplit = new SplitText(elRef.current, { type: "chars" });
+          (gsap as any).effects.rotateIn(newSplit.chars, {
+            onComplete: () => newSplit.revert()
+          });
+        });
       }
-      const scrambled = value
-        .split("")
-        .map(() => characters[Math.floor(Math.random() * characters.length)])
-        .join("");
-      setDisplayValue(scrambled);
-      frame++;
-    }, 40);
-    return () => clearInterval(interval);
+    });
+
+    // Salida del valor actual
+    (tl as any).rotateOut(split.chars);
+
+    return () => {
+      tl.kill();
+      split.revert();
+    };
   }, [value]);
 
-  return <span>{displayValue}</span>;
+  return (
+    <span ref={elRef} className="inline-block" style={{ perspective: "800px" }}>
+      {displayValue}
+    </span>
+  );
 };
 
 const Pricing = () => {
@@ -150,7 +239,7 @@ const Pricing = () => {
                   </p>
                   <div className="flex items-baseline gap-1 mb-10">
                     <span className="text-5xl font-normal tracking-tight">
-                      $<ScramblePrice value={cycle === "monthly" ? plan.monthlyPrice : plan.annualPrice} />
+                      $<RotatingPrice value={cycle === "monthly" ? plan.monthlyPrice : plan.annualPrice} />
                     </span>
                     <span className={`text-xs font-light ${plan.highlighted ? "text-gray-500" : "text-gray-400"}`}>
                       /mes
