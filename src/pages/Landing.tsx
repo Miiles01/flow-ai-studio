@@ -222,17 +222,16 @@ const Landing = () => {
           </section>
           {/* TESTIMONIO */}
           <section className="py-40 px-6">
-            <div className="max-w-4xl mx-auto text-center">
+            <div className="max-w-4xl mx-auto text-center flex flex-col items-center">
+              <span className="text-6xl md:text-8xl font-serif leading-none mb-4 text-black">“</span>
               <h2 className="text-4xl md:text-6xl font-normal leading-tight tracking-tight mb-12">
-                "Luce realmente asombroso"
+                Luce realmente asombroso
               </h2>
-              <div className="flex justify-center">
-                <img 
-                  src="https://wearemiiles.com/wp-content/uploads/2025/03/Frame-2085662063.png" 
-                  alt="Karol Wegner - BeeSpeaker" 
-                  className="h-16 md:h-20 w-auto object-contain"
-                />
-              </div>
+              <img 
+                src="https://wearemiiles.com/wp-content/uploads/2025/03/Frame-2085662063.png" 
+                alt="Karol Wegner - BeeSpeaker" 
+                className="h-20 w-auto object-contain"
+              />
             </div>
           </section>
 
