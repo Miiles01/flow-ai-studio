@@ -15,7 +15,6 @@ const LandingNavbar = ({ onMenuAction }: LandingNavbarProps) => {
     { label: "Acerca de", href: "/acerca-de" },
     { label: "Funciones", href: "/funciones" },
     { label: "Precios", href: "/precios" },
-    { label: "Contacto", href: "/contacto" },
   ];
 
   const handleLinkClick = (href: string) => {
