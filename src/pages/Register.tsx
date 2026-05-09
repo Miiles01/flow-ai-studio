@@ -59,10 +59,6 @@ const Register = () => {
           className="w-full max-w-sm"
         >
           <div className="text-center mb-10">
-            <div className="inline-flex items-center gap-2 mb-6">
-              <img src={logoImg} alt="Miiles" className="w-8 h-8" />
-              <span className="font-normal text-foreground">Miiles</span>
-            </div>
             <h1 className="text-2xl font-normal text-foreground">Crear cuenta</h1>
           </div>
 
