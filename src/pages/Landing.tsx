@@ -229,9 +229,13 @@ const Landing = () => {
               </h2>
               <img 
                 src="https://wearemiiles.com/wp-content/uploads/2025/03/Frame-2085662063.png" 
-                alt="Karol Wegner - BeeSpeaker" 
-                className="h-20 w-auto object-contain"
+                alt="Karol Wegner" 
+                className="h-20 w-auto object-contain mb-4"
               />
+              <div className="flex flex-col items-center">
+                <span className="text-sm font-normal text-black">Karol Wegner</span>
+                <span className="text-[10px] text-gray-400 font-light mt-1">CEO de BeeSpeaker</span>
+              </div>
             </div>
           </section>
 
