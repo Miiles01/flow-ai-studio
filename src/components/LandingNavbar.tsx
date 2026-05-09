@@ -11,7 +11,6 @@ const LandingNavbar = ({ onMenuAction }: LandingNavbarProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   const menuItems = [
-    { label: "Ingresar", href: "/login" },
     { label: "Inicio", href: "/" },
     { label: "Acerca de", href: "/acerca-de" },
     { label: "Funciones", href: "/funciones" },
