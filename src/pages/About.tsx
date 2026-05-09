@@ -99,7 +99,7 @@ const About = () => {
                   <p>
                     En 2019, <span className="text-black font-normal">Miiles Horton</span> fundó Miiles como un estudio creativo. Construyó marcas, trabajó con emprendedores y descubrió el mismo problema en todos: no les faltaba talento ni visión.
                   </p>
-                  <p className="text-2xl md:text-3xl text-black font-normal leading-tight italic" style={{ fontFamily: "'Welth Catritz', serif" }}>
+                  <p className="text-2xl md:text-3xl text-black font-semibold leading-tight" style={{ fontFamily: "'Poppins', sans-serif" }}>
                     "Les faltaba el equipo correcto. Eso lo cambió todo."
                   </p>
                 </div>
