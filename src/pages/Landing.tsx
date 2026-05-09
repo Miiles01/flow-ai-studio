@@ -220,18 +220,29 @@ const Landing = () => {
               </div>
             </div>
           </section>
-          {/* LUCE REALMENTE ASOMBROSO */}
-          <section className="py-32 px-6">
-            <div className="max-w-6xl mx-auto text-center">
-              <h2 className="text-5xl md:text-8xl font-normal leading-tight tracking-tight mb-12">
-                Luce realmente <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>asombroso</span>
+          {/* TESTIMONIO */}
+          <section className="py-40 px-6">
+            <div className="max-w-4xl mx-auto text-center">
+              <h2 className="text-4xl md:text-6xl font-normal leading-tight tracking-tight mb-12">
+                "Luce realmente asombroso"
               </h2>
-              <div className="relative rounded-[3rem] overflow-hidden bg-[#F5F5F8] aspect-video md:aspect-[21/9]">
-                <img 
-                  src="https://wearemiiles.com/wp-content/uploads/2026/01/2121-1024x576.png" 
-                  alt="Asombroso" 
-                  className="w-full h-full object-cover"
-                />
+              <div className="flex items-center justify-center gap-4">
+                <div className="relative">
+                  <img 
+                    src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=100&h=100" 
+                    alt="Karol Wegner" 
+                    className="w-12 h-12 rounded-full object-cover"
+                  />
+                  <div className="absolute -right-1 -bottom-1 bg-white rounded-full p-1 shadow-sm">
+                    <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <path d="M12 2L15.09 8.26L22 9.27L17 14.14L18.18 21.02L12 17.77L5.82 21.02L7 14.14L2 9.27L8.91 8.26L12 2Z" fill="#FFD700"/>
+                    </svg>
+                  </div>
+                </div>
+                <div className="flex flex-col items-start text-left">
+                  <span className="text-sm font-normal text-black">Karol Wegner</span>
+                  <span className="text-[10px] text-gray-400 font-light uppercase tracking-wider">CEO de BeeSpeaker</span>
+                </div>
               </div>
             </div>
           </section>
