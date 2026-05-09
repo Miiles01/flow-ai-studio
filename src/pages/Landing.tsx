@@ -143,12 +143,6 @@ const Landing = () => {
               </div>
             </div>
 
-            {/* gradient blob con parallax */}
-            <div
-              data-speed="0.8"
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full opacity-10 blur-3xl pointer-events-none -z-10"
-              style={{ background: "linear-gradient(135deg, #FCB5B9 0%, #B8A4F8 50%, #4059F1 100%)" }}
-            />
           </section>
 
           {/* BRAND CAROUSEL */}
