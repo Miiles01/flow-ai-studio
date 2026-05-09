@@ -167,7 +167,7 @@ const Landing = () => {
             <div
               ref={videoWrapRef}
               style={{ width: "65%" }}
-              className="rounded-2xl overflow-hidden shadow-2xl"
+              className="rounded-2xl overflow-hidden"
             >
               <video
                 src={videoHome}
