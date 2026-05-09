@@ -63,7 +63,6 @@ const Register = () => {
               <span className="font-normal text-foreground">Miiles</span>
             </div>
             <h1 className="text-2xl font-normal text-foreground">Crear cuenta</h1>
-            <p className="text-sm text-miiles-gray-400 font-light mt-2">Empieza a gestionar tus colaboraciones</p>
           </div>
 
           <form onSubmit={handleRegister} className="space-y-4">

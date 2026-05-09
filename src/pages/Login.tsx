@@ -55,7 +55,6 @@ const Login = () => {
               <span className="font-normal text-foreground">Miiles</span>
             </div>
             <h1 className="text-2xl font-normal text-foreground">Iniciar sesión</h1>
-            <p className="text-sm text-miiles-gray-400 font-light mt-2">Accede a tu plataforma de colaboraciones</p>
           </div>
 
           <form onSubmit={handleLogin} className="space-y-4">
