@@ -237,21 +237,24 @@ const Pricing = () => {
                   <p className={`text-xs font-light mb-8 ${plan.highlighted ? "text-gray-400" : "text-gray-500"}`}>
                     {plan.description}
                   </p>
-                  <div className="flex items-baseline gap-1 mb-10">
-                    <div className="text-5xl font-normal tracking-tight flex items-baseline">
-                      <span>$</span>
-                      <motion.div layout transition={{ type: "spring", stiffness: 300, damping: 30 }}>
+                  <motion.div layout className="flex items-baseline gap-1 mb-10">
+                    <motion.div layout className="text-5xl font-normal tracking-tight flex items-baseline">
+                      <motion.span layout>$</motion.span>
+                      <motion.div 
+                        layout 
+                        transition={{ type: "spring", stiffness: 500, damping: 25, mass: 1 }}
+                      >
                         <RotatingPrice value={cycle === "monthly" ? plan.monthlyPrice : plan.annualPrice} />
                       </motion.div>
-                    </div>
+                    </motion.div>
                     <motion.span 
                       layout
-                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
+                      transition={{ type: "spring", stiffness: 500, damping: 25, mass: 1 }}
                       className={`text-xs font-light ${plan.highlighted ? "text-gray-500" : "text-gray-400"}`}
                     >
                       /mes
                     </motion.span>
-                  </div>
+                  </motion.div>
                   <ul className="flex flex-col gap-4 mb-10 flex-1">
                     {plan.features.map((f) => (
                       <li key={f} className="text-xs font-light flex items-center gap-2">
