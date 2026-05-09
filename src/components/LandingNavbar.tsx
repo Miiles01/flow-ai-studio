@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import logotipoSvg from "@/assets/miiles/logotipo.svg";
 
 interface LandingNavbarProps {
   onMenuAction?: (id: string) => void;
@@ -39,7 +38,7 @@ const LandingNavbar = ({ onMenuAction }: LandingNavbarProps) => {
         {/* NAV — flotante estilo glass */}
         <nav className="w-full flex items-center justify-between gap-4 md:gap-16 px-6 md:px-8 py-2.5 bg-white/40 backdrop-blur-2xl border border-white/20 rounded-full shadow-[0_8px_32px_rgba(0,0,0,0.05)]">
           <Link to="/" className="flex items-center shrink-0">
-            <img src={logotipoSvg} alt="Miiles" className="h-5 w-auto" />
+            <img src="/logotipo.svg" alt="Miiles" className="h-5 w-auto" />
           </Link>
 
           <div className="flex items-center gap-4 md:gap-6 shrink-0">

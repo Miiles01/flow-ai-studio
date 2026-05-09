@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import logotipoSvg from "@/assets/miiles/logotipo.svg";
 
 const LandingFooter = () => {
   return (
@@ -39,7 +38,7 @@ const LandingFooter = () => {
 
       {/* logotipo grande */}
       <div className="w-full max-w-7xl mx-auto px-4 md:px-10 flex justify-center mt-12">
-        <img src={logotipoSvg} alt="miiles" className="w-full h-auto object-contain object-center block mx-auto" />
+        <img src="/logotipo.svg" alt="miiles" className="w-full h-auto object-contain object-center block mx-auto" />
       </div>
     </footer>
   );
