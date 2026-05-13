@@ -23,7 +23,7 @@ import {
 const mainNav = [
   { title: "Inicio", url: "/dashboard", icon: Home },
   { title: "Programas", url: "/programs", icon: ShoppingBag },
-  { title: "Búsqueda IA", url: "/search", icon: Bot },
+  // { title: "Búsqueda IA", url: "/search", icon: Bot },
 ];
 
 type Conversation = { id: string; title: string; updated_at: string };
@@ -127,7 +127,8 @@ function SidebarBody() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {/* AI Chat history */}
+        {/* AI Chat history (Hidden temporarily) */}
+        {/*
         {!collapsed && (
           <SidebarGroup className="mt-2 min-h-0 flex-1 overflow-hidden flex flex-col">
             <div className="flex items-center justify-between px-3 pr-2">
@@ -175,6 +176,7 @@ function SidebarBody() {
             </SidebarGroupContent>
           </SidebarGroup>
         )}
+        */}
 
         {collapsed && <div className="flex-1" />}
 
