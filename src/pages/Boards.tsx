@@ -1,35 +1,64 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { Loader2, Plus, LayoutDashboard } from "lucide-react";
+import { Loader2, Plus, LayoutDashboard, Trash2 } from "lucide-react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-import placeholderMiro from "@/assets/miro-placeholder.jpg"; // Wait, I need to know how to save the image.
+import { toast } from "sonner";
 
-// I will import the image directly or use an absolute path for now, but usually it's better to put the image in public or assets.
-// Since the image was generated in the artifacts directory, I will copy it to src/assets later.
+type FlowRow = { id: string; name: string; updated_at: string };
+
 export default function Boards() {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [flows, setFlows] = useState<any[]>([]);
+  const [flows, setFlows] = useState<FlowRow[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
+  const fetchFlows = async () => {
     if (!user) return;
-    supabase
+    const { data, error } = await supabase
       .from("flows")
       .select("id, name, updated_at")
       .eq("user_id", user.id)
-      .order("updated_at", { ascending: false })
-      .then(({ data }) => {
-        setFlows(data || []);
-        setLoading(false);
-      });
+      .order("updated_at", { ascending: false });
+    if (error) toast.error("Error al cargar tableros");
+    setFlows((data as FlowRow[]) || []);
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchFlows();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
+
+  const handleCreate = async () => {
+    if (!user) return;
+    const { data, error } = await supabase
+      .from("flows")
+      .insert([{ user_id: user.id, name: `Tablero ${new Date().toLocaleDateString("es")}`, nodes: [], edges: [] }])
+      .select()
+      .single();
+    if (error || !data) {
+      toast.error("No se pudo crear el tablero");
+      return;
+    }
+    navigate(`/boards/${data.id}`);
+  };
+
+  const handleDelete = async (e: React.MouseEvent, id: string) => {
+    e.stopPropagation();
+    const { error } = await supabase.from("flows").delete().eq("id", id);
+    if (error) {
+      toast.error("Error al eliminar");
+      return;
+    }
+    toast.success("Tablero eliminado");
+    setFlows((prev) => prev.filter((f) => f.id !== id));
+  };
 
   if (loading) {
     return (
-      <div className="flex items-center justify-center h-full">
+      <div className="flex items-center justify-center h-full py-20">
         <Loader2 size={24} className="animate-spin text-miiles-gray-400" />
       </div>
     );
@@ -41,7 +70,7 @@ export default function Boards() {
         <h1 className="text-2xl md:text-3xl font-normal">Mis Tableros</h1>
         <button
           className="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-full text-sm font-light hover:bg-miiles-pink transition-colors"
-          onClick={() => navigate("/")} // Assuming flow builder is at root
+          onClick={handleCreate}
         >
           <Plus size={16} />
           Nuevo tablero
@@ -62,21 +91,30 @@ export default function Boards() {
               initial={{ y: 10, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: i * 0.05 }}
-              className="bg-background rounded-xl border border-muted overflow-hidden cursor-pointer hover:shadow-md transition-shadow group"
-              onClick={() => navigate("/")} // Navigate to flow editor
+              className="bg-background rounded-xl border border-muted overflow-hidden cursor-pointer hover:shadow-md transition-shadow group relative"
+              onClick={() => navigate(`/boards/${flow.id}`)}
             >
               <div className="aspect-[4/3] bg-muted relative overflow-hidden">
-                <img 
-                  src="/miro_placeholder.png" 
-                  alt="Board preview" 
+                <img
+                  src="/miro_placeholder.png"
+                  alt="Board preview"
                   className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
                 />
               </div>
-              <div className="p-4">
-                <h3 className="font-normal text-sm">{flow.name}</h3>
-                <p className="text-xs font-light text-muted-foreground mt-1">
-                  Actualizado: {new Date(flow.updated_at).toLocaleDateString("es-ES")}
-                </p>
+              <div className="p-4 flex items-center justify-between">
+                <div className="min-w-0">
+                  <h3 className="font-normal text-sm truncate">{flow.name}</h3>
+                  <p className="text-xs font-light text-muted-foreground mt-1">
+                    Actualizado: {new Date(flow.updated_at).toLocaleDateString("es-ES")}
+                  </p>
+                </div>
+                <button
+                  onClick={(e) => handleDelete(e, flow.id)}
+                  className="p-2 rounded-full opacity-0 group-hover:opacity-100 hover:bg-miiles-pink-light text-miiles-pink transition-all"
+                  aria-label="Eliminar"
+                >
+                  <Trash2 size={14} />
+                </button>
               </div>
             </motion.div>
           ))}
