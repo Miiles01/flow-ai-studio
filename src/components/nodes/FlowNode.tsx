@@ -33,23 +33,23 @@ const FlowNode = ({ data, selected }: NodeProps) => {
       initial={{ scale: 0.95, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       className={`
-        relative px-6 py-5 rounded-md bg-white min-w-[180px] max-w-[260px]
-        transition-all duration-300 font-sans
-        ${selected ? "shadow-md ring-2 ring-miiles-blue" : "shadow-md"}
+        relative px-6 py-4 rounded-[16px] bg-white min-w-[180px] max-w-[260px]
+        transition-all duration-300 font-sans group border-[1.5px]
+        ${selected ? "border-[#4F46E5] shadow-sm" : "border-transparent shadow-[0_8px_30px_rgb(0,0,0,0.04)]"}
       `}
     >
       <Handle
         type="target"
         position={Position.Top}
-        className="!w-2.5 !h-2.5 !bg-white !border-2 !border-miiles-blue !-top-1.5"
+        className={`!w-[11px] !h-[11px] !bg-white !border-[1.5px] !border-[#4F46E5] !-top-1.5 transition-all duration-200 hover:!bg-[#4F46E5] ${selected ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}
       />
       
       <div className="flex flex-col gap-2">
-        <div className="flex items-center justify-between gap-2">
+        <div className="flex items-center justify-between gap-3">
           <p className="text-[15px] font-normal text-black truncate tracking-tight">
             {nodeData.label}
           </p>
-          <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${typeAccents[nodeType]}`} />
+          <div className={`w-1.5 h-1.5 rounded-full shrink-0 ${typeAccents[nodeType] || "bg-[#4F46E5]"}`} />
         </div>
         {nodeData.description && (
           <p className="text-[13px] font-light text-miiles-gray-400 leading-relaxed">
@@ -61,7 +61,7 @@ const FlowNode = ({ data, selected }: NodeProps) => {
       <Handle
         type="source"
         position={Position.Bottom}
-        className="!w-2.5 !h-2.5 !bg-white !border-2 !border-miiles-blue !-bottom-1.5"
+        className={`!w-[11px] !h-[11px] !bg-white !border-[1.5px] !border-[#4F46E5] !-bottom-1.5 transition-all duration-200 hover:!bg-[#4F46E5] ${selected ? "opacity-100" : "opacity-0 group-hover:opacity-100"}`}
       />
     </motion.div>
   );
