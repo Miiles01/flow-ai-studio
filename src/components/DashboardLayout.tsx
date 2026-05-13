@@ -152,7 +152,7 @@ function SidebarBody() {
               )}
             </div>
             <div className="min-w-0">
-              <p className="text-[15px] font-normal truncate">{displayName || "Usuario"}</p>
+              <p className="text-[15px] font-normal truncate">{displayName ? displayName.split(" ")[0] : "Usuario"}</p>
               <p className="text-[13px] text-muted-foreground font-light">Plan Gratis</p>
             </div>
           </div>
