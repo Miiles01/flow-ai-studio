@@ -37,6 +37,7 @@ const Index = () => {
   const [name, setName] = useState("Tablero sin título");
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [interactionMode, setInteractionMode] = useState<"edit" | "pan">("edit");
   const nodeCounter = useRef(0);
 
   // Load flow by id
@@ -181,6 +182,11 @@ const Index = () => {
           onConnect={onConnect}
           nodeTypes={nodeTypes}
           connectionMode={ConnectionMode.Loose}
+          panOnDrag={interactionMode === "pan"}
+          selectionOnDrag={interactionMode === "edit"}
+          nodesDraggable={interactionMode === "edit"}
+          nodesConnectable={interactionMode === "edit"}
+          elementsSelectable={interactionMode === "edit"}
           fitView
           proOptions={{ hideAttribution: true }}
           className="bg-white"
@@ -189,7 +195,11 @@ const Index = () => {
           <Controls position="bottom-left" showInteractive={false} />
         </ReactFlow>
 
-        <Toolbar onAddNode={handleAddNode} />
+        <Toolbar 
+          onAddNode={handleAddNode} 
+          interactionMode={interactionMode}
+          setInteractionMode={setInteractionMode}
+        />
         <AIPromptBar onGenerate={handleAIGenerate} isGenerating={isGenerating} />
       </div>
     </div>
