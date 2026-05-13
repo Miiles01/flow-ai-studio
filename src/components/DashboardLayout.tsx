@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useState, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Home, ShoppingBag, User, Bot, Plus, MessageSquare, Trash2 } from "lucide-react";
+import { Home, ShoppingBag, User, Bot, Plus, MessageSquare, Trash2, LayoutDashboard } from "lucide-react";
 import logoImg from "@/assets/logo.png";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -22,6 +22,7 @@ import {
 
 const mainNav = [
   { title: "Inicio", url: "/dashboard", icon: Home },
+  { title: "Tableros", url: "/boards", icon: LayoutDashboard },
   { title: "Programas", url: "/programs", icon: ShoppingBag },
   // { title: "Búsqueda IA", url: "/search", icon: Bot },
 ];

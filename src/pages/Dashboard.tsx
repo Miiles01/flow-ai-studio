@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { Bell, Heart, ArrowRight, Loader2, Send, X, Trash2 } from "lucide-react";
+import { Bell, Heart, ArrowRight, Loader2, Send, X, Trash2, LayoutDashboard } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -54,7 +54,7 @@ type UserApplication = {
 export default function Dashboard() {
   const { user } = useAuth();
   const [displayName, setDisplayName] = useState("");
-  const [featured, setFeatured] = useState<Program[]>([]);
+  const [flows, setFlows] = useState<any[]>([]);
   const [savedCount, setSavedCount] = useState(0);
   const [applications, setApplications] = useState<UserApplication[]>([]);
   const [appsOpen, setAppsOpen] = useState(false);
@@ -78,13 +78,13 @@ export default function Dashboard() {
     if (!user) return;
     Promise.all([
       supabase.from("profiles").select("display_name").eq("user_id", user.id).single(),
-      supabase.from("brand_programs").select("*").eq("is_featured", true).limit(4),
+      supabase.from("flows").select("id, name, updated_at").eq("user_id", user.id).order("updated_at", { ascending: false }).limit(5),
       supabase.from("user_applications").select("id", { count: "exact" }).eq("user_id", user.id),
       supabase.from("notifications").select("*").eq("recipient_id", user.id).order("created_at", { ascending: false }).limit(50),
       supabase.from("user_roles").select("role").eq("user_id", user.id).eq("role", "admin").maybeSingle(),
-    ]).then(async ([profileRes, programsRes, appsRes, notifRes, roleRes]) => {
+    ]).then(async ([profileRes, flowsRes, appsRes, notifRes, roleRes]) => {
       setDisplayName(profileRes.data?.display_name || user.email?.split("@")[0] || "");
-      setFeatured((programsRes.data as Program[]) || []);
+      setFlows(flowsRes.data || []);
       setSavedCount(appsRes.count || 0);
       setNotifications((notifRes.data as Notification[]) || []);
       setIsAdmin(!!roleRes.data);
@@ -455,55 +455,66 @@ export default function Dashboard() {
         </DialogContent>
       </Dialog>
 
-      {/* Featured programs */}
+      {/* Boards Carousel */}
       <div>
         <div className="flex items-center justify-between mb-5">
-          <h2 className="text-lg font-normal">Programas destacados</h2>
-          <Link to="/programs" className="hidden text-xs text-accent hover:underline items-center gap-1 font-light">
+          <h2 className="text-lg font-normal">Mis tableros</h2>
+          <Link to="/boards" className="text-xs text-accent hover:underline flex items-center gap-1 font-light">
             Ver todos <ArrowRight size={12} />
           </Link>
         </div>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {featured.map((p, i) => (
-            <motion.div
-              key={p.id}
-              initial={{ y: 10, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: i * 0.05 }}
-              className="rounded-lg shadow-md hover:shadow-sm transition-shadow duration-200 overflow-hidden"
-            >
-              {p.banner_url && (
-                <img
-                  src={p.banner_url}
-                  alt={p.brand_name}
-                  className="w-full h-44 object-cover"
-                  style={{ objectPosition: `center ${p.banner_position}%` }}
-                  loading="lazy"
-                />
-              )}
-              <div className="p-6">
-              <div className="flex items-start justify-between">
-                <div>
-                  <p className="font-normal">{p.brand_name}</p>
-                  <p className="text-xs text-miiles-gray-400 font-light mt-0.5">{p.name}</p>
-                </div>
-                {p.commission_rate && (
-                  <span className="text-xs bg-miiles-blue-light text-miiles-blue px-3 py-1 rounded-full font-light">
-                    {p.commission_rate}
-                  </span>
-                )}
-              </div>
-              <p className="text-sm text-miiles-gray-400 font-light mt-4 line-clamp-2">{p.description}</p>
-              <Link
-                to={`/programs/${p.id}`}
-                className="text-xs text-accent mt-4 inline-flex items-center gap-1 hover:underline font-light"
+        
+        {flows.length === 0 ? (
+          <div className="text-center py-16 bg-background rounded-xl border border-dashed border-muted">
+            <LayoutDashboard size={40} className="mx-auto text-muted-foreground/50 mb-3" />
+            <p className="text-sm font-normal mb-1">Sin tableros recientes</p>
+            <p className="text-xs font-light text-muted-foreground">Crea uno nuevo para organizar tus ideas.</p>
+            <Link to="/boards" className="mt-4 inline-block px-4 py-2 bg-foreground text-background text-xs rounded-full">
+              Crear tablero
+            </Link>
+          </div>
+        ) : (
+          <div className="flex gap-4 overflow-x-auto pb-6 snap-x snap-mandatory scrollbar-hide -mx-8 px-8 md:mx-0 md:px-0">
+            {flows.map((flow, i) => (
+              <motion.div
+                key={flow.id}
+                initial={{ x: 20, opacity: 0 }}
+                animate={{ x: 0, opacity: 1 }}
+                transition={{ delay: i * 0.05 }}
+                className="snap-start shrink-0 w-[280px] md:w-[320px] rounded-xl shadow-sm border border-muted bg-background hover:shadow-md transition-all duration-200 overflow-hidden cursor-pointer group"
               >
-                Ver detalles <ArrowRight size={12} />
-              </Link>
+                <Link to="/">
+                  <div className="aspect-[4/3] relative overflow-hidden bg-muted">
+                    <img
+                      src="/miro_placeholder.png"
+                      alt={flow.name}
+                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+                      loading="lazy"
+                    />
+                  </div>
+                  <div className="p-4">
+                    <h3 className="font-normal text-sm truncate">{flow.name}</h3>
+                    <p className="text-xs text-muted-foreground font-light mt-1">
+                      {new Date(flow.updated_at).toLocaleDateString("es-ES")}
+                    </p>
+                  </div>
+                </Link>
+              </motion.div>
+            ))}
+            
+            {/* "Ver todos" card at the end of the carousel */}
+            {flows.length >= 5 && (
+              <div className="snap-start shrink-0 w-[120px] rounded-xl border border-dashed border-muted bg-background flex items-center justify-center cursor-pointer hover:bg-muted/50 transition-colors">
+                <Link to="/boards" className="flex flex-col items-center gap-2 text-muted-foreground hover:text-foreground">
+                  <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
+                    <ArrowRight size={16} />
+                  </div>
+                  <span className="text-xs font-light">Ver todos</span>
+                </Link>
               </div>
-            </motion.div>
-          ))}
-        </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

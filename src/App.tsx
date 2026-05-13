@@ -11,6 +11,7 @@ import About from "./pages/About";
 import Pricing from "./pages/Pricing";
 import Features from "./pages/Features";
 import Dashboard from "./pages/Dashboard";
+import Boards from "./pages/Boards";
 import Programs from "./pages/Programs";
 import ProgramDetail from "./pages/ProgramDetail";
 import SearchAI from "./pages/SearchAI";
@@ -81,6 +82,7 @@ const App = () => (
             <Route path="/precios" element={<Pricing />} />
             <Route path="/funciones" element={<Features />} />
             <Route path="/dashboard" element={<DashboardRoute><Dashboard /></DashboardRoute>} />
+            <Route path="/boards" element={<DashboardRoute><Boards /></DashboardRoute>} />
             <Route path="/programs" element={<DashboardRoute><Programs /></DashboardRoute>} />
             <Route path="/programs/:id" element={<ProgramDetail />} />
             <Route path="/p/:slug" element={<ProgramDetail />} />
