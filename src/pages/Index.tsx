@@ -146,18 +146,19 @@ const Index = () => {
     <div className="w-screen h-screen bg-background overflow-hidden relative flex flex-col">
       {/* Top bar */}
       <header className="absolute top-0 left-0 right-0 h-20 flex items-center justify-between px-6 z-20 pointer-events-none">
-        <div className="flex items-center gap-3 min-w-0 pointer-events-auto">
+        <div className="flex items-center gap-1 pl-2 pr-4 py-1.5 rounded-full bg-white shadow-[0_8px_30px_rgb(0,0,0,0.06)] min-w-0 pointer-events-auto">
           <button
             onClick={() => navigate("/boards")}
-            className="p-2 rounded-full hover:bg-black/5 transition-colors"
+            className="p-2 rounded-full hover:bg-[#F3F4F6] transition-colors text-[#6B7280] hover:text-black"
             aria-label="Volver"
           >
             <ArrowLeft size={18} strokeWidth={1.5} />
           </button>
+          <div className="w-[1px] h-5 bg-[#E5E7EB] mx-1" />
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="bg-transparent text-[15px] font-normal tracking-tight outline-none focus:ring-0 px-2 py-1 rounded hover:bg-black/5 transition-colors min-w-0 max-w-[40vw]"
+            className="bg-transparent text-[14px] font-normal tracking-tight outline-none focus:ring-0 px-2 py-1 rounded hover:bg-[#F3F4F6] transition-colors min-w-0 max-w-[40vw]"
           />
         </div>
         <button
