@@ -164,7 +164,7 @@ const Index = () => {
         <button
           onClick={handleSave}
           disabled={saving}
-          className="pointer-events-auto flex items-center gap-2 px-5 py-2.5 rounded-full bg-black text-white text-[13px] font-light hover:bg-black/90 transition-all hover:scale-[1.02] disabled:opacity-40 shadow-sm"
+          className="pointer-events-auto flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-black shadow-[0_8px_30px_rgb(0,0,0,0.06)] text-[13px] font-normal hover:bg-[#F3F4F6] transition-all hover:scale-[1.02] disabled:opacity-40"
         >
           {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} strokeWidth={1.5} />}
           Guardar
