@@ -58,10 +58,13 @@ function SidebarBody() {
     <Sidebar
       collapsible="icon"
       variant="floating"
-      className="m-4 md:m-6 border-none shadow-none rounded-[50px] overflow-hidden"
-      style={{ background: "linear-gradient(to bottom, #FDFDFD, #F8F9FD)" }}
+      className="m-4 md:m-6 border-none shadow-none [&>div[data-sidebar=sidebar]]:bg-transparent [&>div[data-sidebar=sidebar]]:border-none [&>div[data-sidebar=sidebar]]:shadow-none"
     >
-      <SidebarContent className="flex flex-col h-full py-4">
+      <div 
+        className="flex flex-col h-full rounded-[50px] overflow-hidden w-full"
+        style={{ background: "linear-gradient(to bottom, #FDFDFD, #F8F9FD)" }}
+      >
+        <SidebarContent className="flex flex-col h-full py-4 bg-transparent">
         {/* Logo */}
         <div className={`pt-6 pb-8 flex flex-col ${collapsed ? "items-center px-2" : "px-8"}`}>
           <div className="flex items-center gap-3">
@@ -139,7 +142,8 @@ function SidebarBody() {
             </div>
           </div>
         )}
-      </SidebarContent>
+        </SidebarContent>
+      </div>
     </Sidebar>
   );
 }
