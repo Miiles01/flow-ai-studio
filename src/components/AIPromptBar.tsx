@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
-import { motion } from "framer-motion";
-import { Plus, LayoutGrid, Mic, ArrowUp, Loader2 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { Plus, LayoutGrid, Mic, ArrowUp, Loader2, EyeOff } from "lucide-react";
 
 type AIPromptBarProps = {
   onGenerate: (prompt: string) => void;
@@ -9,6 +9,10 @@ type AIPromptBarProps = {
 
 const AIPromptBar = ({ onGenerate, isGenerating }: AIPromptBarProps) => {
   const [prompt, setPrompt] = useState("");
+  const [isExpanded, setIsExpanded] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
+  const [isFocused, setIsFocused] = useState(false);
+  
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
   useEffect(() => {
@@ -32,60 +36,116 @@ const AIPromptBar = ({ onGenerate, isGenerating }: AIPromptBarProps) => {
     }
   };
 
-  return (
-    <motion.div
-      initial={{ y: 40, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      className="absolute bottom-12 inset-x-0 mx-auto z-10 w-full max-w-3xl px-6"
-    >
-      <div className="bg-black rounded-[40px] pt-8 pb-4 px-6 shadow-2xl transition-all duration-300">
-        <textarea
-          ref={textareaRef}
-          rows={1}
-          value={prompt}
-          onChange={(e) => setPrompt(e.target.value)}
-          onKeyDown={handleKeyDown}
-          placeholder="Describe tu flujo o idea..."
-          className="w-full bg-transparent text-white font-light text-[15px] placeholder:text-white/40 outline-none resize-none overflow-hidden min-h-[44px] leading-relaxed text-center placeholder:text-center"
-          disabled={isGenerating}
-        />
-        
-        <div className="flex items-center justify-between mt-2">
-          <div className="flex items-center gap-3">
-            <button 
-              type="button"
-              className="w-10 h-10 rounded-full flex items-center justify-center bg-white/10 text-white/70 hover:bg-white/20 hover:text-white transition-all"
-            >
-              <Plus size={18} strokeWidth={1.5} />
-            </button>
-            <div className="flex items-center gap-2 bg-white/10 h-10 px-4 rounded-full cursor-pointer hover:bg-white/20 transition-all group">
-              <LayoutGrid size={15} strokeWidth={1.5} className="text-white/70 group-hover:text-white transition-colors" />
-              <span className="text-[13px] font-light text-white/70 group-hover:text-white transition-colors tracking-wider">Apps</span>
-            </div>
-          </div>
+  const showHideButton = isHovered || isFocused;
 
-          <div className="flex items-center gap-3">
-            <button 
-              type="button"
-              className="w-10 h-10 rounded-full flex items-center justify-center bg-white/10 text-white/70 hover:bg-white/20 hover:text-white transition-all"
-            >
-              <Mic size={18} strokeWidth={1.5} />
-            </button>
+  return (
+    <div className="absolute bottom-12 inset-x-0 flex flex-col items-center justify-end z-10 pointer-events-none">
+      <AnimatePresence mode="wait">
+        {!isExpanded ? (
+          <motion.div
+            key="collapsed"
+            initial={{ scale: 0.8, opacity: 0, y: 20 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            exit={{ scale: 0.8, opacity: 0, y: 20 }}
+            transition={{ type: "spring", bounce: 0.4, duration: 0.5 }}
+            className="pointer-events-auto"
+          >
             <button
-              onClick={() => handleSubmit()}
-              disabled={!prompt.trim() || isGenerating}
-              className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/70 transition-all duration-300 hover:bg-white/20 hover:text-white disabled:opacity-30 disabled:transform-none"
+              onClick={() => setIsExpanded(true)}
+              className="w-[52px] h-[52px] bg-black rounded-[18px] flex items-center justify-center shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:-translate-y-1.5 transition-transform duration-300"
+              aria-label="Abrir asistente IA"
             >
-              {isGenerating ? (
-                <Loader2 size={18} className="animate-spin" />
-              ) : (
-                <ArrowUp size={18} strokeWidth={1.5} />
-              )}
+              <img src="/isotipo.svg" alt="AI" className="w-7 h-7" />
             </button>
-          </div>
-        </div>
-      </div>
-    </motion.div>
+          </motion.div>
+        ) : (
+          <motion.div
+            key="expanded"
+            initial={{ y: 40, opacity: 0, scale: 0.95 }}
+            animate={{ y: 0, opacity: 1, scale: 1 }}
+            exit={{ y: 40, opacity: 0, scale: 0.95 }}
+            transition={{ type: "spring", bounce: 0.3, duration: 0.5 }}
+            className="relative w-full max-w-3xl px-6 pointer-events-auto flex flex-col"
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+          >
+            {/* Hide button sliding from behind */}
+            <div className="absolute top-0 left-0 right-0 h-0 flex justify-center pointer-events-none">
+              <AnimatePresence>
+                {showHideButton && (
+                  <motion.div
+                    initial={{ y: 20, opacity: 0, scale: 0.8 }}
+                    animate={{ y: -24, opacity: 1, scale: 1 }}
+                    exit={{ y: 20, opacity: 0, scale: 0.8 }}
+                    transition={{ type: "spring", bounce: 0.4, duration: 0.4 }}
+                    className="z-0 pointer-events-auto"
+                  >
+                    <button
+                      onClick={() => setIsExpanded(false)}
+                      className="w-10 h-10 bg-black text-white rounded-full flex items-center justify-center shadow-lg hover:bg-black/80 transition-colors"
+                      title="Ocultar asistente"
+                    >
+                      <EyeOff size={16} strokeWidth={1.5} />
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Main Prompt Bar */}
+            <div className="bg-black rounded-[40px] pt-8 pb-4 px-6 shadow-2xl transition-all duration-300 relative z-10 w-full">
+              <textarea
+                ref={textareaRef}
+                rows={1}
+                value={prompt}
+                onChange={(e) => setPrompt(e.target.value)}
+                onKeyDown={handleKeyDown}
+                onFocus={() => setIsFocused(true)}
+                onBlur={() => setIsFocused(false)}
+                placeholder="Describe tu flujo o idea..."
+                className="w-full bg-transparent text-white font-light text-[15px] placeholder:text-white/40 outline-none resize-none overflow-hidden min-h-[44px] leading-relaxed text-center placeholder:text-center"
+                disabled={isGenerating}
+              />
+              
+              <div className="flex items-center justify-between mt-2">
+                <div className="flex items-center gap-3">
+                  <button 
+                    type="button"
+                    className="w-10 h-10 rounded-full flex items-center justify-center bg-white/10 text-white/70 hover:bg-white/20 hover:text-white transition-all"
+                  >
+                    <Plus size={18} strokeWidth={1.5} />
+                  </button>
+                  <div className="flex items-center gap-2 bg-white/10 h-10 px-4 rounded-full cursor-pointer hover:bg-white/20 transition-all group">
+                    <LayoutGrid size={15} strokeWidth={1.5} className="text-white/70 group-hover:text-white transition-colors" />
+                    <span className="text-[13px] font-light text-white/70 group-hover:text-white transition-colors tracking-wider">Apps</span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-3">
+                  <button 
+                    type="button"
+                    className="w-10 h-10 rounded-full flex items-center justify-center bg-white/10 text-white/70 hover:bg-white/20 hover:text-white transition-all"
+                  >
+                    <Mic size={18} strokeWidth={1.5} />
+                  </button>
+                  <button
+                    onClick={() => handleSubmit()}
+                    disabled={!prompt.trim() || isGenerating}
+                    className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/70 transition-all duration-300 hover:bg-white/20 hover:text-white disabled:opacity-30 disabled:transform-none"
+                  >
+                    {isGenerating ? (
+                      <Loader2 size={18} className="animate-spin" />
+                    ) : (
+                      <ArrowUp size={18} strokeWidth={1.5} />
+                    )}
+                  </button>
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+    </div>
   );
 };
 
