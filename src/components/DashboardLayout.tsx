@@ -97,7 +97,7 @@ function SidebarBody() {
         {/* Main navigation */}
         <SidebarGroup className="px-6">
           <SidebarGroupContent>
-            <SidebarMenu className="space-y-4">
+            <SidebarMenu className="space-y-6">
               {mainNav.map((item) => (
                 <SidebarMenuItem key={item.title}>
                   <SidebarMenuButton asChild className="h-auto p-0 hover:bg-transparent">
