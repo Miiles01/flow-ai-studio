@@ -58,7 +58,7 @@ function SidebarBody() {
     <Sidebar
       collapsible="icon"
       variant="floating"
-      className="m-4 md:m-6 border-none shadow-none [&>div[data-sidebar=sidebar]]:bg-transparent [&>div[data-sidebar=sidebar]]:border-none [&>div[data-sidebar=sidebar]]:shadow-none"
+      className="!py-[40px] pl-6 pr-2 border-none shadow-none [&>div[data-sidebar=sidebar]]:bg-transparent [&>div[data-sidebar=sidebar]]:border-none [&>div[data-sidebar=sidebar]]:shadow-none"
     >
       <div 
         className="flex flex-col h-full rounded-[50px] overflow-hidden w-full"
