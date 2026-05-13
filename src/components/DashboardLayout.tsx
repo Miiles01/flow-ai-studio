@@ -76,17 +76,20 @@ function SidebarBody() {
         </div>
 
         {/* Nuevo Tablero Button */}
-        {!collapsed && (
-          <div className="px-6 mb-8">
-            <button
-              onClick={() => navigate("/")}
-              className="w-full flex items-center justify-center gap-2 bg-black text-white rounded-full py-3.5 text-sm font-light hover:bg-black/90 transition-all hover:scale-[1.02]"
-            >
-              <Plus size={16} />
-              Nuevo tablero
-            </button>
-          </div>
-        )}
+        <div className={`mb-8 flex ${collapsed ? "justify-center px-2" : "px-6"}`}>
+          <button
+            onClick={() => navigate("/")}
+            className={`flex items-center justify-center bg-black text-white hover:bg-black/90 transition-all hover:scale-[1.02] ${
+              collapsed
+                ? "w-10 h-10 rounded-full"
+                : "w-full gap-2 rounded-full py-3.5 text-sm font-light"
+            }`}
+            title={collapsed ? "Nuevo tablero" : undefined}
+          >
+            <Plus size={16} />
+            {!collapsed && "Nuevo tablero"}
+          </button>
+        </div>
 
         {/* Main navigation */}
         <SidebarGroup className="px-6">
