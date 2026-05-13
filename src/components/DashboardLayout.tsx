@@ -23,8 +23,6 @@ import {
 const mainNav = [
   { title: "Inicio", url: "/dashboard", icon: Home },
   { title: "Tableros", url: "/boards", icon: LayoutDashboard },
-  { title: "Programas", url: "/programs", icon: ShoppingBag },
-  // { title: "Búsqueda IA", url: "/search", icon: Bot },
 ];
 
 type Conversation = { id: string; title: string; updated_at: string };
@@ -52,41 +50,6 @@ function SidebarBody() {
       });
   }, [user]);
 
-  const loadConversations = useCallback(async () => {
-    if (!user) return;
-    const { data } = await supabase
-      .from("ai_conversations")
-      .select("id, title, updated_at")
-      .eq("user_id", user.id)
-      .order("updated_at", { ascending: false })
-      .limit(30);
-    setConversations(data ?? []);
-  }, [user]);
-
-  useEffect(() => {
-    loadConversations();
-    const handler = () => loadConversations();
-    window.addEventListener("ai-conversations-changed", handler);
-    return () => window.removeEventListener("ai-conversations-changed", handler);
-  }, [loadConversations]);
-
-  const handleDeleteConversation = async (e: React.MouseEvent, id: string) => {
-    e.stopPropagation();
-    e.preventDefault();
-    const { error } = await supabase.from("ai_conversations").delete().eq("id", id);
-    if (error) {
-      toast.error("No se pudo eliminar");
-      return;
-    }
-    setConversations((prev) => prev.filter((c) => c.id !== id));
-    if (location.pathname === `/search/${id}`) navigate("/search");
-  };
-
-  const handleSignOut = async () => {
-    await signOut();
-    navigate("/login");
-  };
-
   const initials = displayName
     ? displayName.charAt(0).toUpperCase()
     : user?.email?.charAt(0).toUpperCase() || "M";
@@ -95,31 +58,48 @@ function SidebarBody() {
     <Sidebar
       collapsible="icon"
       variant="floating"
-      className="rounded-2xl border-none"
+      className="m-4 md:m-6 border-none shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-[40px] overflow-hidden"
       style={{ background: "linear-gradient(to bottom, #FDFDFD, #F8F9FD)" }}
     >
-      <SidebarContent className="flex flex-col h-full">
+      <SidebarContent className="flex flex-col h-full py-4">
         {/* Logo */}
-        <div className={`pt-6 pb-2 flex items-center ${collapsed ? "justify-center px-2" : "px-5 gap-2"}`}>
-          <img src={logoImg} alt="miiles" className={collapsed ? "h-6 w-6" : "h-7 w-7"} />
-          {!collapsed && <span className="text-xl font-normal tracking-tight">miiles</span>}
+        <div className={`pt-6 pb-8 flex items-center ${collapsed ? "justify-center px-2" : "px-8 gap-3"}`}>
+          <img src={logoImg} alt="miiles" className={collapsed ? "h-6 w-6" : "h-8 w-8"} />
+          {!collapsed && <span className="text-3xl font-normal tracking-tight">miiles</span>}
         </div>
 
+        {/* Nuevo Tablero Button */}
+        {!collapsed && (
+          <div className="px-6 mb-8">
+            <button
+              onClick={() => navigate("/")}
+              className="w-full flex items-center justify-center gap-2 bg-black text-white rounded-full py-3.5 text-sm font-light shadow-md hover:bg-black/90 transition-all hover:scale-[1.02]"
+            >
+              <Plus size={16} />
+              Nuevo tablero
+            </button>
+          </div>
+        )}
+
         {/* Main navigation */}
-        <SidebarGroup className="mt-2">
+        <SidebarGroup className="px-6">
           <SidebarGroupContent>
-            <SidebarMenu>
+            <SidebarMenu className="space-y-4">
               {mainNav.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild>
+                  <SidebarMenuButton asChild className="h-auto p-0">
                     <NavLink
                       to={item.url}
                       end={item.url === "/"}
-                      className="text-muted-foreground hover:text-foreground hover:bg-muted transition-all duration-200 rounded-sm"
-                      activeClassName="bg-muted text-foreground"
+                      className={`flex items-center w-full gap-3 px-5 py-4 text-muted-foreground hover:text-foreground transition-all duration-300 rounded-3xl ${
+                        location.pathname.startsWith(item.url) && item.url !== "/" || (item.url === "/" && location.pathname === "/")
+                          ? "border border-border bg-white text-foreground shadow-sm"
+                          : "border border-transparent hover:border-border hover:bg-white/50"
+                      }`}
+                      activeClassName=""
                     >
-                      <item.icon className="mr-2 h-4 w-4" />
-                      {!collapsed && <span className="font-light">{item.title}</span>}
+                      <item.icon className="h-[22px] w-[22px]" strokeWidth={1.5} />
+                      {!collapsed && <span className="font-normal text-[15px]">{item.title}</span>}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -128,81 +108,26 @@ function SidebarBody() {
           </SidebarGroupContent>
         </SidebarGroup>
 
-        {/* AI Chat history (Hidden temporarily) */}
-        {/*
-        {!collapsed && (
-          <SidebarGroup className="mt-2 min-h-0 flex-1 overflow-hidden flex flex-col">
-            <div className="flex items-center justify-between px-3 pr-2">
-              <SidebarGroupLabel className="text-[10px] uppercase tracking-wider text-muted-foreground/70">
-                Historial IA
-              </SidebarGroupLabel>
-              <button
-                onClick={() => navigate("/search")}
-                className="p-1 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
-                title="Nuevo chat"
-              >
-                <Plus className="h-3.5 w-3.5" />
-              </button>
-            </div>
-            <SidebarGroupContent className="overflow-y-auto">
-              <SidebarMenu>
-                {conversations.length === 0 && (
-                  <p className="px-3 py-2 text-xs font-light text-muted-foreground/60">Sin conversaciones</p>
-                )}
-                {conversations.map((c) => {
-                  const active = location.pathname === `/search/${c.id}`;
-                  return (
-                    <SidebarMenuItem key={c.id}>
-                      <SidebarMenuButton asChild>
-                        <button
-                          onClick={() => navigate(`/search/${c.id}`)}
-                          className={`w-full group flex items-center gap-2 text-left rounded-sm transition-all duration-200 ${
-                            active
-                              ? "bg-muted text-foreground"
-                              : "text-muted-foreground hover:text-foreground hover:bg-muted"
-                          }`}
-                        >
-                          <MessageSquare className="h-3.5 w-3.5 flex-shrink-0" />
-                          <span className="font-light text-xs truncate flex-1">{c.title}</span>
-                          <Trash2
-                            onClick={(e) => handleDeleteConversation(e, c.id)}
-                            className="h-3 w-3 opacity-0 group-hover:opacity-60 hover:!opacity-100 flex-shrink-0"
-                          />
-                        </button>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  );
-                })}
-              </SidebarMenu>
-            </SidebarGroupContent>
-          </SidebarGroup>
-        )}
-        */}
-
         <div className="flex-1" />
-
 
         {/* User profile card at bottom */}
         {!collapsed && (
-          <>
-            <div className="mx-5 border-t border-muted-foreground/10" />
-            <div
-              className="mx-3 mb-4 mt-3 px-4 py-3 flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
-              onClick={() => navigate("/profile")}
-            >
-              <div className="w-9 h-9 rounded-full bg-foreground flex items-center justify-center flex-shrink-0 overflow-hidden">
-                {avatarUrl ? (
-                  <img src={avatarUrl} alt={displayName || "Usuario"} className="w-full h-full object-cover" />
-                ) : (
-                  <span className="text-background text-sm font-normal">{initials}</span>
-                )}
-              </div>
-              <div className="min-w-0">
-                <p className="text-sm font-normal truncate">{displayName || "Usuario"}</p>
-                <p className="text-xs text-muted-foreground font-light">Plan Gratis</p>
-              </div>
+          <div
+            className="mx-6 mb-4 mt-3 px-2 py-2 flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
+            onClick={() => navigate("/profile")}
+          >
+            <div className="w-11 h-11 rounded-full bg-black flex items-center justify-center flex-shrink-0 overflow-hidden shadow-sm">
+              {avatarUrl ? (
+                <img src={avatarUrl} alt={displayName || "Usuario"} className="w-full h-full object-cover" />
+              ) : (
+                <span className="text-white text-sm font-normal">{initials}</span>
+              )}
             </div>
-          </>
+            <div className="min-w-0">
+              <p className="text-[15px] font-normal truncate">{displayName || "Usuario"}</p>
+              <p className="text-[13px] text-muted-foreground font-light">Plan Gratis</p>
+            </div>
+          </div>
         )}
       </SidebarContent>
     </Sidebar>
