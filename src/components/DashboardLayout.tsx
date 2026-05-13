@@ -58,7 +58,7 @@ function SidebarBody() {
     <Sidebar
       collapsible="icon"
       variant="floating"
-      className="!py-[40px] pl-6 pr-2 border-none shadow-none [&>div[data-sidebar=sidebar]]:bg-transparent [&>div[data-sidebar=sidebar]]:border-none [&>div[data-sidebar=sidebar]]:shadow-none"
+      className="!py-[40px] pl-6 pr-2 border-none shadow-none !bg-transparent [&>div[data-sidebar=sidebar]]:bg-transparent [&>div[data-sidebar=sidebar]]:border-none [&>div[data-sidebar=sidebar]]:shadow-none"
     >
       <div 
         className="flex flex-col h-full rounded-[50px] overflow-hidden w-full"
@@ -95,7 +95,7 @@ function SidebarBody() {
         </div>
 
         {/* Main navigation */}
-        <SidebarGroup className="px-6">
+        <SidebarGroup className={collapsed ? "px-2" : "px-6"}>
           <SidebarGroupContent>
             <SidebarMenu className="space-y-1">
               {mainNav.map((item) => (
@@ -104,14 +104,15 @@ function SidebarBody() {
                     <NavLink
                       to={item.url}
                       end={item.url === "/"}
-                      className={`flex items-center w-full gap-3 px-5 py-4 text-black transition-all duration-300 rounded-[25px] border border-[#F3F4F6] hover:bg-black/5 ${
+                      className={`flex items-center ${collapsed ? "justify-center w-11 h-11 mx-auto rounded-full" : "w-full gap-3 px-5 py-4 rounded-[25px]"} text-black transition-all duration-300 border border-[#F3F4F6] hover:bg-black/5 ${
                         location.pathname.startsWith(item.url) && item.url !== "/" || (item.url === "/" && location.pathname === "/")
                           ? "bg-transparent font-normal"
                           : "bg-transparent font-light"
                       }`}
                       activeClassName=""
+                      title={collapsed ? item.title : undefined}
                     >
-                      <item.icon className="h-[22px] w-[22px]" strokeWidth={1.5} />
+                      <item.icon className="h-[22px] w-[22px] flex-shrink-0" strokeWidth={1.5} />
                       {!collapsed && <span className="text-[15px]">{item.title}</span>}
                     </NavLink>
                   </SidebarMenuButton>
@@ -124,7 +125,21 @@ function SidebarBody() {
         <div className="flex-1" />
 
         {/* User profile card at bottom */}
-        {!collapsed && (
+        {collapsed ? (
+          <div 
+            className="mb-6 mt-3 flex justify-center cursor-pointer hover:opacity-80 transition-opacity"
+            onClick={() => navigate("/profile")}
+            title="Perfil"
+          >
+            <div className="w-10 h-10 rounded-full bg-black flex items-center justify-center flex-shrink-0 overflow-hidden shadow-sm">
+              {avatarUrl ? (
+                <img src={avatarUrl} alt={displayName || "Usuario"} className="w-full h-full object-cover" />
+              ) : (
+                <span className="text-white text-sm font-normal">{initials}</span>
+              )}
+            </div>
+          </div>
+        ) : (
           <div
             className="mx-6 mb-4 mt-3 px-2 py-2 flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
             onClick={() => navigate("/profile")}
