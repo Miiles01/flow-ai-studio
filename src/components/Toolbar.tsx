@@ -19,7 +19,7 @@ const Toolbar = ({ onAddNode }: ToolbarProps) => {
     <motion.div
       initial={{ x: -40, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
-      className="absolute top-1/2 -translate-y-1/2 left-6 z-10 flex flex-col items-center gap-1.5 px-2 py-3 rounded-[30px] bg-white shadow-[0_8px_30px_rgb(0,0,0,0.06)] font-sans"
+      className="absolute inset-y-0 my-auto h-fit left-6 z-10 flex flex-col items-center gap-1.5 px-2 py-3 rounded-[30px] bg-white shadow-[0_8px_30px_rgb(0,0,0,0.06)] font-sans"
     >
       <Tooltip>
         <TooltipTrigger asChild>
