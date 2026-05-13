@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Plus, LayoutGrid, Mic, ArrowUp, Loader2, EyeOff } from "lucide-react";
+import logoImg from "@/assets/logo.png";
 
 type AIPromptBarProps = {
   onGenerate: (prompt: string) => void;
@@ -55,7 +56,7 @@ const AIPromptBar = ({ onGenerate, isGenerating }: AIPromptBarProps) => {
               className="w-[52px] h-[52px] bg-black rounded-[18px] flex items-center justify-center shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:-translate-y-1.5 transition-transform duration-300"
               aria-label="Abrir asistente IA"
             >
-              <img src="/isotipo.svg" alt="AI" className="w-7 h-7" />
+              <img src={logoImg} alt="AI" className="w-7 h-7" />
             </button>
           </motion.div>
         ) : (
@@ -75,7 +76,7 @@ const AIPromptBar = ({ onGenerate, isGenerating }: AIPromptBarProps) => {
                 {showHideButton && (
                   <motion.div
                     initial={{ y: 20, opacity: 0, scale: 0.8 }}
-                    animate={{ y: -24, opacity: 1, scale: 1 }}
+                    animate={{ y: -56, opacity: 1, scale: 1 }}
                     exit={{ y: 20, opacity: 0, scale: 0.8 }}
                     transition={{ type: "spring", bounce: 0.4, duration: 0.4 }}
                     className="z-0 pointer-events-auto"
