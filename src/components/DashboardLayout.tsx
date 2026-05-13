@@ -58,14 +58,21 @@ function SidebarBody() {
     <Sidebar
       collapsible="icon"
       variant="floating"
-      className="m-4 md:m-6 border-none shadow-[0_8px_30px_rgb(0,0,0,0.04)] rounded-[40px] overflow-hidden"
+      className="m-4 md:m-6 border-none shadow-none rounded-[50px] overflow-hidden"
       style={{ background: "linear-gradient(to bottom, #FDFDFD, #F8F9FD)" }}
     >
       <SidebarContent className="flex flex-col h-full py-4">
         {/* Logo */}
-        <div className={`pt-6 pb-8 flex items-center ${collapsed ? "justify-center px-2" : "px-8 gap-3"}`}>
-          <img src={logoImg} alt="miiles" className={collapsed ? "h-6 w-6" : "h-8 w-8"} />
-          {!collapsed && <span className="text-3xl font-normal tracking-tight">miiles</span>}
+        <div className={`pt-6 pb-8 flex flex-col ${collapsed ? "items-center px-2" : "px-8"}`}>
+          <div className="flex items-center gap-3">
+            <img src={logoImg} alt="miiles" className={collapsed ? "h-6 w-6" : "h-8 w-8"} />
+            {!collapsed && <span className="text-3xl font-normal tracking-tight">miiles</span>}
+          </div>
+          {!collapsed && (
+            <p className="text-[13px] text-black font-normal mt-2 ml-1 cursor-pointer hover:underline">
+              Nueva conversación
+            </p>
+          )}
         </div>
 
         {/* Nuevo Tablero Button */}
@@ -73,7 +80,7 @@ function SidebarBody() {
           <div className="px-6 mb-8">
             <button
               onClick={() => navigate("/")}
-              className="w-full flex items-center justify-center gap-2 bg-black text-white rounded-full py-3.5 text-sm font-light shadow-md hover:bg-black/90 transition-all hover:scale-[1.02]"
+              className="w-full flex items-center justify-center gap-2 bg-black text-white rounded-full py-3.5 text-sm font-light hover:bg-black/90 transition-all hover:scale-[1.02]"
             >
               <Plus size={16} />
               Nuevo tablero
@@ -87,19 +94,19 @@ function SidebarBody() {
             <SidebarMenu className="space-y-4">
               {mainNav.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild className="h-auto p-0">
+                  <SidebarMenuButton asChild className="h-auto p-0 hover:bg-transparent">
                     <NavLink
                       to={item.url}
                       end={item.url === "/"}
-                      className={`flex items-center w-full gap-3 px-5 py-4 text-muted-foreground hover:text-foreground transition-all duration-300 rounded-3xl ${
+                      className={`flex items-center w-full gap-3 px-5 py-4 text-black transition-all duration-300 rounded-[25px] border border-[#F3F4F6] hover:bg-black/5 ${
                         location.pathname.startsWith(item.url) && item.url !== "/" || (item.url === "/" && location.pathname === "/")
-                          ? "border border-border bg-white text-foreground shadow-sm"
-                          : "border border-transparent hover:border-border hover:bg-white/50"
+                          ? "bg-transparent font-normal"
+                          : "bg-transparent font-light"
                       }`}
                       activeClassName=""
                     >
                       <item.icon className="h-[22px] w-[22px]" strokeWidth={1.5} />
-                      {!collapsed && <span className="font-normal text-[15px]">{item.title}</span>}
+                      {!collapsed && <span className="text-[15px]">{item.title}</span>}
                     </NavLink>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
