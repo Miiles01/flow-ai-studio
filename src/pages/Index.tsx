@@ -1,4 +1,4 @@
-import { useCallback, useState, useRef } from "react";
+import { useCallback, useState, useRef, useEffect } from "react";
 import {
   ReactFlow,
   addEdge,
@@ -10,30 +10,60 @@ import {
   type Connection,
   type Node,
   type Edge,
-  Panel,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { motion } from "framer-motion";
-import { Workflow, Layers, User, LogOut } from "lucide-react";
+import { ArrowLeft, Loader2, Save } from "lucide-react";
 import { toast } from "sonner";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { supabase } from "@/integrations/supabase/client";
 
 import FlowNode from "@/components/nodes/FlowNode";
 import Toolbar from "@/components/Toolbar";
 import AIPromptBar from "@/components/AIPromptBar";
-import FlowSidebar from "@/components/FlowSidebar";
 import { generateFlowFromPrompt } from "@/lib/generateFlow";
 
 const nodeTypes = { flowNode: FlowNode };
 
 const Index = () => {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { user } = useAuth();
+
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [name, setName] = useState("Tablero sin título");
+  const [loading, setLoading] = useState(true);
+  const [saving, setSaving] = useState(false);
   const nodeCounter = useRef(0);
-  const navigate = useNavigate();
-  const { signOut } = useAuth();
+
+  // Load flow by id
+  useEffect(() => {
+    const load = async () => {
+      if (!user || !id || id === "new") {
+        setLoading(false);
+        return;
+      }
+      const { data, error } = await supabase
+        .from("flows")
+        .select("name, nodes, edges")
+        .eq("id", id)
+        .eq("user_id", user.id)
+        .single();
+      if (error || !data) {
+        toast.error("Tablero no encontrado");
+        navigate("/boards");
+        return;
+      }
+      setName(data.name || "Tablero");
+      setNodes(((data.nodes as unknown) as Node[]) || []);
+      setEdges(((data.edges as unknown) as Edge[]) || []);
+      setLoading(false);
+    };
+    load();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id, user]);
 
   const onConnect = useCallback(
     (params: Connection) => setEdges((eds) => addEdge({ ...params, animated: true }, eds)),
@@ -75,53 +105,90 @@ const Index = () => {
     [setNodes, setEdges]
   );
 
-  const handleLoadFlow = useCallback(
-    (loadedNodes: Node[], loadedEdges: Edge[]) => {
-      setNodes(loadedNodes);
-      setEdges(loadedEdges);
-    },
-    [setNodes, setEdges]
-  );
-
-  const handleNewFlow = useCallback(() => {
-    setNodes([]);
-    setEdges([]);
-    nodeCounter.current = 0;
-  }, [setNodes, setEdges]);
-
-  const handleSignOut = async () => {
-    await signOut();
-    navigate("/login");
+  const handleSave = async () => {
+    if (!user) return;
+    setSaving(true);
+    const payload = {
+      name,
+      nodes: JSON.parse(JSON.stringify(nodes)),
+      edges: JSON.parse(JSON.stringify(edges)),
+    };
+    if (!id || id === "new") {
+      const { data, error } = await supabase
+        .from("flows")
+        .insert([{ user_id: user.id, ...payload }])
+        .select()
+        .single();
+      setSaving(false);
+      if (error || !data) {
+        toast.error("Error al crear el tablero");
+        return;
+      }
+      toast.success("Tablero creado");
+      navigate(`/boards/${data.id}`, { replace: true });
+    } else {
+      const { error } = await supabase.from("flows").update(payload).eq("id", id);
+      setSaving(false);
+      if (error) toast.error("Error al guardar");
+      else toast.success("Tablero guardado");
+    }
   };
 
-  return (
-    <div className="w-screen h-screen bg-background overflow-hidden relative">
-      <ReactFlow
-        nodes={nodes}
-        edges={edges}
-        onNodesChange={onNodesChange}
-        onEdgesChange={onEdgesChange}
-        onConnect={onConnect}
-        nodeTypes={nodeTypes}
-        fitView
-        proOptions={{ hideAttribution: true }}
-        className="bg-white"
-      >
-        <Background variant={BackgroundVariant.Dots} gap={32} size={1} color="#E5E7EB" />
-        <Controls position="bottom-left" showInteractive={false} />
-      </ReactFlow>
+  if (loading) {
+    return (
+      <div className="w-screen h-screen flex items-center justify-center bg-background">
+        <Loader2 className="animate-spin text-miiles-gray-400" size={24} />
+      </div>
+    );
+  }
 
-      <Toolbar onAddNode={handleAddNode} />
-      <AIPromptBar 
-        onGenerate={handleAIGenerate} 
-        isGenerating={isGenerating} 
-      />
-      <FlowSidebar
-        currentNodes={nodes}
-        currentEdges={edges}
-        onLoadFlow={handleLoadFlow}
-        onNewFlow={handleNewFlow}
-      />
+  return (
+    <div className="w-screen h-screen bg-background overflow-hidden relative flex flex-col">
+      {/* Top bar */}
+      <header className="h-14 flex items-center justify-between px-4 md:px-6 border-b border-muted bg-white/80 backdrop-blur-sm z-20">
+        <div className="flex items-center gap-3 min-w-0">
+          <button
+            onClick={() => navigate("/boards")}
+            className="p-2 rounded-full hover:bg-muted transition-colors"
+            aria-label="Volver"
+          >
+            <ArrowLeft size={16} />
+          </button>
+          <input
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            className="bg-transparent text-sm font-normal tracking-tight outline-none focus:ring-0 px-2 py-1 rounded hover:bg-muted/50 focus:bg-muted/50 transition-colors min-w-0 max-w-[40vw]"
+          />
+        </div>
+        <button
+          onClick={handleSave}
+          disabled={saving}
+          className="flex items-center gap-2 px-4 py-2 rounded-full bg-black text-white text-xs hover:bg-miiles-pink transition-colors disabled:opacity-40"
+        >
+          {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
+          {id && id !== "new" ? "Guardar" : "Crear"}
+        </button>
+      </header>
+
+      <div className="flex-1 relative">
+        <ReactFlow
+          nodes={nodes}
+          edges={edges}
+          onNodesChange={onNodesChange}
+          onEdgesChange={onEdgesChange}
+          onConnect={onConnect}
+          nodeTypes={nodeTypes}
+          fitView
+          proOptions={{ hideAttribution: true }}
+          className="bg-white"
+        >
+          <Background variant={BackgroundVariant.Dots} gap={32} size={1} color="#E5E7EB" />
+          <Controls position="bottom-left" showInteractive={false} />
+        </ReactFlow>
+
+        <Toolbar onAddNode={handleAddNode} />
+        <AIPromptBar onGenerate={handleAIGenerate} isGenerating={isGenerating} />
+      </div>
     </div>
   );
 };
