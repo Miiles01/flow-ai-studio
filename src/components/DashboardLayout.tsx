@@ -178,7 +178,7 @@ function SidebarBody() {
         )}
         */}
 
-        {collapsed && <div className="flex-1" />}
+        <div className="flex-1" />
 
 
         {/* User profile card at bottom */}
