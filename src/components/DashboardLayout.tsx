@@ -104,9 +104,9 @@ function SidebarBody() {
                     <NavLink
                       to={item.url}
                       end={item.url === "/"}
-                      className={`flex items-center ${collapsed ? "justify-center w-11 h-11 mx-auto rounded-full" : "w-full gap-3 px-5 py-4 rounded-[25px]"} text-black transition-all duration-300 border border-[#F3F4F6] hover:bg-black/5 ${
+                      className={`flex items-center ${collapsed ? "justify-center w-11 h-11 mx-auto rounded-full" : "w-full gap-3 px-5 py-4 rounded-[25px]"} text-black transition-all duration-300 border border-[#F3F4F6] hover:bg-white ${
                         location.pathname.startsWith(item.url) && item.url !== "/" || (item.url === "/" && location.pathname === "/")
-                          ? "bg-transparent font-normal"
+                          ? "bg-white font-normal shadow-sm"
                           : "bg-transparent font-light"
                       }`}
                       activeClassName=""
