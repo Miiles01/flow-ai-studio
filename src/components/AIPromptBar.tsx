@@ -38,7 +38,7 @@ const AIPromptBar = ({ onGenerate, isGenerating }: AIPromptBarProps) => {
       animate={{ y: 0, opacity: 1 }}
       className="absolute bottom-12 inset-x-0 mx-auto z-10 w-full max-w-3xl px-6"
     >
-      <div className="bg-black rounded-xl p-5 shadow-sm transition-all duration-300">
+      <div className="bg-black rounded-[40px] pt-8 pb-4 px-6 shadow-2xl transition-all duration-300">
         <textarea
           ref={textareaRef}
           rows={1}
@@ -46,40 +46,40 @@ const AIPromptBar = ({ onGenerate, isGenerating }: AIPromptBarProps) => {
           onChange={(e) => setPrompt(e.target.value)}
           onKeyDown={handleKeyDown}
           placeholder="Describe tu flujo o idea..."
-          className="w-full bg-transparent text-white font-light text-[15px] placeholder:text-miiles-gray-600 outline-none resize-none overflow-hidden min-h-[44px] leading-relaxed text-center placeholder:text-center"
+          className="w-full bg-transparent text-white font-light text-[15px] placeholder:text-white/40 outline-none resize-none overflow-hidden min-h-[44px] leading-relaxed text-center placeholder:text-center"
           disabled={isGenerating}
         />
         
-        <div className="flex items-center justify-between mt-4">
+        <div className="flex items-center justify-between mt-2">
           <div className="flex items-center gap-3">
             <button 
               type="button"
-              className="w-8 h-8 rounded-full flex items-center justify-center bg-white/10 text-miiles-gray-400 hover:bg-white/20 hover:text-white transition-all"
+              className="w-10 h-10 rounded-full flex items-center justify-center bg-white/10 text-white/70 hover:bg-white/20 hover:text-white transition-all"
             >
-              <Plus size={16} />
+              <Plus size={18} strokeWidth={1.5} />
             </button>
-            <div className="flex items-center gap-2 bg-white/10 h-8 px-3 rounded-full cursor-pointer hover:bg-white/15 transition-all group">
-              <LayoutGrid size={14} className="text-miiles-gray-400 group-hover:text-white" />
-              <span className="text-[11px] font-light text-miiles-gray-400 group-hover:text-white tracking-wider">Apps</span>
+            <div className="flex items-center gap-2 bg-white/10 h-10 px-4 rounded-full cursor-pointer hover:bg-white/20 transition-all group">
+              <LayoutGrid size={15} strokeWidth={1.5} className="text-white/70 group-hover:text-white transition-colors" />
+              <span className="text-[13px] font-light text-white/70 group-hover:text-white transition-colors tracking-wider">Apps</span>
             </div>
           </div>
 
           <div className="flex items-center gap-3">
             <button 
               type="button"
-              className="w-8 h-8 rounded-full flex items-center justify-center bg-white/10 text-miiles-gray-400 hover:bg-white/20 hover:text-white transition-all"
+              className="w-10 h-10 rounded-full flex items-center justify-center bg-white/10 text-white/70 hover:bg-white/20 hover:text-white transition-all"
             >
-              <Mic size={16} />
+              <Mic size={18} strokeWidth={1.5} />
             </button>
             <button
               onClick={() => handleSubmit()}
               disabled={!prompt.trim() || isGenerating}
-              className="w-9 h-9 rounded-full bg-white flex items-center justify-center text-black transition-all duration-300 hover:bg-miiles-pink-light hover:text-miiles-pink hover:-translate-y-1 disabled:opacity-10 disabled:transform-none"
+              className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/70 transition-all duration-300 hover:bg-white/20 hover:text-white disabled:opacity-30 disabled:transform-none"
             >
               {isGenerating ? (
-                <Loader2 size={16} className="animate-spin" />
+                <Loader2 size={18} className="animate-spin" />
               ) : (
-                <ArrowUp size={18} />
+                <ArrowUp size={18} strokeWidth={1.5} />
               )}
             </button>
           </div>

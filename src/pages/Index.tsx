@@ -145,28 +145,28 @@ const Index = () => {
   return (
     <div className="w-screen h-screen bg-background overflow-hidden relative flex flex-col">
       {/* Top bar */}
-      <header className="h-14 flex items-center justify-between px-4 md:px-6 border-b border-muted bg-white/80 backdrop-blur-sm z-20">
-        <div className="flex items-center gap-3 min-w-0">
+      <header className="absolute top-0 left-0 right-0 h-20 flex items-center justify-between px-6 z-20 pointer-events-none">
+        <div className="flex items-center gap-3 min-w-0 pointer-events-auto">
           <button
             onClick={() => navigate("/boards")}
-            className="p-2 rounded-full hover:bg-muted transition-colors"
+            className="p-2 rounded-full hover:bg-black/5 transition-colors"
             aria-label="Volver"
           >
-            <ArrowLeft size={16} />
+            <ArrowLeft size={18} strokeWidth={1.5} />
           </button>
           <input
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="bg-transparent text-sm font-normal tracking-tight outline-none focus:ring-0 px-2 py-1 rounded hover:bg-muted/50 focus:bg-muted/50 transition-colors min-w-0 max-w-[40vw]"
+            className="bg-transparent text-[15px] font-normal tracking-tight outline-none focus:ring-0 px-2 py-1 rounded hover:bg-black/5 transition-colors min-w-0 max-w-[40vw]"
           />
         </div>
         <button
           onClick={handleSave}
           disabled={saving}
-          className="flex items-center gap-2 px-4 py-2 rounded-full bg-black text-white text-xs hover:bg-miiles-pink transition-colors disabled:opacity-40"
+          className="pointer-events-auto flex items-center gap-2 px-5 py-2.5 rounded-full bg-black text-white text-[13px] font-light hover:bg-black/90 transition-all hover:scale-[1.02] disabled:opacity-40 shadow-sm"
         >
-          {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} />}
-          {id && id !== "new" ? "Guardar" : "Crear"}
+          {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} strokeWidth={1.5} />}
+          Guardar
         </button>
       </header>
 

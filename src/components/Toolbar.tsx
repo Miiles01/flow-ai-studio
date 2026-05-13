@@ -18,21 +18,23 @@ const Toolbar = ({ onAddNode }: ToolbarProps) => {
     <motion.div
       initial={{ y: -40, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      className="absolute top-6 left-1/2 -translate-x-1/2 z-10 flex items-center gap-2 px-4 py-3 rounded-full bg-white shadow-sm font-sans"
+      className="absolute top-20 right-8 z-10 flex items-center gap-1 px-3 py-2 rounded-[30px] bg-white shadow-[0_8px_30px_rgb(0,0,0,0.06)] font-sans"
     >
-      <button className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-miiles-gray-50 transition-all text-miiles-gray-400 hover:text-black btn-hover-float">
-        <MousePointer size={18} />
+      <button className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#F3F4F6] transition-all text-[#6B7280] hover:text-black">
+        <MousePointer size={18} strokeWidth={1.5} />
       </button>
       
+      <div className="w-[1px] h-6 bg-[#E5E7EB] mx-1" />
+
       {tools.map((tool) => (
         <button
           key={tool.id}
           onClick={() => onAddNode(tool.id)}
-          className="flex items-center gap-3 px-5 py-2.5 rounded-full hover:bg-miiles-gray-50 transition-all group btn-hover-float"
+          className="flex items-center gap-2 px-4 py-2.5 rounded-full hover:bg-[#F3F4F6] transition-all group"
           title={tool.label}
         >
-          <tool.icon size={18} className="text-miiles-gray-400 group-hover:text-black transition-colors" />
-          <span className="text-[13px] font-light text-miiles-gray-600 group-hover:text-black tracking-tight">{tool.label}</span>
+          <tool.icon size={18} strokeWidth={1.5} className="text-[#6B7280] group-hover:text-black transition-colors" />
+          <span className="text-[13px] font-normal text-[#6B7280] group-hover:text-black tracking-tight">{tool.label}</span>
         </button>
       ))}
     </motion.div>
