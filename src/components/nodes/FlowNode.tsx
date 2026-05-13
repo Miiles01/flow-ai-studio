@@ -38,45 +38,33 @@ const FlowNode = ({ data, selected }: NodeProps) => {
         ${selected ? "border-[#4F46E5] shadow-sm" : "border-transparent shadow-[0_8px_30px_rgb(0,0,0,0.04)]"}
       `}
     >
-      {/* Top Handle Zone */}
       <Handle
         type="source"
         position={Position.Top}
         id="top"
-        className="!w-full !h-8 !bg-transparent !border-none !rounded-none !transform-none !left-0 !top-[-16px] flex items-center justify-center group/top z-10"
-      >
-        <div className={`w-[11px] h-[11px] bg-white border-[1.5px] border-[#4F46E5] rounded-full transition-all duration-200 group-hover/top:bg-[#4F46E5] ${selected ? "opacity-100" : "opacity-0 group-hover/top:opacity-100"}`} />
-      </Handle>
+        className={`!w-[11px] !h-[11px] !rounded-full !bg-white !border-[1.5px] !border-[#4F46E5] !-top-[6px] transition-all duration-200 hover:!bg-[#4F46E5] before:absolute before:-inset-4 before:content-[''] ${selected ? "opacity-100" : "opacity-0 hover:opacity-100"}`}
+      />
 
-      {/* Bottom Handle Zone */}
       <Handle
         type="source"
         position={Position.Bottom}
         id="bottom"
-        className="!w-full !h-8 !bg-transparent !border-none !rounded-none !transform-none !left-0 !bottom-[-16px] !top-auto flex items-center justify-center group/bottom z-10"
-      >
-        <div className={`w-[11px] h-[11px] bg-white border-[1.5px] border-[#4F46E5] rounded-full transition-all duration-200 group-hover/bottom:bg-[#4F46E5] ${selected ? "opacity-100" : "opacity-0 group-hover/bottom:opacity-100"}`} />
-      </Handle>
+        className={`!w-[11px] !h-[11px] !rounded-full !bg-white !border-[1.5px] !border-[#4F46E5] !-bottom-[6px] transition-all duration-200 hover:!bg-[#4F46E5] before:absolute before:-inset-4 before:content-[''] ${selected ? "opacity-100" : "opacity-0 hover:opacity-100"}`}
+      />
 
-      {/* Left Handle Zone */}
       <Handle
         type="source"
         position={Position.Left}
         id="left"
-        className="!w-8 !h-full !bg-transparent !border-none !rounded-none !transform-none !left-[-16px] !top-0 flex items-center justify-center group/left z-10"
-      >
-        <div className={`w-[11px] h-[11px] bg-white border-[1.5px] border-[#4F46E5] rounded-full transition-all duration-200 group-hover/left:bg-[#4F46E5] ${selected ? "opacity-100" : "opacity-0 group-hover/left:opacity-100"}`} />
-      </Handle>
+        className={`!w-[11px] !h-[11px] !rounded-full !bg-white !border-[1.5px] !border-[#4F46E5] !-left-[6px] transition-all duration-200 hover:!bg-[#4F46E5] before:absolute before:-inset-4 before:content-[''] ${selected ? "opacity-100" : "opacity-0 hover:opacity-100"}`}
+      />
 
-      {/* Right Handle Zone */}
       <Handle
         type="source"
         position={Position.Right}
         id="right"
-        className="!w-8 !h-full !bg-transparent !border-none !rounded-none !transform-none !right-[-16px] !left-auto !top-0 flex items-center justify-center group/right z-10"
-      >
-        <div className={`w-[11px] h-[11px] bg-white border-[1.5px] border-[#4F46E5] rounded-full transition-all duration-200 group-hover/right:bg-[#4F46E5] ${selected ? "opacity-100" : "opacity-0 group-hover/right:opacity-100"}`} />
-      </Handle>
+        className={`!w-[11px] !h-[11px] !rounded-full !bg-white !border-[1.5px] !border-[#4F46E5] !-right-[6px] transition-all duration-200 hover:!bg-[#4F46E5] before:absolute before:-inset-4 before:content-[''] ${selected ? "opacity-100" : "opacity-0 hover:opacity-100"}`}
+      />
       
       <div className="flex flex-col gap-2 relative z-20 pointer-events-none">
         <div className="flex items-center justify-between gap-3">
