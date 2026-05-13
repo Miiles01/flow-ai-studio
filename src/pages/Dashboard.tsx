@@ -481,22 +481,12 @@ export default function Dashboard() {
                 initial={{ x: 20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ delay: i * 0.05 }}
-                className="snap-start shrink-0 w-[280px] md:w-[320px] rounded-xl shadow-sm border border-muted bg-background hover:shadow-md transition-all duration-200 overflow-hidden cursor-pointer group"
+                className="snap-start shrink-0 w-[280px] md:w-[320px] aspect-[4/3] rounded-[24px] bg-[#F9FAFB] hover:bg-[#F3F4F6] transition-colors duration-300 overflow-hidden cursor-pointer group"
               >
-                <Link to="/">
-                  <div className="aspect-[4/3] relative overflow-hidden bg-muted">
-                    <img
-                      src="/miro_placeholder.png"
-                      alt={flow.name}
-                      className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                      loading="lazy"
-                    />
-                  </div>
-                  <div className="p-4">
-                    <h3 className="font-normal text-sm truncate">{flow.name}</h3>
-                    <p className="text-xs text-muted-foreground font-light mt-1">
-                      {new Date(flow.updated_at).toLocaleDateString("es-ES")}
-                    </p>
+                <Link to={`/boards/${flow.id}`} className="w-full h-full flex flex-col justify-end p-6">
+                  <div className="flex items-center gap-3 text-black">
+                    <LayoutDashboard className="w-[22px] h-[22px]" strokeWidth={1.5} />
+                    <span className="font-normal text-[16px] truncate">{flow.name}</span>
                   </div>
                 </Link>
               </motion.div>

@@ -91,29 +91,20 @@ export default function Boards() {
               initial={{ y: 10, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: i * 0.05 }}
-              className="bg-background rounded-xl border border-muted overflow-hidden cursor-pointer hover:shadow-md transition-shadow group relative"
+              className="aspect-[4/3] bg-[#F9FAFB] hover:bg-[#F3F4F6] rounded-[24px] overflow-hidden cursor-pointer transition-colors group relative flex flex-col justify-end p-6"
               onClick={() => navigate(`/boards/${flow.id}`)}
             >
-              <div className="aspect-[4/3] bg-muted relative overflow-hidden">
-                <img
-                  src="/miro_placeholder.png"
-                  alt="Board preview"
-                  className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-                />
-              </div>
-              <div className="p-4 flex items-center justify-between">
-                <div className="min-w-0">
-                  <h3 className="font-normal text-sm truncate">{flow.name}</h3>
-                  <p className="text-xs font-light text-muted-foreground mt-1">
-                    Actualizado: {new Date(flow.updated_at).toLocaleDateString("es-ES")}
-                  </p>
+              <div className="flex items-center justify-between w-full">
+                <div className="flex items-center gap-3 text-black">
+                  <LayoutDashboard className="w-[22px] h-[22px]" strokeWidth={1.5} />
+                  <span className="font-normal text-[16px] truncate">{flow.name}</span>
                 </div>
                 <button
                   onClick={(e) => handleDelete(e, flow.id)}
-                  className="p-2 rounded-full opacity-0 group-hover:opacity-100 hover:bg-miiles-pink-light text-miiles-pink transition-all"
+                  className="p-2 rounded-full opacity-0 group-hover:opacity-100 hover:bg-black/5 text-black/40 hover:text-black transition-all"
                   aria-label="Eliminar"
                 >
-                  <Trash2 size={14} />
+                  <Trash2 size={16} strokeWidth={1.5} />
                 </button>
               </div>
             </motion.div>
