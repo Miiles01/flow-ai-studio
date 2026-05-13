@@ -58,7 +58,7 @@ function SidebarBody() {
     <Sidebar
       collapsible="icon"
       variant="floating"
-      className="!py-[40px] pl-6 pr-2 border-none shadow-none !bg-transparent [&>div[data-sidebar=sidebar]]:bg-transparent [&>div[data-sidebar=sidebar]]:border-none [&>div[data-sidebar=sidebar]]:shadow-none"
+      className={`!py-[40px] border-none shadow-none !bg-transparent [&>div[data-sidebar=sidebar]]:bg-transparent [&>div[data-sidebar=sidebar]]:border-none [&>div[data-sidebar=sidebar]]:shadow-none ${collapsed ? "px-3" : "pl-6 pr-2"}`}
     >
       <div 
         className="flex flex-col h-full rounded-[50px] overflow-hidden w-full"
