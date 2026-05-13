@@ -7,6 +7,7 @@ import {
   Controls,
   Background,
   BackgroundVariant,
+  ConnectionMode,
   type Connection,
   type Node,
   type Edge,
@@ -179,6 +180,7 @@ const Index = () => {
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
           nodeTypes={nodeTypes}
+          connectionMode={ConnectionMode.Loose}
           fitView
           proOptions={{ hideAttribution: true }}
           className="bg-white"
