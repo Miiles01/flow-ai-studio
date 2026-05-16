@@ -129,7 +129,7 @@ const Toolbar = ({ onAddNode, interactionMode, setInteractionMode }: ToolbarProp
 
       {/* Formas con flyout */}
       <div className="relative" onMouseEnter={openFlyout} onMouseLeave={closeFlyout}>
-        <Tooltip>
+        <Tooltip open={flyoutOpen ? false : undefined}>
           <TooltipTrigger asChild>
             <button
               onClick={() => onAddNode(selectedShape)}
@@ -152,10 +152,9 @@ const Toolbar = ({ onAddNode, interactionMode, setInteractionMode }: ToolbarProp
               transition={{ duration: 0.14, ease: "easeOut" }}
               onMouseEnter={openFlyout}
               onMouseLeave={closeFlyout}
-              className="absolute left-[calc(100%+10px)] top-1/2 -translate-y-1/2 bg-[#111] rounded-2xl p-2.5 shadow-[0_16px_48px_rgb(0,0,0,0.3)] z-50"
+              className="absolute left-[calc(100%+10px)] top-1/2 -translate-y-1/2 bg-[#111] rounded-2xl p-2 shadow-[0_16px_48px_rgb(0,0,0,0.3)] z-50"
             >
-              <p className="text-[9px] text-[#555] font-light uppercase tracking-widest mb-2 px-1.5">Formas</p>
-              <div className="grid grid-cols-3 gap-1">
+              <div className="flex flex-row gap-1">
                 {SHAPES.map((shape) => (
                   <button
                     key={shape.id}
