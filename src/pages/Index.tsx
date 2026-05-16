@@ -90,6 +90,11 @@ const Index = () => {
     [setEdges]
   );
 
+  const isValidConnection = useCallback(
+    (connection: Connection) => connection.source !== connection.target,
+    []
+  );
+
   const handleAddNode = useCallback(
     (type: string) => {
       nodeCounter.current += 1;
@@ -262,6 +267,7 @@ const Index = () => {
           onConnect={onConnect}
           nodeTypes={nodeTypes}
           connectionMode={ConnectionMode.Loose}
+          isValidConnection={isValidConnection}
           panOnDrag={interactionMode === "pan" ? true : [1, 2]}
           selectionOnDrag={interactionMode === "edit"}
           nodesDraggable={interactionMode === "edit"}

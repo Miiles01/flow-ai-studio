@@ -42,15 +42,7 @@ const ShapeNode = ({ data, selected }: NodeProps) => {
         isVisible={selected}
         minWidth={60}
         minHeight={60}
-        lineStyle={{ borderColor: "#4059F1", borderWidth: 1, opacity: 0.5 }}
-        handleStyle={{
-          width: 8,
-          height: 8,
-          backgroundColor: "white",
-          borderColor: "#4059F1",
-          borderWidth: 1.5,
-          borderRadius: "50%",
-        }}
+        lineStyle={{ borderColor: "#4059F1", borderWidth: 1, opacity: 0.4 }}
       />
 
       {/* Handles — visible solo cuando está seleccionado */}

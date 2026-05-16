@@ -54,14 +54,6 @@ const TextNode = ({ data, selected }: NodeProps) => {
         minWidth={120}
         minHeight={40}
         lineStyle={{ borderColor: "#4059F1", borderWidth: 1, opacity: 0.4 }}
-        handleStyle={{
-          width: 8,
-          height: 8,
-          backgroundColor: "white",
-          borderColor: "#4059F1",
-          borderWidth: 1.5,
-          borderRadius: "50%",
-        }}
       />
 
       {/* Handles */}

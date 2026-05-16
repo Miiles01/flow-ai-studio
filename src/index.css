@@ -198,3 +198,39 @@
 .pan-mode .react-flow__pane:active {
   cursor: grabbing !important;
 }
+
+/* ── NodeResizer: vértices tipo L en esquinas ── */
+.react-flow__resize-control.handle {
+  width: 10px !important;
+  height: 10px !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
+/* Esquinas — L-shape */
+.react-flow__resize-control.handle.top-left {
+  border-top: 2px solid #4059F1 !important;
+  border-left: 2px solid #4059F1 !important;
+}
+.react-flow__resize-control.handle.top-right {
+  border-top: 2px solid #4059F1 !important;
+  border-right: 2px solid #4059F1 !important;
+}
+.react-flow__resize-control.handle.bottom-left {
+  border-bottom: 2px solid #4059F1 !important;
+  border-left: 2px solid #4059F1 !important;
+}
+.react-flow__resize-control.handle.bottom-right {
+  border-bottom: 2px solid #4059F1 !important;
+  border-right: 2px solid #4059F1 !important;
+}
+
+/* Ocultar handles de los bordes (no esquinas) */
+.react-flow__resize-control.handle.top,
+.react-flow__resize-control.handle.right,
+.react-flow__resize-control.handle.bottom,
+.react-flow__resize-control.handle.left {
+  display: none !important;
+}
