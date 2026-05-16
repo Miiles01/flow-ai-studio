@@ -178,10 +178,25 @@ export default function Dashboard() {
     );
   }
 
+  const containerVariants = {
+    hidden: {},
+    visible: { transition: { staggerChildren: 0.1 } },
+  };
+
+  const sectionVariants = {
+    hidden: { opacity: 0, y: 20 },
+    visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.25, 0.1, 0.25, 1] } },
+  };
+
   return (
-    <div className="p-8 md:p-12 max-w-5xl mx-auto space-y-12">
+    <motion.div
+      className="p-8 md:p-12 max-w-5xl mx-auto space-y-12"
+      variants={containerVariants}
+      initial="hidden"
+      animate="visible"
+    >
       {/* Greeting */}
-      <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
+      <motion.div variants={sectionVariants}>
         <h1 className="text-2xl md:text-3xl font-normal">
           {getGreeting()}, <span className="text-accent">{displayName}</span>
         </h1>
@@ -191,12 +206,11 @@ export default function Dashboard() {
       </motion.div>
 
       {/* Stats */}
-      <div className="grid grid-cols-2 gap-5">
+      <motion.div variants={sectionVariants} className="grid grid-cols-2 gap-5">
         {/* Notifications card */}
         <motion.div
-          initial={{ y: 10, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          className="p-5 rounded-lg shadow-md cursor-pointer hover:-translate-y-1 transition-transform duration-200"
+          whileHover={{ y: -4, transition: { duration: 0.2 } }}
+          className="p-5 rounded-lg shadow-md cursor-pointer"
           onClick={() => setNotifOpen(true)}
         >
           <div className="w-8 h-8 rounded-sm bg-background shadow-sm flex items-center justify-center mb-3 relative">
@@ -212,10 +226,8 @@ export default function Dashboard() {
         </motion.div>
 
         <motion.div
-          initial={{ y: 10, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.05 }}
-          className="p-5 rounded-lg shadow-md cursor-pointer hover:-translate-y-1 transition-transform duration-200"
+          whileHover={{ y: -4, transition: { duration: 0.2 } }}
+          className="p-5 rounded-lg shadow-md cursor-pointer"
           onClick={() => setAppsOpen(true)}
         >
           <div className="w-8 h-8 rounded-sm bg-background shadow-sm flex items-center justify-center mb-3">
@@ -224,11 +236,11 @@ export default function Dashboard() {
           <p className="text-2xl font-normal">{savedCount}</p>
           <p className="text-xs text-miiles-gray-400 font-light mt-1">Proyectos</p>
         </motion.div>
-      </div>
+      </motion.div>
 
       {/* Admin: send notification button */}
       {isAdmin && (
-        <div>
+        <motion.div variants={sectionVariants}>
           <Button
             size="sm"
             className="gap-1.5"
@@ -240,7 +252,7 @@ export default function Dashboard() {
             <Send size={14} />
             Enviar notificación
           </Button>
-        </div>
+        </motion.div>
       )}
 
       {/* Notifications popup */}
@@ -456,7 +468,7 @@ export default function Dashboard() {
       </Dialog>
 
       {/* Boards Carousel */}
-      <div>
+      <motion.div variants={sectionVariants}>
         <div className="flex items-center justify-between mb-5">
           <h2 className="text-lg font-normal">Mis tableros</h2>
           <Link to="/boards" className="text-xs text-accent hover:underline flex items-center gap-1 font-light">
@@ -480,8 +492,9 @@ export default function Dashboard() {
                 key={flow.id}
                 initial={{ x: 20, opacity: 0 }}
                 animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: i * 0.05 }}
-                className="snap-start shrink-0 w-[280px] md:w-[320px] aspect-[4/3] rounded-[24px] bg-[#F9FAFB] hover:bg-[#F3F4F6] transition-colors duration-300 overflow-hidden cursor-pointer group"
+                transition={{ delay: 0.3 + i * 0.06 }}
+                whileHover={{ y: -6, transition: { duration: 0.2 } }}
+                className="snap-start shrink-0 w-[280px] md:w-[320px] aspect-[4/3] rounded-[24px] bg-[#F9FAFB] overflow-hidden cursor-pointer group"
               >
                 <Link to={`/boards/${flow.id}`} className="w-full h-full flex flex-col justify-end p-6">
                   <div className="flex items-center gap-3 text-black">
@@ -494,18 +507,21 @@ export default function Dashboard() {
             
             {/* "Ver todos" card at the end of the carousel */}
             {flows.length >= 5 && (
-              <div className="snap-start shrink-0 w-[120px] rounded-xl border border-dashed border-muted bg-background flex items-center justify-center cursor-pointer hover:bg-muted/50 transition-colors">
+              <motion.div
+                whileHover={{ y: -6, transition: { duration: 0.2 } }}
+                className="snap-start shrink-0 w-[120px] rounded-xl border border-dashed border-muted bg-background flex items-center justify-center cursor-pointer"
+              >
                 <Link to="/boards" className="flex flex-col items-center gap-2 text-muted-foreground hover:text-foreground">
                   <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
                     <ArrowRight size={16} />
                   </div>
                   <span className="text-xs font-light">Ver todos</span>
                 </Link>
-              </div>
+              </motion.div>
             )}
           </div>
         )}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }
