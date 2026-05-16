@@ -65,6 +65,10 @@ const Landing = () => {
         });
       });
     };
+
+    // Desvanecimiento ligero para cada sección
+    animate("#smooth-content section", 25, 1.2);
+
     animate("[data-anim-heading]", 40, 0.8);
     animate("[data-split]", 15, 0.5);
 
