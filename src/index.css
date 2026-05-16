@@ -179,3 +179,22 @@
 .animate-marquee {
   animation: marquee 30s linear infinite;
 }
+
+/* Pan Mode — solo navegación, no edición */
+.pan-mode .react-flow__handle {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.pan-mode .react-flow__node {
+  cursor: grab !important;
+  pointer-events: none !important;
+}
+
+.pan-mode .react-flow__pane {
+  cursor: grab !important;
+}
+
+.pan-mode .react-flow__pane:active {
+  cursor: grabbing !important;
+}

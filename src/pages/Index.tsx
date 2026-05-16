@@ -182,14 +182,14 @@ const Index = () => {
           onConnect={onConnect}
           nodeTypes={nodeTypes}
           connectionMode={ConnectionMode.Loose}
-          panOnDrag={interactionMode === "pan"}
+          panOnDrag={interactionMode === "pan" ? true : [1, 2]}
           selectionOnDrag={interactionMode === "edit"}
           nodesDraggable={interactionMode === "edit"}
           nodesConnectable={interactionMode === "edit"}
           elementsSelectable={interactionMode === "edit"}
           fitView
           proOptions={{ hideAttribution: true }}
-          className="bg-white"
+          className={`bg-white ${interactionMode === "pan" ? "pan-mode" : "edit-mode"}`}
         >
           <Background variant={BackgroundVariant.Dots} gap={32} size={1} color="#E5E7EB" />
           <Controls position="bottom-left" showInteractive={false} />
