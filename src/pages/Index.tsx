@@ -21,11 +21,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { AnimatePresence, motion } from "framer-motion";
 
 import FlowNode from "@/components/nodes/FlowNode";
+import ShapeNode from "@/components/nodes/ShapeNode";
+import TextNode from "@/components/nodes/TextNode";
 import Toolbar from "@/components/Toolbar";
 import AIPromptBar from "@/components/AIPromptBar";
 import { generateFlowFromPrompt } from "@/lib/generateFlow";
 
-const nodeTypes = { flowNode: FlowNode };
+const SHAPE_TYPES = ["square", "circle", "diamond", "triangle", "hexagon", "star"];
+const nodeTypes = { flowNode: FlowNode, shapeNode: ShapeNode, textNode: TextNode };
 
 const Index = () => {
   const { id } = useParams();
@@ -90,14 +93,21 @@ const Index = () => {
   const handleAddNode = useCallback(
     (type: string) => {
       nodeCounter.current += 1;
+      const isShape = SHAPE_TYPES.includes(type);
+      const isText = type === "text";
       const newNode: Node = {
         id: `node-${Date.now()}`,
-        type: "flowNode",
+        type: isShape ? "shapeNode" : isText ? "textNode" : "flowNode",
         position: {
-          x: 250 + Math.random() * 300,
+          x: 200 + Math.random() * 300,
           y: 150 + nodeCounter.current * 80,
         },
-        data: { label: `Nuevo nodo ${nodeCounter.current}`, type },
+        style: isShape ? { width: 120, height: 120 } : isText ? { width: 200, height: 80 } : undefined,
+        data: isShape
+          ? { shape: type, label: "" }
+          : isText
+          ? { text: "Texto", fontSize: 16, bold: false, italic: false, underline: false }
+          : { label: `Nodo ${nodeCounter.current}`, type },
       };
       setNodes((nds) => [...nds, newNode]);
     },

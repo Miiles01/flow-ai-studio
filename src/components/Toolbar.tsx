@@ -1,5 +1,6 @@
-import { motion } from "framer-motion";
-import { Circle, Diamond, Square, Play, StopCircle, MousePointer, Hand } from "lucide-react";
+import { useState, useRef } from "react";
+import { motion, AnimatePresence } from "framer-motion";
+import { MousePointer, Hand, Type } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 type ToolbarProps = {
@@ -8,68 +9,191 @@ type ToolbarProps = {
   setInteractionMode: (mode: "edit" | "pan") => void;
 };
 
-const tools = [
-  { id: "process", icon: Square, label: "Proceso" },
-  { id: "decision", icon: Diamond, label: "Decisión" },
-  { id: "start", icon: Play, label: "Inicio" },
-  { id: "end", icon: StopCircle, label: "Fin" },
-  { id: "action", icon: Circle, label: "Acción" },
+const SHAPES = [
+  {
+    id: "square",
+    label: "Rectángulo",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-[18px] h-[18px]">
+        <rect x="2" y="2" width="20" height="20" rx="3" />
+      </svg>
+    ),
+  },
+  {
+    id: "circle",
+    label: "Círculo",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-[18px] h-[18px]">
+        <circle cx="12" cy="12" r="10" />
+      </svg>
+    ),
+  },
+  {
+    id: "diamond",
+    label: "Rombo",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-[18px] h-[18px]">
+        <polygon points="12,2 22,12 12,22 2,12" />
+      </svg>
+    ),
+  },
+  {
+    id: "triangle",
+    label: "Triángulo",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-[18px] h-[18px]">
+        <polygon points="12,2 22,22 2,22" />
+      </svg>
+    ),
+  },
+  {
+    id: "hexagon",
+    label: "Hexágono",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-[18px] h-[18px]">
+        <polygon points="12,2 21,7 21,17 12,22 3,17 3,7" />
+      </svg>
+    ),
+  },
+  {
+    id: "star",
+    label: "Estrella",
+    icon: (
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-[18px] h-[18px]">
+        <polygon points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9" />
+      </svg>
+    ),
+  },
 ];
 
 const Toolbar = ({ onAddNode, interactionMode, setInteractionMode }: ToolbarProps) => {
+  const [selectedShape, setSelectedShape] = useState("square");
+  const [flyoutOpen, setFlyoutOpen] = useState(false);
+  const flyoutTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const openFlyout = () => {
+    if (flyoutTimer.current) clearTimeout(flyoutTimer.current);
+    setFlyoutOpen(true);
+  };
+  const closeFlyout = () => {
+    flyoutTimer.current = setTimeout(() => setFlyoutOpen(false), 120);
+  };
+
+  const currentShape = SHAPES.find((s) => s.id === selectedShape) || SHAPES[0];
+
   return (
     <motion.div
       initial={{ x: -40, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
       className="absolute inset-y-0 my-auto h-fit left-6 z-10 flex flex-col items-center gap-1.5 px-2 py-3 rounded-[30px] bg-white shadow-[0_8px_30px_rgb(0,0,0,0.06)] font-sans"
     >
-      <div className="flex flex-col gap-1.5 w-full">
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <button 
-              onClick={() => setInteractionMode("edit")}
-              className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${interactionMode === "edit" ? "bg-black text-white shadow-md" : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"}`}
-            >
-              <MousePointer size={18} strokeWidth={1.5} />
-            </button>
-          </TooltipTrigger>
-          <TooltipContent side="right" sideOffset={12} className="text-[13px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
-            Seleccionar
-          </TooltipContent>
-        </Tooltip>
+      {/* Seleccionar */}
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button
+            onClick={() => setInteractionMode("edit")}
+            className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
+              interactionMode === "edit"
+                ? "bg-black text-white shadow-md"
+                : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
+            }`}
+          >
+            <MousePointer size={18} strokeWidth={1.5} />
+          </button>
+        </TooltipTrigger>
+        <TooltipContent side="right" sideOffset={12} className="text-[13px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
+          Seleccionar
+        </TooltipContent>
+      </Tooltip>
 
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <button 
-              onClick={() => setInteractionMode("pan")}
-              className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${interactionMode === "pan" ? "bg-black text-white shadow-md" : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"}`}
-            >
-              <Hand size={18} strokeWidth={1.5} />
-            </button>
-          </TooltipTrigger>
-          <TooltipContent side="right" sideOffset={12} className="text-[13px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
-            Navegar
-          </TooltipContent>
-        </Tooltip>
-      </div>
-      
+      {/* Navegar */}
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button
+            onClick={() => setInteractionMode("pan")}
+            className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
+              interactionMode === "pan"
+                ? "bg-black text-white shadow-md"
+                : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
+            }`}
+          >
+            <Hand size={18} strokeWidth={1.5} />
+          </button>
+        </TooltipTrigger>
+        <TooltipContent side="right" sideOffset={12} className="text-[13px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
+          Navegar
+        </TooltipContent>
+      </Tooltip>
+
       <div className="w-6 h-[1px] bg-[#E5E7EB] my-1" />
 
-      {tools.map((tool) => (
-        <Tooltip key={tool.id}>
+      {/* Formas con flyout */}
+      <div className="relative" onMouseEnter={openFlyout} onMouseLeave={closeFlyout}>
+        <Tooltip>
           <TooltipTrigger asChild>
             <button
-              onClick={() => onAddNode(tool.id)}
-              className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#F3F4F6] transition-all group"
+              onClick={() => onAddNode(selectedShape)}
+              className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#F3F4F6] transition-all text-[#6B7280] hover:text-black"
             >
-              <tool.icon size={18} strokeWidth={1.5} className="text-[#6B7280] group-hover:text-black transition-colors" />
+              {currentShape.icon}
             </button>
           </TooltipTrigger>
           <TooltipContent side="right" sideOffset={12} className="text-[13px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
-            {tool.label}
+            Formas
           </TooltipContent>
         </Tooltip>
-      ))}
+
+        <AnimatePresence>
+          {flyoutOpen && (
+            <motion.div
+              initial={{ opacity: 0, x: -8, scale: 0.96 }}
+              animate={{ opacity: 1, x: 0, scale: 1 }}
+              exit={{ opacity: 0, x: -8, scale: 0.96 }}
+              transition={{ duration: 0.14, ease: "easeOut" }}
+              onMouseEnter={openFlyout}
+              onMouseLeave={closeFlyout}
+              className="absolute left-[calc(100%+10px)] top-1/2 -translate-y-1/2 bg-[#111] rounded-2xl p-2.5 shadow-[0_16px_48px_rgb(0,0,0,0.3)] z-50"
+            >
+              <p className="text-[9px] text-[#555] font-light uppercase tracking-widest mb-2 px-1.5">Formas</p>
+              <div className="grid grid-cols-3 gap-1">
+                {SHAPES.map((shape) => (
+                  <button
+                    key={shape.id}
+                    onClick={() => {
+                      setSelectedShape(shape.id);
+                      onAddNode(shape.id);
+                      setFlyoutOpen(false);
+                    }}
+                    title={shape.label}
+                    className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all ${
+                      selectedShape === shape.id
+                        ? "bg-white text-black"
+                        : "text-[#777] hover:bg-[#222] hover:text-white"
+                    }`}
+                  >
+                    {shape.icon}
+                  </button>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* Texto */}
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button
+            onClick={() => onAddNode("text")}
+            className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#F3F4F6] transition-all text-[#6B7280] hover:text-black"
+          >
+            <Type size={18} strokeWidth={1.5} />
+          </button>
+        </TooltipTrigger>
+        <TooltipContent side="right" sideOffset={12} className="text-[13px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
+          Texto
+        </TooltipContent>
+      </Tooltip>
     </motion.div>
   );
 };
