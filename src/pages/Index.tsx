@@ -13,7 +13,7 @@ import {
   type Edge,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { ArrowLeft, Loader2, Save, Settings2, EyeOff, Eye } from "lucide-react";
+import { ArrowLeft, Loader2, Check, Cloud, CloudOff, Settings2, EyeOff, Eye } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -40,12 +40,16 @@ const Index = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [name, setName] = useState("Tablero sin título");
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
+  const [saveState, setSaveState] = useState<"idle" | "dirty" | "saving" | "saved" | "error">("idle");
   const [interactionMode, setInteractionMode] = useState<"edit" | "pan">("edit");
   const [hideTools, setHideTools] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const settingsRef = useRef<HTMLDivElement>(null);
   const nodeCounter = useRef(0);
+  const lastSavedRef = useRef<string>("");
+  const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isCreatingRef = useRef(false);
+  const skipNextDirtyRef = useRef(true);
 
   const [activeDrawShape, setActiveDrawShape] = useState<string | null>(null);
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
