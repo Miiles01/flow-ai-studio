@@ -90,7 +90,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
   const [activeLink, setActiveLink] = useState<HTMLAnchorElement | null>(null);
   const [savedRange, setSavedRange] = useState<Range | null>(null);
   const [activePicker, setActivePicker] = useState<"text" | null>(null);
-  const [isSingleSelected] = [selected && getNodes().filter((n) => n.selected).length === 1];
+  
 
   const editorRef = useRef<HTMLDivElement>(null);
   const linkInputRef = useRef<HTMLInputElement>(null);
