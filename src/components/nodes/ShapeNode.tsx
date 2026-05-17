@@ -17,7 +17,7 @@ const SVG_SHAPES: Record<string, React.ReactNode> = {
 };
 
 const handleClass =
-  "!w-[10px] !h-[10px] !rounded-full !bg-white !border-[1.5px] !border-[#4059F1] transition-all duration-200 hover:!bg-[#4059F1] before:absolute before:-inset-3 before:content-['']";
+  "!w-[10px] !h-[10px] !rounded-full !bg-white !border-[1.5px] !border-[#4059F1] transition-all duration-200 hover:!bg-[#4059F1] before:absolute before:-inset-3 before:content-[''] !z-50";
 
 const ShapeNode = ({ data, selected }: NodeProps) => {
   const nodeData = data as ShapeNodeData;
@@ -44,21 +44,6 @@ const ShapeNode = ({ data, selected }: NodeProps) => {
         minHeight={60}
         lineStyle={{ borderColor: "#4059F1", borderWidth: 1, opacity: 0.4 }}
       />
-
-      {/* Handles — visible solo cuando está seleccionado */}
-      {(["top", "bottom", "left", "right"] as const).map((pos) => (
-        <Handle
-          key={pos}
-          type="source"
-          position={
-            pos === "top" ? Position.Top :
-            pos === "bottom" ? Position.Bottom :
-            pos === "left" ? Position.Left : Position.Right
-          }
-          id={pos}
-          className={`${handleClass} ${selected ? "opacity-100" : "opacity-0 hover:opacity-100"}`}
-        />
-      ))}
 
       {/* SVG shape */}
       <svg
@@ -95,6 +80,21 @@ const ShapeNode = ({ data, selected }: NodeProps) => {
           </span>
         )}
       </div>
+
+      {/* Handles — visible solo cuando está seleccionado (rendered last to stack on top) */}
+      {(["top", "bottom", "left", "right"] as const).map((pos) => (
+        <Handle
+          key={pos}
+          type="source"
+          position={
+            pos === "top" ? Position.Top :
+            pos === "bottom" ? Position.Bottom :
+            pos === "left" ? Position.Left : Position.Right
+          }
+          id={pos}
+          className={`${handleClass} ${selected ? "opacity-100" : "opacity-0 hover:opacity-100"}`}
+        />
+      ))}
     </motion.div>
   );
 };

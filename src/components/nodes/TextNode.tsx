@@ -12,7 +12,7 @@ export type TextNodeData = {
 };
 
 const HANDLE_CLASS =
-  "!w-[10px] !h-[10px] !rounded-full !bg-white !border-[1.5px] !border-[#4059F1] transition-all duration-200 hover:!bg-[#4059F1] before:absolute before:-inset-3 before:content-['']";
+  "!w-[10px] !h-[10px] !rounded-full !bg-white !border-[1.5px] !border-[#4059F1] transition-all duration-200 hover:!bg-[#4059F1] before:absolute before:-inset-3 before:content-[''] !z-50";
 
 // ─── Link Popover ───────────────────────────────────────────────
 function LinkPopover({
@@ -165,6 +165,15 @@ const TextNode = ({ data, selected }: NodeProps) => {
     if (editorRef.current) editorRef.current.style.textAlign = align;
   }, [align]);
 
+  // Seed initial content once
+  useEffect(() => {
+    if (editorRef.current && !editorRef.current.innerHTML) {
+      editorRef.current.innerHTML = nodeData.html || "Texto";
+      styleLinks();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   return (
     <motion.div
       initial={{ scale: 0.9, opacity: 0 }}
@@ -178,21 +187,6 @@ const TextNode = ({ data, selected }: NodeProps) => {
         minHeight={40}
         lineStyle={{ borderColor: "#4059F1", borderWidth: 1, opacity: 0.4 }}
       />
-
-      {/* Handles */}
-      {(["top", "bottom", "left", "right"] as const).map((pos) => (
-        <Handle
-          key={pos}
-          type="source"
-          position={
-            pos === "top" ? Position.Top :
-            pos === "bottom" ? Position.Bottom :
-            pos === "left" ? Position.Left : Position.Right
-          }
-          id={pos}
-          className={`${HANDLE_CLASS} ${selected ? "opacity-100" : "opacity-0 hover:opacity-100"}`}
-        />
-      ))}
 
       {/* ── Formatting Toolbar ── */}
       <AnimatePresence>
@@ -351,9 +345,6 @@ const TextNode = ({ data, selected }: NodeProps) => {
         onMouseUp={detectLink}
         onKeyUp={detectLink}
         onInput={styleLinks}
-        dangerouslySetInnerHTML={
-          editorRef.current ? undefined : { __html: nodeData.html || "Texto" }
-        }
         style={{
           fontSize,
           textAlign: align,
@@ -367,6 +358,21 @@ const TextNode = ({ data, selected }: NodeProps) => {
         }}
         className="w-full h-full font-sans font-light focus:outline-none [&_a]:text-[#4059F1] [&_a]:underline [&_a]:cursor-pointer"
       />
+
+      {/* Handles — visible solo cuando está seleccionado (rendered last to stack on top) */}
+      {(["top", "bottom", "left", "right"] as const).map((pos) => (
+        <Handle
+          key={pos}
+          type="source"
+          position={
+            pos === "top" ? Position.Top :
+            pos === "bottom" ? Position.Bottom :
+            pos === "left" ? Position.Left : Position.Right
+          }
+          id={pos}
+          className={`${HANDLE_CLASS} ${selected ? "opacity-100" : "opacity-0 hover:opacity-100"}`}
+        />
+      ))}
     </motion.div>
   );
 };

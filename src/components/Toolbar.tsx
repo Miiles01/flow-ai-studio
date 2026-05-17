@@ -7,6 +7,8 @@ type ToolbarProps = {
   onAddNode: (type: string) => void;
   interactionMode: "edit" | "pan";
   setInteractionMode: (mode: "edit" | "pan") => void;
+  activeDrawShape: string | null;
+  setActiveDrawShape: (shape: string | null) => void;
 };
 
 const SHAPES = [
@@ -66,7 +68,13 @@ const SHAPES = [
   },
 ];
 
-const Toolbar = ({ onAddNode, interactionMode, setInteractionMode }: ToolbarProps) => {
+const Toolbar = ({
+  onAddNode,
+  interactionMode,
+  setInteractionMode,
+  activeDrawShape,
+  setActiveDrawShape,
+}: ToolbarProps) => {
   const [selectedShape, setSelectedShape] = useState("square");
   const [flyoutOpen, setFlyoutOpen] = useState(false);
   const flyoutTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -91,9 +99,12 @@ const Toolbar = ({ onAddNode, interactionMode, setInteractionMode }: ToolbarProp
       <Tooltip>
         <TooltipTrigger asChild>
           <button
-            onClick={() => setInteractionMode("edit")}
+            onClick={() => {
+              setInteractionMode("edit");
+              setActiveDrawShape(null);
+            }}
             className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
-              interactionMode === "edit"
+              interactionMode === "edit" && activeDrawShape === null
                 ? "bg-black text-white shadow-md"
                 : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
             }`}
@@ -110,7 +121,10 @@ const Toolbar = ({ onAddNode, interactionMode, setInteractionMode }: ToolbarProp
       <Tooltip>
         <TooltipTrigger asChild>
           <button
-            onClick={() => setInteractionMode("pan")}
+            onClick={() => {
+              setInteractionMode("pan");
+              setActiveDrawShape(null);
+            }}
             className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
               interactionMode === "pan"
                 ? "bg-black text-white shadow-md"
@@ -128,12 +142,23 @@ const Toolbar = ({ onAddNode, interactionMode, setInteractionMode }: ToolbarProp
       <div className="w-6 h-[1px] bg-[#E5E7EB] my-1" />
 
       {/* Formas con flyout */}
-      <div className="relative" onMouseEnter={openFlyout} onMouseLeave={closeFlyout}>
+      <div className="relative flex items-center" onMouseEnter={openFlyout} onMouseLeave={closeFlyout}>
         <Tooltip open={flyoutOpen ? false : undefined}>
           <TooltipTrigger asChild>
             <button
-              onClick={() => onAddNode(selectedShape)}
-              className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#F3F4F6] transition-all text-[#6B7280] hover:text-black"
+              onClick={() => {
+                if (activeDrawShape === selectedShape) {
+                  setActiveDrawShape(null);
+                } else {
+                  setActiveDrawShape(selectedShape);
+                  setInteractionMode("edit");
+                }
+              }}
+              className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
+                activeDrawShape !== null
+                  ? "bg-black text-white shadow-md hover:bg-black/90"
+                  : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
+              }`}
             >
               {currentShape.icon}
             </button>
@@ -160,7 +185,8 @@ const Toolbar = ({ onAddNode, interactionMode, setInteractionMode }: ToolbarProp
                     key={shape.id}
                     onClick={() => {
                       setSelectedShape(shape.id);
-                      onAddNode(shape.id);
+                      setActiveDrawShape(shape.id);
+                      setInteractionMode("edit");
                       setFlyoutOpen(false);
                     }}
                     title={shape.label}
@@ -183,7 +209,10 @@ const Toolbar = ({ onAddNode, interactionMode, setInteractionMode }: ToolbarProp
       <Tooltip>
         <TooltipTrigger asChild>
           <button
-            onClick={() => onAddNode("text")}
+            onClick={() => {
+              setActiveDrawShape(null);
+              onAddNode("text");
+            }}
             className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#F3F4F6] transition-all text-[#6B7280] hover:text-black"
           >
             <Type size={18} strokeWidth={1.5} />

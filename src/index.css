@@ -199,32 +199,63 @@
   cursor: grabbing !important;
 }
 
-/* ── NodeResizer: vértices tipo L en esquinas ── */
-.react-flow__resize-control.handle {
-  width: 10px !important;
-  height: 10px !important;
-  background: transparent !important;
-  border: none !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
+/* ── NodeResizer: premium dashed margin and square vertices ── */
+.react-flow__node-resizer .react-flow__resize-control.line {
+  border-color: #4059F1 !important;
+  border-style: dashed !important;
+  border-width: 1.5px !important;
+  opacity: 1 !important;
 }
 
-/* Esquinas — L-shape */
+/* Offset lines outward to create a margin/padding effect */
+.react-flow__node-resizer .react-flow__resize-control.line.top {
+  top: -8px !important;
+  left: -8px !important;
+  right: -8px !important;
+}
+.react-flow__node-resizer .react-flow__resize-control.line.bottom {
+  bottom: -8px !important;
+  left: -8px !important;
+  right: -8px !important;
+}
+.react-flow__node-resizer .react-flow__resize-control.line.left {
+  left: -8px !important;
+  top: -8px !important;
+  bottom: -8px !important;
+}
+.react-flow__node-resizer .react-flow__resize-control.line.right {
+  right: -8px !important;
+  top: -8px !important;
+  bottom: -8px !important;
+}
+
+/* Square vertices at corners */
+.react-flow__resize-control.handle {
+  width: 8px !important;
+  height: 8px !important;
+  background: white !important;
+  border: 1.5px solid #4059F1 !important;
+  border-radius: 0px !important; /* Pure square! */
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12) !important;
+  z-index: 40 !important;
+}
+
+/* Align corners perfectly centered on the -8px offset dashed line intersections */
 .react-flow__resize-control.handle.top-left {
-  border-top: 2px solid #4059F1 !important;
-  border-left: 2px solid #4059F1 !important;
+  top: -12px !important;
+  left: -12px !important;
 }
 .react-flow__resize-control.handle.top-right {
-  border-top: 2px solid #4059F1 !important;
-  border-right: 2px solid #4059F1 !important;
+  top: -12px !important;
+  right: -12px !important;
 }
 .react-flow__resize-control.handle.bottom-left {
-  border-bottom: 2px solid #4059F1 !important;
-  border-left: 2px solid #4059F1 !important;
+  bottom: -12px !important;
+  left: -12px !important;
 }
 .react-flow__resize-control.handle.bottom-right {
-  border-bottom: 2px solid #4059F1 !important;
-  border-right: 2px solid #4059F1 !important;
+  bottom: -12px !important;
+  right: -12px !important;
 }
 
 /* Ocultar handles de los bordes (no esquinas) */

@@ -47,6 +47,14 @@ const Index = () => {
   const settingsRef = useRef<HTMLDivElement>(null);
   const nodeCounter = useRef(0);
 
+  const [activeDrawShape, setActiveDrawShape] = useState<string | null>(null);
+  const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
+  const drawingNodeRef = useRef<{
+    id: string;
+    startX: number;
+    startY: number;
+  } | null>(null);
+
   // Close settings dropdown on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -166,6 +174,97 @@ const Index = () => {
     }
   };
 
+  const handlePointerDown = useCallback((e: React.PointerEvent) => {
+    if (!activeDrawShape || !reactFlowInstance) return;
+
+    // Ensure we clicked on the empty canvas pane, not on interactive overlays, nodes, etc.
+    const target = e.target as HTMLElement;
+    const isInsideCanvas = target.closest(".react-flow__pane") !== null;
+    const isInteractive = target.closest(".react-flow__node") !== null ||
+                          target.closest(".react-flow__controls") !== null ||
+                          target.closest(".react-flow__minimap") !== null ||
+                          target.closest("button") !== null ||
+                          target.closest("input") !== null;
+
+    if (!isInsideCanvas || isInteractive) return;
+
+    e.preventDefault();
+
+    // Project starting page coordinates to canvas flow space
+    const flowStart = reactFlowInstance.screenToFlowPosition({
+      x: e.clientX,
+      y: e.clientY,
+    });
+
+    const newNodeId = `node-${Date.now()}`;
+    const newNode: Node = {
+      id: newNodeId,
+      type: "shapeNode",
+      position: { x: flowStart.x, y: flowStart.y },
+      style: { width: 10, height: 10 },
+      data: { shape: activeDrawShape, label: "" },
+    };
+
+    setNodes((nds) => [...nds, newNode]);
+
+    drawingNodeRef.current = {
+      id: newNodeId,
+      startX: flowStart.x,
+      startY: flowStart.y,
+    };
+
+    const handlePointerMove = (moveEvent: PointerEvent) => {
+      if (!drawingNodeRef.current || !reactFlowInstance) return;
+
+      const currentFlowPos = reactFlowInstance.screenToFlowPosition({
+        x: moveEvent.clientX,
+        y: moveEvent.clientY,
+      });
+
+      const dx = currentFlowPos.x - drawingNodeRef.current.startX;
+      const dy = currentFlowPos.y - drawingNodeRef.current.startY;
+
+      // Restrict minimum dimensions to prevent vanishing
+      const width = Math.max(15, Math.abs(dx));
+      const height = Math.max(15, Math.abs(dy));
+
+      // Support multi-directional drag top-left calculations (Figma-style)
+      const x = dx < 0 ? currentFlowPos.x : drawingNodeRef.current.startX;
+      const y = dy < 0 ? currentFlowPos.y : drawingNodeRef.current.startY;
+
+      setNodes((nds) =>
+        nds.map((n) =>
+          n.id === drawingNodeRef.current!.id
+            ? { ...n, position: { x, y }, style: { width, height } }
+            : n
+        )
+      );
+    };
+
+    const handlePointerUp = () => {
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerup", handlePointerUp);
+
+      if (drawingNodeRef.current) {
+        const finalId = drawingNodeRef.current.id;
+        // Auto-select the drawn shape node on drag finish
+        setNodes((nds) =>
+          nds.map((n) =>
+            n.id === finalId ? { ...n, selected: true } : { ...n, selected: false }
+          )
+        );
+      }
+
+      drawingNodeRef.current = null;
+      setActiveDrawShape(null);
+      setInteractionMode("edit");
+      toast.success("Figura creada");
+    };
+
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointerup", handlePointerUp);
+  }, [activeDrawShape, reactFlowInstance, setNodes, setInteractionMode]);
+
   if (loading) {
     return (
       <div className="w-screen h-screen flex items-center justify-center bg-background">
@@ -258,7 +357,7 @@ const Index = () => {
         </AnimatePresence>
       </header>
 
-      <div className="flex-1 relative">
+      <div className="flex-1 relative" onPointerDown={handlePointerDown}>
         <ReactFlow
           nodes={nodes}
           edges={edges}
@@ -268,14 +367,16 @@ const Index = () => {
           nodeTypes={nodeTypes}
           connectionMode={ConnectionMode.Loose}
           isValidConnection={isValidConnection}
-          panOnDrag={interactionMode === "pan" ? true : [1, 2]}
-          selectionOnDrag={interactionMode === "edit"}
-          nodesDraggable={interactionMode === "edit"}
-          nodesConnectable={interactionMode === "edit"}
-          elementsSelectable={interactionMode === "edit"}
+          panOnDrag={activeDrawShape ? false : interactionMode === "pan" ? true : [1, 2]}
+          selectionOnDrag={activeDrawShape ? false : interactionMode === "edit"}
+          nodesDraggable={activeDrawShape ? false : interactionMode === "edit"}
+          nodesConnectable={activeDrawShape ? false : interactionMode === "edit"}
+          elementsSelectable={activeDrawShape ? false : interactionMode === "edit"}
           fitView
+          onInit={setReactFlowInstance}
           proOptions={{ hideAttribution: true }}
           className={`bg-white ${interactionMode === "pan" ? "pan-mode" : "edit-mode"}`}
+          style={{ cursor: activeDrawShape ? "crosshair" : "inherit" }}
         >
           <Background variant={BackgroundVariant.Dots} gap={32} size={1} color="#E5E7EB" />
           {!hideTools && <Controls position="bottom-left" showInteractive={false} />}
@@ -295,6 +396,8 @@ const Index = () => {
                 onAddNode={handleAddNode}
                 interactionMode={interactionMode}
                 setInteractionMode={setInteractionMode}
+                activeDrawShape={activeDrawShape}
+                setActiveDrawShape={setActiveDrawShape}
               />
             </motion.div>
           )}
