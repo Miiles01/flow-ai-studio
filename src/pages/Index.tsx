@@ -157,10 +157,19 @@ const Index = () => {
   // Debounced autosave: only after id exists (not "new"). For "new", first manual save creates the row.
   const persist = useCallback(async () => {
     if (!user) return;
+    // Strip volatile runtime fields React Flow adds
+    const sanitizedNodes = nodes.map((n) => {
+      const { selected, dragging, resizing, ...rest } = n as Node & { resizing?: boolean };
+      return rest;
+    });
+    const sanitizedEdges = edges.map((e) => {
+      const { selected, ...rest } = e as Edge;
+      return rest;
+    });
     const payload = {
       name,
-      nodes: JSON.parse(JSON.stringify(nodes)),
-      edges: JSON.parse(JSON.stringify(edges)),
+      nodes: JSON.parse(JSON.stringify(sanitizedNodes)),
+      edges: JSON.parse(JSON.stringify(sanitizedEdges)),
     };
     const serialized = JSON.stringify(payload);
     if (serialized === lastSavedRef.current) {

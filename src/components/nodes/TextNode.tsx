@@ -9,6 +9,7 @@ import { AnimatePresence, motion } from "framer-motion";
 export type TextNodeData = {
   html?: string;
   fontSize?: number;
+  align?: "left" | "center" | "right";
 };
 
 const HANDLE_CLASS =
@@ -66,13 +67,13 @@ function LinkPopover({
 
 // ─── TextNode ───────────────────────────────────────────────────
 const TextNode = ({ id, data, selected }: NodeProps) => {
-  const { getNodes } = useReactFlow();
+  const { getNodes, setNodes } = useReactFlow();
   const { zoom } = useViewport();
   const selectedNodes = getNodes().filter((n) => n.selected);
   const isSingleSelected = selected && selectedNodes.length === 1;
   const nodeData = data as TextNodeData;
-  const [fontSize, setFontSize] = useState(nodeData.fontSize ?? 15);
-  const [align, setAlign] = useState<"left" | "center" | "right">("left");
+  const [fontSize, setFontSize] = useState<number>(nodeData.fontSize ?? 15);
+  const [align, setAlign] = useState<"left" | "center" | "right">(nodeData.align ?? "left");
   const [showLinkInput, setShowLinkInput] = useState(false);
   const [linkUrl, setLinkUrl] = useState("");
   const [activeLink, setActiveLink] = useState<HTMLAnchorElement | null>(null);
@@ -80,6 +81,28 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
 
   const editorRef = useRef<HTMLDivElement>(null);
   const linkInputRef = useRef<HTMLInputElement>(null);
+  const htmlSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Persist patches into this node's data via React Flow
+  const commitData = useCallback((patch: Partial<TextNodeData>) => {
+    setNodes((nds) =>
+      nds.map((n) => (n.id === id ? { ...n, data: { ...n.data, ...patch } } : n))
+    );
+  }, [id, setNodes]);
+
+  // Debounced HTML commit while typing
+  const scheduleHtmlCommit = useCallback(() => {
+    if (htmlSaveTimer.current) clearTimeout(htmlSaveTimer.current);
+    htmlSaveTimer.current = setTimeout(() => {
+      if (editorRef.current) commitData({ html: editorRef.current.innerHTML });
+    }, 250);
+  }, [commitData]);
+
+  // Flush html on blur for immediate save
+  const flushHtml = useCallback(() => {
+    if (htmlSaveTimer.current) clearTimeout(htmlSaveTimer.current);
+    if (editorRef.current) commitData({ html: editorRef.current.innerHTML });
+  }, [commitData]);
 
   // Style all anchor tags in the editor
   const styleLinks = useCallback(() => {
@@ -107,7 +130,8 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
   const applyFormat = useCallback((cmd: string, value?: string) => {
     editorRef.current?.focus();
     document.execCommand(cmd, false, value ?? undefined);
-  }, []);
+    scheduleHtmlCommit();
+  }, [scheduleHtmlCommit]);
 
   // Open link dialog — save current selection
   const openLinkInput = useCallback(() => {
@@ -131,10 +155,11 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
       document.execCommand("unlink");
     }
     styleLinks();
+    flushHtml();
     setShowLinkInput(false);
     setLinkUrl("");
     setSavedRange(null);
-  }, [savedRange, linkUrl, styleLinks]);
+  }, [savedRange, linkUrl, styleLinks, flushHtml]);
 
   // Remove active link
   const removeLink = useCallback(() => {
@@ -147,7 +172,8 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
     sel?.addRange(range);
     document.execCommand("unlink");
     setActiveLink(null);
-  }, [activeLink]);
+    flushHtml();
+  }, [activeLink, flushHtml]);
 
   // Keyboard shortcuts
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
@@ -159,24 +185,32 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
     if (e.key === "Escape") { setShowLinkInput(false); editorRef.current?.focus(); }
   }, [applyFormat, openLinkInput]);
 
-  // Font size: apply to whole editor
+  // Font size: apply to whole editor + persist
   useEffect(() => {
     if (editorRef.current) editorRef.current.style.fontSize = `${fontSize}px`;
-  }, [fontSize]);
+    if (fontSize > 0 && fontSize !== nodeData.fontSize) commitData({ fontSize });
+  }, [fontSize, nodeData.fontSize, commitData]);
 
-  // Text alignment: apply to whole editor
+  // Text alignment: apply to whole editor + persist
   useEffect(() => {
     if (editorRef.current) editorRef.current.style.textAlign = align;
-  }, [align]);
+    if (align !== (nodeData.align ?? "left")) commitData({ align });
+  }, [align, nodeData.align, commitData]);
 
-  // Seed initial content once
+  // Seed initial content; re-seed if remote html changes while not focused
   useEffect(() => {
-    if (editorRef.current && !editorRef.current.innerHTML) {
-      editorRef.current.innerHTML = nodeData.html || "Texto";
+    const el = editorRef.current;
+    if (!el) return;
+    const isFocused = document.activeElement === el;
+    const incoming = nodeData.html ?? "Texto";
+    if (!el.innerHTML) {
+      el.innerHTML = incoming;
+      styleLinks();
+    } else if (!isFocused && el.innerHTML !== incoming) {
+      el.innerHTML = incoming;
       styleLinks();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [nodeData.html, styleLinks]);
 
   return (
     <motion.div
@@ -378,7 +412,8 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
         onMouseDown={(e) => e.stopPropagation()}
         onMouseUp={detectLink}
         onKeyUp={detectLink}
-        onInput={styleLinks}
+        onInput={() => { styleLinks(); scheduleHtmlCommit(); }}
+        onBlur={flushHtml}
         style={{
           fontSize,
           textAlign: align,
