@@ -75,11 +75,15 @@ const ImageNode = ({ id, data, selected }: NodeProps) => {
         lineStyle={{ border: "none" }}
       />
 
-      {/* Connection handles */}
-      <Handle type="source" position={Position.Top}    id="t" className={HANDLE_CLASS} style={{ top: "0%",  left: "50%", transform: "translate(-50%, -50%)" }} />
-      <Handle type="source" position={Position.Bottom} id="b" className={HANDLE_CLASS} style={{ bottom: "0%", left: "50%", transform: "translate(-50%, 50%)" }} />
-      <Handle type="source" position={Position.Left}   id="l" className={HANDLE_CLASS} style={{ left: "0%",  top: "50%",  transform: "translate(-50%, -50%)" }} />
-      <Handle type="source" position={Position.Right}  id="r" className={HANDLE_CLASS} style={{ right: "0%", top: "50%",  transform: "translate(50%, -50%)" }} />
+      {/* Connection handles — only visible when selected */}
+      {selected && (
+        <>
+          <Handle type="source" position={Position.Top}    id="t" className={HANDLE_CLASS} style={{ top: "0%",  left: "50%", transform: "translate(-50%, -50%)" }} />
+          <Handle type="source" position={Position.Bottom} id="b" className={HANDLE_CLASS} style={{ bottom: "0%", left: "50%", transform: "translate(-50%, 50%)" }} />
+          <Handle type="source" position={Position.Left}   id="l" className={HANDLE_CLASS} style={{ left: "0%",  top: "50%",  transform: "translate(-50%, -50%)" }} />
+          <Handle type="source" position={Position.Right}  id="r" className={HANDLE_CLASS} style={{ right: "0%", top: "50%",  transform: "translate(50%, -50%)" }} />
+        </>
+      )}
 
       {/* ── Floating Toolbar ── */}
       <AnimatePresence>
