@@ -192,7 +192,7 @@ const TextNode = ({ data, selected }: NodeProps) => {
       <AnimatePresence>
         {selected && (
           <div
-            className="absolute -top-13 left-1/2 -translate-x-1/2 z-20 pointer-events-auto"
+            className="absolute -top-16 left-1/2 -translate-x-1/2 z-20 pointer-events-auto"
             style={{ whiteSpace: "nowrap" }}
             onMouseDown={(e) => e.stopPropagation()}
           >
