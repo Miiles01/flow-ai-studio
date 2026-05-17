@@ -75,7 +75,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
   const isDarkMode = backgroundColor === "#1F2937";
   const textColor = nodeData.textColor ?? (isDarkMode ? "#FFFFFF" : "#1F2937");
 
-  const [activePicker, setActivePicker] = useState<"bg" | "accent" | null>(null);
+  const [activePicker, setActivePicker] = useState<"bg" | "accent" | "text" | null>(null);
   const taskInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
 
   const updateNodeData = (newData: Partial<TodoNodeData>) => {
@@ -504,6 +504,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
           <Plus size={13} />
           <span>Nueva Tarea...</span>
         </button>
+      </div>
       </div>
 
       {/* ─── Fully Bidirectional Connection Handles ─── */}
