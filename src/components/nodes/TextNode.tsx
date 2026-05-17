@@ -367,6 +367,8 @@ const TextNode = ({ data, selected }: NodeProps) => {
         contentEditable
         suppressContentEditableWarning
         onKeyDown={handleKeyDown}
+        onPointerDown={(e) => e.stopPropagation()}
+        onMouseDown={(e) => e.stopPropagation()}
         onMouseUp={detectLink}
         onKeyUp={detectLink}
         onInput={styleLinks}
@@ -381,7 +383,7 @@ const TextNode = ({ data, selected }: NodeProps) => {
           wordBreak: "break-word",
           color: "#000",
         }}
-        className="w-full h-full font-sans font-light focus:outline-none [&_a]:text-[#4059F1] [&_a]:underline [&_a]:cursor-pointer"
+        className="nodrag nopan w-full h-full font-sans font-light focus:outline-none [&_a]:text-[#4059F1] [&_a]:underline [&_a]:cursor-pointer"
       />
 
       {/* Handles — visible solo cuando está seleccionado (rendered last to stack on top) */}
