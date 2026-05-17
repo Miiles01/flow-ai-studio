@@ -212,21 +212,25 @@
   top: -8px !important;
   left: -8px !important;
   right: -8px !important;
+  width: auto !important;
 }
 .react-flow__resize-control.line.bottom {
   bottom: -8px !important;
   left: -8px !important;
   right: -8px !important;
+  width: auto !important;
 }
 .react-flow__resize-control.line.left {
   left: -8px !important;
   top: -8px !important;
   bottom: -8px !important;
+  height: auto !important;
 }
 .react-flow__resize-control.line.right {
   right: -8px !important;
   top: -8px !important;
   bottom: -8px !important;
+  height: auto !important;
 }
 
 /* Square vertices at corners and side centers */
