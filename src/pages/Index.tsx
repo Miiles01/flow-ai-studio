@@ -89,8 +89,13 @@ const Index = () => {
         return;
       }
       setName(data.name || "Tablero");
-      setNodes(((data.nodes as unknown) as Node[]) || []);
-      setEdges(((data.edges as unknown) as Edge[]) || []);
+      const loadedNodes = ((data.nodes as unknown) as Node[]) || [];
+      const loadedEdges = ((data.edges as unknown) as Edge[]) || [];
+      setNodes(loadedNodes);
+      setEdges(loadedEdges);
+      lastSavedRef.current = JSON.stringify({ name: data.name, nodes: loadedNodes, edges: loadedEdges });
+      skipNextDirtyRef.current = true;
+      setSaveState("saved");
       setLoading(false);
     };
     load();
@@ -149,34 +154,77 @@ const Index = () => {
     [setNodes, setEdges]
   );
 
-  const handleSave = async () => {
+  // Debounced autosave: only after id exists (not "new"). For "new", first manual save creates the row.
+  const persist = useCallback(async () => {
     if (!user) return;
-    setSaving(true);
     const payload = {
       name,
       nodes: JSON.parse(JSON.stringify(nodes)),
       edges: JSON.parse(JSON.stringify(edges)),
     };
+    const serialized = JSON.stringify(payload);
+    if (serialized === lastSavedRef.current) {
+      setSaveState("saved");
+      return;
+    }
+    setSaveState("saving");
+
     if (!id || id === "new") {
+      if (isCreatingRef.current) return;
+      isCreatingRef.current = true;
       const { data, error } = await supabase
         .from("flows")
         .insert([{ user_id: user.id, ...payload }])
         .select()
         .single();
-      setSaving(false);
+      isCreatingRef.current = false;
       if (error || !data) {
+        setSaveState("error");
         toast.error("Error al crear el tablero");
         return;
       }
-      toast.success("Tablero creado");
+      lastSavedRef.current = serialized;
+      setSaveState("saved");
       navigate(`/boards/${data.id}`, { replace: true });
     } else {
       const { error } = await supabase.from("flows").update(payload).eq("id", id);
-      setSaving(false);
-      if (error) toast.error("Error al guardar");
-      else toast.success("Tablero guardado");
+      if (error) {
+        setSaveState("error");
+        return;
+      }
+      lastSavedRef.current = serialized;
+      setSaveState("saved");
     }
-  };
+  }, [user, id, name, nodes, edges, navigate]);
+
+  // Mark dirty + schedule autosave on changes
+  useEffect(() => {
+    if (loading) return;
+    if (skipNextDirtyRef.current) {
+      skipNextDirtyRef.current = false;
+      return;
+    }
+    setSaveState("dirty");
+    if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+    saveTimerRef.current = setTimeout(() => {
+      persist();
+    }, 1200);
+    return () => {
+      if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+    };
+  }, [nodes, edges, name, loading, persist]);
+
+  // Flush pending save before unload
+  useEffect(() => {
+    const handler = () => {
+      if (saveTimerRef.current) {
+        clearTimeout(saveTimerRef.current);
+        persist();
+      }
+    };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [persist]);
 
   const handlePointerDown = useCallback((e: React.PointerEvent) => {
     if (!activeDrawShape || !reactFlowInstance) return;
