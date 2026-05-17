@@ -200,21 +200,23 @@
   cursor: grabbing !important;
 }
 
-/* ── NodeResizer: premium dashed margin and square vertices ── */
-.react-flow__resize-control.line {
-  border-color: #4059F1 !important;
-  border-style: dashed !important;
-  border-width: 1px !important;
-  opacity: 0.5 !important;
-  pointer-events: none !important;
-}
+/* ── NodeResizer: selection border line — textNode ONLY ── */
 
-/* Hide selection lines only for shape nodes */
-.react-flow__node-shapeNode .react-flow__resize-control.line {
+/* Hidden by default on ALL nodes */
+.react-flow__resize-control.line {
   border-color: transparent !important;
   border-style: none !important;
   border-width: 0px !important;
   opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+/* Show dashed blue line ONLY on text nodes */
+.react-flow__node-textNode .react-flow__resize-control.line {
+  border-color: #4059F1 !important;
+  border-style: dashed !important;
+  border-width: 1px !important;
+  opacity: 0.5 !important;
 }
 
 /* Offset lines outward to create a margin/padding effect */
