@@ -363,23 +363,33 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                 {task.completed && <Check size={12} className="text-white stroke-[3.5]" />}
               </button>
 
-              {/* Task Text Input */}
-              <input
-                ref={(el) => (taskInputRefs.current[task.id] = el)}
-                value={task.text}
-                onChange={(e) => handleTaskTextChange(task.id, e.target.value)}
-                onKeyDown={(e) => handleKeyDown(e, task.id)}
-                placeholder="Añadir una tarea..."
-                className="bg-transparent flex-1 focus:outline-none border-none font-sans font-light focus:ring-0 placeholder-gray-400/80 leading-normal"
-                style={{
-                  fontSize: `${fontSize}px`,
-                  color: task.completed
-                    ? isDarkMode ? "#6B7280" : "#9CA3AF"
-                    : isDarkMode ? "#F3F4F6" : "#1F2937",
-                  textDecoration: task.completed ? "line-through" : "none",
-                  opacity: task.completed ? 0.7 : 1,
-                }}
-              />
+              {/* Task Text Input & Custom Animated Strikethrough */}
+              <div className="relative flex-1 flex items-center select-text">
+                <input
+                  ref={(el) => (taskInputRefs.current[task.id] = el)}
+                  value={task.text}
+                  onChange={(e) => handleTaskTextChange(task.id, e.target.value)}
+                  onKeyDown={(e) => handleKeyDown(e, task.id)}
+                  placeholder="Añadir una tarea..."
+                  className="bg-transparent w-full focus:outline-none border-none font-sans font-light focus:ring-0 placeholder-gray-400/80 leading-normal"
+                  style={{
+                    fontSize: `${fontSize}px`,
+                    color: task.completed
+                      ? isDarkMode ? "#6B7280" : "#9CA3AF"
+                      : isDarkMode ? "#F3F4F6" : "#1F2937",
+                    opacity: task.completed ? 0.7 : 1,
+                  }}
+                />
+                {task.completed && (
+                  <motion.div
+                    initial={{ width: 0 }}
+                    animate={{ width: "100%" }}
+                    transition={{ duration: 0.22, ease: "easeInOut" }}
+                    className="absolute left-0 top-1/2 -translate-y-1/2 h-[1px] pointer-events-none"
+                    style={{ backgroundColor: isDarkMode ? "#6B7280" : "#9CA3AF" }}
+                  />
+                )}
+              </div>
 
               {/* Task Row Actions */}
               <div className="flex items-center gap-1 opacity-0 group-hover/item:opacity-100 transition-opacity">
