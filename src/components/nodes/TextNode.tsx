@@ -182,24 +182,32 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
     if (e.key === "Escape") { setShowLinkInput(false); editorRef.current?.focus(); }
   }, [applyFormat, openLinkInput]);
 
-  // Font size: apply to whole editor
+  // Font size: apply to whole editor + persist
   useEffect(() => {
     if (editorRef.current) editorRef.current.style.fontSize = `${fontSize}px`;
-  }, [fontSize]);
+    if (fontSize > 0 && fontSize !== nodeData.fontSize) commitData({ fontSize });
+  }, [fontSize, nodeData.fontSize, commitData]);
 
-  // Text alignment: apply to whole editor
+  // Text alignment: apply to whole editor + persist
   useEffect(() => {
     if (editorRef.current) editorRef.current.style.textAlign = align;
-  }, [align]);
+    if (align !== (nodeData.align ?? "left")) commitData({ align });
+  }, [align, nodeData.align, commitData]);
 
-  // Seed initial content once
+  // Seed initial content; re-seed if remote html changes while not focused
   useEffect(() => {
-    if (editorRef.current && !editorRef.current.innerHTML) {
-      editorRef.current.innerHTML = nodeData.html || "Texto";
+    const el = editorRef.current;
+    if (!el) return;
+    const isFocused = document.activeElement === el;
+    const incoming = nodeData.html ?? "Texto";
+    if (!el.innerHTML) {
+      el.innerHTML = incoming;
+      styleLinks();
+    } else if (!isFocused && el.innerHTML !== incoming) {
+      el.innerHTML = incoming;
       styleLinks();
     }
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [nodeData.html, styleLinks]);
 
   return (
     <motion.div
