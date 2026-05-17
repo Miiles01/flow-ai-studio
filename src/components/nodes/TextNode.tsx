@@ -9,6 +9,7 @@ import { AnimatePresence, motion } from "framer-motion";
 export type TextNodeData = {
   html?: string;
   fontSize?: number;
+  align?: "left" | "center" | "right";
 };
 
 const HANDLE_CLASS =
