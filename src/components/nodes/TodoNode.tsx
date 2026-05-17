@@ -1,10 +1,9 @@
 import { memo, useState, useRef, useEffect } from "react";
-import { Handle, Position, type NodeProps, useReactFlow } from "@xyflow/react";
+import { Handle, Position, type NodeProps, NodeResizer, useReactFlow } from "@xyflow/react";
 import {
   Plus, Trash2, ArrowUp, ArrowDown, Type, Eye, EyeOff, Minus, Check, Baseline,
 } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
-import CornerResizer from "./CornerResizer";
 
 export type TodoItem = {
   id: string;
@@ -189,7 +188,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
           selected ? "border-[#4059F1]/40" : "border-[#E5E7EB]"
         }`}
       >
-        <CornerResizer isVisible={!!selected} minWidth={280} minHeight={200} />
+        <NodeResizer isVisible={!!selected} minWidth={280} minHeight={200} lineStyle={{ border: "none" }} />
 
       {/* ─── Floating Toolbar (selected node only) ─── */}
       <AnimatePresence>

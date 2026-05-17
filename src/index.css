@@ -243,67 +243,64 @@
   height: auto !important;
 }
 
-/* Square vertices at corners and side centers */
+/* ── L-bracket corner handles (Figma-style) ── */
+/* Base: transparent background, no border, correct size */
 .react-flow__resize-control.handle {
-  width: 8px !important;
-  height: 8px !important;
-  background: white !important;
-  border: 1.5px solid #4059F1 !important;
-  border-radius: 0px !important; /* Pure square! */
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.12) !important;
+  width: 12px !important;
+  height: 12px !important;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
   z-index: 40 !important;
 }
 
-/* Align corners perfectly centered on the 0px offset dashed line intersections */
+/* Top-left: show top + left arms only */
 .react-flow__resize-control.handle.top-left,
 .react-flow__resize-control.handle.top.left {
   top: 0px !important;
   left: 0px !important;
   transform: translate(-50%, -50%) !important;
+  border-top: 2.5px solid #4059F1 !important;
+  border-left: 2.5px solid #4059F1 !important;
 }
+
+/* Top-right: show top + right arms only */
 .react-flow__resize-control.handle.top-right,
 .react-flow__resize-control.handle.top.right {
   top: 0px !important;
   right: 0px !important;
   transform: translate(50%, -50%) !important;
+  border-top: 2.5px solid #4059F1 !important;
+  border-right: 2.5px solid #4059F1 !important;
 }
+
+/* Bottom-left: show bottom + left arms only */
 .react-flow__resize-control.handle.bottom-left,
 .react-flow__resize-control.handle.bottom.left {
   bottom: 0px !important;
   left: 0px !important;
   transform: translate(-50%, 50%) !important;
+  border-bottom: 2.5px solid #4059F1 !important;
+  border-left: 2.5px solid #4059F1 !important;
 }
+
+/* Bottom-right: show bottom + right arms only */
 .react-flow__resize-control.handle.bottom-right,
 .react-flow__resize-control.handle.bottom.right {
   bottom: 0px !important;
   right: 0px !important;
   transform: translate(50%, 50%) !important;
+  border-bottom: 2.5px solid #4059F1 !important;
+  border-right: 2.5px solid #4059F1 !important;
 }
 
-/* Centered side handles aligned with the 0px dashed border lines */
-.react-flow__resize-control.handle.top:not(.left):not(.right) {
-  top: 0px !important;
-  left: 50% !important;
-  transform: translate(-50%, -50%) !important;
-  display: block !important;
-}
-.react-flow__resize-control.handle.bottom:not(.left):not(.right) {
-  bottom: 0px !important;
-  left: 50% !important;
-  transform: translate(-50%, 50%) !important;
-  display: block !important;
-}
-.react-flow__resize-control.handle.left:not(.top):not(.bottom) {
-  left: 0px !important;
-  top: 50% !important;
-  transform: translate(-50%, -50%) !important;
-  display: block !important;
-}
+/* Hide side-center handles — only 4 corner brackets visible */
+.react-flow__resize-control.handle.top:not(.left):not(.right),
+.react-flow__resize-control.handle.bottom:not(.left):not(.right),
+.react-flow__resize-control.handle.left:not(.top):not(.bottom),
 .react-flow__resize-control.handle.right:not(.top):not(.bottom) {
-  right: 0px !important;
-  top: 50% !important;
-  transform: translate(50%, -50%) !important;
-  display: block !important;
+  display: none !important;
 }
 
 /* Safety reset to eliminate all default margins, padding, and borders on shape node containers */

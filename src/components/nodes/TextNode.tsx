@@ -1,11 +1,10 @@
 import { memo, useState, useRef, useEffect, useCallback } from "react";
-import { Handle, Position, type NodeProps, useReactFlow, useViewport } from "@xyflow/react";
+import { Handle, Position, type NodeProps, NodeResizer, useReactFlow, useViewport } from "@xyflow/react";
 import {
   Bold, Italic, Underline, Link2, AlignLeft, AlignCenter, AlignRight,
   ExternalLink, Trash2, Minus, Plus, Baseline, Check,
 } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
-import CornerResizer from "./CornerResizer";
 
 export type TextNodeData = {
   html?: string;
@@ -248,7 +247,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
       style={{ width: "100%", height: "100%", minWidth: 140, minHeight: 50 }}
       className="relative"
     >
-      <CornerResizer isVisible={!!selected} minWidth={140} minHeight={40} />
+      <NodeResizer isVisible={!!selected} minWidth={140} minHeight={40} />
 
       {/* ── Formatting Toolbar ── */}
       <AnimatePresence>
