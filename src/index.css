@@ -201,10 +201,10 @@
 
 /* ── NodeResizer: premium dashed margin and square vertices ── */
 .react-flow__resize-control.line {
-  border-color: #4059F1 !important;
-  border-style: dashed !important;
-  border-width: 1px !important;
-  opacity: 1 !important;
+  border-color: transparent !important;
+  border-style: none !important;
+  border-width: 0px !important;
+  opacity: 0 !important;
 }
 
 /* Offset lines outward to create a margin/padding effect */

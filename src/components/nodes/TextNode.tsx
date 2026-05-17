@@ -188,7 +188,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
         isVisible={selected}
         minWidth={140}
         minHeight={40}
-        lineStyle={{ borderColor: "#4059F1", borderWidth: 1, opacity: 0.4 }}
+        lineStyle={{ border: "none" }}
       />
 
       {/* ── Formatting Toolbar ── */}

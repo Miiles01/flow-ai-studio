@@ -94,7 +94,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
         isVisible={selected}
         minWidth={60}
         minHeight={60}
-        lineStyle={{ borderColor: "#4059F1", borderWidth: 1, opacity: 0.4 }}
+        lineStyle={{ border: "none" }}
       />
 
       {/* ── Custom Shape Toolbar ── */}
