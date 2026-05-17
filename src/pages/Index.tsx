@@ -23,12 +23,13 @@ import { AnimatePresence, motion } from "framer-motion";
 import FlowNode from "@/components/nodes/FlowNode";
 import ShapeNode from "@/components/nodes/ShapeNode";
 import TextNode from "@/components/nodes/TextNode";
+import TodoNode from "@/components/nodes/TodoNode";
 import Toolbar from "@/components/Toolbar";
 import AIPromptBar from "@/components/AIPromptBar";
 import { generateFlowFromPrompt } from "@/lib/generateFlow";
 
 const SHAPE_TYPES = ["square", "circle", "diamond", "triangle", "hexagon", "star"];
-const nodeTypes = { flowNode: FlowNode, shapeNode: ShapeNode, textNode: TextNode };
+const nodeTypes = { flowNode: FlowNode, shapeNode: ShapeNode, textNode: TextNode, todoNode: TodoNode };
 
 const Index = () => {
   const { id } = useParams();
@@ -274,6 +275,39 @@ const Index = () => {
       setActiveDrawShape(null);
       setInteractionMode("edit");
       toast.success("Texto creado");
+      return;
+    }
+
+    if (activeDrawShape === "todo") {
+      const newNodeId = `node-${Date.now()}`;
+      const newNode: Node = {
+        id: newNodeId,
+        type: "todoNode",
+        position: { x: flowStart.x, y: flowStart.y },
+        style: { width: 320, height: 360 },
+        data: {
+          title: "Lista de Tareas",
+          showTitle: true,
+          subtitle: "Organiza tus actividades diarias",
+          showSubtitle: true,
+          tasks: [
+            { id: "t1", text: "Definir objetivos de diseño", completed: false },
+            { id: "t2", text: "Diseñar wireframes responsivos", completed: false },
+            { id: "t3", text: "Validar prototipos con usuarios", completed: false },
+          ],
+          fontSize: 14,
+          backgroundColor: "#FFFFFF",
+          accentColor: "#4059F1"
+        },
+      };
+
+      setNodes((nds) =>
+        nds.map((n) => ({ ...n, selected: false })).concat({ ...newNode, selected: true })
+      );
+
+      setActiveDrawShape(null);
+      setInteractionMode("edit");
+      toast.success("Todo List creado");
       return;
     }
 

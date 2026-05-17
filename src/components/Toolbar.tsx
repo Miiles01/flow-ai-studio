@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MousePointer, Hand, Type } from "lucide-react";
+import { MousePointer, Hand, Type, ListTodo } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 type ToolbarProps = {
@@ -228,6 +228,32 @@ const Toolbar = ({
         </TooltipTrigger>
         <TooltipContent side="right" sideOffset={12} className="text-[13px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
           Texto
+        </TooltipContent>
+      </Tooltip>
+
+      {/* Todo List */}
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button
+            onClick={() => {
+              if (activeDrawShape === "todo") {
+                setActiveDrawShape(null);
+              } else {
+                setActiveDrawShape("todo");
+                setInteractionMode("edit");
+              }
+            }}
+            className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
+              activeDrawShape === "todo"
+                ? "bg-black text-white"
+                : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
+            }`}
+          >
+            <ListTodo size={18} strokeWidth={1.5} />
+          </button>
+        </TooltipTrigger>
+        <TooltipContent side="right" sideOffset={12} className="text-[13px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
+          Todo List
         </TooltipContent>
       </Tooltip>
     </motion.div>
