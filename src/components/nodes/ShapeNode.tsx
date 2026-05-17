@@ -8,12 +8,12 @@ export type ShapeNodeData = {
 };
 
 const SVG_SHAPES: Record<string, React.ReactNode> = {
-  square: <rect x="1.5" y="1.5" width="97" height="97" rx="8" />,
-  circle: <ellipse cx="50" cy="50" rx="48.5" ry="48.5" />,
-  diamond: <polygon points="50,1.5 98.5,50 50,98.5 1.5,50" />,
-  triangle: <polygon points="50,2 98,97 2,97" />,
-  hexagon: <polygon points="50,2 93,25.5 93,74.5 50,98 7,74.5 7,25.5" />,
-  star: <polygon points="50,3 61,36 98,36 68,57 79,91 50,70 21,91 32,57 2,36 39,36" />,
+  square: <rect x="0" y="0" width="100" height="100" rx="8" />,
+  circle: <ellipse cx="50" cy="50" rx="50" ry="50" />,
+  diamond: <polygon points="50,0 100,50 50,100 0,50" />,
+  triangle: <polygon points="50,0 100,100 0,100" />,
+  hexagon: <polygon points="50,0 100,25 100,75 50,100 0,75 0,25" />,
+  star: <polygon points="50,0 61,35 100,35 69,58 81,95 50,73 19,95 31,58 0,35 39,35" />,
 };
 
 const handleClass =
@@ -57,6 +57,7 @@ const ShapeNode = ({ data, selected }: NodeProps) => {
           stroke: selected ? "#4059F1" : "#D1D5DB",
           strokeWidth: selected ? 2 : 1.5,
           filter: selected ? "drop-shadow(0 0 6px rgba(64,89,241,0.15))" : "none",
+          overflow: "visible",
         }}
       >
         {SVG_SHAPES[shape] || SVG_SHAPES.square}
