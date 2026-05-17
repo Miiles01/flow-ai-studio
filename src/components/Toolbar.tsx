@@ -155,7 +155,7 @@ const Toolbar = ({
                 }
               }}
               className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
-                activeDrawShape !== null && activeDrawShape !== "text"
+                activeDrawShape !== null && activeDrawShape !== "text" && activeDrawShape !== "todo"
                   ? "bg-black text-white shadow-md hover:bg-black/90"
                   : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
               }`}
