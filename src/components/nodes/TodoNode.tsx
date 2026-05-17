@@ -1,7 +1,7 @@
 import { memo, useState, useRef, useEffect } from "react";
 import { Handle, Position, type NodeProps, NodeResizer, useReactFlow } from "@xyflow/react";
 import {
-  Plus, Trash2, ArrowUp, ArrowDown, Type, Eye, EyeOff, Minus, Check, Baseline,
+  Plus, Trash2, ArrowUp, ArrowDown, Minus, Check, Baseline, Heading1, Heading2,
 } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -205,7 +205,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
               transition={{ type: "spring", damping: 20, stiffness: 300 }}
               className="flex items-center gap-1.5 bg-white rounded-xl shadow-[0_4px_20px_rgb(0,0,0,0.14)] px-3 py-1.5 border border-[#E5E7EB] shrink-0"
             >
-              {/* Show / Hide Title */}
+              {/* Show / Hide Title — H1 */}
               <button
                 onClick={() => updateNodeData({ showTitle: !showTitle })}
                 className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${
@@ -213,10 +213,10 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                 }`}
                 title={showTitle ? "Ocultar Título" : "Mostrar Título"}
               >
-                <Type size={13} className={showTitle ? "stroke-[2.5]" : "stroke-[2]"} />
+                <Heading1 size={13} strokeWidth={showTitle ? 2.5 : 2} />
               </button>
 
-              {/* Show / Hide Subtitle */}
+              {/* Show / Hide Subtitle — H2 */}
               <button
                 onClick={() => updateNodeData({ showSubtitle: !showSubtitle })}
                 className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${
@@ -224,7 +224,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                 }`}
                 title={showSubtitle ? "Ocultar Subtítulo" : "Mostrar Subtítulo"}
               >
-                {showSubtitle ? <Eye size={13} className="stroke-[2.5]" /> : <EyeOff size={13} />}
+                <Heading2 size={13} strokeWidth={showSubtitle ? 2.5 : 2} />
               </button>
 
               <div className="w-[1px] h-4 bg-[#E5E7EB] mx-1" />
