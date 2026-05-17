@@ -431,28 +431,19 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
       </div>
 
       {/* ─── Fully Bidirectional Connection Handles ─── */}
-      {(["top", "bottom", "left", "right"] as const).map((pos) => {
-        const position =
-          pos === "top" ? Position.Top :
-          pos === "bottom" ? Position.Bottom :
-          pos === "left" ? Position.Left : Position.Right;
-        return (
-          <div key={pos} className="relative z-[10000]">
-            <Handle
-              type="target"
-              position={position}
-              id={`${pos}-target`}
-              className={`${HANDLE_CLASS} ${selected ? "opacity-100" : "opacity-0 hover:opacity-100"}`}
-            />
-            <Handle
-              type="source"
-              position={position}
-              id={`${pos}-source`}
-              className={`${HANDLE_CLASS} ${selected ? "opacity-100" : "opacity-0 hover:opacity-100"} !bg-transparent !border-none !shadow-none`}
-            />
-          </div>
-        );
-      })}
+      {(["top", "bottom", "left", "right"] as const).map((pos) => (
+        <Handle
+          key={pos}
+          type="source"
+          position={
+            pos === "top" ? Position.Top :
+            pos === "bottom" ? Position.Bottom :
+            pos === "left" ? Position.Left : Position.Right
+          }
+          id={pos}
+          className={`${HANDLE_CLASS} ${selected ? "opacity-100" : "opacity-0 hover:opacity-100"}`}
+        />
+      ))}
     </motion.div>
   );
 };
