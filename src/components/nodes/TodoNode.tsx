@@ -232,9 +232,30 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                 >
                   <Minus size={11} strokeWidth={2.5} />
                 </button>
-                <span className="text-[11px] font-medium text-black w-6 text-center">{fontSize}</span>
+                <input
+                  type="text"
+                  value={fontSize === 0 ? "" : fontSize}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (val === "") {
+                      updateNodeData({ fontSize: 0 });
+                      return;
+                    }
+                    const num = parseInt(val, 10);
+                    if (!isNaN(num)) {
+                      updateNodeData({ fontSize: Math.min(200, num) });
+                    }
+                  }}
+                  onBlur={() => {
+                    updateNodeData({ fontSize: Math.max(10, fontSize || 14) });
+                  }}
+                  onKeyDown={(e) => {
+                    e.stopPropagation();
+                  }}
+                  className="nodrag nopan text-[11px] font-medium text-black w-6 text-center bg-transparent border-none outline-none focus:bg-neutral-100 rounded select-all py-0.5 font-sans"
+                />
                 <button
-                  onClick={() => updateNodeData({ fontSize: Math.min(32, fontSize + 1) })}
+                  onClick={() => updateNodeData({ fontSize: Math.min(200, fontSize + 1) })}
                   className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[#F3F4F6] text-[#6B7280] transition-colors"
                   title="Aumentar letra"
                 >
