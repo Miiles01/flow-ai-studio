@@ -191,137 +191,140 @@ const TextNode = ({ data, selected }: NodeProps) => {
       {/* ── Formatting Toolbar ── */}
       <AnimatePresence>
         {selected && (
-          <motion.div
-            key="toolbar"
-            initial={{ opacity: 0, y: 4 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 4 }}
-            transition={{ duration: 0.15 }}
-            className="absolute -top-13 left-0 z-20 pointer-events-auto"
+          <div
+            className="absolute -top-13 left-1/2 -translate-x-1/2 z-20 pointer-events-auto"
             style={{ whiteSpace: "nowrap" }}
             onMouseDown={(e) => e.stopPropagation()}
           >
-            <div className="flex items-center gap-0.5 bg-white rounded-xl shadow-[0_4px_24px_rgb(0,0,0,0.12)] px-2 py-1.5">
-              {/* Font size */}
-              <button
-                onClick={() => setFontSize((f) => Math.max(10, f - 1))}
-                className="w-6 h-6 flex items-center justify-center rounded-md hover:bg-[#F3F4F6] text-[#6B7280] transition-colors"
-              >
-                <Minus size={10} strokeWidth={2.5} />
-              </button>
-              <span className="text-[11px] font-normal text-black w-6 text-center tabular-nums select-none">{fontSize}</span>
-              <button
-                onClick={() => setFontSize((f) => Math.min(72, f + 1))}
-                className="w-6 h-6 flex items-center justify-center rounded-md hover:bg-[#F3F4F6] text-[#6B7280] transition-colors"
-              >
-                <Plus size={10} strokeWidth={2.5} />
-              </button>
-
-              <div className="w-[1px] h-4 bg-[#E5E7EB] mx-1" />
-
-              {/* Bold */}
-              <button
-                onMouseDown={(e) => { e.preventDefault(); applyFormat("bold"); }}
-                className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black transition-colors font-semibold text-[13px]"
-                title="Negrita (Ctrl+B)"
-              >
-                B
-              </button>
-
-              {/* Italic */}
-              <button
-                onMouseDown={(e) => { e.preventDefault(); applyFormat("italic"); }}
-                className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black transition-colors italic text-[13px]"
-                title="Cursiva (Ctrl+I)"
-              >
-                I
-              </button>
-
-              {/* Underline */}
-              <button
-                onMouseDown={(e) => { e.preventDefault(); applyFormat("underline"); }}
-                className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black transition-colors underline text-[13px]"
-                title="Subrayado (Ctrl+U)"
-              >
-                U
-              </button>
-
-              <div className="w-[1px] h-4 bg-[#E5E7EB] mx-1" />
-
-              {/* Align left */}
-              <button
-                onClick={() => setAlign("left")}
-                className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors ${align === "left" ? "bg-black text-white" : "hover:bg-[#F3F4F6] text-[#6B7280]"}`}
-                title="Alinear izquierda"
-              >
-                <AlignLeft size={13} strokeWidth={2} />
-              </button>
-
-              {/* Align center */}
-              <button
-                onClick={() => setAlign("center")}
-                className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors ${align === "center" ? "bg-black text-white" : "hover:bg-[#F3F4F6] text-[#6B7280]"}`}
-                title="Centrar"
-              >
-                <AlignCenter size={13} strokeWidth={2} />
-              </button>
-
-              {/* Align right */}
-              <button
-                onClick={() => setAlign("right")}
-                className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors ${align === "right" ? "bg-black text-white" : "hover:bg-[#F3F4F6] text-[#6B7280]"}`}
-                title="Alinear derecha"
-              >
-                <AlignRight size={13} strokeWidth={2} />
-              </button>
-
-              <div className="w-[1px] h-4 bg-[#E5E7EB] mx-1" />
-
-              {/* Link */}
-              <button
-                onMouseDown={(e) => { e.preventDefault(); openLinkInput(); }}
-                className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors ${activeLink ? "bg-[#EEF2FF] text-[#4059F1]" : "hover:bg-[#F3F4F6] text-[#6B7280]"}`}
-                title="Link (Ctrl+K)"
-              >
-                <Link2 size={13} strokeWidth={2} />
-              </button>
-            </div>
-
-            {/* Link input popover */}
-            <AnimatePresence>
-              {showLinkInput && (
-                <motion.div
-                  key="link-input"
-                  initial={{ opacity: 0, y: -4 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -4 }}
-                  transition={{ duration: 0.12 }}
-                  className="absolute top-[calc(100%+6px)] left-0 flex items-center gap-2 bg-white rounded-xl shadow-[0_8px_32px_rgb(0,0,0,0.14)] px-3 py-2 z-40"
-                  style={{ minWidth: 280 }}
-                  onMouseDown={(e) => e.stopPropagation()}
+            <motion.div
+              key="toolbar"
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 4 }}
+              transition={{ duration: 0.15 }}
+            >
+              <div className="flex items-center gap-0.5 bg-white rounded-xl shadow-[0_4px_24px_rgb(0,0,0,0.12)] px-2 py-1.5">
+                {/* Font size */}
+                <button
+                  onClick={() => setFontSize((f) => Math.max(10, f - 1))}
+                  className="w-6 h-6 flex items-center justify-center rounded-md hover:bg-[#F3F4F6] text-[#6B7280] transition-colors"
                 >
-                  <Link2 size={13} className="text-[#9CA3AF] shrink-0" />
-                  <input
-                    ref={linkInputRef}
-                    value={linkUrl}
-                    onChange={(e) => setLinkUrl(e.target.value)}
-                    onKeyDown={(e) => {
-                      if (e.key === "Enter") { e.preventDefault(); confirmLink(); }
-                      if (e.key === "Escape") { e.preventDefault(); setShowLinkInput(false); }
-                    }}
-                    placeholder="https://..."
-                    className="flex-1 text-[13px] font-normal outline-none text-black placeholder:text-[#D1D5DB]"
-                  />
-                  <button
-                    onClick={confirmLink}
-                    className="px-3 py-1 rounded-lg bg-black text-white text-[12px] font-normal hover:bg-black/80 transition-colors shrink-0"
+                  <Minus size={10} strokeWidth={2.5} />
+                </button>
+                <span className="text-[11px] font-normal text-black w-6 text-center tabular-nums select-none">{fontSize}</span>
+                <button
+                  onClick={() => setFontSize((f) => Math.min(72, f + 1))}
+                  className="w-6 h-6 flex items-center justify-center rounded-md hover:bg-[#F3F4F6] text-[#6B7280] transition-colors"
+                >
+                  <Plus size={10} strokeWidth={2.5} />
+                </button>
+
+                <div className="w-[1px] h-4 bg-[#E5E7EB] mx-1" />
+
+                {/* Bold */}
+                <button
+                  onMouseDown={(e) => { e.preventDefault(); applyFormat("bold"); }}
+                  className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black transition-colors font-semibold text-[13px]"
+                  title="Negrita (Ctrl+B)"
+                >
+                  B
+                </button>
+
+                {/* Italic */}
+                <button
+                  onMouseDown={(e) => { e.preventDefault(); applyFormat("italic"); }}
+                  className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black transition-colors italic text-[13px]"
+                  title="Cursiva (Ctrl+I)"
+                >
+                  I
+                </button>
+
+                {/* Underline */}
+                <button
+                  onMouseDown={(e) => { e.preventDefault(); applyFormat("underline"); }}
+                  className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black transition-colors underline text-[13px]"
+                  title="Subrayado (Ctrl+U)"
+                >
+                  U
+                </button>
+
+                <div className="w-[1px] h-4 bg-[#E5E7EB] mx-1" />
+
+                {/* Align left */}
+                <button
+                  onClick={() => setAlign("left")}
+                  className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors ${align === "left" ? "bg-black text-white" : "hover:bg-[#F3F4F6] text-[#6B7280]"}`}
+                  title="Alinear izquierda"
+                >
+                  <AlignLeft size={13} strokeWidth={2} />
+                </button>
+
+                {/* Align center */}
+                <button
+                  onClick={() => setAlign("center")}
+                  className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors ${align === "center" ? "bg-black text-white" : "hover:bg-[#F3F4F6] text-[#6B7280]"}`}
+                  title="Centrar"
+                >
+                  <AlignCenter size={13} strokeWidth={2} />
+                </button>
+
+                {/* Align right */}
+                <button
+                  onClick={() => setAlign("right")}
+                  className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors ${align === "right" ? "bg-black text-white" : "hover:bg-[#F3F4F6] text-[#6B7280]"}`}
+                  title="Alinear derecha"
+                >
+                  <AlignRight size={13} strokeWidth={2} />
+                </button>
+
+                <div className="w-[1px] h-4 bg-[#E5E7EB] mx-1" />
+
+                {/* Link */}
+                <button
+                  onMouseDown={(e) => { e.preventDefault(); openLinkInput(); }}
+                  className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors ${activeLink ? "bg-[#EEF2FF] text-[#4059F1]" : "hover:bg-[#F3F4F6] text-[#6B7280]"}`}
+                  title="Link (Ctrl+K)"
+                >
+                  <Link2 size={13} strokeWidth={2} />
+                </button>
+              </div>
+
+              {/* Link input popover */}
+              <AnimatePresence>
+                {showLinkInput && (
+                  <motion.div
+                    key="link-input"
+                    initial={{ opacity: 0, y: -4 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -4 }}
+                    transition={{ duration: 0.12 }}
+                    className="absolute top-[calc(100%+6px)] left-1/2 -translate-x-1/2 flex items-center gap-2 bg-white rounded-xl shadow-[0_8px_32px_rgb(0,0,0,0.14)] px-3 py-2 z-40"
+                    style={{ minWidth: 280 }}
+                    onMouseDown={(e) => e.stopPropagation()}
                   >
-                    {linkUrl.trim() ? "Aplicar" : "Quitar"}
-                  </button>
-                </motion.div>
-              )}
-            </AnimatePresence>
-          </motion.div>
+                    <Link2 size={13} className="text-[#9CA3AF] shrink-0" />
+                    <input
+                      ref={linkInputRef}
+                      value={linkUrl}
+                      onChange={(e) => setLinkUrl(e.target.value)}
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") { e.preventDefault(); confirmLink(); }
+                        if (e.key === "Escape") { e.preventDefault(); setShowLinkInput(false); }
+                      }}
+                      placeholder="https://..."
+                      className="flex-1 text-[13px] font-normal outline-none text-black placeholder:text-[#D1D5DB]"
+                    />
+                    <button
+                      onClick={confirmLink}
+                      className="px-3 py-1 rounded-lg bg-black text-white text-[12px] font-normal hover:bg-black/80 transition-colors shrink-0"
+                    >
+                      {linkUrl.trim() ? "Aplicar" : "Quitar"}
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
 

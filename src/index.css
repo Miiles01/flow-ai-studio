@@ -203,7 +203,7 @@
 .react-flow__node-resizer .react-flow__resize-control.line {
   border-color: #4059F1 !important;
   border-style: dashed !important;
-  border-width: 1.5px !important;
+  border-width: 1px !important;
   opacity: 1 !important;
 }
 
@@ -258,10 +258,28 @@
   right: -12px !important;
 }
 
-/* Ocultar handles de los bordes (no esquinas) */
-.react-flow__resize-control.handle.top,
-.react-flow__resize-control.handle.right,
-.react-flow__resize-control.handle.bottom,
+/* Centered side handles aligned with the -8px dashed border lines */
+.react-flow__resize-control.handle.top {
+  top: -12px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  display: block !important;
+}
+.react-flow__resize-control.handle.bottom {
+  bottom: -12px !important;
+  left: 50% !important;
+  transform: translateX(-50%) !important;
+  display: block !important;
+}
 .react-flow__resize-control.handle.left {
-  display: none !important;
+  left: -12px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  display: block !important;
+}
+.react-flow__resize-control.handle.right {
+  right: -12px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  display: block !important;
 }
