@@ -1,7 +1,7 @@
 import { memo, useState, useRef, useEffect } from "react";
 import { Handle, Position, type NodeProps, NodeResizer, useReactFlow } from "@xyflow/react";
 import {
-  Plus, Trash2, ArrowUp, ArrowDown, Type, Eye, EyeOff, Minus, Check,
+  Plus, Trash2, ArrowUp, ArrowDown, Type, Eye, EyeOff, Minus, Check, Baseline,
 } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -20,6 +20,7 @@ export type TodoNodeData = {
   fontSize?: number;
   backgroundColor?: string;
   accentColor?: string;
+  textColor?: string;
 };
 
 const HANDLE_CLASS =
@@ -43,6 +44,16 @@ const ACCENT_PALETTE = [
   { name: "Violeta", value: "#8B5CF6" },
 ];
 
+const TEXT_COLOR_PALETTE = [
+  { name: "Negro", value: "#111827" },
+  { name: "Gris", value: "#6B7280" },
+  { name: "Azul", value: "#2563EB" },
+  { name: "Verde", value: "#059669" },
+  { name: "Rojo", value: "#DC2626" },
+  { name: "Púrpura", value: "#7C3AED" },
+  { name: "Blanco", value: "#FFFFFF" },
+];
+
 const TodoNode = ({ id, data, selected }: NodeProps) => {
   const { getNodes, setNodes } = useReactFlow();
   const selectedNodes = getNodes().filter((n) => n.selected);
@@ -61,6 +72,8 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
   const fontSize = nodeData.fontSize ?? 14;
   const backgroundColor = nodeData.backgroundColor ?? "#FFFFFF";
   const accentColor = nodeData.accentColor ?? "#111827";
+  const isDarkMode = backgroundColor === "#1F2937";
+  const textColor = nodeData.textColor ?? (isDarkMode ? "#FFFFFF" : "#1F2937");
 
   const [activePicker, setActivePicker] = useState<"bg" | "accent" | null>(null);
   const taskInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
@@ -152,8 +165,6 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
     window.addEventListener("click", handleOutsideClick);
     return () => window.removeEventListener("click", handleOutsideClick);
   }, []);
-
-  const isDarkMode = backgroundColor === "#1F2937";
 
   return (
     <motion.div
@@ -336,6 +347,40 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                   </div>
                 )}
               </div>
+
+              {/* Text Color Picker */}
+              <div className="relative">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setActivePicker(activePicker === "text" ? null : "text");
+                  }}
+                  className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[#F3F4F6] transition-colors"
+                  title="Color del Texto"
+                >
+                  <Baseline size={13} style={{ color: textColor }} className="stroke-[2.5]" />
+                </button>
+                {activePicker === "text" && (
+                  <div className="absolute top-10 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-[0_4px_25px_rgba(0,0,0,0.18)] p-2.5 flex gap-1.5 border border-[#E5E7EB] z-50">
+                    {TEXT_COLOR_PALETTE.map((c) => (
+                      <button
+                        key={c.value}
+                        onClick={() => {
+                          updateNodeData({ textColor: c.value });
+                          setActivePicker(null);
+                        }}
+                        className="w-5.5 h-5.5 rounded-full border border-gray-200 hover:scale-110 transition-transform flex items-center justify-center"
+                        style={{ backgroundColor: c.value }}
+                        title={c.name}
+                      >
+                        {textColor === c.value && (
+                          <Check size={10} className={c.value === "#FFFFFF" ? "text-gray-800" : "text-white"} />
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
             </motion.div>
           </div>
         )}
@@ -347,11 +392,11 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
           <input
             value={title}
             onChange={(e) => updateNodeData({ title: e.target.value })}
-            className="bg-transparent font-sans font-semibold text-black focus:outline-none border-none p-0 w-full placeholder-gray-400"
+            className="bg-transparent font-sans font-semibold focus:outline-none border-none p-0 w-full placeholder-gray-400"
             placeholder="Título de la Lista"
             style={{
               fontSize: `${fontSize * 1.3}px`,
-              color: isDarkMode ? "#FFFFFF" : "#111827",
+              color: textColor,
             }}
           />
         )}
@@ -363,7 +408,9 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
             placeholder="Añade un subtítulo descriptivo..."
             style={{
               fontSize: `${fontSize * 0.95}px`,
-              color: isDarkMode ? "#9CA3AF" : "#6B7280",
+              color: textColor === "#1F2937" || textColor === "#111827"
+                ? (isDarkMode ? "#9CA3AF" : "#6B7280")
+                : `${textColor}cc`,
             }}
           />
         )}
@@ -405,7 +452,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                     fontSize: `${fontSize}px`,
                     color: task.completed
                       ? isDarkMode ? "#6B7280" : "#9CA3AF"
-                      : isDarkMode ? "#F3F4F6" : "#1F2937",
+                      : textColor,
                     opacity: task.completed ? 0.7 : 1,
                   }}
                 />

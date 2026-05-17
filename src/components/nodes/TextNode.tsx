@@ -2,7 +2,7 @@ import { memo, useState, useRef, useEffect, useCallback } from "react";
 import { Handle, Position, type NodeProps, NodeResizer, useReactFlow, useViewport } from "@xyflow/react";
 import {
   Bold, Italic, Underline, Link2, AlignLeft, AlignCenter, AlignRight,
-  ExternalLink, Trash2, Minus, Plus,
+  ExternalLink, Trash2, Minus, Plus, Baseline, Check,
 } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -10,7 +10,18 @@ export type TextNodeData = {
   html?: string;
   fontSize?: number;
   align?: "left" | "center" | "right";
+  textColor?: string;
 };
+
+const TEXT_COLOR_PALETTE = [
+  { name: "Negro", value: "#111827" },
+  { name: "Gris", value: "#6B7280" },
+  { name: "Azul", value: "#2563EB" },
+  { name: "Verde", value: "#059669" },
+  { name: "Rojo", value: "#DC2626" },
+  { name: "Púrpura", value: "#7C3AED" },
+  { name: "Blanco", value: "#FFFFFF" },
+];
 
 const HANDLE_CLASS =
   "!w-[10px] !h-[10px] !rounded-full !bg-white !border-[1.5px] !border-[#4059F1] transition-all duration-200 hover:!bg-[#4059F1] before:absolute before:-inset-3 before:content-[''] !z-50";
@@ -78,6 +89,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
   const [linkUrl, setLinkUrl] = useState("");
   const [activeLink, setActiveLink] = useState<HTMLAnchorElement | null>(null);
   const [savedRange, setSavedRange] = useState<Range | null>(null);
+  const [activePicker, setActivePicker] = useState<"text" | null>(null);
 
   const editorRef = useRef<HTMLDivElement>(null);
   const linkInputRef = useRef<HTMLInputElement>(null);
@@ -196,6 +208,22 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
     if (editorRef.current) editorRef.current.style.textAlign = align;
     if (align !== (nodeData.align ?? "left")) commitData({ align });
   }, [align, nodeData.align, commitData]);
+
+  const textColor = nodeData.textColor ?? "#111827";
+
+  // Text color: apply to whole editor
+  useEffect(() => {
+    if (editorRef.current) {
+      editorRef.current.style.color = textColor;
+    }
+  }, [textColor]);
+
+  // Close color picker on outside click
+  useEffect(() => {
+    const handleOutsideClick = () => setActivePicker(null);
+    window.addEventListener("click", handleOutsideClick);
+    return () => window.removeEventListener("click", handleOutsideClick);
+  }, []);
 
   // Seed initial content; re-seed if remote html changes while not focused
   useEffect(() => {
@@ -350,6 +378,42 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                 >
                   <Link2 size={13} strokeWidth={2} />
                 </button>
+
+                <div className="w-[1px] h-4 bg-[#E5E7EB] mx-1" />
+
+                {/* Text Color Picker */}
+                <div className="relative">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActivePicker(activePicker === "text" ? null : "text");
+                    }}
+                    className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-[#F3F4F6] transition-colors"
+                    title="Color del Texto"
+                  >
+                    <Baseline size={13} style={{ color: textColor }} className="stroke-[2.5]" />
+                  </button>
+                  {activePicker === "text" && (
+                    <div className="absolute top-8 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-[0_4px_25px_rgba(0,0,0,0.18)] p-2.5 flex gap-1.5 border border-[#E5E7EB] z-50">
+                      {TEXT_COLOR_PALETTE.map((c) => (
+                        <button
+                          key={c.value}
+                          onClick={() => {
+                            commitData({ textColor: c.value });
+                            setActivePicker(null);
+                          }}
+                          className="w-5.5 h-5.5 rounded-full border border-gray-200 hover:scale-110 transition-transform flex items-center justify-center"
+                          style={{ backgroundColor: c.value }}
+                          title={c.name}
+                        >
+                          {textColor === c.value && (
+                            <Check size={10} className={c.value === "#FFFFFF" ? "text-gray-800" : "text-white"} />
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* Link input popover */}
