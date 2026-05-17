@@ -1,7 +1,7 @@
 import { memo, useState, useRef, useEffect } from "react";
 import { Handle, Position, type NodeProps, NodeResizer, useReactFlow } from "@xyflow/react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Square, Circle, Triangle, Hexagon, Star, Plus, Minus, Palette, Bold, Italic, Underline } from "lucide-react";
+import { Square, Circle, Triangle, Hexagon, Star, Plus, Minus, Palette, Bold, Italic, Underline, Diamond } from "lucide-react";
 
 export type ShapeNodeData = {
   shape: string;
@@ -46,7 +46,10 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
   const [editing, setEditing] = useState(false);
   const [activePicker, setActivePicker] = useState<"fill" | "border" | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
-  const { setNodes } = useReactFlow();
+  const { setNodes, getNodes } = useReactFlow();
+
+  const selectedNodes = getNodes().filter((n) => n.selected);
+  const isSingleSelected = selected && selectedNodes.length === 1;
 
   useEffect(() => {
     if (editing) inputRef.current?.focus();
@@ -96,7 +99,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
 
       {/* ── Custom Shape Toolbar ── */}
       <AnimatePresence>
-        {selected && (
+        {isSingleSelected && (
           <div
             className="absolute -top-16 left-1/2 -translate-x-1/2 z-20 pointer-events-auto"
             style={{ whiteSpace: "nowrap" }}
@@ -125,9 +128,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
                     >
                       {s === "square" && <Square size={12} />}
                       {s === "circle" && <Circle size={12} />}
-                      {s === "diamond" && (
-                        <div className="w-2.5 h-2.5 border border-current rotate-45 flex items-center justify-center" style={{ borderWidth: "1.5px" }} />
-                      )}
+                      {s === "diamond" && <Diamond size={12} />}
                       {s === "triangle" && <Triangle size={12} />}
                       {s === "hexagon" && <Hexagon size={12} />}
                       {s === "star" && <Star size={12} />}
@@ -168,7 +169,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
 
                 {/* Fill Color Popover */}
                 {activePicker === "fill" && (
-                  <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white rounded-lg shadow-xl border border-gray-100 p-2 grid grid-cols-5 gap-1 z-30">
+                  <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 p-2.5 grid grid-cols-5 gap-1.5 z-30 w-[150px]">
                     {RAINBOW_COLORS.map((c) => (
                       <button
                         key={c.value}
@@ -176,7 +177,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
                           updateNodeData({ fillColor: c.value });
                           setActivePicker(null);
                         }}
-                        className="w-5 h-5 rounded-full border border-gray-200 transition-transform hover:scale-110 flex items-center justify-center overflow-hidden relative"
+                        className="w-6 h-6 rounded-full border border-gray-200/60 transition-transform hover:scale-110 flex items-center justify-center overflow-hidden relative shadow-sm cursor-pointer"
                         style={{
                           backgroundColor: c.value === "transparent" ? "white" : c.value,
                         }}
@@ -192,7 +193,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
 
                 {/* Border Color Popover */}
                 {activePicker === "border" && (
-                  <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white rounded-lg shadow-xl border border-gray-100 p-2 grid grid-cols-5 gap-1 z-30">
+                  <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 p-2.5 grid grid-cols-5 gap-1.5 z-30 w-[150px]">
                     {RAINBOW_COLORS.filter(c => c.value !== "transparent").map((c) => (
                       <button
                         key={c.value}
@@ -200,7 +201,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
                           updateNodeData({ strokeColor: c.value });
                           setActivePicker(null);
                         }}
-                        className="w-5 h-5 rounded-full border border-gray-200 transition-transform hover:scale-110"
+                        className="w-6 h-6 rounded-full border border-gray-200/60 transition-transform hover:scale-110 shadow-sm cursor-pointer"
                         style={{ backgroundColor: c.value }}
                         title={c.name}
                       />

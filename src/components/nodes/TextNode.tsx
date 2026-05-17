@@ -1,5 +1,5 @@
 import { memo, useState, useRef, useEffect, useCallback } from "react";
-import { Handle, Position, type NodeProps, NodeResizer } from "@xyflow/react";
+import { Handle, Position, type NodeProps, NodeResizer, useReactFlow } from "@xyflow/react";
 import {
   Bold, Italic, Underline, Link2, AlignLeft, AlignCenter, AlignRight,
   ExternalLink, Trash2, Minus, Plus,
@@ -65,7 +65,10 @@ function LinkPopover({
 }
 
 // ─── TextNode ───────────────────────────────────────────────────
-const TextNode = ({ data, selected }: NodeProps) => {
+const TextNode = ({ id, data, selected }: NodeProps) => {
+  const { getNodes } = useReactFlow();
+  const selectedNodes = getNodes().filter((n) => n.selected);
+  const isSingleSelected = selected && selectedNodes.length === 1;
   const nodeData = data as TextNodeData;
   const [fontSize, setFontSize] = useState(nodeData.fontSize ?? 15);
   const [align, setAlign] = useState<"left" | "center" | "right">("left");
@@ -190,7 +193,7 @@ const TextNode = ({ data, selected }: NodeProps) => {
 
       {/* ── Formatting Toolbar ── */}
       <AnimatePresence>
-        {selected && (
+        {isSingleSelected && (
           <div
             className="absolute -top-16 left-1/2 -translate-x-1/2 z-20 pointer-events-auto"
             style={{ whiteSpace: "nowrap" }}
