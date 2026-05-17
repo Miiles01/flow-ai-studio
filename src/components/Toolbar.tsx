@@ -177,7 +177,7 @@ const Toolbar = ({
               transition={{ duration: 0.14, ease: "easeOut" }}
               onMouseEnter={openFlyout}
               onMouseLeave={closeFlyout}
-              className="absolute left-[calc(100%+10px)] top-1/2 -translate-y-1/2 bg-[#111] rounded-2xl p-2 shadow-[0_16px_48px_rgb(0,0,0,0.3)] z-50"
+              className="absolute left-[calc(100%+10px)] -top-2 bg-[#111] rounded-2xl p-2 shadow-[0_16px_48px_rgb(0,0,0,0.3)] z-50"
             >
               <div className="flex flex-row gap-1">
                 {SHAPES.map((shape) => (
