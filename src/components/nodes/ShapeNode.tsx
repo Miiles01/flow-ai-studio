@@ -1,5 +1,5 @@
 import { memo, useState, useRef, useEffect } from "react";
-import { Handle, Position, type NodeProps, NodeResizer, useReactFlow } from "@xyflow/react";
+import { Handle, Position, type NodeProps, NodeResizer, useReactFlow, useViewport } from "@xyflow/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Square, Circle, Triangle, Hexagon, Star, Plus, Minus, Palette, Bold, Italic, Underline, Diamond } from "lucide-react";
 
@@ -47,6 +47,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
   const [activePicker, setActivePicker] = useState<"fill" | "border" | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const { setNodes, getNodes } = useReactFlow();
+  const { zoom } = useViewport();
 
   const selectedNodes = getNodes().filter((n) => n.selected);
   const isSingleSelected = selected && selectedNodes.length === 1;
@@ -102,7 +103,11 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
         {isSingleSelected && (
           <div
             className="absolute -top-16 left-1/2 -translate-x-1/2 z-20 pointer-events-auto"
-            style={{ whiteSpace: "nowrap" }}
+            style={{
+              whiteSpace: "nowrap",
+              transform: `translate(-50%, 0) scale(${1 / zoom})`,
+              transformOrigin: "bottom center",
+            }}
             onMouseDown={(e) => e.stopPropagation()}
           >
             <motion.div
