@@ -308,40 +308,6 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                 )}
               </div>
 
-              {/* Accent Color Picker */}
-              <div className="relative">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setActivePicker(activePicker === "accent" ? null : "accent");
-                  }}
-                  className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[#F3F4F6] transition-colors"
-                  title="Color de Acento"
-                >
-                  <div
-                    className="w-4 h-4 rounded-md border border-gray-200 rotate-45"
-                    style={{ backgroundColor: accentColor }}
-                  />
-                </button>
-                {activePicker === "accent" && (
-                  <div className="absolute top-10 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-[0_4px_25px_rgba(0,0,0,0.18)] p-2.5 flex gap-1.5 border border-[#E5E7EB] z-50">
-                    {ACCENT_PALETTE.map((c) => (
-                      <button
-                        key={c.value}
-                        onClick={() => {
-                          updateNodeData({ accentColor: c.value });
-                          setActivePicker(null);
-                        }}
-                        className="w-5.5 h-5.5 rounded-lg border border-gray-200 hover:scale-110 transition-transform flex items-center justify-center"
-                        style={{ backgroundColor: c.value }}
-                        title={c.name}
-                      >
-                        {accentColor === c.value && <Check size={10} className="text-white" />}
-                      </button>
-                    ))}
-                  </div>
-                )}
-              </div>
 
               {/* Text Color Picker */}
               <div className="relative">
