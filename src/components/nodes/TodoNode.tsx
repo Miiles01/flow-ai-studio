@@ -35,6 +35,7 @@ const COLOR_PALETTE = [
 ];
 
 const ACCENT_PALETTE = [
+  { name: "Negro Premium", value: "#111827" },
   { name: "Azul Miiles", value: "#4059F1" },
   { name: "Verde", value: "#10B981" },
   { name: "Naranja", value: "#F59E0B" },
@@ -59,7 +60,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
   ];
   const fontSize = nodeData.fontSize ?? 14;
   const backgroundColor = nodeData.backgroundColor ?? "#FFFFFF";
-  const accentColor = nodeData.accentColor ?? "#4059F1";
+  const accentColor = nodeData.accentColor ?? "#111827";
 
   const [activePicker, setActivePicker] = useState<"bg" | "accent" | null>(null);
   const taskInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
@@ -363,7 +364,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                 onClick={() => handleToggleTask(task.id)}
                 className="w-5 h-5 rounded-md flex items-center justify-center border transition-all shrink-0 duration-200"
                 style={{
-                  borderColor: task.completed ? accentColor : isDarkMode ? "#4B5563" : "#D1D5DB",
+                  borderColor: task.completed ? accentColor : isDarkMode ? "#F3F4F6" : "#111827",
                   backgroundColor: task.completed ? accentColor : "transparent",
                 }}
               >
