@@ -200,7 +200,7 @@
 }
 
 /* ── NodeResizer: premium dashed margin and square vertices ── */
-.react-flow__node-resizer .react-flow__resize-control.line {
+.react-flow__resize-control.line {
   border-color: #4059F1 !important;
   border-style: dashed !important;
   border-width: 1px !important;
@@ -208,28 +208,28 @@
 }
 
 /* Offset lines outward to create a margin/padding effect */
-.react-flow__node-resizer .react-flow__resize-control.line.top {
+.react-flow__resize-control.line.top {
   top: -8px !important;
   left: -8px !important;
   right: -8px !important;
 }
-.react-flow__node-resizer .react-flow__resize-control.line.bottom {
+.react-flow__resize-control.line.bottom {
   bottom: -8px !important;
   left: -8px !important;
   right: -8px !important;
 }
-.react-flow__node-resizer .react-flow__resize-control.line.left {
+.react-flow__resize-control.line.left {
   left: -8px !important;
   top: -8px !important;
   bottom: -8px !important;
 }
-.react-flow__node-resizer .react-flow__resize-control.line.right {
+.react-flow__resize-control.line.right {
   right: -8px !important;
   top: -8px !important;
   bottom: -8px !important;
 }
 
-/* Square vertices at corners */
+/* Square vertices at corners and side centers */
 .react-flow__resize-control.handle {
   width: 8px !important;
   height: 8px !important;
@@ -241,45 +241,59 @@
 }
 
 /* Align corners perfectly centered on the -8px offset dashed line intersections */
-.react-flow__resize-control.handle.top-left {
+.react-flow__resize-control.handle.top-left,
+.react-flow__resize-control.handle.top.left {
   top: -12px !important;
   left: -12px !important;
+  transform: none !important;
 }
-.react-flow__resize-control.handle.top-right {
+.react-flow__resize-control.handle.top-right,
+.react-flow__resize-control.handle.top.right {
   top: -12px !important;
   right: -12px !important;
+  transform: none !important;
 }
-.react-flow__resize-control.handle.bottom-left {
+.react-flow__resize-control.handle.bottom-left,
+.react-flow__resize-control.handle.bottom.left {
   bottom: -12px !important;
   left: -12px !important;
+  transform: none !important;
 }
-.react-flow__resize-control.handle.bottom-right {
+.react-flow__resize-control.handle.bottom-right,
+.react-flow__resize-control.handle.bottom.right {
   bottom: -12px !important;
   right: -12px !important;
+  transform: none !important;
 }
 
 /* Centered side handles aligned with the -8px dashed border lines */
-.react-flow__resize-control.handle.top {
+.react-flow__resize-control.handle.top:not(.left):not(.right) {
   top: -12px !important;
   left: 50% !important;
   transform: translateX(-50%) !important;
   display: block !important;
 }
-.react-flow__resize-control.handle.bottom {
+.react-flow__resize-control.handle.bottom:not(.left):not(.right) {
   bottom: -12px !important;
   left: 50% !important;
   transform: translateX(-50%) !important;
   display: block !important;
 }
-.react-flow__resize-control.handle.left {
+.react-flow__resize-control.handle.left:not(.top):not(.bottom) {
   left: -12px !important;
   top: 50% !important;
   transform: translateY(-50%) !important;
   display: block !important;
 }
-.react-flow__resize-control.handle.right {
+.react-flow__resize-control.handle.right:not(.top):not(.bottom) {
   right: -12px !important;
   top: 50% !important;
   transform: translateY(-50%) !important;
   display: block !important;
+}
+
+/* Remove default selected node border shadow to let the dashed resizer take center stage */
+.react-flow__node.selected {
+  outline: none !important;
+  box-shadow: none !important;
 }
