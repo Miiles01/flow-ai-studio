@@ -430,9 +430,9 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
               {/* Checkbox */}
               <button
                 onClick={() => handleToggleTask(task.id)}
-                className="w-5 h-5 rounded-md flex items-center justify-center border transition-all shrink-0 duration-200"
+                className="w-5 h-5 rounded-md flex items-center justify-center border-[1.5px] border-solid transition-all shrink-0 duration-200"
                 style={{
-                  borderColor: task.completed ? accentColor : isDarkMode ? "#4B5563" : "#D1D5DB",
+                  borderColor: task.completed ? accentColor : isDarkMode ? "#6B7280" : "#9CA3AF",
                   backgroundColor: task.completed ? accentColor : "transparent",
                 }}
               >
