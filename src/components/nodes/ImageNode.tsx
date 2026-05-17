@@ -246,18 +246,19 @@ const ImageNode = ({ id, data, selected }: NodeProps) => {
             key={imageUrl}
             src={imageUrl}
             alt="Canvas image"
-            loading="lazy"
-            className="w-full h-full rounded-lg"
+            className="w-full h-full rounded-lg absolute inset-0"
             style={{
               objectFit,
               objectPosition: "center",
-              display: isLoading ? "none" : "block",
+              opacity: isLoading ? 0 : 1,
+              transition: "opacity 0.2s ease",
             }}
             onLoad={() => setIsLoading(false)}
             onError={() => {
               setIsLoading(false);
               setIsError(true);
             }}
+            draggable={false}
           />
         )}
       </div>
