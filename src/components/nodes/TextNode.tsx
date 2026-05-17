@@ -130,7 +130,8 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
   const applyFormat = useCallback((cmd: string, value?: string) => {
     editorRef.current?.focus();
     document.execCommand(cmd, false, value ?? undefined);
-  }, []);
+    scheduleHtmlCommit();
+  }, [scheduleHtmlCommit]);
 
   // Open link dialog — save current selection
   const openLinkInput = useCallback(() => {
@@ -154,10 +155,11 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
       document.execCommand("unlink");
     }
     styleLinks();
+    flushHtml();
     setShowLinkInput(false);
     setLinkUrl("");
     setSavedRange(null);
-  }, [savedRange, linkUrl, styleLinks]);
+  }, [savedRange, linkUrl, styleLinks, flushHtml]);
 
   // Remove active link
   const removeLink = useCallback(() => {
@@ -170,7 +172,8 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
     sel?.addRange(range);
     document.execCommand("unlink");
     setActiveLink(null);
-  }, [activeLink]);
+    flushHtml();
+  }, [activeLink, flushHtml]);
 
   // Keyboard shortcuts
   const handleKeyDown = useCallback((e: React.KeyboardEvent) => {
