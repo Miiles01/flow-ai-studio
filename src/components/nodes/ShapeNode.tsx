@@ -154,9 +154,13 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
                 >
                   <Palette size={13} className="text-[#6B7280]" />
                   <div
-                    className="absolute bottom-1 right-1 w-2 h-2 rounded-full border border-white"
-                    style={{ backgroundColor: nodeData.fillColor || "white" }}
-                  />
+                    className="absolute bottom-1 right-1 w-2 h-2 rounded-full border border-white overflow-hidden"
+                    style={{ backgroundColor: nodeData.fillColor === "transparent" ? "white" : (nodeData.fillColor || "white") }}
+                  >
+                    {nodeData.fillColor === "transparent" && (
+                      <div className="absolute w-full h-[1px] bg-red-500 rotate-45" style={{ top: "45%" }} />
+                    )}
+                  </div>
                 </button>
 
                 {/* Border Color */}
@@ -167,9 +171,13 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
                 >
                   <Square size={13} className="text-[#6B7280]" />
                   <div
-                    className="absolute bottom-1 right-1 w-2 h-2 rounded-full border border-white"
-                    style={{ backgroundColor: nodeData.strokeColor || "#D1D5DB" }}
-                  />
+                    className="absolute bottom-1 right-1 w-2 h-2 rounded-full border border-white overflow-hidden"
+                    style={{ backgroundColor: nodeData.strokeColor === "transparent" ? "white" : (nodeData.strokeColor || "#D1D5DB") }}
+                  >
+                    {nodeData.strokeColor === "transparent" && (
+                      <div className="absolute w-full h-[1px] bg-red-500 rotate-45" style={{ top: "45%" }} />
+                    )}
+                  </div>
                 </button>
 
                 {/* Fill Color Popover */}
@@ -199,17 +207,23 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
                 {/* Border Color Popover */}
                 {activePicker === "border" && (
                   <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 p-2.5 grid grid-cols-5 gap-1.5 z-30 w-[150px]">
-                    {RAINBOW_COLORS.filter(c => c.value !== "transparent").map((c) => (
+                    {RAINBOW_COLORS.map((c) => (
                       <button
                         key={c.value}
                         onClick={() => {
                           updateNodeData({ strokeColor: c.value });
                           setActivePicker(null);
                         }}
-                        className="w-6 h-6 rounded-full border border-gray-200/60 transition-transform hover:scale-110 shadow-sm cursor-pointer"
-                        style={{ backgroundColor: c.value }}
+                        className="w-6 h-6 rounded-full border border-gray-200/60 transition-transform hover:scale-110 flex items-center justify-center overflow-hidden relative shadow-sm cursor-pointer"
+                        style={{
+                          backgroundColor: c.value === "transparent" ? "white" : c.value,
+                        }}
                         title={c.name}
-                      />
+                      >
+                        {c.value === "transparent" && (
+                          <div className="absolute w-full h-[1.5px] bg-red-500 rotate-45" />
+                        )}
+                      </button>
                     ))}
                   </div>
                 )}
