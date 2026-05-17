@@ -385,7 +385,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                 onClick={() => handleToggleTask(task.id)}
                 className="w-5 h-5 rounded-md flex items-center justify-center border transition-all shrink-0 duration-200"
                 style={{
-                  borderColor: task.completed ? accentColor : isDarkMode ? "#F3F4F6" : "#111827",
+                  borderColor: task.completed ? accentColor : isDarkMode ? "#4B5563" : "#D1D5DB",
                   backgroundColor: task.completed ? accentColor : "transparent",
                 }}
               >
