@@ -144,6 +144,8 @@
   background: white !important;
   border: 2px solid #4059F1 !important;
   box-shadow: var(--shadow-sm) !important;
+  z-index: 10000 !important;
+  pointer-events: auto !important;
 }
 
 .react-flow__handle:hover {
@@ -205,6 +207,7 @@
   border-style: dashed !important;
   border-width: 1px !important;
   opacity: 0.5 !important;
+  pointer-events: none !important;
 }
 
 /* Hide selection lines only for shape nodes */
