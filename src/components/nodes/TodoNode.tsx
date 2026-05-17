@@ -161,20 +161,27 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
       style={{
         width: "100%",
         height: "100%",
-        backgroundColor,
-        color: isDarkMode ? "#F3F4F6" : "#1F2937",
-        boxShadow: selected ? "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)" : "0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.02)",
       }}
-      className={`relative rounded-2xl flex flex-col p-5 select-none transition-all duration-300 border ${
-        selected ? "border-[#4059F1]/40" : "border-[#E5E7EB]"
-      }`}
+      className="relative w-full h-full"
     >
-      <NodeResizer
-        isVisible={selected}
-        minWidth={280}
-        minHeight={200}
-        lineStyle={{ border: "none" }}
-      />
+      <div
+        style={{
+          width: "100%",
+          height: "100%",
+          backgroundColor,
+          color: isDarkMode ? "#F3F4F6" : "#1F2937",
+          boxShadow: selected ? "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)" : "0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.02)",
+        }}
+        className={`w-full h-full rounded-2xl flex flex-col p-5 select-none transition-all duration-300 border ${
+          selected ? "border-[#4059F1]/40" : "border-[#E5E7EB]"
+        }`}
+      >
+        <NodeResizer
+          isVisible={selected}
+          minWidth={280}
+          minHeight={200}
+          lineStyle={{ border: "none" }}
+        />
 
       {/* ─── Floating Toolbar (selected node only) ─── */}
       <AnimatePresence>
