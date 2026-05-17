@@ -409,7 +409,8 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
         onMouseDown={(e) => e.stopPropagation()}
         onMouseUp={detectLink}
         onKeyUp={detectLink}
-        onInput={styleLinks}
+        onInput={() => { styleLinks(); scheduleHtmlCommit(); }}
+        onBlur={flushHtml}
         style={{
           fontSize,
           textAlign: align,
