@@ -505,6 +505,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
           <span>Nueva Tarea...</span>
         </button>
       </div>
+      </div>
 
       {/* ─── Fully Bidirectional Connection Handles ─── */}
       {(["top", "bottom", "left", "right"] as const).map((pos) => (
