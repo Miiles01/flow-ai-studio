@@ -1,6 +1,7 @@
 import { memo, useState, useRef, useEffect } from "react";
-import { Handle, Position, type NodeProps, NodeResizer, useReactFlow, useViewport } from "@xyflow/react";
+import { Handle, Position, type NodeProps, useReactFlow, useViewport } from "@xyflow/react";
 import { motion, AnimatePresence } from "framer-motion";
+import CornerResizer from "./CornerResizer";
 import { Square, Circle, Triangle, Hexagon, Star, Plus, Minus, Palette, Bold, Italic, Underline, Diamond } from "lucide-react";
 
 export type ShapeNodeData = {
@@ -91,12 +92,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
       className="relative"
       onDoubleClick={() => setEditing(true)}
     >
-      <NodeResizer
-        isVisible={selected}
-        minWidth={60}
-        minHeight={60}
-        lineStyle={{ border: "none" }}
-      />
+      <CornerResizer isVisible={!!selected} minWidth={60} minHeight={60} />
 
       {/* ── Custom Shape Toolbar ── */}
       <AnimatePresence>
