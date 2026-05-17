@@ -211,9 +211,31 @@ const TextNode = ({ data, selected }: NodeProps) => {
                 >
                   <Minus size={10} strokeWidth={2.5} />
                 </button>
-                <span className="text-[11px] font-normal text-black w-6 text-center tabular-nums select-none">{fontSize}</span>
+                <input
+                  type="text"
+                  value={fontSize === 0 ? "" : fontSize}
+                  onChange={(e) => {
+                    const val = e.target.value;
+                    if (val === "") {
+                      setFontSize(0);
+                      return;
+                    }
+                    const num = parseInt(val, 10);
+                    if (!isNaN(num)) {
+                      setFontSize(Math.min(200, num));
+                    }
+                  }}
+                  onBlur={() => {
+                    setFontSize((f) => Math.max(10, f || 15));
+                  }}
+                  onKeyDown={(e) => {
+                    e.stopPropagation();
+                  }}
+                  className="nodrag nopan text-[11px] font-normal text-black w-6 text-center bg-transparent border-none outline-none focus:bg-neutral-100 rounded select-all py-0.5 font-sans"
+                  style={{ width: "24px" }}
+                />
                 <button
-                  onClick={() => setFontSize((f) => Math.min(72, f + 1))}
+                  onClick={() => setFontSize((f) => Math.min(200, f + 1))}
                   className="w-6 h-6 flex items-center justify-center rounded-md hover:bg-[#F3F4F6] text-[#6B7280] transition-colors"
                 >
                   <Plus size={10} strokeWidth={2.5} />

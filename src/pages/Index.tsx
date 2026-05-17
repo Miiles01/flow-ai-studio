@@ -196,6 +196,26 @@ const Index = () => {
       y: e.clientY,
     });
 
+    if (activeDrawShape === "text") {
+      const newNodeId = `node-${Date.now()}`;
+      const newNode: Node = {
+        id: newNodeId,
+        type: "textNode",
+        position: { x: flowStart.x, y: flowStart.y },
+        style: { width: 200, height: 80 },
+        data: { text: "Texto", fontSize: 16, bold: false, italic: false, underline: false },
+      };
+
+      setNodes((nds) =>
+        nds.map((n) => ({ ...n, selected: false })).concat({ ...newNode, selected: true })
+      );
+
+      setActiveDrawShape(null);
+      setInteractionMode("edit");
+      toast.success("Texto creado");
+      return;
+    }
+
     const newNodeId = `node-${Date.now()}`;
     const newNode: Node = {
       id: newNodeId,

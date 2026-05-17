@@ -210,10 +210,18 @@ const Toolbar = ({
         <TooltipTrigger asChild>
           <button
             onClick={() => {
-              setActiveDrawShape(null);
-              onAddNode("text");
+              if (activeDrawShape === "text") {
+                setActiveDrawShape(null);
+              } else {
+                setActiveDrawShape("text");
+                setInteractionMode("edit");
+              }
             }}
-            className="w-10 h-10 flex items-center justify-center rounded-full hover:bg-[#F3F4F6] transition-all text-[#6B7280] hover:text-black"
+            className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
+              activeDrawShape === "text"
+                ? "bg-black text-white"
+                : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
+            }`}
           >
             <Type size={18} strokeWidth={1.5} />
           </button>
