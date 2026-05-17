@@ -24,12 +24,13 @@ import FlowNode from "@/components/nodes/FlowNode";
 import ShapeNode from "@/components/nodes/ShapeNode";
 import TextNode from "@/components/nodes/TextNode";
 import TodoNode from "@/components/nodes/TodoNode";
+import ImageNode from "@/components/nodes/ImageNode";
 import Toolbar from "@/components/Toolbar";
 import AIPromptBar from "@/components/AIPromptBar";
 import { generateFlowFromPrompt } from "@/lib/generateFlow";
 
 const SHAPE_TYPES = ["square", "circle", "diamond", "triangle", "hexagon", "star"];
-const nodeTypes = { flowNode: FlowNode, shapeNode: ShapeNode, textNode: TextNode, todoNode: TodoNode };
+const nodeTypes = { flowNode: FlowNode, shapeNode: ShapeNode, textNode: TextNode, todoNode: TodoNode, imageNode: ImageNode };
 
 const Index = () => {
   const { id } = useParams();
@@ -275,6 +276,24 @@ const Index = () => {
       setActiveDrawShape(null);
       setInteractionMode("edit");
       toast.success("Texto creado");
+      return;
+    }
+
+    if (activeDrawShape === "image") {
+      const newNodeId = `node-${Date.now()}`;
+      const newNode: Node = {
+        id: newNodeId,
+        type: "imageNode",
+        position: { x: flowStart.x, y: flowStart.y },
+        style: { width: 320, height: 220 },
+        data: { imageUrl: "", objectFit: "cover" },
+      };
+      setNodes((nds) =>
+        nds.map((n) => ({ ...n, selected: false })).concat({ ...newNode, selected: true })
+      );
+      setActiveDrawShape(null);
+      setInteractionMode("edit");
+      toast.success("Image Block creado");
       return;
     }
 
