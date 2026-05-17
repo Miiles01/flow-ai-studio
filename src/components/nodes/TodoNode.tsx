@@ -376,6 +376,17 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                   </div>
                 )}
               </div>
+
+              <div className="w-[1px] h-4 bg-[#E5E7EB] mx-1" />
+
+              {/* Delete node */}
+              <button
+                onClick={() => setNodes((nds) => nds.filter((n) => n.id !== id))}
+                className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[#FEE2E2] text-[#9CA3AF] hover:text-[#EF4444] transition-colors"
+                title="Eliminar"
+              >
+                <Trash2 size={13} strokeWidth={2} />
+              </button>
             </motion.div>
           </div>
         )}

@@ -90,6 +90,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
   const [activeLink, setActiveLink] = useState<HTMLAnchorElement | null>(null);
   const [savedRange, setSavedRange] = useState<Range | null>(null);
   const [activePicker, setActivePicker] = useState<"text" | null>(null);
+  const [isSingleSelected] = [selected && getNodes().filter((n) => n.selected).length === 1];
 
   const editorRef = useRef<HTMLDivElement>(null);
   const linkInputRef = useRef<HTMLInputElement>(null);
@@ -412,7 +413,19 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                 </div>
               </div>
 
-              {/* Link input popover */}
+              <div className="w-[1px] h-4 bg-[#E5E7EB] mx-1" />
+
+              {/* Delete node */}
+              <button
+                onClick={() => setNodes((nds) => nds.filter((n) => n.id !== id))}
+                className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[#FEE2E2] text-[#9CA3AF] hover:text-[#EF4444] transition-colors"
+                title="Eliminar"
+              >
+                <Trash2 size={13} strokeWidth={2} />
+              </button>
+            </div>
+
+
               <AnimatePresence>
                 {showLinkInput && (
                   <motion.div

@@ -1,7 +1,7 @@
 import { memo, useState, useRef, useEffect } from "react";
 import { Handle, Position, type NodeProps, NodeResizer, useReactFlow, useViewport } from "@xyflow/react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Square, Circle, Triangle, Hexagon, Star, Plus, Minus, Palette, Bold, Italic, Underline, Diamond } from "lucide-react";
+import { Square, Circle, Triangle, Hexagon, Star, Plus, Minus, Palette, Bold, Italic, Underline, Diamond, Trash2 } from "lucide-react";
 
 export type ShapeNodeData = {
   shape: string;
@@ -297,6 +297,17 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
                   <Underline size={11} />
                 </button>
               </div>
+
+              <div className="w-[1px] h-4 bg-[#E5E7EB] mx-1" />
+
+              {/* Delete node */}
+              <button
+                onClick={() => setNodes((nds) => nds.filter((n) => n.id !== id))}
+                className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[#FEE2E2] text-[#9CA3AF] hover:text-[#EF4444] transition-colors"
+                title="Eliminar"
+              >
+                <Trash2 size={13} strokeWidth={2} />
+              </button>
             </motion.div>
           </div>
         )}
