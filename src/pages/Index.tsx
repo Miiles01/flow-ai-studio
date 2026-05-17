@@ -13,7 +13,7 @@ import {
   type Edge,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { ArrowLeft, Loader2, Save, Settings2, EyeOff, Eye } from "lucide-react";
+import { ArrowLeft, Loader2, Check, Cloud, CloudOff, Settings2, EyeOff, Eye } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -40,12 +40,16 @@ const Index = () => {
   const [isGenerating, setIsGenerating] = useState(false);
   const [name, setName] = useState("Tablero sin título");
   const [loading, setLoading] = useState(true);
-  const [saving, setSaving] = useState(false);
+  const [saveState, setSaveState] = useState<"idle" | "dirty" | "saving" | "saved" | "error">("idle");
   const [interactionMode, setInteractionMode] = useState<"edit" | "pan">("edit");
   const [hideTools, setHideTools] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const settingsRef = useRef<HTMLDivElement>(null);
   const nodeCounter = useRef(0);
+  const lastSavedRef = useRef<string>("");
+  const saveTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const isCreatingRef = useRef(false);
+  const skipNextDirtyRef = useRef(true);
 
   const [activeDrawShape, setActiveDrawShape] = useState<string | null>(null);
   const [reactFlowInstance, setReactFlowInstance] = useState<any>(null);
@@ -85,8 +89,13 @@ const Index = () => {
         return;
       }
       setName(data.name || "Tablero");
-      setNodes(((data.nodes as unknown) as Node[]) || []);
-      setEdges(((data.edges as unknown) as Edge[]) || []);
+      const loadedNodes = ((data.nodes as unknown) as Node[]) || [];
+      const loadedEdges = ((data.edges as unknown) as Edge[]) || [];
+      setNodes(loadedNodes);
+      setEdges(loadedEdges);
+      lastSavedRef.current = JSON.stringify({ name: data.name, nodes: loadedNodes, edges: loadedEdges });
+      skipNextDirtyRef.current = true;
+      setSaveState("saved");
       setLoading(false);
     };
     load();
@@ -145,34 +154,77 @@ const Index = () => {
     [setNodes, setEdges]
   );
 
-  const handleSave = async () => {
+  // Debounced autosave: only after id exists (not "new"). For "new", first manual save creates the row.
+  const persist = useCallback(async () => {
     if (!user) return;
-    setSaving(true);
     const payload = {
       name,
       nodes: JSON.parse(JSON.stringify(nodes)),
       edges: JSON.parse(JSON.stringify(edges)),
     };
+    const serialized = JSON.stringify(payload);
+    if (serialized === lastSavedRef.current) {
+      setSaveState("saved");
+      return;
+    }
+    setSaveState("saving");
+
     if (!id || id === "new") {
+      if (isCreatingRef.current) return;
+      isCreatingRef.current = true;
       const { data, error } = await supabase
         .from("flows")
         .insert([{ user_id: user.id, ...payload }])
         .select()
         .single();
-      setSaving(false);
+      isCreatingRef.current = false;
       if (error || !data) {
+        setSaveState("error");
         toast.error("Error al crear el tablero");
         return;
       }
-      toast.success("Tablero creado");
+      lastSavedRef.current = serialized;
+      setSaveState("saved");
       navigate(`/boards/${data.id}`, { replace: true });
     } else {
       const { error } = await supabase.from("flows").update(payload).eq("id", id);
-      setSaving(false);
-      if (error) toast.error("Error al guardar");
-      else toast.success("Tablero guardado");
+      if (error) {
+        setSaveState("error");
+        return;
+      }
+      lastSavedRef.current = serialized;
+      setSaveState("saved");
     }
-  };
+  }, [user, id, name, nodes, edges, navigate]);
+
+  // Mark dirty + schedule autosave on changes
+  useEffect(() => {
+    if (loading) return;
+    if (skipNextDirtyRef.current) {
+      skipNextDirtyRef.current = false;
+      return;
+    }
+    setSaveState("dirty");
+    if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+    saveTimerRef.current = setTimeout(() => {
+      persist();
+    }, 1200);
+    return () => {
+      if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
+    };
+  }, [nodes, edges, name, loading, persist]);
+
+  // Flush pending save before unload
+  useEffect(() => {
+    const handler = () => {
+      if (saveTimerRef.current) {
+        clearTimeout(saveTimerRef.current);
+        persist();
+      }
+    };
+    window.addEventListener("beforeunload", handler);
+    return () => window.removeEventListener("beforeunload", handler);
+  }, [persist]);
 
   const handlePointerDown = useCallback((e: React.PointerEvent) => {
     if (!activeDrawShape || !reactFlowInstance) return;
@@ -357,22 +409,25 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Right: Save button */}
+        {/* Right: Autosave status */}
         <AnimatePresence>
           {!hideTools && (
-            <motion.button
-              key="save-btn"
+            <motion.div
+              key="save-status"
               initial={{ opacity: 0, y: -4 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -4 }}
               transition={{ duration: 0.2 }}
-              onClick={handleSave}
-              disabled={saving}
-              className="pointer-events-auto flex items-center gap-2 px-5 py-2.5 rounded-full bg-white text-black shadow-[0_8px_30px_rgb(0,0,0,0.06)] text-[13px] font-normal hover:bg-[#F3F4F6] transition-all hover:scale-[1.02] disabled:opacity-40"
+              onClick={() => { if (saveTimerRef.current) { clearTimeout(saveTimerRef.current); } persist(); }}
+              className="pointer-events-auto flex items-center gap-2 px-4 py-2.5 rounded-full bg-white shadow-[0_8px_30px_rgb(0,0,0,0.06)] text-[12px] font-normal text-[#6B7280] cursor-pointer hover:bg-[#F3F4F6] transition-all select-none"
+              title="Clic para guardar ahora"
             >
-              {saving ? <Loader2 size={14} className="animate-spin" /> : <Save size={14} strokeWidth={1.5} />}
-              Guardar
-            </motion.button>
+              {saveState === "saving" && (<><Loader2 size={13} className="animate-spin" /> Guardando…</>)}
+              {saveState === "saved" && (<><Check size={13} strokeWidth={2} className="text-emerald-500" /> Guardado</>)}
+              {saveState === "dirty" && (<><Cloud size={13} strokeWidth={1.5} /> Sin guardar</>)}
+              {saveState === "error" && (<><CloudOff size={13} strokeWidth={1.5} className="text-rose-500" /> Error</>)}
+              {saveState === "idle" && (<><Cloud size={13} strokeWidth={1.5} /> Listo</>)}
+            </motion.div>
           )}
         </AnimatePresence>
       </header>
