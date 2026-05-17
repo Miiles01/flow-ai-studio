@@ -15,7 +15,7 @@ export type ShapeNodeData = {
 };
 
 const SVG_SHAPES: Record<string, React.ReactNode> = {
-  square: <rect x="0" y="0" width="100" height="100" rx="8" vectorEffect="non-scaling-stroke" />,
+  square: <rect x="0" y="0" width="100" height="100" rx="0" vectorEffect="non-scaling-stroke" />,
   circle: <ellipse cx="50" cy="50" rx="50" ry="50" vectorEffect="non-scaling-stroke" />,
   diamond: <polygon points="50,0 100,50 50,100 0,50" vectorEffect="non-scaling-stroke" />,
   triangle: <polygon points="50,0 100,100 0,100" vectorEffect="non-scaling-stroke" />,
