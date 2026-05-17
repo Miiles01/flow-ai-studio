@@ -221,7 +221,7 @@ const Index = () => {
       id: newNodeId,
       type: "shapeNode",
       position: { x: flowStart.x, y: flowStart.y },
-      style: { width: 10, height: 10 },
+      style: { width: 60, height: 60 },
       data: { shape: activeDrawShape, label: "" },
     };
 
@@ -244,9 +244,9 @@ const Index = () => {
       const dx = currentFlowPos.x - drawingNodeRef.current.startX;
       const dy = currentFlowPos.y - drawingNodeRef.current.startY;
 
-      // Restrict minimum dimensions to prevent vanishing
-      const width = Math.max(15, Math.abs(dx));
-      const height = Math.max(15, Math.abs(dy));
+      // Restrict minimum dimensions to prevent vanishing and match Resizer constraints
+      const width = Math.max(60, Math.abs(dx));
+      const height = Math.max(60, Math.abs(dy));
 
       // Support multi-directional drag top-left calculations (Figma-style)
       const x = dx < 0 ? currentFlowPos.x : drawingNodeRef.current.startX;

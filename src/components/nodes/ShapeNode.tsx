@@ -34,7 +34,7 @@ const ShapeNode = ({ data, selected }: NodeProps) => {
     <motion.div
       initial={{ scale: 0.9, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
-      style={{ width: "100%", height: "100%", minWidth: 60, minHeight: 60 }}
+      style={{ width: "100%", height: "100%" }}
       className="relative"
       onDoubleClick={() => setEditing(true)}
     >
