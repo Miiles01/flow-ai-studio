@@ -67,13 +67,13 @@ function LinkPopover({
 
 // ─── TextNode ───────────────────────────────────────────────────
 const TextNode = ({ id, data, selected }: NodeProps) => {
-  const { getNodes } = useReactFlow();
+  const { getNodes, setNodes } = useReactFlow();
   const { zoom } = useViewport();
   const selectedNodes = getNodes().filter((n) => n.selected);
   const isSingleSelected = selected && selectedNodes.length === 1;
   const nodeData = data as TextNodeData;
-  const [fontSize, setFontSize] = useState(nodeData.fontSize ?? 15);
-  const [align, setAlign] = useState<"left" | "center" | "right">("left");
+  const [fontSize, setFontSize] = useState<number>(nodeData.fontSize ?? 15);
+  const [align, setAlign] = useState<"left" | "center" | "right">(nodeData.align ?? "left");
   const [showLinkInput, setShowLinkInput] = useState(false);
   const [linkUrl, setLinkUrl] = useState("");
   const [activeLink, setActiveLink] = useState<HTMLAnchorElement | null>(null);
@@ -81,6 +81,28 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
 
   const editorRef = useRef<HTMLDivElement>(null);
   const linkInputRef = useRef<HTMLInputElement>(null);
+  const htmlSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Persist patches into this node's data via React Flow
+  const commitData = useCallback((patch: Partial<TextNodeData>) => {
+    setNodes((nds) =>
+      nds.map((n) => (n.id === id ? { ...n, data: { ...n.data, ...patch } } : n))
+    );
+  }, [id, setNodes]);
+
+  // Debounced HTML commit while typing
+  const scheduleHtmlCommit = useCallback(() => {
+    if (htmlSaveTimer.current) clearTimeout(htmlSaveTimer.current);
+    htmlSaveTimer.current = setTimeout(() => {
+      if (editorRef.current) commitData({ html: editorRef.current.innerHTML });
+    }, 250);
+  }, [commitData]);
+
+  // Flush html on blur for immediate save
+  const flushHtml = useCallback(() => {
+    if (htmlSaveTimer.current) clearTimeout(htmlSaveTimer.current);
+    if (editorRef.current) commitData({ html: editorRef.current.innerHTML });
+  }, [commitData]);
 
   // Style all anchor tags in the editor
   const styleLinks = useCallback(() => {
