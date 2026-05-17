@@ -209,27 +209,27 @@
 
 /* Offset lines outward to create a margin/padding effect */
 .react-flow__resize-control.line.top {
-  top: 0px !important;
-  left: 0px !important;
-  right: 0px !important;
+  top: -1px !important;
+  left: -1px !important;
+  right: -1px !important;
   width: auto !important;
 }
 .react-flow__resize-control.line.bottom {
-  bottom: 0px !important;
-  left: 0px !important;
-  right: 0px !important;
+  bottom: -1px !important;
+  left: -1px !important;
+  right: -1px !important;
   width: auto !important;
 }
 .react-flow__resize-control.line.left {
-  left: 0px !important;
-  top: 0px !important;
-  bottom: 0px !important;
+  left: -1px !important;
+  top: -1px !important;
+  bottom: -1px !important;
   height: auto !important;
 }
 .react-flow__resize-control.line.right {
-  right: 0px !important;
-  top: 0px !important;
-  bottom: 0px !important;
+  right: -1px !important;
+  top: -1px !important;
+  bottom: -1px !important;
   height: auto !important;
 }
 
@@ -247,53 +247,62 @@
 /* Align corners perfectly centered on the 0px offset dashed line intersections */
 .react-flow__resize-control.handle.top-left,
 .react-flow__resize-control.handle.top.left {
-  top: -4px !important;
-  left: -4px !important;
+  top: -5px !important;
+  left: -5px !important;
   transform: none !important;
 }
 .react-flow__resize-control.handle.top-right,
 .react-flow__resize-control.handle.top.right {
-  top: -4px !important;
-  right: -4px !important;
+  top: -5px !important;
+  right: -5px !important;
   transform: none !important;
 }
 .react-flow__resize-control.handle.bottom-left,
 .react-flow__resize-control.handle.bottom.left {
-  bottom: -4px !important;
-  left: -4px !important;
+  bottom: -5px !important;
+  left: -5px !important;
   transform: none !important;
 }
 .react-flow__resize-control.handle.bottom-right,
 .react-flow__resize-control.handle.bottom.right {
-  bottom: -4px !important;
-  right: -4px !important;
+  bottom: -5px !important;
+  right: -5px !important;
   transform: none !important;
 }
 
 /* Centered side handles aligned with the 0px dashed border lines */
 .react-flow__resize-control.handle.top:not(.left):not(.right) {
-  top: -4px !important;
+  top: -5px !important;
   left: 50% !important;
   transform: translateX(-50%) !important;
   display: block !important;
 }
 .react-flow__resize-control.handle.bottom:not(.left):not(.right) {
-  bottom: -4px !important;
+  bottom: -5px !important;
   left: 50% !important;
   transform: translateX(-50%) !important;
   display: block !important;
 }
 .react-flow__resize-control.handle.left:not(.top):not(.bottom) {
-  left: -4px !important;
+  left: -5px !important;
   top: 50% !important;
   transform: translateY(-50%) !important;
   display: block !important;
 }
 .react-flow__resize-control.handle.right:not(.top):not(.bottom) {
-  right: -4px !important;
+  right: -5px !important;
   top: 50% !important;
   transform: translateY(-50%) !important;
   display: block !important;
+}
+
+/* Safety reset to eliminate all default margins, padding, and borders on shape node containers */
+.react-flow__node-shapeNode {
+  padding: 0 !important;
+  margin: 0 !important;
+  border: none !important;
+  background: transparent !important;
+  box-shadow: none !important;
 }
 
 /* Remove default selected node border shadow to let the dashed resizer take center stage */
