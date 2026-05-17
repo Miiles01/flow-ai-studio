@@ -432,11 +432,11 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                 onClick={() => handleToggleTask(task.id)}
                 className="w-5 h-5 rounded-md flex items-center justify-center border-[1.5px] border-solid transition-all shrink-0 duration-200"
                 style={{
-                  borderColor: task.completed ? accentColor : isDarkMode ? "#6B7280" : "#9CA3AF",
-                  backgroundColor: task.completed ? accentColor : "transparent",
+                  borderColor: task.completed ? (isDarkMode ? "#FFFFFF" : "#111827") : (isDarkMode ? "#6B7280" : "#9CA3AF"),
+                  backgroundColor: task.completed ? (isDarkMode ? "#FFFFFF" : "#111827") : "transparent",
                 }}
               >
-                {task.completed && <Check size={12} className="text-white stroke-[3.5]" />}
+                {task.completed && <Check size={12} className={`${isDarkMode ? "text-gray-900" : "text-white"} stroke-[3.5]`} />}
               </button>
 
               {/* Task Text Input & Custom Animated Strikethrough */}
