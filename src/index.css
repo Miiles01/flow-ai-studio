@@ -209,27 +209,27 @@
 
 /* Offset lines outward to create a margin/padding effect */
 .react-flow__resize-control.line.top {
-  top: -1px !important;
-  left: -1px !important;
-  right: -1px !important;
+  top: 0px !important;
+  left: 0px !important;
+  right: 0px !important;
   width: auto !important;
 }
 .react-flow__resize-control.line.bottom {
-  bottom: -1px !important;
-  left: -1px !important;
-  right: -1px !important;
+  bottom: 0px !important;
+  left: 0px !important;
+  right: 0px !important;
   width: auto !important;
 }
 .react-flow__resize-control.line.left {
-  left: -1px !important;
-  top: -1px !important;
-  bottom: -1px !important;
+  left: 0px !important;
+  top: 0px !important;
+  bottom: 0px !important;
   height: auto !important;
 }
 .react-flow__resize-control.line.right {
-  right: -1px !important;
-  top: -1px !important;
-  bottom: -1px !important;
+  right: 0px !important;
+  top: 0px !important;
+  bottom: 0px !important;
   height: auto !important;
 }
 
@@ -247,52 +247,52 @@
 /* Align corners perfectly centered on the 0px offset dashed line intersections */
 .react-flow__resize-control.handle.top-left,
 .react-flow__resize-control.handle.top.left {
-  top: -5px !important;
-  left: -5px !important;
-  transform: none !important;
+  top: 0px !important;
+  left: 0px !important;
+  transform: translate(-50%, -50%) !important;
 }
 .react-flow__resize-control.handle.top-right,
 .react-flow__resize-control.handle.top.right {
-  top: -5px !important;
-  right: -5px !important;
-  transform: none !important;
+  top: 0px !important;
+  right: 0px !important;
+  transform: translate(50%, -50%) !important;
 }
 .react-flow__resize-control.handle.bottom-left,
 .react-flow__resize-control.handle.bottom.left {
-  bottom: -5px !important;
-  left: -5px !important;
-  transform: none !important;
+  bottom: 0px !important;
+  left: 0px !important;
+  transform: translate(-50%, 50%) !important;
 }
 .react-flow__resize-control.handle.bottom-right,
 .react-flow__resize-control.handle.bottom.right {
-  bottom: -5px !important;
-  right: -5px !important;
-  transform: none !important;
+  bottom: 0px !important;
+  right: 0px !important;
+  transform: translate(50%, 50%) !important;
 }
 
 /* Centered side handles aligned with the 0px dashed border lines */
 .react-flow__resize-control.handle.top:not(.left):not(.right) {
-  top: -5px !important;
+  top: 0px !important;
   left: 50% !important;
-  transform: translateX(-50%) !important;
+  transform: translate(-50%, -50%) !important;
   display: block !important;
 }
 .react-flow__resize-control.handle.bottom:not(.left):not(.right) {
-  bottom: -5px !important;
+  bottom: 0px !important;
   left: 50% !important;
-  transform: translateX(-50%) !important;
+  transform: translate(-50%, 50%) !important;
   display: block !important;
 }
 .react-flow__resize-control.handle.left:not(.top):not(.bottom) {
-  left: -5px !important;
+  left: 0px !important;
   top: 50% !important;
-  transform: translateY(-50%) !important;
+  transform: translate(-50%, -50%) !important;
   display: block !important;
 }
 .react-flow__resize-control.handle.right:not(.top):not(.bottom) {
-  right: -5px !important;
+  right: 0px !important;
   top: 50% !important;
-  transform: translateY(-50%) !important;
+  transform: translate(50%, -50%) !important;
   display: block !important;
 }
 
