@@ -409,27 +409,6 @@ const Index = () => {
           </div>
         </div>
 
-        {/* Right: Autosave status */}
-        <AnimatePresence>
-          {!hideTools && (
-            <motion.div
-              key="save-status"
-              initial={{ opacity: 0, y: -4 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -4 }}
-              transition={{ duration: 0.2 }}
-              onClick={() => { if (saveTimerRef.current) { clearTimeout(saveTimerRef.current); } persist(); }}
-              className="pointer-events-auto flex items-center gap-2 px-4 py-2.5 rounded-full bg-white shadow-[0_8px_30px_rgb(0,0,0,0.06)] text-[12px] font-normal text-[#6B7280] cursor-pointer hover:bg-[#F3F4F6] transition-all select-none"
-              title="Clic para guardar ahora"
-            >
-              {saveState === "saving" && (<><Loader2 size={13} className="animate-spin" /> Guardando…</>)}
-              {saveState === "saved" && (<><Check size={13} strokeWidth={2} className="text-emerald-500" /> Guardado</>)}
-              {saveState === "dirty" && (<><Cloud size={13} strokeWidth={1.5} /> Sin guardar</>)}
-              {saveState === "error" && (<><CloudOff size={13} strokeWidth={1.5} className="text-rose-500" /> Error</>)}
-              {saveState === "idle" && (<><Cloud size={13} strokeWidth={1.5} /> Listo</>)}
-            </motion.div>
-          )}
-        </AnimatePresence>
       </header>
 
       <div className="flex-1 relative" onPointerDown={handlePointerDown}>
