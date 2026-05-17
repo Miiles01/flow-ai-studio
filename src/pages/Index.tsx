@@ -13,7 +13,7 @@ import {
   type Edge,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { ArrowLeft, Loader2, Check, Cloud, CloudOff, Settings2, EyeOff, Eye } from "lucide-react";
+import { ArrowLeft, Loader2, Check, Cloud, CloudOff, Settings2, EyeOff, Eye, Trash2 } from "lucide-react";
 import { toast } from "sonner";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
@@ -432,7 +432,7 @@ const Index = () => {
                   className="absolute top-[calc(100%+8px)] left-0 w-52 bg-white rounded-2xl shadow-[0_12px_40px_rgb(0,0,0,0.10)] overflow-hidden z-50"
                 >
                   <div className="px-3 py-2.5">
-                    <p className="text-[10px] text-[#9CA3AF] font-light uppercase tracking-widest mb-1 px-2">Vista</p>
+                    <p className="text-[10px] text-[#9CA3AF] font-light uppercase tracking-widest mb-1 px-2">Ajustes</p>
                     <button
                       onClick={() => { setHideTools((v) => !v); setSettingsOpen(false); }}
                       className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#F3F4F6] transition-colors text-left"
@@ -443,6 +443,21 @@ const Index = () => {
                       }
                       <span className="text-[13px] font-normal text-black">
                         {hideTools ? "Mostrar herramientas" : "Ocultar herramientas"}
+                      </span>
+                    </button>
+
+                    <button
+                      onClick={() => {
+                        setNodes([]);
+                        setEdges([]);
+                        setSettingsOpen(false);
+                        toast.success("Lienzo limpiado correctamente");
+                      }}
+                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#FEE2E2] hover:text-[#EF4444] transition-colors text-left group"
+                    >
+                      <Trash2 size={15} strokeWidth={1.5} className="text-[#6B7280] group-hover:text-[#EF4444] shrink-0 transition-colors" />
+                      <span className="text-[13px] font-normal text-black group-hover:text-[#EF4444] transition-colors">
+                        Limpiar lienzo
                       </span>
                     </button>
                   </div>
