@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MousePointer, Hand, Type, ListTodo, ImageIcon } from "lucide-react";
+import { MousePointer, Hand, Type, ListTodo, ImageIcon, Frame } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 type ToolbarProps = {
@@ -155,7 +155,7 @@ const Toolbar = ({
                 }
               }}
               className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
-                activeDrawShape !== null && activeDrawShape !== "text" && activeDrawShape !== "todo" && activeDrawShape !== "image"
+                activeDrawShape !== null && activeDrawShape !== "text" && activeDrawShape !== "todo" && activeDrawShape !== "image" && activeDrawShape !== "frame"
                   ? "bg-black text-white shadow-md hover:bg-black/90"
                   : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
               }`}
@@ -280,6 +280,32 @@ const Toolbar = ({
         </TooltipTrigger>
         <TooltipContent side="right" sideOffset={12} className="text-[13px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
           Imagen
+        </TooltipContent>
+      </Tooltip>
+
+      {/* Frame / Section */}
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button
+            onClick={() => {
+              if (activeDrawShape === "frame") {
+                setActiveDrawShape(null);
+              } else {
+                setActiveDrawShape("frame");
+                setInteractionMode("edit");
+              }
+            }}
+            className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
+              activeDrawShape === "frame"
+                ? "bg-black text-white"
+                : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
+            }`}
+          >
+            <Frame size={18} strokeWidth={1.5} />
+          </button>
+        </TooltipTrigger>
+        <TooltipContent side="right" sideOffset={12} className="text-[13px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
+          Frame
         </TooltipContent>
       </Tooltip>
     </motion.div>

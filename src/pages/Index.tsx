@@ -25,12 +25,13 @@ import ShapeNode from "@/components/nodes/ShapeNode";
 import TextNode from "@/components/nodes/TextNode";
 import TodoNode from "@/components/nodes/TodoNode";
 import ImageNode from "@/components/nodes/ImageNode";
+import FrameNode from "@/components/nodes/FrameNode";
 import Toolbar from "@/components/Toolbar";
 import AIPromptBar from "@/components/AIPromptBar";
 import { generateFlowFromPrompt } from "@/lib/generateFlow";
 
 const SHAPE_TYPES = ["square", "circle", "diamond", "triangle", "hexagon", "star"];
-const nodeTypes = { flowNode: FlowNode, shapeNode: ShapeNode, textNode: TextNode, todoNode: TodoNode, imageNode: ImageNode };
+const nodeTypes = { flowNode: FlowNode, shapeNode: ShapeNode, textNode: TextNode, todoNode: TodoNode, imageNode: ImageNode, frameNode: FrameNode };
 
 const Index = () => {
   const { id } = useParams();
@@ -112,6 +113,65 @@ const Index = () => {
   const isValidConnection = useCallback(
     (connection: Connection) => connection.source !== connection.target,
     []
+  );
+
+  // ── Frame parent-child: attach/detach nodes on drag stop ──────────────────
+  const onNodeDragStop = useCallback(
+    (_: React.MouseEvent, draggedNode: Node) => {
+      // Frames don't attach to other frames
+      if (draggedNode.type === "frameNode") return;
+
+      const allNodes = nodes;
+      const frames = allNodes.filter((n) => n.type === "frameNode");
+      if (frames.length === 0 && !draggedNode.parentId) return;
+
+      // Resolve absolute position (child positions are relative to parent)
+      let absX = draggedNode.position.x;
+      let absY = draggedNode.position.y;
+      if (draggedNode.parentId) {
+        const parent = allNodes.find((n) => n.id === draggedNode.parentId);
+        if (parent) { absX += parent.position.x; absY += parent.position.y; }
+      }
+
+      const nW = (draggedNode.measured?.width ?? (draggedNode.style?.width as number)) || 100;
+      const nH = (draggedNode.measured?.height ?? (draggedNode.style?.height as number)) || 100;
+      const cx = absX + nW / 2;
+      const cy = absY + nH / 2;
+
+      // Find first frame whose bounds contain the node center
+      let targetFrame: Node | null = null;
+      for (const frame of frames) {
+        const fw = (frame.measured?.width ?? (frame.style?.width as number)) || 300;
+        const fh = (frame.measured?.height ?? (frame.style?.height as number)) || 200;
+        if (cx >= frame.position.x && cx <= frame.position.x + fw &&
+            cy >= frame.position.y && cy <= frame.position.y + fh) {
+          targetFrame = frame;
+          break;
+        }
+      }
+
+      // No change needed if already in the correct frame (or still outside all frames)
+      const alreadyCorrect = targetFrame
+        ? draggedNode.parentId === targetFrame.id
+        : !draggedNode.parentId;
+      if (alreadyCorrect) return;
+
+      setNodes((nds) =>
+        nds.map((n) => {
+          if (n.id !== draggedNode.id) return n;
+          if (targetFrame) {
+            return {
+              ...n,
+              parentId: targetFrame.id,
+              position: { x: absX - targetFrame.position.x, y: absY - targetFrame.position.y },
+            };
+          }
+          // Detach
+          return { ...n, parentId: undefined, extent: undefined, position: { x: absX, y: absY } };
+        })
+      );
+    },
+    [nodes, setNodes]
   );
 
   const handleAddNode = useCallback(
@@ -265,7 +325,12 @@ const Index = () => {
     let minH = 60;
     let successMsg = "Figura creada";
 
-    if (activeDrawShape === "text") {
+    if (activeDrawShape === "frame") {
+      nodeType = "frameNode";
+      nodeData = { label: "Frame" };
+      minW = 200; minH = 120;
+      successMsg = "Frame creado";
+    } else if (activeDrawShape === "text") {
       nodeType = "textNode";
       nodeData = { text: "Texto", fontSize: 16, bold: false, italic: false, underline: false };
       minW = 140; minH = 50;
@@ -305,7 +370,12 @@ const Index = () => {
       data: nodeData,
     };
 
-    setNodes((nds) => [...nds, newNode]);
+    // Frames prepend so they render BELOW everything else
+    if (nodeType === "frameNode") {
+      setNodes((nds) => [{ ...newNode, zIndex: -1 }, ...nds]);
+    } else {
+      setNodes((nds) => [...nds, newNode]);
+    }
 
     drawingNodeRef.current = {
       id: newNodeId,
@@ -461,6 +531,7 @@ const Index = () => {
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
           nodeTypes={nodeTypes}
+          onNodeDragStop={onNodeDragStop}
           connectionMode={ConnectionMode.Loose}
           isValidConnection={isValidConnection}
           panOnDrag={activeDrawShape ? false : interactionMode === "pan" ? true : [1, 2]}
