@@ -210,6 +210,7 @@ export type Database = {
           niche: string | null
           onboarding_completed: boolean
           phone: string | null
+          plan: string
           portfolio_url: string | null
           tiktok_handle: string | null
           twitter_handle: string | null
@@ -230,6 +231,7 @@ export type Database = {
           niche?: string | null
           onboarding_completed?: boolean
           phone?: string | null
+          plan?: string
           portfolio_url?: string | null
           tiktok_handle?: string | null
           twitter_handle?: string | null
@@ -250,6 +252,7 @@ export type Database = {
           niche?: string | null
           onboarding_completed?: boolean
           phone?: string | null
+          plan?: string
           portfolio_url?: string | null
           tiktok_handle?: string | null
           twitter_handle?: string | null
