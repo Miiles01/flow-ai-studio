@@ -1,11 +1,26 @@
 import { memo, useState, useRef } from "react";
 import { type NodeProps, NodeResizer, useReactFlow, useViewport } from "@xyflow/react";
-import { Trash2 } from "lucide-react";
+import { Trash2, Palette, Square } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 
 export type FrameNodeData = {
   label?: string;
+  fillColor?: string;
+  strokeColor?: string;
 };
+
+const RAINBOW_COLORS = [
+  { name: "Transparente", value: "transparent" },
+  { name: "Rojo", value: "#EF4444" },
+  { name: "Naranja", value: "#F97316" },
+  { name: "Amarillo", value: "#FACC15" },
+  { name: "Verde", value: "#22C55E" },
+  { name: "Azul", value: "#3B82F6" },
+  { name: "Morado", value: "#A855F7" },
+  { name: "Rosa", value: "#EC4899" },
+  { name: "Blanco", value: "#FFFFFF" },
+  { name: "Negro", value: "#1F2937" },
+];
 
 const FrameNode = ({ id, data, selected }: NodeProps) => {
   const { setNodes, getNodes } = useReactFlow();
@@ -15,14 +30,22 @@ const FrameNode = ({ id, data, selected }: NodeProps) => {
 
   const [label, setLabel] = useState(nodeData.label ?? "Sección");
   const [editing, setEditing] = useState(false);
+  const [activePicker, setActivePicker] = useState<"fill" | "border" | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
+
+  const updateNodeData = (newData: Partial<FrameNodeData>) => {
+    setNodes((nds) =>
+      nds.map((n) => (n.id === id ? { ...n, data: { ...n.data, ...newData } } : n))
+    );
+  };
 
   const updateLabel = (val: string) => {
     setLabel(val);
-    setNodes((nds) =>
-      nds.map((n) => (n.id === id ? { ...n, data: { ...n.data, label: val } } : n))
-    );
+    updateNodeData({ label: val });
   };
+
+  const fillColor = nodeData.fillColor ?? "rgba(249, 250, 251, 0.35)";
+  const strokeColor = nodeData.strokeColor ?? (selected ? "#4059F1" : "#D1D5DB");
 
   return (
     <div style={{ width: "100%", height: "100%", position: "relative", overflow: "visible" }}>
@@ -82,8 +105,92 @@ const FrameNode = ({ id, data, selected }: NodeProps) => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 4 }}
               transition={{ duration: 0.15 }}
-              className="flex items-center gap-1 px-2 py-1.5 bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-[#F3F4F6]"
+              className="flex items-center gap-1 px-2 py-1.5 bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-[#F3F4F6] relative"
             >
+              {/* Fill Color Picker */}
+              <button
+                onClick={() => setActivePicker(activePicker === "fill" ? null : "fill")}
+                className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[#F3F4F6] transition-colors relative"
+                title="Color de relleno"
+              >
+                <Palette size={13} className="text-[#6B7280]" />
+                <div
+                  className="absolute bottom-1 right-1 w-2 h-2 rounded-full border border-white overflow-hidden"
+                  style={{ backgroundColor: nodeData.fillColor === "transparent" ? "white" : (nodeData.fillColor || "white") }}
+                >
+                  {nodeData.fillColor === "transparent" && (
+                    <div className="absolute w-full h-[1px] bg-red-500 rotate-45" style={{ top: "45%" }} />
+                  )}
+                </div>
+              </button>
+
+              {/* Border Color Picker */}
+              <button
+                onClick={() => setActivePicker(activePicker === "border" ? null : "border")}
+                className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[#F3F4F6] transition-colors relative"
+                title="Color de borde"
+              >
+                <Square size={13} className="text-[#6B7280]" />
+                <div
+                  className="absolute bottom-1 right-1 w-2 h-2 rounded-full border border-white overflow-hidden"
+                  style={{ backgroundColor: nodeData.strokeColor === "transparent" ? "white" : (nodeData.strokeColor || "#D1D5DB") }}
+                >
+                  {nodeData.strokeColor === "transparent" && (
+                    <div className="absolute w-full h-[1px] bg-red-500 rotate-45" style={{ top: "45%" }} />
+                  )}
+                </div>
+              </button>
+
+              {/* Fill Color Popover */}
+              {activePicker === "fill" && (
+                <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px]">
+                  {RAINBOW_COLORS.map((c) => (
+                    <button
+                      key={c.value}
+                      onClick={() => {
+                        updateNodeData({ fillColor: c.value });
+                        setActivePicker(null);
+                      }}
+                      className="w-6 h-6 rounded-full border border-gray-200/60 transition-transform hover:scale-110 flex items-center justify-center overflow-hidden relative shadow-sm cursor-pointer"
+                      style={{
+                        backgroundColor: c.value === "transparent" ? "white" : c.value,
+                      }}
+                      title={c.name}
+                    >
+                      {c.value === "transparent" && (
+                        <div className="absolute w-full h-[1.5px] bg-red-500 rotate-45" />
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              {/* Border Color Popover */}
+              {activePicker === "border" && (
+                <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px]">
+                  {RAINBOW_COLORS.map((c) => (
+                    <button
+                      key={c.value}
+                      onClick={() => {
+                        updateNodeData({ strokeColor: c.value });
+                        setActivePicker(null);
+                      }}
+                      className="w-6 h-6 rounded-full border border-gray-200/60 transition-transform hover:scale-110 flex items-center justify-center overflow-hidden relative shadow-sm cursor-pointer"
+                      style={{
+                        backgroundColor: c.value === "transparent" ? "white" : c.value,
+                      }}
+                      title={c.name}
+                    >
+                      {c.value === "transparent" && (
+                        <div className="absolute w-full h-[1.5px] bg-red-500 rotate-45" />
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
+
+              <div className="w-[1px] h-4 bg-[#E5E7EB] mx-1" />
+
               <button
                 onClick={() =>
                   setNodes((nds) =>
@@ -109,10 +216,10 @@ const FrameNode = ({ id, data, selected }: NodeProps) => {
 
       {/* Visual frame border — pointer-events none so children are clickable */}
       <div
-        className="absolute inset-0 rounded-lg pointer-events-none"
+        className="absolute inset-0 rounded-lg pointer-events-none transition-colors duration-200"
         style={{
-          border: selected ? "1.5px dashed #4059F1" : "1.5px dashed #D1D5DB",
-          backgroundColor: "rgba(249, 250, 251, 0.35)",
+          border: `1.5px dashed ${strokeColor === "transparent" ? "transparent" : strokeColor}`,
+          backgroundColor: fillColor === "transparent" ? "transparent" : fillColor,
         }}
       />
     </div>
