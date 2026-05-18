@@ -13,7 +13,7 @@ const FrameNode = ({ id, data, selected }: NodeProps) => {
   const nodeData = data as FrameNodeData;
   const isSingleSelected = selected && getNodes().filter((n) => n.selected).length === 1;
 
-  const [label, setLabel] = useState(nodeData.label ?? "Frame");
+  const [label, setLabel] = useState(nodeData.label ?? "Sección");
   const [editing, setEditing] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
@@ -59,7 +59,7 @@ const FrameNode = ({ id, data, selected }: NodeProps) => {
           />
         ) : (
           <span className="text-[12px] font-medium text-[#9CA3AF] cursor-text hover:text-[#6B7280] transition-colors select-none">
-            {label || "Frame"}
+            {label || "Sección"}
           </span>
         )}
       </div>
@@ -98,7 +98,7 @@ const FrameNode = ({ id, data, selected }: NodeProps) => {
                   )
                 }
                 className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[#FEE2E2] text-[#9CA3AF] hover:text-[#EF4444] transition-colors"
-                title="Eliminar frame"
+                title="Eliminar sección"
               >
                 <Trash2 size={13} strokeWidth={2} />
               </button>

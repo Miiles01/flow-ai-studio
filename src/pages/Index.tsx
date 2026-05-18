@@ -327,9 +327,9 @@ const Index = () => {
 
     if (activeDrawShape === "frame") {
       nodeType = "frameNode";
-      nodeData = { label: "Frame" };
+      nodeData = { label: "Sección" };
       minW = 200; minH = 120;
-      successMsg = "Frame creado";
+      successMsg = "Sección creada";
     } else if (activeDrawShape === "text") {
       nodeType = "textNode";
       nodeData = { text: "Texto", fontSize: 16, bold: false, italic: false, underline: false };
@@ -417,11 +417,56 @@ const Index = () => {
 
       if (drawingNodeRef.current) {
         const finalId = drawingNodeRef.current.id;
-        setNodes((nds) =>
-          nds.map((n) =>
-            n.id === finalId ? { ...n, selected: true } : { ...n, selected: false }
-          )
-        );
+
+        setNodes((nds) => {
+          const createdNode = nds.find((n) => n.id === finalId);
+          if (!createdNode || createdNode.type === "frameNode") {
+            return nds.map((n) =>
+              n.id === finalId ? { ...n, selected: true } : { ...n, selected: false }
+            );
+          }
+
+          const sections = nds.filter((n) => n.type === "frameNode" && n.id !== finalId);
+          if (sections.length === 0) {
+            return nds.map((n) =>
+              n.id === finalId ? { ...n, selected: true } : { ...n, selected: false }
+            );
+          }
+
+          const nW = (createdNode.style?.width as number) || 100;
+          const nH = (createdNode.style?.height as number) || 100;
+          const cx = createdNode.position.x + nW / 2;
+          const cy = createdNode.position.y + nH / 2;
+
+          let targetSection: Node | null = null;
+          for (const sec of sections) {
+            const sw = (sec.measured?.width ?? (sec.style?.width as number)) || 300;
+            const sh = (sec.measured?.height ?? (sec.style?.height as number)) || 200;
+            if (cx >= sec.position.x && cx <= sec.position.x + sw &&
+                cy >= sec.position.y && cy <= sec.position.y + sh) {
+              targetSection = sec;
+              break;
+            }
+          }
+
+          return nds.map((n) => {
+            if (n.id === finalId) {
+              if (targetSection) {
+                return {
+                  ...n,
+                  parentId: targetSection.id,
+                  position: {
+                    x: createdNode.position.x - targetSection.position.x,
+                    y: createdNode.position.y - targetSection.position.y,
+                  },
+                  selected: true,
+                };
+              }
+              return { ...n, selected: true };
+            }
+            return { ...n, selected: false };
+          });
+        });
       }
 
       drawingNodeRef.current = null;

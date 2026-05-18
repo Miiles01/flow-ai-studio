@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MousePointer, Hand, Type, ListTodo, ImageIcon, Frame } from "lucide-react";
+import { MousePointer, Hand, Type, ListTodo, ImageIcon, SquareDashed } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 
 type ToolbarProps = {
@@ -301,11 +301,11 @@ const Toolbar = ({
                 : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
             }`}
           >
-            <Frame size={18} strokeWidth={1.5} />
+            <SquareDashed size={18} strokeWidth={1.5} />
           </button>
         </TooltipTrigger>
         <TooltipContent side="right" sideOffset={12} className="text-[13px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
-          Frame
+          Sección
         </TooltipContent>
       </Tooltip>
     </motion.div>
