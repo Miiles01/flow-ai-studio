@@ -1,38 +1,56 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
-import { Loader2, Plus, LayoutDashboard, Trash2 } from "lucide-react";
+import { Loader2, Plus, LayoutDashboard, Trash2, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { toast } from "sonner";
 
 type FlowRow = { id: string; name: string; updated_at: string };
 
+const FREE_BOARD_LIMIT = 10;
+
 export default function Boards() {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [flows, setFlows] = useState<FlowRow[]>([]);
   const [loading, setLoading] = useState(true);
+  const [plan, setPlan] = useState<"free" | "pro">("free");
 
-  const fetchFlows = async () => {
+  const fetchData = async () => {
     if (!user) return;
-    const { data, error } = await supabase
-      .from("flows")
-      .select("id, name, updated_at")
-      .eq("user_id", user.id)
-      .order("updated_at", { ascending: false });
-    if (error) toast.error("Error al cargar tableros");
-    setFlows((data as FlowRow[]) || []);
+    const [{ data: flowsData, error: flowsErr }, { data: profileData }] = await Promise.all([
+      supabase
+        .from("flows")
+        .select("id, name, updated_at")
+        .eq("user_id", user.id)
+        .order("updated_at", { ascending: false }),
+      supabase
+        .from("profiles")
+        .select("plan")
+        .eq("user_id", user.id)
+        .maybeSingle(),
+    ]);
+    if (flowsErr) toast.error("Error al cargar tableros");
+    setFlows((flowsData as FlowRow[]) || []);
+    setPlan(((profileData?.plan as "free" | "pro") || "free"));
     setLoading(false);
   };
 
   useEffect(() => {
-    fetchFlows();
+    fetchData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [user]);
 
+  const isPro = plan === "pro";
+  const atLimit = !isPro && flows.length >= FREE_BOARD_LIMIT;
+
   const handleCreate = async () => {
     if (!user) return;
+    if (atLimit) {
+      toast.error(`Has alcanzado el límite de ${FREE_BOARD_LIMIT} tableros del plan gratuito. Actualiza a Pro para tableros ilimitados.`);
+      return;
+    }
     const { data, error } = await supabase
       .from("flows")
       .insert([{ user_id: user.id, name: `Tablero ${new Date().toLocaleDateString("es")}`, nodes: [], edges: [] }])
@@ -66,16 +84,47 @@ export default function Boards() {
 
   return (
     <div className="p-8 md:p-12 max-w-5xl mx-auto space-y-8">
-      <div className="flex items-center justify-between">
-        <h1 className="text-2xl md:text-3xl font-normal">Mis Tableros</h1>
+      <div className="flex items-center justify-between flex-wrap gap-4">
+        <div className="flex items-center gap-3">
+          <h1 className="text-2xl md:text-3xl font-normal">Mis Tableros</h1>
+          {!isPro && (
+            <span className="text-[12px] font-light text-miiles-gray-400 px-2.5 py-1 rounded-full bg-miiles-gray-50">
+              {flows.length}/{FREE_BOARD_LIMIT}
+            </span>
+          )}
+          {isPro && (
+            <span className="text-[12px] font-light text-black px-2.5 py-1 rounded-full bg-[#FEEDED] flex items-center gap-1">
+              <Sparkles size={12} strokeWidth={1.5} /> Pro
+            </span>
+          )}
+        </div>
         <button
-          className="flex items-center gap-2 px-4 py-2 bg-black text-white rounded-full text-sm font-light hover:bg-miiles-pink transition-colors"
+          disabled={atLimit}
+          className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-light transition-colors ${
+            atLimit
+              ? "bg-miiles-gray-100 text-miiles-gray-400 cursor-not-allowed"
+              : "bg-black text-white hover:bg-miiles-pink"
+          }`}
           onClick={handleCreate}
         >
           <Plus size={16} />
           Nuevo tablero
         </button>
       </div>
+
+      {atLimit && (
+        <div className="rounded-2xl bg-[#FFF8E6] border border-[#FDE68A] px-5 py-4 flex items-center justify-between flex-wrap gap-3">
+          <p className="text-[13px] font-light text-[#92400E]">
+            Has alcanzado el límite de {FREE_BOARD_LIMIT} tableros del plan gratuito. Actualiza a Pro para crear tableros ilimitados.
+          </p>
+          <button
+            onClick={() => navigate("/pricing")}
+            className="text-[13px] font-normal px-4 py-2 rounded-full bg-black text-white hover:bg-miiles-pink transition-colors"
+          >
+            Ver planes Pro
+          </button>
+        </div>
+      )}
 
       {flows.length === 0 ? (
         <div className="text-center py-20 bg-miiles-gray-50 rounded-2xl">
