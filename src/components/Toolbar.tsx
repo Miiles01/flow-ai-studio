@@ -231,7 +231,7 @@ const Toolbar = ({
         </TooltipContent>
       </Tooltip>
 
-      {/* Todo List */}
+      {/* Lista de Tareas */}
       <Tooltip>
         <TooltipTrigger asChild>
           <button
@@ -253,7 +253,7 @@ const Toolbar = ({
           </button>
         </TooltipTrigger>
         <TooltipContent side="right" sideOffset={12} className="text-[13px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
-          Todo List
+          Lista de Tareas
         </TooltipContent>
       </Tooltip>
 

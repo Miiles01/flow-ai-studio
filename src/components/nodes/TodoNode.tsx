@@ -279,7 +279,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                     setActivePicker(activePicker === "bg" ? null : "bg");
                   }}
                   className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[#F3F4F6] transition-colors gap-1"
-                  title="Fondo del Todo"
+                  title="Fondo de la lista"
                 >
                   <div
                     className="w-4 h-4 rounded-full border border-gray-200"
