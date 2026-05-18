@@ -233,10 +233,22 @@ const Index = () => {
           };
 
           const isSource = connectingNodeRef.current.handleType === "source";
+          const originHandleId = connectingNodeRef.current.handleId;
+
+          // Dynamically map to the opposite compatible handle on the new shapeNode
+          let oppositeHandle = "top";
+          if (originHandleId) {
+            const lower = originHandleId.toLowerCase();
+            if (lower === "top" || lower === "t") oppositeHandle = "bottom";
+            else if (lower === "bottom" || lower === "b") oppositeHandle = "top";
+            else if (lower === "left" || lower === "l") oppositeHandle = "right";
+            else if (lower === "right" || lower === "r") oppositeHandle = "left";
+          }
+
           const edgeSource = isSource ? originNodeId : newNodeId;
           const edgeTarget = isSource ? newNodeId : originNodeId;
-          const sourceHandle = isSource ? connectingNodeRef.current.handleId : undefined;
-          const targetHandle = isSource ? undefined : connectingNodeRef.current.handleId;
+          const sourceHandle = isSource ? originHandleId : oppositeHandle;
+          const targetHandle = isSource ? oppositeHandle : originHandleId;
 
           const newEdge: Edge = {
             id: `edge-${Date.now()}`,
