@@ -258,85 +258,51 @@ const Index = () => {
       x: e.clientX,
       y: e.clientY,
     });
+    // ── Determine node type + data for ALL drawable elements ──────────────
+    let nodeType = "shapeNode";
+    let nodeData: Record<string, unknown> = { shape: activeDrawShape, label: "" };
+    let minW = 60;
+    let minH = 60;
+    let successMsg = "Figura creada";
 
     if (activeDrawShape === "text") {
-      const newNodeId = `node-${Date.now()}`;
-      const newNode: Node = {
-        id: newNodeId,
-        type: "textNode",
-        position: { x: flowStart.x, y: flowStart.y },
-        style: { width: 200, height: 80 },
-        data: { text: "Texto", fontSize: 16, bold: false, italic: false, underline: false },
+      nodeType = "textNode";
+      nodeData = { text: "Texto", fontSize: 16, bold: false, italic: false, underline: false };
+      minW = 140; minH = 50;
+      successMsg = "Texto creado";
+    } else if (activeDrawShape === "image") {
+      nodeType = "imageNode";
+      nodeData = { imageUrl: "", objectFit: "cover" };
+      minW = 120; minH = 80;
+      successMsg = "Image Block creado";
+    } else if (activeDrawShape === "todo") {
+      nodeType = "todoNode";
+      nodeData = {
+        title: "Lista de Tareas",
+        showTitle: true,
+        subtitle: "Organiza tus actividades diarias",
+        showSubtitle: true,
+        tasks: [
+          { id: "t1", text: "Definir objetivos de diseño", completed: false },
+          { id: "t2", text: "Diseñar wireframes responsivos", completed: false },
+          { id: "t3", text: "Validar prototipos con usuarios", completed: false },
+        ],
+        fontSize: 14,
+        backgroundColor: "#FFFFFF",
+        accentColor: "#4059F1",
       };
-
-      setNodes((nds) =>
-        nds.map((n) => ({ ...n, selected: false })).concat({ ...newNode, selected: true })
-      );
-
-      setActiveDrawShape(null);
-      setInteractionMode("edit");
-      toast.success("Texto creado");
-      return;
+      minW = 280; minH = 200;
+      successMsg = "Todo List creado";
     }
 
-    if (activeDrawShape === "image") {
-      const newNodeId = `node-${Date.now()}`;
-      const newNode: Node = {
-        id: newNodeId,
-        type: "imageNode",
-        position: { x: flowStart.x, y: flowStart.y },
-        style: { width: 320, height: 220 },
-        data: { imageUrl: "", objectFit: "cover" },
-      };
-      setNodes((nds) =>
-        nds.map((n) => ({ ...n, selected: false })).concat({ ...newNode, selected: true })
-      );
-      setActiveDrawShape(null);
-      setInteractionMode("edit");
-      toast.success("Image Block creado");
-      return;
-    }
-
-    if (activeDrawShape === "todo") {
-      const newNodeId = `node-${Date.now()}`;
-      const newNode: Node = {
-        id: newNodeId,
-        type: "todoNode",
-        position: { x: flowStart.x, y: flowStart.y },
-        style: { width: 320, height: 360 },
-        data: {
-          title: "Lista de Tareas",
-          showTitle: true,
-          subtitle: "Organiza tus actividades diarias",
-          showSubtitle: true,
-          tasks: [
-            { id: "t1", text: "Definir objetivos de diseño", completed: false },
-            { id: "t2", text: "Diseñar wireframes responsivos", completed: false },
-            { id: "t3", text: "Validar prototipos con usuarios", completed: false },
-          ],
-          fontSize: 14,
-          backgroundColor: "#FFFFFF",
-          accentColor: "#4059F1"
-        },
-      };
-
-      setNodes((nds) =>
-        nds.map((n) => ({ ...n, selected: false })).concat({ ...newNode, selected: true })
-      );
-
-      setActiveDrawShape(null);
-      setInteractionMode("edit");
-      toast.success("Todo List creado");
-      return;
-    }
-
+    // ── Create node at cursor position, small seed size ────────────────────
     const newNodeId = `node-${Date.now()}`;
     const newNode: Node = {
       id: newNodeId,
-      type: "shapeNode",
+      type: nodeType,
       position: { x: flowStart.x, y: flowStart.y },
-      style: { width: 60, height: 60 },
-      data: { shape: activeDrawShape, label: "" },
+      style: { width: minW, height: minH },
+      data: nodeData,
     };
 
     setNodes((nds) => [...nds, newNode]);
@@ -347,6 +313,7 @@ const Index = () => {
       startY: flowStart.y,
     };
 
+    // ── Shared drag handler — resizes node as user drags ──────────────────
     const handlePointerMove = (moveEvent: PointerEvent) => {
       if (!drawingNodeRef.current || !reactFlowInstance) return;
 
@@ -358,11 +325,10 @@ const Index = () => {
       const dx = currentFlowPos.x - drawingNodeRef.current.startX;
       const dy = currentFlowPos.y - drawingNodeRef.current.startY;
 
-      // Restrict minimum dimensions to prevent vanishing and match Resizer constraints
-      const width = Math.max(60, Math.abs(dx));
-      const height = Math.max(60, Math.abs(dy));
+      const width  = Math.max(minW, Math.abs(dx));
+      const height = Math.max(minH, Math.abs(dy));
 
-      // Support multi-directional drag top-left calculations (Figma-style)
+      // Figma-style: support dragging in any direction
       const x = dx < 0 ? currentFlowPos.x : drawingNodeRef.current.startX;
       const y = dy < 0 ? currentFlowPos.y : drawingNodeRef.current.startY;
 
@@ -381,7 +347,6 @@ const Index = () => {
 
       if (drawingNodeRef.current) {
         const finalId = drawingNodeRef.current.id;
-        // Auto-select the drawn shape node on drag finish
         setNodes((nds) =>
           nds.map((n) =>
             n.id === finalId ? { ...n, selected: true } : { ...n, selected: false }
@@ -392,7 +357,7 @@ const Index = () => {
       drawingNodeRef.current = null;
       setActiveDrawShape(null);
       setInteractionMode("edit");
-      toast.success("Figura creada");
+      toast.success(successMsg);
     };
 
     window.addEventListener("pointermove", handlePointerMove);
