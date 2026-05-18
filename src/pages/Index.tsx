@@ -13,7 +13,9 @@ import {
   type Edge,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { ArrowLeft, Loader2, Check, Cloud, CloudOff, Settings2, EyeOff, Eye, Trash2 } from "lucide-react";
+import { ArrowLeft, Loader2, Check, Cloud, CloudOff, Settings2, EyeOff, Eye, Trash2, Undo2, Redo2 } from "lucide-react";
+import { useHistory } from "@/hooks/useHistory";
+import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { toast } from "sonner";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
