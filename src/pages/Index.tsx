@@ -601,6 +601,48 @@ const Index = () => {
           </div>
         </div>
 
+        {/* Right: history controls */}
+        <div className="flex items-center gap-1 pointer-events-auto px-1.5 py-1.5 rounded-full bg-white shadow-[0_8px_30px_rgb(0,0,0,0.06)]">
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={undo}
+                disabled={!canUndo}
+                className={`w-9 h-9 flex items-center justify-center rounded-full transition-all ${
+                  canUndo
+                    ? "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
+                    : "text-[#D1D5DB] cursor-not-allowed"
+                }`}
+                aria-label="Deshacer"
+              >
+                <Undo2 size={16} strokeWidth={1.5} />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom" sideOffset={8} className="text-[12px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
+              Deshacer (⌘Z)
+            </TooltipContent>
+          </Tooltip>
+          <Tooltip>
+            <TooltipTrigger asChild>
+              <button
+                onClick={redo}
+                disabled={!canRedo}
+                className={`w-9 h-9 flex items-center justify-center rounded-full transition-all ${
+                  canRedo
+                    ? "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
+                    : "text-[#D1D5DB] cursor-not-allowed"
+                }`}
+                aria-label="Rehacer"
+              >
+                <Redo2 size={16} strokeWidth={1.5} />
+              </button>
+            </TooltipTrigger>
+            <TooltipContent side="bottom" sideOffset={8} className="text-[12px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
+              Rehacer (⌘⇧Z)
+            </TooltipContent>
+          </Tooltip>
+        </div>
+
       </header>
 
       <div className="flex-1 relative" onPointerDown={handlePointerDown}>
