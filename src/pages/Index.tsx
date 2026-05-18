@@ -303,6 +303,20 @@ const Index = () => {
     }
   }, [user, id, name, nodes, edges, navigate]);
 
+  // Keep a ref to latest persist so handlers always call the freshest version
+  const persistRef = useRef(persist);
+  useEffect(() => {
+    persistRef.current = persist;
+  }, [persist]);
+
+  const flushSave = useCallback(() => {
+    if (saveTimerRef.current) {
+      clearTimeout(saveTimerRef.current);
+      saveTimerRef.current = null;
+    }
+    persistRef.current();
+  }, []);
+
   // Mark dirty + schedule autosave on changes
   useEffect(() => {
     if (loading) return;
@@ -314,23 +328,37 @@ const Index = () => {
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
     saveTimerRef.current = setTimeout(() => {
       persist();
-    }, 1200);
-    return () => {
-      if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
-    };
+    }, 800);
   }, [nodes, edges, name, loading, persist]);
 
-  // Flush pending save before unload
+  // Flush pending save on unload, tab hide, or unmount
   useEffect(() => {
-    const handler = () => {
+    const onBeforeUnload = () => {
       if (saveTimerRef.current) {
         clearTimeout(saveTimerRef.current);
-        persist();
+        saveTimerRef.current = null;
+        persistRef.current();
       }
     };
-    window.addEventListener("beforeunload", handler);
-    return () => window.removeEventListener("beforeunload", handler);
-  }, [persist]);
+    const onVisibility = () => {
+      if (document.visibilityState === "hidden" && saveTimerRef.current) {
+        flushSave();
+      }
+    };
+    window.addEventListener("beforeunload", onBeforeUnload);
+    document.addEventListener("visibilitychange", onVisibility);
+    return () => {
+      window.removeEventListener("beforeunload", onBeforeUnload);
+      document.removeEventListener("visibilitychange", onVisibility);
+      // Flush any pending changes when navigating away within the SPA
+      if (saveTimerRef.current) {
+        clearTimeout(saveTimerRef.current);
+        saveTimerRef.current = null;
+        persistRef.current();
+      }
+    };
+  }, [flushSave]);
+
 
   const handlePointerDown = useCallback((e: React.PointerEvent) => {
     if (!activeDrawShape || !reactFlowInstance) return;
