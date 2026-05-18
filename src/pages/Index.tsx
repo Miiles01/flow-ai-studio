@@ -107,6 +107,39 @@ const Index = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, user]);
 
+  // History (undo/redo)
+  const { undo, redo, canUndo, canRedo } = useHistory(
+    nodes,
+    edges,
+    (n) => setNodes(n),
+    (e) => setEdges(e),
+    !loading,
+  );
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      const meta = e.metaKey || e.ctrlKey;
+      if (!meta) return;
+      const target = e.target as HTMLElement | null;
+      const tag = target?.tagName;
+      const isEditable =
+        tag === "INPUT" ||
+        tag === "TEXTAREA" ||
+        (target && (target as HTMLElement).isContentEditable);
+      if (isEditable) return;
+      const key = e.key.toLowerCase();
+      if (key === "z" && !e.shiftKey) {
+        e.preventDefault();
+        undo();
+      } else if ((key === "z" && e.shiftKey) || key === "y") {
+        e.preventDefault();
+        redo();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [undo, redo]);
+
   const onConnect = useCallback(
     (params: Connection) => setEdges((eds) => addEdge({ ...params, animated: true }, eds)),
     [setEdges]
