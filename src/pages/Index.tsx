@@ -64,6 +64,12 @@ const Index = () => {
     startY: number;
   } | null>(null);
 
+  const connectingNodeRef = useRef<{
+    nodeId: string;
+    handleId: string | null;
+    handleType: "source" | "target";
+  } | null>(null);
+
   // Close settings dropdown on outside click
   useEffect(() => {
     const handler = (e: MouseEvent) => {
@@ -148,6 +154,113 @@ const Index = () => {
   const isValidConnection = useCallback(
     (connection: Connection) => connection.source !== connection.target,
     []
+  );
+
+  const onConnectStart = useCallback(
+    (event: any, { nodeId, handleId, handleType }: any) => {
+      connectingNodeRef.current = { nodeId, handleId, handleType };
+    },
+    []
+  );
+
+  const onConnectEnd = useCallback(
+    (event: any) => {
+      if (!connectingNodeRef.current || !reactFlowInstance) return;
+
+      const target = event.target as HTMLElement;
+      const isPane = target.classList.contains("react-flow__pane");
+      const isInsideInteractive =
+        target.closest(".react-flow__node") !== null ||
+        target.closest(".react-flow__handle") !== null ||
+        target.closest(".react-flow__controls") !== null ||
+        target.closest(".react-flow__minimap") !== null ||
+        target.closest("button") !== null ||
+        target.closest("input") !== null;
+
+      if (isPane || !isInsideInteractive) {
+        const { clientX, clientY } =
+          "changedTouches" in event ? event.changedTouches[0] : event;
+        const position = reactFlowInstance.screenToFlowPosition({
+          x: clientX,
+          y: clientY,
+        });
+
+        const originNodeId = connectingNodeRef.current.nodeId;
+        const originNode = nodes.find((n) => n.id === originNodeId);
+
+        if (originNode) {
+          if (originNode.type === "frameNode") {
+            connectingNodeRef.current = null;
+            return;
+          }
+
+          let newNodeType = "shapeNode";
+          let newNodeData: any = { shape: "square", label: "" };
+          let newWidth = 100;
+          let newHeight = 100;
+
+          if (originNode.type === "shapeNode") {
+            newNodeType = "shapeNode";
+            newNodeData = {
+              shape: originNode.data?.shape || "square",
+              label: "",
+              backgroundColor: originNode.data?.backgroundColor || "#FFFFFF",
+              borderColor: originNode.data?.borderColor || "#000000",
+            };
+            newWidth = (originNode.style?.width as number) || 100;
+            newHeight = (originNode.style?.height as number) || 100;
+          } else {
+            newNodeType = "shapeNode";
+            newNodeData = {
+              shape: "square",
+              label: "",
+              backgroundColor: "#FFFFFF",
+              borderColor: "#1F2937",
+            };
+          }
+
+          const newNodeId = `node-${Date.now()}`;
+          const newNode: Node = {
+            id: newNodeId,
+            type: newNodeType,
+            position: {
+              x: position.x - newWidth / 2,
+              y: position.y - newHeight / 2,
+            },
+            style: { width: newWidth, height: newHeight },
+            data: newNodeData,
+            selected: true,
+          };
+
+          const isSource = connectingNodeRef.current.handleType === "source";
+          const edgeSource = isSource ? originNodeId : newNodeId;
+          const edgeTarget = isSource ? newNodeId : originNodeId;
+          const sourceHandle = isSource ? connectingNodeRef.current.handleId : undefined;
+          const targetHandle = isSource ? undefined : connectingNodeRef.current.handleId;
+
+          const newEdge: Edge = {
+            id: `edge-${Date.now()}`,
+            source: edgeSource,
+            target: edgeTarget,
+            sourceHandle: sourceHandle || undefined,
+            targetHandle: targetHandle || undefined,
+            animated: true,
+          };
+
+          setNodes((nds) => nds.map((n) => ({ ...n, selected: false })).concat(newNode));
+          setEdges((eds) => eds.concat(newEdge));
+
+          toast.success(
+            originNode.type === "shapeNode"
+              ? "Figura clonada y conectada"
+              : "Figura conectada creada"
+          );
+        }
+      }
+
+      connectingNodeRef.current = null;
+    },
+    [reactFlowInstance, nodes, setNodes, setEdges]
   );
 
   // ── Frame parent-child: attach/detach nodes on drag stop ──────────────────
@@ -682,6 +795,8 @@ const Index = () => {
           onNodesChange={onNodesChange}
           onEdgesChange={onEdgesChange}
           onConnect={onConnect}
+          onConnectStart={onConnectStart}
+          onConnectEnd={onConnectEnd}
           nodeTypes={nodeTypes}
           onNodeDragStop={onNodeDragStop}
           connectionMode={ConnectionMode.Loose}
