@@ -15,7 +15,7 @@ import {
   type Edge,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { ArrowLeft, Loader2, Check, Cloud, CloudOff, Settings2, EyeOff, Eye, Trash2, Undo2, Redo2, Palette, Square, Type, Baseline, Sparkles, PanelRight, ListChecks } from "lucide-react";
+import { ArrowLeft, Loader2, Check, Cloud, CloudOff, Settings2, EyeOff, Eye, Trash2, Undo2, Redo2, Palette, Square, Type, Baseline, Sparkles, PanelRight, ListChecks, Plus } from "lucide-react";
 import { useHistory } from "@/hooks/useHistory";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { toast } from "sonner";
@@ -1444,12 +1444,12 @@ const IndexContent = () => {
             </div>
 
             {/* Body */}
-            <div className="flex-1 overflow-y-auto px-4 py-4 space-y-5">
+            <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
               {(() => {
                 const todoNodes = nodes.filter((n) => n.type === "todoNode");
                 if (todoNodes.length === 0) {
                   return (
-                    <div className="flex flex-col items-center justify-center h-full gap-3 text-center pt-12">
+                    <div className="flex flex-col items-center justify-center h-full gap-3 text-center pt-16">
                       <div className="w-10 h-10 rounded-full bg-[#F9FAFB] flex items-center justify-center">
                         <ListChecks size={18} strokeWidth={1.5} className="text-[#D1D5DB]" />
                       </div>
@@ -1463,58 +1463,111 @@ const IndexContent = () => {
                   const d = node.data as any;
                   const tasks: { id: string; text: string; completed: boolean }[] = d.tasks ?? [];
                   const title: string = d.title || "Lista de Tareas";
+                  const subtitle: string = d.subtitle || "";
                   const done = tasks.filter((t) => t.completed).length;
+
+                  const toggleTask = (taskId: string) => {
+                    setNodes((nds) =>
+                      nds.map((n) => {
+                        if (n.id !== node.id) return n;
+                        const updated = ((n.data as any).tasks ?? []).map((t: any) =>
+                          t.id === taskId ? { ...t, completed: !t.completed } : t
+                        );
+                        return { ...n, data: { ...n.data, tasks: updated } };
+                      })
+                    );
+                  };
+
+                  const addTask = () => {
+                    const newTask = { id: `task-${Date.now()}`, text: "", completed: false };
+                    setNodes((nds) =>
+                      nds.map((n) => {
+                        if (n.id !== node.id) return n;
+                        return { ...n, data: { ...n.data, tasks: [...((n.data as any).tasks ?? []), newTask] } };
+                      })
+                    );
+                  };
+
+                  const updateTaskText = (taskId: string, text: string) => {
+                    setNodes((nds) =>
+                      nds.map((n) => {
+                        if (n.id !== node.id) return n;
+                        const updated = ((n.data as any).tasks ?? []).map((t: any) =>
+                          t.id === taskId ? { ...t, text } : t
+                        );
+                        return { ...n, data: { ...n.data, tasks: updated } };
+                      })
+                    );
+                  };
+
                   return (
-                    <div key={node.id} className="space-y-2">
-                      {/* List title */}
-                      <div className="flex items-center justify-between">
-                        <span className="text-[12px] font-medium text-black truncate max-w-[160px]">{title}</span>
-                        <span className="text-[11px] text-[#9CA3AF] shrink-0 ml-2">{done}/{tasks.length}</span>
+                    <div
+                      key={node.id}
+                      className="rounded-2xl border border-[#F3F4F6] bg-[#FAFAFA] p-4 space-y-3"
+                    >
+                      {/* Card header */}
+                      <div className="space-y-0.5">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[13px] font-semibold text-black truncate max-w-[180px]">{title}</span>
+                          <span className="text-[11px] text-[#9CA3AF] shrink-0 ml-2 tabular-nums">{done}/{tasks.length}</span>
+                        </div>
+                        {subtitle && (
+                          <p className="text-[11px] text-[#9CA3AF] font-light leading-snug">{subtitle}</p>
+                        )}
                       </div>
 
                       {/* Progress bar */}
                       {tasks.length > 0 && (
-                        <div className="h-[3px] rounded-full bg-[#F3F4F6] overflow-hidden">
+                        <div className="h-[3px] rounded-full bg-[#EBEBEB] overflow-hidden">
                           <motion.div
                             className="h-full bg-[#111827] rounded-full"
-                            initial={{ width: 0 }}
                             animate={{ width: `${(done / tasks.length) * 100}%` }}
-                            transition={{ duration: 0.4, ease: "easeOut" }}
+                            transition={{ duration: 0.35, ease: "easeOut" }}
                           />
                         </div>
                       )}
 
                       {/* Tasks */}
-                      <div className="space-y-1 pt-0.5">
+                      <div className="space-y-1">
                         {tasks.length === 0 && (
-                          <p className="text-[11px] text-[#D1D5DB] font-light">Sin tareas aún.</p>
+                          <p className="text-[11px] text-[#D1D5DB] font-light py-1">Sin tareas aún.</p>
                         )}
                         {tasks.map((task) => (
                           <div key={task.id} className="flex items-start gap-2.5 py-1">
-                            <div
-                              className="w-4 h-4 rounded-[4px] border-[1.5px] flex items-center justify-center shrink-0 mt-px transition-colors"
+                            {/* Interactive checkbox */}
+                            <button
+                              onClick={() => toggleTask(task.id)}
+                              className="w-4 h-4 rounded-[4px] border-[1.5px] flex items-center justify-center shrink-0 mt-px transition-all"
                               style={{
                                 borderColor: task.completed ? "#111827" : "#D1D5DB",
                                 backgroundColor: task.completed ? "#111827" : "transparent",
                               }}
                             >
                               {task.completed && <Check size={9} className="text-white stroke-[3]" />}
-                            </div>
-                            <span
-                              className="text-[12px] font-light leading-snug"
+                            </button>
+                            {/* Editable task text */}
+                            <input
+                              value={task.text}
+                              onChange={(e) => updateTaskText(task.id, e.target.value)}
+                              placeholder="Nueva tarea..."
+                              className="flex-1 bg-transparent border-none outline-none text-[12px] font-light leading-snug placeholder-[#D1D5DB] min-w-0"
                               style={{
                                 color: task.completed ? "#9CA3AF" : "#374151",
                                 textDecoration: task.completed ? "line-through" : "none",
                               }}
-                            >
-                              {task.text || <span className="text-[#D1D5DB] italic">Sin texto</span>}
-                            </span>
+                            />
                           </div>
                         ))}
                       </div>
 
-                      {/* Separator between lists */}
-                      <div className="pt-1 border-b border-[#F9FAFB]" />
+                      {/* Add task */}
+                      <button
+                        onClick={addTask}
+                        className="flex items-center gap-1.5 text-[11px] text-[#9CA3AF] hover:text-black transition-colors pt-0.5"
+                      >
+                        <Plus size={12} strokeWidth={2} />
+                        <span>Nueva tarea</span>
+                      </button>
                     </div>
                   );
                 });
