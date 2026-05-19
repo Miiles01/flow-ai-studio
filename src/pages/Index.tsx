@@ -75,6 +75,10 @@ const IndexContent = () => {
   const [hideTools, setHideTools] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [taskPanelOpen, setTaskPanelOpen] = useState(false);
+  const [panelWidth, setPanelWidth] = useState(288); // default w-72
+  const panelMinWidth = 288;
+  const settingsButtonRef = useRef<HTMLButtonElement>(null);
+  const isDraggingPanel = useRef(false);
   const settingsRef = useRef<HTMLDivElement>(null);
   const nodeCounter = useRef(0);
   const lastSavedRef = useRef<string>("");
@@ -965,6 +969,7 @@ const IndexContent = () => {
           {/* Settings icon + dropdown */}
           <div ref={settingsRef} className="relative">
             <button
+              ref={settingsButtonRef}
               onClick={() => setSettingsOpen((v) => !v)}
               className={`w-9 h-9 flex items-center justify-center rounded-full bg-white shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-all hover:bg-[#F3F4F6] ${settingsOpen ? "bg-[#F3F4F6]" : ""}`}
               aria-label="Configuración del tablero"
@@ -1426,9 +1431,41 @@ const IndexContent = () => {
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: "100%", opacity: 0 }}
             transition={{ type: "spring", damping: 28, stiffness: 260 }}
-            className="absolute top-0 right-0 h-full w-72 lg:w-96 bg-white z-50 flex flex-col"
-            style={{ borderLeft: "1px solid #F3F4F6" }}
+            className="absolute top-0 right-0 h-full bg-white z-50 flex flex-col select-none"
+            style={{ width: panelWidth, borderLeft: "1px solid #F3F4F6" }}
           >
+            {/* Drag-resize handle */}
+            <div
+              className="absolute top-0 left-0 w-1.5 h-full cursor-col-resize z-10 group"
+              onPointerDown={(e) => {
+                e.preventDefault();
+                isDraggingPanel.current = true;
+                const startX = e.clientX;
+                const startWidth = panelWidth;
+
+                const onMove = (ev: PointerEvent) => {
+                  if (!isDraggingPanel.current) return;
+                  const delta = startX - ev.clientX;
+                  const settingsRight = settingsButtonRef.current
+                    ? settingsButtonRef.current.getBoundingClientRect().right + 16
+                    : 220;
+                  const maxWidth = window.innerWidth - settingsRight;
+                  const next = Math.min(maxWidth, Math.max(panelMinWidth, startWidth + delta));
+                  setPanelWidth(next);
+                };
+
+                const onUp = () => {
+                  isDraggingPanel.current = false;
+                  window.removeEventListener("pointermove", onMove);
+                  window.removeEventListener("pointerup", onUp);
+                };
+
+                window.addEventListener("pointermove", onMove);
+                window.addEventListener("pointerup", onUp);
+              }}
+            >
+              <div className="absolute left-0 top-0 w-[3px] h-full opacity-0 group-hover:opacity-100 bg-[#E5E7EB] transition-opacity rounded-full" />
+            </div>
             {/* Header */}
             <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-[#F3F4F6]">
               <div className="flex items-center gap-2">
@@ -1444,7 +1481,7 @@ const IndexContent = () => {
             </div>
 
             {/* Body */}
-            <div className="flex-1 overflow-y-auto px-4 py-4 space-y-3">
+            <div className="flex-1 overflow-y-auto px-4 py-4">
               {(() => {
                 const todoNodes = nodes.filter((n) => n.type === "todoNode");
                 if (todoNodes.length === 0) {
@@ -1459,118 +1496,129 @@ const IndexContent = () => {
                     </div>
                   );
                 }
-                return todoNodes.map((node) => {
-                  const d = node.data as any;
-                  const tasks: { id: string; text: string; completed: boolean }[] = d.tasks ?? [];
-                  const title: string = d.title || "Lista de Tareas";
-                  const subtitle: string = d.subtitle || "";
-                  const done = tasks.filter((t) => t.completed).length;
 
-                  const toggleTask = (taskId: string) => {
-                    setNodes((nds) =>
-                      nds.map((n) => {
-                        if (n.id !== node.id) return n;
-                        const updated = ((n.data as any).tasks ?? []).map((t: any) =>
-                          t.id === taskId ? { ...t, completed: !t.completed } : t
+                // Responsive columns based on panel width
+                const cols = panelWidth >= 720 ? 3 : panelWidth >= 480 ? 2 : 1;
+                const gridClass = cols === 3
+                  ? "grid grid-cols-3 gap-3"
+                  : cols === 2
+                  ? "grid grid-cols-2 gap-3"
+                  : "flex flex-col gap-3";
+
+                return (
+                  <div className={gridClass}>
+                    {todoNodes.map((node) => {
+                      const d = node.data as any;
+                      const tasks: { id: string; text: string; completed: boolean }[] = d.tasks ?? [];
+                      const title: string = d.title || "Lista de Tareas";
+                      const subtitle: string = d.subtitle || "";
+                      const done = tasks.filter((t) => t.completed).length;
+
+                      const toggleTask = (taskId: string) => {
+                        setNodes((nds) =>
+                          nds.map((n) => {
+                            if (n.id !== node.id) return n;
+                            const updated = ((n.data as any).tasks ?? []).map((t: any) =>
+                              t.id === taskId ? { ...t, completed: !t.completed } : t
+                            );
+                            return { ...n, data: { ...n.data, tasks: updated } };
+                          })
                         );
-                        return { ...n, data: { ...n.data, tasks: updated } };
-                      })
-                    );
-                  };
+                      };
 
-                  const addTask = () => {
-                    const newTask = { id: `task-${Date.now()}`, text: "", completed: false };
-                    setNodes((nds) =>
-                      nds.map((n) => {
-                        if (n.id !== node.id) return n;
-                        return { ...n, data: { ...n.data, tasks: [...((n.data as any).tasks ?? []), newTask] } };
-                      })
-                    );
-                  };
-
-                  const updateTaskText = (taskId: string, text: string) => {
-                    setNodes((nds) =>
-                      nds.map((n) => {
-                        if (n.id !== node.id) return n;
-                        const updated = ((n.data as any).tasks ?? []).map((t: any) =>
-                          t.id === taskId ? { ...t, text } : t
+                      const addTask = () => {
+                        const newTask = { id: `task-${Date.now()}`, text: "", completed: false };
+                        setNodes((nds) =>
+                          nds.map((n) => {
+                            if (n.id !== node.id) return n;
+                            return { ...n, data: { ...n.data, tasks: [...((n.data as any).tasks ?? []), newTask] } };
+                          })
                         );
-                        return { ...n, data: { ...n.data, tasks: updated } };
-                      })
-                    );
-                  };
+                      };
 
-                  return (
-                    <div
-                      key={node.id}
-                      className="rounded-2xl border border-[#F3F4F6] bg-[#FAFAFA] p-4 space-y-3"
-                    >
-                      {/* Card header */}
-                      <div className="space-y-0.5">
-                        <div className="flex items-center justify-between">
-                          <span className="text-[13px] font-semibold text-black truncate max-w-[180px]">{title}</span>
-                          <span className="text-[11px] text-[#9CA3AF] shrink-0 ml-2 tabular-nums">{done}/{tasks.length}</span>
-                        </div>
-                        {subtitle && (
-                          <p className="text-[11px] text-[#9CA3AF] font-light leading-snug">{subtitle}</p>
-                        )}
-                      </div>
+                      const updateTaskText = (taskId: string, text: string) => {
+                        setNodes((nds) =>
+                          nds.map((n) => {
+                            if (n.id !== node.id) return n;
+                            const updated = ((n.data as any).tasks ?? []).map((t: any) =>
+                              t.id === taskId ? { ...t, text } : t
+                            );
+                            return { ...n, data: { ...n.data, tasks: updated } };
+                          })
+                        );
+                      };
 
-                      {/* Progress bar */}
-                      {tasks.length > 0 && (
-                        <div className="h-[3px] rounded-full bg-[#EBEBEB] overflow-hidden">
-                          <motion.div
-                            className="h-full bg-[#111827] rounded-full"
-                            animate={{ width: `${(done / tasks.length) * 100}%` }}
-                            transition={{ duration: 0.35, ease: "easeOut" }}
-                          />
-                        </div>
-                      )}
-
-                      {/* Tasks */}
-                      <div className="space-y-1">
-                        {tasks.length === 0 && (
-                          <p className="text-[11px] text-[#D1D5DB] font-light py-1">Sin tareas aún.</p>
-                        )}
-                        {tasks.map((task) => (
-                          <div key={task.id} className="flex items-start gap-2.5 py-1">
-                            {/* Interactive checkbox */}
-                            <button
-                              onClick={() => toggleTask(task.id)}
-                              className="w-4 h-4 rounded-full border-[1.5px] flex items-center justify-center shrink-0 mt-px transition-all"
-                              style={{
-                                borderColor: task.completed ? "#111827" : "#D1D5DB",
-                                backgroundColor: task.completed ? "#111827" : "transparent",
-                              }}
-                            >
-                              {task.completed && <Check size={8} className="text-white" strokeWidth={3} />}
-                            </button>
-                            {/* Editable task text */}
-                            <input
-                              value={task.text}
-                              onChange={(e) => updateTaskText(task.id, e.target.value)}
-                              placeholder="Nueva tarea..."
-                              className="flex-1 bg-transparent border-none outline-none text-[12px] font-light leading-snug placeholder-[#D1D5DB] min-w-0"
-                              style={{
-                                color: task.completed ? "#9CA3AF" : "#374151",
-                                textDecoration: task.completed ? "line-through" : "none",
-                              }}
-                            />
+                      return (
+                        <div
+                          key={node.id}
+                          className="rounded-2xl border border-[#F3F4F6] bg-[#FAFAFA] p-4 space-y-3"
+                        >
+                          {/* Card header */}
+                          <div className="space-y-0.5">
+                            <div className="flex items-center justify-between">
+                              <span className="text-[13px] font-semibold text-black truncate">{title}</span>
+                              <span className="text-[11px] text-[#9CA3AF] shrink-0 ml-2 tabular-nums">{done}/{tasks.length}</span>
+                            </div>
+                            {subtitle && (
+                              <p className="text-[11px] text-[#9CA3AF] font-light leading-snug">{subtitle}</p>
+                            )}
                           </div>
-                        ))}
-                      </div>
 
-                      {/* Add task */}
-                      <button
-                        onClick={addTask}
-                        className="flex items-center gap-1.5 text-[11px] text-[#9CA3AF] hover:text-black transition-colors pt-0.5"
-                      >
-                        <Plus size={12} strokeWidth={2} />
-                        <span>Nueva tarea</span>
-                      </button>
-                    </div>
-                  );
-                });
+                          {/* Progress bar */}
+                          {tasks.length > 0 && (
+                            <div className="h-[3px] rounded-full bg-[#EBEBEB] overflow-hidden">
+                              <motion.div
+                                className="h-full bg-[#111827] rounded-full"
+                                animate={{ width: `${(done / tasks.length) * 100}%` }}
+                                transition={{ duration: 0.35, ease: "easeOut" }}
+                              />
+                            </div>
+                          )}
+
+                          {/* Tasks */}
+                          <div className="space-y-1">
+                            {tasks.length === 0 && (
+                              <p className="text-[11px] text-[#D1D5DB] font-light py-1">Sin tareas aún.</p>
+                            )}
+                            {tasks.map((task) => (
+                              <div key={task.id} className="flex items-start gap-2.5 py-1">
+                                <button
+                                  onClick={() => toggleTask(task.id)}
+                                  className="w-4 h-4 rounded-full border-[1.5px] flex items-center justify-center shrink-0 mt-px transition-all"
+                                  style={{
+                                    borderColor: task.completed ? "#111827" : "#D1D5DB",
+                                    backgroundColor: task.completed ? "#111827" : "transparent",
+                                  }}
+                                >
+                                  {task.completed && <Check size={8} className="text-white" strokeWidth={3} />}
+                                </button>
+                                <input
+                                  value={task.text}
+                                  onChange={(e) => updateTaskText(task.id, e.target.value)}
+                                  placeholder="Nueva tarea..."
+                                  className="flex-1 bg-transparent border-none outline-none text-[12px] font-light leading-snug placeholder-[#D1D5DB] min-w-0"
+                                  style={{
+                                    color: task.completed ? "#9CA3AF" : "#374151",
+                                    textDecoration: task.completed ? "line-through" : "none",
+                                  }}
+                                />
+                              </div>
+                            ))}
+                          </div>
+
+                          {/* Add task */}
+                          <button
+                            onClick={addTask}
+                            className="flex items-center gap-1.5 text-[11px] text-[#9CA3AF] hover:text-black transition-colors pt-0.5"
+                          >
+                            <Plus size={12} strokeWidth={2} />
+                            <span>Nueva tarea</span>
+                          </button>
+                        </div>
+                      );
+                    })}
+                  </div>
+                );
               })()}
             </div>
           </motion.aside>
