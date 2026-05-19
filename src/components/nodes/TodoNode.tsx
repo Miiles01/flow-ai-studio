@@ -1,7 +1,7 @@
 import { memo, useState, useRef, useEffect } from "react";
 import { Handle, Position, type NodeProps, NodeResizer, useReactFlow } from "@xyflow/react";
 import {
-  Plus, Trash2, ArrowUp, ArrowDown, Minus, Check, Baseline, Heading1, Heading2,
+  Plus, Trash2, ArrowUp, ArrowDown, Minus, Check, Baseline, Heading1, Heading2, Square,
 } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -263,14 +263,18 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                     e.stopPropagation();
                     setActivePicker(activePicker === "bg" ? null : "bg");
                   }}
-                  className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[#F3F4F6] transition-colors relative"
+                  className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-[#F3F4F6] transition-colors relative"
                   title="Color de fondo"
                 >
-                  {/* Mini swatch showing current bg */}
+                  <Square size={13} className="text-[#6B7280]" />
                   <div
-                    className="w-4 h-4 rounded-full border border-gray-300 shadow-sm"
-                    style={{ backgroundColor }}
-                  />
+                    className="absolute bottom-1 right-1 w-2 h-2 rounded-full border border-white overflow-hidden"
+                    style={{ backgroundColor: backgroundColor === "transparent" ? "white" : (backgroundColor || "#FAFAFA") }}
+                  >
+                    {backgroundColor === "transparent" && (
+                      <div className="absolute w-full h-[1px] bg-red-500 rotate-45" style={{ top: "45%" }} />
+                    )}
+                  </div>
                 </button>
                 {activePicker === "bg" && (
                   <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px]">
@@ -302,7 +306,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                     e.stopPropagation();
                     setActivePicker(activePicker === "text" ? null : "text");
                   }}
-                  className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[#F3F4F6] transition-colors"
+                  className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-[#F3F4F6] transition-colors"
                   title="Color del Texto"
                 >
                   <Baseline size={13} style={{ color: textColor }} className="stroke-[2.5]" />
