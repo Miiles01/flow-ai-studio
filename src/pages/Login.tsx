@@ -7,8 +7,7 @@ import { motion } from "framer-motion";
 import { Mail, Lock, Loader2, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import logoImg from "@/assets/logo.png";
-import LandingNavbar from "@/components/LandingNavbar";
+import logotipoSvg from "@/assets/miiles/logotipo.svg";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -42,68 +41,73 @@ const Login = () => {
   };
 
   return (
-    <>
-      <LandingNavbar />
-      <div className="min-h-screen bg-background flex items-center justify-center p-4 pt-32">
+    <div className="min-h-screen bg-gradient-to-b from-[#FDFDFD] to-[#F8F9FD] flex items-center justify-center p-4 md:p-8">
+      <div className="flex flex-col lg:flex-row items-center justify-center w-full max-w-[1100px] gap-8">
+        
+        {/* Form Container */}
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="w-full max-w-sm"
+          className="bg-white w-full max-w-[500px] p-8 md:p-14 rounded-[32px] shadow-sm flex flex-col justify-center"
+          style={{ minHeight: "680px" }}
         >
           <div className="text-center mb-10">
-            <h1 className="text-2xl font-normal text-foreground">Iniciar sesión</h1>
+            <Link to="/" className="inline-block mb-8 hover:opacity-80 transition-opacity">
+              <img src={logotipoSvg} alt="miiles" className="h-8 mx-auto" />
+            </Link>
+            <h1 className="text-[28px] font-medium text-foreground">Iniciar sesión</h1>
           </div>
 
-          <form onSubmit={handleLogin} className="space-y-4">
+          <form onSubmit={handleLogin} className="space-y-5">
             <div className="relative">
-              <Mail size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-miiles-gray-400" />
+              <Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-miiles-gray-400" />
               <Input
                 type="email"
                 placeholder="tu@email.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
-                className="pl-10 bg-white"
+                className="pl-12 h-14 bg-transparent border-border rounded-full"
                 required
               />
             </div>
             <div className="relative">
-              <Lock size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-miiles-gray-400" />
+              <Lock size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-miiles-gray-400" />
               <Input
                 type={showPassword ? "text" : "password"}
                 placeholder="Contraseña"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="pl-10 pr-12 bg-white"
+                className="pl-12 pr-12 h-14 bg-transparent border-border rounded-full"
                 required
               />
               <button
                 type="button"
                 onClick={() => setShowPassword(!showPassword)}
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-miiles-gray-400 hover:text-black transition-colors"
+                className="absolute right-5 top-1/2 -translate-y-1/2 text-miiles-gray-400 hover:text-black transition-colors"
               >
-                {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
+                {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
               </button>
             </div>
             <button
               type="submit"
-              className="w-full py-4 rounded-full bg-black text-white text-sm font-light hover:-translate-y-1 transition-transform disabled:opacity-50 disabled:pointer-events-none"
+              className="w-full h-14 rounded-full bg-black text-white font-medium hover:-translate-y-1 transition-transform disabled:opacity-50 disabled:pointer-events-none mt-2"
               disabled={loading}
             >
-              {loading ? <Loader2 size={16} className="animate-spin mx-auto" /> : "Entrar"}
+              {loading ? <Loader2 size={18} className="animate-spin mx-auto" /> : "Entrar"}
             </button>
           </form>
 
-          <div className="relative my-6">
+          <div className="relative my-8">
             <div className="absolute inset-0 flex items-center">
               <div className="w-full border-t border-border" />
             </div>
             <div className="relative flex justify-center text-xs">
-              <span className="bg-background px-2 text-muted-foreground">o</span>
+              <span className="bg-white px-4 text-muted-foreground">o</span>
             </div>
           </div>
 
-          <Button variant="outline" className="w-full rounded-full h-12" onClick={handleGoogleLogin}>
-            <svg className="w-4 h-4 mr-2" viewBox="0 0 24 24">
+          <Button variant="outline" className="w-full rounded-full h-14 border-border hover:bg-gray-50" onClick={handleGoogleLogin}>
+            <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24">
               <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
               <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
               <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
@@ -112,15 +116,30 @@ const Login = () => {
             Continuar con Google
           </Button>
 
-          <p className="text-center text-sm text-miiles-gray-400 font-light mt-8">
+          <p className="text-center text-sm text-miiles-gray-400 font-normal mt-10">
             ¿No tienes cuenta?{" "}
-            <Link to="/register" className="text-accent hover:underline">
+            <Link to="/register" className="text-accent hover:underline font-medium">
               Regístrate
             </Link>
           </p>
         </motion.div>
+
+        {/* Image Container */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.1 }}
+          className="hidden lg:block w-full max-w-[500px] h-[680px]"
+        >
+          <img 
+            src="https://wearemiiles.com/wp-content/uploads/2026/05/enhanced_Gemini_Generated_Image_h6viuth6viuth6vi-3-scaled.jpg" 
+            alt="Miiles platform" 
+            className="w-full h-full object-cover rounded-[32px] shadow-sm"
+          />
+        </motion.div>
+
       </div>
-    </>
+    </div>
   );
 };
 

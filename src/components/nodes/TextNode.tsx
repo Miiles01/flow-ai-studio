@@ -248,13 +248,13 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
       style={{ width: "100%", height: "100%", minWidth: 140, minHeight: 50 }}
       className="relative"
     >
-      <NodeResizer isVisible={!!selected} minWidth={140} minHeight={40} />
+      <NodeResizer isVisible={!!isSingleSelected} minWidth={140} minHeight={40} />
 
       {/* ── Formatting Toolbar ── */}
       <AnimatePresence>
         {isSingleSelected && (
           <div
-            className="absolute -top-16 left-1/2 -translate-x-1/2 z-20 pointer-events-auto"
+            className="absolute -top-16 left-1/2 -translate-x-1/2 z-20 pointer-events-auto node-floating-toolbar"
             style={{
               whiteSpace: "nowrap",
               transform: `translate(-50%, 0) scale(${1 / zoom})`,
@@ -510,7 +510,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
             pos === "left" ? Position.Left : Position.Right
           }
           id={pos}
-          className={`${HANDLE_CLASS} ${selected ? "opacity-100" : "opacity-0 hover:opacity-100"}`}
+          className={`${HANDLE_CLASS} ${isSingleSelected ? "opacity-100" : "opacity-0 pointer-events-none"}`}
         />
       ))}
     </motion.div>

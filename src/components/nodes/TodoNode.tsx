@@ -188,13 +188,13 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
           selected ? "border-[#4059F1]/40" : "border-[#E5E7EB]"
         }`}
       >
-        <NodeResizer isVisible={!!selected} minWidth={280} minHeight={200} lineStyle={{ border: "none" }} />
+        <NodeResizer isVisible={!!isSingleSelected} minWidth={280} minHeight={200} lineStyle={{ border: "none" }} />
 
       {/* ─── Floating Toolbar (selected node only) ─── */}
       <AnimatePresence>
         {isSingleSelected && (
           <div
-            className="absolute -top-16 left-1/2 -translate-x-1/2 z-[1000] pointer-events-auto"
+            className="absolute -top-16 left-1/2 -translate-x-1/2 z-[1000] pointer-events-auto node-floating-toolbar"
             onClick={(e) => e.stopPropagation()}
             onMouseDown={(e) => e.stopPropagation()}
           >
@@ -267,45 +267,6 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                 >
                   <Plus size={11} strokeWidth={2.5} />
                 </button>
-              </div>
-
-              <div className="w-[1px] h-4 bg-[#E5E7EB] mx-1" />
-
-              {/* Background Color Picker */}
-              <div className="relative">
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    setActivePicker(activePicker === "bg" ? null : "bg");
-                  }}
-                  className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[#F3F4F6] transition-colors gap-1"
-                  title="Fondo de la lista"
-                >
-                  <div
-                    className="w-4 h-4 rounded-full border border-gray-200"
-                    style={{ backgroundColor }}
-                  />
-                </button>
-                {activePicker === "bg" && (
-                  <div className="absolute top-10 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-[0_4px_25px_rgba(0,0,0,0.18)] p-2.5 flex gap-1.5 border border-[#E5E7EB] z-50">
-                    {COLOR_PALETTE.map((c) => (
-                      <button
-                        key={c.value}
-                        onClick={() => {
-                          updateNodeData({ backgroundColor: c.value });
-                          setActivePicker(null);
-                        }}
-                        className="w-5.5 h-5.5 rounded-full border border-gray-200 hover:scale-110 transition-transform flex items-center justify-center"
-                        style={{ backgroundColor: c.value }}
-                        title={c.name}
-                      >
-                        {backgroundColor === c.value && (
-                          <Check size={10} className={c.value === "#1F2937" ? "text-white" : "text-gray-800"} />
-                        )}
-                      </button>
-                    ))}
-                  </div>
-                )}
               </div>
 
 
@@ -490,7 +451,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
             pos === "left" ? Position.Left : Position.Right
           }
           id={pos}
-          className={`${HANDLE_CLASS} ${selected ? "opacity-100" : "opacity-0 hover:opacity-100"}`}
+          className={`${HANDLE_CLASS} ${isSingleSelected ? "opacity-100" : "opacity-0 pointer-events-none"}`}
         />
       ))}
     </motion.div>

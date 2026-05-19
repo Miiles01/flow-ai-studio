@@ -51,7 +51,7 @@ const FrameNode = ({ id, data, selected }: NodeProps) => {
     <div style={{ width: "100%", height: "100%", position: "relative", overflow: "visible" }}>
       {/* Resize handles */}
       <NodeResizer
-        isVisible={!!selected}
+        isVisible={!!isSingleSelected}
         minWidth={120}
         minHeight={80}
         lineStyle={{ border: "none" }}
@@ -91,7 +91,7 @@ const FrameNode = ({ id, data, selected }: NodeProps) => {
       <AnimatePresence>
         {isSingleSelected && (
           <div
-            className="absolute -top-14 left-1/2 z-[1000] pointer-events-auto"
+            className="absolute -top-14 left-1/2 z-[1000] pointer-events-auto node-floating-toolbar"
             style={{
               transform: `translate(-50%, 0) scale(${1 / zoom})`,
               transformOrigin: "bottom center",

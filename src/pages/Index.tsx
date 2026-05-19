@@ -1,4 +1,4 @@
-import { useCallback, useState, useRef, useEffect } from "react";
+import { useCallback, useState, useRef, useEffect, useMemo } from "react";
 import {
   ReactFlow,
   addEdge,
@@ -8,12 +8,14 @@ import {
   Background,
   BackgroundVariant,
   ConnectionMode,
+  useViewport,
+  ReactFlowProvider,
   type Connection,
   type Node,
   type Edge,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { ArrowLeft, Loader2, Check, Cloud, CloudOff, Settings2, EyeOff, Eye, Trash2, Undo2, Redo2 } from "lucide-react";
+import { ArrowLeft, Loader2, Check, Cloud, CloudOff, Settings2, EyeOff, Eye, Trash2, Undo2, Redo2, Palette, Square, Type, Baseline, Sparkles } from "lucide-react";
 import { useHistory } from "@/hooks/useHistory";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { toast } from "sonner";
@@ -35,7 +37,30 @@ import { generateFlowFromPrompt } from "@/lib/generateFlow";
 const SHAPE_TYPES = ["square", "circle", "diamond", "triangle", "hexagon", "star"];
 const nodeTypes = { flowNode: FlowNode, shapeNode: ShapeNode, textNode: TextNode, todoNode: TodoNode, imageNode: ImageNode, frameNode: FrameNode };
 
-const Index = () => {
+const RAINBOW_COLORS = [
+  { name: "Transparente", value: "transparent" },
+  { name: "Rojo", value: "#EF4444" },
+  { name: "Naranja", value: "#F97316" },
+  { name: "Amarillo", value: "#FACC15" },
+  { name: "Verde", value: "#22C55E" },
+  { name: "Azul", value: "#3B82F6" },
+  { name: "Morado", value: "#A855F7" },
+  { name: "Rosa", value: "#EC4899" },
+  { name: "Blanco", value: "#FFFFFF" },
+  { name: "Negro", value: "#1F2937" },
+];
+
+const TEXT_COLOR_PALETTE = [
+  { name: "Negro", value: "#111827" },
+  { name: "Gris", value: "#6B7280" },
+  { name: "Azul", value: "#2563EB" },
+  { name: "Verde", value: "#059669" },
+  { name: "Rojo", value: "#DC2626" },
+  { name: "Púrpura", value: "#7C3AED" },
+  { name: "Blanco", value: "#FFFFFF" },
+];
+
+const IndexContent = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -69,6 +94,243 @@ const Index = () => {
     handleId: string | null;
     handleType: "source" | "target";
   } | null>(null);
+
+  // ── Multi-Selection Transform Calculations ──────────────────
+  const selectedNodes = useMemo(() => nodes.filter(n => n.selected), [nodes]);
+  const isMultiSelection = selectedNodes.length > 1;
+
+  // Viewport for screen-space coordinate transformations
+  const { x: vpX, y: vpY, zoom: vpZoom } = useViewport();
+
+  // Resize Drag State
+  const [resizing, setResizing] = useState<string | null>(null);
+  const resizeStartRef = useRef<{
+    pointerX: number;
+    pointerY: number;
+    bounds: { x: number; y: number; w: number; h: number };
+    nodeStates: Array<{ id: string; x: number; y: number; w: number; h: number; fontSize: number }>;
+  } | null>(null);
+
+  // Compute bounding box around all selected nodes in canvas coordinates
+  const selectionBounds = useMemo(() => {
+    if (selectedNodes.length <= 1) return null;
+    let minX = Infinity;
+    let minY = Infinity;
+    let maxX = -Infinity;
+    let maxY = -Infinity;
+
+    selectedNodes.forEach((node) => {
+      const x = node.position.x;
+      const y = node.position.y;
+      const w = (node.style?.width as number) || (node.measured?.width) || 100;
+      const h = (node.style?.height as number) || (node.measured?.height) || 100;
+
+      if (x < minX) minX = x;
+      if (y < minY) minY = y;
+      if (x + w > maxX) maxX = x + w;
+      if (y + h > maxY) maxY = y + h;
+    });
+
+    return {
+      x: minX,
+      y: minY,
+      w: maxX - minX,
+      h: maxY - minY,
+    };
+  }, [selectedNodes]);
+
+  // Handle pointer down on transform handles
+  const handleTransformStart = useCallback((e: React.PointerEvent, handle: string) => {
+    if (!selectionBounds || selectedNodes.length <= 1) return;
+    e.preventDefault();
+    e.stopPropagation();
+
+    // Capture initial states
+    const nodeStates = selectedNodes.map((n) => ({
+      id: n.id,
+      x: n.position.x,
+      y: n.position.y,
+      w: (n.style?.width as number) || (n.measured?.width) || 100,
+      h: (n.style?.height as number) || (n.measured?.height) || 100,
+      fontSize: n.data?.fontSize || 14,
+    }));
+
+    resizeStartRef.current = {
+      pointerX: e.clientX,
+      pointerY: e.clientY,
+      bounds: { ...selectionBounds },
+      nodeStates,
+    };
+
+    setResizing(handle);
+  }, [selectionBounds, selectedNodes]);
+
+  // Pointer Move Listener (window-level)
+  useEffect(() => {
+    if (!resizing || !resizeStartRef.current || !selectionBounds) return;
+
+    const handlePointerMove = (e: PointerEvent) => {
+      const start = resizeStartRef.current;
+      if (!start) return;
+
+      // Delta in canvas flow space (scaled by zoom)
+      const dx = (e.clientX - start.pointerX) / vpZoom;
+      const dy = (e.clientY - start.pointerY) / vpZoom;
+
+      // Compute new bounds
+      let nextX = start.bounds.x;
+      let nextY = start.bounds.y;
+      let nextW = start.bounds.w;
+      let nextH = start.bounds.h;
+
+      const handle = resizing;
+      const isCorner = ["nw", "ne", "se", "sw"].includes(handle);
+
+      if (isCorner) {
+        let scaleX = 1;
+        let scaleY = 1;
+
+        if (handle === "se") {
+          scaleX = (start.bounds.w + dx) / start.bounds.w;
+          scaleY = (start.bounds.h + dy) / start.bounds.h;
+          const minScale = 30 / Math.min(start.bounds.w, start.bounds.h);
+          const scale = Math.max(minScale, Math.abs(dx) > Math.abs(dy) ? scaleX : scaleY);
+          nextW = start.bounds.w * scale;
+          nextH = start.bounds.h * scale;
+          nextX = start.bounds.x;
+          nextY = start.bounds.y;
+        } else if (handle === "sw") {
+          scaleX = (start.bounds.w - dx) / start.bounds.w;
+          scaleY = (start.bounds.h + dy) / start.bounds.h;
+          const minScale = 30 / Math.min(start.bounds.w, start.bounds.h);
+          const scale = Math.max(minScale, Math.abs(dx) > Math.abs(dy) ? scaleX : scaleY);
+          nextW = start.bounds.w * scale;
+          nextH = start.bounds.h * scale;
+          nextX = start.bounds.x + start.bounds.w - nextW;
+          nextY = start.bounds.y;
+        } else if (handle === "ne") {
+          scaleX = (start.bounds.w + dx) / start.bounds.w;
+          scaleY = (start.bounds.h - dy) / start.bounds.h;
+          const minScale = 30 / Math.min(start.bounds.w, start.bounds.h);
+          const scale = Math.max(minScale, Math.abs(dx) > Math.abs(dy) ? scaleX : scaleY);
+          nextW = start.bounds.w * scale;
+          nextH = start.bounds.h * scale;
+          nextX = start.bounds.x;
+          nextY = start.bounds.y + start.bounds.h - nextH;
+        } else if (handle === "nw") {
+          scaleX = (start.bounds.w - dx) / start.bounds.w;
+          scaleY = (start.bounds.h - dy) / start.bounds.h;
+          const minScale = 30 / Math.min(start.bounds.w, start.bounds.h);
+          const scale = Math.max(minScale, Math.abs(dx) > Math.abs(dy) ? scaleX : scaleY);
+          nextW = start.bounds.w * scale;
+          nextH = start.bounds.h * scale;
+          nextX = start.bounds.x + start.bounds.w - nextW;
+          nextY = start.bounds.y + start.bounds.h - nextH;
+        }
+      } else {
+        // Axial (side) resize
+        if (handle.includes("e")) {
+          nextW = Math.max(30, start.bounds.w + dx);
+        }
+        if (handle.includes("s")) {
+          nextH = Math.max(30, start.bounds.h + dy);
+        }
+        if (handle.includes("w")) {
+          const potentialW = Math.max(30, start.bounds.w - dx);
+          nextX = start.bounds.x + (start.bounds.w - potentialW);
+          nextW = potentialW;
+        }
+        if (handle.includes("n")) {
+          const potentialH = Math.max(30, start.bounds.h - dy);
+          nextY = start.bounds.y + (start.bounds.h - potentialH);
+          nextH = potentialH;
+        }
+      }
+
+      setNodes((nds) =>
+        nds.map((node) => {
+          const startState = start.nodeStates.find((s) => s.id === node.id);
+          if (!startState) return node;
+
+          // Compute initial relative positions in the bounds
+          const relX = (startState.x - start.bounds.x) / start.bounds.w;
+          const relY = (startState.y - start.bounds.y) / start.bounds.h;
+          const relW = startState.w / start.bounds.w;
+          const relH = startState.h / start.bounds.h;
+
+          const scaledW = relW * nextW;
+          const nodeScale = scaledW / startState.w;
+          const nextFontSize = Math.max(6, Math.round(startState.fontSize * nodeScale));
+
+          return {
+            ...node,
+            position: {
+              x: nextX + relX * nextW,
+              y: nextY + relY * nextH,
+            },
+            style: {
+              ...node.style,
+              width: scaledW,
+              height: relH * nextH,
+            },
+            data: {
+              ...node.data,
+              fontSize: nextFontSize,
+            },
+          };
+        })
+      );
+    };
+
+    const handlePointerUp = () => {
+      setResizing(null);
+      resizeStartRef.current = null;
+    };
+
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointerup", handlePointerUp);
+
+    return () => {
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerup", handlePointerUp);
+    };
+  }, [resizing, vpZoom, selectionBounds, setNodes]);
+
+  // Group Toolbar Colors Picker helper
+  const [groupPicker, setGroupPicker] = useState<"fill" | "border" | "text" | null>(null);
+
+  const applyGroupStyle = useCallback((type: "fill" | "border" | "text", color: string) => {
+    setNodes((nds) =>
+      nds.map((node) => {
+        if (!node.selected) return node;
+        const data = { ...node.data };
+
+        if (type === "fill") {
+          if (node.type === "shapeNode") data.fillColor = color;
+          else if (node.type === "todoNode") data.backgroundColor = color;
+          else if (node.type === "frameNode") data.fillColor = color;
+        } else if (type === "border") {
+          if (node.type === "shapeNode") data.strokeColor = color;
+          else if (node.type === "todoNode") data.accentColor = color;
+          else if (node.type === "frameNode") data.strokeColor = color;
+        } else if (type === "text") {
+          if (node.type === "textNode") data.textColor = color;
+          else if (node.type === "todoNode") data.textColor = color;
+        }
+
+        return { ...node, data };
+      })
+    );
+    setGroupPicker(null);
+    toast.success("Estilo de grupo aplicado");
+  }, [setNodes]);
+
+  const handleGroupDelete = useCallback(() => {
+    const selectedIds = selectedNodes.map((n) => n.id);
+    setNodes((nds) => nds.filter((n) => !n.selected));
+    setEdges((eds) => eds.filter((e) => !selectedIds.includes(e.source) && !selectedIds.includes(e.target)));
+    toast.success("Elementos eliminados");
+  }, [selectedNodes, setNodes, setEdges]);
 
   // Close settings dropdown on outside click
   useEffect(() => {
@@ -821,12 +1083,279 @@ const Index = () => {
           fitView
           onInit={setReactFlowInstance}
           proOptions={{ hideAttribution: true }}
-          className={`bg-white ${interactionMode === "pan" ? "pan-mode" : "edit-mode"}`}
+          className={`bg-white ${interactionMode === "pan" ? "pan-mode" : "edit-mode"} ${isMultiSelection ? "multi-select-active" : ""}`}
           style={{ cursor: activeDrawShape ? "crosshair" : "inherit" }}
         >
           <Background variant={BackgroundVariant.Dots} gap={32} size={1} color="#E5E7EB" />
           {!hideTools && <Controls position="bottom-left" showInteractive={false} />}
         </ReactFlow>
+
+        {/* Unified Multi-Selection Bounding Box & Transform Handles */}
+        {selectionBounds && (
+          <>
+            <div
+              style={{
+                position: "absolute",
+                left: selectionBounds.x * vpZoom + vpX,
+                top: selectionBounds.y * vpZoom + vpY,
+                width: selectionBounds.w * vpZoom,
+                height: selectionBounds.h * vpZoom,
+                border: "1.5px solid #4059F1",
+                pointerEvents: "none",
+                zIndex: 9000,
+                boxShadow: "0 0 0 1px rgba(64, 89, 241, 0.15)",
+              }}
+            >
+              {/* Handles wrapper to get hover & pointer events */}
+              <div className="absolute inset-0 pointer-events-auto">
+                {/* Corner Handles */}
+                {/* Top Left (nw) */}
+                <div
+                  onPointerDown={(e) => handleTransformStart(e, "nw")}
+                  style={{
+                    position: "absolute",
+                    top: -5,
+                    left: -5,
+                    width: 10,
+                    height: 10,
+                    backgroundColor: "#FFF",
+                    border: "1.5px solid #4059F1",
+                    borderRadius: "2px",
+                    cursor: "nwse-resize",
+                  }}
+                />
+                {/* Top Right (ne) */}
+                <div
+                  onPointerDown={(e) => handleTransformStart(e, "ne")}
+                  style={{
+                    position: "absolute",
+                    top: -5,
+                    right: -5,
+                    width: 10,
+                    height: 10,
+                    backgroundColor: "#FFF",
+                    border: "1.5px solid #4059F1",
+                    borderRadius: "2px",
+                    cursor: "nesw-resize",
+                  }}
+                />
+                {/* Bottom Right (se) */}
+                <div
+                  onPointerDown={(e) => handleTransformStart(e, "se")}
+                  style={{
+                    position: "absolute",
+                    bottom: -5,
+                    right: -5,
+                    width: 10,
+                    height: 10,
+                    backgroundColor: "#FFF",
+                    border: "1.5px solid #4059F1",
+                    borderRadius: "2px",
+                    cursor: "nwse-resize",
+                  }}
+                />
+                {/* Bottom Left (sw) */}
+                <div
+                  onPointerDown={(e) => handleTransformStart(e, "sw")}
+                  style={{
+                    position: "absolute",
+                    bottom: -5,
+                    left: -5,
+                    width: 10,
+                    height: 10,
+                    backgroundColor: "#FFF",
+                    border: "1.5px solid #4059F1",
+                    borderRadius: "2px",
+                    cursor: "nesw-resize",
+                  }}
+                />
+
+                {/* Side Handles */}
+                {/* Top (n) */}
+                <div
+                  onPointerDown={(e) => handleTransformStart(e, "n")}
+                  style={{
+                    position: "absolute",
+                    top: -4,
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    width: 8,
+                    height: 8,
+                    backgroundColor: "#FFF",
+                    border: "1.5px solid #4059F1",
+                    borderRadius: "2px",
+                    cursor: "ns-resize",
+                  }}
+                />
+                {/* Right (e) */}
+                <div
+                  onPointerDown={(e) => handleTransformStart(e, "e")}
+                  style={{
+                    position: "absolute",
+                    top: "50%",
+                    right: -4,
+                    transform: "translateY(-50%)",
+                    width: 8,
+                    height: 8,
+                    backgroundColor: "#FFF",
+                    border: "1.5px solid #4059F1",
+                    borderRadius: "2px",
+                    cursor: "ew-resize",
+                  }}
+                />
+                {/* Bottom (s) */}
+                <div
+                  onPointerDown={(e) => handleTransformStart(e, "s")}
+                  style={{
+                    position: "absolute",
+                    bottom: -4,
+                    left: "50%",
+                    transform: "translateX(-50%)",
+                    width: 8,
+                    height: 8,
+                    backgroundColor: "#FFF",
+                    border: "1.5px solid #4059F1",
+                    borderRadius: "2px",
+                    cursor: "ns-resize",
+                  }}
+                />
+                {/* Left (w) */}
+                <div
+                  onPointerDown={(e) => handleTransformStart(e, "w")}
+                  style={{
+                    position: "absolute",
+                    top: "50%",
+                    left: -4,
+                    transform: "translateY(-50%)",
+                    width: 8,
+                    height: 8,
+                    backgroundColor: "#FFF",
+                    border: "1.5px solid #4059F1",
+                    borderRadius: "2px",
+                    cursor: "ew-resize",
+                  }}
+                />
+              </div>
+            </div>
+
+            {/* Floating Group Selection Toolbar */}
+            <AnimatePresence>
+              <motion.div
+                initial={{ opacity: 0, y: 10, x: "-50%" }}
+                animate={{ opacity: 1, y: 0, x: "-50%" }}
+                exit={{ opacity: 0, y: 10, x: "-50%" }}
+                style={{
+                  position: "absolute",
+                  left: selectionBounds.x * vpZoom + vpX + (selectionBounds.w * vpZoom) / 2,
+                  top: (() => {
+                    const topPos = selectionBounds.y * vpZoom + vpY;
+                    return topPos > 96
+                      ? topPos - 56
+                      : Math.min(topPos + selectionBounds.h * vpZoom + 16, window.innerHeight - 80);
+                  })(),
+                  transform: "translateX(-50%)",
+                  zIndex: 9999,
+                }}
+                className="flex items-center gap-1 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] px-2 py-1.5 border border-gray-100/50 pointer-events-auto"
+              >
+                <span className="text-[11px] font-medium text-gray-400 px-1.5 border-r border-gray-100 mr-1 select-none">
+                  {selectedNodes.length} seleccionados
+                </span>
+
+                {/* Group Style Fill */}
+                <div className="relative">
+                  <button
+                    onClick={() => setGroupPicker(groupPicker === "fill" ? null : "fill")}
+                    className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black transition-colors relative"
+                    title="Color de Relleno del Grupo"
+                  >
+                    <Palette size={13} />
+                  </button>
+                  {groupPicker === "fill" && (
+                    <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 p-2 grid grid-cols-5 gap-1 z-[10000] w-[140px]">
+                      {RAINBOW_COLORS.map((c) => (
+                        <button
+                          key={c.value}
+                          onClick={() => applyGroupStyle("fill", c.value)}
+                          className="w-5 h-5 rounded-full border border-gray-200 transition-transform hover:scale-110 flex items-center justify-center overflow-hidden relative cursor-pointer"
+                          style={{ backgroundColor: c.value === "transparent" ? "white" : c.value }}
+                          title={c.name}
+                        >
+                          {c.value === "transparent" && (
+                            <div className="absolute w-full h-[1.5px] bg-red-500 rotate-45" />
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Group Style Border */}
+                <div className="relative">
+                  <button
+                    onClick={() => setGroupPicker(groupPicker === "border" ? null : "border")}
+                    className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black transition-colors relative"
+                    title="Color de Borde del Grupo"
+                  >
+                    <Square size={12} />
+                  </button>
+                  {groupPicker === "border" && (
+                    <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 p-2 grid grid-cols-5 gap-1 z-[10000] w-[140px]">
+                      {RAINBOW_COLORS.map((c) => (
+                        <button
+                          key={c.value}
+                          onClick={() => applyGroupStyle("border", c.value)}
+                          className="w-5 h-5 rounded-full border border-gray-200 transition-transform hover:scale-110 flex items-center justify-center overflow-hidden relative cursor-pointer"
+                          style={{ backgroundColor: c.value === "transparent" ? "white" : c.value }}
+                          title={c.name}
+                        >
+                          {c.value === "transparent" && (
+                            <div className="absolute w-full h-[1.5px] bg-red-500 rotate-45" />
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                {/* Group Style Text */}
+                <div className="relative">
+                  <button
+                    onClick={() => setGroupPicker(groupPicker === "text" ? null : "text")}
+                    className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black transition-colors relative"
+                    title="Color del Texto del Grupo"
+                  >
+                    <Baseline size={13} />
+                  </button>
+                  {groupPicker === "text" && (
+                    <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 p-2 grid grid-cols-4 gap-1 z-[10000] w-[120px]">
+                      {TEXT_COLOR_PALETTE.map((c) => (
+                        <button
+                          key={c.value}
+                          onClick={() => applyGroupStyle("text", c.value)}
+                          className="w-5 h-5 rounded-full border border-gray-200 transition-transform hover:scale-110 flex items-center justify-center cursor-pointer"
+                          style={{ backgroundColor: c.value }}
+                          title={c.name}
+                        />
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div className="w-[1px] h-4 bg-[#E5E7EB] mx-1" />
+
+                {/* Group Delete */}
+                <button
+                  onClick={handleGroupDelete}
+                  className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-red-50 text-gray-400 hover:text-red-500 transition-colors"
+                  title="Eliminar Selección"
+                >
+                  <Trash2 size={13} />
+                </button>
+              </motion.div>
+            </AnimatePresence>
+          </>
+        )}
 
         <AnimatePresence>
           {!hideTools && (
@@ -864,6 +1393,14 @@ const Index = () => {
         </AnimatePresence>
       </div>
     </div>
+  );
+};
+
+const Index = () => {
+  return (
+    <ReactFlowProvider>
+      <IndexContent />
+    </ReactFlowProvider>
   );
 };
 

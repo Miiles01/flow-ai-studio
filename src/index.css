@@ -319,3 +319,42 @@
   outline: none !important;
   box-shadow: none !important;
 }
+
+/* ── Multi-Selection Transform Overrides ── */
+
+/* Hide all individual resize controls, connection handles, and custom node toolbars during multi-selection */
+.multi-select-active .react-flow__resize-control,
+.multi-select-active .react-flow__handle,
+.multi-select-active .node-floating-toolbar {
+  display: none !important;
+}
+
+/* Reset individual node borders, rings, and shadows to their unselected/normal states */
+
+/* Reset ImageNode selected outline */
+.multi-select-active .react-flow__node-imageNode .ring-\[1\.5px\] {
+  box-shadow: 0 0 0 1px #E5E7EB !important;
+}
+
+/* Reset ShapeNode outline & shadow */
+.multi-select-active .react-flow__node-shapeNode svg {
+  stroke-width: 1.5px !important;
+  filter: none !important;
+}
+
+/* Reset TodoNode border & shadow */
+.multi-select-active .react-flow__node-todoNode .border-\[\#4059F1\]\/40 {
+  border-color: #E5E7EB !important;
+  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.02) !important;
+}
+
+/* Reset FlowNode border & shadow */
+.multi-select-active .react-flow__node-flowNode .border-\[\#4F46E5\] {
+  border-color: transparent !important;
+  box-shadow: 0 8px 30px rgb(0 0 0 / 4%) !important;
+}
+
+/* Reset FrameNode dashed border color */
+.multi-select-active .react-flow__node-frameNode .rounded-lg.pointer-events-none {
+  border-color: #D1D5DB !important;
+}

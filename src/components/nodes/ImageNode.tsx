@@ -69,14 +69,14 @@ const ImageNode = ({ id, data, selected }: NodeProps) => {
     >
       {/* Resize handles */}
       <NodeResizer
-        isVisible={!!selected}
+        isVisible={!!isSingleSelected}
         minWidth={80}
         minHeight={60}
         lineStyle={{ border: "none" }}
       />
 
       {/* Connection handles — only visible when selected */}
-      {selected && (
+      {isSingleSelected && (
         <>
           <Handle type="source" position={Position.Top}    id="t" className={HANDLE_CLASS} style={{ top: "0%",  left: "50%", transform: "translate(-50%, -50%)" }} />
           <Handle type="source" position={Position.Bottom} id="b" className={HANDLE_CLASS} style={{ bottom: "0%", left: "50%", transform: "translate(-50%, 50%)" }} />
@@ -89,7 +89,7 @@ const ImageNode = ({ id, data, selected }: NodeProps) => {
       <AnimatePresence>
         {isSingleSelected && (
           <div
-            className="absolute -top-14 left-1/2 z-[1000] pointer-events-auto"
+            className="absolute -top-14 left-1/2 z-[1000] pointer-events-auto node-floating-toolbar"
             style={{
               transform: `translate(-50%, 0) scale(${1 / zoom})`,
               transformOrigin: "bottom center",

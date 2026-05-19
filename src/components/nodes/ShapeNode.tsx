@@ -91,13 +91,13 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
       className="relative"
       onDoubleClick={() => setEditing(true)}
     >
-      <NodeResizer isVisible={!!selected} minWidth={60} minHeight={60} lineStyle={{ border: "none" }} />
+      <NodeResizer isVisible={!!isSingleSelected} minWidth={60} minHeight={60} lineStyle={{ border: "none" }} />
 
       {/* ── Custom Shape Toolbar ── */}
       <AnimatePresence>
         {isSingleSelected && (
           <div
-            className="absolute -top-16 left-1/2 -translate-x-1/2 z-20 pointer-events-auto"
+            className="absolute -top-16 left-1/2 -translate-x-1/2 z-20 pointer-events-auto node-floating-toolbar"
             style={{
               whiteSpace: "nowrap",
               transform: `translate(-50%, 0) scale(${1 / zoom})`,
@@ -365,7 +365,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
             pos === "left" ? Position.Left : Position.Right
           }
           id={pos}
-          className={`${handleClass} ${selected ? "opacity-100" : "opacity-0 hover:opacity-100"}`}
+          className={`${handleClass} ${isSingleSelected ? "opacity-100" : "opacity-0 pointer-events-none"}`}
         />
       ))}
     </motion.div>
