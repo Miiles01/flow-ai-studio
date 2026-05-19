@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import {
   User, Save, Loader2, Instagram, Tag, Phone, Globe,
-  LogOut, Twitter, Youtube, Video, Plus, Pencil, X
+  LogOut, Twitter, Youtube, Video, Plus, Pencil, X, Check
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -71,6 +71,8 @@ const Profile = () => {
   const [editingVideo, setEditingVideo] = useState<number | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [savedSuccess, setSavedSuccess] = useState(false);
+  const [originalData, setOriginalData] = useState<any>(null);
 
   const videos = [
     { val: videoUrl1, set: setVideoUrl1 },
@@ -100,13 +102,36 @@ const Profile = () => {
           setVideoUrl1(data.video_url_1 || "");
           setVideoUrl2(data.video_url_2 || "");
           setVideoUrl3(data.video_url_3 || "");
+
+          setOriginalData({
+            displayName: data.display_name || "",
+            avatarUrl: data.avatar_url || "",
+            instagramHandle: data.instagram_handle || "",
+            tiktokHandle: data.tiktok_handle || "",
+            twitterHandle: data.twitter_handle || "",
+            youtubeHandle: data.youtube_handle || "",
+            bio: data.bio || "",
+            niche: data.niche || "",
+            phone: data.phone || "",
+            portfolioUrl: data.portfolio_url || "",
+            videoUrl1: data.video_url_1 || "",
+            videoUrl2: data.video_url_2 || "",
+            videoUrl3: data.video_url_3 || "",
+          });
         }
         setLoading(false);
       });
   }, [user]);
 
-  const handleSave = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const currentData = {
+    displayName, avatarUrl, instagramHandle, tiktokHandle, twitterHandle,
+    youtubeHandle, bio, niche, phone, portfolioUrl, videoUrl1, videoUrl2, videoUrl3
+  };
+
+  const isDirty = originalData && JSON.stringify(originalData) !== JSON.stringify(currentData);
+
+  const handleSave = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
     if (!user) return;
     setSaving(true);
     const { error } = await supabase
@@ -129,10 +154,16 @@ const Profile = () => {
       .eq("user_id", user.id);
     if (error) {
       toast.error("Error al guardar");
+      setSaving(false);
     } else {
       toast.success("Perfil actualizado");
+      setSaving(false);
+      setSavedSuccess(true);
+      setOriginalData(currentData);
+      setTimeout(() => {
+        setSavedSuccess(false);
+      }, 2000);
     }
-    setSaving(false);
   };
 
   const handleSignOut = async () => {
@@ -341,13 +372,6 @@ const Profile = () => {
               </div>
             </CardContent>
           </Card>
-
-          <div className="flex justify-center">
-            <Button type="submit" className="w-auto px-10 rounded-full" disabled={saving}>
-              {saving ? <Loader2 size={16} className="animate-spin mr-2" /> : <Save size={16} className="mr-2" />}
-              Guardar cambios
-            </Button>
-          </div>
         </form>
 
         <Separator className="my-6" />
@@ -359,6 +383,35 @@ const Profile = () => {
           </Button>
         </div>
       </motion.div>
+
+      {/* Sticky Bottom Bar */}
+      <AnimatePresence>
+        {(isDirty || savedSuccess) && (
+          <motion.div
+            initial={{ y: 100, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            exit={{ y: 100, opacity: 0 }}
+            className="fixed bottom-6 left-0 right-0 z-50 flex justify-center pointer-events-none"
+          >
+            <div className="pointer-events-auto">
+              <Button 
+                onClick={() => handleSave()}
+                disabled={saving}
+                className="w-auto px-8 h-12 rounded-full bg-white text-black hover:bg-gray-100 shadow-2xl border border-gray-200 font-medium transition-all"
+              >
+                {saving ? (
+                  <Loader2 size={18} className="animate-spin mr-2" />
+                ) : savedSuccess ? (
+                  <Check size={18} className="mr-2 text-green-500" />
+                ) : (
+                  <Save size={18} className="mr-2" />
+                )}
+                {savedSuccess ? "Guardado" : "Guardar cambios"}
+              </Button>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </div>
   );
 };
