@@ -197,8 +197,9 @@ export default function Dashboard() {
     >
       {/* Greeting */}
       <motion.div variants={sectionVariants}>
-        <h1 className="text-2xl md:text-3xl font-normal">
-          {getGreeting()}, <span className="text-accent">{displayName}</span>
+        <h1 className="text-2xl md:text-3xl font-normal leading-tight">
+          {getGreeting()},<br />
+          <span className="text-black font-medium">{displayName}</span>
         </h1>
         <p className="text-miiles-gray-400 mt-2 text-sm font-light">
           ¿Qué vamos hacer hoy?
