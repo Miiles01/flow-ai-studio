@@ -1426,7 +1426,7 @@ const IndexContent = () => {
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: "100%", opacity: 0 }}
             transition={{ type: "spring", damping: 28, stiffness: 260 }}
-            className="absolute top-0 right-0 h-full w-72 bg-white z-50 flex flex-col"
+            className="absolute top-0 right-0 h-full w-72 lg:w-96 bg-white z-50 flex flex-col"
             style={{ borderLeft: "1px solid #F3F4F6" }}
           >
             {/* Header */}
