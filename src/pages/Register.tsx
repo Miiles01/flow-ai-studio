@@ -56,7 +56,7 @@ const Register = () => {
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="bg-white w-full max-w-[500px] p-8 md:p-14 rounded-[32px] flex flex-col justify-center"
+          className="bg-white w-full lg:w-1/2 p-8 md:p-14 rounded-[32px] flex flex-col justify-center"
           style={{ minHeight: "680px" }}
         >
           <div className="text-center mb-10">
@@ -149,7 +149,7 @@ const Register = () => {
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
           transition={{ delay: 0.1 }}
-          className="hidden lg:block w-full max-w-[500px] h-[680px]"
+          className="hidden lg:block w-full lg:w-1/2 h-[680px]"
         >
           <img 
             src="https://wearemiiles.com/wp-content/uploads/2026/05/enhanced_Gemini_Generated_Image_h6viuth6viuth6vi-3-scaled.jpg" 
