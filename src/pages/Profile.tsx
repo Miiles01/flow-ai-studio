@@ -387,30 +387,32 @@ const Profile = () => {
       {/* Sticky Bottom Bar */}
       <AnimatePresence>
         {(isDirty || savedSuccess) && (
-          <motion.div
-            key="save-bar"
-            initial={{ y: 100, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            exit={{ y: 100, opacity: 0 }}
-            className="sticky bottom-6 z-50 flex justify-center pointer-events-none mt-8"
-          >
-            <div className="pointer-events-auto">
-              <Button 
-                onClick={() => handleSave()}
-                disabled={saving}
-                className="w-auto px-8 h-12 rounded-full bg-white text-black hover:bg-gray-100 shadow-2xl border border-gray-200 font-medium transition-all"
-              >
-                {saving ? (
-                  <Loader2 size={18} className="animate-spin mr-2" />
-                ) : savedSuccess ? (
-                  <Check size={18} className="mr-2 text-green-500" />
-                ) : (
-                  <Save size={18} className="mr-2" />
-                )}
-                {savedSuccess ? "Guardado" : "Guardar cambios"}
-              </Button>
-            </div>
-          </motion.div>
+          <div className="w-full flex justify-center pointer-events-none">
+            <motion.div
+              key="save-bar"
+              initial={{ y: 100, opacity: 0 }}
+              animate={{ y: 0, opacity: 1 }}
+              exit={{ y: 100, opacity: 0 }}
+              className="fixed bottom-6 z-50 pointer-events-none"
+            >
+              <div className="pointer-events-auto">
+                <Button 
+                  onClick={() => handleSave()}
+                  disabled={saving}
+                  className="w-auto px-8 h-12 rounded-full bg-white text-black hover:bg-gray-100 shadow-2xl border border-gray-200 font-medium transition-all"
+                >
+                  {saving ? (
+                    <Loader2 size={18} className="animate-spin mr-2" />
+                  ) : savedSuccess ? (
+                    <Check size={18} className="mr-2 text-green-500" />
+                  ) : (
+                    <Save size={18} className="mr-2" />
+                  )}
+                  {savedSuccess ? "Guardado" : "Guardar cambios"}
+                </Button>
+              </div>
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
     </div>
