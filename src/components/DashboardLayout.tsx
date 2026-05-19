@@ -67,7 +67,7 @@ function SidebarBody() {
         <SidebarContent className="flex flex-col h-full py-4 bg-transparent relative">
         {/* Toggle & Logo */}
         <div className={`pt-2 pb-8 flex flex-col ${collapsed ? "items-center px-2" : "px-8"}`}>
-          <div className={`hidden md:flex w-full ${collapsed ? "justify-center" : "justify-end"} mb-4`}>
+          <div className={`hidden md:flex w-full ${collapsed ? "justify-center" : "justify-start"} mb-4`}>
             <SidebarTrigger />
           </div>
           <div className="flex items-center gap-3">
