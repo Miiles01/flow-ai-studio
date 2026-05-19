@@ -170,6 +170,40 @@ export default function Dashboard() {
     });
   }
 
+  async function generateTestBoard() {
+    if (!user) return;
+    setLoading(true);
+    const testNodes = [
+      { id: "title", type: "TextNode", position: { x: 0, y: -100 }, data: { text: "Business Model Canvas", fontSize: 48, fontWeight: "600" } },
+      { id: "frame-problem", type: "FrameNode", position: { x: 0, y: 0 }, style: { width: 300, height: 400 }, data: { label: "1. Problema" } },
+      { id: "text-problem", type: "TextNode", position: { x: 20, y: 60 }, parentId: "frame-problem", extent: "parent", data: { text: "• Tiempos largos de desarrollo\n• Costos altos de diseño\n• Falta de validación rápida", fontSize: 16 } },
+      { id: "frame-value", type: "FrameNode", position: { x: 350, y: 0 }, style: { width: 300, height: 400 }, data: { label: "2. Propuesta de Valor" } },
+      { id: "text-value", type: "TextNode", position: { x: 20, y: 60 }, parentId: "frame-value", extent: "parent", data: { text: "Plataforma SaaS que genera modelos de negocio y prototipos visuales usando IA en minutos.", fontSize: 16 } },
+      { id: "frame-segments", type: "FrameNode", position: { x: 700, y: 0 }, style: { width: 300, height: 400 }, data: { label: "3. Segmentos de Clientes" } },
+      { id: "text-segments", type: "TextNode", position: { x: 20, y: 60 }, parentId: "frame-segments", extent: "parent", data: { text: "• Emprendedores\n• Agencias de diseño\n• Consultoras de negocio", fontSize: 16 } },
+      { id: "todo-next", type: "TodoNode", position: { x: 0, y: 450 }, data: { title: "Próximos Pasos", tasks: [{ id: "1", text: "Validar con 10 usuarios", completed: false }, { id: "2", text: "Definir pricing", completed: false }] } }
+    ];
+    const testEdges = [
+      { id: "e1", source: "frame-problem", target: "frame-value", type: "smoothstep", animated: true },
+      { id: "e2", source: "frame-value", target: "frame-segments", type: "smoothstep", animated: true }
+    ];
+    
+    const { data, error } = await supabase.from("flows").insert({
+      user_id: user.id,
+      name: "Lean Canvas Generado por IA",
+      nodes: testNodes,
+      edges: testEdges
+    }).select().single();
+    
+    setLoading(false);
+    if (error) {
+      toast.error("Error al generar el tablero de prueba.");
+    } else {
+      toast.success("¡Tablero generado! Revisa 'Mis tableros'.");
+      setFlows(prev => [data, ...prev]);
+    }
+  }
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-full">
@@ -252,6 +286,14 @@ export default function Dashboard() {
           >
             <Send size={14} />
             Enviar notificación
+          </Button>
+        </motion.div>
+      )}
+
+      {user?.email === "contmanuel@gmail.com" && (
+        <motion.div variants={sectionVariants}>
+          <Button onClick={generateTestBoard} className="bg-miiles-blue text-white w-full md:w-auto">
+            🪄 Generar Tablero de Prueba (IA)
           </Button>
         </motion.div>
       )}
