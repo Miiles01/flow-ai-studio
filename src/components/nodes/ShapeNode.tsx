@@ -1,13 +1,14 @@
 import { memo, useState, useRef, useEffect } from "react";
 import { Handle, Position, type NodeProps, NodeResizer, useReactFlow, useViewport } from "@xyflow/react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Square, Circle, Triangle, Hexagon, Star, Plus, Minus, Palette, Bold, Italic, Underline, Diamond, Trash2 } from "lucide-react";
+import { Square, Circle, Triangle, Hexagon, Star, Plus, Minus, Palette, Bold, Italic, Underline, Diamond, Trash2, Baseline, Check } from "lucide-react";
 
 export type ShapeNodeData = {
   shape: string;
   label?: string;
   fillColor?: string;
   strokeColor?: string;
+  textColor?: string;
   fontSize?: number;
   bold?: boolean;
   italic?: boolean;
@@ -36,6 +37,16 @@ const RAINBOW_COLORS = [
   { name: "Negro", value: "#1F2937" },
 ];
 
+const TEXT_COLOR_PALETTE = [
+  { name: "Negro", value: "#111827" },
+  { name: "Gris", value: "#6B7280" },
+  { name: "Blanco", value: "#FFFFFF" },
+  { name: "Azul", value: "#2563EB" },
+  { name: "Verde", value: "#059669" },
+  { name: "Rojo", value: "#DC2626" },
+  { name: "Amarillo", value: "#FACC15" },
+];
+
 const handleClass =
   "!w-[10px] !h-[10px] !rounded-full !bg-white !border-[1.5px] !border-[#4059F1] transition-all duration-200 hover:!bg-[#4059F1] before:absolute before:-inset-3 before:content-[''] !z-50";
 
@@ -44,7 +55,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
   const shape = nodeData.shape || "square";
   const [label, setLabel] = useState(nodeData.label || "");
   const [editing, setEditing] = useState(false);
-  const [activePicker, setActivePicker] = useState<"fill" | "border" | null>(null);
+  const [activePicker, setActivePicker] = useState<"fill" | "border" | "text" | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const { setNodes, getNodes } = useReactFlow();
   const { zoom } = useViewport();
@@ -81,6 +92,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
     fontWeight: nodeData.bold ? "bold" : "normal",
     fontStyle: nodeData.italic ? "italic" : "normal",
     textDecoration: nodeData.underline ? "underline" : "none",
+    color: nodeData.textColor || "#111827",
   };
 
   return (
@@ -175,25 +187,27 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
                   </div>
                 </button>
 
+                {/* Text Color */}
+                <button
+                  onClick={() => setActivePicker(activePicker === "text" ? null : "text")}
+                  className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-[#F3F4F6] transition-colors"
+                  title="Color de texto"
+                >
+                  <Baseline size={13} style={{ color: nodeData.textColor || "#111827" }} className="stroke-[2.5]" />
+                </button>
+
                 {/* Fill Color Popover */}
                 {activePicker === "fill" && (
-                  <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 p-2.5 grid grid-cols-5 gap-1.5 z-30 w-[150px]">
+                  <div className="absolute bottom-full mb-2 left-0 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 p-2.5 grid grid-cols-5 gap-1.5 z-30 w-[150px]">
                     {RAINBOW_COLORS.map((c) => (
                       <button
                         key={c.value}
-                        onClick={() => {
-                          updateNodeData({ fillColor: c.value });
-                          setActivePicker(null);
-                        }}
+                        onClick={() => { updateNodeData({ fillColor: c.value }); setActivePicker(null); }}
                         className="w-6 h-6 rounded-full border border-gray-200/60 transition-transform hover:scale-110 flex items-center justify-center overflow-hidden relative shadow-sm cursor-pointer"
-                        style={{
-                          backgroundColor: c.value === "transparent" ? "white" : c.value,
-                        }}
+                        style={{ backgroundColor: c.value === "transparent" ? "white" : c.value }}
                         title={c.name}
                       >
-                        {c.value === "transparent" && (
-                          <div className="absolute w-full h-[1.5px] bg-red-500 rotate-45" />
-                        )}
+                        {c.value === "transparent" && <div className="absolute w-full h-[1.5px] bg-red-500 rotate-45" />}
                       </button>
                     ))}
                   </div>
@@ -201,22 +215,34 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
 
                 {/* Border Color Popover */}
                 {activePicker === "border" && (
-                  <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 p-2.5 grid grid-cols-5 gap-1.5 z-30 w-[150px]">
+                  <div className="absolute bottom-full mb-2 left-0 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 p-2.5 grid grid-cols-5 gap-1.5 z-30 w-[150px]">
                     {RAINBOW_COLORS.map((c) => (
                       <button
                         key={c.value}
-                        onClick={() => {
-                          updateNodeData({ strokeColor: c.value });
-                          setActivePicker(null);
-                        }}
+                        onClick={() => { updateNodeData({ strokeColor: c.value }); setActivePicker(null); }}
                         className="w-6 h-6 rounded-full border border-gray-200/60 transition-transform hover:scale-110 flex items-center justify-center overflow-hidden relative shadow-sm cursor-pointer"
-                        style={{
-                          backgroundColor: c.value === "transparent" ? "white" : c.value,
-                        }}
+                        style={{ backgroundColor: c.value === "transparent" ? "white" : c.value }}
                         title={c.name}
                       >
-                        {c.value === "transparent" && (
-                          <div className="absolute w-full h-[1.5px] bg-red-500 rotate-45" />
+                        {c.value === "transparent" && <div className="absolute w-full h-[1.5px] bg-red-500 rotate-45" />}
+                      </button>
+                    ))}
+                  </div>
+                )}
+
+                {/* Text Color Popover */}
+                {activePicker === "text" && (
+                  <div className="absolute bottom-full mb-2 left-0 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 p-2.5 flex gap-1.5 z-30">
+                    {TEXT_COLOR_PALETTE.map((c) => (
+                      <button
+                        key={c.value}
+                        onClick={() => { updateNodeData({ textColor: c.value }); setActivePicker(null); }}
+                        className="w-6 h-6 rounded-full border border-gray-200 hover:scale-110 transition-transform flex items-center justify-center"
+                        style={{ backgroundColor: c.value }}
+                        title={c.name}
+                      >
+                        {(nodeData.textColor || "#111827") === c.value && (
+                          <Check size={10} className={c.value === "#FFFFFF" || c.value === "#FACC15" ? "text-gray-800" : "text-white"} />
                         )}
                       </button>
                     ))}
