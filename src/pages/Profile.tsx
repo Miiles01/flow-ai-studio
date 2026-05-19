@@ -160,7 +160,7 @@ const Profile = () => {
   };
 
   return (
-    <div className="p-6 md:p-10 max-w-2xl mx-auto">
+    <div className="p-6 md:px-10 md:pb-10 md:pt-48 max-w-2xl mx-auto">
       <motion.div initial={{ y: 10, opacity: 0 }} animate={{ y: 0, opacity: 1 }}>
         {/* Header */}
         <div className="flex items-center gap-5 mb-10">

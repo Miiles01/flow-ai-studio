@@ -83,7 +83,7 @@ export default function Boards() {
   }
 
   return (
-    <div className="p-8 md:p-12 max-w-5xl mx-auto space-y-8">
+    <div className="p-8 md:px-12 md:pb-12 md:pt-48 max-w-5xl mx-auto space-y-8">
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div className="flex items-center gap-3">
           <h1 className="text-2xl md:text-3xl font-normal">Mis Tableros</h1>

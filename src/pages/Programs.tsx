@@ -295,7 +295,7 @@ export default function Programs() {
   }
 
   return (
-    <div className="p-8 md:p-12 max-w-5xl mx-auto space-y-8">
+    <div className="p-8 md:px-12 md:pb-12 md:pt-48 max-w-5xl mx-auto space-y-8">
       <div className="flex items-start justify-between">
         <div>
           <h1 className="text-2xl font-normal">Programas de marcas</h1>

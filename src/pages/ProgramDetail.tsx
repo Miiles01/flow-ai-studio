@@ -132,7 +132,7 @@ export default function ProgramDetail() {
   }
 
   return (
-    <div className="p-8 md:p-12 max-w-3xl mx-auto">
+    <div className="p-8 md:px-12 md:pb-12 md:pt-48 max-w-3xl mx-auto">
       <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.3 }}>
         {/* Back button */}
         <button
