@@ -64,9 +64,12 @@ function SidebarBody() {
         className="flex flex-col h-full rounded-[50px] overflow-hidden w-full"
         style={{ background: "linear-gradient(to bottom, #FDFDFD, #F8F9FD)" }}
       >
-        <SidebarContent className="flex flex-col h-full py-4 bg-transparent">
-        {/* Logo */}
-        <div className={`pt-6 pb-8 flex flex-col ${collapsed ? "items-center px-2" : "px-8"}`}>
+        <SidebarContent className="flex flex-col h-full py-4 bg-transparent relative">
+        {/* Toggle & Logo */}
+        <div className={`pt-2 pb-8 flex flex-col ${collapsed ? "items-center px-2" : "px-8"}`}>
+          <div className={`hidden md:flex w-full ${collapsed ? "justify-center" : "justify-end"} mb-4`}>
+            <SidebarTrigger />
+          </div>
           <div className="flex items-center gap-3">
             <img src={logoImg} alt="miiles" className={collapsed ? "h-6 w-6" : "h-8 w-8"} />
             {!collapsed && <span className="text-3xl font-normal tracking-tight">miiles</span>}
@@ -169,7 +172,7 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
       <div className="min-h-screen flex w-full bg-background">
         <SidebarBody />
         <div className="flex-1 flex flex-col min-w-0">
-          <header className="h-12 flex items-center px-4 sticky top-0 z-10 bg-background">
+          <header className="h-12 flex md:hidden items-center px-4 sticky top-0 z-10 bg-background">
             <SidebarTrigger />
           </header>
           <main className="flex-1 overflow-y-auto">{children}</main>
