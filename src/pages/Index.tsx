@@ -1548,78 +1548,83 @@ const IndexContent = () => {
                         );
                       };
 
+                      const isDarkMode = d.backgroundColor === "#1F2937" || d.backgroundColor === "#111827";
+                      const effectiveTextColor = d.textColor || (isDarkMode ? "#FFFFFF" : "#1F2937");
+
                       return (
                         <div
                           key={node.id}
-                          className="rounded-2xl border border-[#F3F4F6] p-4 space-y-3 relative group/card"
-                          style={{ backgroundColor: d.backgroundColor || "#FAFAFA" }}
+                          className="rounded-2xl border p-5 space-y-3 relative group/card transition-colors duration-300"
+                          style={{
+                            backgroundColor: d.backgroundColor || "#FAFAFA",
+                            borderColor: isDarkMode ? "#374151" : "#E5E7EB"
+                          }}
                           onMouseEnter={() => setPanelCardHover(node.id)}
                           onMouseLeave={() => { setPanelCardHover(null); }}
                         >
                           {/* Card header */}
-                          <div className="space-y-0.5">
-                            <div className="flex items-center justify-between">
-                              <span className="text-[13px] font-semibold text-black truncate">{title}</span>
-                              <span className="text-[11px] text-[#9CA3AF] shrink-0 ml-2 tabular-nums">{done}/{tasks.length}</span>
-                            </div>
+                          <div className="space-y-1">
+                            {title && (
+                              <div className="text-[16px] font-semibold truncate" style={{ color: effectiveTextColor }}>
+                                {title}
+                              </div>
+                            )}
                             {subtitle && (
-                              <p className="text-[11px] text-[#9CA3AF] font-light leading-snug">{subtitle}</p>
+                              <p className="text-[13px] font-light leading-snug" style={{
+                                color: effectiveTextColor === "#1F2937" || effectiveTextColor === "#111827"
+                                  ? (isDarkMode ? "#9CA3AF" : "#6B7280")
+                                  : `${effectiveTextColor}cc`
+                              }}>
+                                {subtitle}
+                              </p>
                             )}
                           </div>
 
-                          {/* Progress bar */}
-                          {tasks.length > 0 && (
-                            <div className="h-[3px] rounded-full bg-[#EBEBEB] overflow-hidden">
-                              <motion.div
-                                className="h-full bg-[#111827] rounded-full"
-                                animate={{ width: `${(done / tasks.length) * 100}%` }}
-                                transition={{ duration: 0.35, ease: "easeOut" }}
-                              />
-                            </div>
-                          )}
-
                           {/* Tasks */}
-                          <div className="space-y-1">
+                          <div className="space-y-2 pt-1">
                             {tasks.length === 0 && (
-                              <p className="text-[11px] text-[#D1D5DB] font-light py-1">Sin tareas aún.</p>
+                              <p className="text-[12px] font-light py-1" style={{ color: isDarkMode ? "#6B7280" : "#9CA3AF" }}>Sin tareas aún.</p>
                             )}
                             {tasks.map((task) => (
-                              <div key={task.id} className="flex items-start gap-2.5 py-1">
+                              <div key={task.id} className="flex items-center gap-3 py-1">
                                 <button
                                   onClick={() => toggleTask(task.id)}
-                                  className="w-4 h-4 rounded-full border-[1.5px] flex items-center justify-center shrink-0 mt-px transition-all"
+                                  className="w-5 h-5 rounded-full border-[1.5px] flex items-center justify-center shrink-0 transition-all duration-200"
                                   style={{
-                                    borderColor: task.completed ? "#111827" : "#D1D5DB",
-                                    backgroundColor: task.completed ? "#111827" : "transparent",
+                                    borderColor: task.completed ? effectiveTextColor : (isDarkMode ? "#6B7280" : "#9CA3AF"),
+                                    backgroundColor: task.completed ? effectiveTextColor : "transparent",
                                   }}
                                 >
-                                  {task.completed && <Check size={8} className="text-white" strokeWidth={3} />}
+                                  {task.completed && <Check size={12} className={effectiveTextColor === "#FFFFFF" ? "text-gray-900" : "text-white"} strokeWidth={3} />}
                                 </button>
                                 <input
                                   value={task.text}
                                   onChange={(e) => updateTaskText(task.id, e.target.value)}
                                   placeholder="Nueva tarea..."
-                                  className="flex-1 bg-transparent border-none outline-none text-[12px] font-light leading-snug placeholder-[#D1D5DB] min-w-0"
+                                  className="flex-1 bg-transparent border-none outline-none text-[13px] font-light leading-snug min-w-0 placeholder-gray-400"
                                   style={{
-                                    color: task.completed ? "#9CA3AF" : "#374151",
+                                    color: task.completed ? (isDarkMode ? "#6B7280" : "#9CA3AF") : effectiveTextColor,
                                     textDecoration: task.completed ? "line-through" : "none",
+                                    opacity: task.completed ? 0.7 : 1,
                                   }}
                                 />
                               </div>
                             ))}
                           </div>
 
-                          {/* Add task + color controls */}
-                          <div className="flex items-center justify-between pt-0.5">
-                            <button
-                              onClick={addTask}
-                              className="flex items-center gap-1.5 text-[11px] text-[#9CA3AF] hover:text-black transition-colors"
-                            >
-                              <Plus size={12} strokeWidth={2} />
-                              <span>Nueva tarea</span>
-                            </button>
-
-                          </div>
+                          {/* Add task button */}
+                          <button
+                            onClick={addTask}
+                            className="flex items-center gap-2 py-2 px-3 rounded-xl border border-dashed transition-all text-left mt-2 shrink-0 w-full"
+                            style={{
+                              borderColor: isDarkMode ? "#4B5563" : "#D1D5DB",
+                              color: isDarkMode ? "#9CA3AF" : "#9CA3AF",
+                              backgroundColor: isDarkMode ? "rgba(255,255,255,0.02)" : "rgba(0,0,0,0.02)"
+                            }}
+                          >
+                            <Plus size={13} />
+                            <span className="text-[13px]">Nueva Tarea...</span>
+                          </button>
                         </div>
                       );
                     })}
