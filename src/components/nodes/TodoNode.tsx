@@ -269,6 +269,45 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                 </button>
               </div>
 
+              <div className="w-[1px] h-4 bg-[#E5E7EB] mx-1" />
+
+              {/* Background Color Picker */}
+              <div className="relative">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    setActivePicker(activePicker === "bg" ? null : "bg");
+                  }}
+                  className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[#F3F4F6] transition-colors relative"
+                  title="Color de fondo"
+                >
+                  {/* Mini swatch showing current bg */}
+                  <div
+                    className="w-4 h-4 rounded-full border border-gray-300 shadow-sm"
+                    style={{ backgroundColor }}
+                  />
+                </button>
+                {activePicker === "bg" && (
+                  <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 p-2.5 flex gap-1.5 z-50">
+                    {COLOR_PALETTE.map((c) => (
+                      <button
+                        key={c.value}
+                        onClick={() => {
+                          updateNodeData({ backgroundColor: c.value });
+                          setActivePicker(null);
+                        }}
+                        className="w-6 h-6 rounded-full border border-gray-200/60 transition-transform hover:scale-110 flex items-center justify-center overflow-hidden relative shadow-sm cursor-pointer"
+                        style={{ backgroundColor: c.value }}
+                        title={c.name}
+                      >
+                        {backgroundColor === c.value && (
+                          <Check size={10} className={c.value === "#FFFFFF" || c.value === "#F9FAFB" || c.value === "#F0F7FF" || c.value === "#ECFDF5" || c.value === "#FEFCE8" ? "text-gray-700" : "text-white"} strokeWidth={2.5} />
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
 
               {/* Text Color Picker */}
               <div className="relative">
@@ -283,7 +322,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                   <Baseline size={13} style={{ color: textColor }} className="stroke-[2.5]" />
                 </button>
                 {activePicker === "text" && (
-                  <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 p-2.5 grid grid-cols-4 gap-1.5 z-50">
+                  <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 p-2.5 flex gap-1.5 z-50">
                     {TEXT_COLOR_PALETTE.map((c) => (
                       <button
                         key={c.value}
@@ -303,8 +342,6 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                   </div>
                 )}
               </div>
-
-              <div className="w-[1px] h-4 bg-[#E5E7EB] mx-1" />
 
               {/* Delete node */}
               <button
