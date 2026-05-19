@@ -50,10 +50,6 @@ const RAINBOW_COLORS = [
   { name: "Negro", value: "#1F2937" },
 ];
 
-  { name: "Blanco", value: "#FFFFFF" },
-  { name: "Negro", value: "#1F2937" },
-];
-
 const IndexContent = () => {
   const { id } = useParams();
   const navigate = useNavigate();
