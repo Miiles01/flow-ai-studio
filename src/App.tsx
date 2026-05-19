@@ -23,6 +23,7 @@ import Onboarding from "./pages/Onboarding";
 import ProgramApplicants from "./pages/ProgramApplicants";
 import PublicApplicants from "./pages/PublicApplicants";
 import NotFound from "./pages/NotFound";
+import AuthLayout from "./components/AuthLayout";
 import { useEffect, useState } from "react";
 
 const queryClient = new QueryClient();
@@ -95,8 +96,10 @@ const App = () => (
             <Route path="/programs/:id/applicants" element={<ProgramApplicants />} />
             <Route path="/applicants/:token" element={<PublicApplicants />} />
             <Route path="/onboarding" element={<ProtectedOnboardingRoute><Onboarding /></ProtectedOnboardingRoute>} />
-            <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
-            <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
+            <Route element={<AuthLayout />}>
+              <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+              <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
+            </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
         </AuthProvider>
