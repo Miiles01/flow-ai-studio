@@ -48,7 +48,7 @@ const Login = () => {
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="bg-white w-full lg:w-1/2 p-8 md:p-14 rounded-[32px] flex flex-col justify-center"
+          className="bg-white w-full lg:w-1/2 py-8 px-4 md:py-14 md:px-8 rounded-[32px] flex flex-col justify-center"
           style={{ minHeight: "680px" }}
         >
           <div className="text-center mb-10">
