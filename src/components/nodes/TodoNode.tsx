@@ -26,32 +26,17 @@ export type TodoNodeData = {
 const HANDLE_CLASS =
   "!w-[10px] !h-[10px] !rounded-full !bg-white !border-[1.5px] !border-[#4059F1] transition-all duration-200 hover:!bg-[#4059F1] before:absolute before:-inset-3 before:content-[''] !z-[10000] pointer-events-auto";
 
-const COLOR_PALETTE = [
-  { name: "Blanco", value: "#FFFFFF" },
-  { name: "Celeste", value: "#F0F7FF" },
-  { name: "Verde Menta", value: "#ECFDF5" },
-  { name: "Amarillo Nota", value: "#FEFCE8" },
-  { name: "Gris Premium", value: "#F9FAFB" },
-  { name: "Oscuro Elegante", value: "#1F2937" },
-];
-
-const ACCENT_PALETTE = [
-  { name: "Negro Premium", value: "#111827" },
-  { name: "Azul Miiles", value: "#4059F1" },
-  { name: "Verde", value: "#10B981" },
-  { name: "Naranja", value: "#F59E0B" },
+const RAINBOW_COLORS = [
+  { name: "Transparente", value: "transparent" },
+  { name: "Rojo", value: "#EF4444" },
+  { name: "Naranja", value: "#F97316" },
+  { name: "Amarillo", value: "#FACC15" },
+  { name: "Verde", value: "#22C55E" },
+  { name: "Azul", value: "#3B82F6" },
+  { name: "Morado", value: "#A855F7" },
   { name: "Rosa", value: "#EC4899" },
-  { name: "Violeta", value: "#8B5CF6" },
-];
-
-const TEXT_COLOR_PALETTE = [
-  { name: "Negro", value: "#111827" },
-  { name: "Gris", value: "#6B7280" },
-  { name: "Azul", value: "#2563EB" },
-  { name: "Verde", value: "#059669" },
-  { name: "Rojo", value: "#DC2626" },
-  { name: "Púrpura", value: "#7C3AED" },
   { name: "Blanco", value: "#FFFFFF" },
+  { name: "Negro", value: "#1F2937" },
 ];
 
 const TodoNode = ({ id, data, selected }: NodeProps) => {
@@ -288,8 +273,8 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                   />
                 </button>
                 {activePicker === "bg" && (
-                  <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 p-2.5 flex gap-1.5 z-50">
-                    {COLOR_PALETTE.map((c) => (
+                  <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px]">
+                    {RAINBOW_COLORS.map((c) => (
                       <button
                         key={c.value}
                         onClick={() => {
@@ -297,11 +282,12 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                           setActivePicker(null);
                         }}
                         className="w-6 h-6 rounded-full border border-gray-200/60 transition-transform hover:scale-110 flex items-center justify-center overflow-hidden relative shadow-sm cursor-pointer"
-                        style={{ backgroundColor: c.value }}
+                        style={{ backgroundColor: c.value === "transparent" ? "white" : c.value }}
                         title={c.name}
                       >
-                        {backgroundColor === c.value && (
-                          <Check size={10} className={c.value === "#FFFFFF" || c.value === "#F9FAFB" || c.value === "#F0F7FF" || c.value === "#ECFDF5" || c.value === "#FEFCE8" ? "text-gray-700" : "text-white"} strokeWidth={2.5} />
+                        {c.value === "transparent" && <div className="absolute w-full h-[1.5px] bg-red-500 rotate-45" />}
+                        {backgroundColor === c.value && c.value !== "transparent" && (
+                          <Check size={10} className={c.value === "#FFFFFF" ? "text-gray-700" : "text-white"} strokeWidth={2.5} />
                         )}
                       </button>
                     ))}
@@ -322,8 +308,8 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                   <Baseline size={13} style={{ color: textColor }} className="stroke-[2.5]" />
                 </button>
                 {activePicker === "text" && (
-                  <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 p-2.5 flex gap-1.5 z-50">
-                    {TEXT_COLOR_PALETTE.map((c) => (
+                  <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px]">
+                    {RAINBOW_COLORS.map((c) => (
                       <button
                         key={c.value}
                         onClick={() => {
@@ -331,10 +317,11 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                           setActivePicker(null);
                         }}
                         className="w-6 h-6 rounded-full border border-gray-200/60 transition-transform hover:scale-110 flex items-center justify-center overflow-hidden relative shadow-sm cursor-pointer"
-                        style={{ backgroundColor: c.value }}
+                        style={{ backgroundColor: c.value === "transparent" ? "white" : c.value }}
                         title={c.name}
                       >
-                        {textColor === c.value && (
+                        {c.value === "transparent" && <div className="absolute w-full h-[1.5px] bg-red-500 rotate-45" />}
+                        {textColor === c.value && c.value !== "transparent" && (
                           <Check size={10} className={c.value === "#FFFFFF" ? "text-gray-800" : "text-white"} strokeWidth={2.5} />
                         )}
                       </button>

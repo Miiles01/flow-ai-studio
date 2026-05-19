@@ -50,14 +50,8 @@ const RAINBOW_COLORS = [
   { name: "Negro", value: "#1F2937" },
 ];
 
-const TEXT_COLOR_PALETTE = [
-  { name: "Negro", value: "#111827" },
-  { name: "Gris", value: "#6B7280" },
-  { name: "Azul", value: "#2563EB" },
-  { name: "Verde", value: "#059669" },
-  { name: "Rojo", value: "#DC2626" },
-  { name: "Púrpura", value: "#7C3AED" },
   { name: "Blanco", value: "#FFFFFF" },
+  { name: "Negro", value: "#1F2937" },
 ];
 
 const IndexContent = () => {
@@ -1138,7 +1132,7 @@ const IndexContent = () => {
               }}
             >
               {/* Handles wrapper to get hover & pointer events */}
-              <div className="absolute inset-0 pointer-events-auto">
+              <div className="absolute inset-0 pointer-events-none">
                 {/* Corner Handles */}
                 {/* Top Left (nw) */}
                 <div
@@ -1150,9 +1144,9 @@ const IndexContent = () => {
                     width: 10,
                     height: 10,
                     backgroundColor: "#FFF",
-                    border: "1.5px solid #4059F1",
                     borderRadius: "2px",
                     cursor: "nwse-resize",
+                    pointerEvents: "auto",
                   }}
                 />
                 {/* Top Right (ne) */}
@@ -1165,9 +1159,9 @@ const IndexContent = () => {
                     width: 10,
                     height: 10,
                     backgroundColor: "#FFF",
-                    border: "1.5px solid #4059F1",
                     borderRadius: "2px",
                     cursor: "nesw-resize",
+                    pointerEvents: "auto",
                   }}
                 />
                 {/* Bottom Right (se) */}
@@ -1180,9 +1174,9 @@ const IndexContent = () => {
                     width: 10,
                     height: 10,
                     backgroundColor: "#FFF",
-                    border: "1.5px solid #4059F1",
                     borderRadius: "2px",
                     cursor: "nwse-resize",
+                    pointerEvents: "auto",
                   }}
                 />
                 {/* Bottom Left (sw) */}
@@ -1195,9 +1189,9 @@ const IndexContent = () => {
                     width: 10,
                     height: 10,
                     backgroundColor: "#FFF",
-                    border: "1.5px solid #4059F1",
                     borderRadius: "2px",
                     cursor: "nesw-resize",
+                    pointerEvents: "auto",
                   }}
                 />
 
@@ -1213,9 +1207,9 @@ const IndexContent = () => {
                     width: 8,
                     height: 8,
                     backgroundColor: "#FFF",
-                    border: "1.5px solid #4059F1",
                     borderRadius: "2px",
                     cursor: "ns-resize",
+                    pointerEvents: "auto",
                   }}
                 />
                 {/* Right (e) */}
@@ -1229,9 +1223,9 @@ const IndexContent = () => {
                     width: 8,
                     height: 8,
                     backgroundColor: "#FFF",
-                    border: "1.5px solid #4059F1",
                     borderRadius: "2px",
                     cursor: "ew-resize",
+                    pointerEvents: "auto",
                   }}
                 />
                 {/* Bottom (s) */}
@@ -1245,9 +1239,9 @@ const IndexContent = () => {
                     width: 8,
                     height: 8,
                     backgroundColor: "#FFF",
-                    border: "1.5px solid #4059F1",
                     borderRadius: "2px",
                     cursor: "ns-resize",
+                    pointerEvents: "auto",
                   }}
                 />
                 {/* Left (w) */}
@@ -1261,9 +1255,9 @@ const IndexContent = () => {
                     width: 8,
                     height: 8,
                     backgroundColor: "#FFF",
-                    border: "1.5px solid #4059F1",
                     borderRadius: "2px",
                     cursor: "ew-resize",
+                    pointerEvents: "auto",
                   }}
                 />
               </div>
@@ -1359,15 +1353,19 @@ const IndexContent = () => {
                     <Baseline size={13} />
                   </button>
                   {groupPicker === "text" && (
-                    <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 p-2 grid grid-cols-4 gap-1 z-[10000] w-[120px]">
-                      {TEXT_COLOR_PALETTE.map((c) => (
+                    <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 p-2 grid grid-cols-5 gap-1 z-[10000] w-[140px]">
+                      {RAINBOW_COLORS.map((c) => (
                         <button
                           key={c.value}
                           onClick={() => applyGroupStyle("text", c.value)}
-                          className="w-5 h-5 rounded-full border border-gray-200 transition-transform hover:scale-110 flex items-center justify-center cursor-pointer"
-                          style={{ backgroundColor: c.value }}
+                          className="w-5 h-5 rounded-full border border-gray-200 transition-transform hover:scale-110 flex items-center justify-center overflow-hidden relative cursor-pointer"
+                          style={{ backgroundColor: c.value === "transparent" ? "white" : c.value }}
                           title={c.name}
-                        />
+                        >
+                          {c.value === "transparent" && (
+                            <div className="absolute w-full h-[1.5px] bg-red-500 rotate-45" />
+                          )}
+                        </button>
                       ))}
                     </div>
                   )}
@@ -1558,59 +1556,6 @@ const IndexContent = () => {
                           onMouseEnter={() => setPanelCardHover(node.id)}
                           onMouseLeave={() => { setPanelCardHover(null); }}
                         >
-                          {/* Hover mini-toolbar */}
-                          <AnimatePresence>
-                            {panelCardHover === node.id && (
-                              <motion.div
-                                key={`hover-bar-${node.id}`}
-                                initial={{ opacity: 0, y: 4, scale: 0.96 }}
-                                animate={{ opacity: 1, y: 0, scale: 1 }}
-                                exit={{ opacity: 0, y: 4, scale: 0.96 }}
-                                transition={{ duration: 0.12 }}
-                                className="absolute -top-10 left-1/2 -translate-x-1/2 z-50 flex items-center gap-1 bg-white rounded-xl shadow-[0_4px_20px_rgb(0,0,0,0.12)] px-2.5 py-1.5 border border-gray-100 pointer-events-auto"
-                                onMouseEnter={() => setPanelCardHover(node.id)}
-                                onClick={(e) => e.stopPropagation()}
-                              >
-                                {/* BG palette */}
-                                <div className="relative">
-                                  <button
-                                    onClick={(e) => { e.stopPropagation(); setPanelCardPicker(panelCardPicker?.nodeId === node.id && panelCardPicker.type === "bg" ? null : { nodeId: node.id, type: "bg" }); }}
-                                    className="w-6 h-6 rounded-full border-2 border-white shadow-sm hover:scale-110 transition-transform"
-                                    style={{ backgroundColor: d.backgroundColor || "#FAFAFA", outline: "1px solid #E5E7EB" }}
-                                    title="Color de fondo"
-                                  />
-                                  {panelCardPicker?.nodeId === node.id && panelCardPicker.type === "bg" && (
-                                    <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.14)] border border-gray-100 p-2.5 grid grid-cols-3 gap-1.5 z-50" onClick={(e) => e.stopPropagation()}>
-                                      {[{ name: "Blanco", value: "#FFFFFF" }, { name: "Celeste", value: "#F0F7FF" }, { name: "Menta", value: "#ECFDF5" }, { name: "Amarillo", value: "#FEFCE8" }, { name: "Gris", value: "#F9FAFB" }, { name: "Oscuro", value: "#1F2937" }].map((c) => (
-                                        <button key={c.value} onClick={() => { setNodes((nds) => nds.map((n) => n.id === node.id ? { ...n, data: { ...n.data, backgroundColor: c.value } } : n)); setPanelCardPicker(null); }} className="w-6 h-6 rounded-full border border-gray-200 hover:scale-110 transition-transform" style={{ backgroundColor: c.value }} title={c.name} />
-                                      ))}
-                                    </div>
-                                  )}
-                                </div>
-                                <div className="w-[1px] h-3 bg-[#E5E7EB]" />
-                                {/* Text palette */}
-                                <div className="relative">
-                                  <button
-                                    onClick={(e) => { e.stopPropagation(); setPanelCardPicker(panelCardPicker?.nodeId === node.id && panelCardPicker.type === "text" ? null : { nodeId: node.id, type: "text" }); }}
-                                    className="w-6 h-6 rounded-full border-2 border-white shadow-sm hover:scale-110 transition-transform flex items-center justify-center text-[10px] font-bold"
-                                    style={{ backgroundColor: d.textColor || "#1F2937", outline: "1px solid #E5E7EB", color: d.textColor === "#FFFFFF" ? "#1F2937" : "#FFFFFF" }}
-                                    title="Color de texto"
-                                  >
-                                    A
-                                  </button>
-                                  {panelCardPicker?.nodeId === node.id && panelCardPicker.type === "text" && (
-                                    <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.14)] border border-gray-100 p-2.5 grid grid-cols-3 gap-1.5 z-50" onClick={(e) => e.stopPropagation()}>
-                                      {[{ name: "Negro", value: "#111827" }, { name: "Gris", value: "#6B7280" }, { name: "Blanco", value: "#FFFFFF" }, { name: "Azul", value: "#2563EB" }, { name: "Verde", value: "#059669" }, { name: "Rojo", value: "#DC2626" }].map((c) => (
-                                        <button key={c.value} onClick={() => { setNodes((nds) => nds.map((n) => n.id === node.id ? { ...n, data: { ...n.data, textColor: c.value } } : n)); setPanelCardPicker(null); }} className="w-6 h-6 rounded-full border border-gray-200 hover:scale-110 transition-transform flex items-center justify-center" style={{ backgroundColor: c.value }} title={c.name}>
-                                          {(d.textColor || "#111827") === c.value && <Check size={9} className={c.value === "#FFFFFF" ? "text-gray-800" : "text-white"} strokeWidth={3} />}
-                                        </button>
-                                      ))}
-                                    </div>
-                                  )}
-                                </div>
-                              </motion.div>
-                            )}
-                          </AnimatePresence>
                           {/* Card header */}
                           <div className="space-y-0.5">
                             <div className="flex items-center justify-between">
@@ -1674,103 +1619,6 @@ const IndexContent = () => {
                               <span>Nueva tarea</span>
                             </button>
 
-                            {/* Color swatches */}
-                            <div className="flex items-center gap-1.5 relative">
-                              {/* BG color */}
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setPanelCardPicker(
-                                    panelCardPicker?.nodeId === node.id && panelCardPicker.type === "bg"
-                                      ? null
-                                      : { nodeId: node.id, type: "bg" }
-                                  );
-                                }}
-                                className="w-5 h-5 rounded-full border-2 border-white shadow-sm hover:scale-110 transition-transform"
-                                style={{ backgroundColor: d.backgroundColor || "#FAFAFA", outline: "1px solid #E5E7EB" }}
-                                title="Color de fondo"
-                              />
-                              {/* Text color */}
-                              <button
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  setPanelCardPicker(
-                                    panelCardPicker?.nodeId === node.id && panelCardPicker.type === "text"
-                                      ? null
-                                      : { nodeId: node.id, type: "text" }
-                                  );
-                                }}
-                                className="w-5 h-5 rounded-full border-2 border-white shadow-sm hover:scale-110 transition-transform flex items-center justify-center text-[10px] font-bold"
-                                style={{ backgroundColor: d.textColor || "#1F2937", outline: "1px solid #E5E7EB", color: d.textColor === "#FFFFFF" ? "#1F2937" : "#FFFFFF" }}
-                                title="Color de texto"
-                              >
-                                A
-                              </button>
-
-                              {/* BG Palette */}
-                              {panelCardPicker?.nodeId === node.id && panelCardPicker.type === "bg" && (
-                                <div
-                                  className="absolute bottom-full right-0 mb-2 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.14)] border border-gray-100 p-2.5 grid grid-cols-3 gap-1.5 z-50"
-                                  onClick={(e) => e.stopPropagation()}
-                                >
-                                  {[
-                                    { name: "Blanco", value: "#FFFFFF" },
-                                    { name: "Celeste", value: "#F0F7FF" },
-                                    { name: "Menta", value: "#ECFDF5" },
-                                    { name: "Amarillo", value: "#FEFCE8" },
-                                    { name: "Gris", value: "#F9FAFB" },
-                                    { name: "Oscuro", value: "#1F2937" },
-                                  ].map((c) => (
-                                    <button
-                                      key={c.value}
-                                      onClick={() => {
-                                        setNodes((nds) => nds.map((n) =>
-                                          n.id === node.id ? { ...n, data: { ...n.data, backgroundColor: c.value } } : n
-                                        ));
-                                        setPanelCardPicker(null);
-                                      }}
-                                      className="w-6 h-6 rounded-full border border-gray-200 hover:scale-110 transition-transform"
-                                      style={{ backgroundColor: c.value }}
-                                      title={c.name}
-                                    />
-                                  ))}
-                                </div>
-                              )}
-
-                              {/* Text Palette */}
-                              {panelCardPicker?.nodeId === node.id && panelCardPicker.type === "text" && (
-                                <div
-                                  className="absolute bottom-full right-0 mb-2 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.14)] border border-gray-100 p-2.5 flex gap-1.5 z-50"
-                                  onClick={(e) => e.stopPropagation()}
-                                >
-                                  {[
-                                    { name: "Negro", value: "#111827" },
-                                    { name: "Gris", value: "#6B7280" },
-                                    { name: "Blanco", value: "#FFFFFF" },
-                                    { name: "Azul", value: "#2563EB" },
-                                    { name: "Verde", value: "#059669" },
-                                    { name: "Rojo", value: "#DC2626" },
-                                  ].map((c) => (
-                                    <button
-                                      key={c.value}
-                                      onClick={() => {
-                                        setNodes((nds) => nds.map((n) =>
-                                          n.id === node.id ? { ...n, data: { ...n.data, textColor: c.value } } : n
-                                        ));
-                                        setPanelCardPicker(null);
-                                      }}
-                                      className="w-6 h-6 rounded-full border border-gray-200 hover:scale-110 transition-transform flex items-center justify-center"
-                                      style={{ backgroundColor: c.value }}
-                                      title={c.name}
-                                    >
-                                      {(d.textColor || "#111827") === c.value && (
-                                        <Check size={9} className={c.value === "#FFFFFF" ? "text-gray-800" : "text-white"} strokeWidth={3} />
-                                      )}
-                                    </button>
-                                  ))}
-                                </div>
-                              )}
-                            </div>
                           </div>
                         </div>
                       );
