@@ -283,7 +283,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                   <Baseline size={13} style={{ color: textColor }} className="stroke-[2.5]" />
                 </button>
                 {activePicker === "text" && (
-                  <div className="absolute top-10 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-[0_4px_25px_rgba(0,0,0,0.18)] p-2.5 flex gap-1.5 border border-[#E5E7EB] z-50">
+                  <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 p-2.5 grid grid-cols-4 gap-1.5 z-50">
                     {TEXT_COLOR_PALETTE.map((c) => (
                       <button
                         key={c.value}
@@ -291,12 +291,12 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                           updateNodeData({ textColor: c.value });
                           setActivePicker(null);
                         }}
-                        className="w-5.5 h-5.5 rounded-full border border-gray-200 hover:scale-110 transition-transform flex items-center justify-center"
+                        className="w-6 h-6 rounded-full border border-gray-200/60 transition-transform hover:scale-110 flex items-center justify-center overflow-hidden relative shadow-sm cursor-pointer"
                         style={{ backgroundColor: c.value }}
                         title={c.name}
                       >
                         {textColor === c.value && (
-                          <Check size={10} className={c.value === "#FFFFFF" ? "text-gray-800" : "text-white"} />
+                          <Check size={10} className={c.value === "#FFFFFF" ? "text-gray-800" : "text-white"} strokeWidth={2.5} />
                         )}
                       </button>
                     ))}
