@@ -224,7 +224,7 @@ export default function Dashboard() {
 
   return (
     <motion.div
-      className="p-8 md:px-12 md:pb-12 md:pt-24 max-w-5xl mx-auto space-y-12"
+      className="p-8 md:px-12 md:pb-12 md:pt-48 max-w-5xl mx-auto space-y-12"
       variants={containerVariants}
       initial="hidden"
       animate="visible"
