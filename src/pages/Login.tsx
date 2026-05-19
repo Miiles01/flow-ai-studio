@@ -48,7 +48,7 @@ const Login = () => {
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
-          className="bg-white w-full max-w-[500px] p-8 md:p-14 rounded-[32px] shadow-sm flex flex-col justify-center"
+          className="bg-white w-full max-w-[500px] p-8 md:p-14 rounded-[32px] flex flex-col justify-center"
           style={{ minHeight: "680px" }}
         >
           <div className="text-center mb-10">
@@ -134,7 +134,7 @@ const Login = () => {
           <img 
             src="https://wearemiiles.com/wp-content/uploads/2026/05/enhanced_Gemini_Generated_Image_h6viuth6viuth6vi-3-scaled.jpg" 
             alt="Miiles platform" 
-            className="w-full h-full object-cover rounded-[32px] shadow-sm"
+            className="w-full h-full object-cover rounded-[32px]"
           />
         </motion.div>
 
