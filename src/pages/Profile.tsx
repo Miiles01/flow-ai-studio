@@ -342,18 +342,22 @@ const Profile = () => {
             </CardContent>
           </Card>
 
-          <Button type="submit" className="w-full" disabled={saving}>
-            {saving ? <Loader2 size={16} className="animate-spin mr-2" /> : <Save size={16} className="mr-2" />}
-            Guardar cambios
-          </Button>
+          <div className="flex justify-center">
+            <Button type="submit" className="w-auto px-10 rounded-full" disabled={saving}>
+              {saving ? <Loader2 size={16} className="animate-spin mr-2" /> : <Save size={16} className="mr-2" />}
+              Guardar cambios
+            </Button>
+          </div>
         </form>
 
         <Separator className="my-6" />
 
-        <Button variant="destructive" className="w-full" onClick={handleSignOut}>
-          <LogOut size={16} className="mr-2" />
-          Cerrar sesión
-        </Button>
+        <div className="flex justify-center">
+          <Button variant="destructive" className="w-auto px-10 rounded-full bg-red-50 text-red-500 hover:bg-red-100 border-none shadow-none" onClick={handleSignOut}>
+            <LogOut size={16} className="mr-2" />
+            Cerrar sesión
+          </Button>
+        </div>
       </motion.div>
     </div>
   );
