@@ -309,7 +309,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                   className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-[#F3F4F6] transition-colors"
                   title="Color del Texto"
                 >
-                  <Baseline size={13} style={{ color: textColor }} className="stroke-[2.5]" />
+                  <Baseline size={13} style={{ color: effectiveTextColor }} className="stroke-[2.5]" />
                 </button>
                 {activePicker === "text" && (
                   <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px]">

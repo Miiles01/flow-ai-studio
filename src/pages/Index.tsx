@@ -10,6 +10,7 @@ import {
   ConnectionMode,
   useViewport,
   ReactFlowProvider,
+  useReactFlow,
   type Connection,
   type Node,
   type Edge,
@@ -54,6 +55,7 @@ const IndexContent = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { setCenter } = useReactFlow();
 
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -1550,13 +1552,23 @@ const IndexContent = () => {
                       return (
                         <div
                           key={node.id}
-                          className="rounded-2xl border p-5 space-y-3 relative group/card transition-colors duration-300"
+                          className="rounded-2xl border p-5 space-y-3 relative group/card transition-colors duration-300 cursor-pointer"
                           style={{
                             backgroundColor: d.backgroundColor || "#FAFAFA",
                             borderColor: isDarkMode ? "#374151" : "#E5E7EB"
                           }}
                           onMouseEnter={() => setPanelCardHover(node.id)}
                           onMouseLeave={() => { setPanelCardHover(null); }}
+                          onClick={() => {
+                            const foundNode = nodes.find(n => n.id === node.id);
+                            if (foundNode) {
+                              setCenter(
+                                foundNode.position.x + 150, 
+                                foundNode.position.y + 100, 
+                                { zoom: 1.2, duration: 800 }
+                              );
+                            }
+                          }}
                         >
                           {/* Card header */}
                           <div className="space-y-1">
@@ -1582,9 +1594,9 @@ const IndexContent = () => {
                               <p className="text-[12px] font-light py-1" style={{ color: isDarkMode ? "#6B7280" : "#9CA3AF" }}>Sin tareas aún.</p>
                             )}
                             {tasks.map((task) => (
-                              <div key={task.id} className="flex items-center gap-3 py-1">
+                              <div key={task.id} className="flex items-center gap-3 py-1" onClick={(e) => e.stopPropagation()}>
                                 <button
-                                  onClick={() => toggleTask(task.id)}
+                                  onClick={(e) => { e.stopPropagation(); toggleTask(task.id); }}
                                   className="w-5 h-5 rounded-full border-[1.5px] flex items-center justify-center shrink-0 transition-all duration-200"
                                   style={{
                                     borderColor: task.completed ? effectiveTextColor : (isDarkMode ? "#6B7280" : "#9CA3AF"),
@@ -1610,7 +1622,7 @@ const IndexContent = () => {
 
                           {/* Add task button */}
                           <button
-                            onClick={addTask}
+                            onClick={(e) => { e.stopPropagation(); addTask(); }}
                             className="flex items-center gap-2 py-2 px-3 rounded-xl border border-dashed transition-all text-left mt-2 shrink-0 w-full"
                             style={{
                               borderColor: isDarkMode ? "#4B5563" : "#D1D5DB",
