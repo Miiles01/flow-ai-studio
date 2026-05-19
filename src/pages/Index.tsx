@@ -80,6 +80,7 @@ const IndexContent = () => {
   const settingsButtonRef = useRef<HTMLButtonElement>(null);
   const isDraggingPanel = useRef(false);
   const [panelCardPicker, setPanelCardPicker] = useState<{ nodeId: string; type: "bg" | "text" } | null>(null);
+  const [panelCardHover, setPanelCardHover] = useState<string | null>(null);
   const settingsRef = useRef<HTMLDivElement>(null);
   const nodeCounter = useRef(0);
   const lastSavedRef = useRef<string>("");
@@ -1552,9 +1553,64 @@ const IndexContent = () => {
                       return (
                         <div
                           key={node.id}
-                          className="rounded-2xl border border-[#F3F4F6] p-4 space-y-3 relative"
+                          className="rounded-2xl border border-[#F3F4F6] p-4 space-y-3 relative group/card"
                           style={{ backgroundColor: d.backgroundColor || "#FAFAFA" }}
+                          onMouseEnter={() => setPanelCardHover(node.id)}
+                          onMouseLeave={() => { setPanelCardHover(null); }}
                         >
+                          {/* Hover mini-toolbar */}
+                          <AnimatePresence>
+                            {panelCardHover === node.id && (
+                              <motion.div
+                                key={`hover-bar-${node.id}`}
+                                initial={{ opacity: 0, y: 4, scale: 0.96 }}
+                                animate={{ opacity: 1, y: 0, scale: 1 }}
+                                exit={{ opacity: 0, y: 4, scale: 0.96 }}
+                                transition={{ duration: 0.12 }}
+                                className="absolute -top-10 left-1/2 -translate-x-1/2 z-50 flex items-center gap-1 bg-white rounded-xl shadow-[0_4px_20px_rgb(0,0,0,0.12)] px-2.5 py-1.5 border border-gray-100 pointer-events-auto"
+                                onMouseEnter={() => setPanelCardHover(node.id)}
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                {/* BG palette */}
+                                <div className="relative">
+                                  <button
+                                    onClick={(e) => { e.stopPropagation(); setPanelCardPicker(panelCardPicker?.nodeId === node.id && panelCardPicker.type === "bg" ? null : { nodeId: node.id, type: "bg" }); }}
+                                    className="w-6 h-6 rounded-full border-2 border-white shadow-sm hover:scale-110 transition-transform"
+                                    style={{ backgroundColor: d.backgroundColor || "#FAFAFA", outline: "1px solid #E5E7EB" }}
+                                    title="Color de fondo"
+                                  />
+                                  {panelCardPicker?.nodeId === node.id && panelCardPicker.type === "bg" && (
+                                    <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.14)] border border-gray-100 p-2.5 grid grid-cols-3 gap-1.5 z-50" onClick={(e) => e.stopPropagation()}>
+                                      {[{ name: "Blanco", value: "#FFFFFF" }, { name: "Celeste", value: "#F0F7FF" }, { name: "Menta", value: "#ECFDF5" }, { name: "Amarillo", value: "#FEFCE8" }, { name: "Gris", value: "#F9FAFB" }, { name: "Oscuro", value: "#1F2937" }].map((c) => (
+                                        <button key={c.value} onClick={() => { setNodes((nds) => nds.map((n) => n.id === node.id ? { ...n, data: { ...n.data, backgroundColor: c.value } } : n)); setPanelCardPicker(null); }} className="w-6 h-6 rounded-full border border-gray-200 hover:scale-110 transition-transform" style={{ backgroundColor: c.value }} title={c.name} />
+                                      ))}
+                                    </div>
+                                  )}
+                                </div>
+                                <div className="w-[1px] h-3 bg-[#E5E7EB]" />
+                                {/* Text palette */}
+                                <div className="relative">
+                                  <button
+                                    onClick={(e) => { e.stopPropagation(); setPanelCardPicker(panelCardPicker?.nodeId === node.id && panelCardPicker.type === "text" ? null : { nodeId: node.id, type: "text" }); }}
+                                    className="w-6 h-6 rounded-full border-2 border-white shadow-sm hover:scale-110 transition-transform flex items-center justify-center text-[10px] font-bold"
+                                    style={{ backgroundColor: d.textColor || "#1F2937", outline: "1px solid #E5E7EB", color: d.textColor === "#FFFFFF" ? "#1F2937" : "#FFFFFF" }}
+                                    title="Color de texto"
+                                  >
+                                    A
+                                  </button>
+                                  {panelCardPicker?.nodeId === node.id && panelCardPicker.type === "text" && (
+                                    <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.14)] border border-gray-100 p-2.5 grid grid-cols-3 gap-1.5 z-50" onClick={(e) => e.stopPropagation()}>
+                                      {[{ name: "Negro", value: "#111827" }, { name: "Gris", value: "#6B7280" }, { name: "Blanco", value: "#FFFFFF" }, { name: "Azul", value: "#2563EB" }, { name: "Verde", value: "#059669" }, { name: "Rojo", value: "#DC2626" }].map((c) => (
+                                        <button key={c.value} onClick={() => { setNodes((nds) => nds.map((n) => n.id === node.id ? { ...n, data: { ...n.data, textColor: c.value } } : n)); setPanelCardPicker(null); }} className="w-6 h-6 rounded-full border border-gray-200 hover:scale-110 transition-transform flex items-center justify-center" style={{ backgroundColor: c.value }} title={c.name}>
+                                          {(d.textColor || "#111827") === c.value && <Check size={9} className={c.value === "#FFFFFF" ? "text-gray-800" : "text-white"} strokeWidth={3} />}
+                                        </button>
+                                      ))}
+                                    </div>
+                                  )}
+                                </div>
+                              </motion.div>
+                            )}
+                          </AnimatePresence>
                           {/* Card header */}
                           <div className="space-y-0.5">
                             <div className="flex items-center justify-between">
