@@ -87,11 +87,7 @@ export default function Boards() {
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div className="flex items-center gap-3">
           <h1 className="text-2xl md:text-3xl font-normal">Mis Tableros</h1>
-          {!isPro && (
-            <span className="text-[12px] font-light text-miiles-gray-400 px-2.5 py-1 rounded-full bg-miiles-gray-50">
-              {flows.length}/{FREE_BOARD_LIMIT}
-            </span>
-          )}
+
           {isPro && (
             <span className="text-[12px] font-light text-black px-2.5 py-1 rounded-full bg-[#FEEDED] flex items-center gap-1">
               <Sparkles size={12} strokeWidth={1.5} /> Pro
