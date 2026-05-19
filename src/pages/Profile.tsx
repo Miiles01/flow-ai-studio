@@ -391,7 +391,7 @@ const Profile = () => {
             initial={{ y: 100, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             exit={{ y: 100, opacity: 0 }}
-            className="fixed bottom-6 left-0 right-0 z-50 flex justify-center pointer-events-none"
+            className="sticky bottom-6 z-50 flex justify-center pointer-events-none mt-8"
           >
             <div className="pointer-events-auto">
               <Button 
