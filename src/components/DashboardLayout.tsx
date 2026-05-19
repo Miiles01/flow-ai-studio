@@ -74,17 +74,12 @@ function SidebarBody() {
             <img src={logoImg} alt="miiles" className={collapsed ? "h-6 w-6" : "h-8 w-8"} />
             {!collapsed && <span className="text-3xl font-normal tracking-tight">miiles</span>}
           </div>
-          {!collapsed && (
-            <p className="text-[13px] text-black font-normal mt-2 ml-1 cursor-pointer hover:underline">
-              Nueva conversación
-            </p>
-          )}
         </div>
 
         {/* Nuevo Tablero Button */}
         <div className={`mb-8 flex ${collapsed ? "justify-center px-2" : "px-6"}`}>
           <button
-            onClick={() => navigate("/")}
+            onClick={() => navigate("/boards/new")}
             className={`flex items-center justify-center bg-black text-white hover:bg-black/90 transition-all hover:scale-[1.02] ${
               collapsed
                 ? "w-10 h-10 rounded-full"
