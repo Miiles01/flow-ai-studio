@@ -1537,13 +1537,13 @@ const IndexContent = () => {
                             {/* Interactive checkbox */}
                             <button
                               onClick={() => toggleTask(task.id)}
-                              className="w-4 h-4 rounded-[4px] border-[1.5px] flex items-center justify-center shrink-0 mt-px transition-all"
+                              className="w-4 h-4 rounded-full border-[1.5px] flex items-center justify-center shrink-0 mt-px transition-all"
                               style={{
                                 borderColor: task.completed ? "#111827" : "#D1D5DB",
                                 backgroundColor: task.completed ? "#111827" : "transparent",
                               }}
                             >
-                              {task.completed && <Check size={9} className="text-white stroke-[3]" />}
+                              {task.completed && <Check size={8} className="text-white" strokeWidth={3} />}
                             </button>
                             {/* Editable task text */}
                             <input
