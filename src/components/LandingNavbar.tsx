@@ -93,7 +93,7 @@ const LandingNavbar = ({ onMenuAction }: LandingNavbarProps) => {
               
               {/* Left Column: Socials & Legal */}
               <div className="flex flex-col justify-between w-full md:w-1/3 h-auto md:h-full order-2 md:order-1 mt-8 md:mt-0">
-                <div className="flex flex-col gap-3 mt-0 md:mt-12">
+                <div className="flex flex-col gap-5 mt-0 md:mt-12">
                   {socialLinks.map((link, i) => (
                     <div 
                       key={link.label} 
@@ -134,7 +134,7 @@ const LandingNavbar = ({ onMenuAction }: LandingNavbarProps) => {
               </div>
 
               {/* Right Column: Main Navigation Links — Osmo masked reveal */}
-              <div className="flex flex-col justify-start md:justify-center w-full md:w-2/3 h-auto md:h-full gap-0 pl-0 md:pl-20 order-1 md:order-2">
+              <div className="flex flex-col justify-start md:justify-center w-full md:w-2/3 h-auto md:h-full gap-3 md:gap-4 pl-0 md:pl-20 order-1 md:order-2">
                 {menuItems.map((item, i) => (
                   <div 
                     key={item.label} 
