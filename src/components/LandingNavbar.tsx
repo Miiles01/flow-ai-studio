@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 
@@ -6,23 +6,8 @@ interface LandingNavbarProps {
   onMenuAction?: (id: string) => void;
 }
 
-const AnimatedTextLink = ({ text }: { text: string }) => (
-  <span className="nav-link-anim" data-text={text}>
-    <span className="nav-link-anim-inner">{text}</span>
-  </span>
-);
-
 const LandingNavbar = ({ onMenuAction }: LandingNavbarProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isScrolled, setIsScrolled] = useState(false);
-
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 50);
-    };
-    window.addEventListener("scroll", handleScroll);
-    return () => window.removeEventListener("scroll", handleScroll);
-  }, []);
 
   const menuItems = [
     { label: "Inicio", href: "/" },
@@ -48,86 +33,74 @@ const LandingNavbar = ({ onMenuAction }: LandingNavbarProps) => {
 
   return (
     <>
-      {/* NAVBAR */}
-      <div 
-        className={`fixed top-0 left-0 w-full z-50 transition-all duration-500 ease-in-out ${
-          isScrolled && !isMenuOpen ? "bg-white/80 backdrop-blur-2xl border-b border-gray-200/50 shadow-sm py-4" : "bg-transparent py-6"
-        }`}
-      >
-        <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between">
-          <Link to="/" className="flex items-center shrink-0 z-50">
-            <img src="/logotipo.svg" alt="Miiles" className={`h-6 w-auto transition-transform duration-500 ${isMenuOpen ? "brightness-0 invert" : ""}`} />
+      {/* WRAPPER PARA NAV Y MENÚ */}
+      <div className="fixed top-6 left-1/2 -translate-x-1/2 w-[95vw] md:w-max z-50 flex flex-col gap-2">
+        {/* NAV — flotante estilo glass */}
+        <nav className="w-full flex items-center justify-between gap-4 md:gap-16 px-6 md:px-8 py-2.5 bg-white/10 backdrop-blur-2xl border border-white/20 rounded-full">
+          <Link to="/" className="flex items-center shrink-0">
+            <img src="/logotipo.svg" alt="Miiles" className="h-5 w-auto" />
           </Link>
 
-          <div className={`flex items-center gap-6 md:gap-8 shrink-0 z-50 transition-colors duration-500 ${isMenuOpen ? "text-white" : "text-black"}`}>
+          <div className="flex items-center gap-4 md:gap-6 shrink-0">
             <button 
               onClick={() => setIsMenuOpen(!isMenuOpen)}
-              className="text-[15px] font-medium tracking-tight overflow-hidden"
+              className="text-sm font-normal hover:opacity-50 transition-opacity tracking-tight"
             >
-              {isMenuOpen ? (
-                <AnimatedTextLink text="Cerrar" />
-              ) : (
-                <AnimatedTextLink text="Menú" />
-              )}
+              {isMenuOpen ? "Cerrar" : "Menu"}
             </button>
             <Link
               to="/login"
-              className={`text-[13px] font-medium px-6 py-3 rounded-full transition-all duration-500 ${
-                isMenuOpen 
-                  ? "bg-white text-black hover:bg-gray-100" 
-                  : "bg-black text-white hover:scale-105 shadow-[0_8px_30px_rgb(0,0,0,0.12)]"
-              }`}
+              className="text-xs font-normal px-5 py-2.5 rounded-full bg-black text-white hover:scale-105 transition-transform duration-300"
             >
-              <AnimatedTextLink text="Unirse" />
+              Unirse
             </Link>
           </div>
-        </div>
+        </nav>
+
+        {/* MENU DESPLEGABLE — estilo glass negro */}
+        <AnimatePresence>
+          {isMenuOpen && (
+            <motion.div 
+              initial={{ opacity: 0, y: -10, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -10, scale: 0.95 }}
+              transition={{ duration: 0.4, ease: [0.22, 1, 0.36, 1] }}
+              className="w-full bg-black/40 backdrop-blur-3xl border border-white/10 rounded-3xl p-10 shadow-[0_20px_50px_rgba(0,0,0,0.3)] overflow-hidden"
+            >
+              <div className="flex flex-col gap-6 text-left">
+                {menuItems.map((item, i) => (
+                  <div key={item.label} className="overflow-hidden">
+                    <motion.div 
+                      initial={{ y: "110%" }} 
+                      animate={{ y: "0%" }} 
+                      transition={{ duration: 0.9, ease: [0.625, 0.05, 0, 1], delay: i * 0.08 }}
+                    >
+                      <Link 
+                        to={item.href}
+                        onClick={() => setIsMenuOpen(false)}
+                        className="block text-3xl md:text-4xl font-normal text-white hover:opacity-50 transition-opacity tracking-tight"
+                      >
+                        {item.label}
+                      </Link>
+                    </motion.div>
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
-      {/* FULL SCREEN MEGA MENU */}
+      {/* Overlay para cerrar al hacer clic fuera */}
       <AnimatePresence>
         {isMenuOpen && (
           <motion.div 
-            initial={{ opacity: 0, y: "-100%" }}
-            animate={{ opacity: 1, y: "0%" }}
-            exit={{ opacity: 0, y: "-10%" }}
-            transition={{ duration: 0.7, ease: [0.625, 0.05, 0, 1] }}
-            className="fixed inset-0 z-40 bg-[#111111] flex flex-col justify-center px-6 md:px-20 lg:px-40"
-          >
-            <div className="max-w-7xl w-full mx-auto flex flex-col gap-8 md:gap-12">
-              {menuItems.map((item, i) => (
-                <div key={item.label} className="overflow-hidden">
-                  <motion.div 
-                    initial={{ y: "110%" }} 
-                    animate={{ y: "0%" }} 
-                    exit={{ y: "110%" }}
-                    transition={{ duration: 0.8, ease: [0.625, 0.05, 0, 1], delay: 0.1 + i * 0.08 }}
-                  >
-                    <Link 
-                      to={item.href}
-                      onClick={() => handleLinkClick(item.href)}
-                      className="inline-block text-5xl md:text-7xl lg:text-[100px] font-normal text-white hover:text-gray-400 transition-colors tracking-tight leading-none"
-                      style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}
-                    >
-                      <AnimatedTextLink text={item.label} />
-                    </Link>
-                  </motion.div>
-                </div>
-              ))}
-            </div>
-            
-            {/* Footer links in menu */}
-            <motion.div 
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ delay: 0.6, duration: 0.5 }}
-              className="absolute bottom-10 left-6 md:left-20 lg:left-40 max-w-7xl w-full flex gap-8 text-gray-400 text-sm font-light"
-            >
-              <Link to="/privacidad" className="hover:text-white transition-colors"><AnimatedTextLink text="Privacidad" /></Link>
-              <Link to="/terminos" className="hover:text-white transition-colors"><AnimatedTextLink text="Términos" /></Link>
-            </motion.div>
-          </motion.div>
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsMenuOpen(false)}
+            className="fixed inset-0 z-40 bg-black/5"
+          />
         )}
       </AnimatePresence>
     </>
