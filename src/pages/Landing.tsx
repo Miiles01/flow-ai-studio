@@ -112,15 +112,19 @@ const Landing = () => {
 
           {/* HERO */}
           <section className="min-h-[85vh] flex flex-col items-center justify-center text-center px-6 pt-32 pb-10 relative overflow-hidden">
-            <div className="max-w-4xl mx-auto">
+            <div className="max-w-4xl mx-auto flex flex-col items-center">
               <img 
                 data-anim-heading 
                 src={logoImg} 
-                alt="Miiles" 
-                className="w-14 h-14 mx-auto mb-6" 
+                alt="Miiles Logo" 
+                className="w-14 h-14 mx-auto mb-3" 
               />
+              <span data-anim-heading className="text-[22px] font-normal mb-8 tracking-tight">
+                Miiles
+              </span>
+              
               <h1
-                className="text-5xl md:text-6xl lg:text-7xl font-normal leading-tight tracking-tight mb-8"
+                className="text-5xl md:text-6xl lg:text-7xl font-normal leading-tight tracking-tight mb-10 text-center"
               >
                 <span className="block">Trabaja más</span>
                 <span className="block" style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic", color: "#000" }}>
@@ -131,18 +135,18 @@ const Landing = () => {
               <div data-anim-heading className="flex items-center justify-center gap-4 flex-wrap">
                 <Link
                   to="/login"
-                  className="px-8 py-4 rounded-full bg-black text-white text-sm font-light hover:-translate-y-2 transition-transform duration-300 flex items-center gap-2"
+                  className="px-8 py-4 rounded-full bg-black text-white text-[15px] font-normal hover:-translate-y-2 transition-transform duration-300 flex items-center gap-2"
                 >
-                  <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 0C12.3 8.8 15.2 11.7 24 12C15.2 12.3 12.3 15.2 12 24C11.7 15.2 8.8 12.3 0 12C8.8 11.7 11.7 8.8 12 0Z" />
                   </svg>
-                  Prueba gratis
+                  Prueba Gratis
                 </Link>
                 <Link
                   to="/funciones"
-                  className="px-8 py-4 rounded-full border border-gray-200 text-sm font-light hover:-translate-y-2 transition-transform duration-300"
+                  className="px-8 py-4 rounded-full bg-white text-black text-[15px] font-normal shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:-translate-y-2 transition-all duration-300"
                 >
-                  Ver funciones →
+                  Funciones
                 </Link>
               </div>
             </div>
