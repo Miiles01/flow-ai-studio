@@ -45,6 +45,45 @@ const LandingNavbar = ({ onMenuAction }: LandingNavbarProps) => {
     }
   };
 
+  // Animated menu link with per-character 3D rotation on hover
+  const AnimatedMenuLink = ({ label, href }: { label: string; href: string }) => {
+    const [charKey, setCharKey] = useState(0);
+    const chars = label.split("");
+
+    const triggerAnim = () => setCharKey(k => k + 1);
+
+    return (
+      <Link
+        to={href}
+        onClick={() => handleLinkClick(href)}
+        onMouseEnter={triggerAnim}
+        onMouseLeave={triggerAnim}
+        className="block text-5xl md:text-7xl font-medium text-white tracking-tight"
+        style={{ fontFamily: "'Poppins', sans-serif", perspective: "800px" }}
+      >
+        {chars.map((char, i) => (
+          <motion.span
+            key={`${i}-${charKey}`}
+            initial={{ rotateX: 90, opacity: 0, y: 8 }}
+            animate={{ rotateX: 0, opacity: 1, y: 0 }}
+            transition={{
+              duration: 0.5,
+              delay: i * 0.03,
+              ease: [0.175, 0.885, 0.32, 1.275],
+            }}
+            style={{
+              display: "inline-block",
+              transformOrigin: "50% 100%",
+              willChange: "transform, opacity",
+            }}
+          >
+            {char === " " ? "\u00A0" : char}
+          </motion.span>
+        ))}
+      </Link>
+    );
+  };
+
   return (
     <>
       {/* WRAPPER PARA NAV Y MENÚ */}
@@ -147,14 +186,7 @@ const LandingNavbar = ({ onMenuAction }: LandingNavbarProps) => {
                       exit={{ y: "110%" }}
                       transition={{ duration: 0.8, ease: [0.625, 0.05, 0, 1], delay: 0.1 + i * 0.08 }}
                     >
-                      <Link 
-                        to={item.href}
-                        onClick={() => handleLinkClick(item.href)}
-                        className="block text-5xl md:text-7xl font-medium text-white hover:text-white/50 transition-colors duration-300 tracking-tight"
-                        style={{ fontFamily: "'Poppins', sans-serif" }}
-                      >
-                        {item.label}
-                      </Link>
+                      <AnimatedMenuLink label={item.label} href={item.href} />
                     </motion.div>
                   </div>
                 ))}
