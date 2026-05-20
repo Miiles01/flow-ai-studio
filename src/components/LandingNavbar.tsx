@@ -86,44 +86,63 @@ const LandingNavbar = ({ onMenuAction }: LandingNavbarProps) => {
               <div className="flex flex-col justify-between w-full md:w-1/3 h-full">
                 <div className="flex flex-col gap-3 mt-12">
                   {socialLinks.map((link, i) => (
-                    <motion.div
-                      key={link.label}
-                      initial={{ opacity: 0, x: -20 }}
-                      animate={{ opacity: 1, x: 0 }}
-                      transition={{ delay: 0.2 + (i * 0.1), duration: 0.5 }}
+                    <div 
+                      key={link.label} 
+                      className="overflow-hidden"
+                      style={{ lineHeight: 1.2 }}
                     >
-                      <a href={link.href} className="text-base font-light text-white/80 hover:text-white transition-colors">
-                        {link.label}
-                      </a>
-                    </motion.div>
+                      <motion.div
+                        initial={{ y: "110%" }}
+                        animate={{ y: "0%" }}
+                        exit={{ y: "110%" }}
+                        transition={{ duration: 0.8, ease: [0.625, 0.05, 0, 1], delay: 0.15 + i * 0.08 }}
+                      >
+                        <a 
+                          href={link.href} 
+                          target="_blank" 
+                          rel="noopener noreferrer"
+                          className="block text-base font-light text-white/80 hover:text-white transition-colors"
+                        >
+                          {link.label}
+                        </a>
+                      </motion.div>
+                    </div>
                   ))}
                 </div>
 
-                <motion.div 
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.6, duration: 0.5 }}
-                  className="flex flex-col gap-1 text-[11px] font-light text-white/50"
-                >
-                  <Link to="/terminos" className="hover:text-white/80 transition-colors">Términos y condiciones</Link>
-                  <Link to="/privacidad" className="hover:text-white/80 transition-colors">Política de privacidad</Link>
-                </motion.div>
+                <div className="overflow-hidden" style={{ lineHeight: 1.4 }}>
+                  <motion.div 
+                    initial={{ y: "110%" }}
+                    animate={{ y: "0%" }}
+                    exit={{ y: "110%" }}
+                    transition={{ duration: 0.8, ease: [0.625, 0.05, 0, 1], delay: 0.5 }}
+                    className="flex flex-col gap-1 text-[11px] font-light text-white/50"
+                  >
+                    <Link to="/terminos" className="hover:text-white/80 transition-colors">Términos y condiciones</Link>
+                    <Link to="/privacidad" className="hover:text-white/80 transition-colors">Política de privacidad</Link>
+                  </motion.div>
+                </div>
               </div>
 
-              {/* Right Column: Main Navigation Links */}
-              <div className="flex flex-col justify-center w-full md:w-2/3 h-full gap-4 md:gap-6 pl-10 md:pl-20">
+              {/* Right Column: Main Navigation Links — Osmo masked reveal */}
+              <div className="flex flex-col justify-center w-full md:w-2/3 h-full gap-0 pl-10 md:pl-20">
                 {menuItems.map((item, i) => (
-                  <div key={item.label} className="overflow-hidden">
+                  <div 
+                    key={item.label} 
+                    className="overflow-hidden"
+                    style={{ lineHeight: 1.15, paddingBottom: '0.15em' }}
+                  >
                     <motion.div 
                       initial={{ y: "110%" }} 
                       animate={{ y: "0%" }} 
-                      exit={{ y: "110%", opacity: 0 }}
-                      transition={{ duration: 0.7, ease: [0.625, 0.05, 0, 1], delay: 0.1 + i * 0.08 }}
+                      exit={{ y: "110%" }}
+                      transition={{ duration: 0.8, ease: [0.625, 0.05, 0, 1], delay: 0.1 + i * 0.08 }}
                     >
                       <Link 
                         to={item.href}
                         onClick={() => handleLinkClick(item.href)}
-                        className="block text-5xl md:text-7xl font-medium text-white hover:text-white/50 transition-colors tracking-tight font-poppins"
+                        className="block text-5xl md:text-7xl font-medium text-white hover:text-white/50 transition-colors duration-300 tracking-tight"
+                        style={{ fontFamily: "'Poppins', sans-serif" }}
                       >
                         {item.label}
                       </Link>
