@@ -89,7 +89,7 @@ const LandingNavbar = ({ onMenuAction }: LandingNavbarProps) => {
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
             className="fixed top-0 left-0 w-full h-screen md:h-[70vh] z-40 overflow-hidden shadow-2xl" style={{ backgroundColor: 'rgba(6,5,5,0.5)', backdropFilter: 'blur(80px)' }}
           >
-            <div className="max-w-6xl mx-auto w-full h-full flex flex-col md:flex-row pt-24 md:pt-32 pb-16 px-8 md:px-12">
+            <div className="max-w-6xl mx-auto w-full h-full flex flex-col md:flex-row pt-40 md:pt-32 pb-16 px-8 md:px-12">
               
               {/* Left Column: Socials & Legal */}
               <div className="flex flex-col justify-between w-full md:w-1/3 h-auto md:h-full order-2 md:order-1 mt-8 md:mt-0">
