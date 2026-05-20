@@ -119,7 +119,7 @@ const LandingNavbar = ({ onMenuAction }: LandingNavbarProps) => {
                   ))}
                 </div>
 
-                <div className="overflow-hidden" style={{ lineHeight: 1.4 }}>
+                <div className="overflow-hidden mt-6" style={{ lineHeight: 1.4 }}>
                   <motion.div 
                     initial={{ y: "110%" }}
                     animate={{ y: "0%" }}
