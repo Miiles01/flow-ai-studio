@@ -8,6 +8,14 @@ interface LandingNavbarProps {
 
 const LandingNavbar = ({ onMenuAction }: LandingNavbarProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [menuKey, setMenuKey] = useState(0);
+
+  const toggleMenu = () => {
+    if (!isMenuOpen) {
+      setMenuKey(k => k + 1);
+    }
+    setIsMenuOpen(!isMenuOpen);
+  };
 
   const menuItems = [
     { label: "Inicio", href: "/" },
@@ -53,7 +61,7 @@ const LandingNavbar = ({ onMenuAction }: LandingNavbarProps) => {
 
           <div className="flex items-center gap-4 md:gap-6 shrink-0">
             <button 
-              onClick={() => setIsMenuOpen(!isMenuOpen)}
+              onClick={toggleMenu}
               className={`text-sm font-normal hover:opacity-50 transition-colors duration-500 tracking-tight ${isMenuOpen ? "text-white" : "text-black"}`}
             >
               {isMenuOpen ? "Cerrar" : "Menú"}
@@ -71,9 +79,10 @@ const LandingNavbar = ({ onMenuAction }: LandingNavbarProps) => {
       </div>
 
       {/* MEGA MENU DESPLEGABLE — Altura 75vh, anclado al top */}
-      <AnimatePresence>
+      <AnimatePresence mode="wait">
         {isMenuOpen && (
           <motion.div 
+            key={menuKey}
             initial={{ opacity: 0, y: "-10%" }}
             animate={{ opacity: 1, y: "0%" }}
             exit={{ opacity: 0, y: "-10%" }}
