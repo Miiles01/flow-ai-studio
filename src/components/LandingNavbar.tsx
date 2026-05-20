@@ -17,9 +17,9 @@ const LandingNavbar = ({ onMenuAction }: LandingNavbarProps) => {
   ];
 
   const socialLinks = [
-    { label: "Instagram", href: "#" },
-    { label: "Tiktok", href: "#" },
-    { label: "Youtube", href: "#" },
+    { label: "Instagram", href: "https://instagram.com/wearemiiles" },
+    { label: "Tiktok", href: "https://tiktok.com/@wearemiiles" },
+    { label: "Youtube", href: "https://youtube.com" },
   ];
 
   const handleLinkClick = (href: string) => {
@@ -78,12 +78,12 @@ const LandingNavbar = ({ onMenuAction }: LandingNavbarProps) => {
             animate={{ opacity: 1, y: "0%" }}
             exit={{ opacity: 0, y: "-10%" }}
             transition={{ duration: 0.5, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed top-0 left-0 w-full h-[75vh] z-40 bg-[#0F172A]/80 backdrop-blur-3xl overflow-hidden rounded-b-[40px] shadow-2xl"
+            className="fixed top-0 left-0 w-full h-screen md:h-[70vh] z-40 overflow-hidden shadow-2xl" style={{ backgroundColor: 'rgba(6,5,5,0.5)', backdropFilter: 'blur(80px)' }}
           >
-            <div className="max-w-6xl mx-auto w-full h-full flex pt-32 pb-16 px-8 md:px-12">
+            <div className="max-w-6xl mx-auto w-full h-full flex flex-col md:flex-row pt-32 pb-16 px-8 md:px-12">
               
               {/* Left Column: Socials & Legal */}
-              <div className="flex flex-col justify-between w-1/3 h-full">
+              <div className="flex flex-col justify-between w-full md:w-1/3 h-full">
                 <div className="flex flex-col gap-3 mt-12">
                   {socialLinks.map((link, i) => (
                     <motion.div
@@ -111,7 +111,7 @@ const LandingNavbar = ({ onMenuAction }: LandingNavbarProps) => {
               </div>
 
               {/* Right Column: Main Navigation Links */}
-              <div className="flex flex-col justify-center w-2/3 h-full gap-4 md:gap-6 pl-10 md:pl-20">
+              <div className="flex flex-col justify-center w-full md:w-2/3 h-full gap-4 md:gap-6 pl-10 md:pl-20">
                 {menuItems.map((item, i) => (
                   <div key={item.label} className="overflow-hidden">
                     <motion.div 
@@ -123,7 +123,7 @@ const LandingNavbar = ({ onMenuAction }: LandingNavbarProps) => {
                       <Link 
                         to={item.href}
                         onClick={() => handleLinkClick(item.href)}
-                        className="block text-5xl md:text-7xl font-medium text-white hover:text-white/50 transition-colors tracking-tight font-sans"
+                        className="block text-5xl md:text-7xl font-medium text-white hover:text-white/50 transition-colors tracking-tight font-poppins"
                       >
                         {item.label}
                       </Link>
@@ -145,7 +145,7 @@ const LandingNavbar = ({ onMenuAction }: LandingNavbarProps) => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setIsMenuOpen(false)}
-            className="fixed inset-0 z-30 bg-black/10 cursor-pointer"
+            className="fixed inset-0 z-30 bg-transparent cursor-pointer"
           />
         )}
       </AnimatePresence>
