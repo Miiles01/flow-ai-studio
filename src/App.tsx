@@ -54,7 +54,11 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 const PublicRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth();
   if (loading) return null;
-  if (user) return <Navigate to="/dashboard" replace />;
+  if (user) {
+    const params = new URLSearchParams(window.location.search);
+    const next = params.get("next") || "/dashboard";
+    return <Navigate to={next} replace />;
+  }
   return <>{children}</>;
 };
 
