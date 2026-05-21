@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import { toast } from "sonner";
 import { motion, AnimatePresence } from "framer-motion";
 import {
@@ -54,6 +55,7 @@ function VideoLinkPopover({ value, onSave, onCancel }: { value: string; onSave: 
 }
 const Profile = () => {
   const { user, signOut } = useAuth();
+  const { isDark } = useTheme();
   const navigate = useNavigate();
   const [displayName, setDisplayName] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
@@ -377,7 +379,7 @@ const Profile = () => {
         <Separator className="my-6" />
 
         <div className="flex justify-center">
-          <Button variant="destructive" className="w-auto px-10 rounded-full bg-red-50 text-red-500 hover:bg-red-100 border-none shadow-none" onClick={handleSignOut}>
+          <Button variant="destructive" className={`w-auto px-10 rounded-full border-none shadow-none ${isDark ? 'bg-red-950/40 text-red-400 hover:bg-red-950/60' : 'bg-red-50 text-red-500 hover:bg-red-100'}`} onClick={handleSignOut}>
             <LogOut size={16} className="mr-2" />
             Cerrar sesión
           </Button>
@@ -399,7 +401,7 @@ const Profile = () => {
                 <Button 
                   onClick={() => handleSave()}
                   disabled={saving}
-                  className="w-auto px-8 h-12 rounded-full bg-white text-black hover:bg-gray-100 shadow-2xl border border-gray-200 font-medium transition-all"
+                  className={`w-auto px-8 h-12 rounded-full shadow-2xl font-medium transition-all border ${isDark ? 'bg-white/10 text-white hover:bg-white/20 border-white/20' : 'bg-white text-black hover:bg-gray-100 border-gray-200'}`}
                 >
                   {saving ? (
                     <Loader2 size={18} className="animate-spin mr-2" />

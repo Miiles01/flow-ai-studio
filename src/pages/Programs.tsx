@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import { toast } from "sonner";
 import { Search, Bookmark, BookmarkCheck, ExternalLink, Loader2, Plus, X, Pencil } from "lucide-react";
 import { motion } from "framer-motion";
@@ -173,6 +174,7 @@ function ProgramFormDialog({
 
 export default function Programs() {
   const { user } = useAuth();
+  const { isDark } = useTheme();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
   const [programs, setPrograms] = useState<Program[]>([]);
@@ -345,7 +347,7 @@ export default function Programs() {
             initial={{ y: 8, opacity: 0 }}
             animate={{ y: 0, opacity: 1 }}
             transition={{ delay: i * 0.03 }}
-            className="rounded-lg shadow-md transition-shadow duration-200 relative cursor-pointer hover:-translate-y-1 transition-transform overflow-hidden"
+            className={`rounded-lg shadow-md transition-shadow duration-200 relative cursor-pointer hover:-translate-y-1 transition-transform overflow-hidden ${isDark ? 'bg-white/5' : 'bg-white'}`}
             onClick={() => navigate(`/programs/${p.id}`)}
           >
             {p.banner_url && (

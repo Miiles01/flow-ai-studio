@@ -102,7 +102,7 @@ export default function Boards() {
             atLimit
               ? "bg-miiles-gray-100 text-miiles-gray-400 cursor-not-allowed"
               : isDark
-              ? "bg-white text-black hover:bg-white/80"
+              ? "bg-black text-white border border-white/10 hover:bg-zinc-900"
               : "bg-black text-white hover:bg-miiles-pink"
           }`}
           onClick={handleCreate}
@@ -140,7 +140,7 @@ export default function Boards() {
               initial={{ y: 10, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: i * 0.05 }}
-              className="aspect-[4/3] bg-black hover:bg-black/90 rounded-[24px] overflow-hidden cursor-pointer transition-colors group relative flex flex-col justify-end p-6"
+              className={`aspect-[4/3] bg-black hover:bg-black/90 rounded-[24px] overflow-hidden cursor-pointer transition-colors group relative flex flex-col justify-end p-6 ${isDark ? 'ring-1 ring-white/10' : ''}`}
               onClick={() => navigate(`/boards/${flow.id}`)}
             >
               <div className="flex items-center justify-between w-full">

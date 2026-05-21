@@ -93,7 +93,7 @@ function SidebarBody() {
             onClick={() => navigate("/boards/new")}
             className={`flex items-center justify-center transition-all hover:scale-[1.02] ${
               isDark
-                ? "bg-white text-black hover:bg-white/90"
+                ? "bg-black text-white border border-white/10 hover:bg-zinc-900"
                 : "bg-black text-white hover:bg-black/90"
             } ${
               collapsed
