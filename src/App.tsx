@@ -23,6 +23,7 @@ import Onboarding from "./pages/Onboarding";
 import ProgramApplicants from "./pages/ProgramApplicants";
 import PublicApplicants from "./pages/PublicApplicants";
 import NotFound from "./pages/NotFound";
+import JoinFlow from "./pages/JoinFlow";
 import AuthLayout from "./components/AuthLayout";
 import { useEffect, useState } from "react";
 
