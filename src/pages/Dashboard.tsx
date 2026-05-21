@@ -531,7 +531,7 @@ export default function Dashboard() {
             </Link>
           </div>
         ) : (
-          <div className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide -mx-8 px-6 md:-mx-4 md:px-4 pt-8 pb-40 -mt-4 -mb-32">
+          <div className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide -mx-8 px-6 md:-mx-4 md:px-4 py-8 -my-6">
             {flows.map((flow, i) => (
               <motion.div
                 key={flow.id}
@@ -539,7 +539,7 @@ export default function Dashboard() {
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ delay: 0.3 + i * 0.06 }}
                 whileHover={{ y: -6, transition: { duration: 0.2 } }}
-                className={`snap-start shrink-0 w-[280px] md:w-[320px] aspect-[4/3] rounded-[24px] overflow-hidden cursor-pointer group transition-colors m-2 ${isDark ? 'bg-black hover:bg-zinc-900 ring-1 ring-white/10' : 'bg-white hover:bg-miiles-gray-50 shadow-md'}`}
+                className={`snap-start shrink-0 w-[280px] md:w-[320px] aspect-[4/3] rounded-[24px] overflow-hidden cursor-pointer group transition-colors m-2 ${isDark ? 'bg-black hover:bg-zinc-900 ring-1 ring-white/10' : 'bg-white hover:bg-miiles-gray-50 shadow-[0_20px_40px_rgba(0,0,0,0.04)]'}`}
               >
                 <Link to={`/boards/${flow.id}`} className="w-full h-full flex flex-col justify-end p-6">
                   <div className={`flex items-center gap-3 ${isDark ? 'text-white' : 'text-black'}`}>
