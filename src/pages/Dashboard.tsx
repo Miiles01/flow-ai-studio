@@ -531,30 +531,31 @@ export default function Dashboard() {
             </Link>
           </div>
         ) : (
-          <div className="flex gap-4 overflow-x-auto pt-4 pb-8 snap-x snap-mandatory scrollbar-hide -mx-8 px-8 md:-mx-4 md:px-4">
+          <div className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide -mx-8 px-6 md:-mx-4 md:px-2 py-4">
             {flows.map((flow, i) => (
-              <motion.div
-                key={flow.id}
-                initial={{ x: 20, opacity: 0 }}
-                animate={{ x: 0, opacity: 1 }}
-                transition={{ delay: 0.3 + i * 0.06 }}
-                whileHover={{ y: -6, transition: { duration: 0.2 } }}
-                className={`snap-start shrink-0 w-[280px] md:w-[320px] aspect-[4/3] rounded-[24px] overflow-hidden cursor-pointer group transition-colors ${isDark ? 'bg-black hover:bg-zinc-900 ring-1 ring-white/10' : 'bg-white hover:bg-miiles-gray-50 shadow-md'}`}
-              >
-                <Link to={`/boards/${flow.id}`} className="w-full h-full flex flex-col justify-end p-6">
-                  <div className={`flex items-center gap-3 ${isDark ? 'text-white' : 'text-black'}`}>
-                    <LayoutDashboard className="w-[22px] h-[22px]" strokeWidth={1.5} />
-                    <span className="font-normal text-[16px] truncate">{flow.name}</span>
-                  </div>
-                </Link>
-              </motion.div>
+              <div key={flow.id} className="snap-start shrink-0 px-2 py-2">
+                <motion.div
+                  initial={{ x: 20, opacity: 0 }}
+                  animate={{ x: 0, opacity: 1 }}
+                  transition={{ delay: 0.3 + i * 0.06 }}
+                  whileHover={{ y: -6, transition: { duration: 0.2 } }}
+                  className={`w-[280px] md:w-[320px] aspect-[4/3] rounded-[24px] overflow-hidden cursor-pointer group transition-colors ${isDark ? 'bg-black hover:bg-zinc-900 ring-1 ring-white/10' : 'bg-white hover:bg-miiles-gray-50 shadow-md'}`}
+                >
+                  <Link to={`/boards/${flow.id}`} className="w-full h-full flex flex-col justify-end p-6">
+                    <div className={`flex items-center gap-3 ${isDark ? 'text-white' : 'text-black'}`}>
+                      <LayoutDashboard className="w-[22px] h-[22px]" strokeWidth={1.5} />
+                      <span className="font-normal text-[16px] truncate">{flow.name}</span>
+                    </div>
+                  </Link>
+                </motion.div>
+              </div>
             ))}
             
             {/* "Ver todos" card at the end of the carousel */}
             {flows.length >= 5 && (
               <motion.div
                 whileHover={{ y: -6, transition: { duration: 0.2 } }}
-                className="snap-start shrink-0 w-[120px] rounded-xl border border-dashed border-muted bg-background flex items-center justify-center cursor-pointer"
+                className="snap-start shrink-0 w-[120px] rounded-xl border border-dashed border-muted bg-background flex items-center justify-center cursor-pointer ml-2 my-2"
               >
                 <Link to="/boards" className="flex flex-col items-center gap-2 text-muted-foreground hover:text-foreground">
                   <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
