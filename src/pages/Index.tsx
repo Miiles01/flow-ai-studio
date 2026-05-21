@@ -16,7 +16,9 @@ import {
   type Edge,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { ArrowLeft, Loader2, Check, Cloud, CloudOff, Settings2, EyeOff, Eye, Trash2, Undo2, Redo2, Palette, Square, Type, Baseline, Sparkles, PanelRight, ListChecks, Plus } from "lucide-react";
+import { ArrowLeft, Loader2, Check, Cloud, CloudOff, Settings2, EyeOff, Eye, Trash2, Undo2, Redo2, Palette, Square, Type, Baseline, Sparkles, PanelRight, ListChecks, Plus, Share2 } from "lucide-react";
+import ShareDialog from "@/components/ShareDialog";
+import { usePlan } from "@/hooks/usePlan";
 import { useHistory } from "@/hooks/useHistory";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { toast } from "sonner";
@@ -67,6 +69,8 @@ const IndexContent = () => {
   const [hideTools, setHideTools] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [taskPanelOpen, setTaskPanelOpen] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
+  const { isPro } = usePlan();
   const [panelWidth, setPanelWidth] = useState(288);
   const panelMinWidth = 288;
   const settingsButtonRef = useRef<HTMLButtonElement>(null);
@@ -342,19 +346,55 @@ const IndexContent = () => {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
+  // Guest (anonymous public) access via ?guest_token=
+  const guestToken = typeof window !== "undefined"
+    ? new URLSearchParams(window.location.search).get("guest_token")
+    : null;
+  const isGuest = !user && !!guestToken;
+
+  // Ownership state: owner | collaborator | guest
+  const [ownerId, setOwnerId] = useState<string | null>(null);
+  const isOwner = !!user && !!ownerId && ownerId === user.id;
+
   // Load flow by id
   useEffect(() => {
     const load = async () => {
-      if (!user || !id || id === "new") {
+      if (!id || id === "new") {
         setLoading(false);
         return;
       }
+
+      // Anonymous guest path
+      if (!user && guestToken) {
+        const { data, error } = await supabase.rpc("get_public_flow", { p_token: guestToken });
+        const f = (data as any[])?.[0];
+        if (error || !f) {
+          toast.error("Tablero no disponible");
+          navigate("/");
+          return;
+        }
+        setName(f.name || "Tablero");
+        setNodes((f.nodes as Node[]) || []);
+        setEdges((f.edges as Edge[]) || []);
+        setOwnerId(f.user_id);
+        lastSavedRef.current = JSON.stringify({ name: f.name, nodes: f.nodes, edges: f.edges });
+        skipNextDirtyRef.current = true;
+        setSaveState("saved");
+        setLoading(false);
+        return;
+      }
+
+      if (!user) {
+        navigate("/login");
+        return;
+      }
+
+      // Authenticated path — RLS allows owners + collaborators
       const { data, error } = await supabase
         .from("flows")
-        .select("name, nodes, edges")
+        .select("name, nodes, edges, user_id")
         .eq("id", id)
-        .eq("user_id", user.id)
-        .single();
+        .maybeSingle();
       if (error || !data) {
         toast.error("Tablero no encontrado");
         navigate("/boards");
@@ -365,6 +405,7 @@ const IndexContent = () => {
       const loadedEdges = ((data.edges as unknown) as Edge[]) || [];
       setNodes(loadedNodes);
       setEdges(loadedEdges);
+      setOwnerId((data as any).user_id);
       lastSavedRef.current = JSON.stringify({ name: data.name, nodes: loadedNodes, edges: loadedEdges });
       skipNextDirtyRef.current = true;
       setSaveState("saved");
@@ -1014,7 +1055,38 @@ const IndexContent = () => {
               )}
             </AnimatePresence>
           </div>
+
+          {/* Share button (owner only) */}
+          {isOwner && id && id !== "new" && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => {
+                    if (!isPro) {
+                      toast.info("Compartir tableros está disponible en el plan Pro");
+                      navigate("/precios");
+                      return;
+                    }
+                    setShareOpen(true);
+                  }}
+                  className="h-9 px-3.5 flex items-center gap-1.5 rounded-full bg-black text-white text-[13px] font-normal shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:bg-[#1F2937] transition-colors"
+                  aria-label="Compartir tablero"
+                >
+                  <Share2 size={14} strokeWidth={1.75} />
+                  Compartir
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" sideOffset={8} className="text-[12px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
+                Invitar colaboradores
+              </TooltipContent>
+            </Tooltip>
+          )}
         </div>
+
+        {/* Share dialog */}
+        {isOwner && id && id !== "new" && (
+          <ShareDialog open={shareOpen} onOpenChange={setShareOpen} flowId={id} />
+        )}
 
         {/* Right: history controls + task panel toggle */}
         {!hideTools && (

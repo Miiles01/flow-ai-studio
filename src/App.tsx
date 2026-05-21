@@ -23,6 +23,7 @@ import Onboarding from "./pages/Onboarding";
 import ProgramApplicants from "./pages/ProgramApplicants";
 import PublicApplicants from "./pages/PublicApplicants";
 import NotFound from "./pages/NotFound";
+import JoinFlow from "./pages/JoinFlow";
 import AuthLayout from "./components/AuthLayout";
 import { useEffect, useState } from "react";
 
@@ -53,7 +54,11 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 const PublicRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth();
   if (loading) return null;
-  if (user) return <Navigate to="/dashboard" replace />;
+  if (user) {
+    const params = new URLSearchParams(window.location.search);
+    const next = params.get("next") || "/dashboard";
+    return <Navigate to={next} replace />;
+  }
   return <>{children}</>;
 };
 
@@ -85,7 +90,8 @@ const App = () => (
             <Route path="/dashboard" element={<DashboardRoute><Dashboard /></DashboardRoute>} />
             <Route path="/boards" element={<DashboardRoute><Boards /></DashboardRoute>} />
             <Route path="/boards/new" element={<ProtectedRoute><Index /></ProtectedRoute>} />
-            <Route path="/boards/:id" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+            <Route path="/boards/join/:token" element={<JoinFlow />} />
+            <Route path="/boards/:id" element={<Index />} />
             <Route path="/programs" element={<DashboardRoute><Programs /></DashboardRoute>} />
             <Route path="/programs/:id" element={<ProgramDetail />} />
             <Route path="/p/:slug" element={<ProgramDetail />} />
