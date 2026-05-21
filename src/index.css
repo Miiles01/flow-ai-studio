@@ -76,6 +76,40 @@
 
     --font-sans: 'Poppins', system-ui, sans-serif;
   }
+
+  .dark {
+    --background: 222 20% 8%;
+    --foreground: 0 0% 95%;
+
+    --primary: 0 0% 95%;
+    --primary-foreground: 222 20% 8%;
+
+    --secondary: 222 20% 12%;
+    --secondary-foreground: 0 0% 95%;
+
+    --muted: 222 20% 14%;
+    --muted-foreground: 215 15% 55%;
+
+    --accent: 231 87% 60%;
+    --accent-foreground: 0 0% 100%;
+
+    --destructive: 355 93% 40%;
+    --destructive-foreground: 355 93% 86%;
+
+    --border: transparent;
+    --input: 222 20% 14%;
+    --ring: 231 87% 60%;
+
+    --card: 222 20% 10%;
+    --card-foreground: 0 0% 95%;
+
+    --popover: 222 20% 10%;
+    --popover-foreground: 0 0% 95%;
+
+    --gradient-card: linear-gradient(to right, hsl(222 20% 10%), hsl(222 20% 12%));
+    --shadow-sm: 8px 6px 30px 0px rgba(0, 0, 0, 0.2);
+    --shadow-md: 0px 100px 170px 0px rgba(0, 0, 0, 0.3);
+  }
 }
 
 @layer base {
@@ -88,6 +122,7 @@
     font-family: var(--font-sans);
     font-weight: 300;
     color: #000000;
+    transition: background-color 0.3s ease, color 0.3s ease;
   }
 
   h1, h2, h3, h4, h5, h6 {

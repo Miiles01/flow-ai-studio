@@ -6,6 +6,8 @@ import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
 import { NavLink } from "@/components/NavLink";
 import { toast } from "sonner";
+import { ThemeProvider, useTheme } from "@/contexts/ThemeContext";
+import { DarkModeToggle } from "@/components/DarkModeToggle";
 import {
   Sidebar,
   SidebarContent,
@@ -31,6 +33,7 @@ function SidebarBody() {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const { user, signOut } = useAuth();
+  const { isDark } = useTheme();
   const navigate = useNavigate();
   const [displayName, setDisplayName] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
@@ -54,25 +57,39 @@ function SidebarBody() {
     ? displayName.charAt(0).toUpperCase()
     : user?.email?.charAt(0).toUpperCase() || "M";
 
+  const sidebarBg = isDark
+    ? "linear-gradient(to bottom, hsl(222 20% 11%), hsl(222 20% 9%))"
+    : "linear-gradient(to bottom, #FDFDFD, #F8F9FD)";
+
   return (
     <Sidebar
       collapsible="icon"
       variant="floating"
       className={`!py-[40px] border-none shadow-none !bg-transparent [&>div[data-sidebar=sidebar]]:bg-transparent [&>div[data-sidebar=sidebar]]:border-none [&>div[data-sidebar=sidebar]]:shadow-none ${collapsed ? "px-3" : "pl-6 pr-2"}`}
     >
-      <div 
-        className="flex flex-col h-full rounded-[50px] overflow-hidden w-full"
-        style={{ background: "linear-gradient(to bottom, #FDFDFD, #F8F9FD)" }}
+      <div
+        className="flex flex-col h-full rounded-[50px] overflow-hidden w-full transition-colors duration-300"
+        style={{ background: sidebarBg }}
       >
         <SidebarContent className="flex flex-col h-full py-4 bg-transparent relative">
         {/* Toggle & Logo */}
         <div className={`pt-2 pb-8 flex flex-col ${collapsed ? "items-center px-2" : "px-8"}`}>
-          <div className={`hidden md:flex w-full ${collapsed ? "justify-center" : "justify-start"} mb-4`}>
+          <div className={`hidden md:flex w-full ${collapsed ? "justify-center" : "justify-between"} mb-4 items-center`}>
             <SidebarTrigger />
+            {!collapsed && <DarkModeToggle />}
           </div>
+          {collapsed && (
+            <div className="mb-3 flex justify-center">
+              <DarkModeToggle />
+            </div>
+          )}
           <div className="flex items-center gap-3">
             <img src={logoImg} alt="miiles" className={collapsed ? "h-6 w-6" : "h-8 w-8"} />
-            {!collapsed && <span className="text-3xl font-normal tracking-tight">miiles</span>}
+            {!collapsed && (
+              <span className={`text-3xl font-normal tracking-tight transition-colors duration-300 ${isDark ? "text-white" : "text-black"}`}>
+                miiles
+              </span>
+            )}
           </div>
         </div>
 
@@ -80,7 +97,11 @@ function SidebarBody() {
         <div className={`mb-8 flex ${collapsed ? "justify-center px-2" : "px-6"}`}>
           <button
             onClick={() => navigate("/boards/new")}
-            className={`flex items-center justify-center bg-black text-white hover:bg-black/90 transition-all hover:scale-[1.02] ${
+            className={`flex items-center justify-center transition-all hover:scale-[1.02] ${
+              isDark
+                ? "bg-white text-black hover:bg-white/90"
+                : "bg-black text-white hover:bg-black/90"
+            } ${
               collapsed
                 ? "w-10 h-10 rounded-full"
                 : "w-full gap-2 rounded-full py-3.5 text-sm font-light"
@@ -96,26 +117,33 @@ function SidebarBody() {
         <SidebarGroup className={collapsed ? "px-2" : "px-6"}>
           <SidebarGroupContent>
             <SidebarMenu className="space-y-1">
-              {mainNav.map((item) => (
-                <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton asChild className="h-auto p-0 hover:bg-transparent">
-                    <NavLink
-                      to={item.url}
-                      end={item.url === "/"}
-                      className={`flex items-center ${collapsed ? "justify-center w-11 h-11 mx-auto rounded-full" : "w-full gap-3 px-5 py-4 rounded-[25px]"} text-black transition-all duration-300 border border-[#F3F4F6] hover:bg-white ${
-                        location.pathname.startsWith(item.url) && item.url !== "/" || (item.url === "/" && location.pathname === "/")
-                          ? "bg-white font-normal shadow-sm"
-                          : "bg-transparent font-light"
-                      }`}
-                      activeClassName=""
-                      title={collapsed ? item.title : undefined}
-                    >
-                      <item.icon className="h-[22px] w-[22px] flex-shrink-0" strokeWidth={1.5} />
-                      {!collapsed && <span className="text-[15px]">{item.title}</span>}
-                    </NavLink>
-                  </SidebarMenuButton>
-                </SidebarMenuItem>
-              ))}
+              {mainNav.map((item) => {
+                const isActive =
+                  location.pathname.startsWith(item.url) && item.url !== "/" ||
+                  (item.url === "/" && location.pathname === "/");
+                return (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton asChild className="h-auto p-0 hover:bg-transparent">
+                      <NavLink
+                        to={item.url}
+                        end={item.url === "/"}
+                        className={`flex items-center ${
+                          collapsed ? "justify-center w-11 h-11 mx-auto rounded-full" : "w-full gap-3 px-5 py-4 rounded-[25px]"
+                        } transition-all duration-300 border ${
+                          isDark
+                            ? `border-white/10 text-white ${isActive ? "bg-white/10 font-normal" : "bg-transparent font-light hover:bg-white/5"}`
+                            : `border-[#F3F4F6] text-black ${isActive ? "bg-white font-normal shadow-sm" : "bg-transparent font-light hover:bg-white"}`
+                        }`}
+                        activeClassName=""
+                        title={collapsed ? item.title : undefined}
+                      >
+                        <item.icon className="h-[22px] w-[22px] flex-shrink-0" strokeWidth={1.5} />
+                        {!collapsed && <span className="text-[15px]">{item.title}</span>}
+                      </NavLink>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                );
+              })}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
@@ -124,16 +152,16 @@ function SidebarBody() {
 
         {/* User profile card at bottom */}
         {collapsed ? (
-          <div 
+          <div
             className="mb-6 mt-3 flex justify-center cursor-pointer hover:opacity-80 transition-opacity"
             onClick={() => navigate("/profile")}
             title="Perfil"
           >
-            <div className="w-10 h-10 rounded-full bg-black flex items-center justify-center flex-shrink-0 overflow-hidden shadow-sm">
+            <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden shadow-sm ${isDark ? "bg-white/20" : "bg-black"}`}>
               {avatarUrl ? (
                 <img src={avatarUrl} alt={displayName || "Usuario"} className="w-full h-full object-cover" />
               ) : (
-                <span className="text-white text-sm font-normal">{initials}</span>
+                <span className={`text-sm font-normal ${isDark ? "text-white" : "text-white"}`}>{initials}</span>
               )}
             </div>
           </div>
@@ -142,7 +170,7 @@ function SidebarBody() {
             className="mx-6 mb-4 mt-3 px-2 py-2 flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
             onClick={() => navigate("/profile")}
           >
-            <div className="w-11 h-11 rounded-full bg-black flex items-center justify-center flex-shrink-0 overflow-hidden shadow-sm">
+            <div className={`w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden shadow-sm ${isDark ? "bg-white/20" : "bg-black"}`}>
               {avatarUrl ? (
                 <img src={avatarUrl} alt={displayName || "Usuario"} className="w-full h-full object-cover" />
               ) : (
@@ -150,7 +178,9 @@ function SidebarBody() {
               )}
             </div>
             <div className="min-w-0">
-              <p className="text-[15px] font-normal truncate">{displayName ? displayName.split(" ")[0] : "Usuario"}</p>
+              <p className={`text-[15px] font-normal truncate ${isDark ? "text-white" : "text-black"}`}>
+                {displayName ? displayName.split(" ")[0] : "Usuario"}
+              </p>
               <p className="text-[13px] text-muted-foreground font-light">Plan Gratis</p>
             </div>
           </div>
@@ -163,8 +193,18 @@ function SidebarBody() {
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
+    <ThemeProvider>
+      <DashboardContent>{children}</DashboardContent>
+    </ThemeProvider>
+  );
+}
+
+function DashboardContent({ children }: { children: ReactNode }) {
+  const { isDark } = useTheme();
+
+  return (
     <SidebarProvider>
-      <div className="min-h-screen flex w-full bg-background">
+      <div className={`min-h-screen flex w-full transition-colors duration-300 ${isDark ? "dark bg-[hsl(222,20%,8%)]" : "bg-background"}`}>
         <SidebarBody />
         <div className="flex-1 flex flex-col min-w-0">
           <header className="h-12 flex md:hidden items-center px-4 sticky top-0 z-10 bg-background">
@@ -176,3 +216,4 @@ export default function DashboardLayout({ children }: { children: ReactNode }) {
     </SidebarProvider>
   );
 }
+
