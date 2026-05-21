@@ -15,6 +15,8 @@ const Login = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const next = searchParams.get("next") || "/dashboard";
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,20 +26,20 @@ const Login = () => {
       toast.error(error.message);
     } else {
       toast.success("¡Bienvenido de vuelta!");
-      navigate("/dashboard");
+      navigate(next);
     }
     setLoading(false);
   };
 
   const handleGoogleLogin = async () => {
     const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: `${window.location.origin}/dashboard`,
+      redirect_uri: `${window.location.origin}${next}`,
     });
     if (result.error) {
       toast.error("Error al iniciar sesión con Google");
     }
     if (result.redirected) return;
-    navigate("/dashboard");
+    navigate(next);
   };
 
   return (
