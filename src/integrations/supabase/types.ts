@@ -139,13 +139,51 @@ export type Database = {
         }
         Relationships: []
       }
+      flow_collaborators: {
+        Row: {
+          added_at: string
+          added_by: string | null
+          flow_id: string
+          id: string
+          role: string
+          user_id: string
+        }
+        Insert: {
+          added_at?: string
+          added_by?: string | null
+          flow_id: string
+          id?: string
+          role?: string
+          user_id: string
+        }
+        Update: {
+          added_at?: string
+          added_by?: string | null
+          flow_id?: string
+          id?: string
+          role?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "flow_collaborators_flow_id_fkey"
+            columns: ["flow_id"]
+            isOneToOne: false
+            referencedRelation: "flows"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       flows: {
         Row: {
           created_at: string
           edges: Json
           id: string
+          is_public: boolean
           name: string
           nodes: Json
+          public_role: string
+          public_token: string
           updated_at: string
           user_id: string
         }
@@ -153,8 +191,11 @@ export type Database = {
           created_at?: string
           edges?: Json
           id?: string
+          is_public?: boolean
           name?: string
           nodes?: Json
+          public_role?: string
+          public_token?: string
           updated_at?: string
           user_id: string
         }
@@ -162,8 +203,11 @@ export type Database = {
           created_at?: string
           edges?: Json
           id?: string
+          is_public?: boolean
           name?: string
           nodes?: Json
+          public_role?: string
+          public_token?: string
           updated_at?: string
           user_id?: string
         }
@@ -323,6 +367,16 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      can_access_flow: { Args: { _flow_id: string }; Returns: boolean }
+      can_edit_flow: { Args: { _flow_id: string }; Returns: boolean }
+      find_user_by_email: {
+        Args: { p_email: string }
+        Returns: {
+          avatar_url: string
+          display_name: string
+          user_id: string
+        }[]
+      }
       get_program_applicants_by_token: {
         Args: { p_token: string }
         Returns: {
@@ -346,6 +400,17 @@ export type Database = {
           youtube_handle: string
         }[]
       }
+      get_public_flow: {
+        Args: { p_token: string }
+        Returns: {
+          edges: Json
+          id: string
+          name: string
+          nodes: Json
+          public_role: string
+          user_id: string
+        }[]
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -353,6 +418,8 @@ export type Database = {
         }
         Returns: boolean
       }
+      is_flow_owner: { Args: { _flow_id: string }; Returns: boolean }
+      join_flow_by_token: { Args: { p_token: string }; Returns: string }
       toggle_applicant_like: {
         Args: { p_application_id: string }
         Returns: boolean
