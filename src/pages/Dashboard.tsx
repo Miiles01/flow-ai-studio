@@ -539,10 +539,10 @@ export default function Dashboard() {
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ delay: 0.3 + i * 0.06 }}
                 whileHover={{ y: -6, transition: { duration: 0.2 } }}
-                className={`snap-start shrink-0 w-[280px] md:w-[320px] aspect-[4/3] rounded-[24px] overflow-hidden cursor-pointer group bg-black hover:bg-black/90 transition-colors ${isDark ? 'ring-1 ring-white/10' : ''}`}
+                className={`snap-start shrink-0 w-[280px] md:w-[320px] aspect-[4/3] rounded-[24px] overflow-hidden cursor-pointer group transition-colors ${isDark ? 'bg-black hover:bg-zinc-900 ring-1 ring-white/10' : 'bg-white hover:bg-miiles-gray-50 shadow-md'}`}
               >
                 <Link to={`/boards/${flow.id}`} className="w-full h-full flex flex-col justify-end p-6">
-                  <div className="flex items-center gap-3 text-white">
+                  <div className={`flex items-center gap-3 ${isDark ? 'text-white' : 'text-black'}`}>
                     <LayoutDashboard className="w-[22px] h-[22px]" strokeWidth={1.5} />
                     <span className="font-normal text-[16px] truncate">{flow.name}</span>
                   </div>

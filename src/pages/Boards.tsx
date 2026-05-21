@@ -140,17 +140,17 @@ export default function Boards() {
               initial={{ y: 10, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: i * 0.05 }}
-              className={`aspect-[4/3] bg-black hover:bg-black/90 rounded-[24px] overflow-hidden cursor-pointer transition-colors group relative flex flex-col justify-end p-6 ${isDark ? 'ring-1 ring-white/10' : ''}`}
+              className={`aspect-[4/3] rounded-[24px] overflow-hidden cursor-pointer transition-colors group relative flex flex-col justify-end p-6 ${isDark ? 'bg-black hover:bg-zinc-900 ring-1 ring-white/10' : 'bg-white hover:bg-miiles-gray-50 shadow-md'}`}
               onClick={() => navigate(`/boards/${flow.id}`)}
             >
               <div className="flex items-center justify-between w-full">
-                <div className="flex items-center gap-3 text-white">
+                <div className={`flex items-center gap-3 ${isDark ? 'text-white' : 'text-black'}`}>
                   <LayoutDashboard className="w-[22px] h-[22px]" strokeWidth={1.5} />
                   <span className="font-normal text-[16px] truncate">{flow.name}</span>
                 </div>
                 <button
                   onClick={(e) => handleDelete(e, flow.id)}
-                  className="p-2 rounded-full opacity-0 group-hover:opacity-100 hover:bg-white/10 text-white/40 hover:text-white transition-all"
+                  className={`p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all ${isDark ? 'hover:bg-white/10 text-white/40 hover:text-white' : 'hover:bg-black/5 text-black/30 hover:text-black'}`}
                   aria-label="Eliminar"
                 >
                   <Trash2 size={16} strokeWidth={1.5} />

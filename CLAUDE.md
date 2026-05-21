@@ -129,9 +129,12 @@ className={`rounded-full ${isDark ? 'bg-black text-white border border-white/10 
 </Card>
 ```
 
-### Card de tablero (negra)
+### Card de tablero
 ```tsx
-className={`aspect-[4/3] bg-black rounded-[24px] overflow-hidden cursor-pointer transition-colors ${isDark ? 'ring-1 ring-white/10' : ''}`}
+// Light: blanca con sombra. Dark: negra con borde sutil
+className={`aspect-[4/3] rounded-[24px] overflow-hidden cursor-pointer transition-colors ${isDark ? 'bg-black hover:bg-zinc-900 ring-1 ring-white/10' : 'bg-white hover:bg-miiles-gray-50 shadow-md'}`}
+// Texto e iconos dentro — también condicionados
+className={`flex items-center gap-3 ${isDark ? 'text-white' : 'text-black'}`}
 ```
 
 ### Card de stats
