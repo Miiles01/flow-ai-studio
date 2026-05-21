@@ -30,8 +30,9 @@ const mainNav = [
 type Conversation = { id: string; title: string; updated_at: string };
 
 function SidebarBody() {
-  const { state } = useSidebar();
+  const { state, setOpenMobile } = useSidebar();
   const collapsed = state === "collapsed";
+  const closeMobile = () => setOpenMobile(false);
   const { user, signOut } = useAuth();
   const { isDark } = useTheme();
   const navigate = useNavigate();
@@ -90,7 +91,7 @@ function SidebarBody() {
         {/* Nuevo Tablero Button */}
         <div className={`mb-8 flex ${collapsed ? "justify-center px-2" : "px-6"}`}>
           <button
-            onClick={() => navigate("/boards/new")}
+            onClick={() => { closeMobile(); navigate("/boards/new"); }}
             className={`flex items-center justify-center transition-all hover:scale-[1.02] ${
               isDark
                 ? "bg-black text-white border border-white/10 hover:bg-zinc-900"
@@ -121,6 +122,7 @@ function SidebarBody() {
                       <NavLink
                         to={item.url}
                         end={item.url === "/"}
+                        onClick={closeMobile}
                         className={`flex items-center ${
                           collapsed ? "justify-center w-11 h-11 mx-auto rounded-full" : "w-full gap-3 px-5 py-4 rounded-[25px]"
                         } transition-all duration-300 border ${
@@ -148,7 +150,7 @@ function SidebarBody() {
         {collapsed ? (
           <div
             className="mb-6 mt-3 flex justify-center cursor-pointer hover:opacity-80 transition-opacity"
-            onClick={() => navigate("/profile")}
+            onClick={() => { closeMobile(); navigate("/profile"); }}
             title="Perfil"
           >
             <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden shadow-sm ${isDark ? "bg-white/20" : "bg-black"}`}>
@@ -162,7 +164,7 @@ function SidebarBody() {
         ) : (
           <div
             className="mx-6 mb-4 mt-3 px-2 py-2 flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
-            onClick={() => navigate("/profile")}
+            onClick={() => { closeMobile(); navigate("/profile"); }}
           >
             <div className={`w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden shadow-sm ${isDark ? "bg-white/20" : "bg-black"}`}>
               {avatarUrl ? (
