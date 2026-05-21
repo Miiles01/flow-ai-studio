@@ -69,6 +69,8 @@ const IndexContent = () => {
   const [hideTools, setHideTools] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [taskPanelOpen, setTaskPanelOpen] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
+  const { isPro } = usePlan();
   const [panelWidth, setPanelWidth] = useState(288);
   const panelMinWidth = 288;
   const settingsButtonRef = useRef<HTMLButtonElement>(null);
