@@ -280,7 +280,7 @@ export default function Dashboard() {
         <motion.div variants={sectionVariants}>
           <Button
             size="sm"
-            className="gap-1.5"
+            className={`gap-1.5 ${isDark ? 'bg-white/10 text-white border border-white/10 hover:bg-white/15' : ''}`}
             onClick={() => {
               loadProfiles();
               setSendOpen(true);
