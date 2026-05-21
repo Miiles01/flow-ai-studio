@@ -16,7 +16,9 @@ import {
   type Edge,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { ArrowLeft, Loader2, Check, Cloud, CloudOff, Settings2, EyeOff, Eye, Trash2, Undo2, Redo2, Palette, Square, Type, Baseline, Sparkles, PanelRight, ListChecks, Plus } from "lucide-react";
+import { ArrowLeft, Loader2, Check, Cloud, CloudOff, Settings2, EyeOff, Eye, Trash2, Undo2, Redo2, Palette, Square, Type, Baseline, Sparkles, PanelRight, ListChecks, Plus, Share2 } from "lucide-react";
+import ShareDialog from "@/components/ShareDialog";
+import { usePlan } from "@/hooks/usePlan";
 import { useHistory } from "@/hooks/useHistory";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { toast } from "sonner";
