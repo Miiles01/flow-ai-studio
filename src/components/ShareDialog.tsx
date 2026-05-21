@@ -111,11 +111,49 @@ const ShareDialog = ({ open, onOpenChange, flowId }: Props) => {
       .eq("id", flowId);
   };
 
-  const copyLink = () => {
-    if (!publicUrl) return;
-    navigator.clipboard.writeText(publicUrl);
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1500);
+  const copyLink = async (e?: React.MouseEvent) => {
+    if (e) {
+      e.preventDefault();
+      e.stopPropagation();
+    }
+    if (!publicUrl) {
+      toast.error("No hay un enlace válido para copiar");
+      return;
+    }
+    
+    try {
+      await navigator.clipboard.writeText(publicUrl);
+      setCopied(true);
+      toast.success("Enlace copiado al portapapeles");
+      setTimeout(() => setCopied(false), 1500);
+    } catch (err) {
+      console.error("Clipboard API failed, using fallback:", err);
+      // Fallback
+      const textArea = document.createElement("textarea");
+      textArea.value = publicUrl;
+      // Avoid scrolling to bottom
+      textArea.style.top = "0";
+      textArea.style.left = "0";
+      textArea.style.position = "fixed";
+      document.body.appendChild(textArea);
+      textArea.focus();
+      textArea.select();
+      
+      try {
+        const successful = document.execCommand('copy');
+        if (successful) {
+          setCopied(true);
+          toast.success("Enlace copiado al portapapeles");
+          setTimeout(() => setCopied(false), 1500);
+        } else {
+          toast.error("No se pudo copiar el enlace");
+        }
+      } catch (err) {
+        console.error("Fallback failed:", err);
+        toast.error("No se pudo copiar el enlace");
+      }
+      document.body.removeChild(textArea);
+    }
   };
 
   const handleInvite = async (e: React.FormEvent) => {
@@ -299,6 +337,7 @@ const ShareDialog = ({ open, onOpenChange, flowId }: Props) => {
                       onFocus={(e) => e.currentTarget.select()}
                     />
                     <button
+                      type="button"
                       onClick={copyLink}
                       className={`h-11 px-5 rounded-full text-[13px] font-normal transition-colors flex items-center gap-2 shrink-0 ${isDark ? 'bg-white text-black hover:bg-gray-200' : 'bg-black text-white hover:bg-[#1F2937]'}`}
                     >
