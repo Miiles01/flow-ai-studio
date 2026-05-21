@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import { Loader2, Plus, LayoutDashboard, Trash2, Sparkles } from "lucide-react";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
@@ -12,6 +13,7 @@ const FREE_BOARD_LIMIT = 10;
 
 export default function Boards() {
   const { user } = useAuth();
+  const { isDark } = useTheme();
   const navigate = useNavigate();
   const [flows, setFlows] = useState<FlowRow[]>([]);
   const [loading, setLoading] = useState(true);
@@ -86,10 +88,10 @@ export default function Boards() {
     <div className="p-8 md:px-12 md:pb-12 md:pt-48 max-w-5xl mx-auto space-y-8">
       <div className="flex items-center justify-between flex-wrap gap-4">
         <div className="flex items-center gap-3">
-          <h1 className="text-2xl md:text-3xl font-normal">Mis Tableros</h1>
+          <h1 className={`text-2xl md:text-3xl font-normal ${isDark ? 'text-white' : 'text-black'}`}>Mis Tableros</h1>
 
           {isPro && (
-            <span className="text-[12px] font-light text-black px-2.5 py-1 rounded-full bg-[#FEEDED] flex items-center gap-1">
+            <span className={`text-[12px] font-light px-2.5 py-1 rounded-full bg-[#FEEDED] flex items-center gap-1 ${isDark ? 'text-white' : 'text-black'}`}>
               <Sparkles size={12} strokeWidth={1.5} /> Pro
             </span>
           )}
@@ -99,6 +101,8 @@ export default function Boards() {
           className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-light transition-colors ${
             atLimit
               ? "bg-miiles-gray-100 text-miiles-gray-400 cursor-not-allowed"
+              : isDark
+              ? "bg-white text-black hover:bg-white/80"
               : "bg-black text-white hover:bg-miiles-pink"
           }`}
           onClick={handleCreate}
@@ -123,9 +127,9 @@ export default function Boards() {
       )}
 
       {flows.length === 0 ? (
-        <div className="text-center py-20 bg-miiles-gray-50 rounded-2xl">
+        <div className={`text-center py-20 rounded-2xl ${isDark ? 'bg-white/5' : 'bg-miiles-gray-50'}`}>
           <LayoutDashboard size={48} className="mx-auto text-miiles-gray-200 mb-4" />
-          <h2 className="text-lg font-normal mb-2">No tienes tableros</h2>
+          <h2 className={`text-lg font-normal mb-2 ${isDark ? 'text-white' : 'text-black'}`}>No tienes tableros</h2>
           <p className="text-sm font-light text-miiles-gray-400">Crea tu primer tablero para organizar tus ideas.</p>
         </div>
       ) : (
@@ -136,17 +140,17 @@ export default function Boards() {
               initial={{ y: 10, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ delay: i * 0.05 }}
-              className="aspect-[4/3] bg-[#F9FAFB] hover:bg-[#F3F4F6] rounded-[24px] overflow-hidden cursor-pointer transition-colors group relative flex flex-col justify-end p-6"
+              className="aspect-[4/3] bg-black hover:bg-black/90 rounded-[24px] overflow-hidden cursor-pointer transition-colors group relative flex flex-col justify-end p-6"
               onClick={() => navigate(`/boards/${flow.id}`)}
             >
               <div className="flex items-center justify-between w-full">
-                <div className="flex items-center gap-3 text-black">
+                <div className="flex items-center gap-3 text-white">
                   <LayoutDashboard className="w-[22px] h-[22px]" strokeWidth={1.5} />
                   <span className="font-normal text-[16px] truncate">{flow.name}</span>
                 </div>
                 <button
                   onClick={(e) => handleDelete(e, flow.id)}
-                  className="p-2 rounded-full opacity-0 group-hover:opacity-100 hover:bg-black/5 text-black/40 hover:text-black transition-all"
+                  className="p-2 rounded-full opacity-0 group-hover:opacity-100 hover:bg-white/10 text-white/40 hover:text-white transition-all"
                   aria-label="Eliminar"
                 >
                   <Trash2 size={16} strokeWidth={1.5} />
