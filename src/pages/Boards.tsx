@@ -90,11 +90,7 @@ export default function Boards() {
         <div className="flex items-center gap-3">
           <h1 className={`text-2xl md:text-3xl font-normal ${isDark ? 'text-white' : 'text-black'}`}>Mis Tableros</h1>
 
-          {isPro && (
-            <span className={`text-[12px] font-light px-2.5 py-1 rounded-full bg-[#FEEDED] flex items-center gap-1 ${isDark ? 'text-white' : 'text-black'}`}>
-              <Sparkles size={12} strokeWidth={1.5} /> Pro
-            </span>
-          )}
+
         </div>
         <button
           disabled={atLimit}
