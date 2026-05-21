@@ -20,6 +20,7 @@ import { ArrowLeft, Loader2, Check, Cloud, CloudOff, Settings2, EyeOff, Eye, Tra
 import ShareDialog from "@/components/ShareDialog";
 import { usePlan } from "@/hooks/usePlan";
 import { useHistory } from "@/hooks/useHistory";
+import { useIsMobile } from "@/hooks/use-mobile";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { toast } from "sonner";
 import { useNavigate, useParams } from "react-router-dom";
@@ -58,6 +59,17 @@ const IndexContent = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { setCenter } = useReactFlow();
+
+  const isMobile = useIsMobile();
+  const [showMobileWarning, setShowMobileWarning] = useState(false);
+
+  useEffect(() => {
+    if (isMobile) {
+      setShowMobileWarning(true);
+      const timer = setTimeout(() => setShowMobileWarning(false), 5000);
+      return () => clearTimeout(timer);
+    }
+  }, [isMobile]);
 
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
@@ -1002,7 +1014,7 @@ const IndexContent = () => {
           </div>
 
           {/* Settings icon + dropdown */}
-          <div ref={settingsRef} className="relative">
+          <div ref={settingsRef} className="relative hidden md:block">
             <button
               ref={settingsButtonRef}
               onClick={() => setSettingsOpen((v) => !v)}
@@ -1090,7 +1102,7 @@ const IndexContent = () => {
 
         {/* Right: history controls + task panel toggle */}
         {!hideTools && (
-          <div className="flex items-center gap-1 pointer-events-auto px-1.5 py-1.5 rounded-full bg-white shadow-[0_8px_30px_rgb(0,0,0,0.06)]">
+          <div className="hidden md:flex items-center gap-1 pointer-events-auto px-1.5 py-1.5 rounded-full bg-white shadow-[0_8px_30px_rgb(0,0,0,0.06)]">
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
@@ -1170,11 +1182,11 @@ const IndexContent = () => {
           onNodeDragStop={onNodeDragStop}
           connectionMode={ConnectionMode.Loose}
           isValidConnection={isValidConnection}
-          panOnDrag={activeDrawShape ? false : interactionMode === "pan" ? true : [1, 2]}
-          selectionOnDrag={activeDrawShape ? false : interactionMode === "edit"}
-          nodesDraggable={activeDrawShape ? false : interactionMode === "edit"}
-          nodesConnectable={activeDrawShape ? false : interactionMode === "edit"}
-          elementsSelectable={activeDrawShape ? false : interactionMode === "edit"}
+          panOnDrag={isMobile ? true : activeDrawShape ? false : interactionMode === "pan" ? true : [1, 2]}
+          selectionOnDrag={isMobile ? false : activeDrawShape ? false : interactionMode === "edit"}
+          nodesDraggable={isMobile ? false : activeDrawShape ? false : interactionMode === "edit"}
+          nodesConnectable={isMobile ? false : activeDrawShape ? false : interactionMode === "edit"}
+          elementsSelectable={isMobile ? false : activeDrawShape ? false : interactionMode === "edit"}
           fitView
           onInit={setReactFlowInstance}
           proOptions={{ hideAttribution: true }}
@@ -1457,7 +1469,7 @@ const IndexContent = () => {
         )}
 
         <AnimatePresence>
-          {!hideTools && (
+          {!hideTools && !isMobile && (
             <motion.div
               key="toolbar"
               initial={{ opacity: 0, x: -10 }}
@@ -1478,7 +1490,7 @@ const IndexContent = () => {
         </AnimatePresence>
 
         <AnimatePresence>
-          {!hideTools && (
+          {!hideTools && !isMobile && (
             <motion.div
               key="prompt-bar"
               initial={{ opacity: 0, y: 10 }}
@@ -1491,6 +1503,22 @@ const IndexContent = () => {
           )}
         </AnimatePresence>
       </div>
+
+      {/* ─── Mobile View Warning Toast ─── */}
+      <AnimatePresence>
+        {isMobile && showMobileWarning && (
+          <motion.div
+            initial={{ opacity: 0, y: 50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 50 }}
+            className="absolute bottom-6 left-4 right-4 z-[9999] flex justify-center pointer-events-none"
+          >
+            <div className="bg-black text-white text-[13px] font-normal px-5 py-3 rounded-2xl shadow-xl max-w-sm text-center pointer-events-auto">
+              Te recomendamos usar Miiles desde un ordenador o tablet para una mejor experiencia.
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {/* ─── Task List Side Panel ─── */}
       <AnimatePresence>

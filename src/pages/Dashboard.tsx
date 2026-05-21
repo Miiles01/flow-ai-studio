@@ -531,7 +531,7 @@ export default function Dashboard() {
             </Link>
           </div>
         ) : (
-          <div className="flex gap-4 overflow-x-auto pt-2 pb-6 snap-x snap-mandatory scrollbar-hide -mx-8 px-8 md:mx-0 md:px-0">
+          <div className="flex gap-4 overflow-x-auto pt-4 pb-8 snap-x snap-mandatory scrollbar-hide -mx-8 px-8 md:-mx-4 md:px-4">
             {flows.map((flow, i) => (
               <motion.div
                 key={flow.id}
