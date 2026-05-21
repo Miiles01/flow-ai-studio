@@ -1055,7 +1055,38 @@ const IndexContent = () => {
               )}
             </AnimatePresence>
           </div>
+
+          {/* Share button (owner only) */}
+          {isOwner && id && id !== "new" && (
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => {
+                    if (!isPro) {
+                      toast.info("Compartir tableros está disponible en el plan Pro");
+                      navigate("/precios");
+                      return;
+                    }
+                    setShareOpen(true);
+                  }}
+                  className="h-9 px-3.5 flex items-center gap-1.5 rounded-full bg-black text-white text-[13px] font-normal shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:bg-[#1F2937] transition-colors"
+                  aria-label="Compartir tablero"
+                >
+                  <Share2 size={14} strokeWidth={1.75} />
+                  Compartir
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="bottom" sideOffset={8} className="text-[12px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
+                Invitar colaboradores
+              </TooltipContent>
+            </Tooltip>
+          )}
         </div>
+
+        {/* Share dialog */}
+        {isOwner && id && id !== "new" && (
+          <ShareDialog open={shareOpen} onOpenChange={setShareOpen} flowId={id} />
+        )}
 
         {/* Right: history controls + task panel toggle */}
         {!hideTools && (
