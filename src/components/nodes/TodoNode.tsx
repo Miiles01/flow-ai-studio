@@ -4,6 +4,7 @@ import {
   Plus, Trash2, ArrowUp, ArrowDown, Minus, Check, Baseline, Heading1, Heading2, Square,
 } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useTheme } from "@/contexts/ThemeContext";
 
 export type TodoItem = {
   id: string;
@@ -43,6 +44,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
   const { getNodes, setNodes } = useReactFlow();
   const selectedNodes = getNodes().filter((n) => n.selected);
   const isSingleSelected = selected && selectedNodes.length === 1;
+  const { isDark } = useTheme();
 
   const nodeData = data as TodoNodeData;
   const showTitle = nodeData.showTitle ?? true;
@@ -188,7 +190,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
               animate={{ opacity: 1, y: 0, scale: 1 }}
               exit={{ opacity: 0, y: 10, scale: 0.95 }}
               transition={{ type: "spring", damping: 20, stiffness: 300 }}
-              className="flex items-center gap-1.5 bg-white rounded-xl shadow-[0_4px_20px_rgb(0,0,0,0.14)] px-3 py-1.5 border border-[#E5E7EB] shrink-0"
+              className={`flex items-center gap-1.5 rounded-xl shadow-[0_4px_20px_rgb(0,0,0,0.14)] px-3 py-1.5 shrink-0 border ${isDark ? 'bg-[#1C1C1E] border-white/10' : 'bg-white border-[#E5E7EB]'}`}
             >
               {/* Show / Hide Title — H1 */}
               <button
@@ -277,7 +279,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                   </div>
                 </button>
                 {activePicker === "bg" && (
-                  <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px]">
+                  <div className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px] ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-gray-100'}`}>
                     {RAINBOW_COLORS.map((c) => (
                       <button
                         key={c.value}
@@ -312,7 +314,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                   <Baseline size={13} style={{ color: textColor }} className="stroke-[2.5]" />
                 </button>
                 {activePicker === "text" && (
-                  <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px]">
+                  <div className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px] ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-gray-100'}`}>
                     {RAINBOW_COLORS.map((c) => (
                       <button
                         key={c.value}

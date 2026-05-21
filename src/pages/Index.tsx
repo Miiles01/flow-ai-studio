@@ -25,6 +25,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { toast } from "sonner";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import { supabase } from "@/integrations/supabase/client";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -58,6 +59,7 @@ const IndexContent = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { isDark } = useTheme();
   const { setCenter } = useReactFlow();
 
   const isMobile = useIsMobile();
@@ -996,32 +998,31 @@ const IndexContent = () => {
 
         {/* Left: back + name + settings */}
         <div className="flex items-center gap-2 pointer-events-auto">
-          {/* Name pill */}
-          <div className="flex items-center gap-1 pl-2 pr-4 py-1.5 rounded-full bg-white shadow-[0_8px_30px_rgb(0,0,0,0.06)] min-w-0">
+          <div className={`flex items-center gap-1 pl-2 pr-4 py-1.5 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.06)] min-w-0 ${isDark ? 'bg-black text-white ring-1 ring-white/10' : 'bg-white text-black'}`}>
             <button
               onClick={() => navigate("/boards")}
-              className="p-2 rounded-full hover:bg-[#F3F4F6] transition-colors text-[#6B7280] hover:text-black"
+              className={`p-2 rounded-full transition-colors ${isDark ? 'hover:bg-white/10 text-[#9CA3AF] hover:text-white' : 'hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black'}`}
               aria-label="Volver"
             >
               <ArrowLeft size={18} strokeWidth={1.5} />
             </button>
-            <div className="w-[1px] h-5 bg-[#E5E7EB] mx-1" />
+            <div className={`w-[1px] h-5 mx-1 ${isDark ? 'bg-white/10' : 'bg-[#E5E7EB]'}`} />
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className="bg-transparent text-[14px] font-normal tracking-tight outline-none focus:ring-0 px-2 py-1 rounded hover:bg-[#F3F4F6] transition-colors min-w-0 max-w-[40vw]"
+              className={`bg-transparent text-[14px] font-normal tracking-tight outline-none focus:ring-0 px-2 py-1 rounded transition-colors min-w-0 max-w-[40vw] ${isDark ? 'hover:bg-white/10' : 'hover:bg-[#F3F4F6]'}`}
             />
           </div>
 
           {/* Settings icon + dropdown */}
-          <div ref={settingsRef} className="relative hidden md:block">
+          <div ref={settingsRef} className="relative hidden md:block pointer-events-auto">
             <button
               ref={settingsButtonRef}
-              onClick={() => setSettingsOpen((v) => !v)}
-              className={`w-9 h-9 flex items-center justify-center rounded-full bg-white shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-all hover:bg-[#F3F4F6] ${settingsOpen ? "bg-[#F3F4F6]" : ""}`}
+              onClick={() => setSettingsOpen(!settingsOpen)}
+              className={`w-9 h-9 flex items-center justify-center rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-all ${isDark ? 'bg-black text-white ring-1 ring-white/10 hover:bg-white/10' : 'bg-white hover:bg-[#F3F4F6]'} ${settingsOpen ? (isDark ? "bg-white/10" : "bg-[#F3F4F6]") : ""}`}
               aria-label="Configuración del tablero"
             >
-              <Settings2 size={16} strokeWidth={1.5} className="text-[#6B7280]" />
+              <Settings2 size={16} strokeWidth={1.5} className={isDark ? 'text-[#9CA3AF]' : 'text-[#6B7280]'} />
             </button>
 
             <AnimatePresence>
@@ -1031,19 +1032,19 @@ const IndexContent = () => {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -6, scale: 0.97 }}
                   transition={{ duration: 0.15, ease: "easeOut" }}
-                  className="absolute top-[calc(100%+8px)] left-0 w-52 bg-white rounded-2xl shadow-[0_12px_40px_rgb(0,0,0,0.10)] overflow-hidden z-50"
+                  className={`absolute top-[calc(100%+8px)] left-0 w-52 rounded-2xl shadow-[0_12px_40px_rgb(0,0,0,0.10)] overflow-hidden z-50 ${isDark ? 'bg-[#1C1C1E] border border-white/10 text-white' : 'bg-white text-black'}`}
                 >
                   <div className="px-3 py-2.5">
                     <p className="text-[10px] text-[#9CA3AF] font-light uppercase tracking-widest mb-1 px-2">Ajustes</p>
                     <button
                       onClick={() => { setHideTools((v) => !v); setSettingsOpen(false); }}
-                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#F3F4F6] transition-colors text-left"
+                      className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors text-left ${isDark ? 'hover:bg-white/10' : 'hover:bg-[#F3F4F6]'}`}
                     >
                       {hideTools
-                        ? <Eye size={15} strokeWidth={1.5} className="text-[#6B7280] shrink-0" />
-                        : <EyeOff size={15} strokeWidth={1.5} className="text-[#6B7280] shrink-0" />
+                        ? <Eye size={15} strokeWidth={1.5} className={isDark ? 'text-[#9CA3AF] shrink-0' : 'text-[#6B7280] shrink-0'} />
+                        : <EyeOff size={15} strokeWidth={1.5} className={isDark ? 'text-[#9CA3AF] shrink-0' : 'text-[#6B7280] shrink-0'} />
                       }
-                      <span className="text-[13px] font-normal text-black">
+                      <span className={`text-[13px] font-normal ${isDark ? 'text-white' : 'text-black'}`}>
                         {hideTools ? "Mostrar herramientas" : "Ocultar herramientas"}
                       </span>
                     </button>
@@ -1055,10 +1056,10 @@ const IndexContent = () => {
                         setSettingsOpen(false);
                         toast.success("Lienzo limpiado correctamente");
                       }}
-                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl hover:bg-[#FEE2E2] hover:text-[#EF4444] transition-colors text-left group"
+                      className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors text-left group ${isDark ? 'hover:bg-[#EF4444]/20 hover:text-[#EF4444]' : 'hover:bg-[#FEE2E2] hover:text-[#EF4444]'}`}
                     >
-                      <Trash2 size={15} strokeWidth={1.5} className="text-[#6B7280] group-hover:text-[#EF4444] shrink-0 transition-colors" />
-                      <span className="text-[13px] font-normal text-black group-hover:text-[#EF4444] transition-colors">
+                      <Trash2 size={15} strokeWidth={1.5} className={`shrink-0 transition-colors ${isDark ? 'text-[#9CA3AF] group-hover:text-[#EF4444]' : 'text-[#6B7280] group-hover:text-[#EF4444]'}`} />
+                      <span className={`text-[13px] font-normal transition-colors ${isDark ? 'text-white group-hover:text-[#EF4444]' : 'text-black group-hover:text-[#EF4444]'}`}>
                         Limpiar lienzo
                       </span>
                     </button>
@@ -1067,7 +1068,6 @@ const IndexContent = () => {
               )}
             </AnimatePresence>
           </div>
-
           {/* Share button (owner only) */}
           {isOwner && id && id !== "new" && (
             <Tooltip>
@@ -1081,7 +1081,7 @@ const IndexContent = () => {
                     }
                     setShareOpen(true);
                   }}
-                  className="h-9 px-3.5 flex items-center gap-1.5 rounded-full bg-black text-white text-[13px] font-normal shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:bg-[#1F2937] transition-colors"
+                  className={`h-9 px-3.5 flex items-center gap-1.5 rounded-full text-[13px] font-normal shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-colors ${isDark ? 'bg-white text-black hover:bg-gray-200' : 'bg-black text-white hover:bg-[#1F2937]'}`}
                   aria-label="Compartir tablero"
                 >
                   <Share2 size={14} strokeWidth={1.75} />
@@ -1102,7 +1102,7 @@ const IndexContent = () => {
 
         {/* Right: history controls + task panel toggle */}
         {!hideTools && (
-          <div className="hidden md:flex items-center gap-1 pointer-events-auto px-1.5 py-1.5 rounded-full bg-white shadow-[0_8px_30px_rgb(0,0,0,0.06)]">
+          <div className={`hidden md:flex items-center gap-1 pointer-events-auto px-1.5 py-1.5 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.06)] ${isDark ? 'bg-black text-white ring-1 ring-white/10' : 'bg-white'}`}>
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
@@ -1110,8 +1110,8 @@ const IndexContent = () => {
                   disabled={!canUndo}
                   className={`w-9 h-9 flex items-center justify-center rounded-full transition-all ${
                     canUndo
-                      ? "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
-                      : "text-[#D1D5DB] cursor-not-allowed"
+                      ? isDark ? "hover:bg-white/10 text-[#9CA3AF] hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
+                      : isDark ? "text-white/20 cursor-not-allowed" : "text-[#D1D5DB] cursor-not-allowed"
                   }`}
                   aria-label="Deshacer"
                 >
@@ -1129,8 +1129,8 @@ const IndexContent = () => {
                   disabled={!canRedo}
                   className={`w-9 h-9 flex items-center justify-center rounded-full transition-all ${
                     canRedo
-                      ? "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
-                      : "text-[#D1D5DB] cursor-not-allowed"
+                      ? isDark ? "hover:bg-white/10 text-[#9CA3AF] hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
+                      : isDark ? "text-white/20 cursor-not-allowed" : "text-[#D1D5DB] cursor-not-allowed"
                   }`}
                   aria-label="Rehacer"
                 >
@@ -1143,7 +1143,7 @@ const IndexContent = () => {
             </Tooltip>
 
             {/* Divider */}
-            <div className="w-[1px] h-4 bg-[#E5E7EB] mx-0.5" />
+            <div className={`w-[1px] h-4 mx-0.5 ${isDark ? 'bg-white/10' : 'bg-[#E5E7EB]'}`} />
 
             {/* Task Panel Toggle */}
             <Tooltip>
@@ -1152,8 +1152,8 @@ const IndexContent = () => {
                   onClick={() => setTaskPanelOpen((v) => !v)}
                   className={`w-9 h-9 flex items-center justify-center rounded-full transition-all ${
                     taskPanelOpen
-                      ? "bg-[#F3F4F6] text-black"
-                      : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
+                      ? isDark ? "bg-white/10 text-white" : "bg-[#F3F4F6] text-black"
+                      : isDark ? "hover:bg-white/10 text-[#9CA3AF] hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
                   }`}
                   aria-label="Panel de tareas"
                 >
@@ -1187,13 +1187,15 @@ const IndexContent = () => {
           nodesDraggable={isMobile ? false : activeDrawShape ? false : interactionMode === "edit"}
           nodesConnectable={isMobile ? false : activeDrawShape ? false : interactionMode === "edit"}
           elementsSelectable={isMobile ? false : activeDrawShape ? false : interactionMode === "edit"}
+          panOnScroll={true}
+          selectionMode={2}
           fitView
           onInit={setReactFlowInstance}
           proOptions={{ hideAttribution: true }}
-          className={`bg-white ${interactionMode === "pan" ? "pan-mode" : "edit-mode"} ${isMultiSelection ? "multi-select-active" : ""}`}
+          className={`${isDark ? 'bg-[#0f0f11]' : 'bg-white'} ${interactionMode === "pan" ? "pan-mode" : "edit-mode"} ${isMultiSelection ? "multi-select-active" : ""}`}
           style={{ cursor: activeDrawShape ? "crosshair" : "inherit" }}
         >
-          <Background variant={BackgroundVariant.Dots} gap={32} size={1} color="#E5E7EB" />
+          <Background variant={BackgroundVariant.Dots} gap={32} size={1} color={isDark ? "#333333" : "#E5E7EB"} />
           {!hideTools && <Controls position="bottom-left" showInteractive={false} />}
         </ReactFlow>
 
@@ -1363,7 +1365,7 @@ const IndexContent = () => {
                   transform: "translateX(-50%)",
                   zIndex: 9999,
                 }}
-                className="flex items-center gap-1 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] px-2 py-1.5 border border-gray-100/50 pointer-events-auto"
+                className={`flex items-center gap-1 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] px-2 py-1.5 pointer-events-auto ${isDark ? 'bg-[#1C1C1E] border border-white/10 text-white' : 'bg-white border border-gray-100/50 text-black'}`}
               >
                 <span className="text-[11px] font-medium text-gray-400 px-1.5 border-r border-gray-100 mr-1 select-none">
                   {selectedNodes.length} seleccionados
@@ -1529,8 +1531,8 @@ const IndexContent = () => {
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: "100%", opacity: 0 }}
             transition={{ type: "spring", damping: 28, stiffness: 260 }}
-            className="absolute top-0 right-0 h-full bg-white z-50 flex flex-col select-none"
-            style={{ width: panelWidth, borderLeft: "1px solid #F3F4F6" }}
+            className={`absolute top-0 right-0 h-full z-50 flex flex-col select-none pointer-events-auto ${isDark ? 'bg-black border-l border-white/10 text-white' : 'bg-white border-l border-gray-100 text-black'}`}
+            style={{ width: panelWidth }}
           >
             {/* Drag-resize handle */}
             <div

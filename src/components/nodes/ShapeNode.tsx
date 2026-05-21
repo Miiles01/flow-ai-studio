@@ -1,6 +1,7 @@
 import { memo, useState, useRef, useEffect } from "react";
 import { Handle, Position, type NodeProps, NodeResizer, useReactFlow, useViewport } from "@xyflow/react";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTheme } from "@/contexts/ThemeContext";
 import { Square, Circle, Triangle, Hexagon, Star, Plus, Minus, Palette, Bold, Italic, Underline, Diamond, Trash2, Baseline, Check } from "lucide-react";
 
 export type ShapeNodeData = {
@@ -59,6 +60,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
   const inputRef = useRef<HTMLInputElement>(null);
   const { setNodes, getNodes } = useReactFlow();
   const { zoom } = useViewport();
+  const { isDark } = useTheme();
 
   const selectedNodes = getNodes().filter((n) => n.selected);
   const isSingleSelected = selected && selectedNodes.length === 1;
@@ -123,7 +125,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 4 }}
               transition={{ duration: 0.15 }}
-              className="flex items-center gap-0.5 bg-white rounded-xl shadow-[0_4px_24px_rgb(0,0,0,0.12)] px-2 py-1.5 border border-gray-100/50"
+              className={`flex items-center gap-0.5 rounded-xl shadow-[0_4px_24px_rgb(0,0,0,0.12)] px-2 py-1.5 ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-gray-100/50'}`}
             >
               {/* Shape Selector flyout */}
               <div className="flex items-center gap-0.5">
@@ -198,7 +200,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
 
                 {/* Fill Color Popover */}
                 {activePicker === "fill" && (
-                  <div className="absolute bottom-full mb-2 left-0 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 p-2.5 grid grid-cols-5 gap-1.5 z-30 w-[150px]">
+                  <div className={`absolute bottom-full mb-2 left-0 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] p-2.5 grid grid-cols-5 gap-1.5 z-30 w-[150px] ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-gray-100'}`}>
                     {RAINBOW_COLORS.map((c) => (
                       <button
                         key={c.value}
@@ -215,7 +217,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
 
                 {/* Border Color Popover */}
                 {activePicker === "border" && (
-                  <div className="absolute bottom-full mb-2 left-0 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 p-2.5 grid grid-cols-5 gap-1.5 z-30 w-[150px]">
+                  <div className={`absolute bottom-full mb-2 left-0 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] p-2.5 grid grid-cols-5 gap-1.5 z-30 w-[150px] ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-gray-100'}`}>
                     {RAINBOW_COLORS.map((c) => (
                       <button
                         key={c.value}
@@ -232,7 +234,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
 
                 {/* Text Color Popover */}
                 {activePicker === "text" && (
-                  <div className="absolute bottom-full mb-2 left-0 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 p-2.5 flex gap-1.5 z-30">
+                  <div className={`absolute bottom-full mb-2 left-0 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] p-2.5 flex gap-1.5 z-30 ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-gray-100'}`}>
                     {TEXT_COLOR_PALETTE.map((c) => (
                       <button
                         key={c.value}

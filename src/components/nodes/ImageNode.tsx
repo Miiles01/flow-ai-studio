@@ -2,6 +2,7 @@ import { memo, useState, useRef, useCallback } from "react";
 import { Handle, Position, type NodeProps, NodeResizer, useReactFlow, useViewport } from "@xyflow/react";
 import { ImageIcon, Link2, Maximize2, Minimize2, AlertTriangle, RotateCcw, Trash2, Check } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useTheme } from "@/contexts/ThemeContext";
 
 export type ImageNodeData = {
   imageUrl?: string;
@@ -15,6 +16,7 @@ const HANDLE_CLASS =
 const ImageNode = ({ id, data, selected }: NodeProps) => {
   const { getNodes, setNodes } = useReactFlow();
   const { zoom } = useViewport();
+  const { isDark } = useTheme();
   const nodeData = data as ImageNodeData;
   const selectedNodes = getNodes().filter((n) => n.selected);
   const isSingleSelected = selected && selectedNodes.length === 1;
@@ -103,7 +105,7 @@ const ImageNode = ({ id, data, selected }: NodeProps) => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 4 }}
               transition={{ duration: 0.15 }}
-              className="flex items-center gap-1 px-2 py-1.5 bg-white rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-[#F3F4F6]"
+              className={`flex items-center gap-1 px-2 py-1.5 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border ${isDark ? 'bg-[#1C1C1E] border-white/10' : 'bg-white border-[#F3F4F6]'}`}
             >
               {/* URL button */}
               <button
@@ -152,7 +154,7 @@ const ImageNode = ({ id, data, selected }: NodeProps) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.12 }}
-            className="absolute top-[calc(100%+10px)] left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 bg-white rounded-2xl shadow-[0_8px_32px_rgb(0,0,0,0.14)] px-3 py-2.5 border border-[#F3F4F6]"
+            className={`absolute top-[calc(100%+10px)] left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 rounded-2xl shadow-[0_8px_32px_rgb(0,0,0,0.14)] px-3 py-2.5 border ${isDark ? 'bg-[#1C1C1E] border-white/10' : 'bg-white border-[#F3F4F6]'}`}
             style={{ minWidth: 300 }}
             onMouseDown={(e) => e.stopPropagation()}
           >
@@ -168,7 +170,7 @@ const ImageNode = ({ id, data, selected }: NodeProps) => {
                 if (e.key === "Escape") setShowInput(false);
               }}
               placeholder="https://ejemplo.com/imagen.jpg"
-              className="flex-1 text-[12px] font-light text-black outline-none border-none bg-transparent placeholder-gray-400 nodrag nopan"
+              className={`flex-1 text-[12px] font-light outline-none border-none bg-transparent placeholder-gray-400 nodrag nopan ${isDark ? 'text-white' : 'text-black'}`}
             />
             <button
               onClick={handleConfirmUrl}
@@ -197,7 +199,7 @@ const ImageNode = ({ id, data, selected }: NodeProps) => {
             className="w-full h-full flex flex-col items-center justify-center gap-3 cursor-pointer bg-[#F9FAFB] border-2 border-dashed border-[#E5E7EB] rounded-lg hover:border-[#4059F1]/40 hover:bg-[#EEF2FF]/20 transition-all"
             onClick={handleOpenInput}
           >
-            <div className="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center">
+            <div className={`w-10 h-10 rounded-xl shadow-sm flex items-center justify-center ${isDark ? 'bg-[#1C1C1E]' : 'bg-white'}`}>
               <ImageIcon size={18} className="text-[#9CA3AF]" strokeWidth={1.5} />
             </div>
             <div className="flex flex-col items-center gap-1">
@@ -232,7 +234,7 @@ const ImageNode = ({ id, data, selected }: NodeProps) => {
             className="w-full h-full flex flex-col items-center justify-center gap-3 bg-[#FEF2F2] border border-[#FECACA] rounded-lg cursor-pointer"
             onClick={handleOpenInput}
           >
-            <div className="w-10 h-10 rounded-xl bg-white shadow-sm flex items-center justify-center">
+            <div className={`w-10 h-10 rounded-xl shadow-sm flex items-center justify-center ${isDark ? 'bg-[#1C1C1E]' : 'bg-white'}`}>
               <AlertTriangle size={18} className="text-[#EF4444]" strokeWidth={1.5} />
             </div>
             <div className="flex flex-col items-center gap-1">

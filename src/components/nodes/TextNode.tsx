@@ -5,6 +5,7 @@ import {
   ExternalLink, Trash2, Minus, Plus, Baseline, Check,
 } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
+import { useTheme } from "@/contexts/ThemeContext";
 
 export type TextNodeData = {
   html?: string;
@@ -38,13 +39,14 @@ function LinkPopover({
 }) {
   const href = anchor.getAttribute("href") || "";
   const display = href.length > 32 ? href.slice(0, 30) + "…" : href;
+  const { isDark } = useTheme();
   return (
     <motion.div
       initial={{ opacity: 0, y: 4 }}
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 4 }}
       transition={{ duration: 0.12 }}
-      className="absolute -bottom-11 left-0 flex items-center gap-1.5 bg-white rounded-xl shadow-[0_4px_20px_rgb(0,0,0,0.14)] px-2.5 py-1.5 z-30 pointer-events-auto"
+      className={`absolute -bottom-11 left-0 flex items-center gap-1.5 rounded-xl shadow-[0_4px_20px_rgb(0,0,0,0.14)] px-2.5 py-1.5 z-30 pointer-events-auto ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white'}`}
       style={{ whiteSpace: "nowrap" }}
       onMouseDown={(e) => e.stopPropagation()}
     >
@@ -60,7 +62,7 @@ function LinkPopover({
       </button>
       <button
         onClick={(e) => { e.stopPropagation(); onEdit(); }}
-        className="text-[11px] font-normal text-black hover:underline px-0.5 transition-colors"
+        className={`text-[11px] font-normal hover:underline px-0.5 transition-colors ${isDark ? 'text-white' : 'text-black'}`}
         title="Editar"
       >
         Editar
@@ -80,6 +82,7 @@ function LinkPopover({
 const TextNode = ({ id, data, selected }: NodeProps) => {
   const { getNodes, setNodes } = useReactFlow();
   const { zoom } = useViewport();
+  const { isDark } = useTheme();
   const selectedNodes = getNodes().filter((n) => n.selected);
   const isSingleSelected = selected && selectedNodes.length === 1;
   const nodeData = data as TextNodeData;
@@ -269,7 +272,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
               exit={{ opacity: 0, y: 4 }}
               transition={{ duration: 0.15 }}
             >
-              <div className="flex items-center gap-0.5 bg-white rounded-xl shadow-[0_4px_24px_rgb(0,0,0,0.12)] px-2 py-1.5">
+              <div className={`flex items-center gap-0.5 rounded-xl shadow-[0_4px_24px_rgb(0,0,0,0.12)] px-2 py-1.5 ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white'}`}>
                 {/* Font size */}
                 <button
                   onClick={() => setFontSize((f) => Math.max(10, f - 1))}
@@ -297,7 +300,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                   onKeyDown={(e) => {
                     e.stopPropagation();
                   }}
-                  className="nodrag nopan text-[11px] font-normal text-black w-6 text-center bg-transparent border-none outline-none focus:bg-neutral-100 rounded select-all py-0.5 font-sans"
+                  className={`nodrag nopan text-[11px] font-normal w-6 text-center bg-transparent border-none outline-none rounded select-all py-0.5 font-sans ${isDark ? 'text-white focus:bg-white/10' : 'text-black focus:bg-neutral-100'}`}
                   style={{ width: "24px" }}
                 />
                 <button
@@ -391,7 +394,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                     <Baseline size={13} style={{ color: textColor }} className="stroke-[2.5]" />
                   </button>
                   {activePicker === "text" && (
-                    <div className="absolute top-8 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-[0_4px_25px_rgba(0,0,0,0.18)] p-2.5 flex gap-1.5 border border-[#E5E7EB] z-50">
+                    <div className={`absolute top-8 left-1/2 -translate-x-1/2 rounded-xl shadow-[0_4px_25px_rgba(0,0,0,0.18)] p-2.5 flex gap-1.5 z-50 ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-[#E5E7EB]'}`}>
                       {TEXT_COLOR_PALETTE.map((c) => (
                         <button
                           key={c.value}
@@ -432,7 +435,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -4 }}
                     transition={{ duration: 0.12 }}
-                    className="absolute top-[calc(100%+6px)] left-1/2 -translate-x-1/2 flex items-center gap-2 bg-white rounded-xl shadow-[0_8px_32px_rgb(0,0,0,0.14)] px-3 py-2 z-40"
+                    className={`absolute top-[calc(100%+6px)] left-1/2 -translate-x-1/2 flex items-center gap-2 rounded-xl shadow-[0_8px_32px_rgb(0,0,0,0.14)] px-3 py-2 z-40 ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white'}`}
                     style={{ minWidth: 280 }}
                     onMouseDown={(e) => e.stopPropagation()}
                   >
@@ -446,11 +449,11 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                         if (e.key === "Escape") { e.preventDefault(); setShowLinkInput(false); }
                       }}
                       placeholder="https://..."
-                      className="flex-1 text-[13px] font-normal outline-none text-black placeholder:text-[#D1D5DB]"
+                      className={`flex-1 text-[13px] font-normal outline-none placeholder:text-[#D1D5DB] bg-transparent ${isDark ? 'text-white' : 'text-black'}`}
                     />
                     <button
                       onClick={confirmLink}
-                      className="px-3 py-1 rounded-lg bg-black text-white text-[12px] font-normal hover:bg-black/80 transition-colors shrink-0"
+                      className={`px-3 py-1 rounded-lg text-[12px] font-normal transition-colors shrink-0 ${isDark ? 'bg-white text-black hover:bg-white/90' : 'bg-black text-white hover:bg-black/80'}`}
                     >
                       {linkUrl.trim() ? "Aplicar" : "Quitar"}
                     </button>
@@ -496,7 +499,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
           wordBreak: "break-word",
           color: "#000",
         }}
-        className="nodrag nopan w-full h-full font-sans font-light focus:outline-none [&_a]:text-[#4059F1] [&_a]:underline [&_a]:cursor-pointer"
+        className={`nodrag nopan w-full h-full font-sans font-light focus:outline-none [&_a]:text-[#4059F1] [&_a]:underline [&_a]:cursor-pointer ${isDark ? 'text-white' : 'text-black'}`}
       />
 
       {/* Handles — visible solo cuando está seleccionado (rendered last to stack on top) */}

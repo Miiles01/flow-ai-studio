@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MousePointer, Hand, Type, ListTodo, ImageIcon, SquareDashed } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
+import { useTheme } from "@/contexts/ThemeContext";
 
 type ToolbarProps = {
   onAddNode: (type: string) => void;
@@ -78,6 +79,7 @@ const Toolbar = ({
   const [selectedShape, setSelectedShape] = useState("square");
   const [flyoutOpen, setFlyoutOpen] = useState(false);
   const flyoutTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const { isDark } = useTheme();
 
   const openFlyout = () => {
     if (flyoutTimer.current) clearTimeout(flyoutTimer.current);
@@ -93,7 +95,7 @@ const Toolbar = ({
     <motion.div
       initial={{ x: -40, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
-      className="absolute inset-y-0 my-auto h-fit left-6 z-10 flex flex-col items-center gap-1.5 px-2 py-3 rounded-[30px] bg-white shadow-[0_8px_30px_rgb(0,0,0,0.06)] font-sans"
+      className={`absolute inset-y-0 my-auto h-fit left-6 z-10 flex flex-col items-center gap-1.5 px-2 py-3 rounded-[30px] shadow-[0_8px_30px_rgb(0,0,0,0.06)] font-sans ${isDark ? 'bg-[#1C1C1E] border border-white/10 text-white' : 'bg-white'}`}
     >
       {/* Seleccionar */}
       <Tooltip>
@@ -105,8 +107,8 @@ const Toolbar = ({
             }}
             className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
               interactionMode === "edit" && activeDrawShape === null
-                ? "bg-black text-white shadow-md"
-                : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
+                ? isDark ? "bg-white text-black shadow-md" : "bg-black text-white shadow-md"
+                : isDark ? "hover:bg-white/10 text-gray-400 hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
             }`}
           >
             <MousePointer size={18} strokeWidth={1.5} />
@@ -127,8 +129,8 @@ const Toolbar = ({
             }}
             className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
               interactionMode === "pan"
-                ? "bg-black text-white shadow-md"
-                : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
+                ? isDark ? "bg-white text-black shadow-md" : "bg-black text-white shadow-md"
+                : isDark ? "hover:bg-white/10 text-gray-400 hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
             }`}
           >
             <Hand size={18} strokeWidth={1.5} />
@@ -139,7 +141,7 @@ const Toolbar = ({
         </TooltipContent>
       </Tooltip>
 
-      <div className="w-6 h-[1px] bg-[#E5E7EB] my-1" />
+      <div className={`w-6 h-[1px] my-1 ${isDark ? 'bg-white/10' : 'bg-[#E5E7EB]'}`} />
 
       {/* Formas con flyout */}
       <div className="relative flex items-center" onMouseEnter={openFlyout} onMouseLeave={closeFlyout}>
@@ -156,14 +158,14 @@ const Toolbar = ({
               }}
               className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
                 activeDrawShape !== null && activeDrawShape !== "text" && activeDrawShape !== "todo" && activeDrawShape !== "image" && activeDrawShape !== "frame"
-                  ? "bg-black text-white shadow-md hover:bg-black/90"
-                  : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
+                  ? isDark ? "bg-white text-black shadow-md hover:bg-white/90" : "bg-black text-white shadow-md hover:bg-black/90"
+                  : isDark ? "hover:bg-white/10 text-gray-400 hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
               }`}
             >
               {currentShape.icon}
             </button>
           </TooltipTrigger>
-          <TooltipContent side="right" sideOffset={12} className="text-[13px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
+          <TooltipContent side="right" sideOffset={12} className={`text-[13px] border-none rounded-full px-3 py-1.5 font-light ${isDark ? 'bg-white text-black' : 'bg-black text-white'}`}>
             Formas
           </TooltipContent>
         </Tooltip>
@@ -177,7 +179,7 @@ const Toolbar = ({
               transition={{ duration: 0.14, ease: "easeOut" }}
               onMouseEnter={openFlyout}
               onMouseLeave={closeFlyout}
-              className="absolute left-[calc(100%+10px)] -top-2 bg-[#111] rounded-2xl p-2 shadow-[0_16px_48px_rgb(0,0,0,0.3)] z-50"
+              className={`absolute left-[calc(100%+10px)] -top-2 rounded-2xl p-2 shadow-[0_16px_48px_rgb(0,0,0,0.3)] z-50 ${isDark ? 'bg-[#2C2C2E] border border-white/10' : 'bg-[#111]'}`}
             >
               <div className="flex flex-row gap-1">
                 {SHAPES.map((shape) => (
@@ -192,8 +194,8 @@ const Toolbar = ({
                     title={shape.label}
                     className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all ${
                       selectedShape === shape.id
-                        ? "bg-white text-black"
-                        : "text-[#777] hover:bg-[#222] hover:text-white"
+                        ? isDark ? "bg-white text-black" : "bg-white text-black"
+                        : isDark ? "text-gray-400 hover:bg-white/10 hover:text-white" : "text-[#777] hover:bg-[#222] hover:text-white"
                     }`}
                   >
                     {shape.icon}
@@ -219,8 +221,8 @@ const Toolbar = ({
             }}
             className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
               activeDrawShape === "text"
-                ? "bg-black text-white"
-                : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
+                ? isDark ? "bg-white text-black shadow-md" : "bg-black text-white"
+                : isDark ? "hover:bg-white/10 text-gray-400 hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
             }`}
           >
             <Type size={18} strokeWidth={1.5} />
@@ -245,8 +247,8 @@ const Toolbar = ({
             }}
             className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
               activeDrawShape === "todo"
-                ? "bg-black text-white"
-                : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
+                ? isDark ? "bg-white text-black shadow-md" : "bg-black text-white"
+                : isDark ? "hover:bg-white/10 text-gray-400 hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
             }`}
           >
             <ListTodo size={18} strokeWidth={1.5} />
@@ -271,8 +273,8 @@ const Toolbar = ({
             }}
             className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
               activeDrawShape === "image"
-                ? "bg-black text-white"
-                : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
+                ? isDark ? "bg-white text-black shadow-md" : "bg-black text-white"
+                : isDark ? "hover:bg-white/10 text-gray-400 hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
             }`}
           >
             <ImageIcon size={18} strokeWidth={1.5} />
@@ -297,8 +299,8 @@ const Toolbar = ({
             }}
             className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
               activeDrawShape === "frame"
-                ? "bg-black text-white"
-                : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
+                ? isDark ? "bg-white text-black shadow-md" : "bg-black text-white"
+                : isDark ? "hover:bg-white/10 text-gray-400 hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
             }`}
           >
             <SquareDashed size={18} strokeWidth={1.5} />

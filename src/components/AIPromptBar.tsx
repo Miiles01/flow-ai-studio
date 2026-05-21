@@ -2,6 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { LayoutGrid, ArrowUp, Loader2, EyeOff } from "lucide-react";
 import logoImg from "@/assets/logo.png";
+import { useTheme } from "@/contexts/ThemeContext";
 
 type AIPromptBarProps = {
   onGenerate: (prompt: string) => void;
@@ -13,6 +14,7 @@ const AIPromptBar = ({ onGenerate, isGenerating }: AIPromptBarProps) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+  const { isDark } = useTheme();
   
   const textareaRef = useRef<HTMLTextAreaElement>(null);
 
@@ -53,7 +55,7 @@ const AIPromptBar = ({ onGenerate, isGenerating }: AIPromptBarProps) => {
           >
             <button
               onClick={() => setIsExpanded(true)}
-              className="w-[52px] h-[52px] bg-black rounded-[18px] flex items-center justify-center shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:-translate-y-1.5 transition-transform duration-300"
+              className={`w-[52px] h-[52px] bg-black rounded-[18px] flex items-center justify-center shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:-translate-y-1.5 transition-transform duration-300 ${isDark ? 'ring-1 ring-white/10' : ''}`}
               aria-label="Abrir asistente IA"
             >
               <img src={logoImg} alt="AI" className="w-7 h-7" />
@@ -94,7 +96,7 @@ const AIPromptBar = ({ onGenerate, isGenerating }: AIPromptBarProps) => {
             </div>
 
             {/* Main Prompt Bar */}
-            <div className="bg-black rounded-[40px] pt-8 pb-4 px-6 shadow-2xl transition-all duration-300 relative z-10 w-full">
+            <div className={`bg-black rounded-[40px] pt-8 pb-4 px-6 shadow-2xl transition-all duration-300 relative z-10 w-full ${isDark ? 'ring-1 ring-white/10' : ''}`}>
               <textarea
                 ref={textareaRef}
                 rows={1}

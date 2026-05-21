@@ -5,6 +5,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
 import { AuthProvider, useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/integrations/supabase/client";
+import { ThemeProvider } from "@/contexts/ThemeContext";
 import DashboardLayout from "@/components/DashboardLayout";
 import Landing from "./pages/Landing";
 import About from "./pages/About";
@@ -80,36 +81,38 @@ const App = () => (
     <TooltipProvider>
       <Toaster />
       <Sonner />
-      <BrowserRouter>
-        <AuthProvider>
-          <Routes>
-            <Route path="/" element={<Landing />} />
-            <Route path="/acerca-de" element={<About />} />
-            <Route path="/precios" element={<Pricing />} />
-            <Route path="/funciones" element={<Features />} />
-            <Route path="/dashboard" element={<DashboardRoute><Dashboard /></DashboardRoute>} />
-            <Route path="/boards" element={<DashboardRoute><Boards /></DashboardRoute>} />
-            <Route path="/boards/new" element={<ProtectedRoute><Index /></ProtectedRoute>} />
-            <Route path="/boards/join/:token" element={<JoinFlow />} />
-            <Route path="/boards/:id" element={<Index />} />
-            <Route path="/programs" element={<DashboardRoute><Programs /></DashboardRoute>} />
-            <Route path="/programs/:id" element={<ProgramDetail />} />
-            <Route path="/p/:slug" element={<ProgramDetail />} />
-            <Route path="/search" element={<DashboardRoute><SearchAI /></DashboardRoute>} />
-            <Route path="/search/:conversationId" element={<DashboardRoute><SearchAI /></DashboardRoute>} />
-            {/* <Route path="/flows" element={<DashboardRoute><Index /></DashboardRoute>} /> */}
-            <Route path="/profile" element={<DashboardRoute><Profile /></DashboardRoute>} />
-            <Route path="/programs/:id/applicants" element={<ProgramApplicants />} />
-            <Route path="/applicants/:token" element={<PublicApplicants />} />
-            <Route path="/onboarding" element={<ProtectedOnboardingRoute><Onboarding /></ProtectedOnboardingRoute>} />
-            <Route element={<AuthLayout />}>
-              <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
-              <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
-            </Route>
-            <Route path="*" element={<NotFound />} />
-          </Routes>
-        </AuthProvider>
-      </BrowserRouter>
+      <ThemeProvider>
+        <BrowserRouter>
+          <AuthProvider>
+            <Routes>
+              <Route path="/" element={<Landing />} />
+              <Route path="/acerca-de" element={<About />} />
+              <Route path="/precios" element={<Pricing />} />
+              <Route path="/funciones" element={<Features />} />
+              <Route path="/dashboard" element={<DashboardRoute><Dashboard /></DashboardRoute>} />
+              <Route path="/boards" element={<DashboardRoute><Boards /></DashboardRoute>} />
+              <Route path="/boards/new" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+              <Route path="/boards/join/:token" element={<JoinFlow />} />
+              <Route path="/boards/:id" element={<Index />} />
+              <Route path="/programs" element={<DashboardRoute><Programs /></DashboardRoute>} />
+              <Route path="/programs/:id" element={<ProgramDetail />} />
+              <Route path="/p/:slug" element={<ProgramDetail />} />
+              <Route path="/search" element={<DashboardRoute><SearchAI /></DashboardRoute>} />
+              <Route path="/search/:conversationId" element={<DashboardRoute><SearchAI /></DashboardRoute>} />
+              {/* <Route path="/flows" element={<DashboardRoute><Index /></DashboardRoute>} /> */}
+              <Route path="/profile" element={<DashboardRoute><Profile /></DashboardRoute>} />
+              <Route path="/programs/:id/applicants" element={<ProgramApplicants />} />
+              <Route path="/applicants/:token" element={<PublicApplicants />} />
+              <Route path="/onboarding" element={<ProtectedOnboardingRoute><Onboarding /></ProtectedOnboardingRoute>} />
+              <Route element={<AuthLayout />}>
+                <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
+                <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
+              </Route>
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </AuthProvider>
+        </BrowserRouter>
+      </ThemeProvider>
     </TooltipProvider>
   </QueryClientProvider>
 );
