@@ -207,7 +207,7 @@ const Profile = () => {
             />
           )}
           <div className="min-w-0">
-            <h1 className="text-xl font-normal truncate">{displayName || "Usuario"}</h1>
+            <h1 className="text-xl font-normal truncate text-foreground">{displayName || "Usuario"}</h1>
             <p className="text-xs text-muted-foreground font-light">{user?.email}</p>
             {niche && (
               <Badge variant="secondary" className="mt-2 text-xs font-light">

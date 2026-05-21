@@ -300,7 +300,7 @@ export default function Programs() {
     <div className="p-8 md:px-12 md:pb-12 md:pt-48 max-w-5xl mx-auto space-y-8">
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-normal">Programas de marcas</h1>
+          <h1 className="text-2xl font-normal text-foreground">Programas de marcas</h1>
           <p className="text-sm text-miiles-gray-400 font-light mt-2">Encuentra y guarda programas de afiliados y colaboraciones</p>
         </div>
         {isAdmin && (
@@ -384,7 +384,7 @@ export default function Programs() {
             )}
             <div className="flex items-start justify-between pr-12">
               <div className="flex-1 min-w-0">
-                <p className="font-normal">{p.brand_name}</p>
+                <p className="font-normal text-foreground">{p.brand_name}</p>
                 <p className="text-xs text-miiles-gray-400 font-light mt-0.5">{p.name}</p>
               </div>
               <div className="flex items-center gap-2 flex-shrink-0">

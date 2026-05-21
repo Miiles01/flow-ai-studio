@@ -258,7 +258,7 @@ export default function Dashboard() {
               </span>
             )}
           </div>
-          <p className="text-2xl font-normal">{unreadCount}</p>
+          <p className="text-2xl font-normal text-foreground">{unreadCount}</p>
           <p className="text-xs text-miiles-gray-400 font-light mt-1">Notificaciones</p>
         </motion.div>
 
@@ -270,7 +270,7 @@ export default function Dashboard() {
           <div className="w-8 h-8 rounded-sm bg-background shadow-sm flex items-center justify-center mb-3">
             <Heart size={16} className="text-miiles-pink" />
           </div>
-          <p className="text-2xl font-normal">{savedCount}</p>
+          <p className="text-2xl font-normal text-foreground">{savedCount}</p>
           <p className="text-xs text-miiles-gray-400 font-light mt-1">Proyectos</p>
         </motion.div>
       </motion.div>
@@ -515,8 +515,8 @@ export default function Dashboard() {
       {/* Boards Carousel */}
       <motion.div variants={sectionVariants}>
         <div className="flex items-center justify-between mb-5">
-          <h2 className="text-lg font-normal">Mis tableros</h2>
-          <Link to="/boards" className="text-xs text-accent hover:underline flex items-center gap-1 font-light">
+          <h2 className="text-lg font-normal text-foreground">Mis tableros</h2>
+          <Link to="/boards" className="text-xs text-foreground/60 hover:text-foreground flex items-center gap-1 font-light">
             Ver todos <ArrowRight size={12} />
           </Link>
         </div>
@@ -524,7 +524,7 @@ export default function Dashboard() {
         {flows.length === 0 ? (
           <div className={`text-center py-16 rounded-xl border border-dashed border-muted ${isDark ? 'bg-white/5' : 'bg-background'}`}>
             <LayoutDashboard size={40} className="mx-auto text-muted-foreground/50 mb-3" />
-            <p className="text-sm font-normal mb-1">Sin tableros recientes</p>
+            <p className="text-sm font-normal mb-1 text-foreground">Sin tableros recientes</p>
             <p className="text-xs font-light text-muted-foreground">Crea uno nuevo para organizar tus ideas.</p>
             <Link to="/boards" className={`mt-4 inline-block px-4 py-2 text-xs rounded-full ${isDark ? 'bg-black text-white border border-white/10 hover:bg-zinc-900' : 'bg-foreground text-background'}`}>
               Crear tablero
