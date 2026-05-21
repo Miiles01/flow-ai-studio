@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import { Bell, Heart, ArrowRight, Loader2, Send, X, Trash2, LayoutDashboard } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -53,6 +54,7 @@ type UserApplication = {
 
 export default function Dashboard() {
   const { user } = useAuth();
+  const { isDark } = useTheme();
   const [displayName, setDisplayName] = useState("");
   const [flows, setFlows] = useState<any[]>([]);
   const [savedCount, setSavedCount] = useState(0);
@@ -231,9 +233,9 @@ export default function Dashboard() {
     >
       {/* Greeting */}
       <motion.div variants={sectionVariants}>
-        <h1 className="text-2xl md:text-3xl font-normal leading-tight">
+        <h1 className={`text-2xl md:text-3xl font-normal leading-tight ${isDark ? 'text-white' : 'text-black'}`}>
           {getGreeting()},<br />
-          <span className="text-black font-medium">{displayName}</span>
+          <span className={`font-medium ${isDark ? 'text-white' : 'text-black'}`}>{displayName}</span>
         </h1>
         <p className="text-miiles-gray-400 mt-2 text-sm font-light">
           ¿Qué vamos hacer hoy?
@@ -245,7 +247,7 @@ export default function Dashboard() {
         {/* Notifications card */}
         <motion.div
           whileHover={{ y: -4, transition: { duration: 0.2 } }}
-          className="p-5 rounded-lg shadow-md cursor-pointer"
+          className={`p-5 rounded-lg shadow-md cursor-pointer ${isDark ? 'bg-white/5' : 'bg-white'}`}
           onClick={() => setNotifOpen(true)}
         >
           <div className="w-8 h-8 rounded-sm bg-background shadow-sm flex items-center justify-center mb-3 relative">
@@ -262,7 +264,7 @@ export default function Dashboard() {
 
         <motion.div
           whileHover={{ y: -4, transition: { duration: 0.2 } }}
-          className="p-5 rounded-lg shadow-md cursor-pointer"
+          className={`p-5 rounded-lg shadow-md cursor-pointer ${isDark ? 'bg-white/5' : 'bg-white'}`}
           onClick={() => setAppsOpen(true)}
         >
           <div className="w-8 h-8 rounded-sm bg-background shadow-sm flex items-center justify-center mb-3">
@@ -520,7 +522,7 @@ export default function Dashboard() {
         </div>
         
         {flows.length === 0 ? (
-          <div className="text-center py-16 bg-background rounded-xl border border-dashed border-muted">
+          <div className={`text-center py-16 rounded-xl border border-dashed border-muted ${isDark ? 'bg-white/5' : 'bg-background'}`}>
             <LayoutDashboard size={40} className="mx-auto text-muted-foreground/50 mb-3" />
             <p className="text-sm font-normal mb-1">Sin tableros recientes</p>
             <p className="text-xs font-light text-muted-foreground">Crea uno nuevo para organizar tus ideas.</p>
@@ -537,10 +539,10 @@ export default function Dashboard() {
                 animate={{ x: 0, opacity: 1 }}
                 transition={{ delay: 0.3 + i * 0.06 }}
                 whileHover={{ y: -6, transition: { duration: 0.2 } }}
-                className="snap-start shrink-0 w-[280px] md:w-[320px] aspect-[4/3] rounded-[24px] bg-[#F9FAFB] overflow-hidden cursor-pointer group"
+                className="snap-start shrink-0 w-[280px] md:w-[320px] aspect-[4/3] rounded-[24px] overflow-hidden cursor-pointer group bg-black hover:bg-black/90 transition-colors"
               >
                 <Link to={`/boards/${flow.id}`} className="w-full h-full flex flex-col justify-end p-6">
-                  <div className="flex items-center gap-3 text-black">
+                  <div className="flex items-center gap-3 text-white">
                     <LayoutDashboard className="w-[22px] h-[22px]" strokeWidth={1.5} />
                     <span className="font-normal text-[16px] truncate">{flow.name}</span>
                   </div>
