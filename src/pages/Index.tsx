@@ -1081,11 +1081,10 @@ const IndexContent = () => {
                     }
                     setShareOpen(true);
                   }}
-                  className={`h-9 px-3.5 flex items-center gap-1.5 rounded-full text-[13px] font-normal shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-colors ${isDark ? 'bg-white text-black hover:bg-gray-200' : 'bg-black text-white hover:bg-[#1F2937]'}`}
+                  className={`w-9 h-9 flex items-center justify-center rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-all ${isDark ? 'bg-white text-black hover:bg-gray-200' : 'bg-black text-white hover:bg-[#1F2937]'}`}
                   aria-label="Compartir tablero"
                 >
                   <Share2 size={14} strokeWidth={1.75} />
-                  Compartir
                 </button>
               </TooltipTrigger>
               <TooltipContent side="bottom" sideOffset={8} className="text-[12px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
