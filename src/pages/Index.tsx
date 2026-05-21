@@ -342,19 +342,55 @@ const IndexContent = () => {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
+  // Guest (anonymous public) access via ?guest_token=
+  const guestToken = typeof window !== "undefined"
+    ? new URLSearchParams(window.location.search).get("guest_token")
+    : null;
+  const isGuest = !user && !!guestToken;
+
+  // Ownership state: owner | collaborator | guest
+  const [ownerId, setOwnerId] = useState<string | null>(null);
+  const isOwner = !!user && !!ownerId && ownerId === user.id;
+
   // Load flow by id
   useEffect(() => {
     const load = async () => {
-      if (!user || !id || id === "new") {
+      if (!id || id === "new") {
         setLoading(false);
         return;
       }
+
+      // Anonymous guest path
+      if (!user && guestToken) {
+        const { data, error } = await supabase.rpc("get_public_flow", { p_token: guestToken });
+        const f = (data as any[])?.[0];
+        if (error || !f) {
+          toast.error("Tablero no disponible");
+          navigate("/");
+          return;
+        }
+        setName(f.name || "Tablero");
+        setNodes((f.nodes as Node[]) || []);
+        setEdges((f.edges as Edge[]) || []);
+        setOwnerId(f.user_id);
+        lastSavedRef.current = JSON.stringify({ name: f.name, nodes: f.nodes, edges: f.edges });
+        skipNextDirtyRef.current = true;
+        setSaveState("saved");
+        setLoading(false);
+        return;
+      }
+
+      if (!user) {
+        navigate("/login");
+        return;
+      }
+
+      // Authenticated path — RLS allows owners + collaborators
       const { data, error } = await supabase
         .from("flows")
-        .select("name, nodes, edges")
+        .select("name, nodes, edges, user_id")
         .eq("id", id)
-        .eq("user_id", user.id)
-        .single();
+        .maybeSingle();
       if (error || !data) {
         toast.error("Tablero no encontrado");
         navigate("/boards");
@@ -365,6 +401,7 @@ const IndexContent = () => {
       const loadedEdges = ((data.edges as unknown) as Edge[]) || [];
       setNodes(loadedNodes);
       setEdges(loadedEdges);
+      setOwnerId((data as any).user_id);
       lastSavedRef.current = JSON.stringify({ name: data.name, nodes: loadedNodes, edges: loadedEdges });
       skipNextDirtyRef.current = true;
       setSaveState("saved");
