@@ -75,7 +75,7 @@ function SidebarBody() {
         {/* Toggle & Logo */}
         <div className={`pt-2 pb-8 flex flex-col ${collapsed ? "items-center px-2" : "px-8"}`}>
           <div className={`hidden md:flex w-full ${collapsed ? "justify-center" : "justify-start"} mb-4`}>
-            <SidebarTrigger />
+            <SidebarTrigger className={isDark ? "text-white hover:bg-white/10" : ""} />
           </div>
           <div className="flex items-center gap-3">
             <img src={logoImg} alt="miiles" className={collapsed ? "h-6 w-6" : "h-8 w-8"} />
@@ -202,7 +202,7 @@ function DashboardContent({ children }: { children: ReactNode }) {
         <SidebarBody />
         <div className="flex-1 flex flex-col min-w-0 relative">
           <header className="h-12 flex md:hidden items-center px-4 sticky top-0 z-10 bg-background">
-            <SidebarTrigger />
+            <SidebarTrigger className={isDark ? "text-white hover:bg-white/10" : ""} />
           </header>
           {/* Dark mode toggle — fixed top-right of the page area */}
           <div className="fixed top-5 right-6 z-50">
