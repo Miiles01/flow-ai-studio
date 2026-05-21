@@ -9,8 +9,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { toast } from "sonner";
-import { Loader2, Link as LinkIcon, Copy, X, Mail, Check } from "lucide-react";
+import { Loader2, Link as LinkIcon, Copy, X, Mail, Check, ChevronDown } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
+import { useTheme } from "@/contexts/ThemeContext";
 
 type Role = "viewer" | "editor";
 
@@ -42,8 +43,10 @@ const ShareDialog = ({ open, onOpenChange, flowId }: Props) => {
   const [inviting, setInviting] = useState(false);
   const [copied, setCopied] = useState(false);
 
+  const { isDark } = useTheme();
+
   const publicUrl =
-    publicToken ? `${window.location.origin}/boards/join/${publicToken}` : "";
+    publicToken ? `${window.location.protocol}//${window.location.host}/boards/join/${publicToken}` : "";
 
   const loadData = async () => {
     setLoading(true);
@@ -177,10 +180,10 @@ const ShareDialog = ({ open, onOpenChange, flowId }: Props) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent className="max-w-md rounded-3xl border-none shadow-[0_20px_60px_rgb(0,0,0,0.15)]">
+      <DialogContent className={`max-w-md rounded-[28px] border-none shadow-[0_20px_60px_rgb(0,0,0,0.15)] ${isDark ? 'bg-[#1C1C1E] text-white' : 'bg-white text-black'}`}>
         <DialogHeader>
           <DialogTitle className="text-[18px] font-normal">Compartir tablero</DialogTitle>
-          <DialogDescription className="text-[13px] font-light text-[#6B7280]">
+          <DialogDescription className={`text-[13px] font-light ${isDark ? 'text-[#9CA3AF]' : 'text-[#6B7280]'}`}>
             Invita a tu equipo o genera un enlace para colaborar en tiempo real.
           </DialogDescription>
         </DialogHeader>
@@ -190,36 +193,39 @@ const ShareDialog = ({ open, onOpenChange, flowId }: Props) => {
             <Loader2 className="animate-spin text-[#9CA3AF]" size={20} />
           </div>
         ) : (
-          <div className="space-y-6">
+          <div className="space-y-7 mt-2">
             {/* Email invite */}
             <div>
-              <p className="text-[12px] font-light uppercase tracking-wider text-[#9CA3AF] mb-2">
+              <p className={`text-[13px] font-medium mb-3 ${isDark ? 'text-white' : 'text-black'}`}>
                 Invitar por correo
               </p>
               <form onSubmit={handleInvite} className="flex items-center gap-2">
                 <div className="relative flex-1">
-                  <Mail size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-[#9CA3AF]" />
+                  <Mail size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9CA3AF]" />
                   <Input
                     type="email"
                     placeholder="correo@ejemplo.com"
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
-                    className="pl-9 h-10 rounded-full bg-[#F3F4F6] text-[13px]"
+                    className={`pl-9 h-11 rounded-full text-[13px] border-none focus-visible:ring-1 focus-visible:ring-[#4059F1] ${isDark ? 'bg-white/5 text-white placeholder:text-white/40' : 'bg-[#F3F4F6] text-black placeholder:text-[#9CA3AF]'}`}
                   />
                 </div>
-                <select
-                  value={inviteRole}
-                  onChange={(e) => setInviteRole(e.target.value as Role)}
-                  className="text-[13px] font-light px-3 h-10 rounded-full bg-[#F3F4F6] border-none outline-none cursor-pointer"
-                >
-                  <option value="editor">Editor</option>
-                  <option value="viewer">Lector</option>
-                </select>
+                <div className="relative">
+                  <select
+                    value={inviteRole}
+                    onChange={(e) => setInviteRole(e.target.value as Role)}
+                    className={`appearance-none text-[13px] font-light pl-4 pr-8 h-11 rounded-full border-none outline-none cursor-pointer focus:ring-1 focus:ring-[#4059F1] ${isDark ? 'bg-white/5 text-white hover:bg-white/10' : 'bg-[#F3F4F6] text-black hover:bg-[#E5E7EB]'}`}
+                  >
+                    <option value="editor">Editor</option>
+                    <option value="viewer">Lector</option>
+                  </select>
+                  <ChevronDown size={14} className={`absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none ${isDark ? 'text-white/50' : 'text-[#6B7280]'}`} />
+                </div>
                 <button
                   type="submit"
                   disabled={inviting}
-                  className="h-10 px-4 rounded-full bg-black text-white text-[13px] font-normal hover:bg-[#1F2937] transition-colors disabled:opacity-50"
+                  className={`h-11 px-5 rounded-full text-[13px] font-normal transition-colors disabled:opacity-50 ${isDark ? 'bg-white text-black hover:bg-gray-200' : 'bg-black text-white hover:bg-[#1F2937]'}`}
                 >
                   {inviting ? <Loader2 size={14} className="animate-spin" /> : "Invitar"}
                 </button>
@@ -228,31 +234,34 @@ const ShareDialog = ({ open, onOpenChange, flowId }: Props) => {
 
             {/* Collaborators list */}
             {collaborators.length > 0 && (
-              <div className="space-y-2">
+              <div className="space-y-2.5">
                 {collaborators.map((c) => (
                   <div key={c.id} className="flex items-center justify-between gap-2 py-1">
-                    <div className="flex items-center gap-2.5 min-w-0">
-                      <div className="w-7 h-7 rounded-full bg-[#E5E7EB] flex items-center justify-center overflow-hidden shrink-0">
+                    <div className="flex items-center gap-3 min-w-0">
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center overflow-hidden shrink-0 ${isDark ? 'bg-white/10' : 'bg-[#E5E7EB]'}`}>
                         {c.avatar_url ? (
                           <img src={c.avatar_url} alt={c.display_name} className="w-full h-full object-cover" />
                         ) : (
-                          <span className="text-[10px] font-medium text-[#6B7280]">{initials(c.display_name)}</span>
+                          <span className={`text-[11px] font-medium ${isDark ? 'text-white/60' : 'text-[#6B7280]'}`}>{initials(c.display_name)}</span>
                         )}
                       </div>
-                      <span className="text-[13px] font-light truncate">{c.display_name}</span>
+                      <span className="text-[13.5px] font-light truncate">{c.display_name}</span>
                     </div>
-                    <div className="flex items-center gap-1">
-                      <select
-                        value={c.role}
-                        onChange={(e) => updateCollabRole(c.id, e.target.value as Role)}
-                        className="text-[12px] font-light px-2 h-8 rounded-full bg-transparent hover:bg-[#F3F4F6] border-none outline-none cursor-pointer"
-                      >
-                        <option value="editor">Editor</option>
-                        <option value="viewer">Lector</option>
-                      </select>
+                    <div className="flex items-center gap-1.5">
+                      <div className="relative">
+                        <select
+                          value={c.role}
+                          onChange={(e) => updateCollabRole(c.id, e.target.value as Role)}
+                          className={`appearance-none text-[12.5px] font-light pl-3 pr-7 h-8 rounded-full border-none outline-none cursor-pointer ${isDark ? 'bg-transparent hover:bg-white/10 text-white' : 'bg-transparent hover:bg-[#F3F4F6] text-black'}`}
+                        >
+                          <option value="editor">Editor</option>
+                          <option value="viewer">Lector</option>
+                        </select>
+                        <ChevronDown size={12} className={`absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none ${isDark ? 'text-white/50' : 'text-[#6B7280]'}`} />
+                      </div>
                       <button
                         onClick={() => removeCollab(c.id)}
-                        className="w-8 h-8 flex items-center justify-center rounded-full hover:bg-[#FEE2E2] text-[#9CA3AF] hover:text-[#EF4444] transition-colors"
+                        className={`w-8 h-8 flex items-center justify-center rounded-full transition-colors ${isDark ? 'hover:bg-[#EF4444]/20 text-[#9CA3AF] hover:text-[#EF4444]' : 'hover:bg-[#FEE2E2] text-[#9CA3AF] hover:text-[#EF4444]'}`}
                         aria-label="Quitar"
                       >
                         <X size={14} />
@@ -263,17 +272,17 @@ const ShareDialog = ({ open, onOpenChange, flowId }: Props) => {
               </div>
             )}
 
-            <div className="h-[1px] bg-[#F3F4F6]" />
+            <div className={`h-[1px] ${isDark ? 'bg-white/10' : 'bg-[#F3F4F6]'}`} />
 
             {/* Public link */}
             <div>
-              <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center justify-between mb-4">
                 <div>
-                  <p className="text-[13px] font-normal flex items-center gap-2">
-                    <LinkIcon size={14} className="text-[#6B7280]" />
+                  <p className="text-[13.5px] font-medium flex items-center gap-2">
+                    <LinkIcon size={15} className={isDark ? 'text-white/70' : 'text-[#6B7280]'} />
                     Enlace público
                   </p>
-                  <p className="text-[11px] font-light text-[#9CA3AF] mt-0.5">
+                  <p className={`text-[12px] font-light mt-1 ${isDark ? 'text-[#9CA3AF]' : 'text-[#6B7280]'}`}>
                     Cualquiera con el enlace podrá acceder
                   </p>
                 </div>
@@ -281,32 +290,35 @@ const ShareDialog = ({ open, onOpenChange, flowId }: Props) => {
               </div>
 
               {isPublic && (
-                <div className="space-y-2">
+                <div className="space-y-3">
                   <div className="flex items-center gap-2">
                     <Input
                       readOnly
                       value={publicUrl}
-                      className="h-10 rounded-full bg-[#F3F4F6] text-[12px] font-light text-[#6B7280]"
+                      className={`h-11 rounded-full text-[13px] font-light border-none focus-visible:ring-1 focus-visible:ring-[#4059F1] ${isDark ? 'bg-white/5 text-white/70' : 'bg-[#F3F4F6] text-[#6B7280]'}`}
                       onFocus={(e) => e.currentTarget.select()}
                     />
                     <button
                       onClick={copyLink}
-                      className="h-10 px-4 rounded-full bg-black text-white text-[13px] font-normal hover:bg-[#1F2937] transition-colors flex items-center gap-1.5"
+                      className={`h-11 px-5 rounded-full text-[13px] font-normal transition-colors flex items-center gap-2 shrink-0 ${isDark ? 'bg-white text-black hover:bg-gray-200' : 'bg-black text-white hover:bg-[#1F2937]'}`}
                     >
-                      {copied ? <Check size={14} /> : <Copy size={14} />}
+                      {copied ? <Check size={15} /> : <Copy size={15} />}
                       {copied ? "Copiado" : "Copiar"}
                     </button>
                   </div>
-                  <div className="flex items-center gap-2 text-[12px] font-light text-[#6B7280]">
+                  <div className={`flex items-center gap-2 text-[12.5px] font-light ${isDark ? 'text-[#9CA3AF]' : 'text-[#6B7280]'}`}>
                     Permisos del enlace:
-                    <select
-                      value={publicRole}
-                      onChange={(e) => changePublicRole(e.target.value as Role)}
-                      className="text-[12px] font-light px-2 h-7 rounded-full bg-[#F3F4F6] border-none outline-none cursor-pointer"
-                    >
-                      <option value="editor">Editor</option>
-                      <option value="viewer">Lector</option>
-                    </select>
+                    <div className="relative">
+                      <select
+                        value={publicRole}
+                        onChange={(e) => changePublicRole(e.target.value as Role)}
+                        className={`appearance-none text-[12.5px] font-light pl-3 pr-7 h-8 rounded-full border-none outline-none cursor-pointer focus:ring-1 focus:ring-[#4059F1] ${isDark ? 'bg-white/5 text-white hover:bg-white/10' : 'bg-[#F3F4F6] text-black hover:bg-[#E5E7EB]'}`}
+                      >
+                        <option value="editor">Editor</option>
+                        <option value="viewer">Lector</option>
+                      </select>
+                      <ChevronDown size={12} className={`absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none ${isDark ? 'text-white/50' : 'text-[#6B7280]'}`} />
+                    </div>
                   </div>
                 </div>
               )}
