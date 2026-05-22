@@ -1582,7 +1582,7 @@ const IndexContent = () => {
         </AnimatePresence>
 
         <AnimatePresence>
-          {!hideTools && !isMobile && (
+          {!hideTools && !isMobile && canEdit && (
             <motion.div
               key="prompt-bar"
               initial={{ opacity: 0, y: 10 }}
