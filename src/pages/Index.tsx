@@ -1189,9 +1189,6 @@ const IndexContent = () => {
           <PresenceStack users={presenceUsers} />
         </div>
 
-        {/* placeholder to keep JSX structure */}
-        {false && (
-        )}
 
         {/* Right: history controls + task panel toggle */}
         {!hideTools && (
