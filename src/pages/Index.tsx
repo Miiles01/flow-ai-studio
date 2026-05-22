@@ -1278,7 +1278,7 @@ const IndexContent = () => {
           nodesConnectable={canEdit && (isMobile ? false : activeDrawShape ? false : interactionMode === "edit")}
           elementsSelectable={isMobile ? false : activeDrawShape ? false : interactionMode === "edit"}
           panOnScroll={true}
-          selectionMode={2}
+          selectionMode={"partial" as any}
           fitView
           onInit={setReactFlowInstance}
           proOptions={{ hideAttribution: true }}
