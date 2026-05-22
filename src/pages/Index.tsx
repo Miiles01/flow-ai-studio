@@ -38,7 +38,7 @@ import ImageNode from "@/components/nodes/ImageNode";
 import FrameNode from "@/components/nodes/FrameNode";
 import Toolbar from "@/components/Toolbar";
 import AIPromptBar from "@/components/AIPromptBar";
-import { DarkModeToggle } from "@/components/DarkModeToggle";
+import { QuickSettings } from "@/components/QuickSettings";
 import { generateFlowFromPrompt } from "@/lib/generateFlow";
 
 const SHAPE_TYPES = ["square", "circle", "diamond", "triangle", "hexagon", "star"];
@@ -1161,7 +1161,7 @@ const IndexContent = () => {
           </div>
 
           <div className="pointer-events-auto">
-            <DarkModeToggle />
+            <QuickSettings />
           </div>
 
           {/* Share button (owner only) */}
