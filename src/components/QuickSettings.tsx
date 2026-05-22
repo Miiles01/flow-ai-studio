@@ -68,8 +68,8 @@ export function QuickSettings() {
               className={`
                 p-3 rounded-2xl flex items-center justify-between border transition-all duration-300
                 ${isDark
-                  ? "bg-white/5 border-white/5"
-                  : "bg-gray-50 border-[#F3F4F6]"
+                  ? "bg-white/5 border-white/5 text-white"
+                  : "bg-black border-zinc-900 text-white"
                 }
               `}
             >
@@ -87,10 +87,11 @@ export function QuickSettings() {
                 className={`
                   flex items-center gap-1 text-[11px] font-medium px-2.5 py-1 rounded-full transition-all hover:scale-[1.03]
                   ${isPremium
-                    ? (isDark 
-                        ? "bg-white/10 hover:bg-white/20 text-white border border-white/10" 
-                        : "bg-gray-200 hover:bg-gray-300 text-black")
-                    : "bg-gradient-to-r from-violet-600 to-indigo-600 hover:opacity-90 text-white shadow-sm"
+                    ? "bg-white/10 hover:bg-white/20 text-white border border-white/10"
+                    : (isDark
+                        ? "bg-gradient-to-r from-violet-600 to-indigo-600 hover:opacity-90 text-white shadow-sm"
+                        : "bg-white hover:bg-gray-100 text-black shadow-sm"
+                      )
                   }
                 `}
               >
