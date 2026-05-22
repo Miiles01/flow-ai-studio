@@ -16,8 +16,10 @@ import {
   type Edge,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { ArrowLeft, Loader2, Check, Cloud, CloudOff, Settings2, EyeOff, Eye, Trash2, Undo2, Redo2, Palette, Square, Type, Baseline, Sparkles, PanelRight, ListChecks, Plus, Share2 } from "lucide-react";
+import { ArrowLeft, Loader2, Check, Cloud, CloudOff, Settings2, EyeOff, Eye, Trash2, Undo2, Redo2, Palette, Square, Type, Baseline, Sparkles, PanelRight, ListChecks, Plus, Share2, EyeIcon } from "lucide-react";
 import ShareDialog from "@/components/ShareDialog";
+import PresenceStack from "@/components/PresenceStack";
+import { useFlowRealtime, type PresenceUser } from "@/hooks/useFlowRealtime";
 import { usePlan } from "@/hooks/usePlan";
 import { useHistory } from "@/hooks/useHistory";
 import { useIsMobile } from "@/hooks/use-mobile";
@@ -368,7 +370,15 @@ const IndexContent = () => {
 
   // Ownership state: owner | collaborator | guest
   const [ownerId, setOwnerId] = useState<string | null>(null);
+  const [collabRole, setCollabRole] = useState<"editor" | "viewer" | null>(null);
+  const [publicRole, setPublicRole] = useState<"editor" | "viewer">("editor");
   const isOwner = !!user && !!ownerId && ownerId === user.id;
+  const canEdit = isOwner
+    || (!!user && collabRole === "editor")
+    || (isGuest && publicRole === "editor");
+  const isApplyingRemoteRef = useRef(false);
+  const [presenceUsers, setPresenceUsers] = useState<PresenceUser[]>([]);
+  const [identityProfile, setIdentityProfile] = useState<{ display_name: string; avatar_url: string | null } | null>(null);
 
   // Load flow by id
   useEffect(() => {
@@ -391,6 +401,7 @@ const IndexContent = () => {
         setNodes((f.nodes as Node[]) || []);
         setEdges((f.edges as Edge[]) || []);
         setOwnerId(f.user_id);
+        setPublicRole((f.public_role as "editor" | "viewer") || "viewer");
         lastSavedRef.current = JSON.stringify({ name: f.name, nodes: f.nodes, edges: f.edges });
         skipNextDirtyRef.current = true;
         setSaveState("saved");
@@ -420,6 +431,20 @@ const IndexContent = () => {
       setNodes(loadedNodes);
       setEdges(loadedEdges);
       setOwnerId((data as any).user_id);
+
+      // If not owner, look up collaborator role
+      if ((data as any).user_id !== user.id) {
+        const { data: collab } = await supabase
+          .from("flow_collaborators")
+          .select("role")
+          .eq("flow_id", id)
+          .eq("user_id", user.id)
+          .maybeSingle();
+        setCollabRole(((collab as any)?.role as "editor" | "viewer") ?? "viewer");
+      } else {
+        setCollabRole(null);
+      }
+
       lastSavedRef.current = JSON.stringify({ name: data.name, nodes: loadedNodes, edges: loadedEdges });
       skipNextDirtyRef.current = true;
       setSaveState("saved");
@@ -428,6 +453,25 @@ const IndexContent = () => {
     load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, user]);
+
+  // Load identity (for presence)
+  useEffect(() => {
+    if (!user) {
+      setIdentityProfile({ display_name: "Invitado", avatar_url: null });
+      return;
+    }
+    supabase
+      .from("profiles")
+      .select("display_name, avatar_url")
+      .eq("user_id", user.id)
+      .maybeSingle()
+      .then(({ data }) => {
+        setIdentityProfile({
+          display_name: (data as any)?.display_name || user.email?.split("@")[0] || "Usuario",
+          avatar_url: (data as any)?.avatar_url ?? null,
+        });
+      });
+  }, [user]);
 
   // History (undo/redo)
   const { undo, redo, canUndo, canRedo } = useHistory(
@@ -695,6 +739,8 @@ const IndexContent = () => {
   // Debounced autosave: only after id exists (not "new"). For "new", first manual save creates the row.
   const persist = useCallback(async () => {
     if (!user) return;
+    // Viewers / non-editor collaborators don't save
+    if (!isOwner && collabRole !== "editor") return;
     // Strip volatile runtime fields React Flow adds
     const sanitizedNodes = nodes.map((n) => {
       const { selected, dragging, resizing, ...rest } = n as Node & { resizing?: boolean };
@@ -765,12 +811,45 @@ const IndexContent = () => {
       skipNextDirtyRef.current = false;
       return;
     }
+    // Don't mark dirty for remote-applied changes
+    if (isApplyingRemoteRef.current) return;
+    // Viewers / guests don't autosave
+    if (!isOwner && collabRole !== "editor") return;
     setSaveState("dirty");
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
     saveTimerRef.current = setTimeout(() => {
       persist();
     }, 800);
-  }, [nodes, edges, name, loading, persist]);
+  }, [nodes, edges, name, loading, persist, isOwner, collabRole]);
+
+  // Realtime collaboration + presence
+  const identityForPresence: PresenceUser = useMemo(() => {
+    const palette = ["#4059F1", "#FCB5B9", "#34D399", "#F59E0B", "#A855F7", "#06B6D4", "#EF4444"];
+    const key = (user?.id || guestToken || "anon") as string;
+    let hash = 0;
+    for (let i = 0; i < key.length; i++) hash = (hash * 31 + key.charCodeAt(i)) | 0;
+    const color = palette[Math.abs(hash) % palette.length];
+    return {
+      id: user?.id || `guest-${key.slice(0, 8)}`,
+      display_name: identityProfile?.display_name || (isGuest ? "Invitado" : "Tú"),
+      avatar_url: identityProfile?.avatar_url ?? null,
+      color,
+      is_anon: !user,
+    };
+  }, [user, guestToken, identityProfile, isGuest]);
+
+  useFlowRealtime({
+    flowId: id && id !== "new" ? id : null,
+    enabled: !loading && !!id && id !== "new",
+    identity: identityForPresence,
+    nodes,
+    edges,
+    setNodes,
+    setEdges,
+    isApplyingRemoteRef,
+    onPresenceChange: setPresenceUsers,
+  });
+
 
   // Flush pending save on unload, tab hide, or unmount
   useEffect(() => {
@@ -1099,6 +1178,18 @@ const IndexContent = () => {
           <ShareDialog open={shareOpen} onOpenChange={setShareOpen} flowId={id} />
         )}
 
+        {/* Center: presence avatars + read-only badge */}
+        <div className="absolute left-1/2 -translate-x-1/2 top-5 flex items-center gap-2 pointer-events-none">
+          {!canEdit && (
+            <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-light pointer-events-auto ${isDark ? 'bg-black text-white/80 ring-1 ring-white/10' : 'bg-white text-[#6B7280] shadow-[0_8px_30px_rgb(0,0,0,0.06)]'}`}>
+              <EyeIcon size={12} strokeWidth={1.5} />
+              Solo lectura
+            </div>
+          )}
+          <PresenceStack users={presenceUsers} />
+        </div>
+
+
         {/* Right: history controls + task panel toggle */}
         {!hideTools && (
           <div className={`hidden md:flex items-center gap-1 pointer-events-auto px-1.5 py-1.5 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.06)] ${isDark ? 'bg-black text-white ring-1 ring-white/10' : 'bg-white'}`}>
@@ -1183,11 +1274,11 @@ const IndexContent = () => {
           isValidConnection={isValidConnection}
           panOnDrag={isMobile ? true : activeDrawShape ? false : interactionMode === "pan" ? true : [1, 2]}
           selectionOnDrag={isMobile ? false : activeDrawShape ? false : interactionMode === "edit"}
-          nodesDraggable={isMobile ? false : activeDrawShape ? false : interactionMode === "edit"}
-          nodesConnectable={isMobile ? false : activeDrawShape ? false : interactionMode === "edit"}
+          nodesDraggable={canEdit && (isMobile ? false : activeDrawShape ? false : interactionMode === "edit")}
+          nodesConnectable={canEdit && (isMobile ? false : activeDrawShape ? false : interactionMode === "edit")}
           elementsSelectable={isMobile ? false : activeDrawShape ? false : interactionMode === "edit"}
           panOnScroll={true}
-          selectionMode={2}
+          selectionMode={"partial" as any}
           fitView
           onInit={setReactFlowInstance}
           proOptions={{ hideAttribution: true }}
@@ -1470,7 +1561,7 @@ const IndexContent = () => {
         )}
 
         <AnimatePresence>
-          {!hideTools && !isMobile && (
+          {!hideTools && !isMobile && canEdit && (
             <motion.div
               key="toolbar"
               initial={{ opacity: 0, x: -10 }}
@@ -1491,7 +1582,7 @@ const IndexContent = () => {
         </AnimatePresence>
 
         <AnimatePresence>
-          {!hideTools && !isMobile && (
+          {!hideTools && !isMobile && canEdit && (
             <motion.div
               key="prompt-bar"
               initial={{ opacity: 0, y: 10 }}

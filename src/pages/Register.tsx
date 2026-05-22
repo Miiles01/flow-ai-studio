@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate, Link, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { toast } from "sonner";
@@ -16,6 +16,8 @@ const Register = () => {
   const [displayName, setDisplayName] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
+  const next = searchParams.get("next") || "/onboarding";
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,20 +34,20 @@ const Register = () => {
       toast.error(error.message);
     } else {
       toast.success("¡Cuenta creada! Revisa tu email para confirmar.");
-      navigate("/onboarding");
+      navigate(next);
     }
     setLoading(false);
   };
 
   const handleGoogleLogin = async () => {
     const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: `${window.location.origin}/dashboard`,
+      redirect_uri: `${window.location.origin}${next === "/onboarding" ? "/dashboard" : next}`,
     });
     if (result.error) {
       toast.error("Error al registrarse con Google");
     }
     if (result.redirected) return;
-    navigate("/onboarding");
+    navigate(next);
   };
 
   return (
@@ -138,7 +140,7 @@ const Register = () => {
 
       <p className="text-center text-sm text-miiles-gray-400 font-normal mt-10">
         ¿Ya tienes cuenta?{" "}
-        <Link to="/login" className="text-accent hover:underline font-medium">
+        <Link to={`/login${next !== "/onboarding" ? `?next=${encodeURIComponent(next)}` : ""}`} className="text-accent hover:underline font-medium">
           Inicia sesión
         </Link>
       </p>
