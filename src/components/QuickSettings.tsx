@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Settings, Sun, Moon, User, Sparkles, ArrowRight } from "lucide-react";
+import { Settings, Sun, Moon, User, ArrowRight } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { usePlan } from "@/hooks/usePlan";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
@@ -63,7 +63,7 @@ export function QuickSettings() {
         <div className="space-y-4">
           {/* Header & Plan Info */}
           <div className="space-y-2">
-            <h4 className="text-[11px] font-semibold tracking-wider uppercase opacity-50">Membresía</h4>
+            <h4 className="text-[11px] font-semibold tracking-wider opacity-50">Membresía</h4>
             <div 
               className={`
                 p-3 rounded-2xl flex items-center justify-between border transition-all duration-300
@@ -74,10 +74,6 @@ export function QuickSettings() {
               `}
             >
               <div className="flex items-center gap-2 min-w-0">
-                <Sparkles 
-                  size={15} 
-                  className={isPremium ? "text-violet-500 animate-pulse shrink-0" : "text-gray-400 shrink-0"} 
-                />
                 <span className="text-[13px] font-medium truncate">
                   {displayPlan}
                 </span>
@@ -108,7 +104,7 @@ export function QuickSettings() {
 
           {/* Quick Actions List */}
           <div className="space-y-2">
-            <h4 className="text-[11px] font-semibold tracking-wider uppercase opacity-50 mb-1">Ajustes</h4>
+            <h4 className="text-[11px] font-semibold tracking-wider opacity-50 mb-1">Ajustes</h4>
             
             {/* Dark Mode toggle row */}
             <div 
