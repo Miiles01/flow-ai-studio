@@ -10,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
 
 type Program = {
   id: string;
@@ -153,15 +154,17 @@ function ProgramFormDialog({
               </div>
             )}
           </div>
-          <label className="flex items-center gap-2 text-sm font-light cursor-pointer">
-            <input
-              type="checkbox"
+          <div className="flex items-center justify-between py-2 border-t border-border/10 mt-3 pt-3">
+            <div>
+              <Label htmlFor="is_featured" className="font-light cursor-pointer text-sm">Destacado</Label>
+              <p className="text-[11px] text-muted-foreground font-light mt-0.5">Mostrar este programa en la sección de destacados</p>
+            </div>
+            <Switch
+              id="is_featured"
               checked={form.is_featured}
-              onChange={(e) => setForm({ ...form, is_featured: e.target.checked })}
-              className="rounded"
+              onCheckedChange={(checked) => setForm({ ...form, is_featured: checked })}
             />
-            Destacado
-          </label>
+          </div>
           <Button type="submit" className="w-full" disabled={saving}>
             {saving ? <Loader2 size={14} className="animate-spin mr-2" /> : null}
             {submitLabel}

@@ -327,7 +327,6 @@ const ShareDialog = ({ open, onOpenChange, flowId }: Props) => {
                 <Switch 
                   checked={isPublic} 
                   onCheckedChange={togglePublic} 
-                  className={isDark ? 'data-[state=unchecked]:bg-white/10' : 'data-[state=unchecked]:bg-[#E5E7EB]'} 
                 />
               </div>
 
