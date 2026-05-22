@@ -401,6 +401,7 @@ const IndexContent = () => {
         setNodes((f.nodes as Node[]) || []);
         setEdges((f.edges as Edge[]) || []);
         setOwnerId(f.user_id);
+        setPublicRole((f.public_role as "editor" | "viewer") || "viewer");
         lastSavedRef.current = JSON.stringify({ name: f.name, nodes: f.nodes, edges: f.edges });
         skipNextDirtyRef.current = true;
         setSaveState("saved");
@@ -430,6 +431,20 @@ const IndexContent = () => {
       setNodes(loadedNodes);
       setEdges(loadedEdges);
       setOwnerId((data as any).user_id);
+
+      // If not owner, look up collaborator role
+      if ((data as any).user_id !== user.id) {
+        const { data: collab } = await supabase
+          .from("flow_collaborators")
+          .select("role")
+          .eq("flow_id", id)
+          .eq("user_id", user.id)
+          .maybeSingle();
+        setCollabRole(((collab as any)?.role as "editor" | "viewer") ?? "viewer");
+      } else {
+        setCollabRole(null);
+      }
+
       lastSavedRef.current = JSON.stringify({ name: data.name, nodes: loadedNodes, edges: loadedEdges });
       skipNextDirtyRef.current = true;
       setSaveState("saved");
@@ -438,6 +453,25 @@ const IndexContent = () => {
     load();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [id, user]);
+
+  // Load identity (for presence)
+  useEffect(() => {
+    if (!user) {
+      setIdentityProfile({ display_name: "Invitado", avatar_url: null });
+      return;
+    }
+    supabase
+      .from("profiles")
+      .select("display_name, avatar_url")
+      .eq("user_id", user.id)
+      .maybeSingle()
+      .then(({ data }) => {
+        setIdentityProfile({
+          display_name: (data as any)?.display_name || user.email?.split("@")[0] || "Usuario",
+          avatar_url: (data as any)?.avatar_url ?? null,
+        });
+      });
+  }, [user]);
 
   // History (undo/redo)
   const { undo, redo, canUndo, canRedo } = useHistory(
