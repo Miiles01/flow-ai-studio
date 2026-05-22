@@ -370,7 +370,15 @@ const IndexContent = () => {
 
   // Ownership state: owner | collaborator | guest
   const [ownerId, setOwnerId] = useState<string | null>(null);
+  const [collabRole, setCollabRole] = useState<"editor" | "viewer" | null>(null);
+  const [publicRole, setPublicRole] = useState<"editor" | "viewer">("editor");
   const isOwner = !!user && !!ownerId && ownerId === user.id;
+  const canEdit = isOwner
+    || (!!user && collabRole === "editor")
+    || (isGuest && publicRole === "editor");
+  const isApplyingRemoteRef = useRef(false);
+  const [presenceUsers, setPresenceUsers] = useState<PresenceUser[]>([]);
+  const [identityProfile, setIdentityProfile] = useState<{ display_name: string; avatar_url: string | null } | null>(null);
 
   // Load flow by id
   useEffect(() => {
