@@ -53,7 +53,7 @@ export function QuickSettings() {
         align="end" 
         sideOffset={8}
         className={`
-          w-72 rounded-[24px] p-4 border shadow-xl backdrop-blur-md transition-colors duration-300
+          w-72 rounded-[24px] p-4 border shadow-[0_12px_40px_rgba(0,0,0,0.06)] backdrop-blur-md transition-colors duration-300
           ${isDark
             ? "bg-zinc-950/90 border-white/10 text-white"
             : "bg-white/95 border-[#F3F4F6] text-black"
