@@ -811,12 +811,45 @@ const IndexContent = () => {
       skipNextDirtyRef.current = false;
       return;
     }
+    // Don't mark dirty for remote-applied changes
+    if (isApplyingRemoteRef.current) return;
+    // Viewers / guests don't autosave
+    if (!isOwner && collabRole !== "editor") return;
     setSaveState("dirty");
     if (saveTimerRef.current) clearTimeout(saveTimerRef.current);
     saveTimerRef.current = setTimeout(() => {
       persist();
     }, 800);
-  }, [nodes, edges, name, loading, persist]);
+  }, [nodes, edges, name, loading, persist, isOwner, collabRole]);
+
+  // Realtime collaboration + presence
+  const identityForPresence: PresenceUser = useMemo(() => {
+    const palette = ["#4059F1", "#FCB5B9", "#34D399", "#F59E0B", "#A855F7", "#06B6D4", "#EF4444"];
+    const key = (user?.id || guestToken || "anon") as string;
+    let hash = 0;
+    for (let i = 0; i < key.length; i++) hash = (hash * 31 + key.charCodeAt(i)) | 0;
+    const color = palette[Math.abs(hash) % palette.length];
+    return {
+      id: user?.id || `guest-${key.slice(0, 8)}`,
+      display_name: identityProfile?.display_name || (isGuest ? "Invitado" : "Tú"),
+      avatar_url: identityProfile?.avatar_url ?? null,
+      color,
+      is_anon: !user,
+    };
+  }, [user, guestToken, identityProfile, isGuest]);
+
+  useFlowRealtime({
+    flowId: id && id !== "new" ? id : null,
+    enabled: !loading && !!id && id !== "new",
+    identity: identityForPresence,
+    nodes,
+    edges,
+    setNodes,
+    setEdges,
+    isApplyingRemoteRef,
+    onPresenceChange: setPresenceUsers,
+  });
+
 
   // Flush pending save on unload, tab hide, or unmount
   useEffect(() => {
