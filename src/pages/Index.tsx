@@ -739,6 +739,8 @@ const IndexContent = () => {
   // Debounced autosave: only after id exists (not "new"). For "new", first manual save creates the row.
   const persist = useCallback(async () => {
     if (!user) return;
+    // Viewers / non-editor collaborators don't save
+    if (!isOwner && collabRole !== "editor") return;
     // Strip volatile runtime fields React Flow adds
     const sanitizedNodes = nodes.map((n) => {
       const { selected, dragging, resizing, ...rest } = n as Node & { resizing?: boolean };
