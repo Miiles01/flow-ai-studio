@@ -1274,8 +1274,8 @@ const IndexContent = () => {
           isValidConnection={isValidConnection}
           panOnDrag={isMobile ? true : activeDrawShape ? false : interactionMode === "pan" ? true : [1, 2]}
           selectionOnDrag={isMobile ? false : activeDrawShape ? false : interactionMode === "edit"}
-          nodesDraggable={isMobile ? false : activeDrawShape ? false : interactionMode === "edit"}
-          nodesConnectable={isMobile ? false : activeDrawShape ? false : interactionMode === "edit"}
+          nodesDraggable={canEdit && (isMobile ? false : activeDrawShape ? false : interactionMode === "edit")}
+          nodesConnectable={canEdit && (isMobile ? false : activeDrawShape ? false : interactionMode === "edit")}
           elementsSelectable={isMobile ? false : activeDrawShape ? false : interactionMode === "edit"}
           panOnScroll={true}
           selectionMode={2}
