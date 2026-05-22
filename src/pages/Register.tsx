@@ -34,20 +34,20 @@ const Register = () => {
       toast.error(error.message);
     } else {
       toast.success("¡Cuenta creada! Revisa tu email para confirmar.");
-      navigate("/onboarding");
+      navigate(next);
     }
     setLoading(false);
   };
 
   const handleGoogleLogin = async () => {
     const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: `${window.location.origin}/dashboard`,
+      redirect_uri: `${window.location.origin}${next === "/onboarding" ? "/dashboard" : next}`,
     });
     if (result.error) {
       toast.error("Error al registrarse con Google");
     }
     if (result.redirected) return;
-    navigate("/onboarding");
+    navigate(next);
   };
 
   return (
