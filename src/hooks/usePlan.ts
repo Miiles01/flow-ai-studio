@@ -4,7 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 
 export function usePlan() {
   const { user } = useAuth();
-  const [plan, setPlan] = useState<"free" | "pro">("free");
+  const [plan, setPlan] = useState<string>("free");
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -21,7 +21,7 @@ export function usePlan() {
       .maybeSingle()
       .then(({ data }) => {
         if (!active) return;
-        setPlan(((data as any)?.plan as "free" | "pro") ?? "free");
+        setPlan(data?.plan ?? "free");
         setLoading(false);
       });
     return () => {
@@ -29,5 +29,5 @@ export function usePlan() {
     };
   }, [user]);
 
-  return { plan, isPro: plan === "pro", loading };
+  return { plan, isPro: plan !== "free", loading };
 }

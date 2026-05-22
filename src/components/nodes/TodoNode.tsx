@@ -57,9 +57,9 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
     { id: "t3", text: "Validar prototipos con usuarios", completed: false },
   ];
   const fontSize = nodeData.fontSize ?? 14;
-  const backgroundColor = nodeData.backgroundColor ?? "#FFFFFF";
+  const backgroundColor = nodeData.backgroundColor ?? (isDark ? "#1F2937" : "#FFFFFF");
   const accentColor = nodeData.accentColor ?? "#111827";
-  const isDarkMode = backgroundColor === "#1F2937";
+  const isDarkMode = backgroundColor === "#1F2937" || backgroundColor === "#111827" || (isDark && (backgroundColor === "transparent" || !nodeData.backgroundColor));
   const textColor = nodeData.textColor ?? (isDarkMode ? "#FFFFFF" : "#1F2937");
 
   const [activePicker, setActivePicker] = useState<"bg" | "accent" | "text" | null>(null);
@@ -172,7 +172,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
           boxShadow: selected ? "0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.1)" : "0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.02)",
         }}
         className={`w-full h-full rounded-2xl flex flex-col p-5 select-none transition-all duration-300 border ${
-          selected ? "border-[#4059F1]/40" : "border-[#E5E7EB]"
+          selected ? "border-[#4059F1]/40" : (isDark ? "border-white/10" : "border-[#E5E7EB]")
         }`}
       >
         <NodeResizer isVisible={!!isSingleSelected} minWidth={280} minHeight={200} lineStyle={{ border: "none" }} />
@@ -196,7 +196,9 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
               <button
                 onClick={() => updateNodeData({ showTitle: !showTitle })}
                 className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${
-                  showTitle ? "bg-[#F3F4F6] text-[#4059F1]" : "hover:bg-[#F3F4F6] text-[#6B7280]"
+                  showTitle 
+                    ? (isDark ? "bg-white/10 text-white" : "bg-[#F3F4F6] text-[#4059F1]") 
+                    : (isDark ? "hover:bg-white/10 text-white/60 hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280]")
                 }`}
                 title={showTitle ? "Ocultar Título" : "Mostrar Título"}
               >
@@ -207,20 +209,22 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
               <button
                 onClick={() => updateNodeData({ showSubtitle: !showSubtitle })}
                 className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${
-                  showSubtitle ? "bg-[#F3F4F6] text-[#4059F1]" : "hover:bg-[#F3F4F6] text-[#6B7280]"
+                  showSubtitle 
+                    ? (isDark ? "bg-white/10 text-white" : "bg-[#F3F4F6] text-[#4059F1]") 
+                    : (isDark ? "hover:bg-white/10 text-white/60 hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280]")
                 }`}
                 title={showSubtitle ? "Ocultar Subtítulo" : "Mostrar Subtítulo"}
               >
                 <Heading2 size={13} strokeWidth={showSubtitle ? 2.5 : 2} />
               </button>
 
-              <div className="w-[1px] h-4 bg-[#E5E7EB] mx-1" />
+              <div className={`w-[1px] h-4 mx-1 ${isDark ? 'bg-white/10' : 'bg-[#E5E7EB]'}`} />
 
               {/* Font Size Adjustments */}
               <div className="flex items-center gap-0.5">
                 <button
                   onClick={() => updateNodeData({ fontSize: Math.max(10, fontSize - 1) })}
-                  className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[#F3F4F6] text-[#6B7280] transition-colors"
+                  className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${isDark ? 'hover:bg-white/10 text-white/60 hover:text-white' : 'hover:bg-[#F3F4F6] text-[#6B7280]'}`}
                   title="Reducir letra"
                 >
                   <Minus size={11} strokeWidth={2.5} />
@@ -245,18 +249,18 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                   onKeyDown={(e) => {
                     e.stopPropagation();
                   }}
-                  className="nodrag nopan text-[11px] font-medium text-black w-6 text-center bg-transparent border-none outline-none focus:bg-neutral-100 rounded select-all py-0.5 font-sans"
+                  className={`nodrag nopan text-[11px] font-medium w-6 text-center bg-transparent border-none outline-none rounded select-all py-0.5 font-sans ${isDark ? 'text-white focus:bg-white/10' : 'text-black focus:bg-neutral-100'}`}
                 />
                 <button
                   onClick={() => updateNodeData({ fontSize: Math.min(200, fontSize + 1) })}
-                  className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[#F3F4F6] text-[#6B7280] transition-colors"
+                  className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${isDark ? 'hover:bg-white/10 text-white/60 hover:text-white' : 'hover:bg-[#F3F4F6] text-[#6B7280]'}`}
                   title="Aumentar letra"
                 >
                   <Plus size={11} strokeWidth={2.5} />
                 </button>
               </div>
 
-              <div className="w-[1px] h-4 bg-[#E5E7EB] mx-1" />
+              <div className={`w-[1px] h-4 mx-1 ${isDark ? 'bg-white/10' : 'bg-[#E5E7EB]'}`} />
 
               {/* Background Color Picker */}
               <div className="relative">
@@ -265,7 +269,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                     e.stopPropagation();
                     setActivePicker(activePicker === "bg" ? null : "bg");
                   }}
-                  className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-[#F3F4F6] transition-colors relative"
+                  className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors relative ${isDark ? 'hover:bg-white/10 text-white/60 hover:text-white' : 'hover:bg-[#F3F4F6] text-[#6B7280]'}`}
                   title="Color de fondo"
                 >
                   <Square size={13} className="text-[#6B7280]" />
@@ -308,7 +312,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                     e.stopPropagation();
                     setActivePicker(activePicker === "text" ? null : "text");
                   }}
-                  className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-[#F3F4F6] transition-colors"
+                  className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors ${isDark ? 'hover:bg-white/10 text-white/60 hover:text-white' : 'hover:bg-[#F3F4F6] text-[#6B7280]'}`}
                   title="Color del Texto"
                 >
                   <Baseline size={13} style={{ color: textColor }} className="stroke-[2.5]" />
@@ -339,7 +343,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
               {/* Delete node */}
               <button
                 onClick={() => setNodes((nds) => nds.filter((n) => n.id !== id))}
-                className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[#FEE2E2] text-[#9CA3AF] hover:text-[#EF4444] transition-colors"
+                className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${isDark ? 'hover:bg-red-500/20 text-[#9CA3AF] hover:text-[#EF4444]' : 'hover:bg-[#FEE2E2] text-[#9CA3AF] hover:text-[#EF4444]'}`}
                 title="Eliminar"
               >
                 <Trash2 size={13} strokeWidth={2} />
@@ -393,13 +397,32 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
               {/* Checkbox */}
               <button
                 onClick={() => handleToggleTask(task.id)}
-                className="w-5 h-5 rounded-md flex items-center justify-center border-[1.5px] border-solid transition-all shrink-0 duration-200"
+                className={`w-5 h-5 rounded-md flex items-center justify-center border-[1.5px] border-solid transition-all shrink-0 duration-200 ${
+                  task.completed
+                    ? ""
+                    : isDarkMode
+                    ? "bg-white/[0.05] border-white/15 hover:border-white/30 hover:bg-white/[0.08]"
+                    : "bg-black/[0.03] border-black/15 hover:border-black/30 hover:bg-black/[0.05]"
+                }`}
                 style={{
-                  borderColor: task.completed ? (isDarkMode ? "#FFFFFF" : "#111827") : (isDarkMode ? "#6B7280" : "#9CA3AF"),
-                  backgroundColor: task.completed ? (isDarkMode ? "#FFFFFF" : "#111827") : "transparent",
+                  borderColor: task.completed
+                    ? (accentColor && accentColor !== "transparent" ? accentColor : (isDarkMode ? "#FFFFFF" : "#111827"))
+                    : undefined,
+                  backgroundColor: task.completed
+                    ? (accentColor && accentColor !== "transparent" ? accentColor : (isDarkMode ? "#FFFFFF" : "#111827"))
+                    : undefined,
                 }}
               >
-                {task.completed && <Check size={12} className={`${isDarkMode ? "text-gray-900" : "text-white"} stroke-[3.5]`} />}
+                {task.completed && (
+                  <Check
+                    size={12}
+                    className={`${
+                      (accentColor && accentColor !== "transparent" ? (accentColor === "#FFFFFF" || accentColor === "#FACC15") : isDarkMode)
+                        ? "text-gray-900"
+                        : "text-white"
+                    } stroke-[3.5]`}
+                  />
+                )}
               </button>
 
               {/* Task Text Input & Custom Animated Strikethrough */}

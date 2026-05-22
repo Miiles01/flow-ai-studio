@@ -8,7 +8,7 @@ interface ThemeContextValue {
   isDark: boolean;
 }
 
-const ThemeContext = createContext<ThemeContextValue>({
+export const ThemeContext = createContext<ThemeContextValue>({
   theme: "light",
   toggleTheme: () => {},
   isDark: false,
@@ -22,8 +22,13 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
   });
 
   useEffect(() => {
-    // Save preference but DON'T touch html element — dark class is scoped to dashboard wrapper
+    // Save preference and apply the dark class to html element so portals get dark mode styling
     localStorage.setItem("miiles-theme", theme);
+    if (theme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
   }, [theme]);
 
   const toggleTheme = () => setTheme(t => (t === "light" ? "dark" : "light"));

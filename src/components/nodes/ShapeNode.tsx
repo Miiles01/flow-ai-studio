@@ -94,7 +94,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
     fontWeight: nodeData.bold ? "bold" : "normal",
     fontStyle: nodeData.italic ? "italic" : "normal",
     textDecoration: nodeData.underline ? "underline" : "none",
-    color: nodeData.textColor || "#111827",
+    color: nodeData.textColor || (isDark ? "#FFFFFF" : "#111827"),
   };
 
   return (
@@ -136,7 +136,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
                       key={s}
                       onClick={() => updateNodeData({ shape: s })}
                       className={`w-6 h-6 flex items-center justify-center rounded-md transition-colors ${
-                        isActive ? "bg-[#4059F1] text-white" : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
+                        isActive ? "bg-[#4059F1] text-white" : isDark ? "hover:bg-white/10 text-zinc-400 hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
                       }`}
                       title={`Cambiar a ${s}`}
                     >
@@ -151,14 +151,14 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
                 })}
               </div>
 
-              <div className="w-[1px] h-4 bg-[#E5E7EB] mx-1" />
+              <div className={`w-[1px] h-4 mx-1 ${isDark ? 'bg-white/10' : 'bg-[#E5E7EB]'}`} />
 
               {/* Color pickers */}
               <div className="relative flex items-center gap-1">
                 {/* Fill Color */}
                 <button
                   onClick={() => setActivePicker(activePicker === "fill" ? null : "fill")}
-                  className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-[#F3F4F6] transition-colors relative"
+                  className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors relative ${isDark ? 'hover:bg-white/10' : 'hover:bg-[#F3F4F6]'}`}
                   title="Color de relleno"
                 >
                   <Palette size={13} className="text-[#6B7280]" />
@@ -175,7 +175,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
                 {/* Border Color */}
                 <button
                   onClick={() => setActivePicker(activePicker === "border" ? null : "border")}
-                  className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-[#F3F4F6] transition-colors relative"
+                  className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors relative ${isDark ? 'hover:bg-white/10' : 'hover:bg-[#F3F4F6]'}`}
                   title="Color de borde"
                 >
                   <Square size={13} className="text-[#6B7280]" />
@@ -192,10 +192,10 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
                 {/* Text Color */}
                 <button
                   onClick={() => setActivePicker(activePicker === "text" ? null : "text")}
-                  className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-[#F3F4F6] transition-colors"
+                  className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors ${isDark ? 'hover:bg-white/10' : 'hover:bg-[#F3F4F6]'}`}
                   title="Color de texto"
                 >
-                  <Baseline size={13} style={{ color: nodeData.textColor || "#111827" }} className="stroke-[2.5]" />
+                  <Baseline size={13} style={{ color: nodeData.textColor || (isDark ? "#FFFFFF" : "#111827") }} className="stroke-[2.5]" />
                 </button>
 
                 {/* Fill Color Popover */}
@@ -252,7 +252,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
                 )}
               </div>
 
-              <div className="w-[1px] h-4 bg-[#E5E7EB] mx-1" />
+              <div className={`w-[1px] h-4 mx-1 ${isDark ? 'bg-white/10' : 'bg-[#E5E7EB]'}`} />
 
               {/* Text formatting options */}
               <div className="flex items-center gap-0.5">
@@ -262,7 +262,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
                     const currentSize = nodeData.fontSize || 14;
                     updateNodeData({ fontSize: Math.max(10, currentSize - 1) });
                   }}
-                  className="w-6 h-6 flex items-center justify-center rounded-md hover:bg-[#F3F4F6] text-[#6B7280] transition-colors"
+                  className={`w-6 h-6 flex items-center justify-center rounded-md text-[#6B7280] transition-colors ${isDark ? 'hover:bg-white/10' : 'hover:bg-[#F3F4F6]'}`}
                   title="Reducir letra"
                 >
                   <Minus size={10} strokeWidth={2.5} />
@@ -276,7 +276,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
                       updateNodeData({ fontSize: Math.min(200, num) });
                     }
                   }}
-                  className="nodrag nopan text-[11px] font-normal text-black w-6 text-center bg-transparent border-none outline-none focus:bg-neutral-100 rounded py-0.5 font-sans"
+                  className={`nodrag nopan text-[11px] font-normal w-6 text-center bg-transparent border-none outline-none rounded py-0.5 font-sans ${isDark ? 'text-white focus:bg-white/10' : 'text-black focus:bg-neutral-100'}`}
                   style={{ width: "20px" }}
                 />
                 <button
@@ -284,19 +284,19 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
                     const currentSize = nodeData.fontSize || 14;
                     updateNodeData({ fontSize: Math.min(200, currentSize + 1) });
                   }}
-                  className="w-6 h-6 flex items-center justify-center rounded-md hover:bg-[#F3F4F6] text-[#6B7280] transition-colors"
+                  className={`w-6 h-6 flex items-center justify-center rounded-md text-[#6B7280] transition-colors ${isDark ? 'hover:bg-white/10' : 'hover:bg-[#F3F4F6]'}`}
                   title="Aumentar letra"
                 >
                   <Plus size={10} strokeWidth={2.5} />
                 </button>
 
-                <div className="w-[1px] h-3 bg-[#E5E7EB] mx-1" />
+                <div className={`w-[1px] h-3 mx-1 ${isDark ? 'bg-white/10' : 'bg-[#E5E7EB]'}`} />
 
                 {/* Bold */}
                 <button
                   onClick={() => updateNodeData({ bold: !nodeData.bold })}
                   className={`w-6 h-6 flex items-center justify-center rounded-md transition-colors ${
-                    nodeData.bold ? "bg-[#4059F1] text-white" : "hover:bg-[#F3F4F6] text-[#6B7280]"
+                    nodeData.bold ? "bg-[#4059F1] text-white" : isDark ? "hover:bg-white/10 text-[#6B7280]" : "hover:bg-[#F3F4F6] text-[#6B7280]"
                   }`}
                   title="Negrita"
                 >
@@ -307,7 +307,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
                 <button
                   onClick={() => updateNodeData({ italic: !nodeData.italic })}
                   className={`w-6 h-6 flex items-center justify-center rounded-md transition-colors ${
-                    nodeData.italic ? "bg-[#4059F1] text-white" : "hover:bg-[#F3F4F6] text-[#6B7280]"
+                    nodeData.italic ? "bg-[#4059F1] text-white" : isDark ? "hover:bg-white/10 text-[#6B7280]" : "hover:bg-[#F3F4F6] text-[#6B7280]"
                   }`}
                   title="Cursiva"
                 >
@@ -318,7 +318,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
                 <button
                   onClick={() => updateNodeData({ underline: !nodeData.underline })}
                   className={`w-6 h-6 flex items-center justify-center rounded-md transition-colors ${
-                    nodeData.underline ? "bg-[#4059F1] text-white" : "hover:bg-[#F3F4F6] text-[#6B7280]"
+                    nodeData.underline ? "bg-[#4059F1] text-white" : isDark ? "hover:bg-white/10 text-[#6B7280]" : "hover:bg-[#F3F4F6] text-[#6B7280]"
                   }`}
                   title="Subrayado"
                 >
@@ -326,12 +326,12 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
                 </button>
               </div>
 
-              <div className="w-[1px] h-4 bg-[#E5E7EB] mx-1" />
+              <div className={`w-[1px] h-4 mx-1 ${isDark ? 'bg-white/10' : 'bg-[#E5E7EB]'}`} />
 
               {/* Delete node */}
               <button
                 onClick={() => setNodes((nds) => nds.filter((n) => n.id !== id))}
-                className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[#FEE2E2] text-[#9CA3AF] hover:text-[#EF4444] transition-colors"
+                className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${isDark ? 'hover:bg-red-500/20 text-[#9CA3AF] hover:text-red-400' : 'hover:bg-[#FEE2E2] text-[#9CA3AF] hover:text-[#EF4444]'}`}
                 title="Eliminar"
               >
                 <Trash2 size={13} strokeWidth={2} />
@@ -349,8 +349,8 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
         preserveAspectRatio="none"
         className="absolute inset-0"
         style={{
-          fill: nodeData.fillColor || "white",
-          stroke: nodeData.strokeColor || "#D1D5DB",
+          fill: nodeData.fillColor || (isDark ? "#2C2C2E" : "white"),
+          stroke: nodeData.strokeColor || (isDark ? "#444446" : "#D1D5DB"),
           strokeWidth: selected ? 2 : 1.5,
           filter: selected ? "drop-shadow(0 0 6px rgba(64,89,241,0.15))" : "none",
           overflow: "visible",
@@ -368,7 +368,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
             onChange={(e) => setLabel(e.target.value)}
             onBlur={handleBlur}
             onKeyDown={(e) => e.key === "Enter" && handleBlur()}
-            className="bg-transparent text-center outline-none w-full text-black pointer-events-auto nodrag nopan font-sans"
+            className="bg-transparent text-center outline-none w-full pointer-events-auto nodrag nopan font-sans"
             style={textStyle}
             onClick={(e) => e.stopPropagation()}
           />

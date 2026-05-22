@@ -133,6 +133,9 @@
 .react-flow__background {
   background-color: white !important;
 }
+.dark .react-flow__background {
+  background-color: #0f0f11 !important;
+}
 
 .react-flow__controls {
   background: white !important;
@@ -140,6 +143,10 @@
   border-radius: var(--radius-sm) !important;
   box-shadow: var(--shadow-sm) !important;
   padding: 4px !important;
+}
+.dark .react-flow__controls {
+  background: #1C1C1E !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
 .react-flow__controls-button {
@@ -150,9 +157,18 @@
   border-radius: var(--radius-xs) !important;
   transition: all 0.2s ease !important;
 }
+.dark .react-flow__controls-button {
+  color: #9CA3AF !important;
+  fill: #9CA3AF !important;
+}
 
 .react-flow__controls-button:hover {
   background: #EEEFF2 !important;
+}
+.dark .react-flow__controls-button:hover {
+  background: rgba(255, 255, 255, 0.08) !important;
+  color: white !important;
+  fill: white !important;
 }
 
 .react-flow__minimap {
@@ -161,10 +177,17 @@
   border-radius: var(--radius-md) !important;
   box-shadow: var(--shadow-md) !important;
 }
+.dark .react-flow__minimap {
+  background: #1C1C1E !important;
+  border: 1px solid rgba(255, 255, 255, 0.1) !important;
+}
 
 .react-flow__edge-path {
   stroke: #D9DBE3 !important;
   stroke-width: 1.5 !important;
+}
+.dark .react-flow__edge-path {
+  stroke: #374151 !important;
 }
 
 .react-flow__edge.selected .react-flow__edge-path {

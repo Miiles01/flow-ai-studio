@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { Home, ShoppingBag, User, Bot, Plus, MessageSquare, Trash2, LayoutDashboard } from "lucide-react";
 import logoImg from "@/assets/logo.png";
 import { useAuth } from "@/contexts/AuthContext";
+import { usePlan } from "@/hooks/usePlan";
 import { supabase } from "@/integrations/supabase/client";
 import { NavLink } from "@/components/NavLink";
 import { toast } from "sonner";
@@ -34,12 +35,21 @@ function SidebarBody() {
   const collapsed = state === "collapsed";
   const closeMobile = () => setOpenMobile(false);
   const { user, signOut } = useAuth();
+  const { plan } = usePlan();
   const { isDark } = useTheme();
   const navigate = useNavigate();
   const [displayName, setDisplayName] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const location = useLocation();
+
+  const planNames: Record<string, string> = {
+    free: "Plan Gratis",
+    pro: "Plan Pro",
+    business: "Plan Negocios",
+    negocios: "Plan Negocios"
+  };
+  const displayPlan = planNames[plan?.toLowerCase() || "free"] || `Plan ${plan ? plan.charAt(0).toUpperCase() + plan.slice(1) : "Gratis"}`;
 
   useEffect(() => {
     if (!user) return;
@@ -177,7 +187,7 @@ function SidebarBody() {
               <p className={`text-[15px] font-normal truncate ${isDark ? "text-white" : "text-black"}`}>
                 {displayName ? displayName.split(" ")[0] : "Usuario"}
               </p>
-              <p className="text-[13px] text-muted-foreground font-light">Plan Gratis</p>
+              <p className="text-[13px] text-muted-foreground font-light">{displayPlan}</p>
             </div>
           </div>
         )}
@@ -189,9 +199,7 @@ function SidebarBody() {
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
   return (
-    <ThemeProvider>
-      <DashboardContent>{children}</DashboardContent>
-    </ThemeProvider>
+    <DashboardContent>{children}</DashboardContent>
   );
 }
 

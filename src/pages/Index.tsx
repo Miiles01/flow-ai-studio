@@ -13,10 +13,9 @@ import {
   useReactFlow,
   type Connection,
   type Node,
-  type Edge,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { ArrowLeft, Loader2, Check, Cloud, CloudOff, Settings2, EyeOff, Eye, Trash2, Undo2, Redo2, Palette, Square, Type, Baseline, Sparkles, PanelRight, ListChecks, Plus, Share2, EyeIcon } from "lucide-react";
+import { ArrowLeft, Loader2, Check, Cloud, CloudOff, Settings2, EyeOff, Eye, Trash2, Undo2, Redo2, Palette, Square, Type, Baseline, Sparkles, PanelRight, ListChecks, Plus, Share2, Sun, Moon, EyeIcon } from "lucide-react";
 import ShareDialog from "@/components/ShareDialog";
 import PresenceStack from "@/components/PresenceStack";
 import { useFlowRealtime, type PresenceUser } from "@/hooks/useFlowRealtime";
@@ -27,7 +26,7 @@ import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip
 import { toast } from "sonner";
 import { useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
-import { useTheme } from "@/contexts/ThemeContext";
+import { useTheme, ThemeContext } from "@/contexts/ThemeContext";
 import { supabase } from "@/integrations/supabase/client";
 import { AnimatePresence, motion } from "framer-motion";
 
@@ -39,6 +38,7 @@ import ImageNode from "@/components/nodes/ImageNode";
 import FrameNode from "@/components/nodes/FrameNode";
 import Toolbar from "@/components/Toolbar";
 import AIPromptBar from "@/components/AIPromptBar";
+import { DarkModeToggle } from "@/components/DarkModeToggle";
 import { generateFlowFromPrompt } from "@/lib/generateFlow";
 
 const SHAPE_TYPES = ["square", "circle", "diamond", "triangle", "hexagon", "star"];
@@ -61,7 +61,7 @@ const IndexContent = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
-  const { isDark } = useTheme();
+  const { isDark, toggleTheme } = useTheme();
   const { setCenter } = useReactFlow();
 
   const isMobile = useIsMobile();
@@ -564,8 +564,8 @@ const IndexContent = () => {
             newNodeData = {
               shape: originNode.data?.shape || "square",
               label: "",
-              backgroundColor: originNode.data?.backgroundColor || "#FFFFFF",
-              borderColor: originNode.data?.borderColor || "#000000",
+              fillColor: originNode.data?.fillColor,
+              strokeColor: originNode.data?.strokeColor,
             };
             newWidth = (originNode.style?.width as number) || 100;
             newHeight = (originNode.style?.height as number) || 100;
@@ -574,8 +574,6 @@ const IndexContent = () => {
             newNodeData = {
               shape: "square",
               label: "",
-              backgroundColor: "#FFFFFF",
-              borderColor: "#1F2937",
             };
           }
 
@@ -1094,7 +1092,7 @@ const IndexContent = () => {
           </div>
 
           {/* Settings icon + dropdown */}
-          <div ref={settingsRef} className="relative hidden md:block pointer-events-auto">
+          <div ref={settingsRef} className="relative pointer-events-auto">
             <button
               ref={settingsButtonRef}
               onClick={() => setSettingsOpen(!settingsOpen)}
@@ -1129,6 +1127,20 @@ const IndexContent = () => {
                     </button>
 
                     <button
+                      onClick={() => { toggleTheme(); setSettingsOpen(false); }}
+                      className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors text-left ${isDark ? 'hover:bg-white/10' : 'hover:bg-[#F3F4F6]'}`}
+                    >
+                      {isDark ? (
+                        <Sun size={15} strokeWidth={1.5} className="text-[#9CA3AF] shrink-0" />
+                      ) : (
+                        <Moon size={15} strokeWidth={1.5} className="text-[#6B7280] shrink-0" />
+                      )}
+                      <span className={`text-[13px] font-normal ${isDark ? 'text-white' : 'text-black'}`}>
+                        {isDark ? "Modo claro" : "Modo oscuro"}
+                      </span>
+                    </button>
+
+                    <button
                       onClick={() => {
                         setNodes([]);
                         setEdges([]);
@@ -1147,6 +1159,11 @@ const IndexContent = () => {
               )}
             </AnimatePresence>
           </div>
+
+          <div className="pointer-events-auto">
+            <DarkModeToggle />
+          </div>
+
           {/* Share button (owner only) */}
           {isOwner && id && id !== "new" && (
             <Tooltip>
@@ -1282,6 +1299,7 @@ const IndexContent = () => {
           fitView
           onInit={setReactFlowInstance}
           proOptions={{ hideAttribution: true }}
+          colorMode={isDark ? "dark" : "light"}
           className={`${isDark ? 'bg-[#0f0f11]' : 'bg-white'} ${interactionMode === "pan" ? "pan-mode" : "edit-mode"} ${isMultiSelection ? "multi-select-active" : ""}`}
           style={{ cursor: activeDrawShape ? "crosshair" : "inherit" }}
         >
@@ -1657,14 +1675,18 @@ const IndexContent = () => {
               <div className="absolute left-0 top-0 w-[3px] h-full opacity-0 group-hover:opacity-100 bg-[#E5E7EB] transition-opacity rounded-full" />
             </div>
             {/* Header */}
-            <div className="flex items-center justify-between px-5 pt-5 pb-4 border-b border-[#F3F4F6]">
+            <div className={`flex items-center justify-between px-5 pt-5 pb-4 border-b ${isDark ? 'border-white/10' : 'border-[#F3F4F6]'}`}>
               <div className="flex items-center gap-2">
                 <ListChecks size={16} strokeWidth={1.5} className="text-[#6B7280]" />
-                <span className="text-[13px] font-medium text-black">Lista de tareas</span>
+                <span className={`text-[13px] font-medium ${isDark ? 'text-white' : 'text-black'}`}>Lista de tareas</span>
               </div>
               <button
                 onClick={() => setTaskPanelOpen(false)}
-                className="w-7 h-7 flex items-center justify-center rounded-full hover:bg-[#F3F4F6] text-[#9CA3AF] hover:text-black transition-colors"
+                className={`w-7 h-7 flex items-center justify-center rounded-full transition-colors ${
+                  isDark
+                    ? 'hover:bg-white/10 text-[#9CA3AF] hover:text-white'
+                    : 'hover:bg-[#F3F4F6] text-[#9CA3AF] hover:text-black'
+                }`}
               >
                 <PanelRight size={14} strokeWidth={1.5} />
               </button>
@@ -1677,7 +1699,7 @@ const IndexContent = () => {
                 if (todoNodes.length === 0) {
                   return (
                     <div className="flex flex-col items-center justify-center h-full gap-3 text-center pt-16">
-                      <div className="w-10 h-10 rounded-full bg-[#F9FAFB] flex items-center justify-center">
+                      <div className={`w-10 h-10 rounded-full flex items-center justify-center ${isDark ? 'bg-white/5' : 'bg-[#F9FAFB]'}`}>
                         <ListChecks size={18} strokeWidth={1.5} className="text-[#D1D5DB]" />
                       </div>
                       <p className="text-[12px] text-[#9CA3AF] font-light leading-relaxed">
@@ -1738,16 +1760,16 @@ const IndexContent = () => {
                         );
                       };
 
-                      const isDarkMode = d.backgroundColor === "#1F2937" || d.backgroundColor === "#111827";
-                      const effectiveTextColor = d.textColor || (isDarkMode ? "#FFFFFF" : "#1F2937");
+                      const isCardDark = isDark || d.backgroundColor === "#1F2937" || d.backgroundColor === "#111827";
+                      const effectiveTextColor = d.textColor || (isCardDark ? "#FFFFFF" : "#1F2937");
 
                       return (
                         <div
                           key={node.id}
                           className="rounded-2xl border p-5 space-y-3 relative group/card transition-colors duration-300 cursor-pointer"
                           style={{
-                            backgroundColor: d.backgroundColor || "#FAFAFA",
-                            borderColor: isDarkMode ? "#374151" : "#E5E7EB"
+                            backgroundColor: d.backgroundColor || (isDark ? "#1C1C1E" : "#FAFAFA"),
+                            borderColor: isCardDark ? "rgba(255,255,255,0.1)" : "#E5E7EB"
                           }}
                           onMouseEnter={() => setPanelCardHover(node.id)}
                           onMouseLeave={() => { setPanelCardHover(null); }}
@@ -1772,7 +1794,7 @@ const IndexContent = () => {
                             {subtitle && (
                               <p className="text-[13px] font-light leading-snug" style={{
                                 color: effectiveTextColor === "#1F2937" || effectiveTextColor === "#111827"
-                                  ? (isDarkMode ? "#9CA3AF" : "#6B7280")
+                                  ? (isCardDark ? "#9CA3AF" : "#6B7280")
                                   : `${effectiveTextColor}cc`
                               }}>
                                 {subtitle}
@@ -1783,7 +1805,7 @@ const IndexContent = () => {
                           {/* Tasks */}
                           <div className="space-y-2 pt-1">
                             {tasks.length === 0 && (
-                              <p className="text-[12px] font-light py-1" style={{ color: isDarkMode ? "#6B7280" : "#9CA3AF" }}>Sin tareas aún.</p>
+                              <p className="text-[12px] font-light py-1" style={{ color: isCardDark ? "#6B7280" : "#9CA3AF" }}>Sin tareas aún.</p>
                             )}
                             {tasks.map((task) => (
                               <div key={task.id} className="flex items-center gap-3 py-1" onClick={(e) => e.stopPropagation()}>
@@ -1791,7 +1813,7 @@ const IndexContent = () => {
                                   onClick={(e) => { e.stopPropagation(); toggleTask(task.id); }}
                                   className="w-5 h-5 rounded-full border-[1.5px] flex items-center justify-center shrink-0 transition-all duration-200"
                                   style={{
-                                    borderColor: task.completed ? effectiveTextColor : (isDarkMode ? "#6B7280" : "#9CA3AF"),
+                                    borderColor: task.completed ? effectiveTextColor : (isCardDark ? "#6B7280" : "#9CA3AF"),
                                     backgroundColor: task.completed ? effectiveTextColor : "transparent",
                                   }}
                                 >
@@ -1803,7 +1825,7 @@ const IndexContent = () => {
                                   placeholder="Nueva tarea..."
                                   className="flex-1 bg-transparent border-none outline-none text-[13px] font-light leading-snug min-w-0 placeholder-gray-400"
                                   style={{
-                                    color: task.completed ? (isDarkMode ? "#6B7280" : "#9CA3AF") : effectiveTextColor,
+                                    color: task.completed ? (isCardDark ? "#6B7280" : "#9CA3AF") : effectiveTextColor,
                                     textDecoration: task.completed ? "line-through" : "none",
                                     opacity: task.completed ? 0.7 : 1,
                                   }}
@@ -1817,9 +1839,9 @@ const IndexContent = () => {
                             onClick={(e) => { e.stopPropagation(); addTask(); }}
                             className="flex items-center gap-2 py-2 px-3 rounded-xl border border-dashed transition-all text-left mt-2 shrink-0 w-full"
                             style={{
-                              borderColor: isDarkMode ? "#4B5563" : "#D1D5DB",
-                              color: isDarkMode ? "#9CA3AF" : "#9CA3AF",
-                              backgroundColor: isDarkMode ? "rgba(255,255,255,0.02)" : "rgba(0,0,0,0.02)"
+                              borderColor: isCardDark ? "rgba(255,255,255,0.1)" : "#D1D5DB",
+                              color: isCardDark ? "#9CA3AF" : "#9CA3AF",
+                              backgroundColor: isCardDark ? "rgba(255,255,255,0.02)" : "rgba(0,0,0,0.02)"
                             }}
                           >
                             <Plus size={13} />

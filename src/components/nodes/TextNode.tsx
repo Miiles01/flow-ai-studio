@@ -213,7 +213,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
     if (align !== (nodeData.align ?? "left")) commitData({ align });
   }, [align, nodeData.align, commitData]);
 
-  const textColor = nodeData.textColor ?? "#111827";
+  const textColor = nodeData.textColor ?? (isDark ? "#FFFFFF" : "#111827");
 
   // Text color: apply to whole editor
   useEffect(() => {
@@ -276,7 +276,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                 {/* Font size */}
                 <button
                   onClick={() => setFontSize((f) => Math.max(10, f - 1))}
-                  className="w-6 h-6 flex items-center justify-center rounded-md hover:bg-[#F3F4F6] text-[#6B7280] transition-colors"
+                  className={`w-6 h-6 flex items-center justify-center rounded-md transition-colors ${isDark ? 'hover:bg-white/10 text-[#9CA3AF] hover:text-white' : 'hover:bg-[#F3F4F6] text-[#6B7280]'}`}
                 >
                   <Minus size={10} strokeWidth={2.5} />
                 </button>
@@ -305,17 +305,17 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                 />
                 <button
                   onClick={() => setFontSize((f) => Math.min(200, f + 1))}
-                  className="w-6 h-6 flex items-center justify-center rounded-md hover:bg-[#F3F4F6] text-[#6B7280] transition-colors"
+                  className={`w-6 h-6 flex items-center justify-center rounded-md transition-colors ${isDark ? 'hover:bg-white/10 text-[#9CA3AF] hover:text-white' : 'hover:bg-[#F3F4F6] text-[#6B7280]'}`}
                 >
                   <Plus size={10} strokeWidth={2.5} />
                 </button>
 
-                <div className="w-[1px] h-4 bg-[#E5E7EB] mx-1" />
+                <div className={`w-[1px] h-4 mx-1 ${isDark ? 'bg-white/10' : 'bg-[#E5E7EB]'}`} />
 
                 {/* Bold */}
                 <button
                   onMouseDown={(e) => { e.preventDefault(); applyFormat("bold"); }}
-                  className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black transition-colors font-semibold text-[13px]"
+                  className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors font-semibold text-[13px] ${isDark ? 'hover:bg-white/10 text-[#9CA3AF] hover:text-white' : 'hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black'}`}
                   title="Negrita (Ctrl+B)"
                 >
                   B
@@ -324,7 +324,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                 {/* Italic */}
                 <button
                   onMouseDown={(e) => { e.preventDefault(); applyFormat("italic"); }}
-                  className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black transition-colors italic text-[13px]"
+                  className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors italic text-[13px] ${isDark ? 'hover:bg-white/10 text-[#9CA3AF] hover:text-white' : 'hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black'}`}
                   title="Cursiva (Ctrl+I)"
                 >
                   I
@@ -333,18 +333,22 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                 {/* Underline */}
                 <button
                   onMouseDown={(e) => { e.preventDefault(); applyFormat("underline"); }}
-                  className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black transition-colors underline text-[13px]"
+                  className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors underline text-[13px] ${isDark ? 'hover:bg-white/10 text-[#9CA3AF] hover:text-white' : 'hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black'}`}
                   title="Subrayado (Ctrl+U)"
                 >
                   U
                 </button>
 
-                <div className="w-[1px] h-4 bg-[#E5E7EB] mx-1" />
+                <div className={`w-[1px] h-4 mx-1 ${isDark ? 'bg-white/10' : 'bg-[#E5E7EB]'}`} />
 
                 {/* Align left */}
                 <button
                   onClick={() => setAlign("left")}
-                  className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors ${align === "left" ? "bg-black text-white" : "hover:bg-[#F3F4F6] text-[#6B7280]"}`}
+                  className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors ${
+                    align === "left" 
+                      ? (isDark ? "bg-white text-black" : "bg-black text-white") 
+                      : (isDark ? "hover:bg-white/10 text-[#9CA3AF] hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280]")
+                  }`}
                   title="Alinear izquierda"
                 >
                   <AlignLeft size={13} strokeWidth={2} />
@@ -353,7 +357,11 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                 {/* Align center */}
                 <button
                   onClick={() => setAlign("center")}
-                  className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors ${align === "center" ? "bg-black text-white" : "hover:bg-[#F3F4F6] text-[#6B7280]"}`}
+                  className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors ${
+                    align === "center" 
+                      ? (isDark ? "bg-white text-black" : "bg-black text-white") 
+                      : (isDark ? "hover:bg-white/10 text-[#9CA3AF] hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280]")
+                  }`}
                   title="Centrar"
                 >
                   <AlignCenter size={13} strokeWidth={2} />
@@ -362,24 +370,32 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                 {/* Align right */}
                 <button
                   onClick={() => setAlign("right")}
-                  className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors ${align === "right" ? "bg-black text-white" : "hover:bg-[#F3F4F6] text-[#6B7280]"}`}
+                  className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors ${
+                    align === "right" 
+                      ? (isDark ? "bg-white text-black" : "bg-black text-white") 
+                      : (isDark ? "hover:bg-white/10 text-[#9CA3AF] hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280]")
+                  }`}
                   title="Alinear derecha"
                 >
                   <AlignRight size={13} strokeWidth={2} />
                 </button>
 
-                <div className="w-[1px] h-4 bg-[#E5E7EB] mx-1" />
+                <div className={`w-[1px] h-4 mx-1 ${isDark ? 'bg-white/10' : 'bg-[#E5E7EB]'}`} />
 
                 {/* Link */}
                 <button
                   onMouseDown={(e) => { e.preventDefault(); openLinkInput(); }}
-                  className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors ${activeLink ? "bg-[#EEF2FF] text-[#4059F1]" : "hover:bg-[#F3F4F6] text-[#6B7280]"}`}
+                  className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors ${
+                    activeLink 
+                      ? (isDark ? "bg-white text-black" : "bg-[#EEF2FF] text-[#4059F1]") 
+                      : (isDark ? "hover:bg-white/10 text-[#9CA3AF] hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280]")
+                  }`}
                   title="Link (Ctrl+K)"
                 >
                   <Link2 size={13} strokeWidth={2} />
                 </button>
 
-                <div className="w-[1px] h-4 bg-[#E5E7EB] mx-1" />
+                <div className={`w-[1px] h-4 mx-1 ${isDark ? 'bg-white/10' : 'bg-[#E5E7EB]'}`} />
 
                 {/* Text Color Picker */}
                 <div className="relative">
@@ -388,7 +404,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                       e.stopPropagation();
                       setActivePicker(activePicker === "text" ? null : "text");
                     }}
-                    className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-[#F3F4F6] transition-colors"
+                    className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors ${isDark ? 'hover:bg-white/10' : 'hover:bg-[#F3F4F6]'}`}
                     title="Color del Texto"
                   >
                     <Baseline size={13} style={{ color: textColor }} className="stroke-[2.5]" />
@@ -415,12 +431,12 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                   )}
                 </div>
 
-                <div className="w-[1px] h-4 bg-[#E5E7EB] mx-1" />
+                <div className={`w-[1px] h-4 mx-1 ${isDark ? 'bg-white/10' : 'bg-[#E5E7EB]'}`} />
 
                 {/* Delete node */}
                 <button
                   onClick={() => setNodes((nds) => nds.filter((n) => n.id !== id))}
-                  className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[#FEE2E2] text-[#9CA3AF] hover:text-[#EF4444] transition-colors"
+                  className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${isDark ? 'hover:bg-red-500/20 text-[#9CA3AF] hover:text-red-400' : 'hover:bg-[#FEE2E2] text-[#9CA3AF] hover:text-[#EF4444]'}`}
                   title="Eliminar"
                 >
                   <Trash2 size={13} strokeWidth={2} />
@@ -497,7 +513,6 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
           lineHeight: 1.5,
           padding: "8px 10px",
           wordBreak: "break-word",
-          color: "#000",
         }}
         className={`nodrag nopan w-full h-full font-sans font-light focus:outline-none [&_a]:text-[#4059F1] [&_a]:underline [&_a]:cursor-pointer ${isDark ? 'text-white' : 'text-black'}`}
       />

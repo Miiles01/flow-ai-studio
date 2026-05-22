@@ -46,8 +46,8 @@ const FrameNode = ({ id, data, selected }: NodeProps) => {
     updateNodeData({ label: val });
   };
 
-  const fillColor = nodeData.fillColor ?? "rgba(249, 250, 251, 0.35)";
-  const strokeColor = nodeData.strokeColor ?? (selected ? "#4059F1" : "#D1D5DB");
+  const fillColor = nodeData.fillColor ?? (isDark ? "rgba(255, 255, 255, 0.03)" : "rgba(249, 250, 251, 0.35)");
+  const strokeColor = nodeData.strokeColor ?? (selected ? "#4059F1" : (isDark ? "rgba(255, 255, 255, 0.15)" : "#D1D5DB"));
 
   return (
     <div style={{ width: "100%", height: "100%", position: "relative", overflow: "visible" }}>
@@ -79,11 +79,11 @@ const FrameNode = ({ id, data, selected }: NodeProps) => {
               e.stopPropagation();
               if (e.key === "Enter" || e.key === "Escape") setEditing(false);
             }}
-            className="nodrag nopan text-[12px] font-medium text-[#6B7280] bg-transparent border-none outline-none"
+            className={`nodrag nopan text-[12px] font-medium bg-transparent border-none outline-none ${isDark ? 'text-zinc-300' : 'text-[#6B7280]'}`}
             style={{ minWidth: 60, maxWidth: 240 }}
           />
         ) : (
-          <span className="text-[12px] font-medium text-[#9CA3AF] cursor-text hover:text-[#6B7280] transition-colors select-none">
+          <span className={`text-[12px] font-medium transition-colors select-none cursor-text ${isDark ? 'text-zinc-500 hover:text-zinc-300' : 'text-[#9CA3AF] hover:text-[#6B7280]'}`}>
             {label || "Sección"}
           </span>
         )}
@@ -112,7 +112,7 @@ const FrameNode = ({ id, data, selected }: NodeProps) => {
               {/* Fill Color Picker */}
               <button
                 onClick={() => setActivePicker(activePicker === "fill" ? null : "fill")}
-                className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[#F3F4F6] transition-colors relative"
+                className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors relative ${isDark ? 'hover:bg-white/10' : 'hover:bg-[#F3F4F6]'}`}
                 title="Color de relleno"
               >
                 <Palette size={13} className="text-[#6B7280]" />
@@ -129,7 +129,7 @@ const FrameNode = ({ id, data, selected }: NodeProps) => {
               {/* Border Color Picker */}
               <button
                 onClick={() => setActivePicker(activePicker === "border" ? null : "border")}
-                className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[#F3F4F6] transition-colors relative"
+                className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors relative ${isDark ? 'hover:bg-white/10' : 'hover:bg-[#F3F4F6]'}`}
                 title="Color de borde"
               >
                 <Square size={13} className="text-[#6B7280]" />
@@ -191,7 +191,7 @@ const FrameNode = ({ id, data, selected }: NodeProps) => {
                 </div>
               )}
 
-              <div className="w-[1px] h-4 bg-[#E5E7EB] mx-1" />
+              <div className={`w-[1px] h-4 mx-1 ${isDark ? 'bg-white/10' : 'bg-[#E5E7EB]'}`} />
 
               <button
                 onClick={() =>
@@ -206,7 +206,11 @@ const FrameNode = ({ id, data, selected }: NodeProps) => {
                       )
                   )
                 }
-                className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[#FEE2E2] text-[#9CA3AF] hover:text-[#EF4444] transition-colors"
+                className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${
+                  isDark
+                    ? 'hover:bg-red-500/20 text-[#9CA3AF] hover:text-[#EF4444]'
+                    : 'hover:bg-[#FEE2E2] text-[#9CA3AF] hover:text-[#EF4444]'
+                }`}
                 title="Eliminar sección"
               >
                 <Trash2 size={13} strokeWidth={2} />

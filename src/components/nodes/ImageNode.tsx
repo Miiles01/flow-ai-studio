@@ -110,18 +110,24 @@ const ImageNode = ({ id, data, selected }: NodeProps) => {
               {/* URL button */}
               <button
                 onClick={handleOpenInput}
-                className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${imageUrl ? "hover:bg-[#F3F4F6] text-[#6B7280]" : "bg-[#EEF2FF] text-[#4059F1]"}`}
+                className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${
+                  imageUrl
+                    ? isDark ? "hover:bg-white/10 text-zinc-400" : "hover:bg-[#F3F4F6] text-[#6B7280]"
+                    : isDark ? "bg-indigo-600/30 text-indigo-400 border border-indigo-500/20" : "bg-[#EEF2FF] text-[#4059F1]"
+                }`}
                 title="Pegar URL de imagen"
               >
                 <Link2 size={13} strokeWidth={2} />
               </button>
 
-              <div className="w-[1px] h-4 bg-[#E5E7EB] mx-0.5" />
+              <div className={`w-[1px] h-4 mx-0.5 ${isDark ? 'bg-white/10' : 'bg-[#E5E7EB]'}`} />
 
               {/* Object fit toggle */}
               <button
                 onClick={handleToggleFit}
-                className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[#F3F4F6] text-[#6B7280] transition-colors"
+                className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${
+                  isDark ? "hover:bg-white/10 text-zinc-400" : "hover:bg-[#F3F4F6] text-[#6B7280]"
+                }`}
                 title={objectFit === "cover" ? "Cambiar a Contain" : "Cambiar a Cover"}
               >
                 {objectFit === "cover"
@@ -130,12 +136,16 @@ const ImageNode = ({ id, data, selected }: NodeProps) => {
                 }
               </button>
 
-              <div className="w-[1px] h-4 bg-[#E5E7EB] mx-0.5" />
+              <div className={`w-[1px] h-4 mx-0.5 ${isDark ? 'bg-white/10' : 'bg-[#E5E7EB]'}`} />
 
               {/* Delete */}
               <button
                 onClick={handleDelete}
-                className="w-7 h-7 flex items-center justify-center rounded-lg hover:bg-[#FEE2E2] text-[#9CA3AF] hover:text-[#EF4444] transition-colors"
+                className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${
+                  isDark
+                    ? 'hover:bg-red-500/20 text-[#9CA3AF] hover:text-red-400'
+                    : 'hover:bg-[#FEE2E2] text-[#9CA3AF] hover:text-[#EF4444]'
+                }`}
                 title="Eliminar imagen"
               >
                 <Trash2 size={13} strokeWidth={2} />
@@ -188,7 +198,7 @@ const ImageNode = ({ id, data, selected }: NodeProps) => {
         className={`w-full h-full overflow-hidden rounded-lg relative transition-all ${
           selected
             ? "ring-[1.5px] ring-[#4059F1] ring-offset-0"
-            : "ring-[1px] ring-[#E5E7EB]"
+            : `ring-[1px] ${isDark ? 'ring-white/10' : 'ring-[#E5E7EB]'}`
         }`}
       >
         {/* Empty state */}
@@ -196,14 +206,18 @@ const ImageNode = ({ id, data, selected }: NodeProps) => {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="w-full h-full flex flex-col items-center justify-center gap-3 cursor-pointer bg-[#F9FAFB] border-2 border-dashed border-[#E5E7EB] rounded-lg hover:border-[#4059F1]/40 hover:bg-[#EEF2FF]/20 transition-all"
+            className={`w-full h-full flex flex-col items-center justify-center gap-3 cursor-pointer border-2 border-dashed rounded-lg transition-all ${
+              isDark
+                ? 'bg-white/5 border-white/10 hover:border-white/20 hover:bg-white/10'
+                : 'bg-[#F9FAFB] border-[#E5E7EB] hover:border-[#4059F1]/40 hover:bg-[#EEF2FF]/20'
+            }`}
             onClick={handleOpenInput}
           >
-            <div className={`w-10 h-10 rounded-xl shadow-sm flex items-center justify-center ${isDark ? 'bg-[#1C1C1E]' : 'bg-white'}`}>
+            <div className={`w-10 h-10 rounded-xl shadow-sm flex items-center justify-center ${isDark ? 'bg-white/5' : 'bg-white'}`}>
               <ImageIcon size={18} className="text-[#9CA3AF]" strokeWidth={1.5} />
             </div>
             <div className="flex flex-col items-center gap-1">
-              <p className="text-[12px] font-medium text-[#6B7280]">Añadir imagen</p>
+              <p className={`text-[12px] font-medium ${isDark ? 'text-zinc-300' : 'text-[#6B7280]'}`}>Añadir imagen</p>
               <p className="text-[10px] text-[#9CA3AF] font-light">Pega una URL de imagen</p>
             </div>
           </motion.div>
@@ -211,12 +225,14 @@ const ImageNode = ({ id, data, selected }: NodeProps) => {
 
         {/* Loading skeleton */}
         {imageUrl && isLoading && !isError && (
-          <div className="w-full h-full bg-[#F3F4F6] rounded-lg overflow-hidden">
+          <div className={`w-full h-full rounded-lg overflow-hidden ${isDark ? 'bg-zinc-800' : 'bg-[#F3F4F6]'}`}>
             <div className="w-full h-full relative overflow-hidden">
               <motion.div
                 className="absolute inset-0"
                 style={{
-                  background: "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.6) 50%, transparent 100%)",
+                  background: isDark
+                    ? "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.05) 50%, transparent 100%)"
+                    : "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.6) 50%, transparent 100%)",
                   backgroundSize: "200% 100%",
                 }}
                 animate={{ backgroundPositionX: ["200%", "-200%"] }}
@@ -231,10 +247,14 @@ const ImageNode = ({ id, data, selected }: NodeProps) => {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className="w-full h-full flex flex-col items-center justify-center gap-3 bg-[#FEF2F2] border border-[#FECACA] rounded-lg cursor-pointer"
+            className={`w-full h-full flex flex-col items-center justify-center gap-3 rounded-lg cursor-pointer ${
+              isDark
+                ? 'bg-red-950/20 border border-red-900/35'
+                : 'bg-[#FEF2F2] border border-[#FECACA]'
+            }`}
             onClick={handleOpenInput}
           >
-            <div className={`w-10 h-10 rounded-xl shadow-sm flex items-center justify-center ${isDark ? 'bg-[#1C1C1E]' : 'bg-white'}`}>
+            <div className={`w-10 h-10 rounded-xl shadow-sm flex items-center justify-center ${isDark ? 'bg-white/5' : 'bg-white'}`}>
               <AlertTriangle size={18} className="text-[#EF4444]" strokeWidth={1.5} />
             </div>
             <div className="flex flex-col items-center gap-1">
