@@ -1178,6 +1178,21 @@ const IndexContent = () => {
           <ShareDialog open={shareOpen} onOpenChange={setShareOpen} flowId={id} />
         )}
 
+        {/* Center: presence avatars + read-only badge */}
+        <div className="absolute left-1/2 -translate-x-1/2 top-5 flex items-center gap-2 pointer-events-none">
+          {!canEdit && (
+            <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-light pointer-events-auto ${isDark ? 'bg-black text-white/80 ring-1 ring-white/10' : 'bg-white text-[#6B7280] shadow-[0_8px_30px_rgb(0,0,0,0.06)]'}`}>
+              <EyeIcon size={12} strokeWidth={1.5} />
+              Solo lectura
+            </div>
+          )}
+          <PresenceStack users={presenceUsers} />
+        </div>
+
+        {/* placeholder to keep JSX structure */}
+        {false && (
+        )}
+
         {/* Right: history controls + task panel toggle */}
         {!hideTools && (
           <div className={`hidden md:flex items-center gap-1 pointer-events-auto px-1.5 py-1.5 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.06)] ${isDark ? 'bg-black text-white ring-1 ring-white/10' : 'bg-white'}`}>
