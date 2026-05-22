@@ -1561,7 +1561,7 @@ const IndexContent = () => {
         )}
 
         <AnimatePresence>
-          {!hideTools && !isMobile && (
+          {!hideTools && !isMobile && canEdit && (
             <motion.div
               key="toolbar"
               initial={{ opacity: 0, x: -10 }}
