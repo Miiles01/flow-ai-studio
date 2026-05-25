@@ -174,6 +174,45 @@ export type Database = {
           },
         ]
       }
+      flow_templates: {
+        Row: {
+          created_at: string
+          description: string
+          edges: Json
+          id: string
+          nodes: Json
+          prompt_hint: string
+          slug: string
+          tags: string[]
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description?: string
+          edges?: Json
+          id?: string
+          nodes?: Json
+          prompt_hint?: string
+          slug: string
+          tags?: string[]
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          edges?: Json
+          id?: string
+          nodes?: Json
+          prompt_hint?: string
+          slug?: string
+          tags?: string[]
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       flows: {
         Row: {
           created_at: string
@@ -309,6 +348,60 @@ export type Database = {
         }
         Relationships: []
       }
+      prospects: {
+        Row: {
+          company: string | null
+          created_at: string
+          email: string | null
+          id: string
+          industry: string | null
+          location: string | null
+          name: string | null
+          notes: string | null
+          phone: string | null
+          raw: Json
+          role: string | null
+          source_file: string | null
+          tags: string[]
+          updated_at: string
+          website: string | null
+        }
+        Insert: {
+          company?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          industry?: string | null
+          location?: string | null
+          name?: string | null
+          notes?: string | null
+          phone?: string | null
+          raw?: Json
+          role?: string | null
+          source_file?: string | null
+          tags?: string[]
+          updated_at?: string
+          website?: string | null
+        }
+        Update: {
+          company?: string | null
+          created_at?: string
+          email?: string | null
+          id?: string
+          industry?: string | null
+          location?: string | null
+          name?: string | null
+          notes?: string | null
+          phone?: string | null
+          raw?: Json
+          role?: string | null
+          source_file?: string | null
+          tags?: string[]
+          updated_at?: string
+          website?: string | null
+        }
+        Relationships: []
+      }
       user_applications: {
         Row: {
           created_at: string
@@ -420,6 +513,8 @@ export type Database = {
       }
       is_flow_owner: { Args: { _flow_id: string }; Returns: boolean }
       join_flow_by_token: { Args: { p_token: string }; Returns: string }
+      show_limit: { Args: never; Returns: number }
+      show_trgm: { Args: { "": string }; Returns: string[] }
       toggle_applicant_like: {
         Args: { p_application_id: string }
         Returns: boolean

@@ -1,164 +1,100 @@
+# Admin Dashboard — Plan
 
-# Colaboración en tiempo real para Tableros
+## Acceso (/admin)
+- Nueva ruta pública `/admin` con pantalla de login simple (input password).
+- Secret `ADMIN_PASSWORD` = `miiles24244053@AA`.
+- Edge function `admin-auth` valida password y devuelve un token firmado (JWT con HS256 usando `ADMIN_PASSWORD` como secret, exp 8h). Guardado en `localStorage` (`miiles_admin_token`).
+- Todas las edge functions admin verifican ese token en header `x-admin-token`.
+- Ruta `/admin` envuelta en `<AdminGuard>` que valida token contra `admin-auth` (verify mode).
 
-Sistema tipo Figma para compartir y co-editar tableros. **Solo disponible para usuarios Pro**. Soporta invitación por email (a usuarios existentes), enlace público híbrido (anónimo puede entrar; si inicia sesión se agrega a sus tableros), roles **Editor/Viewer**, sincronización en vivo de nodos/edges y avatares de presencia.
+## Módulo 1 — Carga de datos (Prospectos)
 
----
+**DB (migración):**
+```
+prospects (
+  id uuid pk, name text, company text, email text, phone text,
+  role text, industry text, location text, website text, notes text,
+  tags text[], source_file text, raw jsonb, created_at, updated_at
+)
+```
+- Índice GIN sobre `tags` y trigram sobre `name || company || industry` para búsqueda.
+- RLS: bloqueada para `anon`/`authenticated` (solo accesible via service role desde edge functions admin).
 
-## 1. Modelo de datos (migración)
+**Edge function `admin-ingest`:**
+- Body: `{ filename, mime, contentBase64 }` + header `x-admin-token`.
+- CSV/Excel/TXT: parsea con `xlsx` (npm) → arrays de filas.
+- PDF: extrae texto con `pdf-parse` (npm).
+- Pasa filas/texto a Lovable AI Gateway (`google/gemini-3-flash-preview`) con `Output.object` y schema Zod `{ prospects: [{ name, company, email, phone, role, industry, location, website, notes, tags }] }`.
+- Inserta en `prospects` con `source_file = filename`.
 
-### `flows` — añadir columnas
-- `is_public boolean` (default false) — si el link público está activo
-- `public_token uuid` (default gen_random_uuid, unique) — token del link
-- `public_role text` (default 'editor', check 'viewer'|'editor')
+**UI tab "Prospectos":**
+- Dropzone (drag&drop) + lista de últimos uploads.
+- Tabla paginada con filtros (búsqueda, tag, industria).
+- Acciones: borrar fila, borrar batch por `source_file`.
 
-### Nueva tabla `flow_collaborators`
-| campo | tipo | notas |
-|---|---|---|
-| `id` | uuid PK | |
-| `flow_id` | uuid | FK → flows |
-| `user_id` | uuid | usuario invitado |
-| `role` | text | 'viewer' \| 'editor' |
-| `added_by` | uuid | quién lo invitó |
-| `added_at` | timestamptz | |
+## Módulo 2 — Sync con IA del tablero
 
-Unique `(flow_id, user_id)`.
+Modifica `supabase/functions/generate-flow/index.ts`:
+- Antes de llamar al modelo, hace `supabase.from('prospects').select(...)` filtrando por keywords del prompt (ILIKE sobre name/company/industry/tags).
+- Inyecta hasta 20 prospectos relevantes en el system prompt como "PROSPECTS DB (úsalos primero, no inventes si están aquí)".
+- Inyecta también las plantillas (módulo 4) como ejemplos few-shot.
+- Si no hay match, el modelo genera libremente (comportamiento actual).
+- Sin cambios en el cliente.
 
-### RLS — flows
-- **SELECT**: `auth.uid() = user_id` **OR** existe fila en `flow_collaborators` para ese flow y usuario. (vía función `can_access_flow(flow_id)` SECURITY DEFINER para evitar recursión)
-- **UPDATE**: owner **OR** colaborador con `role='editor'`. (vía `can_edit_flow(flow_id)`)
-- **DELETE**: solo `auth.uid() = user_id` (solo el dueño borra de verdad)
-- **INSERT**: sin cambios
+## Módulo 3 — Instrucciones desde GitHub
+**Decisión del usuario:** el flujo es "edito el repo con Claude Code → Lovable sincroniza con GitHub automáticamente". No se necesita webhook ni API de GitHub.
 
-### RLS — flow_collaborators
-- **SELECT**: dueño del flow, o el propio colaborador
-- **INSERT / UPDATE / DELETE**: solo el dueño del flow, **excepto** que un colaborador puede borrarse a sí mismo ("quitar de mis tableros")
+→ Las plantillas viven como archivos estáticos en `src/data/flow-templates/*.json`. Cuando el usuario edita en Claude Code y pushea, GitHub sync trae los archivos al proyecto Lovable.
 
-### Funciones SECURITY DEFINER
-- `can_access_flow(flow_id uuid) returns bool` — owner o colaborador
-- `can_edit_flow(flow_id uuid) returns bool` — owner o colaborador editor
-- `join_flow_by_token(p_token uuid) returns uuid` — usado por usuarios logueados que entran por link público; agrega fila en `flow_collaborators` con `role = flows.public_role` y devuelve el `flow_id`
-- `get_public_flow(p_token uuid) returns flows` — devuelve el flow para visitantes anónimos cuando `is_public = true` (permite render sin login)
+**Edge function `list-flow-templates`** (público, sin auth admin):
+- Lee plantillas vía import dinámico no es posible en edge → en su lugar mantenemos las plantillas también en una tabla `flow_templates` sincronizada al boot.
 
-### Realtime
-`ALTER PUBLICATION supabase_realtime ADD TABLE flows, flow_collaborators;` para refrescar listas y permisos al instante.
+**Mejor enfoque (simplificado):** las plantillas son archivos JSON en `src/data/flow-templates/` y se exponen al edge function vía:
+- Nueva tabla `flow_templates (id, slug, title, description, tags, nodes jsonb, edges jsonb, prompt_hint text)`.
+- Botón "Sincronizar desde repo" en /admin que sube los archivos del frontend (lee `import.meta.glob('@/data/flow-templates/*.json')`) → edge function `admin-sync-templates` upsert por slug.
+- Así el usuario edita JSON en GitHub via Claude Code y luego presiona "Sincronizar" en /admin.
 
----
+## Módulo 4 — Ejemplos de flujos / nodos
+- Tab "Plantillas" en /admin: lista de plantillas de `flow_templates`, preview de cada una (nombre, descripción, conteo nodos/edges, tags).
+- Botón "Sincronizar desde repo" arriba.
+- Botón "Borrar" por plantilla.
+- Las plantillas se inyectan en `generate-flow` (módulo 2).
 
-## 2. UI — Modal de Compartir
+## Archivos
 
-Botón **Compartir** en el header del editor (`Index.tsx`), al lado del icono de Settings. Solo visible para el **dueño**. Si el usuario es Free, abre un modal de upsell hacia `/pricing` en lugar del modal de compartir.
+**Nuevos:**
+- `src/pages/Admin.tsx` — layout con tabs (Prospectos, Plantillas).
+- `src/pages/AdminLogin.tsx` — form password.
+- `src/components/admin/AdminGuard.tsx`
+- `src/components/admin/ProspectsTab.tsx`
+- `src/components/admin/TemplatesTab.tsx`
+- `src/components/admin/FileDropzone.tsx`
+- `src/hooks/useAdminAuth.ts`
+- `src/data/flow-templates/example-prospecting.json` (seed)
+- `src/data/flow-templates/example-content.json` (seed)
+- `supabase/functions/admin-auth/index.ts`
+- `supabase/functions/admin-ingest/index.ts`
+- `supabase/functions/admin-prospects/index.ts` (list/delete)
+- `supabase/functions/admin-sync-templates/index.ts`
+- Migración SQL.
 
-### Modal (shadcn `Dialog`) — dos secciones
-1. **Invitar por email**
-   - Input email + selector de rol (Editor/Viewer) + botón "Invitar"
-   - Resuelve email → user_id contra `profiles` vía RPC `find_user_by_email`
-   - Si no existe: toast "Este usuario aún no tiene cuenta en Miiles"
-   - Lista de colaboradores debajo con avatar, nombre, dropdown de rol y botón "Quitar"
+**Modificados:**
+- `src/App.tsx` — rutas `/admin` y `/admin/login`.
+- `supabase/functions/generate-flow/index.ts` — inyección de prospectos + plantillas.
 
-2. **Enlace público**
-   - Switch "Cualquiera con el enlace puede acceder"
-   - Selector de rol del link (Editor/Viewer)
-   - Input readonly con la URL `https://app/boards/join/{public_token}` + botón Copiar
+## Secrets
+- `ADMIN_PASSWORD` (add_secret).
 
----
+## Fuera de alcance
+- Webhook GitHub (sustituido por botón sincronizar).
+- Edición visual de plantillas (se editan via Claude Code en el repo).
+- 2FA/recovery del admin.
 
-## 3. Ruta `/boards/join/:token`
-
-Página puente que cubre los tres casos del flujo "Híbrido":
-
-- Llama `get_public_flow(token)`. Si no existe o `is_public=false` → 404.
-- **Si hay sesión**: ejecuta `join_flow_by_token(token)` (idempotente por unique), luego `navigate(/boards/{flow_id}, { replace: true })`.
-- **Si no hay sesión**: muestra preview con nombre del tablero + dos botones: **"Editar como invitado"** (entra directo al editor en modo anónimo) y **"Iniciar sesión y guardar en mis tableros"** (manda a `/login?next=/boards/join/{token}`).
-
-`Login.tsx` / `Register.tsx` ya redirigen a `/dashboard`; se respeta el query `?next=` para regresar al join.
-
----
-
-## 4. Editor (`Index.tsx`) — modo colaborativo
-
-### Carga
-- Detecta si el usuario es **owner**, **collaborator** (con rol), o **anónimo público** (sin user, vía token en query).
-- Para anónimo: en lugar de `supabase.from('flows').select()`, llama RPC `get_public_flow` y desactiva el guardado a DB (solo broadcast).
-- Variable `canEdit`: true si owner, collaborator editor, o anon con `public_role=editor`.
-- Si `!canEdit` → `nodesDraggable={false}`, `nodesConnectable={false}`, oculta toolbar/drawing, muestra pill "Solo lectura".
-
-### Botón Compartir
-- Solo visible si owner. Pro-gated.
-- Si el usuario actual es colaborador, mostrar en su lugar un menú "Salir del tablero" (borra su fila en `flow_collaborators`).
-
-### Sincronización en vivo (Supabase Realtime — broadcast)
-- Canal `flow:{flow_id}` con `{ config: { broadcast: { self: false }, presence: { key: user.id || anonId } } }`.
-- **Sender**: en el `useEffect` que ya marca dirty, también emite `channel.send({ type:'broadcast', event:'state', payload:{ nodes, edges, by: clientId, ts } })` con throttle de ~120ms (no debounce — necesitamos fluidez al mover).
-- **Receiver**: al recibir, hace `setNodes/setEdges` con la versión remota **solo si** `payload.ts > lastLocalTs` (last-write-wins por timestamp + clientId como desempate).
-- Flag `isApplyingRemoteRef` para que el cambio remoto no dispare otro broadcast ni alimente el history undo.
-- La persistencia a DB se mantiene tal cual (debounce 800ms): cualquier editor escribe; los demás reciben el estado y al recargar leen de DB. No hay merge fino — es suficiente para esta primera versión.
-
-### Presencia (avatares activos)
-- En el canal, `channel.track({ user_id, display_name, avatar_url, color })` al unirse.
-- Componente `PresenceStack` en el header (arriba a la derecha, antes de Undo/Redo): stack de avatares con tooltip de nombre. Anónimos aparecen como "Invitado" con color generado.
-
----
-
-## 5. Página "Mis Tableros" (`Boards.tsx`)
-
-- Query owned: `flows where user_id = me`
-- Query shared: `flow_collaborators` join `flows` where `user_id = me`
-- Render en **dos secciones**: "Mis tableros" y "Compartidos conmigo" (cada uno con su grid existente).
-- Las cards compartidas llevan un badge sutil "Compartido" + nombre del dueño.
-- Botón rojo de eliminar:
-  - **Owner** → DELETE flow (cascada borra colaboradores)
-  - **Colaborador** → DELETE su fila en `flow_collaborators` con toast "Quitado de tu lista"
-- Conteo `X/10` solo cuenta tableros **propios**. Los compartidos no consumen cuota.
-- Realtime subscription a `flow_collaborators` filtrada por su user_id → refresh automático cuando alguien los invita.
-
----
-
-## 6. Gating de plan Pro
-
-- Hook `usePlan()` que lee `profiles.plan`.
-- En `Index.tsx`: el botón Compartir se muestra siempre al owner, pero si `plan !== 'pro'` abre `UpgradeDialog` con CTA a `/pricing`.
-- Los usuarios Free **sí pueden** ser invitados a colaborar y editar tableros de un Pro (no tendría sentido limitar al revés).
-
----
-
-## 7. Aspectos técnicos
-
-**Conflict handling**: last-write-wins por timestamp del emisor. Cada cliente ignora broadcasts cuyo `ts` sea menor al último estado local conocido. Para esta primera versión esto es suficiente y predecible; un CRDT (Yjs) sería trabajo de otro sprint.
-
-**Throttle vs debounce**: el broadcast usa throttle de 120ms (no debounce) para que el arrastre se vea fluido. La escritura a DB sigue con debounce de 800ms para no saturar Postgres.
-
-**Anti-loop**: ref `isApplyingRemoteRef` impide que `setNodes` desde un broadcast remoto vuelva a emitir o se guarde como entrada de undo.
-
-**Seguridad del link público**: el token es un uuid v4 (122 bits), suficientemente impredecible. Al desactivar `is_public` se rota opcionalmente el token con un botón "Regenerar enlace".
-
-**Cuota**: tableros compartidos **no cuentan** contra el límite de 10 del plan Free.
-
----
-
-## 8. Archivos a tocar
-
-**Nuevos**
-- `src/components/ShareDialog.tsx`
-- `src/components/PresenceStack.tsx`
-- `src/hooks/useFlowRealtime.ts` (broadcast + presence)
-- `src/hooks/useFlowAccess.ts` (resuelve owner/collaborator/anon + canEdit + role)
-- `src/hooks/usePlan.ts`
-- `src/pages/JoinFlow.tsx` (ruta `/boards/join/:token`)
-
-**Modificados**
-- `src/pages/Index.tsx` — botón Compartir, presencia, sincronización, modo solo-lectura, soporte anónimo
-- `src/pages/Boards.tsx` — sección "Compartidos conmigo", lógica de "quitar" vs "borrar"
-- `src/pages/Login.tsx`, `src/pages/Register.tsx` — respetar `?next=` para volver al join tras login
-- `src/App.tsx` — registrar ruta `/boards/join/:token`
-
-**Migración SQL única** con: columnas en flows, tabla flow_collaborators, RLS actualizadas, 4 funciones SECURITY DEFINER, publicación realtime.
-
----
-
-## 9. Fuera de alcance (lo dejamos para una siguiente iteración)
-
-- Cursores en vivo por usuario en el canvas
-- Sistema de comentarios
-- Invitación a usuarios que aún no tienen cuenta (con envío de email vía Resend)
-- CRDT real para merge sin conflictos a nivel de propiedad
+## Diagrama
+```
+Admin UI ─► admin-auth ──► JWT
+        ─► admin-ingest ─► [parse + Gemini] ─► prospects table
+        ─► admin-sync-templates ─► flow_templates table
+        
+User chat ─► generate-flow ──► fetch prospects+templates ─► Gemini ─► flow
+```
