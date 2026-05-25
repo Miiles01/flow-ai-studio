@@ -25,6 +25,7 @@ import ProgramApplicants from "./pages/ProgramApplicants";
 import PublicApplicants from "./pages/PublicApplicants";
 import NotFound from "./pages/NotFound";
 import JoinFlow from "./pages/JoinFlow";
+import Admin from "./pages/Admin";
 import AuthLayout from "./components/AuthLayout";
 import { useEffect, useState } from "react";
 
