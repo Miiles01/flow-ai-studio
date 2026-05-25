@@ -44,26 +44,24 @@ const PresenceStack = ({ users, localUserId }: { users: PresenceUser[], localUse
           </motion.div>
         );
 
-        const tooltipWrap = (
-          <Tooltip key={u.id + i}>
-            <TooltipTrigger asChild>
-              {isLocal ? <button className="outline-none">{avatarContent}</button> : avatarContent}
-            </TooltipTrigger>
-            <TooltipContent side="bottom" sideOffset={8} className="text-[12px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
-              {u.display_name}{u.is_anon ? " (invitado)" : ""} {isLocal ? "(Tú)" : ""}
-            </TooltipContent>
-          </Tooltip>
-        );
-
         if (isLocal) {
           return (
             <QuickSettings key={u.id + i}>
-              {tooltipWrap}
+              <button className="outline-none focus:outline-none">{avatarContent}</button>
             </QuickSettings>
           );
         }
 
-        return tooltipWrap;
+        return (
+          <Tooltip key={u.id + i}>
+            <TooltipTrigger asChild>
+              {avatarContent}
+            </TooltipTrigger>
+            <TooltipContent side="bottom" sideOffset={8} className="text-[12px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
+              {u.display_name}{u.is_anon ? " (invitado)" : ""}
+            </TooltipContent>
+          </Tooltip>
+        );
       })}
       {overflow > 0 && (
         <div className="w-7 h-7 rounded-full ring-2 ring-white bg-[#F3F4F6] text-[10px] flex items-center justify-center text-[#6B7280] font-medium">
