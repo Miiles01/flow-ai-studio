@@ -1,0 +1,15 @@
+{
+  "slug": "example-prospecting",
+  "title": "Prospección B2B",
+  "description": "Flujo base de outreach a prospectos desde la base de datos",
+  "tags": ["ventas", "outreach", "b2b"],
+  "prompt_hint": "Usar cuando el usuario pida un flujo de ventas, outreach o prospección",
+  "nodes": [
+    { "type": "process", "label": "Filtrar prospectos", "description": "Por industria y ciudad" },
+    { "type": "action", "label": "Enviar email frío", "description": "Plantilla personalizada" },
+    { "type": "decision", "label": "¿Respondió?" },
+    { "type": "action", "label": "Agendar llamada" },
+    { "type": "action", "label": "Follow-up D+3" }
+  ],
+  "edges": []
+}

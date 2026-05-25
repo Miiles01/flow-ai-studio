@@ -25,6 +25,7 @@ import ProgramApplicants from "./pages/ProgramApplicants";
 import PublicApplicants from "./pages/PublicApplicants";
 import NotFound from "./pages/NotFound";
 import JoinFlow from "./pages/JoinFlow";
+import Admin from "./pages/Admin";
 import AuthLayout from "./components/AuthLayout";
 import { useEffect, useState } from "react";
 
@@ -108,6 +109,7 @@ const App = () => (
                 <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
                 <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
               </Route>
+              <Route path="/admin" element={<Admin />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </AuthProvider>
