@@ -1157,7 +1157,7 @@ const IndexContent = () => {
                   className={`absolute top-[calc(100%+8px)] left-0 w-52 rounded-2xl shadow-[0_12px_40px_rgb(0,0,0,0.10)] overflow-hidden z-50 ${isDark ? 'bg-[#1C1C1E] border border-white/10 text-white' : 'bg-white text-black'}`}
                 >
                   <div className="px-3 py-2.5">
-                    <p className="text-[10px] text-[#9CA3AF] font-light uppercase tracking-widest mb-1 px-2">Ajustes</p>
+                    <p className="text-[10px] text-[#9CA3AF] font-light tracking-widest mb-1 px-2">Ajustes</p>
                     <button
                       onClick={() => { setHideTools((v) => !v); setSettingsOpen(false); }}
                       className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors text-left ${isDark ? 'hover:bg-white/10' : 'hover:bg-[#F3F4F6]'}`}
@@ -1171,19 +1171,7 @@ const IndexContent = () => {
                       </span>
                     </button>
 
-                    <button
-                      onClick={() => { toggleTheme(); setSettingsOpen(false); }}
-                      className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors text-left ${isDark ? 'hover:bg-white/10' : 'hover:bg-[#F3F4F6]'}`}
-                    >
-                      {isDark ? (
-                        <Sun size={15} strokeWidth={1.5} className="text-[#9CA3AF] shrink-0" />
-                      ) : (
-                        <Moon size={15} strokeWidth={1.5} className="text-[#6B7280] shrink-0" />
-                      )}
-                      <span className={`text-[13px] font-normal ${isDark ? 'text-white' : 'text-black'}`}>
-                        {isDark ? "Modo claro" : "Modo oscuro"}
-                      </span>
-                    </button>
+
 
                     <button
                       onClick={() => {
