@@ -1240,19 +1240,7 @@ const IndexContent = () => {
           <ShareDialog open={shareOpen} onOpenChange={setShareOpen} flowId={id} />
         )}
 
-        {/* Avatars: Top Center (Desktop) / Bottom Right (Mobile) */}
-        <div className="absolute bottom-[80px] right-5 md:bottom-auto md:right-auto md:left-1/2 md:-translate-x-1/2 md:top-5 flex flex-col md:flex-row items-end md:items-center gap-2 pointer-events-none z-50">
-          {!canEdit && (
-            <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-light pointer-events-auto ${isDark ? 'bg-black text-white/80 ring-1 ring-white/10' : 'bg-white text-[#6B7280] shadow-[0_8px_30px_rgb(0,0,0,0.06)]'}`}>
-              <EyeIcon size={12} strokeWidth={1.5} />
-              <span className="hidden sm:inline">Solo lectura</span>
-              <span className="inline sm:hidden">Lectura</span>
-            </div>
-          )}
-          <div className="pointer-events-auto">
-            <PresenceStack users={presenceUsers} />
-          </div>
-        </div>
+
 
 
         {/* Right: history controls + task panel toggle */}
@@ -1323,6 +1311,20 @@ const IndexContent = () => {
         )}
 
       </header>
+
+      {/* Avatars: Top Center (Desktop) / Bottom Right (Mobile) */}
+      <div className="absolute bottom-[90px] right-4 md:bottom-auto md:right-auto md:left-1/2 md:-translate-x-1/2 md:top-5 flex flex-col md:flex-row items-end md:items-center gap-2 pointer-events-none z-50">
+        {!canEdit && (
+          <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-light pointer-events-auto ${isDark ? 'bg-black text-white/80 ring-1 ring-white/10' : 'bg-white text-[#6B7280] shadow-[0_8px_30px_rgb(0,0,0,0.06)]'}`}>
+            <EyeIcon size={12} strokeWidth={1.5} />
+            <span className="hidden sm:inline">Solo lectura</span>
+            <span className="inline sm:hidden">Lectura</span>
+          </div>
+        )}
+        <div className="pointer-events-auto">
+          <PresenceStack users={presenceUsers} />
+        </div>
+      </div>
 
       <div className="flex-1 relative" onPointerDown={handlePointerDown}>
         <ReactFlow
