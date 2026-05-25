@@ -1,10 +1,22 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
+import { createClient } from "npm:@supabase/supabase-js@2";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
     "authorization, x-client-info, apikey, content-type",
 };
+
+function extractKeywords(prompt: string): string[] {
+  const stop = new Set(["el","la","los","las","de","del","y","o","u","a","con","para","por","un","una","unos","unas","en","que","como","mi","tu","su","sus","me","te","se","lo","al","es","ser","estar","tiene","tengo","quiero","necesito","busco","ideas","negocio","flujo","crear","crea","haz","hazme","una","uno","sobre","sus","yo","como","esta","este","esto","ver"]);
+  return Array.from(new Set(
+    prompt.toLowerCase()
+      .normalize("NFD").replace(/[\u0300-\u036f]/g, "")
+      .replace(/[^\w\sñ]/g, " ")
+      .split(/\s+/)
+      .filter(w => w.length >= 4 && !stop.has(w))
+  )).slice(0, 8);
+}
 
 serve(async (req) => {
   if (req.method === "OPTIONS") {
@@ -25,6 +37,36 @@ serve(async (req) => {
       );
     }
 
+    // ─── RAG: fetch prospects + templates ────────────────────────────────
+    const supabase = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+    );
+
+    const keywords = extractKeywords(prompt);
+    let prospects: any[] = [];
+    if (keywords.length > 0) {
+      const orClauses = keywords.flatMap(k => [
+        `name.ilike.%${k}%`,
+        `company.ilike.%${k}%`,
+        `industry.ilike.%${k}%`,
+        `role.ilike.%${k}%`,
+        `notes.ilike.%${k}%`,
+      ]).join(",");
+      const { data } = await supabase.from("prospects").select("name,company,email,phone,role,industry,location,website,notes,tags").or(orClauses).limit(20);
+      prospects = data ?? [];
+    }
+
+    const { data: templates } = await supabase.from("flow_templates").select("title,description,tags,prompt_hint,nodes,edges").limit(10);
+
+    const prospectsBlock = prospects.length > 0
+      ? `\n\nPROSPECTOS EN LA BASE DE DATOS (úsalos como fuente primaria; si el usuario pide alguno listado aquí, refiérelo con sus datos reales):\n${JSON.stringify(prospects, null, 0)}`
+      : "";
+
+    const templatesBlock = (templates && templates.length > 0)
+      ? `\n\nPLANTILLAS DE FLUJOS DE REFERENCIA (úsalas como inspiración estructural cuando apliquen):\n${(templates ?? []).map((t: any) => `- ${t.title}: ${t.description} | tags: ${(t.tags ?? []).join(",")} | hint: ${t.prompt_hint}`).join("\n")}`
+      : "";
+
     const systemPrompt = `You are a flow diagram generator. Given a user description, generate a JSON array of steps for a flow diagram.
 
 Each step must have:
@@ -39,9 +81,10 @@ Rules:
 - Use "process" for general steps
 - Generate 4-8 steps typically
 - Respond ONLY with valid JSON array, no markdown, no explanation
+- When the user asks about prospects or business ideas, prefer real prospects from the database below over invented ones.
 
 Example output:
-[{"label":"Inicio","type":"start"},{"label":"Recibir solicitud","description":"El usuario envía el formulario","type":"process"},{"label":"¿Datos válidos?","description":"Validar campos requeridos","type":"decision"},{"label":"Guardar en BD","description":"Insertar registro","type":"action"},{"label":"Enviar confirmación","description":"Email al usuario","type":"action"},{"label":"Fin","type":"end"}]`;
+[{"label":"Inicio","type":"start"},{"label":"Recibir solicitud","description":"El usuario envía el formulario","type":"process"},{"label":"¿Datos válidos?","description":"Validar campos requeridos","type":"decision"},{"label":"Guardar en BD","description":"Insertar registro","type":"action"},{"label":"Enviar confirmación","description":"Email al usuario","type":"action"},{"label":"Fin","type":"end"}]${prospectsBlock}${templatesBlock}`;
 
     const response = await fetch(
       "https://ai.gateway.lovable.dev/v1/chat/completions",
@@ -86,7 +129,6 @@ Example output:
       throw new Error("No content in AI response");
     }
 
-    // Parse the JSON from the response, handling potential markdown wrapping
     let steps;
     try {
       const cleaned = content.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
@@ -96,7 +138,7 @@ Example output:
       throw new Error("Failed to parse AI response as JSON");
     }
 
-    return new Response(JSON.stringify({ steps }), {
+    return new Response(JSON.stringify({ steps, used_prospects: prospects.length, used_templates: templates?.length ?? 0 }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (error) {
