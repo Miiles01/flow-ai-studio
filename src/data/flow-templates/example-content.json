@@ -5,11 +5,63 @@
   "tags": ["contenido", "marketing", "social"],
   "prompt_hint": "Usar cuando el usuario pida un flujo de contenido, posts, ideas creativas",
   "nodes": [
-    { "type": "process", "label": "Investigar tema" },
-    { "type": "process", "label": "Generar guion" },
-    { "type": "action", "label": "Grabar / diseñar" },
-    { "type": "decision", "label": "¿Aprobado?" },
-    { "type": "action", "label": "Publicar" }
+    {
+      "id": "1",
+      "type": "text",
+      "position": { "x": 50, "y": -50 },
+      "data": { "html": "<b>Fase 1: Ideación</b>", "fontSize": 24, "textColor": "#4059F1" }
+    },
+    {
+      "id": "2",
+      "type": "shape",
+      "position": { "x": 50, "y": 80 },
+      "style": { "width": 140, "height": 140 },
+      "data": { "shape": "circle", "label": "Investigar\nTema", "fillColor": "#3B82F6", "textColor": "#FFFFFF", "fontSize": 15, "bold": true }
+    },
+    {
+      "id": "3",
+      "type": "shape",
+      "position": { "x": 250, "y": 80 },
+      "style": { "width": 140, "height": 140 },
+      "data": { "shape": "square", "label": "Generar Guion", "fillColor": "#FACC15", "textColor": "#111827", "fontSize": 15, "bold": true }
+    },
+    {
+      "id": "4",
+      "type": "todo",
+      "position": { "x": 450, "y": 30 },
+      "style": { "width": 300, "height": 240 },
+      "data": {
+        "title": "Checklist Producción",
+        "subtitle": "Preparativos antes de grabar",
+        "tasks": [
+          { "id": "t1", "text": "Revisar iluminación", "completed": true },
+          { "id": "t2", "text": "Preparar cámara", "completed": false },
+          { "id": "t3", "text": "Grabar audio limpio", "completed": false }
+        ],
+        "backgroundColor": "#1F2937",
+        "accentColor": "#A855F7",
+        "textColor": "#FFFFFF"
+      }
+    },
+    {
+      "id": "5",
+      "type": "shape",
+      "position": { "x": 820, "y": 80 },
+      "style": { "width": 140, "height": 140 },
+      "data": { "shape": "diamond", "label": "¿Aprobado?", "fillColor": "#EF4444", "textColor": "#FFFFFF", "fontSize": 14 }
+    },
+    {
+      "id": "6",
+      "type": "shape",
+      "position": { "x": 1050, "y": 80 },
+      "style": { "width": 140, "height": 140 },
+      "data": { "shape": "hexagon", "label": "Publicar!", "fillColor": "#22C55E", "textColor": "#FFFFFF", "fontSize": 16, "bold": true }
+    }
   ],
-  "edges": []
+  "edges": [
+    { "id": "e1-2", "source": "2", "target": "3", "animated": true, "style": { "stroke": "#3B82F6", "strokeWidth": 2 } },
+    { "id": "e2-3", "source": "3", "target": "4", "animated": true, "style": { "stroke": "#FACC15", "strokeWidth": 2 } },
+    { "id": "e3-4", "source": "4", "target": "5", "animated": true, "style": { "stroke": "#A855F7", "strokeWidth": 2 } },
+    { "id": "e4-5", "source": "5", "target": "6", "animated": true, "style": { "stroke": "#EF4444", "strokeWidth": 2 } }
+  ]
 }

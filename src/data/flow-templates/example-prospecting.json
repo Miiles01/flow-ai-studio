@@ -5,11 +5,63 @@
   "tags": ["ventas", "outreach", "b2b"],
   "prompt_hint": "Usar cuando el usuario pida un flujo de ventas, outreach o prospección",
   "nodes": [
-    { "type": "process", "label": "Filtrar prospectos", "description": "Por industria y ciudad" },
-    { "type": "action", "label": "Enviar email frío", "description": "Plantilla personalizada" },
-    { "type": "decision", "label": "¿Respondió?" },
-    { "type": "action", "label": "Agendar llamada" },
-    { "type": "action", "label": "Follow-up D+3" }
+    {
+      "id": "1",
+      "type": "text",
+      "position": { "x": 50, "y": -60 },
+      "data": { "html": "<b>Flujo B2B</b>", "fontSize": 28, "textColor": "#4059F1" }
+    },
+    {
+      "id": "2",
+      "type": "todo",
+      "position": { "x": 50, "y": 50 },
+      "style": { "width": 280, "height": 220 },
+      "data": {
+        "title": "Lista de Prospectos",
+        "subtitle": "Filtros aplicados",
+        "tasks": [
+          { "id": "t1", "text": "Industria: Software", "completed": true },
+          { "id": "t2", "text": "Tamaño: 50-200 empl.", "completed": true },
+          { "id": "t3", "text": "Cargo: CEO/CTO", "completed": false }
+        ],
+        "backgroundColor": "#FFFFFF",
+        "accentColor": "#3B82F6",
+        "textColor": "#111827"
+      }
+    },
+    {
+      "id": "3",
+      "type": "shape",
+      "position": { "x": 400, "y": 90 },
+      "style": { "width": 140, "height": 140 },
+      "data": { "shape": "square", "label": "Enviar\nEmail Frío", "fillColor": "#F97316", "textColor": "#FFFFFF", "fontSize": 15, "bold": true }
+    },
+    {
+      "id": "4",
+      "type": "shape",
+      "position": { "x": 620, "y": 90 },
+      "style": { "width": 140, "height": 140 },
+      "data": { "shape": "diamond", "label": "¿Respondió?", "fillColor": "#EC4899", "textColor": "#FFFFFF", "fontSize": 14 }
+    },
+    {
+      "id": "5",
+      "type": "shape",
+      "position": { "x": 850, "y": 0 },
+      "style": { "width": 140, "height": 140 },
+      "data": { "shape": "star", "label": "Agendar\nLlamada", "fillColor": "#22C55E", "textColor": "#FFFFFF", "fontSize": 15, "bold": true }
+    },
+    {
+      "id": "6",
+      "type": "shape",
+      "position": { "x": 850, "y": 180 },
+      "style": { "width": 140, "height": 140 },
+      "data": { "shape": "square", "label": "Follow-up\nD+3", "fillColor": "#6B7280", "textColor": "#FFFFFF", "fontSize": 14 }
+    }
   ],
-  "edges": []
+  "edges": [
+    { "id": "e1-2", "source": "2", "target": "3", "animated": true, "style": { "stroke": "#3B82F6", "strokeWidth": 2 } },
+    { "id": "e2-3", "source": "3", "target": "4", "animated": false, "style": { "stroke": "#F97316", "strokeWidth": 2 } },
+    { "id": "e3-4", "source": "4", "target": "5", "sourceHandle": "top", "targetHandle": "left", "animated": true, "style": { "stroke": "#22C55E", "strokeWidth": 2 } },
+    { "id": "e3-5", "source": "4", "target": "6", "sourceHandle": "bottom", "targetHandle": "left", "animated": false, "style": { "stroke": "#6B7280", "strokeWidth": 2 } }
+  ]
 }
