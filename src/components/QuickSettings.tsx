@@ -7,7 +7,7 @@ import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover
 import { Switch } from "@/components/ui/switch";
 import { motion } from "framer-motion";
 
-export function QuickSettings() {
+export function QuickSettings({ children }: { children: React.ReactNode }) {
   const { isDark, toggleTheme } = useTheme();
   const { plan } = usePlan();
   const navigate = useNavigate();
@@ -26,27 +26,7 @@ export function QuickSettings() {
   return (
     <Popover open={isOpen} onOpenChange={setIsOpen}>
       <PopoverTrigger asChild>
-        <button
-          title="Ajustes rápidos"
-          className={`
-            relative flex items-center justify-center
-            w-9 h-9 rounded-full
-            border transition-all duration-300 outline-none
-            ${isDark
-              ? "border-white/20 bg-white/10 hover:bg-white/20 text-white"
-              : "border-black/10 bg-white hover:bg-gray-50 text-black shadow-sm"
-            }
-          `}
-        >
-          <motion.div
-            animate={{ rotate: isOpen ? 90 : 0 }}
-            whileHover={{ rotate: 45 }}
-            transition={{ type: "spring", stiffness: 200, damping: 15 }}
-            className="flex items-center justify-center"
-          >
-            <Settings size={16} strokeWidth={1.5} />
-          </motion.div>
-        </button>
+        {children}
       </PopoverTrigger>
       
       <PopoverContent 

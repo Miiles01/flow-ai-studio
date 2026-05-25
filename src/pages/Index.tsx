@@ -40,7 +40,7 @@ import FrameNode from "@/components/nodes/FrameNode";
 import SkeletonNode from "@/components/nodes/SkeletonNode";
 import Toolbar from "@/components/Toolbar";
 import AIPromptBar from "@/components/AIPromptBar";
-import { QuickSettings } from "@/components/QuickSettings";
+
 import { generateFlowFromPrompt } from "@/lib/generateFlow";
 
 const SHAPE_TYPES = ["square", "circle", "diamond", "hexagon", "star", "document", "cloud", "database", "cylinder", "callout", "speech", "heart"];
@@ -1194,7 +1194,7 @@ const IndexContent = () => {
           </div>
 
           <div className="pointer-events-auto">
-            <QuickSettings />
+
           </div>
 
           {/* Share button (owner only) */}
@@ -1242,7 +1242,7 @@ const IndexContent = () => {
               </div>
             )}
             <div className="pointer-events-auto">
-              <PresenceStack users={presenceUsers} />
+              <PresenceStack users={presenceUsers} localUserId={identityForPresence.id} />
             </div>
           </div>
 
@@ -1327,7 +1327,7 @@ const IndexContent = () => {
           </div>
         )}
         <div className="pointer-events-auto">
-          <PresenceStack users={presenceUsers} />
+          <PresenceStack users={presenceUsers} localUserId={identityForPresence.id} />
         </div>
       </div>
 
