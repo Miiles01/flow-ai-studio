@@ -14,23 +14,32 @@ export async function generateFlowFromPrompt(
   const enhancedPrompt = `${prompt}
 
 ---
-CRITICAL INSTRUCTION FOR AI: Ignore any previous formatting rules in the system prompt. You MUST return the output as a JSON OBJECT with "nodes" and "edges" arrays.
+CRITICAL INSTRUCTION FOR AI: Ignore any previous formatting rules. You MUST return a JSON OBJECT with "nodes" and "edges" arrays.
+You are an expert UX/UI Flow Designer. Your job is to create visually STUNNING, vibrant, and highly detailed diagrams.
+
 Each node MUST have:
-- "id": unique string identifier (e.g. "1", "2")
-- "type": one of "shape", "todo", "text"
+- "id": unique string (e.g. "n1", "n2")
+- "type": MUST BE EXACTLY ONE OF: "shapeNode", "todoNode", "textNode"
 - "position": {"x": number, "y": number}
 - "data": an object based on the type
 
-Node Types and Data:
-1. "shape": {"shape": "square"|"circle"|"diamond"|"hexagon"|"star", "label": "text", "fillColor": "hex", "textColor": "hex", "fontSize": 14}
-2. "todo": {"title": "text", "subtitle": "text", "tasks": [{"id": "t1", "text": "task", "completed": boolean}], "backgroundColor": "hex", "accentColor": "hex"}
-3. "text": {"html": "<b>Title</b>", "fontSize": 24, "textColor": "hex"}
+🎨 NODE TYPES & DATA:
+1. "shapeNode" (for steps, decisions, start/end):
+   - "data": {"shape": "square"|"circle"|"diamond"|"hexagon"|"document", "label": "Text here", "fillColor": "#Hex", "textColor": "#Hex", "fontSize": 14}
+   - Use #4059F1 (Blue), #F36F56 (Coral), #45B382 (Green), #F5A623 (Orange), #8B5CF6 (Purple). NEVER use plain white. Always use white text (#FFFFFF) on colored backgrounds.
 
-Rules:
-- Organize the nodes logically with X and Y positions. Increment X by 300 for sequential steps.
-- Make it colorful and visually appealing (use colors like #3B82F6, #F97316, #22C55E).
-- If you use edges, generate them in "edges": [{"id": "e1-2", "source": "1", "target": "2", "animated": true, "style": {"stroke": "hex", "strokeWidth": 2}}].
-- Respond ONLY with valid JSON: {"nodes": [...], "edges": [...]}`;
+2. "todoNode" (for checklists or grouped tasks):
+   - "data": {"title": "Main Step", "subtitle": "Description", "tasks": [{"id": "t1", "text": "Task 1", "completed": boolean}], "backgroundColor": "#1C1C1E", "accentColor": "#4059F1"}
+
+3. "textNode" (for large titles/headers in the canvas):
+   - "data": {"html": "<b>FLOW TITLE</b>", "fontSize": 32, "textColor": "#333333"}
+
+📐 LAYOUT RULES:
+- Spread nodes out! X should increment by 350-400px. Y can vary for branches.
+- Use "circle" for start/end, "diamond" for decisions, "square"/"document" for processes.
+- Edges: {"id": "e1-2", "source": "n1", "target": "n2", "animated": true, "style": {"stroke": "#A3A8B8", "strokeWidth": 2}}
+
+Respond ONLY with valid JSON: {"nodes": [...], "edges": [...]}`;
 
   const { data, error } = await supabase.functions.invoke("generate-flow", {
     body: { prompt: enhancedPrompt },
