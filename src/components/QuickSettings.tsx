@@ -120,7 +120,6 @@ export function QuickSettings({ children }: { children: React.ReactNode }) {
                 <User size={16} strokeWidth={1.5} className="opacity-70" />
                 <span className="text-[13px] font-light">Ajustes del perfil</span>
               </div>
-              <ArrowRight size={12} className="opacity-40" />
             </button>
           </div>
         </div>
