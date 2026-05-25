@@ -1243,87 +1243,92 @@ const IndexContent = () => {
 
 
 
-        {/* Right: history controls + task panel toggle */}
-        {!hideTools && (
-          <div className={`hidden md:flex items-center gap-1 pointer-events-auto px-1.5 py-1.5 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.06)] ${isDark ? 'bg-black text-white ring-1 ring-white/10' : 'bg-white'}`}>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={undo}
-                  disabled={!canUndo}
-                  className={`w-9 h-9 flex items-center justify-center rounded-full transition-all ${
-                    canUndo
-                      ? isDark ? "hover:bg-white/10 text-[#9CA3AF] hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
-                      : isDark ? "text-white/20 cursor-not-allowed" : "text-[#D1D5DB] cursor-not-allowed"
-                  }`}
-                  aria-label="Deshacer"
-                >
-                  <Undo2 size={16} strokeWidth={1.5} />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" sideOffset={8} className="text-[12px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
-                Deshacer (⌘Z)
-              </TooltipContent>
-            </Tooltip>
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={redo}
-                  disabled={!canRedo}
-                  className={`w-9 h-9 flex items-center justify-center rounded-full transition-all ${
-                    canRedo
-                      ? isDark ? "hover:bg-white/10 text-[#9CA3AF] hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
-                      : isDark ? "text-white/20 cursor-not-allowed" : "text-[#D1D5DB] cursor-not-allowed"
-                  }`}
-                  aria-label="Rehacer"
-                >
-                  <Redo2 size={16} strokeWidth={1.5} />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" sideOffset={8} className="text-[12px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
-                Rehacer (⌘⇧Z)
-              </TooltipContent>
-            </Tooltip>
-
-            {/* Divider */}
-            <div className={`w-[1px] h-4 mx-0.5 ${isDark ? 'bg-white/10' : 'bg-[#E5E7EB]'}`} />
-
-            {/* Task Panel Toggle */}
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={() => setTaskPanelOpen((v) => !v)}
-                  className={`w-9 h-9 flex items-center justify-center rounded-full transition-all ${
-                    taskPanelOpen
-                      ? isDark ? "bg-white/10 text-white" : "bg-[#F3F4F6] text-black"
-                      : isDark ? "hover:bg-white/10 text-[#9CA3AF] hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
-                  }`}
-                  aria-label="Panel de tareas"
-                >
-                  <PanelRight size={16} strokeWidth={1.5} />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" sideOffset={8} className="text-[12px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
-                Lista de tareas
-              </TooltipContent>
-            </Tooltip>
+        {/* Right Area: Avatars + Controls */}
+        <div className="hidden md:flex items-center gap-4 pointer-events-none">
+          {/* Desktop Avatars */}
+          <div className="flex items-center gap-2 z-50">
+            {!canEdit && (
+              <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-light pointer-events-auto ${isDark ? 'bg-black text-white/80 ring-1 ring-white/10' : 'bg-white text-[#6B7280] shadow-[0_8px_30px_rgb(0,0,0,0.06)]'}`}>
+                <EyeIcon size={12} strokeWidth={1.5} />
+                Solo lectura
+              </div>
+            )}
+            <div className="pointer-events-auto">
+              <PresenceStack users={presenceUsers} />
+            </div>
           </div>
-        )}
+
+          {/* History controls + task panel toggle */}
+          {!hideTools && (
+            <div className={`flex items-center gap-1 pointer-events-auto px-1.5 py-1.5 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.06)] ${isDark ? 'bg-black text-white ring-1 ring-white/10' : 'bg-white'}`}>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={undo}
+                    disabled={!canUndo}
+                    className={`w-9 h-9 flex items-center justify-center rounded-full transition-all ${
+                      canUndo
+                        ? isDark ? "hover:bg-white/10 text-[#9CA3AF] hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
+                        : isDark ? "text-white/20 cursor-not-allowed" : "text-[#D1D5DB] cursor-not-allowed"
+                    }`}
+                    aria-label="Deshacer"
+                  >
+                    <Undo2 size={16} strokeWidth={1.5} />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" sideOffset={8} className="text-[12px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
+                  Deshacer (⌘Z)
+                </TooltipContent>
+              </Tooltip>
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={redo}
+                    disabled={!canRedo}
+                    className={`w-9 h-9 flex items-center justify-center rounded-full transition-all ${
+                      canRedo
+                        ? isDark ? "hover:bg-white/10 text-[#9CA3AF] hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
+                        : isDark ? "text-white/20 cursor-not-allowed" : "text-[#D1D5DB] cursor-not-allowed"
+                    }`}
+                    aria-label="Rehacer"
+                  >
+                    <Redo2 size={16} strokeWidth={1.5} />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" sideOffset={8} className="text-[12px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
+                  Rehacer (⌘⇧Z)
+                </TooltipContent>
+              </Tooltip>
+
+              {/* Divider */}
+              <div className={`w-[1px] h-4 mx-0.5 ${isDark ? 'bg-white/10' : 'bg-[#E5E7EB]'}`} />
+
+              {/* Task Panel Toggle */}
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={() => setTaskPanelOpen((v) => !v)}
+                    className={`w-9 h-9 flex items-center justify-center rounded-full transition-all ${
+                      taskPanelOpen
+                        ? isDark ? "bg-white/10 text-white" : "bg-[#F3F4F6] text-black"
+                        : isDark ? "hover:bg-white/10 text-[#9CA3AF] hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
+                    }`}
+                    aria-label="Panel de tareas"
+                  >
+                    <PanelRight size={16} strokeWidth={1.5} />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="bottom" sideOffset={8} className="text-[12px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
+                  Lista de tareas
+                </TooltipContent>
+              </Tooltip>
+            </div>
+          )}
+        </div>
 
       </header>
 
-      {/* Avatars: Top Center (Desktop) */}
-      <div className="hidden md:flex absolute left-1/2 -translate-x-1/2 top-5 items-center gap-2 pointer-events-none z-50">
-        {!canEdit && (
-          <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-light pointer-events-auto ${isDark ? 'bg-black text-white/80 ring-1 ring-white/10' : 'bg-white text-[#6B7280] shadow-[0_8px_30px_rgb(0,0,0,0.06)]'}`}>
-            <EyeIcon size={12} strokeWidth={1.5} />
-            Solo lectura
-          </div>
-        )}
-        <div className="pointer-events-auto">
-          <PresenceStack users={presenceUsers} />
-        </div>
-      </div>
+
 
       {/* Avatars: Bottom Right (Mobile) */}
       <div className="md:hidden absolute bottom-5 right-4 flex flex-col items-end gap-2 pointer-events-none z-50">
