@@ -24,7 +24,12 @@ export async function generateFlowFromPrompt(
     throw new Error(data.error);
   }
 
-  const steps: AIStep[] = data.steps;
+  // Si la IA devolvió el nuevo formato estructurado visualmente
+  if (data.nodes && Array.isArray(data.nodes) && data.nodes.length > 0 && data.nodes[0].position) {
+    return { nodes: data.nodes, edges: data.edges || [] };
+  }
+
+  const steps: AIStep[] = data.steps || data.nodes;
 
   if (!Array.isArray(steps) || steps.length === 0) {
     throw new Error("La IA no generó pasos válidos");

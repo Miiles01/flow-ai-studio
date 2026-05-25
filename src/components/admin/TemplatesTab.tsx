@@ -65,13 +65,13 @@ export default function TemplatesTab() {
         <div>
           <p className="text-sm text-white font-light">Plantillas desde el repo</p>
           <p className="text-xs text-white/60 mt-1 font-light">
-            Edita los archivos en <code className="text-white/80">src/data/flow-templates/*.json</code> con Claude Code, pushea a GitHub y luego sincroniza aquí.
+            Edita los archivos en <code className="text-white/80">src/data/flow-templates/*.json</code> y haz push a GitHub. Se sincronizarán <strong className="text-[#4059F1]">automáticamente</strong> mediante Actions.
           </p>
-          <p className="text-xs text-white/40 mt-1">{Object.keys(templateFiles).length} archivos detectados en el repo</p>
+          <p className="text-xs text-white/40 mt-1">{Object.keys(templateFiles).length} archivos detectados en el repo local</p>
         </div>
-        <Button onClick={handleSync} disabled={syncing} className="bg-white text-black hover:bg-white/90 shrink-0">
-          <RefreshCw className={`h-4 w-4 ${syncing ? "animate-spin" : ""}`} />
-          Sincronizar
+        <Button onClick={handleSync} disabled={syncing} className="bg-white/10 text-white hover:bg-white/20 shrink-0 border border-white/10">
+          <RefreshCw className={`h-4 w-4 mr-2 ${syncing ? "animate-spin" : ""}`} />
+          Forzar Sync Manual
         </Button>
       </div>
 
