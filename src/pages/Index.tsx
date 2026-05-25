@@ -1137,7 +1137,7 @@ const IndexContent = () => {
           </div>
 
           {/* Settings icon + dropdown */}
-          <div ref={settingsRef} className="relative pointer-events-auto">
+          <div ref={settingsRef} className="relative pointer-events-auto hidden md:block">
             <button
               ref={settingsButtonRef}
               onClick={() => setSettingsOpen(!settingsOpen)}
