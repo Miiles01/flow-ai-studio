@@ -37,13 +37,14 @@ import TextNode from "@/components/nodes/TextNode";
 import TodoNode from "@/components/nodes/TodoNode";
 import ImageNode from "@/components/nodes/ImageNode";
 import FrameNode from "@/components/nodes/FrameNode";
+import SkeletonNode from "@/components/nodes/SkeletonNode";
 import Toolbar from "@/components/Toolbar";
 import AIPromptBar from "@/components/AIPromptBar";
 import { QuickSettings } from "@/components/QuickSettings";
 import { generateFlowFromPrompt } from "@/lib/generateFlow";
 
-const SHAPE_TYPES = ["square", "circle", "diamond", "triangle", "hexagon", "star"];
-const nodeTypes = { flowNode: FlowNode, shapeNode: ShapeNode, textNode: TextNode, todoNode: TodoNode, imageNode: ImageNode, frameNode: FrameNode };
+const SHAPE_TYPES = ["square", "circle", "diamond", "hexagon", "star", "document", "cloud", "database", "cylinder", "callout", "speech", "heart"];
+const nodeTypes = { flowNode: FlowNode, shapeNode: ShapeNode, textNode: TextNode, todoNode: TodoNode, imageNode: ImageNode, frameNode: FrameNode, skeletonNode: SkeletonNode };
 
 const RAINBOW_COLORS = [
   { name: "Transparente", value: "transparent" },
@@ -720,19 +721,62 @@ const IndexContent = () => {
   const handleAIGenerate = useCallback(
     async (prompt: string) => {
       setIsGenerating(true);
+      const skeletonId = `ai-skeleton-${Date.now()}`;
+
+      // Posición inicial (centro de la pantalla)
+      const centerPos = reactFlowInstance
+        ? reactFlowInstance.screenToFlowPosition({ x: window.innerWidth / 2, y: window.innerHeight / 2 })
+        : { x: 400, y: 200 };
+
+      const skeletonNode: Node = {
+        id: skeletonId,
+        type: "skeletonNode",
+        position: { x: centerPos.x - 140, y: centerPos.y - 80 },
+        data: {},
+      };
+
+      setNodes((prev) => [...prev, skeletonNode]);
+
       try {
         const { nodes: newNodes, edges: newEdges } = await generateFlowFromPrompt(prompt);
-        setNodes((prev) => [...prev, ...newNodes]);
+
+        setNodes((prev) => {
+          // Capturar posición final del skeleton
+          const skeleton = prev.find((n) => n.id === skeletonId);
+          const finalX = skeleton ? skeleton.position.x : centerPos.x - 140;
+          const finalY = skeleton ? skeleton.position.y : centerPos.y - 80;
+
+          const filteredNodes = prev.filter((n) => n.id !== skeletonId);
+
+          if (newNodes.length > 0) {
+            // Calcular bounds (minX, minY)
+            const minX = Math.min(...newNodes.map((n) => n.position.x));
+            const minY = Math.min(...newNodes.map((n) => n.position.y));
+
+            const offsetNodes = newNodes.map((n) => ({
+              ...n,
+              position: {
+                x: finalX + (n.position.x - minX),
+                y: finalY + (n.position.y - minY),
+              },
+            }));
+            return [...filteredNodes, ...offsetNodes];
+          }
+
+          return filteredNodes;
+        });
+
         setEdges((prev) => [...prev, ...newEdges]);
         toast.success(`Diagrama generado con ${newNodes.length} nodos`);
       } catch (err) {
+        setNodes((prev) => prev.filter((n) => n.id !== skeletonId));
         const message = err instanceof Error ? err.message : "Error desconocido";
         toast.error(message);
       } finally {
         setIsGenerating(false);
       }
     },
-    [setNodes, setEdges]
+    [setNodes, setEdges, reactFlowInstance]
   );
 
   // Debounced autosave: only after id exists (not "new"). For "new", first manual save creates the row.
