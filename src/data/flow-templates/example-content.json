@@ -1,0 +1,15 @@
+{
+  "slug": "example-content",
+  "title": "Creación de contenido",
+  "description": "Flujo de ideación → producción → publicación de contenido",
+  "tags": ["contenido", "marketing", "social"],
+  "prompt_hint": "Usar cuando el usuario pida un flujo de contenido, posts, ideas creativas",
+  "nodes": [
+    { "type": "process", "label": "Investigar tema" },
+    { "type": "process", "label": "Generar guion" },
+    { "type": "action", "label": "Grabar / diseñar" },
+    { "type": "decision", "label": "¿Aprobado?" },
+    { "type": "action", "label": "Publicar" }
+  ],
+  "edges": []
+}
