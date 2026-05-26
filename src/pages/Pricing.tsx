@@ -105,11 +105,12 @@ const plans = [
   },
   {
     name: "Negocios",
-    monthlyPrice: "499",
-    annualPrice: "4,990",
+    monthlyPrice: "Charlemos",
+    annualPrice: "Charlemos",
     description: "Para equipos y empresas",
     features: ["Todo lo de Pro", "Cuentas multi-usuario", "API access", "Account manager"],
     cta: "Contactar",
+    customPrice: true,
   },
 ];
 
