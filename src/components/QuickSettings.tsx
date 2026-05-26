@@ -1,14 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Settings, Sun, Moon, User, ArrowRight } from "lucide-react";
+import { Settings, Sun, Moon, Laptop, User, ArrowRight } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { usePlan } from "@/hooks/usePlan";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
-import { Switch } from "@/components/ui/switch";
 import { motion } from "framer-motion";
 
 export function QuickSettings({ children }: { children?: React.ReactNode }) {
-  const { isDark, toggleTheme } = useTheme();
+  const { theme, setTheme, isDark } = useTheme();
   const { plan } = usePlan();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
@@ -109,22 +108,70 @@ export function QuickSettings({ children }: { children?: React.ReactNode }) {
           <div className="space-y-2">
             <h4 className="text-[11px] font-semibold tracking-wider opacity-50 mb-1">Ajustes</h4>
             
-            {/* Dark Mode toggle row */}
+            {/* Theme Selector Row */}
             <div 
-              className={`
-                flex items-center justify-between px-3 py-2.5 rounded-2xl transition-all duration-200
-                ${isDark ? "hover:bg-white/5" : "hover:bg-gray-50"}
-              `}
+              className="flex items-center justify-between px-3 py-2"
             >
               <div className="flex items-center gap-2.5">
-                {isDark ? (
+                {theme === "light" ? (
+                  <Sun size={16} strokeWidth={1.5} className="text-amber-500" />
+                ) : theme === "dark" ? (
                   <Moon size={16} strokeWidth={1.5} className="text-violet-400" />
                 ) : (
-                  <Sun size={16} strokeWidth={1.5} className="text-amber-500" />
+                  <Laptop size={16} strokeWidth={1.5} className="opacity-70" />
                 )}
-                <span className="text-[13px] font-light">Modo oscuro</span>
+                <span className="text-[13px] font-light">Tema</span>
               </div>
-              <Switch checked={isDark} onCheckedChange={toggleTheme} />
+              
+              <div className={`flex items-center gap-1 p-0.5 rounded-full border ${isDark ? 'bg-white/5 border-white/10' : 'bg-gray-50 border-gray-100'}`}>
+                {/* Light Theme Button */}
+                <button
+                  type="button"
+                  title="Tema claro"
+                  onClick={() => setTheme("light")}
+                  className={`
+                    p-1.5 rounded-full transition-all duration-200 hover:scale-105
+                    ${theme === "light" 
+                      ? (isDark ? "bg-white text-black" : "bg-black text-white shadow-sm") 
+                      : "text-muted-foreground hover:text-foreground"
+                    }
+                  `}
+                >
+                  <Sun size={14} strokeWidth={2} />
+                </button>
+
+                {/* Dark Theme Button */}
+                <button
+                  type="button"
+                  title="Tema oscuro"
+                  onClick={() => setTheme("dark")}
+                  className={`
+                    p-1.5 rounded-full transition-all duration-200 hover:scale-105
+                    ${theme === "dark" 
+                      ? (isDark ? "bg-white text-black" : "bg-black text-white shadow-sm") 
+                      : "text-muted-foreground hover:text-foreground"
+                    }
+                  `}
+                >
+                  <Moon size={14} strokeWidth={2} />
+                </button>
+
+                {/* System Theme Button */}
+                <button
+                  type="button"
+                  title="Automático (Dispositivo)"
+                  onClick={() => setTheme("system")}
+                  className={`
+                    p-1.5 rounded-full transition-all duration-200 hover:scale-105
+                    ${theme === "system" 
+                      ? (isDark ? "bg-white text-black" : "bg-black text-white shadow-sm") 
+                      : "text-muted-foreground hover:text-foreground"
+                    }
+                  `}
+                >
+                  <Laptop size={14} strokeWidth={2} />
+                </button>
+              </div>
             </div>
 
             {/* Profile Settings row */}
