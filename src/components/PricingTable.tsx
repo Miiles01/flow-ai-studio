@@ -156,7 +156,7 @@ export default function PricingTable() {
               key={plan.name}
               className={`flex flex-col rounded-[2.5rem] p-10 transition-all duration-500 hover:-translate-y-2 ${
                 plan.highlighted
-                  ? "bg-black text-white shadow-[0_40px_80px_rgba(0,0,0,0.2)] scale-105"
+                  ? "bg-black text-white shadow-[0_40px_80px_rgba(0,0,0,0.2)]"
                   : "bg-[#F5F5F8] text-black"
               }`}
             >
