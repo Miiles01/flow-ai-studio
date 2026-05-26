@@ -105,11 +105,12 @@ const plans = [
   },
   {
     name: "Negocios",
-    monthlyPrice: "499",
-    annualPrice: "4,990",
+    monthlyPrice: "Charlemos",
+    annualPrice: "Charlemos",
     description: "Para equipos y empresas",
     features: ["Todo lo de Pro", "Cuentas multi-usuario", "API access", "Account manager"],
     cta: "Contactar",
+    customPrice: true,
   },
 ];
 
@@ -263,13 +264,21 @@ const Pricing = () => {
                     {plan.description}
                   </p>
                   <div className="flex items-baseline gap-1 mb-2">
-                    <div className="text-5xl font-normal tracking-tight flex items-baseline">
-                      <span>$</span>
-                      <RotatingPrice value={cycle === "monthly" ? plan.monthlyPrice : plan.annualPrice} />
-                    </div>
-                    <span className={`text-xs font-light ${plan.highlighted ? "text-gray-500" : "text-gray-400"}`}>
-                      MXN {cycle === "monthly" ? "/mes" : "/año"}
-                    </span>
+                    {plan.customPrice ? (
+                      <div className="text-5xl font-normal tracking-tight" style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>
+                        Charlemos
+                      </div>
+                    ) : (
+                      <>
+                        <div className="text-5xl font-normal tracking-tight flex items-baseline">
+                          <span>$</span>
+                          <RotatingPrice value={cycle === "monthly" ? plan.monthlyPrice : plan.annualPrice} />
+                        </div>
+                        <span className={`text-xs font-light ${plan.highlighted ? "text-gray-500" : "text-gray-400"}`}>
+                          MXN {cycle === "monthly" ? "/mes" : "/año"}
+                        </span>
+                      </>
+                    )}
                   </div>
                   {cycle === "annually" && plan.annualBadge && (
                     <p className={`text-[11px] font-light mb-8 ${plan.highlighted ? "text-white/70" : "text-miiles-blue"}`}>
