@@ -21,16 +21,7 @@ type Prospect = {
   created_at: string;
 };
 
-async function fileToBase64(file: File): Promise<string> {
-  const buf = await file.arrayBuffer();
-  const bytes = new Uint8Array(buf);
-  let s = "";
-  const chunk = 0x8000;
-  for (let i = 0; i < bytes.length; i += chunk) {
-    s += String.fromCharCode.apply(null, Array.from(bytes.subarray(i, i + chunk)) as any);
-  }
-  return btoa(s);
-}
+import { supabase } from "@/integrations/supabase/client";
 
 export default function ProspectsTab() {
   const [prospects, setProspects] = useState<Prospect[]>([]);
@@ -56,11 +47,23 @@ export default function ProspectsTab() {
 
   const handleUpload = async (file: File) => {
     try {
-      const contentBase64 = await fileToBase64(file);
-      const { data, error } = await adminFetch("admin-ingest", {
+      // 1) Pedimos URL firmada para subir a storage (evita el límite de 50MB del edge function)
+      const { data: signed, error: signErr } = await adminFetch("admin-ingest", {
+        mode: "get_upload_url",
         filename: file.name,
-        mime: file.type,
-        contentBase64,
+      });
+      if (signErr || signed?.error) throw new Error(signed?.error ?? signErr?.message ?? "No se pudo iniciar la subida");
+
+      // 2) Subimos el archivo directo al storage
+      const { error: upErr } = await supabase.storage
+        .from("admin-uploads")
+        .uploadToSignedUrl(signed.path, signed.token, file, { contentType: file.type || "application/octet-stream" });
+      if (upErr) throw upErr;
+
+      // 3) El edge function descarga y procesa
+      const { data, error } = await adminFetch("admin-ingest", {
+        storage_path: signed.path,
+        filename: file.name,
       });
       if (error || data?.error) throw new Error(data?.error ?? error?.message);
       toast.success(`${file.name}: ${data.inserted ?? 0} prospectos importados`);
