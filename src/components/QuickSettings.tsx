@@ -83,10 +83,10 @@ export function QuickSettings({ children }: { children?: React.ReactNode }) {
               <button
                 onClick={() => {
                   setIsOpen(false);
-                  navigate("/profile");
+                  navigate("/profile#plan");
                 }}
                 className={`
-                  flex items-center gap-1 text-[11px] font-medium px-2.5 py-1 rounded-full transition-all hover:scale-[1.03]
+                  flex items-center text-[11px] font-medium px-2.5 py-1 rounded-full transition-all hover:scale-[1.03]
                   ${isPremium
                     ? "bg-white/10 hover:bg-white/20 text-white border border-white/10"
                     : (isDark
@@ -97,7 +97,6 @@ export function QuickSettings({ children }: { children?: React.ReactNode }) {
                 `}
               >
                 {isPremium ? "Gestionar" : "Mejorar"}
-                <ArrowRight size={10} />
               </button>
             </div>
           </div>

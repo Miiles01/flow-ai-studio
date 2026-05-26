@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -57,6 +57,8 @@ const Profile = () => {
   const { user, signOut } = useAuth();
   const { isDark } = useTheme();
   const navigate = useNavigate();
+  const [plan, setPlan] = useState("free");
+  const planRef = useRef<HTMLDivElement>(null);
   const [displayName, setDisplayName] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
   const [instagramHandle, setInstagramHandle] = useState("");
@@ -104,6 +106,7 @@ const Profile = () => {
           setVideoUrl1(data.video_url_1 || "");
           setVideoUrl2(data.video_url_2 || "");
           setVideoUrl3(data.video_url_3 || "");
+          setPlan(data.plan || "free");
 
           setOriginalData({
             displayName: data.display_name || "",
@@ -124,6 +127,15 @@ const Profile = () => {
         setLoading(false);
       });
   }, [user]);
+
+  useEffect(() => {
+    if (!loading && window.location.hash === "#plan") {
+      const timer = setTimeout(() => {
+        planRef.current?.scrollIntoView({ behavior: "smooth", block: "center" });
+      }, 100);
+      return () => clearTimeout(timer);
+    }
+  }, [loading, window.location.hash]);
 
   const currentData = {
     displayName, avatarUrl, instagramHandle, tiktokHandle, twitterHandle,
@@ -374,6 +386,45 @@ const Profile = () => {
               </div>
             </CardContent>
           </Card>
+
+          {/* Sección de Membresía / Plan */}
+          <div ref={planRef} className="scroll-mt-6">
+            <Card className="border border-border">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-base">Tu plan</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div 
+                  className={`
+                    p-5 rounded-2xl border transition-all duration-300 flex items-center justify-between
+                    ${isDark
+                      ? "bg-white/5 border-white/10 text-white"
+                      : "bg-gray-50 border-gray-100 text-black shadow-sm"
+                    }
+                  `}
+                >
+                  <div className="space-y-1">
+                    <span className="text-[10px] font-semibold tracking-wider uppercase opacity-50 block">Membresía Activa</span>
+                    <span className="text-base font-semibold block">
+                      {plan === "pro" ? "Plan Pro" : plan === "business" || plan === "negocios" ? "Plan Negocios" : "Plan Gratis"}
+                    </span>
+                    <span className="text-xs font-light text-muted-foreground block">
+                      Ciclo: {plan === "free" ? "No aplica" : "Mensual"}
+                    </span>
+                  </div>
+                  
+                  <div className="text-right">
+                    <span className="text-2xl font-semibold block">
+                      {plan === "pro" ? "$29" : plan === "business" || plan === "negocios" ? "$99" : "$0"}
+                    </span>
+                    <span className="text-[10px] font-light text-muted-foreground block">
+                      {plan === "free" ? "Gratis para siempre" : "USD / mes"}
+                    </span>
+                  </div>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
         </form>
 
         <Separator className="my-6" />
