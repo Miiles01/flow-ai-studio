@@ -415,10 +415,10 @@ const Profile = () => {
                   
                   <div className="text-right">
                     <span className="text-2xl font-semibold block">
-                      {plan === "pro" ? "$29" : plan === "business" || plan === "negocios" ? "$99" : "$0"}
+                      {plan === "pro" ? "$179" : plan === "business" || plan === "negocios" ? "$499" : "$0"}
                     </span>
                     <span className="text-[10px] font-light text-muted-foreground block">
-                      {plan === "free" ? "Gratis para siempre" : "USD / mes"}
+                      {plan === "free" ? "Gratis para siempre" : "MXN / mes"}
                     </span>
                   </div>
                 </div>
