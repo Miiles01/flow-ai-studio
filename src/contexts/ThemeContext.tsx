@@ -29,11 +29,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     if (theme === "dark") return true;
     if (theme === "light") return false;
     
-    // Default system resolution on initial mount
-    const systemPrefersDark = typeof window !== "undefined" && window.matchMedia("(prefers-color-scheme: dark)").matches;
+    // Default system (automatic time-of-day) resolution on initial mount
     const hour = new Date().getHours();
-    const isNightTime = hour >= 18 || hour < 6;
-    return systemPrefersDark || isNightTime;
+    return hour >= 18 || hour < 6;
   });
 
   useEffect(() => {
@@ -46,11 +44,9 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
       } else if (theme === "light") {
         activeDark = false;
       } else {
-        // "system"
-        const systemPrefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+        // "system" (automatic time-of-day)
         const hour = new Date().getHours();
-        const isNightTime = hour >= 18 || hour < 6;
-        activeDark = systemPrefersDark || isNightTime;
+        activeDark = hour >= 18 || hour < 6;
       }
 
       setIsDark(activeDark);
@@ -64,26 +60,8 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
     updateTheme();
 
     if (theme === "system") {
-      const mediaQuery = window.matchMedia("(prefers-color-scheme: dark)");
-      const listener = () => updateTheme();
-      
-      // Modern matchMedia uses addEventListener, fallback to addListener for older browsers
-      if (mediaQuery.addEventListener) {
-        mediaQuery.addEventListener("change", listener);
-      } else {
-        mediaQuery.addListener(listener);
-      }
-      
       const interval = setInterval(updateTheme, 60000); // check time changes every minute
-      
-      return () => {
-        if (mediaQuery.removeEventListener) {
-          mediaQuery.removeEventListener("change", listener);
-        } else {
-          mediaQuery.removeListener(listener);
-        }
-        clearInterval(interval);
-      };
+      return () => clearInterval(interval);
     }
   }, [theme]);
 
