@@ -2,6 +2,7 @@ import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { createClient } from "npm:@supabase/supabase-js@2";
 import * as XLSX from "npm:xlsx@0.18.5";
 
+const BUCKET = "admin-uploads";
 const enc = new TextEncoder();
 async function verifyToken(token: string | null, secret: string) {
   if (!token) return false;
@@ -19,13 +20,6 @@ async function verifyToken(token: string | null, secret: string) {
   } catch { return false; }
 }
 
-function b64ToBytes(b64: string): Uint8Array {
-  const bin = atob(b64);
-  const bytes = new Uint8Array(bin.length);
-  for (let i = 0; i < bin.length; i++) bytes[i] = bin.charCodeAt(i);
-  return bytes;
-}
-
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
   try {
@@ -39,16 +33,49 @@ Deno.serve(async (req) => {
       });
     }
 
-    const { filename, mime, contentBase64 } = await req.json();
-    if (!filename || !contentBase64) {
-      return new Response(JSON.stringify({ error: "filename y contentBase64 requeridos" }), {
+    const supabase = createClient(
+      Deno.env.get("SUPABASE_URL")!,
+      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
+    );
+
+    const body = await req.json();
+
+    // Mode 1: request a signed upload URL
+    if (body.mode === "get_upload_url") {
+      const filename = String(body.filename ?? "file");
+      const path = `${crypto.randomUUID()}-${filename}`;
+      const { data, error } = await supabase.storage.from(BUCKET).createSignedUploadUrl(path);
+      if (error) throw error;
+      return new Response(JSON.stringify({ path: data.path, token: data.token, signedUrl: data.signedUrl }), {
+        headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+
+    // Mode 2: process a previously uploaded storage object
+    const { storage_path, filename } = body;
+    if (!storage_path || !filename) {
+      return new Response(JSON.stringify({ error: "storage_path y filename requeridos" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    const bytes = b64ToBytes(contentBase64);
-    let rawText = "";
+    const { data: fileData, error: dlErr } = await supabase.storage.from(BUCKET).download(storage_path);
+    if (dlErr) throw dlErr;
 
+    // Stream into memory
+    const reader = fileData.stream().getReader();
+    const chunks: Uint8Array[] = [];
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+      chunks.push(value);
+    }
+    const total = chunks.reduce((a, c) => a + c.length, 0);
+    const bytes = new Uint8Array(total);
+    let off = 0;
+    for (const c of chunks) { bytes.set(c, off); off += c.length; }
+
+    let rawText = "";
     const lower = filename.toLowerCase();
     if (lower.endsWith(".csv") || lower.endsWith(".xlsx") || lower.endsWith(".xls")) {
       const wb = XLSX.read(bytes, { type: "array" });
@@ -56,15 +83,12 @@ Deno.serve(async (req) => {
       const rows = XLSX.utils.sheet_to_json(sheet, { defval: "" }) as Record<string, unknown>[];
       rawText = "Filas tabulares:\n" + rows.slice(0, 500).map(r => JSON.stringify(r)).join("\n");
     } else if (lower.endsWith(".pdf")) {
-      // Minimal PDF text extraction via regex over text streams (best-effort).
-      // For richer extraction, we delegate to the AI by passing the raw text we can salvage.
       const decoder = new TextDecoder("latin1");
       const raw = decoder.decode(bytes);
       const matches = raw.match(/\(([^)]{2,})\)/g) || [];
       rawText = matches.slice(0, 5000).map(m => m.slice(1, -1)).join(" ").slice(0, 60000);
       if (!rawText.trim()) rawText = "(no se pudo extraer texto del PDF; la IA tratará de inferir)";
     } else {
-      // txt and otros
       rawText = new TextDecoder().decode(bytes).slice(0, 80000);
     }
 
@@ -106,16 +130,15 @@ Reglas:
     }
 
     const prospects = (parsed.prospects ?? []).filter((p: any) => p && (p.name || p.company || p.email));
+
+    // Clean up the storage object regardless of result
+    await supabase.storage.from(BUCKET).remove([storage_path]).catch(() => {});
+
     if (prospects.length === 0) {
       return new Response(JSON.stringify({ inserted: 0, message: "No se encontraron prospectos" }), {
         headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-
-    const supabase = createClient(
-      Deno.env.get("SUPABASE_URL")!,
-      Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
-    );
 
     const rows = prospects.map((p: any) => ({
       name: p.name || null,
