@@ -95,17 +95,18 @@ const plans = [
   },
   {
     name: "Pro",
-    monthlyPrice: "29",
-    annualPrice: "19",
+    monthlyPrice: "179",
+    annualPrice: "1,800",
     description: "Para creadores en crecimiento",
     features: ["Proyectos ilimitados", "Colaboraciones ilimitadas", "Analítica avanzada", "Soporte prioritario"],
     cta: "Empezar Pro",
     highlighted: true,
+    annualBadge: "Ahorra con el plan anual",
   },
   {
     name: "Negocios",
-    monthlyPrice: "99",
-    annualPrice: "79",
+    monthlyPrice: "499",
+    annualPrice: "4,990",
     description: "Para equipos y empresas",
     features: ["Todo lo de Pro", "Cuentas multi-usuario", "API access", "Account manager"],
     cta: "Contactar",
@@ -261,15 +262,21 @@ const Pricing = () => {
                   <p className={`text-xs font-light mb-8 ${plan.highlighted ? "text-gray-400" : "text-gray-500"}`}>
                     {plan.description}
                   </p>
-                  <div className="flex items-baseline gap-1 mb-10">
+                  <div className="flex items-baseline gap-1 mb-2">
                     <div className="text-5xl font-normal tracking-tight flex items-baseline">
                       <span>$</span>
                       <RotatingPrice value={cycle === "monthly" ? plan.monthlyPrice : plan.annualPrice} />
                     </div>
                     <span className={`text-xs font-light ${plan.highlighted ? "text-gray-500" : "text-gray-400"}`}>
-                      /mes
+                      MXN {cycle === "monthly" ? "/mes" : "/año"}
                     </span>
                   </div>
+                  {cycle === "annually" && plan.annualBadge && (
+                    <p className={`text-[11px] font-light mb-8 ${plan.highlighted ? "text-white/70" : "text-miiles-blue"}`}>
+                      ✦ {plan.annualBadge}
+                    </p>
+                  )}
+                  {!(cycle === "annually" && plan.annualBadge) && <div className="mb-8" />}
                   <ul className="flex flex-col gap-4 mb-10 flex-1">
                     {plan.features.map((f) => (
                       <li key={f} className="text-xs font-light flex items-center gap-2">
