@@ -140,8 +140,8 @@ const Register = () => {
 
       <p className="text-center text-sm text-miiles-gray-400 font-normal mt-10">
         ¿Ya tienes cuenta?{" "}
-        <Link to={`/login${next !== "/onboarding" ? `?next=${encodeURIComponent(next)}` : ""}`} className="text-accent hover:underline font-medium">
-          Inicia sesión
+        <Link to={`/login${next !== "/onboarding" ? `?next=${encodeURIComponent(next)}` : ""}`} className="text-black hover:underline font-medium">
+          Iniciar sesión
         </Link>
       </p>
     </motion.div>

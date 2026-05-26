@@ -120,8 +120,8 @@ const Login = () => {
 
       <p className="text-center text-sm text-miiles-gray-400 font-normal mt-10">
         ¿No tienes cuenta?{" "}
-        <Link to={`/register${next !== "/dashboard" ? `?next=${encodeURIComponent(next)}` : ""}`} className="text-accent hover:underline font-medium">
-          Regístrate
+        <Link to={`/register${next !== "/dashboard" ? `?next=${encodeURIComponent(next)}` : ""}`} className="text-black hover:underline font-medium">
+          Registrarse
         </Link>
       </p>
     </motion.div>
