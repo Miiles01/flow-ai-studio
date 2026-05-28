@@ -40,6 +40,27 @@ const RAINBOW_COLORS = [
   { name: "Negro", value: "#1F2937" },
 ];
 
+const isColorDark = (colorHex: string): boolean => {
+  if (!colorHex || colorHex === "transparent") return false;
+  const hex = colorHex.replace("#", "").trim();
+  if (hex.toLowerCase() === "white") return false;
+  if (hex.toLowerCase() === "black") return true;
+  
+  if (hex.length === 3) {
+    const r = parseInt(hex[0] + hex[0], 16);
+    const g = parseInt(hex[1] + hex[1], 16);
+    const b = parseInt(hex[2] + hex[2], 16);
+    return (r * 299 + g * 587 + b * 114) / 1000 < 140;
+  }
+  if (hex.length === 6) {
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+    return (r * 299 + g * 587 + b * 114) / 1000 < 140;
+  }
+  return false;
+};
+
 const TodoNode = ({ id, data, selected }: NodeProps) => {
   const { getNodes, setNodes } = useReactFlow();
   const selectedNodes = getNodes().filter((n) => n.selected);
@@ -58,8 +79,10 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
   ];
   const fontSize = nodeData.fontSize ?? 14;
   const backgroundColor = nodeData.backgroundColor ?? (isDark ? "#1F2937" : "#FFFFFF");
-  const accentColor = nodeData.accentColor ?? "#111827";
-  const isDarkMode = backgroundColor === "#1F2937" || backgroundColor === "#111827" || (isDark && (backgroundColor === "transparent" || !nodeData.backgroundColor));
+  const accentColor = nodeData.accentColor ?? "#4059F1";
+  const isDarkMode = backgroundColor === "transparent" || !nodeData.backgroundColor
+    ? isDark
+    : isColorDark(backgroundColor);
   const textColor = nodeData.textColor ?? (isDarkMode ? "#FFFFFF" : "#1F2937");
 
   const [activePicker, setActivePicker] = useState<"bg" | "accent" | "text" | null>(null);

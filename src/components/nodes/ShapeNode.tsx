@@ -51,6 +51,27 @@ const TEXT_COLOR_PALETTE = [
 const handleClass =
   "!w-[10px] !h-[10px] !rounded-full !bg-white !border-[1.5px] !border-[#4059F1] transition-all duration-200 hover:!bg-[#4059F1] before:absolute before:-inset-3 before:content-[''] !z-50";
 
+const isColorDark = (colorHex: string): boolean => {
+  if (!colorHex || colorHex === "transparent") return false;
+  const hex = colorHex.replace("#", "").trim();
+  if (hex.toLowerCase() === "white") return false;
+  if (hex.toLowerCase() === "black") return true;
+  
+  if (hex.length === 3) {
+    const r = parseInt(hex[0] + hex[0], 16);
+    const g = parseInt(hex[1] + hex[1], 16);
+    const b = parseInt(hex[2] + hex[2], 16);
+    return (r * 299 + g * 587 + b * 114) / 1000 < 140;
+  }
+  if (hex.length === 6) {
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+    return (r * 299 + g * 587 + b * 114) / 1000 < 140;
+  }
+  return false;
+};
+
 const ShapeNode = ({ id, data, selected }: NodeProps) => {
   const nodeData = data as ShapeNodeData;
   const shape = nodeData.shape || "square";
@@ -89,12 +110,16 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
     updateNodeData({ label });
   };
 
+  const fillColor = nodeData.fillColor || (isDark ? "#2C2C2E" : "#FFFFFF");
+  const isFillDark = fillColor === "transparent" ? isDark : isColorDark(fillColor);
+  const defaultTextColor = isFillDark ? "#FFFFFF" : "#111827";
+
   const textStyle: React.CSSProperties = {
     fontSize: `${nodeData.fontSize || 14}px`,
     fontWeight: nodeData.bold ? "bold" : "normal",
     fontStyle: nodeData.italic ? "italic" : "normal",
     textDecoration: nodeData.underline ? "underline" : "none",
-    color: nodeData.textColor || (isDark ? "#FFFFFF" : "#111827"),
+    color: nodeData.textColor || defaultTextColor,
   };
 
   return (

@@ -67,29 +67,38 @@ serve(async (req) => {
       ? `\n\nPLANTILLAS DE FLUJOS DE REFERENCIA (úsalas como inspiración estructural cuando apliquen):\n${(templates ?? []).map((t: any) => `- ${t.title}: ${t.description} | tags: ${(t.tags ?? []).join(",")} | hint: ${t.prompt_hint}`).join("\n")}`
       : "";
 
-    const systemPrompt = `You are an expert visual flow diagram generator. Generate a beautiful, structured JSON array of nodes representing a flow on a canvas.
+    const systemPrompt = `You are an expert visual flow diagram generator. Generate a beautiful, highly professional, and structured JSON object representing a flow on a canvas.
 
 Each node MUST have:
 - "id": unique string identifier (e.g. "1", "2")
-- "type": one of "shape", "todo", "text"
+- "type": one of "shapeNode", "todoNode", "textNode", "imageNode"
 - "position": {"x": number, "y": number}
+- "style": {"width": number, "height": number} (optional but highly recommended: shapes default to 140x140, todos to 280x240 or wider if they have long tasks)
 - "data": an object based on the type
 
 Node Types and Data:
-1. "shape": {"shape": "square"|"circle"|"diamond"|"hexagon"|"star", "label": "text", "fillColor": "hex", "textColor": "hex", "fontSize": 14}
-2. "todo": {"title": "text", "subtitle": "text", "tasks": [{"id": "t1", "text": "task", "completed": boolean}], "backgroundColor": "hex", "accentColor": "hex"}
-3. "text": {"html": "<b>Title</b>", "fontSize": 24, "textColor": "hex"}
+1. "shapeNode": {"shape": "square"|"circle"|"diamond"|"hexagon"|"star", "label": "text", "fillColor": "hex", "textColor": "hex", "fontSize": 14}
+   - Use "circle" for start/end points, "diamond" for decision points, and "square" or other shapes for general processes.
+2. "todoNode": {"title": "text", "subtitle": "text", "tasks": [{"id": "t1", "text": "detailed task description", "completed": boolean}], "backgroundColor": "hex", "accentColor": "hex", "textColor": "hex"}
+   - Use for phases with actionable checklist items. Do not make tasks generic; customize them in detail based on the user request.
+3. "textNode": {"html": "<b>Title</b>", "fontSize": 24, "textColor": "hex"}
+   - Use for general headers, sections, or annotations.
+4. "imageNode": {"url": "string", "width": number, "height": number}
+   - Use for visual placeholders or logos.
 
-Rules:
-- Organize the nodes logically with X and Y positions. Typically increment X by 250 for sequential steps.
-- Make it colorful and visually appealing (use colors like #3B82F6, #F97316, #22C55E, #EC4899, #FACC15).
-- Include "width" and "height" in "style" if needed (shapes: 140x140, todos: 280x200).
-- If you use edges, generate them in a separate array "edges": [{"id": "e1-2", "source": "1", "target": "2", "animated": true, "style": {"stroke": "hex", "strokeWidth": 2}}].
-- Respond ONLY with valid JSON with {"nodes": [...], "edges": [...]}, no markdown.
+Rules for Premium Visual Design:
+- ALIGNMENT: Layout nodes neatly in a clean grid or linear structure. For sequential steps, increment X by 320 to 360 pixels. For parallel branches or decisions, offset Y by 240 to 280 pixels. Make sure nodes NEVER overlap.
+- COLOR CONTRAST: Ensure high readability. If you set a dark card "backgroundColor" (e.g., #1F2937, #111827, #0F172A), you MUST set "textColor" to "#FFFFFF" or a very light gray. If you use a light card background, use dark text (e.g., #1F2937).
+- COLOR PALETTES: Choose a cohesive palette. Avoid mixing random conflicting colors. Use sleek combinations:
+  - Dark Premium: Dark card backgrounds (#1F2937, #1E1E24) with vibrant brand accents (#4059F1, #10B981, #EC4899, #8B5CF6) and white text.
+  - Light Clean: White (#FFFFFF) or soft gray (#F3F4F6) card backgrounds with brand accents (#4059F1) and dark text (#1F2937).
+- DEFAULT BRAND COLOR: The primary brand color is #4059F1. Use it as the default accentColor for todos and stroke color for edges.
+- EDGES: Connect nodes logically. Set edge "style": {"stroke": "hex", "strokeWidth": 2}. Use "animated": true for active processes/main flows.
 - When the user asks about prospects or business ideas, prefer real prospects from the database below over invented ones.
+- Respond ONLY with valid JSON containing {"nodes": [...], "edges": [...]}, no markdown.
 
 Example output:
-{"nodes": [{"id":"1","type":"text","position":{"x":50,"y":50},"data":{"html":"<b>Inicio</b>","fontSize":24,"textColor":"#4059F1"}},{"id":"2","type":"shape","position":{"x":50,"y":100},"style":{"width":140,"height":140},"data":{"shape":"circle","label":"Paso 1","fillColor":"#3B82F6","textColor":"#FFFFFF"}},{"id":"3","type":"todo","position":{"x":300,"y":50},"style":{"width":280,"height":200},"data":{"title":"Tareas","tasks":[{"id":"t1","text":"Hacer esto","completed":true}],"backgroundColor":"#1F2937","accentColor":"#A855F7"}}], "edges": [{"id":"e2-3","source":"2","target":"3","animated":true,"style":{"stroke":"#3B82F6","strokeWidth":2}}]}${prospectsBlock}${templatesBlock}`;
+{"nodes": [{"id":"1","type":"textNode","position":{"x":50,"y":50},"data":{"html":"<b>Inicio</b>","fontSize":24,"textColor":"#4059F1"}},{"id":"2","type":"shapeNode","position":{"x":50,"y":120},"style":{"width":140,"height":140},"data":{"shape":"circle","label":"Inicio del Flujo","fillColor":"#4059F1","textColor":"#FFFFFF"}},{"id":"3","type":"todoNode","position":{"x":350,"y":70},"style":{"width":280,"height":240},"data":{"title":"Fase de Planificación","subtitle":"Prerrequisitos obligatorios","tasks":[{"id":"t1","text":"Analizar requerimientos del cliente","completed":false},{"id":"t2","text":"Crear bocetos preliminares","completed":false}],"backgroundColor":"#1F2937","accentColor":"#4059F1","textColor":"#FFFFFF"}}], "edges": [{"id":"e2-3","source":"2","target":"3","animated":true,"style":{"stroke":"#4059F1","strokeWidth":2}}]}${prospectsBlock}${templatesBlock}`;
 
     const response = await fetch(
       "https://ai.gateway.lovable.dev/v1/chat/completions",
