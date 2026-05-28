@@ -1710,6 +1710,20 @@ const IndexContent = () => {
         </AnimatePresence>
       </div>
 
+      <AnimatePresence>
+        {clarifyResult && (
+          <ClarifyPanel
+            result={clarifyResult}
+            isDark={isDark}
+            isGenerating={isGenerating}
+            onConfirm={handleClarifyConfirm}
+            onSkip={handleClarifySkip}
+            onClose={() => setClarifyResult(null)}
+          />
+        )}
+      </AnimatePresence>
+
+
       {/* ─── Mobile View Warning Toast ─── */}
       <AnimatePresence>
         {isMobile && showMobileWarning && (
