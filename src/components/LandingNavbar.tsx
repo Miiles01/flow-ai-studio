@@ -81,16 +81,15 @@ const LandingNavbar = ({ onMenuAction }: LandingNavbarProps) => {
         {isMenuOpen && (
           <motion.div 
             key={menuKey}
-            initial={{ opacity: 0, scale: 0.95, y: "-55%" }}
-            animate={{ opacity: 1, scale: 1, y: "-50%" }}
-            exit={{ opacity: 0, scale: 0.95, y: "-55%" }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+            initial={{ opacity: 0, scale: 0.98, y: -15 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.98, y: -15 }}
+            transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
             style={{
               left: "50%",
-              top: "50%",
               x: "-50%",
             }}
-            className="fixed z-40 w-[90vw] md:w-[85vw] max-w-5xl rounded-[32px] md:rounded-[40px] shadow-[0_24px_70px_rgba(0,0,0,0.15)] border border-white/10 bg-[#7E7E7E] max-h-[85vh] overflow-y-auto"
+            className="fixed top-[92px] z-40 w-[90vw] md:w-[85vw] max-w-5xl rounded-[32px] md:rounded-[40px] shadow-[0_24px_70px_rgba(0,0,0,0.15)] border border-white/10 bg-[#7E7E7E] max-h-[80vh] overflow-y-auto"
           >
             <div className="w-full flex flex-col md:flex-row py-12 px-10 md:py-16 md:px-20 gap-8 md:gap-0">
               
