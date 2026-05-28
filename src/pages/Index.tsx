@@ -40,8 +40,10 @@ import FrameNode from "@/components/nodes/FrameNode";
 import SkeletonNode from "@/components/nodes/SkeletonNode";
 import Toolbar from "@/components/Toolbar";
 import AIPromptBar from "@/components/AIPromptBar";
+import ClarifyPanel from "@/components/ClarifyPanel";
 
 import { generateFlowFromPrompt } from "@/lib/generateFlow";
+import { clarifyPrompt, buildEnrichedPrompt, type ClarifyResult } from "@/lib/clarifyFlow";
 
 const SHAPE_TYPES = ["square", "circle", "diamond", "hexagon", "star", "document", "cloud", "database", "cylinder", "callout", "speech", "heart"];
 const nodeTypes = { flowNode: FlowNode, shapeNode: ShapeNode, textNode: TextNode, todoNode: TodoNode, imageNode: ImageNode, frameNode: FrameNode, skeletonNode: SkeletonNode };
@@ -80,6 +82,9 @@ const IndexContent = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isClarifying, setIsClarifying] = useState(false);
+  const [clarifyResult, setClarifyResult] = useState<ClarifyResult | null>(null);
+  const [pendingPrompt, setPendingPrompt] = useState("");
   const [name, setName] = useState("Tablero sin título");
   const [loading, setLoading] = useState(true);
   const [saveState, setSaveState] = useState<"idle" | "dirty" | "saving" | "saved" | "error">("idle");
@@ -718,7 +723,7 @@ const IndexContent = () => {
     [setNodes]
   );
 
-  const handleAIGenerate = useCallback(
+  const runGenerate = useCallback(
     async (prompt: string) => {
       setIsGenerating(true);
       const skeletonId = `ai-skeleton-${Date.now()}`;
@@ -778,6 +783,42 @@ const IndexContent = () => {
     },
     [setNodes, setEdges, reactFlowInstance]
   );
+
+  // Primero entiende la intención: si el prompt es muy general, abre el panel de preguntas.
+  const handleAIGenerate = useCallback(
+    async (prompt: string) => {
+      setIsClarifying(true);
+      try {
+        const result = await clarifyPrompt(prompt);
+        if (result.needs_clarification) {
+          setPendingPrompt(prompt);
+          setClarifyResult(result);
+          return;
+        }
+        await runGenerate(result.refined_prompt || prompt);
+      } finally {
+        setIsClarifying(false);
+      }
+    },
+    [runGenerate]
+  );
+
+  const handleClarifyConfirm = useCallback(
+    async (answers: Record<string, string[]>) => {
+      if (!clarifyResult) return;
+      const enriched = buildEnrichedPrompt(pendingPrompt, clarifyResult, answers);
+      setClarifyResult(null);
+      await runGenerate(enriched);
+    },
+    [clarifyResult, pendingPrompt, runGenerate]
+  );
+
+  const handleClarifySkip = useCallback(async () => {
+    const base = pendingPrompt;
+    setClarifyResult(null);
+    await runGenerate(base);
+  }, [pendingPrompt, runGenerate]);
+
 
   // Debounced autosave: only after id exists (not "new"). For "new", first manual save creates the row.
   const persist = useCallback(async () => {
@@ -1663,11 +1704,25 @@ const IndexContent = () => {
               exit={{ opacity: 0, y: 10 }}
               transition={{ duration: 0.2 }}
             >
-              <AIPromptBar onGenerate={handleAIGenerate} isGenerating={isGenerating} />
+              <AIPromptBar onGenerate={handleAIGenerate} isGenerating={isGenerating || isClarifying} />
             </motion.div>
           )}
         </AnimatePresence>
       </div>
+
+      <AnimatePresence>
+        {clarifyResult && (
+          <ClarifyPanel
+            result={clarifyResult}
+            isDark={isDark}
+            isGenerating={isGenerating}
+            onConfirm={handleClarifyConfirm}
+            onSkip={handleClarifySkip}
+            onClose={() => setClarifyResult(null)}
+          />
+        )}
+      </AnimatePresence>
+
 
       {/* ─── Mobile View Warning Toast ─── */}
       <AnimatePresence>
