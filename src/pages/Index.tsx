@@ -40,8 +40,10 @@ import FrameNode from "@/components/nodes/FrameNode";
 import SkeletonNode from "@/components/nodes/SkeletonNode";
 import Toolbar from "@/components/Toolbar";
 import AIPromptBar from "@/components/AIPromptBar";
+import ClarifyPanel from "@/components/ClarifyPanel";
 
 import { generateFlowFromPrompt } from "@/lib/generateFlow";
+import { clarifyPrompt, buildEnrichedPrompt, type ClarifyResult } from "@/lib/clarifyFlow";
 
 const SHAPE_TYPES = ["square", "circle", "diamond", "hexagon", "star", "document", "cloud", "database", "cylinder", "callout", "speech", "heart"];
 const nodeTypes = { flowNode: FlowNode, shapeNode: ShapeNode, textNode: TextNode, todoNode: TodoNode, imageNode: ImageNode, frameNode: FrameNode, skeletonNode: SkeletonNode };
