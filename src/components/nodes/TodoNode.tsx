@@ -477,7 +477,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
               </div>
 
               {/* Task Row Actions */}
-              <div className="flex items-center gap-1 opacity-0 group-hover/item:opacity-100 transition-opacity">
+              <div className="hidden group-hover/item:flex items-center gap-1 shrink-0">
                 <button
                   onClick={() => handleMoveTask(task.id, "up")}
                   className="p-1 rounded-md hover:bg-black/10 dark:hover:bg-white/10 text-gray-400 hover:text-gray-600 transition-colors"
@@ -503,17 +503,17 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
             </motion.div>
           ))}
         </AnimatePresence>
-
-        {/* Add Task Button at bottom of list */}
-        <button
-          onClick={() => handleAddTask()}
-          className="flex items-center gap-2 py-2 px-2 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 text-gray-400 hover:text-gray-600 hover:border-gray-400 hover:bg-black/5 dark:hover:bg-white/5 transition-all text-left mt-1 shrink-0"
-          style={{ fontSize: `${fontSize * 0.9}px` }}
-        >
-          <Plus size={13} />
-          <span>Nueva Tarea...</span>
-        </button>
       </div>
+
+      {/* Add Task Button at bottom of list */}
+      <button
+        onClick={() => handleAddTask()}
+        className="flex items-center gap-2 py-2 px-2 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 text-gray-400 hover:text-gray-600 hover:border-gray-400 hover:bg-black/5 dark:hover:bg-white/5 transition-all text-left mt-2 shrink-0"
+        style={{ fontSize: `${fontSize * 0.9}px` }}
+      >
+        <Plus size={13} />
+        <span>Nueva Tarea...</span>
+      </button>
       </div>
 
       {/* ─── Fully Bidirectional Connection Handles ─── */}
