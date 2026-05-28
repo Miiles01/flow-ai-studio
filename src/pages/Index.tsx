@@ -82,6 +82,9 @@ const IndexContent = () => {
   const [nodes, setNodes, onNodesChange] = useNodesState([]);
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [isClarifying, setIsClarifying] = useState(false);
+  const [clarifyResult, setClarifyResult] = useState<ClarifyResult | null>(null);
+  const [pendingPrompt, setPendingPrompt] = useState("");
   const [name, setName] = useState("Tablero sin título");
   const [loading, setLoading] = useState(true);
   const [saveState, setSaveState] = useState<"idle" | "dirty" | "saving" | "saved" | "error">("idle");
