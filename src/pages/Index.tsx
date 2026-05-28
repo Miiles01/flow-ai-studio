@@ -723,7 +723,7 @@ const IndexContent = () => {
     [setNodes]
   );
 
-  const handleAIGenerate = useCallback(
+  const runGenerate = useCallback(
     async (prompt: string) => {
       setIsGenerating(true);
       const skeletonId = `ai-skeleton-${Date.now()}`;
@@ -783,6 +783,42 @@ const IndexContent = () => {
     },
     [setNodes, setEdges, reactFlowInstance]
   );
+
+  // Primero entiende la intención: si el prompt es muy general, abre el panel de preguntas.
+  const handleAIGenerate = useCallback(
+    async (prompt: string) => {
+      setIsClarifying(true);
+      try {
+        const result = await clarifyPrompt(prompt);
+        if (result.needs_clarification) {
+          setPendingPrompt(prompt);
+          setClarifyResult(result);
+          return;
+        }
+        await runGenerate(result.refined_prompt || prompt);
+      } finally {
+        setIsClarifying(false);
+      }
+    },
+    [runGenerate]
+  );
+
+  const handleClarifyConfirm = useCallback(
+    async (answers: Record<string, string[]>) => {
+      if (!clarifyResult) return;
+      const enriched = buildEnrichedPrompt(pendingPrompt, clarifyResult, answers);
+      setClarifyResult(null);
+      await runGenerate(enriched);
+    },
+    [clarifyResult, pendingPrompt, runGenerate]
+  );
+
+  const handleClarifySkip = useCallback(async () => {
+    const base = pendingPrompt;
+    setClarifyResult(null);
+    await runGenerate(base);
+  }, [pendingPrompt, runGenerate]);
+
 
   // Debounced autosave: only after id exists (not "new"). For "new", first manual save creates the row.
   const persist = useCallback(async () => {
