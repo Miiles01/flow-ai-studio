@@ -84,11 +84,18 @@ Each node MUST have:
 4. "imageNode" (for visual placeholders or logos):
    - "data": {"url": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=200&auto=format&fit=crop", "width": 200, "height": 150}
 
-📐 ARCHITECTURE & LAYOUT RULES (CRITICAL):
-- Create COMPREHENSIVE flows. Generate at least 6 to 12 nodes. Do not generate simple straight lines if a process requires decisions.
-- Create BRANCHING PATHS using "diamond" shapes for decisions, splitting into "Yes" and "No" or multiple options.
-- Spread nodes out! X should increment by 350-400px. Y must vary for branches (e.g., Y: -250 for top branch, Y: +250 for bottom branch).
-- Use "circle" for start/end, "diamond" for decisions, "document" for outputs/files, "square" for standard processes.
+📐 ARCHITECTURE & LAYOUT RULES (CRITICAL - PREMIUM SYMMETRICAL DESIGN):
+- PERFECT GRID ALIGNMENT: The diagram must look extremely neat, structured, and symmetric like a high-end mind map. All nodes in a sequential path must align to the exact same Y level (e.g. Y: 250).
+- CONSTANT X-SPACING: Every consecutive step in a sequence must increment X by exactly 350px (e.g. X: 100, 450, 800, 1150, 1500...). Keep spacing uniform across the entire flowchart.
+- SYMMETRIC DECISION BRANCHING: When a decision node (diamond shape) splits into branches:
+  - Branch A (e.g., "Yes" or active path) must offset Y downwards by exactly 200px (e.g. Y: 450) and then continue perfectly straight horizontally at Y: 450, incrementing X by 350px.
+  - Branch B (e.g., "No" or fallback path) must offset Y upwards by exactly 200px (e.g. Y: 50) and then continue perfectly straight horizontally at Y: 50, incrementing X by 350px.
+  - This prevents weird diagonal lines, random vertical overlaps, and layout chaos.
+- SHAPE MEANINGS:
+  - "circle" shape for start and end nodes.
+  - "diamond" shape for decision points.
+  - "square" or "hexagon" for standard processes and activities.
+  - "todoNode" for phases containing detailed actionable checklist steps.
 
 🔗 EDGES RULES:
 - "edges": [{"id": "e1-2", "source": "n1", "target": "n2", "animated": true, "label": "Yes", "style": {"stroke": "#A3A8B8", "strokeWidth": 2}}]

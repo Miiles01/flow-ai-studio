@@ -87,7 +87,12 @@ Node Types and Data:
    - Use for visual placeholders or logos.
 
 Rules for Premium Visual Design:
-- ALIGNMENT: Layout nodes neatly in a clean grid or linear structure. For sequential steps, increment X by 320 to 360 pixels. For parallel branches or decisions, offset Y by 240 to 280 pixels. Make sure nodes NEVER overlap.
+- ALIGNMENT & SYMMETRY: Nodes in the same sequence must be aligned on the exact same horizontal grid line (e.g. Y: 250) to look like a high-end mind map.
+- CONSTANT X-SPACING: Every consecutive node in a sequence must increment X by exactly 350 pixels (e.g. X: 100, X: 450, X: 800...).
+- DECISION BRANCHING: For decision points (diamond shape):
+  - Offset one branch (e.g. "Yes") downwards by exactly 200px (Y: +200) and keep that branch straight (Y constant).
+  - Offset the other branch (e.g. "No") upwards by exactly 200px (Y: -200) and keep that branch straight (Y constant).
+  - This forms clean, straight parallel lanes and avoids random angles or overlaps.
 - COLOR CONTRAST: Ensure high readability. If you set a dark card "backgroundColor" (e.g., #1F2937, #111827, #0F172A), you MUST set "textColor" to "#FFFFFF" or a very light gray. If you use a light card background, use dark text (e.g., #1F2937).
 - COLOR PALETTES: Choose a cohesive palette. Avoid mixing random conflicting colors. Use sleek combinations:
   - Dark Premium: Dark card backgrounds (#1F2937, #1E1E24) with vibrant brand accents (#4059F1, #10B981, #EC4899, #8B5CF6) and white text.
