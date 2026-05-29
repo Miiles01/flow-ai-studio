@@ -98,12 +98,12 @@ Rules for Premium Visual Design:
   - Dark Premium: Dark card backgrounds (#1F2937, #1E1E24) with vibrant brand accents (#4059F1, #10B981, #EC4899, #8B5CF6) and white text.
   - Light Clean: White (#FFFFFF) or soft gray (#F3F4F6) card backgrounds with brand accents (#4059F1) and dark text (#1F2937).
 - DEFAULT BRAND COLOR: The primary brand color is #4059F1. Use it as the default accentColor for todos and stroke color for edges.
-- EDGES: Connect nodes logically. Set edge "style": {"stroke": "hex", "strokeWidth": 2}. Use "animated": true for active processes/main flows.
+- EDGES: Connect nodes logically. Set edge "style": {"stroke": "hex", "strokeWidth": 2}. Do NOT animate the edges (always set "animated": false or omit it).
 - When the user asks about prospects or business ideas, prefer real prospects from the database below over invented ones.
 - Respond ONLY with valid JSON containing {"nodes": [...], "edges": [...]}, no markdown.
 
 Example output:
-{"nodes": [{"id":"1","type":"textNode","position":{"x":50,"y":50},"data":{"html":"<b>Inicio</b>","fontSize":24,"textColor":"#4059F1"}},{"id":"2","type":"shapeNode","position":{"x":50,"y":120},"style":{"width":140,"height":140},"data":{"shape":"circle","label":"Inicio del Flujo","fillColor":"#4059F1","textColor":"#FFFFFF"}},{"id":"3","type":"todoNode","position":{"x":350,"y":70},"style":{"width":280,"height":240},"data":{"title":"Fase de Planificación","subtitle":"Prerrequisitos obligatorios","tasks":[{"id":"t1","text":"Analizar requerimientos del cliente","completed":false},{"id":"t2","text":"Crear bocetos preliminares","completed":false}],"backgroundColor":"#1F2937","accentColor":"#4059F1","textColor":"#FFFFFF"}}], "edges": [{"id":"e2-3","source":"2","target":"3","animated":true,"style":{"stroke":"#4059F1","strokeWidth":2}}]}${prospectsBlock}${templatesBlock}`;
+{"nodes": [{"id":"1","type":"textNode","position":{"x":50,"y":50},"data":{"html":"<b>Inicio</b>","fontSize":24,"textColor":"#4059F1"}},{"id":"2","type":"shapeNode","position":{"x":50,"y":120},"style":{"width":140,"height":140},"data":{"shape":"circle","label":"Inicio del Flujo","fillColor":"#4059F1","textColor":"#FFFFFF"}},{"id":"3","type":"todoNode","position":{"x":350,"y":70},"style":{"width":280,"height":240},"data":{"title":"Fase de Planificación","subtitle":"Prerrequisitos obligatorios","tasks":[{"id":"t1","text":"Analizar requerimientos del cliente","completed":false},{"id":"t2","text":"Crear bocetos preliminares","completed":false}],"backgroundColor":"#1F2937","accentColor":"#4059F1","textColor":"#FFFFFF"}}], "edges": [{"id":"e2-3","source":"2","target":"3","animated":false,"style":{"stroke":"#4059F1","strokeWidth":2}}]}${prospectsBlock}${templatesBlock}`;
 
     const response = await fetch(
       "https://ai.gateway.lovable.dev/v1/chat/completions",

@@ -518,7 +518,7 @@ const IndexContent = () => {
   }, [undo, redo]);
 
   const onConnect = useCallback(
-    (params: Connection) => setEdges((eds) => addEdge({ ...params, animated: true }, eds)),
+    (params: Connection) => setEdges((eds) => addEdge(params, eds)),
     [setEdges]
   );
 
@@ -625,7 +625,6 @@ const IndexContent = () => {
             target: edgeTarget,
             sourceHandle: sourceHandle || undefined,
             targetHandle: targetHandle || undefined,
-            animated: true,
           };
 
           setNodes((nds) => nds.map((n) => ({ ...n, selected: false })).concat(newNode));

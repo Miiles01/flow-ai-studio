@@ -98,8 +98,9 @@ Each node MUST have:
   - "todoNode" for phases containing detailed actionable checklist steps.
 
 🔗 EDGES RULES:
-- "edges": [{"id": "e1-2", "source": "n1", "target": "n2", "animated": true, "label": "Yes", "style": {"stroke": "#A3A8B8", "strokeWidth": 2}}]
+- "edges": [{"id": "e1-2", "source": "n1", "target": "n2", "animated": false, "label": "Yes", "style": {"stroke": "#A3A8B8", "strokeWidth": 2}}]
 - If branching from a decision node, you MUST add a "label" (e.g., "Aprobado", "Rechazado") to the edge.
+- Do NOT animate the edges (always set "animated": false).
 
 Respond ONLY with valid JSON: {"nodes": [...], "edges": [...]}`;
 
@@ -158,7 +159,7 @@ Respond ONLY with valid JSON: {"nodes": [...], "edges": [...]}`;
         id: `e-${nodes[i - 1].id}-${node.id}`,
         source: nodes[i - 1].id,
         target: node.id,
-        animated: true,
+        animated: false,
       });
     }
   });

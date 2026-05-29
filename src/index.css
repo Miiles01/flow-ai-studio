@@ -182,15 +182,24 @@
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
-.react-flow__edge-path {
+.react-flow__connection-path,
+.react-flow__edge-path,
+.react-flow__edge path,
+.react-flow__edge.animated path {
   stroke: #D9DBE3 !important;
   stroke-width: 1.5 !important;
+  stroke-dasharray: none !important;
+  animation: none !important;
 }
-.dark .react-flow__edge-path {
+.dark .react-flow__connection-path,
+.dark .react-flow__edge-path,
+.dark .react-flow__edge path,
+.dark .react-flow__edge.animated path {
   stroke: #374151 !important;
 }
 
-.react-flow__edge.selected .react-flow__edge-path {
+.react-flow__edge.selected .react-flow__edge-path,
+.react-flow__edge.selected path {
   stroke: #4059F1 !important;
   stroke-width: 2 !important;
 }
