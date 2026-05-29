@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Sparkles, ArrowRight, ArrowLeft, Loader2 } from "lucide-react";
+import { X, ArrowRight, ArrowLeft, Loader2 } from "lucide-react";
 import type { ClarifyResult } from "@/lib/clarifyFlow";
 
 type ClarifyPanelProps = {
@@ -176,10 +176,7 @@ const ClarifyPanel = ({ result, isDark, isGenerating, onConfirm, onSkip, onClose
                 <ArrowRight size={14} />
               </>
             ) : (
-              <>
-                Generar flujo
-                <Sparkles size={14} />
-              </>
+              "Generar flujo"
             )}
           </button>
         </div>
