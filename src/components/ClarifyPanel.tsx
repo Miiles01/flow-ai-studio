@@ -71,11 +71,8 @@ const ClarifyPanel = ({ result, isDark, isGenerating, onConfirm, onSkip, onClose
         {/* Header Area */}
         <div className="flex items-center justify-between gap-3 mb-4">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-full bg-[#4059F1]/10 flex items-center justify-center shrink-0">
-              <Sparkles size={14} className="text-[#4059F1]" />
-            </div>
             <p className={`text-[13px] font-normal ${isDark ? "text-white/95" : "text-black/95"}`}>
-              Afinemos tu idea
+              Cuéntame más sobre tu idea
             </p>
             <span className={`text-[10px] px-2.5 py-0.5 rounded-full font-light border ${
               isDark ? "bg-white/5 border-white/10 text-white/50" : "bg-[#F3F4F6] border-neutral-200/50 text-[#6B7280]"
@@ -107,13 +104,6 @@ const ClarifyPanel = ({ result, isDark, isGenerating, onConfirm, onSkip, onClose
             </button>
           </div>
         </div>
-
-        {/* Intent Description */}
-        {result.intent && currentStep === 0 && (
-          <p className={`text-xs font-light mb-4 leading-relaxed ${isDark ? "text-white/60" : "text-[#6B7280]"}`}>
-            Entendido: "{result.intent}"
-          </p>
-        )}
 
         {/* Question Slide Area */}
         <div className="overflow-hidden min-h-[110px] flex flex-col justify-center">
