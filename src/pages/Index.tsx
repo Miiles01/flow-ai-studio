@@ -65,6 +65,45 @@ const RAINBOW_COLORS = [
   { name: "Negro", value: "#1F2937" },
 ];
 
+interface AutoResizingTextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+  value: string;
+}
+
+const AutoResizingTextarea = React.forwardRef<HTMLTextAreaElement, AutoResizingTextareaProps>(
+  ({ value, onChange, className, style, rows = 1, ...props }, ref) => {
+    const localRef = useRef<HTMLTextAreaElement>(null);
+    const textareaRef = (ref || localRef) as React.MutableRefObject<HTMLTextAreaElement | null>;
+
+    const adjustHeight = () => {
+      const el = textareaRef.current;
+      if (el) {
+        el.style.height = "auto";
+        el.style.height = `${el.scrollHeight}px`;
+      }
+    };
+
+    useEffect(() => {
+      adjustHeight();
+    }, [value]);
+
+    return (
+      <textarea
+        ref={textareaRef}
+        value={value}
+        onChange={(e) => {
+          onChange?.(e);
+          adjustHeight();
+        }}
+        className={`${className} resize-none overflow-hidden`}
+        rows={rows}
+        style={style}
+        {...props}
+      />
+    );
+  }
+);
+AutoResizingTextarea.displayName = "AutoResizingTextarea";
+
 const IndexContent = () => {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -1968,11 +2007,17 @@ const IndexContent = () => {
                                 >
                                   {task.completed && <Check size={12} className={effectiveTextColor === "#FFFFFF" ? "text-gray-900" : "text-white"} strokeWidth={3} />}
                                 </button>
-                                <input
+                                <AutoResizingTextarea
                                   value={task.text}
                                   onChange={(e) => updateTaskText(task.id, e.target.value)}
+                                  onKeyDown={(e) => {
+                                    if (e.key === "Enter") {
+                                      e.preventDefault();
+                                      addTask();
+                                    }
+                                  }}
                                   placeholder="Nueva tarea..."
-                                  className="flex-1 bg-transparent border-none outline-none text-[13px] font-light leading-snug min-w-0 placeholder-gray-400"
+                                  className="flex-1 bg-transparent border-none outline-none text-[13px] font-light leading-snug min-w-0 placeholder-gray-400 p-0"
                                   style={{
                                     color: task.completed ? (isCardDark ? "#6B7280" : "#9CA3AF") : effectiveTextColor,
                                     textDecoration: task.completed ? "line-through" : "none",

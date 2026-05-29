@@ -61,6 +61,45 @@ const isColorDark = (colorHex: string): boolean => {
   return false;
 };
 
+interface AutoResizingTextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+  value: string;
+}
+
+const AutoResizingTextarea = React.forwardRef<HTMLTextAreaElement, AutoResizingTextareaProps>(
+  ({ value, onChange, className, style, rows = 1, ...props }, ref) => {
+    const localRef = useRef<HTMLTextAreaElement>(null);
+    const textareaRef = (ref || localRef) as React.MutableRefObject<HTMLTextAreaElement | null>;
+
+    const adjustHeight = () => {
+      const el = textareaRef.current;
+      if (el) {
+        el.style.height = "auto";
+        el.style.height = `${el.scrollHeight}px`;
+      }
+    };
+
+    useEffect(() => {
+      adjustHeight();
+    }, [value]);
+
+    return (
+      <textarea
+        ref={textareaRef}
+        value={value}
+        onChange={(e) => {
+          onChange?.(e);
+          adjustHeight();
+        }}
+        className={`${className} resize-none overflow-hidden`}
+        rows={rows}
+        style={style}
+        {...props}
+      />
+    );
+  }
+);
+AutoResizingTextarea.displayName = "AutoResizingTextarea";
+
 const TodoNode = ({ id, data, selected }: NodeProps) => {
   const { getNodes, setNodes } = useReactFlow();
   const selectedNodes = getNodes().filter((n) => n.selected);
@@ -86,7 +125,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
   const textColor = nodeData.textColor ?? (isDarkMode ? "#FFFFFF" : "#1F2937");
 
   const [activePicker, setActivePicker] = useState<"bg" | "accent" | "text" | null>(null);
-  const taskInputRefs = useRef<Record<string, HTMLInputElement | null>>({});
+  const taskInputRefs = useRef<Record<string, HTMLTextAreaElement | null>>({});
 
   const updateNodeData = (newData: Partial<TodoNodeData>) => {
     setNodes((nds) =>
@@ -152,11 +191,10 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
     const updatedTasks = [...tasks];
     const [moved] = updatedTasks.splice(idx, 1);
     updatedTasks.splice(targetIdx, 0, moved);
-
     updateNodeData({ tasks: updatedTasks });
   };
 
-  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>, taskId: string) => {
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>, taskId: string) => {
     if (e.key === "Enter") {
       e.preventDefault();
       handleAddTask(taskId);
@@ -450,30 +488,22 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
 
               {/* Task Text Input & Custom Animated Strikethrough */}
               <div className="relative flex-1 flex items-center select-text">
-                <input
+                <AutoResizingTextarea
                   ref={(el) => (taskInputRefs.current[task.id] = el)}
                   value={task.text}
                   onChange={(e) => handleTaskTextChange(task.id, e.target.value)}
                   onKeyDown={(e) => handleKeyDown(e, task.id)}
                   placeholder="Añadir una tarea..."
-                  className="bg-transparent w-full focus:outline-none border-none font-sans font-light focus:ring-0 placeholder-gray-400/80 leading-normal"
+                  className="bg-transparent w-full focus:outline-none border-none font-sans font-light focus:ring-0 placeholder-gray-400/80 leading-normal p-0"
                   style={{
                     fontSize: `${fontSize}px`,
                     color: task.completed
                       ? isDarkMode ? "#6B7280" : "#9CA3AF"
                       : textColor,
                     opacity: task.completed ? 0.7 : 1,
+                    textDecoration: task.completed ? "line-through" : "none",
                   }}
                 />
-                {task.completed && (
-                  <motion.div
-                    initial={{ width: 0 }}
-                    animate={{ width: "100%" }}
-                    transition={{ duration: 0.22, ease: "easeInOut" }}
-                    className="absolute left-0 top-1/2 -translate-y-1/2 h-[1px] pointer-events-none"
-                    style={{ backgroundColor: isDarkMode ? "#6B7280" : "#9CA3AF" }}
-                  />
-                )}
               </div>
 
               {/* Task Row Actions */}
