@@ -934,6 +934,17 @@ const IndexContent = () => {
     onPresenceChange: setPresenceUsers,
   });
 
+  const activeUsersForPresence = useMemo(() => {
+    if (!identityForPresence) return presenceUsers;
+    if (presenceUsers.length === 0) {
+      return [identityForPresence];
+    }
+    if (!presenceUsers.some((u) => u.id === identityForPresence.id)) {
+      return [identityForPresence, ...presenceUsers];
+    }
+    return presenceUsers;
+  }, [presenceUsers, identityForPresence]);
+
 
   // Flush pending save on unload, tab hide, or unmount
   useEffect(() => {
@@ -1283,7 +1294,7 @@ const IndexContent = () => {
               </div>
             )}
             <div className="pointer-events-auto">
-              <PresenceStack users={presenceUsers} localUserId={identityForPresence.id} />
+              <PresenceStack users={activeUsersForPresence} localUserId={identityForPresence.id} />
             </div>
           </div>
 
@@ -1368,7 +1379,7 @@ const IndexContent = () => {
           </div>
         )}
         <div className="pointer-events-auto">
-          <PresenceStack users={presenceUsers} localUserId={identityForPresence.id} />
+          <PresenceStack users={activeUsersForPresence} localUserId={identityForPresence.id} />
         </div>
       </div>
 

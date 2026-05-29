@@ -1,6 +1,6 @@
 import { useState } from "react";
-import { motion } from "framer-motion";
-import { X, Sparkles, ArrowRight, Loader2 } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import { X, Sparkles, ArrowRight, ArrowLeft, Loader2 } from "lucide-react";
 import type { ClarifyResult } from "@/lib/clarifyFlow";
 
 type ClarifyPanelProps = {
@@ -13,9 +13,14 @@ type ClarifyPanelProps = {
 };
 
 const ClarifyPanel = ({ result, isDark, isGenerating, onConfirm, onSkip, onClose }: ClarifyPanelProps) => {
+  const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string[]>>({});
 
-  const toggleOption = (q: ClarifyResult["questions"][number], option: string) => {
+  const q = result.questions[currentStep];
+  const totalSteps = result.questions.length;
+
+  const toggleOption = (option: string) => {
+    if (!q) return;
     setAnswers((prev) => {
       const current = prev[q.id] ?? [];
       if (q.allow_multiple) {
@@ -27,66 +32,120 @@ const ClarifyPanel = ({ result, isDark, isGenerating, onConfirm, onSkip, onClose
     });
   };
 
-  const isSelected = (qId: string, option: string) => (answers[qId] ?? []).includes(option);
+  const isSelected = (option: string) => {
+    if (!q) return false;
+    return (answers[q.id] ?? []).includes(option);
+  };
+
+  const handleNext = () => {
+    if (currentStep < totalSteps - 1) {
+      setCurrentStep((prev) => prev + 1);
+    } else {
+      onConfirm(answers);
+    }
+  };
+
+  const handleBack = () => {
+    if (currentStep > 0) {
+      setCurrentStep((prev) => prev - 1);
+    }
+  };
+
+  const hasAnswerSelected = q ? (answers[q.id] ?? []).length > 0 : false;
+
+  if (!q) return null;
 
   return (
-    <div className="absolute top-6 inset-x-0 z-20 flex justify-center px-4 pointer-events-none">
+    <div className="absolute bottom-[210px] inset-x-0 z-20 flex justify-center px-4 pointer-events-none">
       <motion.div
-        initial={{ y: -24, opacity: 0, scale: 0.97 }}
+        initial={{ y: 24, opacity: 0, scale: 0.97 }}
         animate={{ y: 0, opacity: 1, scale: 1 }}
-        exit={{ y: -24, opacity: 0, scale: 0.97 }}
+        exit={{ y: 24, opacity: 0, scale: 0.97 }}
         transition={{ type: "spring", bounce: 0.3, duration: 0.5 }}
-        className={`pointer-events-auto w-full max-w-xl rounded-[24px] p-5 shadow-2xl border ${
+        className={`pointer-events-auto w-full max-w-xl rounded-[24px] p-5 shadow-[0_24px_50px_rgba(0,0,0,0.18)] border ${
           isDark
-            ? "bg-[hsl(222,20%,11%)] border-white/10 text-white"
+            ? "bg-[#1C1C1E] border-white/10 text-white"
             : "bg-white border-[#F3F4F6] text-black"
         }`}
       >
-        <div className="flex items-start justify-between gap-3 mb-3">
+        {/* Header Area */}
+        <div className="flex items-center justify-between gap-3 mb-4">
           <div className="flex items-center gap-2">
-            <div className="w-7 h-7 rounded-full bg-miiles-blue/15 flex items-center justify-center shrink-0">
-              <Sparkles size={15} className="text-miiles-blue" />
+            <div className="w-7 h-7 rounded-full bg-[#4059F1]/10 flex items-center justify-center shrink-0">
+              <Sparkles size={14} className="text-[#4059F1]" />
             </div>
-            <p className={`text-sm font-normal ${isDark ? "text-white" : "text-black"}`}>
+            <p className={`text-[13px] font-normal ${isDark ? "text-white/95" : "text-black/95"}`}>
               Afinemos tu idea
             </p>
+            <span className={`text-[10px] px-2.5 py-0.5 rounded-full font-light border ${
+              isDark ? "bg-white/5 border-white/10 text-white/50" : "bg-[#F3F4F6] border-neutral-200/50 text-[#6B7280]"
+            }`}>
+              Pregunta {currentStep + 1} de {totalSteps}
+            </span>
           </div>
-          <button
-            onClick={onClose}
-            className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors ${
-              isDark ? "hover:bg-white/10 text-white/60" : "hover:bg-black/5 text-miiles-gray-400"
-            }`}
-            aria-label="Cerrar"
-          >
-            <X size={15} />
-          </button>
+          
+          <div className="flex items-center gap-1.5">
+            {currentStep > 0 && (
+              <button
+                onClick={handleBack}
+                className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors ${
+                  isDark ? "hover:bg-white/10 text-white/60" : "hover:bg-black/5 text-[#6B7280]"
+                }`}
+                title="Atrás"
+              >
+                <ArrowLeft size={14} />
+              </button>
+            )}
+            <button
+              onClick={onClose}
+              className={`w-7 h-7 rounded-full flex items-center justify-center transition-colors ${
+                isDark ? "hover:bg-white/10 text-white/60" : "hover:bg-black/5 text-[#6B7280]"
+              }`}
+              aria-label="Cerrar"
+            >
+              <X size={14} />
+            </button>
+          </div>
         </div>
 
-        {result.intent && (
-          <p className={`text-xs font-light mb-4 ${isDark ? "text-white/60" : "text-miiles-gray-400"}`}>
-            {result.intent}
+        {/* Intent Description */}
+        {result.intent && currentStep === 0 && (
+          <p className={`text-xs font-light mb-4 leading-relaxed ${isDark ? "text-white/60" : "text-[#6B7280]"}`}>
+            Entendido: "{result.intent}"
           </p>
         )}
 
-        <div className="space-y-4 max-h-[50vh] overflow-y-auto scrollbar-hide">
-          {result.questions.map((q) => (
-            <div key={q.id}>
-              <p className={`text-sm font-normal mb-2 ${isDark ? "text-white" : "text-black"}`}>
+        {/* Question Slide Area */}
+        <div className="overflow-hidden min-h-[110px] flex flex-col justify-center">
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={currentStep}
+              initial={{ x: 20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: -20, opacity: 0 }}
+              transition={{ duration: 0.25, ease: "easeInOut" }}
+              className="space-y-3"
+            >
+              <p className={`text-[15px] font-medium leading-relaxed ${isDark ? "text-white" : "text-black"}`}>
                 {q.question}
+                {q.allow_multiple && (
+                  <span className="text-[11px] font-light text-[#6B7280] ml-1.5">(Selecciona varias si deseas)</span>
+                )}
               </p>
-              <div className="flex flex-wrap gap-2">
+              
+              <div className="flex flex-wrap gap-2 pt-1">
                 {q.options.map((option) => {
-                  const selected = isSelected(q.id, option);
+                  const selected = isSelected(option);
                   return (
                     <button
                       key={option}
-                      onClick={() => toggleOption(q, option)}
-                      className={`px-3.5 py-1.5 rounded-full text-xs font-light transition-colors border ${
+                      onClick={() => toggleOption(option)}
+                      className={`px-3.5 py-2 rounded-full text-xs font-light transition-all border cursor-pointer select-none ${
                         selected
-                          ? "bg-miiles-blue text-white border-miiles-blue"
+                          ? "bg-[#4059F1] text-white border-[#4059F1] shadow-[0_4px_12px_rgba(64,89,241,0.2)] hover:scale-102"
                           : isDark
-                          ? "bg-white/5 text-white/70 border-white/10 hover:bg-white/10"
-                          : "bg-miiles-gray-50 text-miiles-gray-600 border-[#F3F4F6] hover:bg-miiles-gray-100"
+                          ? "bg-white/5 text-white/70 border-white/10 hover:bg-white/10 hover:text-white"
+                          : "bg-[#F3F4F8] text-[#374151] border-transparent hover:bg-neutral-200"
                       }`}
                     >
                       {option}
@@ -94,35 +153,42 @@ const ClarifyPanel = ({ result, isDark, isGenerating, onConfirm, onSkip, onClose
                   );
                 })}
               </div>
-            </div>
-          ))}
+            </motion.div>
+          </AnimatePresence>
         </div>
 
-        <div className="flex items-center justify-between gap-3 mt-5">
+        {/* Footer Actions */}
+        <div className="flex items-center justify-between gap-3 mt-6 pt-4 border-t border-dashed border-neutral-200/10">
           <button
             onClick={onSkip}
             disabled={isGenerating}
-            className={`text-xs font-light transition-colors disabled:opacity-40 ${
-              isDark ? "text-white/50 hover:text-white/80" : "text-miiles-gray-400 hover:text-miiles-gray-600"
+            className={`text-xs font-light transition-colors disabled:opacity-40 cursor-pointer ${
+              isDark ? "text-white/50 hover:text-white/80" : "text-[#6B7280] hover:text-black"
             }`}
           >
             Generar de todos modos
           </button>
+          
           <button
-            onClick={() => onConfirm(answers)}
+            onClick={handleNext}
             disabled={isGenerating}
-            className={`flex items-center gap-2 rounded-full px-4 py-2 text-xs font-normal transition-colors disabled:opacity-50 ${
+            className={`flex items-center gap-2 rounded-full px-5 py-2.5 text-xs font-medium transition-all duration-300 disabled:opacity-40 cursor-pointer shadow-md ${
               isDark
-                ? "bg-black text-white border border-white/10 hover:bg-zinc-900"
-                : "bg-black text-white hover:bg-miiles-pink"
+                ? "bg-white text-black hover:bg-white/90"
+                : "bg-black text-white hover:bg-black/90"
             }`}
           >
             {isGenerating ? (
               <Loader2 size={14} className="animate-spin" />
+            ) : currentStep < totalSteps - 1 ? (
+              <>
+                Siguiente
+                <ArrowRight size={14} />
+              </>
             ) : (
               <>
                 Generar flujo
-                <ArrowRight size={14} />
+                <Sparkles size={14} />
               </>
             )}
           </button>
