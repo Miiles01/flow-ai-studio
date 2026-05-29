@@ -8,6 +8,53 @@ type AIStep = {
   type: "start" | "process" | "decision" | "action" | "end";
 };
 
+function assignOptimalHandles(nodes: Node[], edges: Edge[]): Edge[] {
+  return edges.map((edge) => {
+    // If the edge already has handle IDs, keep them
+    if (edge.sourceHandle && edge.targetHandle) return edge;
+
+    const sourceNode = nodes.find((n) => n.id === edge.source);
+    const targetNode = nodes.find((n) => n.id === edge.target);
+
+    if (!sourceNode || !targetNode) return edge;
+
+    const sx = sourceNode.position.x;
+    const sy = sourceNode.position.y;
+    const tx = targetNode.position.x;
+    const ty = targetNode.position.y;
+
+    const dx = tx - sx;
+    const dy = ty - sy;
+
+    let sourceHandle = "right";
+    let targetHandle = "left";
+
+    if (Math.abs(dx) > Math.abs(dy)) {
+      if (dx > 0) {
+        sourceHandle = "right";
+        targetHandle = "left";
+      } else {
+        sourceHandle = "left";
+        targetHandle = "right";
+      }
+    } else {
+      if (dy > 0) {
+        sourceHandle = "bottom";
+        targetHandle = "top";
+      } else {
+        sourceHandle = "top";
+        targetHandle = "bottom";
+      }
+    }
+
+    return {
+      ...edge,
+      sourceHandle,
+      targetHandle,
+    };
+  });
+}
+
 export async function generateFlowFromPrompt(
   prompt: string
 ): Promise<{ nodes: Node[]; edges: Edge[] }> {
@@ -64,12 +111,12 @@ Respond ONLY with valid JSON: {"nodes": [...], "edges": [...]}`;
 
   // 1. Si la nueva función Edge está desplegada, vendrá en data.nodes
   if (data.nodes && Array.isArray(data.nodes) && data.nodes.length > 0 && data.nodes[0].position) {
-    return { nodes: data.nodes, edges: data.edges || [] };
+    return { nodes: data.nodes, edges: assignOptimalHandles(data.nodes, data.edges || []) };
   }
 
   // 2. Si la función Edge vieja está desplegada, pero la IA obedeció el nuevo prompt, vendrá dentro de data.steps.nodes
   if (data.steps && data.steps.nodes && Array.isArray(data.steps.nodes)) {
-    return { nodes: data.steps.nodes, edges: data.steps.edges || [] };
+    return { nodes: data.steps.nodes, edges: assignOptimalHandles(data.steps.nodes, data.steps.edges || []) };
   }
 
   // 3. Fallback absoluto si la IA insistió en devolver el array simple antiguo
@@ -108,6 +155,5 @@ Respond ONLY with valid JSON: {"nodes": [...], "edges": [...]}`;
       });
     }
   });
-
-  return { nodes, edges };
+  return { nodes, edges: assignOptimalHandles(nodes, edges) };
 }

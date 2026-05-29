@@ -408,19 +408,30 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
       </div>
 
       {/* Handles — visible solo cuando está seleccionado (rendered last to stack on top) */}
-      {(["top", "bottom", "left", "right"] as const).map((pos) => (
-        <Handle
-          key={pos}
-          type="source"
-          position={
-            pos === "top" ? Position.Top :
-            pos === "bottom" ? Position.Bottom :
-            pos === "left" ? Position.Left : Position.Right
-          }
-          id={pos}
-          className={`${handleClass} ${isSingleSelected ? "opacity-100" : "opacity-0 pointer-events-none"}`}
-        />
-      ))}
+      {(["top", "bottom", "left", "right"] as const).map((pos) => {
+        const position =
+          pos === "top" ? Position.Top :
+          pos === "bottom" ? Position.Bottom :
+          pos === "left" ? Position.Left : Position.Right;
+        const className = `${handleClass} ${isSingleSelected ? "opacity-100" : "opacity-0 pointer-events-none"}`;
+
+        return (
+          <div key={pos}>
+            <Handle
+              type="target"
+              position={position}
+              id={pos}
+              className={className}
+            />
+            <Handle
+              type="source"
+              position={position}
+              id={pos}
+              className={className}
+            />
+          </div>
+        );
+      })}
     </motion.div>
   );
 };

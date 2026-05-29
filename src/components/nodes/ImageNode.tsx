@@ -80,10 +80,17 @@ const ImageNode = ({ id, data, selected }: NodeProps) => {
       {/* Connection handles — only visible when selected */}
       {isSingleSelected && (
         <>
-          <Handle type="source" position={Position.Top}    id="t" className={HANDLE_CLASS} style={{ top: "0%",  left: "50%", transform: "translate(-50%, -50%)" }} />
-          <Handle type="source" position={Position.Bottom} id="b" className={HANDLE_CLASS} style={{ bottom: "0%", left: "50%", transform: "translate(-50%, 50%)" }} />
-          <Handle type="source" position={Position.Left}   id="l" className={HANDLE_CLASS} style={{ left: "0%",  top: "50%",  transform: "translate(-50%, -50%)" }} />
-          <Handle type="source" position={Position.Right}  id="r" className={HANDLE_CLASS} style={{ right: "0%", top: "50%",  transform: "translate(50%, -50%)" }} />
+          <Handle type="target" position={Position.Top}    id="top" className={HANDLE_CLASS} style={{ top: "0%",  left: "50%", transform: "translate(-50%, -50%)" }} />
+          <Handle type="source" position={Position.Top}    id="top" className={HANDLE_CLASS} style={{ top: "0%",  left: "50%", transform: "translate(-50%, -50%)" }} />
+          
+          <Handle type="target" position={Position.Bottom} id="bottom" className={HANDLE_CLASS} style={{ bottom: "0%", left: "50%", transform: "translate(-50%, 50%)" }} />
+          <Handle type="source" position={Position.Bottom} id="bottom" className={HANDLE_CLASS} style={{ bottom: "0%", left: "50%", transform: "translate(-50%, 50%)" }} />
+          
+          <Handle type="target" position={Position.Left}   id="left" className={HANDLE_CLASS} style={{ left: "0%",  top: "50%",  transform: "translate(-50%, -50%)" }} />
+          <Handle type="source" position={Position.Left}   id="left" className={HANDLE_CLASS} style={{ left: "0%",  top: "50%",  transform: "translate(-50%, -50%)" }} />
+          
+          <Handle type="target" position={Position.Right}  id="right" className={HANDLE_CLASS} style={{ right: "0%", top: "50%",  transform: "translate(50%, -50%)" }} />
+          <Handle type="source" position={Position.Right}  id="right" className={HANDLE_CLASS} style={{ right: "0%", top: "50%",  transform: "translate(50%, -50%)" }} />
         </>
       )}
 

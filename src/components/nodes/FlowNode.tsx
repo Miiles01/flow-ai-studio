@@ -40,33 +40,38 @@ const FlowNode = ({ data, selected }: NodeProps) => {
         ${selected ? "border-[#4F46E5] shadow-sm" : isDark ? "border-white/5 shadow-[0_8px_30px_rgba(0,0,0,0.2)]" : "border-transparent shadow-[0_8px_30px_rgb(0,0,0,0.04)]"}
       `}
     >
-      <Handle
-        type="source"
-        position={Position.Top}
-        id="top"
-        className={`!w-[11px] !h-[11px] !rounded-full !border-[1.5px] !border-[#4F46E5] !-top-[6px] transition-all duration-200 hover:!bg-[#4F46E5] before:absolute before:-inset-4 before:content-[''] !z-50 ${selected ? "opacity-100" : "opacity-0 hover:opacity-100"} ${isDark ? '!bg-[#1C1C1E]' : '!bg-white'}`}
-      />
+      {/* ─── Fully Bidirectional Connection Handles ─── */}
+      {(["top", "bottom", "left", "right"] as const).map((pos) => {
+        const position =
+          pos === "top" ? Position.Top :
+          pos === "bottom" ? Position.Bottom :
+          pos === "left" ? Position.Left : Position.Right;
+        
+        const className = `!w-[11px] !h-[11px] !rounded-full !border-[1.5px] !border-[#4F46E5] transition-all duration-200 hover:!bg-[#4F46E5] before:absolute before:-inset-4 before:content-[''] !z-50 ${
+          selected ? "opacity-100" : "opacity-0 hover:opacity-100"
+        } ${isDark ? '!bg-[#1C1C1E]' : '!bg-white'} ${
+          pos === "top" ? "!-top-[6px]" :
+          pos === "bottom" ? "!-bottom-[6px]" :
+          pos === "left" ? "!-left-[6px]" : "!-right-[6px]"
+        }`;
 
-      <Handle
-        type="source"
-        position={Position.Bottom}
-        id="bottom"
-        className={`!w-[11px] !h-[11px] !rounded-full !border-[1.5px] !border-[#4F46E5] !-bottom-[6px] transition-all duration-200 hover:!bg-[#4F46E5] before:absolute before:-inset-4 before:content-[''] !z-50 ${selected ? "opacity-100" : "opacity-0 hover:opacity-100"} ${isDark ? '!bg-[#1C1C1E]' : '!bg-white'}`}
-      />
-
-      <Handle
-        type="source"
-        position={Position.Left}
-        id="left"
-        className={`!w-[11px] !h-[11px] !rounded-full !border-[1.5px] !border-[#4F46E5] !-left-[6px] transition-all duration-200 hover:!bg-[#4F46E5] before:absolute before:-inset-4 before:content-[''] !z-50 ${selected ? "opacity-100" : "opacity-0 hover:opacity-100"} ${isDark ? '!bg-[#1C1C1E]' : '!bg-white'}`}
-      />
-
-      <Handle
-        type="source"
-        position={Position.Right}
-        id="right"
-        className={`!w-[11px] !h-[11px] !rounded-full !border-[1.5px] !border-[#4F46E5] !-right-[6px] transition-all duration-200 hover:!bg-[#4F46E5] before:absolute before:-inset-4 before:content-[''] !z-50 ${selected ? "opacity-100" : "opacity-0 hover:opacity-100"} ${isDark ? '!bg-[#1C1C1E]' : '!bg-white'}`}
-      />
+        return (
+          <div key={pos}>
+            <Handle
+              type="target"
+              position={position}
+              id={pos}
+              className={className}
+            />
+            <Handle
+              type="source"
+              position={position}
+              id={pos}
+              className={className}
+            />
+          </div>
+        );
+      })}
       
       <div className="flex flex-col gap-2 relative z-20 pointer-events-none">
         <div className="flex items-center justify-between gap-3">
