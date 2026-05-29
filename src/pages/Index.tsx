@@ -1431,6 +1431,8 @@ const IndexContent = () => {
           panOnScroll={true}
           selectionMode={"partial" as any}
           fitView
+          minZoom={0.05}
+          maxZoom={4}
           onInit={setReactFlowInstance}
           proOptions={{ hideAttribution: true }}
           colorMode={isDark ? "dark" : "light"}
