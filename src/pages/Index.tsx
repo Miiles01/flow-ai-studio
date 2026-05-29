@@ -808,6 +808,7 @@ const IndexContent = () => {
       try {
         const { nodes: newNodes, edges: newEdges } = await generateFlowFromPrompt(prompt);
 
+        const generatedIds: string[] = [];
         setNodes((prev) => {
           // Capturar posición final del skeleton
           const skeleton = prev.find((n) => n.id === skeletonId);
@@ -828,6 +829,7 @@ const IndexContent = () => {
                 y: finalY + (n.position.y - minY),
               },
             }));
+            offsetNodes.forEach((n) => generatedIds.push(String(n.id)));
             return [...filteredNodes, ...offsetNodes];
           }
 
@@ -835,6 +837,18 @@ const IndexContent = () => {
         });
 
         setEdges((prev) => [...prev, ...newEdges]);
+
+        // Asegurar que los nodos recién generados queden visibles
+        if (generatedIds.length > 0 && reactFlowInstance) {
+          setTimeout(() => {
+            reactFlowInstance.fitView({
+              nodes: generatedIds.map((id) => ({ id })),
+              padding: 0.25,
+              duration: 600,
+            });
+          }, 100);
+        }
+
         toast.success(`Diagrama generado con ${newNodes.length} nodos`);
       } catch (err) {
         setNodes((prev) => prev.filter((n) => n.id !== skeletonId));
