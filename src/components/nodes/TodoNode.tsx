@@ -1,4 +1,4 @@
-import { memo, useState, useRef, useEffect } from "react";
+import { memo, useState, useRef, useEffect, forwardRef } from "react";
 import { Handle, Position, type NodeProps, NodeResizer, useReactFlow } from "@xyflow/react";
 import {
   Plus, Trash2, ArrowUp, ArrowDown, Minus, Check, Baseline, Heading1, Heading2, Square,
@@ -65,7 +65,7 @@ interface AutoResizingTextareaProps extends React.TextareaHTMLAttributes<HTMLTex
   value: string;
 }
 
-const AutoResizingTextarea = React.forwardRef<HTMLTextAreaElement, AutoResizingTextareaProps>(
+const AutoResizingTextarea = forwardRef<HTMLTextAreaElement, AutoResizingTextareaProps>(
   ({ value, onChange, className, style, rows = 1, ...props }, ref) => {
     const localRef = useRef<HTMLTextAreaElement>(null);
     const textareaRef = (ref || localRef) as React.MutableRefObject<HTMLTextAreaElement | null>;
