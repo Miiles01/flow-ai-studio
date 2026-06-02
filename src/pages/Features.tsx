@@ -611,21 +611,6 @@ const CollaborationMockup = () => {
         {/* Connection/Activity line behind avatars for visual depth */}
         <div className="absolute inset-x-8 h-[2px] bg-dashed border-t border-dashed border-neutral-200" />
         
-        {/* Branded decorative elements: Star badge card */}
-        <motion.div 
-          className="absolute top-6 right-6 bg-white border border-neutral-100 p-2.5 rounded-[1rem] shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex items-center gap-2 z-40"
-          animate={{ y: [0, -4, 0] }}
-          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
-        >
-          <img src={starBadge} alt="Star Badge" className="w-6 h-6 object-contain" />
-          <div className="flex flex-col text-left">
-            <span className="text-[10px] font-semibold text-neutral-850">Miiles Space</span>
-            <span className="text-[8px] text-green-500 font-medium flex items-center gap-1">
-              <span className="w-1 h-1 rounded-full bg-green-500 animate-pulse" /> Activo
-            </span>
-          </div>
-        </motion.div>
-
         {/* Avatars Stack Row */}
         <div className="flex items-center justify-center mt-4">
           {/* Avatar 1 */}
