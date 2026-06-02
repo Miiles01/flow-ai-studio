@@ -106,36 +106,33 @@ const TypewriterInput = () => {
   }, [currentText, isDeleting, phraseIdx]);
 
   return (
-    <div className="w-full max-w-[320px] p-5 bg-white/70 backdrop-blur-sm rounded-[1.5rem] border border-neutral-200/50 text-left flex flex-col gap-3.5 shadow-none hover:scale-[1.02] transition-transform duration-300">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-1.5">
-          <div className="w-2.5 h-2.5 rounded-full bg-neutral-200" />
-          <div className="w-2.5 h-2.5 rounded-full bg-neutral-200" />
-          <div className="w-2.5 h-2.5 rounded-full bg-neutral-200" />
-        </div>
-        <span className="text-[9px] font-medium tracking-wider text-neutral-400 uppercase font-sans">AI Studio</span>
-      </div>
-      
-      <div className="w-full p-3 bg-white border border-neutral-200/80 rounded-xl flex items-start gap-2.5 min-h-[76px]">
-        <div className="w-5 h-5 rounded-md bg-blue-50/80 flex items-center justify-center text-[#4059F1] shrink-0 text-[10px] mt-0.5">
-          ✦
-        </div>
-        <div className="flex-1">
-          <p className="text-[11px] text-neutral-800 font-light leading-normal min-h-[44px]">
-            {currentText}
-            <span className="inline-block w-[1.5px] h-3.5 ml-0.5 bg-[#4059F1] animate-pulse align-middle" />
-          </p>
-        </div>
+    <div className="w-full max-w-[320px] bg-black text-white rounded-[32px] pt-7 pb-4 px-5 text-center flex flex-col justify-between min-h-[145px] shadow-none hover:scale-[1.02] transition-transform duration-300 select-none">
+      <div className="flex-1 flex items-center justify-center min-h-[50px] mb-3">
+        <p className="text-[13px] text-white font-light leading-relaxed text-center w-full">
+          {currentText}
+          <span className="inline-block w-[1.5px] h-3.5 ml-0.5 bg-white animate-pulse align-middle" />
+        </p>
       </div>
 
-      <div className="flex justify-between items-center mt-0.5">
-        <span className="text-[9px] text-neutral-400 font-light max-w-[160px] leading-tight">Escribe tu idea para generar un flujo</span>
-        <div className={`h-7 px-3.5 text-[10px] font-medium rounded-lg flex items-center justify-center transition-all duration-300 ${
+      <div className="flex items-center justify-between mt-2">
+        <div className="flex items-center gap-2 bg-white/10 h-8 px-3 rounded-full">
+          <svg className="w-3 h-3 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <rect x="3" y="3" width="7" height="7" rx="1" />
+            <rect x="14" y="3" width="7" height="7" rx="1" />
+            <rect x="14" y="14" width="7" height="7" rx="1" />
+            <rect x="3" y="14" width="7" height="7" rx="1" />
+          </svg>
+          <span className="text-[11px] font-light text-white/70 tracking-wider">Apps</span>
+        </div>
+
+        <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
           currentText.length > 5 
-            ? "bg-[#4059F1] text-white" 
-            : "bg-neutral-100 text-neutral-400"
+            ? "bg-white/20 text-white" 
+            : "bg-white/5 text-white/30"
         }`}>
-          Generar
+          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+          </svg>
         </div>
       </div>
     </div>
