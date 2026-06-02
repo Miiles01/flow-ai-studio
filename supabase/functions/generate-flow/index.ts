@@ -107,6 +107,8 @@ Rules for Premium Visual Design:
 - DEFAULT BRAND COLOR: The primary brand color is #4059F1. Use it as the default accentColor for todos and stroke color for edges.
 - EDGES: Connect nodes logically. Set edge "style": {"stroke": "hex", "strokeWidth": 2}. Do NOT animate the edges (always set "animated": false or omit it).
 - When the user asks about prospects or business ideas, prefer real prospects from the database below over invented ones.
+- CONTEXTO DEL CLIENTE: Antes de diseñar, infiere el contexto, la industria y los OBJETIVOS del cliente a partir del prompt y de los prospectos disponibles, y construye el flujo en función de esos objetivos.
+- EMBEDS DE SITIO WEB: Si un prospecto relevante tiene un campo "website", PUEDES (no es obligatorio) añadir un "embedNode" con esa URL real cuando aporte valor al plan o a los objetivos planteados (p. ej. para revisar el sitio del cliente/competencia). Decide si es necesario según el plan; no lo agregues por defecto en cada flujo.
 - Respond ONLY with valid JSON containing {"nodes": [...], "edges": [...]}, no markdown.
 
 Example output:
