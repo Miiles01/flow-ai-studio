@@ -10,6 +10,7 @@ import LandingNavbar from "@/components/LandingNavbar";
 import LandingFooter from "@/components/LandingFooter";
 import PricingTable from "@/components/PricingTable";
 import { Check } from "lucide-react";
+import funcionesHero from "@/assets/funciones-hero.webp.asset.json";
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText, CustomEase);
 if (!CustomEase.get("osmo-ease")) {
@@ -112,6 +113,18 @@ const Features = () => {
             <p className="text-lg font-light text-gray-500 max-w-2xl">
               Todo lo que necesitas para hacer crecer tu marca, en una sola plataforma.
             </p>
+          </section>
+
+          {/* Hero Image */}
+          <section className="px-6 pb-24">
+            <div className="max-w-6xl mx-auto rounded-[2rem] overflow-hidden shadow-xl border border-gray-100">
+              <img
+                src={funcionesHero.url}
+                alt="Persona usando Miiles en una tablet, cómoda en su sofá"
+                className="w-full h-auto object-cover"
+                loading="lazy"
+              />
+            </div>
           </section>
 
           {/* Detailed Features Sections */}
