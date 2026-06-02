@@ -592,8 +592,14 @@ const InteractiveCanvasMockup = () => {
               transition: "left 0.6s cubic-bezier(0.16, 1, 0.3, 1), top 0.6s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease, transform 0.1s ease",
             }}
           >
-            <svg className="w-5.5 h-5.5 text-black filter drop-shadow-md" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M4.5 3v15.2l3.8-3.8 3.5 8.1 3-1.3-3.5-8.1 5.4.1z" />
+            <svg className="w-5.5 h-5.5 filter drop-shadow-[0_2px_5px_rgba(0,0,0,0.15)]" viewBox="0 0 24 24">
+              <path 
+                d="M4.5 3v15.2l3.8-3.8 3.5 8.1 3-1.3-3.5-8.1 5.4.1z" 
+                fill="#222222" 
+                stroke="white" 
+                strokeWidth="1.5" 
+                strokeLinejoin="round" 
+              />
             </svg>
           </div>
         </div>
@@ -677,7 +683,7 @@ const CollaborationMockup = () => {
         {/* Collaborative Presence Cursors */}
         {/* Mateo Cursor (Blue) - Stays in the top area, moves and pauses, never collides with avatars */}
         <motion.div 
-          className="absolute left-1/4 top-[20%] z-45 pointer-events-none"
+          className="absolute left-1/4 top-[20%] z-45 pointer-events-none flex items-start"
           animate={{ 
             x: [-60, 40, 40, -20, -20, -60], 
             y: [-10, 15, 15, -15, -15, -10] 
@@ -690,19 +696,23 @@ const CollaborationMockup = () => {
             delay: 0.2
           }}
         >
-          <div className="flex flex-col items-start gap-1.5">
-            <div className="flex items-center gap-1.5 bg-[#4059F1] text-white py-1 px-3.5 rounded-full shadow-[0_4px_12px_rgba(64,89,241,0.25)]">
-              <span className="text-[11px] sm:text-xs font-semibold tracking-wide">Mateo</span>
-            </div>
-            <svg className="w-6 h-6 text-[#4059F1] -mt-1 ml-2.5 filter drop-shadow-sm rotate-[15deg]" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M4.5 3v15.2l3.8-3.8 3.5 8.1 3-1.3-3.5-8.1 5.4.1z" />
-            </svg>
+          <svg className="w-6 h-6 filter drop-shadow-[0_2px_5px_rgba(0,0,0,0.15)] rotate-[15deg] shrink-0" viewBox="0 0 24 24">
+            <path 
+              d="M4.5 3v15.2l3.8-3.8 3.5 8.1 3-1.3-3.5-8.1 5.4.1z" 
+              fill="#222222" 
+              stroke="white" 
+              strokeWidth="1.5" 
+              strokeLinejoin="round" 
+            />
+          </svg>
+          <div className="bg-[#4059F1] text-white py-1 px-3.5 rounded-full shadow-[0_4px_12px_rgba(64,89,241,0.25)] -ml-1.5 mt-4">
+            <span className="text-[11px] sm:text-xs font-semibold tracking-wide">Mateo</span>
           </div>
         </motion.div>
 
         {/* Sofía Cursor (Pink) - Stays in the bottom area, moves and pauses, never collides with avatars */}
         <motion.div 
-          className="absolute right-1/4 bottom-[20%] z-45 pointer-events-none"
+          className="absolute right-1/4 bottom-[20%] z-45 pointer-events-none flex items-start"
           animate={{ 
             x: [60, -40, -40, 20, 20, 60], 
             y: [15, -10, -10, 20, 20, 15] 
@@ -715,13 +725,17 @@ const CollaborationMockup = () => {
             delay: 1.5 
           }}
         >
-          <div className="flex flex-col items-start gap-1.5">
-            <div className="flex items-center gap-1.5 bg-[#EC4899] text-white py-1 px-3.5 rounded-full shadow-[0_4px_12px_rgba(236,72,153,0.25)]">
-              <span className="text-[11px] sm:text-xs font-semibold tracking-wide">Sofía</span>
-            </div>
-            <svg className="w-6 h-6 text-[#EC4899] -mt-1 ml-2.5 filter drop-shadow-sm rotate-[-10deg]" viewBox="0 0 24 24" fill="currentColor">
-              <path d="M4.5 3v15.2l3.8-3.8 3.5 8.1 3-1.3-3.5-8.1 5.4.1z" />
-            </svg>
+          <svg className="w-6 h-6 filter drop-shadow-[0_2px_5px_rgba(0,0,0,0.15)] rotate-[-10deg] shrink-0" viewBox="0 0 24 24">
+            <path 
+              d="M4.5 3v15.2l3.8-3.8 3.5 8.1 3-1.3-3.5-8.1 5.4.1z" 
+              fill="#222222" 
+              stroke="white" 
+              strokeWidth="1.5" 
+              strokeLinejoin="round" 
+            />
+          </svg>
+          <div className="bg-[#EC4899] text-white py-1 px-3.5 rounded-full shadow-[0_4px_12px_rgba(236,72,153,0.25)] -ml-1.5 mt-4">
+            <span className="text-[11px] sm:text-xs font-semibold tracking-wide">Sofía</span>
           </div>
         </motion.div>
 
