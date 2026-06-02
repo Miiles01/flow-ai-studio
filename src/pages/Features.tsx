@@ -140,10 +140,9 @@ const TypewriterInput = () => {
 
 const InteractiveCanvasMockup = () => {
   const [activeTool, setActiveTool] = useState<"select" | "pan" | "shapes" | "text" | "todo" | "image" | "section">("select");
-  const [activeShape, setActiveShape] = useState<"square" | "circle" | "diamond">("square");
+  const [activeShape, setActiveShape] = useState<"square" | "circle" | "diamond" | "triangle" | "hexagon" | "star">("square");
   const [cursorPos, setCursorPos] = useState({ x: 180, y: 221, opacity: 0, scale: 1 });
-  const [visibleTooltip, setVisibleTooltip] = useState<string | null>(null);
-  const [tooltipY, setTooltipY] = useState<number>(0);
+  const [hoveredTool, setHoveredTool] = useState<"select" | "pan" | "shapes" | "text" | "todo" | "image" | "section" | null>(null);
   const [isFlyoutOpen, setIsFlyoutOpen] = useState(false);
 
   useEffect(() => {
@@ -154,145 +153,189 @@ const InteractiveCanvasMockup = () => {
       setCursorPos({ x: 180, y: 221, opacity: 0, scale: 1 });
       setActiveTool("select");
       setActiveShape("square");
-      setVisibleTooltip(null);
+      setHoveredTool(null);
       setIsFlyoutOpen(false);
 
-      // Step 1: Move to Shapes tool Y center is 143px
+      // Step 1: Move to Pan tool Y center is 78px
       timeouts.push(setTimeout(() => {
-        setCursorPos({ x: 29, y: 143, opacity: 1, scale: 1 });
-        setVisibleTooltip("Formas");
-        setTooltipY(129);
-      }, 1000));
+        setCursorPos({ x: 29, y: 78, opacity: 1, scale: 1 });
+      }, 800));
 
-      // Step 2: Click Shapes tool and open flyout
+      // Step 1b: Hover Pan tool
       timeouts.push(setTimeout(() => {
-        setIsFlyoutOpen(true);
-        setVisibleTooltip(null);
+        setHoveredTool("pan");
+      }, 1400));
+
+      // Step 1c: Click Pan tool
+      timeouts.push(setTimeout(() => {
+        setActiveTool("pan");
+        setHoveredTool(null);
         setCursorPos(prev => ({ ...prev, scale: 0.85 }));
       }, 1800));
 
-      // Step 2b: Unclick Shapes
+      // Step 1d: Unclick Pan
       timeouts.push(setTimeout(() => {
         setCursorPos(prev => ({ ...prev, scale: 1 }));
       }, 2000));
 
-      // Step 2c: Move to Círculo button in the flyout (x: 142, y: 143)
+      // Step 2: Move to Shapes tool Y center is 143px
       timeouts.push(setTimeout(() => {
-        setCursorPos({ x: 142, y: 143, opacity: 1, scale: 1 });
-      }, 2500));
+        setCursorPos({ x: 29, y: 143, opacity: 1, scale: 1 });
+      }, 2600));
 
-      // Step 2d: Click Círculo shape
+      // Step 2b: Hover Shapes tool
+      timeouts.push(setTimeout(() => {
+        setHoveredTool("shapes");
+      }, 3200));
+
+      // Step 2c: Click Shapes tool and open flyout
       timeouts.push(setTimeout(() => {
         setActiveTool("shapes");
-        setActiveShape("circle");
+        setHoveredTool(null);
+        setIsFlyoutOpen(true);
         setCursorPos(prev => ({ ...prev, scale: 0.85 }));
-      }, 3300));
+      }, 3600));
 
-      // Step 2e: Unclick and close flyout
+      // Step 2d: Unclick Shapes
       timeouts.push(setTimeout(() => {
-        setIsFlyoutOpen(false);
         setCursorPos(prev => ({ ...prev, scale: 1 }));
-      }, 3500));
+      }, 3800));
 
-      // Step 3: Move to Text tool (Y: 193px)
+      // Step 3: Move to Círculo button in the flyout (x: 135, y: 143)
       timeouts.push(setTimeout(() => {
-        setCursorPos({ x: 29, y: 193, opacity: 1, scale: 1 });
-        setVisibleTooltip("Texto");
-        setTooltipY(179);
-      }, 4200));
+        setCursorPos({ x: 135, y: 143, opacity: 1, scale: 1 });
+      }, 4400));
 
-      // Step 4: Click Text tool
+      // Step 3b: Click Círculo shape
       timeouts.push(setTimeout(() => {
-        setActiveTool("text");
+        setActiveShape("circle");
         setCursorPos(prev => ({ ...prev, scale: 0.85 }));
       }, 5000));
 
-      // Step 4b: Unclick
+      // Step 3c: Unclick and close flyout
       timeouts.push(setTimeout(() => {
+        setIsFlyoutOpen(false);
         setCursorPos(prev => ({ ...prev, scale: 1 }));
       }, 5200));
 
-      // Step 5: Move to Todo tool (Y: 243px)
+      // Step 4: Move to Text tool (Y: 193px)
       timeouts.push(setTimeout(() => {
-        setCursorPos({ x: 29, y: 243, opacity: 1, scale: 1 });
-        setVisibleTooltip("Lista de Tareas");
-        setTooltipY(229);
-      }, 6000));
+        setCursorPos({ x: 29, y: 193, opacity: 1, scale: 1 });
+      }, 5800));
 
-      // Step 6: Click Todo tool
+      // Step 4b: Hover Text tool
       timeouts.push(setTimeout(() => {
-        setActiveTool("todo");
+        setHoveredTool("text");
+      }, 6400));
+
+      // Step 4c: Click Text tool
+      timeouts.push(setTimeout(() => {
+        setActiveTool("text");
+        setHoveredTool(null);
         setCursorPos(prev => ({ ...prev, scale: 0.85 }));
       }, 6800));
 
-      // Step 6b: Unclick
+      // Step 4d: Unclick Text
       timeouts.push(setTimeout(() => {
         setCursorPos(prev => ({ ...prev, scale: 1 }));
       }, 7000));
 
-      // Step 7: Move to Image tool (Y: 293px)
+      // Step 5: Move to Todo tool (Y: 243px)
       timeouts.push(setTimeout(() => {
-        setCursorPos({ x: 29, y: 293, opacity: 1, scale: 1 });
-        setVisibleTooltip("Imagen");
-        setTooltipY(279);
-      }, 7800));
+        setCursorPos({ x: 29, y: 243, opacity: 1, scale: 1 });
+      }, 7600));
 
-      // Step 8: Click Image tool
+      // Step 5b: Hover Todo tool
       timeouts.push(setTimeout(() => {
-        setActiveTool("image");
+        setHoveredTool("todo");
+      }, 8200));
+
+      // Step 5c: Click Todo tool
+      timeouts.push(setTimeout(() => {
+        setActiveTool("todo");
+        setHoveredTool(null);
         setCursorPos(prev => ({ ...prev, scale: 0.85 }));
       }, 8600));
 
-      // Step 8b: Unclick
+      // Step 5d: Unclick Todo
       timeouts.push(setTimeout(() => {
         setCursorPos(prev => ({ ...prev, scale: 1 }));
       }, 8800));
 
-      // Step 9: Move to Section tool (Y: 343px)
+      // Step 6: Move to Image tool (Y: 293px)
       timeouts.push(setTimeout(() => {
-        setCursorPos({ x: 29, y: 343, opacity: 1, scale: 1 });
-        setVisibleTooltip("Sección");
-        setTooltipY(329);
-      }, 9600));
+        setCursorPos({ x: 29, y: 293, opacity: 1, scale: 1 });
+      }, 9400));
 
-      // Step 10: Click Section tool
+      // Step 6b: Hover Image tool
       timeouts.push(setTimeout(() => {
-        setActiveTool("section");
+        setHoveredTool("image");
+      }, 10000));
+
+      // Step 6c: Click Image tool
+      timeouts.push(setTimeout(() => {
+        setActiveTool("image");
+        setHoveredTool(null);
         setCursorPos(prev => ({ ...prev, scale: 0.85 }));
       }, 10400));
 
-      // Step 10b: Unclick
+      // Step 6d: Unclick Image
       timeouts.push(setTimeout(() => {
         setCursorPos(prev => ({ ...prev, scale: 1 }));
       }, 10600));
 
-      // Step 11: Move to Select tool (Y: 28px)
+      // Step 7: Move to Section tool (Y: 343px)
       timeouts.push(setTimeout(() => {
-        setCursorPos({ x: 29, y: 28, opacity: 1, scale: 1 });
-        setVisibleTooltip("Seleccionar");
-        setTooltipY(14);
-      }, 11400));
+        setCursorPos({ x: 29, y: 343, opacity: 1, scale: 1 });
+      }, 11200));
 
-      // Step 12: Click Select tool
+      // Step 7b: Hover Section tool
       timeouts.push(setTimeout(() => {
-        setActiveTool("select");
+        setHoveredTool("section");
+      }, 11800));
+
+      // Step 7c: Click Section tool
+      timeouts.push(setTimeout(() => {
+        setActiveTool("section");
+        setHoveredTool(null);
         setCursorPos(prev => ({ ...prev, scale: 0.85 }));
       }, 12200));
 
-      // Step 12b: Unclick
+      // Step 7d: Unclick Section
       timeouts.push(setTimeout(() => {
         setCursorPos(prev => ({ ...prev, scale: 1 }));
       }, 12400));
 
-      // Step 13: Exit screen to the top-right
+      // Step 8: Move to Select tool (Y: 28px)
       timeouts.push(setTimeout(() => {
-        setVisibleTooltip(null);
+        setCursorPos({ x: 29, y: 28, opacity: 1, scale: 1 });
+      }, 13000));
+
+      // Step 8b: Hover Select tool
+      timeouts.push(setTimeout(() => {
+        setHoveredTool("select");
+      }, 13600));
+
+      // Step 8c: Click Select tool
+      timeouts.push(setTimeout(() => {
+        setActiveTool("select");
+        setHoveredTool(null);
+        setCursorPos(prev => ({ ...prev, scale: 0.85 }));
+      }, 14000));
+
+      // Step 8d: Unclick Select
+      timeouts.push(setTimeout(() => {
+        setCursorPos(prev => ({ ...prev, scale: 1 }));
+      }, 14200));
+
+      // Step 9: Exit screen to the top-right
+      timeouts.push(setTimeout(() => {
         setCursorPos({ x: 200, y: -20, opacity: 0, scale: 1 });
-      }, 13200));
+      }, 14800));
     };
 
     runLoop();
-    const interval = setInterval(runLoop, 14600);
+    const interval = setInterval(runLoop, 15600);
 
     return () => {
       clearInterval(interval);
@@ -300,82 +343,237 @@ const InteractiveCanvasMockup = () => {
     };
   }, []);
 
+  const shouldShowTooltip = (tool: string) => {
+    return hoveredTool === tool || (activeTool === tool && hoveredTool === null);
+  };
+
   return (
     <div className="w-full h-full relative bg-white/70 backdrop-blur-sm rounded-[1.5rem] border border-neutral-200/50 overflow-hidden flex items-center justify-center select-none">
-      {/* Zoom level indicator */}
-      <div className="absolute top-4 left-4 z-10">
-        <div className="px-2.5 py-1 bg-neutral-100 border border-neutral-200 text-[9px] text-neutral-500 font-medium rounded-lg">
-          100%
-        </div>
-      </div>
-
       {/* Main Container to relative position the floating details relative to the toolbar */}
       <div className="relative">
         {/* Large Toolbar in the center */}
         <div className="relative w-[58px] p-1.5 bg-white border border-neutral-200/80 rounded-[28px] shadow-[0_12px_40px_rgba(0,0,0,0.06)] flex flex-col items-center gap-1.5 z-20">
           {/* Select Tool */}
-          <div className={`w-11 h-11 rounded-full flex items-center justify-center transition-colors duration-200 ${
+          <div className={`relative w-11 h-11 rounded-full flex items-center justify-center transition-colors duration-200 ${
             activeTool === "select" ? "bg-black text-white" : "text-[#6B7280]"
           }`}>
-            <MousePointer size={20} strokeWidth={1.5} />
+            <MousePointer size={18} strokeWidth={1.5} />
+            <AnimatePresence>
+              {shouldShowTooltip("select") && (
+                <motion.div
+                  initial={{ opacity: 0, x: -6 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -6 }}
+                  transition={{ duration: 0.15, ease: "easeOut" }}
+                  className="absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 bg-black text-white text-[13px] font-light py-1.5 px-3 rounded-full whitespace-nowrap shadow-lg z-30 pointer-events-none"
+                >
+                  Seleccionar
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* Pan Tool */}
-          <div className={`w-11 h-11 rounded-full flex items-center justify-center transition-colors duration-200 ${
+          <div className={`relative w-11 h-11 rounded-full flex items-center justify-center transition-colors duration-200 ${
             activeTool === "pan" ? "bg-black text-white" : "text-[#6B7280]"
           }`}>
-            <Hand size={20} strokeWidth={1.5} />
+            <Hand size={18} strokeWidth={1.5} />
+            <AnimatePresence>
+              {shouldShowTooltip("pan") && (
+                <motion.div
+                  initial={{ opacity: 0, x: -6 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -6 }}
+                  transition={{ duration: 0.15, ease: "easeOut" }}
+                  className="absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 bg-black text-white text-[13px] font-light py-1.5 px-3 rounded-full whitespace-nowrap shadow-lg z-30 pointer-events-none"
+                >
+                  Navegar
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           <div className="w-6 h-[1px] bg-neutral-200/60 my-0.5" />
 
           {/* Shapes Tool */}
-          <div className={`w-11 h-11 rounded-full flex items-center justify-center transition-colors duration-200 ${
+          <div className={`relative w-11 h-11 rounded-full flex items-center justify-center transition-colors duration-200 ${
             activeTool === "shapes" ? "bg-black text-white" : "text-[#6B7280]"
           }`}>
             {activeShape === "square" && (
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-[18px] h-[18px]">
                 <rect x="2" y="2" width="20" height="20" rx="3" />
               </svg>
             )}
             {activeShape === "circle" && (
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-[18px] h-[18px]">
                 <circle cx="12" cy="12" r="10" />
               </svg>
             )}
             {activeShape === "diamond" && (
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-5 h-5">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-[18px] h-[18px]">
                 <polygon points="12,2 22,12 12,22 2,12" />
               </svg>
             )}
+            {activeShape === "triangle" && (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-[18px] h-[18px]">
+                <polygon points="12,2 22,22 2,22" />
+              </svg>
+            )}
+            {activeShape === "hexagon" && (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-[18px] h-[18px]">
+                <polygon points="12,2 21,7 21,17 12,22 3,17 3,7" />
+              </svg>
+            )}
+            {activeShape === "star" && (
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-[18px] h-[18px]">
+                <polygon points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9" />
+              </svg>
+            )}
+
+            {/* Shapes Flyout Menu display (Y center is Shapes Y minus offset) */}
+            <AnimatePresence>
+              {activeTool === "shapes" && isFlyoutOpen && (
+                <motion.div
+                  initial={{ opacity: 0, x: -8, scale: 0.96 }}
+                  animate={{ opacity: 1, x: 0, scale: 1 }}
+                  exit={{ opacity: 0, x: -8, scale: 0.96 }}
+                  transition={{ duration: 0.14, ease: "easeOut" }}
+                  className="absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 bg-[#111] p-1.5 rounded-2xl shadow-xl border border-neutral-800 flex gap-1.5 z-30 pointer-events-none"
+                >
+                  {/* Rectangulo */}
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${activeShape === "square" ? "bg-white text-black" : "text-white/50 bg-white/5"}`}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4.5 h-4.5">
+                      <rect x="2" y="2" width="20" height="20" rx="3" />
+                    </svg>
+                  </div>
+                  {/* Circulo */}
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${activeShape === "circle" ? "bg-white text-black" : "text-white/50 bg-white/5"}`}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4.5 h-4.5">
+                      <circle cx="12" cy="12" r="10" />
+                    </svg>
+                  </div>
+                  {/* Rombo */}
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${activeShape === "diamond" ? "bg-white text-black" : "text-white/50 bg-white/5"}`}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4.5 h-4.5">
+                      <polygon points="12,2 22,12 12,22 2,12" />
+                    </svg>
+                  </div>
+                  {/* Triángulo */}
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${activeShape === "triangle" ? "bg-white text-black" : "text-white/50 bg-white/5"}`}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4.5 h-4.5">
+                      <polygon points="12,2 22,22 2,22" />
+                    </svg>
+                  </div>
+                  {/* Hexágono */}
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${activeShape === "hexagon" ? "bg-white text-black" : "text-white/50 bg-white/5"}`}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4.5 h-4.5">
+                      <polygon points="12,2 21,7 21,17 12,22 3,17 3,7" />
+                    </svg>
+                  </div>
+                  {/* Estrella */}
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${activeShape === "star" ? "bg-white text-black" : "text-white/50 bg-white/5"}`}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4.5 h-4.5">
+                      <polygon points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9" />
+                    </svg>
+                  </div>
+                </motion.div>
+              )}
+            </AnimatePresence>
+
+            {/* Formas Tooltip */}
+            <AnimatePresence>
+              {shouldShowTooltip("shapes") && !isFlyoutOpen && (
+                <motion.div
+                  initial={{ opacity: 0, x: -6 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -6 }}
+                  transition={{ duration: 0.15, ease: "easeOut" }}
+                  className="absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 bg-black text-white text-[13px] font-light py-1.5 px-3 rounded-full whitespace-nowrap shadow-lg z-30 pointer-events-none"
+                >
+                  Formas
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* Text Tool */}
-          <div className={`w-11 h-11 rounded-full flex items-center justify-center transition-colors duration-200 ${
+          <div className={`relative w-11 h-11 rounded-full flex items-center justify-center transition-colors duration-200 ${
             activeTool === "text" ? "bg-black text-white" : "text-[#6B7280]"
           }`}>
-            <Type size={20} strokeWidth={1.5} />
+            <Type size={18} strokeWidth={1.5} />
+            <AnimatePresence>
+              {shouldShowTooltip("text") && (
+                <motion.div
+                  initial={{ opacity: 0, x: -6 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -6 }}
+                  transition={{ duration: 0.15, ease: "easeOut" }}
+                  className="absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 bg-black text-white text-[13px] font-light py-1.5 px-3 rounded-full whitespace-nowrap shadow-lg z-30 pointer-events-none"
+                >
+                  Texto
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* Todo Tool */}
-          <div className={`w-11 h-11 rounded-full flex items-center justify-center transition-colors duration-200 ${
+          <div className={`relative w-11 h-11 rounded-full flex items-center justify-center transition-colors duration-200 ${
             activeTool === "todo" ? "bg-black text-white" : "text-[#6B7280]"
           }`}>
-            <ListTodo size={20} strokeWidth={1.5} />
+            <ListTodo size={18} strokeWidth={1.5} />
+            <AnimatePresence>
+              {shouldShowTooltip("todo") && (
+                <motion.div
+                  initial={{ opacity: 0, x: -6 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -6 }}
+                  transition={{ duration: 0.15, ease: "easeOut" }}
+                  className="absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 bg-black text-white text-[13px] font-light py-1.5 px-3 rounded-full whitespace-nowrap shadow-lg z-30 pointer-events-none"
+                >
+                  Lista de Tareas
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* Image Tool */}
-          <div className={`w-11 h-11 rounded-full flex items-center justify-center transition-colors duration-200 ${
+          <div className={`relative w-11 h-11 rounded-full flex items-center justify-center transition-colors duration-200 ${
             activeTool === "image" ? "bg-black text-white" : "text-[#6B7280]"
           }`}>
-            <ImageIcon size={20} strokeWidth={1.5} />
+            <ImageIcon size={18} strokeWidth={1.5} />
+            <AnimatePresence>
+              {shouldShowTooltip("image") && (
+                <motion.div
+                  initial={{ opacity: 0, x: -6 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -6 }}
+                  transition={{ duration: 0.15, ease: "easeOut" }}
+                  className="absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 bg-black text-white text-[13px] font-light py-1.5 px-3 rounded-full whitespace-nowrap shadow-lg z-30 pointer-events-none"
+                >
+                  Imagen
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* Section Tool */}
-          <div className={`w-11 h-11 rounded-full flex items-center justify-center transition-colors duration-200 ${
+          <div className={`relative w-11 h-11 rounded-full flex items-center justify-center transition-colors duration-200 ${
             activeTool === "section" ? "bg-black text-white" : "text-[#6B7280]"
           }`}>
-            <SquareDashed size={20} strokeWidth={1.5} />
+            <SquareDashed size={18} strokeWidth={1.5} />
+            <AnimatePresence>
+              {shouldShowTooltip("section") && (
+                <motion.div
+                  initial={{ opacity: 0, x: -6 }}
+                  animate={{ opacity: 1, x: 0 }}
+                  exit={{ opacity: 0, x: -6 }}
+                  transition={{ duration: 0.15, ease: "easeOut" }}
+                  className="absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 bg-black text-white text-[13px] font-light py-1.5 px-3 rounded-full whitespace-nowrap shadow-lg z-30 pointer-events-none"
+                >
+                  Sección
+                </motion.div>
+              )}
+            </AnimatePresence>
           </div>
 
           {/* Animated Mouse Cursor relative to the Toolbar */}
@@ -393,42 +591,6 @@ const InteractiveCanvasMockup = () => {
             </svg>
           </div>
         </div>
-
-        {/* Hover Tooltip display */}
-        {visibleTooltip && (
-          <div 
-            className="absolute left-[70px] bg-black text-white text-[10px] font-normal py-1.5 px-3 rounded-full whitespace-nowrap shadow-lg z-30 pointer-events-none transition-all duration-300 animate-[fade-in_0.2s_ease-out]"
-            style={{ top: `${tooltipY}px` }}
-          >
-            {visibleTooltip}
-          </div>
-        )}
-
-        {/* Shapes Flyout Menu display (Y center is Shapes Y minus offset) */}
-        {isFlyoutOpen && (
-          <div 
-            className="absolute left-[70px] top-[117px] bg-[#111] p-1.5 rounded-2xl shadow-xl border border-neutral-800 flex gap-1.5 z-30 pointer-events-none animate-[fade-in_0.15s_ease-out]"
-          >
-            {/* Rectangulo */}
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${activeShape === "square" ? "bg-white text-black" : "text-white/50 bg-white/5"}`}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4.5 h-4.5">
-                <rect x="2" y="2" width="20" height="20" rx="3" />
-              </svg>
-            </div>
-            {/* Circulo */}
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${activeShape === "circle" ? "bg-white text-black" : "text-white/50 bg-white/5"}`}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4.5 h-4.5">
-                <circle cx="12" cy="12" r="10" />
-              </svg>
-            </div>
-            {/* Rombo */}
-            <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${activeShape === "diamond" ? "bg-white text-black" : "text-white/50 bg-white/5"}`}>
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4.5 h-4.5">
-                <polygon points="12,2 22,12 12,22 2,12" />
-              </svg>
-            </div>
-          </div>
-        )}
       </div>
     </div>
   );
