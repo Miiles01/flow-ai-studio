@@ -115,6 +115,18 @@ const Features = () => {
             </p>
           </section>
 
+          {/* Hero Image */}
+          <section className="px-6 pb-24">
+            <div className="max-w-6xl mx-auto rounded-[2rem] overflow-hidden shadow-xl border border-gray-100">
+              <img
+                src={funcionesHero.url}
+                alt="Persona usando Miiles en una tablet, cómoda en su sofá"
+                className="w-full h-auto object-cover"
+                loading="lazy"
+              />
+            </div>
+          </section>
+
           {/* Detailed Features Sections */}
           <section className="pb-32 px-6">
             <div className="max-w-6xl mx-auto flex flex-col gap-36">
