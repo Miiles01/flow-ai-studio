@@ -11,6 +11,10 @@ import LandingFooter from "@/components/LandingFooter";
 import PricingTable from "@/components/PricingTable";
 import { Check, MousePointer, Hand, Type, ListTodo, ImageIcon, SquareDashed } from "lucide-react";
 import funcionesHero from "@/assets/funciones-hero.webp.asset.json";
+import avatar1 from "@/assets/avatar1.png";
+import avatar2 from "@/assets/avatar2.png";
+import avatar3 from "@/assets/avatar3.png";
+import starBadge from "@/assets/star-badge.png";
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText, CustomEase);
 if (!CustomEase.get("osmo-ease")) {
@@ -597,6 +601,109 @@ const InteractiveCanvasMockup = () => {
   );
 };
 
+const CollaborationMockup = () => {
+  return (
+    <div className="w-full h-full relative bg-white/70 backdrop-blur-sm rounded-[1.5rem] border border-neutral-200/50 overflow-hidden flex items-center justify-center select-none">
+      {/* Central Canvas Mockup containing avatars */}
+      <div className="relative w-full h-full flex flex-col items-center justify-center p-4">
+        
+        {/* Connection/Activity line behind avatars for visual depth */}
+        <div className="absolute inset-x-8 h-[2px] bg-dashed border-t border-dashed border-neutral-200" />
+        
+        {/* Branded decorative elements: Star badge card */}
+        <motion.div 
+          className="absolute top-6 right-6 bg-white border border-neutral-100 p-2.5 rounded-[1rem] shadow-[0_4px_20px_rgba(0,0,0,0.03)] flex items-center gap-2 z-40"
+          animate={{ y: [0, -4, 0] }}
+          transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}
+        >
+          <img src={starBadge} alt="Star Badge" className="w-6 h-6 object-contain" />
+          <div className="flex flex-col text-left">
+            <span className="text-[10px] font-semibold text-neutral-850">Miiles Space</span>
+            <span className="text-[8px] text-green-500 font-medium flex items-center gap-1">
+              <span className="w-1 h-1 rounded-full bg-green-500 animate-pulse" /> Activo
+            </span>
+          </div>
+        </motion.div>
+
+        {/* Avatars Stack Row */}
+        <div className="flex items-center justify-center mt-4">
+          {/* Avatar 1 */}
+          <motion.div
+            className="relative z-10 w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-white shadow-[0_4px_15px_rgba(0,0,0,0.08)] overflow-hidden"
+            animate={{ y: [0, -18, 0] }}
+            transition={{
+              duration: 2.2,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 0,
+            }}
+          >
+            <img src={avatar1} alt="Colaborador 1" className="w-full h-full object-cover" />
+          </motion.div>
+
+          {/* Avatar 2 */}
+          <motion.div
+            className="relative z-20 w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-white shadow-[0_4px_15px_rgba(0,0,0,0.08)] overflow-hidden -ml-5 sm:-ml-6"
+            animate={{ y: [0, -18, 0] }}
+            transition={{
+              duration: 2.2,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 0.3,
+            }}
+          >
+            <img src={avatar2} alt="Colaborador 2" className="w-full h-full object-cover" />
+          </motion.div>
+
+          {/* Avatar 3 */}
+          <motion.div
+            className="relative z-30 w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-white shadow-[0_4px_15px_rgba(0,0,0,0.08)] overflow-hidden -ml-5 sm:-ml-6"
+            animate={{ y: [0, -18, 0] }}
+            transition={{
+              duration: 2.2,
+              repeat: Infinity,
+              ease: "easeInOut",
+              delay: 0.6,
+            }}
+          >
+            <img src={avatar3} alt="Colaborador 3" className="w-full h-full object-cover" />
+          </motion.div>
+        </div>
+
+        {/* Collaborative Presence Cursors */}
+        {/* Mateo Cursor (Blue) floating near Avatar 1 */}
+        <motion.div 
+          className="absolute bottom-12 left-10 sm:left-14 flex flex-col items-start gap-1 z-40 pointer-events-none"
+          animate={{ x: [0, 6, 0], y: [0, -4, 0] }}
+          transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut", delay: 0.2 }}
+        >
+          <div className="flex items-center gap-1 bg-[#4059F1] text-white py-0.5 px-2 rounded-full shadow-[0_4px_10px_rgba(64,89,241,0.2)]">
+            <span className="text-[9px] font-medium tracking-wide">Mateo</span>
+          </div>
+          <svg className="w-3.5 h-3.5 text-[#4059F1] -mt-1 ml-2 filter drop-shadow-sm rotate-[15deg]" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M4.5 3v15.2l3.8-3.8 3.5 8.1 3-1.3-3.5-8.1 5.4.1z" />
+          </svg>
+        </motion.div>
+
+        {/* Sofía Cursor (Pink) floating near Avatar 3 */}
+        <motion.div 
+          className="absolute bottom-16 right-10 sm:right-14 flex flex-col items-start gap-1 z-40 pointer-events-none"
+          animate={{ x: [0, -8, 0], y: [0, 6, 0] }}
+          transition={{ duration: 3.8, repeat: Infinity, ease: "easeInOut", delay: 0.7 }}
+        >
+          <div className="flex items-center gap-1 bg-[#EC4899] text-white py-0.5 px-2 rounded-full shadow-[0_4px_10px_rgba(236,72,153,0.2)]">
+            <span className="text-[9px] font-medium tracking-wide">Sofía</span>
+          </div>
+          <svg className="w-3.5 h-3.5 text-[#EC4899] -mt-1 ml-2 filter drop-shadow-sm rotate-[-10deg]" viewBox="0 0 24 24" fill="currentColor">
+            <path d="M4.5 3v15.2l3.8-3.8 3.5 8.1 3-1.3-3.5-8.1 5.4.1z" />
+          </svg>
+        </motion.div>
+
+      </div>
+    </div>
+  );
+};
+
 const Features = () => {
   const smootherRef = useRef<ScrollSmoother | null>(null);
 
@@ -684,7 +791,7 @@ const Features = () => {
                 >
                   <div className="max-w-6xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
                     {/* Left Column: Text Content */}
-                    <div className={`flex flex-col text-left ${f.id === "ai-studio" ? "md:pl-6 lg:pl-12" : ""} ${f.id === "collab" ? "md:col-span-2 md:text-center md:items-center md:max-w-4xl md:mx-auto" : ""}`}>
+                    <div className={`flex flex-col text-left ${f.id === "ai-studio" ? "md:pl-6 lg:pl-12" : ""}`}>
                       <span className="text-xs font-semibold tracking-wider text-miiles-blue mb-3 font-sans">
                         {f.badge}
                       </span>
@@ -694,7 +801,7 @@ const Features = () => {
                       <p className="text-md font-light text-gray-500 leading-relaxed mb-8">
                         {f.description}
                       </p>
-                      <ul className={`flex flex-col gap-4 ${f.id === "collab" ? "md:flex-row md:justify-center md:gap-8 mt-4" : ""}`}>
+                      <ul className="flex flex-col gap-4">
                         {f.bullets.map((bullet, idx) => (
                           <li key={idx} className="flex items-start gap-3 text-sm font-light text-gray-600 text-left">
                             <div className="w-5 h-5 rounded-full bg-miiles-blue-light flex items-center justify-center shrink-0 mt-0.5 text-miiles-blue">
@@ -707,29 +814,28 @@ const Features = () => {
                     </div>
 
                     {/* Right Column: Mockup Container (Responsive Aspect Ratio and Padding for Mobile) */}
-                    {f.id !== "collab" && (
-                      <div 
-                        className="w-full aspect-[4/5] md:aspect-square rounded-[2.5rem] overflow-hidden border border-neutral-100 flex items-center justify-center p-6 md:p-10 hover:scale-[1.01] transition-transform duration-500"
-                        style={{
-                          background: "linear-gradient(to bottom, #FDFDFD, #F8F9FD)"
-                        }}
-                      >
-                        {f.id === "ai-studio" && (
-                          <TypewriterInput />
-                        )}
+                    <div 
+                      className="w-full aspect-[4/5] md:aspect-square rounded-[2.5rem] overflow-hidden border border-neutral-100 flex items-center justify-center p-6 md:p-10 hover:scale-[1.01] transition-transform duration-500"
+                      style={{
+                        background: "linear-gradient(to bottom, #FDFDFD, #F8F9FD)"
+                      }}
+                    >
+                      {f.id === "ai-studio" && (
+                        <TypewriterInput />
+                      )}
 
-                        {f.id === "todos" && (
-                          <div className="w-full h-full flex flex-col justify-start p-6 bg-white/70 backdrop-blur-sm rounded-[1.5rem] border border-neutral-200/50 text-left">
-                            {/* Card Title */}
-                            <div className="mb-5">
-                              <div className="h-3 w-28 bg-neutral-800 rounded mb-1.5" />
-                              <div className="h-2 w-36 bg-neutral-400 rounded" />
-                            </div>
-                            {/* Task Rows */}
-                            <div className="flex flex-col gap-3">
-                              {/* Row 1: Completed */}
-                              <div className="flex items-start gap-2.5 py-1">
-                                <div className="w-4.5 h-4.5 rounded bg-[#4059F1] text-white flex items-center justify-center shrink-0">
+                      {f.id === "todos" && (
+                        <div className="w-full h-full flex flex-col justify-start p-6 bg-white/70 backdrop-blur-sm rounded-[1.5rem] border border-neutral-200/50 text-left">
+                          {/* Card Title */}
+                          <div className="mb-5">
+                            <div className="h-3 w-28 bg-neutral-800 rounded mb-1.5" />
+                            <div className="h-2 w-36 bg-neutral-400 rounded" />
+                          </div>
+                          {/* Task Rows */}
+                          <div className="flex flex-col gap-3">
+                            {/* Row 1: Completed */}
+                            <div className="flex items-start gap-2.5 py-1">
+                              <div className="w-4.5 h-4.5 rounded bg-[#4059F1] text-white flex items-center justify-center shrink-0">
                                   <Check size={10} strokeWidth={3} />
                                 </div>
                                 <span className="text-[11px] text-neutral-400 line-through font-light leading-snug">
@@ -751,12 +857,15 @@ const Features = () => {
                           </div>
                         )}
 
+                        {f.id === "collab" && (
+                          <CollaborationMockup />
+                        )}
+
                         {f.id === "canvas" && (
                           <InteractiveCanvasMockup />
                         )}
                       </div>
-                    )}
-                  </div>
+                    </div>
                 </div>
               ))}
             </div>
