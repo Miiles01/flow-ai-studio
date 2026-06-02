@@ -2,7 +2,6 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import gsap from "gsap";
-import { SplitText } from "gsap/SplitText";
 
 // Checkbox Icon Component
 const CheckIcon = ({ highlighted }: { highlighted?: boolean }) => {
