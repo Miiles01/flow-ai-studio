@@ -68,8 +68,22 @@ const RotatingPrice = ({ value }: { value: string }) => {
       }, 0);
 
       gsap.set(nextEl, { autoAlpha: 1 });
-      (tl as any).rotateOut(splitCurrent.chars, { duration: 0.4 }, 0)
-        .rotateIn(splitNext.chars, { duration: 0.6 }, 0.1);
+      gsap.set(splitNext.chars, { rotationX: -90, opacity: 0, transformOrigin: "50% 50% -0.5em" });
+      tl.to(splitCurrent.chars, {
+        rotationX: 90,
+        opacity: 0,
+        duration: 0.4,
+        ease: "power2.in",
+        stagger: 0.03,
+        transformOrigin: "50% 50% -0.5em",
+      }, 0)
+        .to(splitNext.chars, {
+          rotationX: 0,
+          opacity: 1,
+          duration: 0.6,
+          ease: "power2.out",
+          stagger: 0.03,
+        }, 0.1);
 
     }, containerRef);
 
