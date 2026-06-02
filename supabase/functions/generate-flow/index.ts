@@ -90,6 +90,8 @@ Node Types and Data:
    - Use for general headers, sections, or annotations.
 4. "imageNode": {"url": "string", "width": number, "height": number}
    - Use for visual placeholders or logos.
+5. "embedNode": {"url": "https://..."} con "style": {"width": 480, "height": 320}
+   - Embebe una página web real dentro del canvas (iframe en vivo). Úsalo SOLO con URLs reales (por ejemplo el campo "website" de un prospecto de la base de datos). NUNCA inventes URLs.
 
 Rules for Premium Visual Design:
 - ALIGNMENT & SYMMETRY: Nodes in the same sequence must be aligned on the exact same horizontal grid line (e.g. Y: 250) to look like a high-end mind map.
