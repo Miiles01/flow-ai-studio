@@ -56,11 +56,16 @@ serve(async (req) => {
       const { data } = await supabase.from("prospects").select("name,company,email,phone,role,industry,location,website,notes,tags").or(orClauses).limit(20);
       prospects = data ?? [];
     }
+    // Fallback: if no keyword match, bring a recent base set so the AI always has client context
+    if (prospects.length === 0) {
+      const { data } = await supabase.from("prospects").select("name,company,email,phone,role,industry,location,website,notes,tags").order("created_at", { ascending: false }).limit(15);
+      prospects = data ?? [];
+    }
 
     const { data: templates } = await supabase.from("flow_templates").select("title,description,tags,prompt_hint,nodes,edges").limit(10);
 
     const prospectsBlock = prospects.length > 0
-      ? `\n\nPROSPECTOS EN LA BASE DE DATOS (úsalos como fuente primaria; si el usuario pide alguno listado aquí, refiérelo con sus datos reales):\n${JSON.stringify(prospects, null, 0)}`
+      ? `\n\nPROSPECTOS EN LA BASE DE DATOS (úsalos como fuente primaria; si el usuario pide alguno listado aquí, refiérelo con sus datos reales. Cada prospecto puede tener un campo "website" con su sitio real):\n${JSON.stringify(prospects, null, 0)}`
       : "";
 
     const templatesBlock = (templates && templates.length > 0)
