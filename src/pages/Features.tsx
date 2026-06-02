@@ -149,6 +149,7 @@ const InteractiveCanvasMockup = () => {
   const [cursorPos, setCursorPos] = useState({ x: 180, y: 221, opacity: 0, scale: 1 });
   const [hoveredTool, setHoveredTool] = useState<"select" | "pan" | "shapes" | "text" | "todo" | "image" | "section" | null>(null);
   const [isFlyoutOpen, setIsFlyoutOpen] = useState(false);
+  const [hoveredFlyoutItem, setHoveredFlyoutItem] = useState<string | null>(null);
 
   useEffect(() => {
     let timeouts: any[] = [];
@@ -160,6 +161,7 @@ const InteractiveCanvasMockup = () => {
       setActiveShape("square");
       setHoveredTool(null);
       setIsFlyoutOpen(false);
+      setHoveredFlyoutItem(null);
 
       // Step 1: Move to Pan tool Y center is 74px, X is 28px
       timeouts.push(setTimeout(() => {
@@ -174,7 +176,6 @@ const InteractiveCanvasMockup = () => {
       // Step 1c: Click Pan tool
       timeouts.push(setTimeout(() => {
         setActiveTool("pan");
-        setHoveredTool(null);
         setCursorPos(prev => ({ ...prev, scale: 0.85 }));
       }, 1800));
 
@@ -185,19 +186,19 @@ const InteractiveCanvasMockup = () => {
 
       // Step 2: Move to Shapes tool Y center is 129px
       timeouts.push(setTimeout(() => {
+        setHoveredTool(null);
         setCursorPos({ x: 28, y: 129, opacity: 1, scale: 1 });
       }, 2600));
 
-      // Step 2b: Hover Shapes tool
+      // Step 2b: Hover Shapes tool (opens shapes flyout immediately on hover)
       timeouts.push(setTimeout(() => {
         setHoveredTool("shapes");
+        setIsFlyoutOpen(true);
       }, 3200));
 
-      // Step 2c: Click Shapes tool and open flyout
+      // Step 2c: Click Shapes tool
       timeouts.push(setTimeout(() => {
         setActiveTool("shapes");
-        setHoveredTool(null);
-        setIsFlyoutOpen(true);
         setCursorPos(prev => ({ ...prev, scale: 0.85 }));
       }, 3600));
 
@@ -208,7 +209,9 @@ const InteractiveCanvasMockup = () => {
 
       // Step 3: Move to Círculo button in the flyout (x: 134, y: 129)
       timeouts.push(setTimeout(() => {
+        setHoveredTool(null);
         setCursorPos({ x: 134, y: 129, opacity: 1, scale: 1 });
+        setHoveredFlyoutItem("circle");
       }, 4400));
 
       // Step 3b: Click Círculo shape
@@ -220,6 +223,7 @@ const InteractiveCanvasMockup = () => {
       // Step 3c: Unclick and close flyout
       timeouts.push(setTimeout(() => {
         setIsFlyoutOpen(false);
+        setHoveredFlyoutItem(null);
         setCursorPos(prev => ({ ...prev, scale: 1 }));
       }, 5200));
 
@@ -236,7 +240,6 @@ const InteractiveCanvasMockup = () => {
       // Step 4c: Click Text tool
       timeouts.push(setTimeout(() => {
         setActiveTool("text");
-        setHoveredTool(null);
         setCursorPos(prev => ({ ...prev, scale: 0.85 }));
       }, 6800));
 
@@ -247,6 +250,7 @@ const InteractiveCanvasMockup = () => {
 
       // Step 5: Move to Todo tool (Y: 221px)
       timeouts.push(setTimeout(() => {
+        setHoveredTool(null);
         setCursorPos({ x: 28, y: 221, opacity: 1, scale: 1 });
       }, 7600));
 
@@ -258,7 +262,6 @@ const InteractiveCanvasMockup = () => {
       // Step 5c: Click Todo tool
       timeouts.push(setTimeout(() => {
         setActiveTool("todo");
-        setHoveredTool(null);
         setCursorPos(prev => ({ ...prev, scale: 0.85 }));
       }, 8600));
 
@@ -269,6 +272,7 @@ const InteractiveCanvasMockup = () => {
 
       // Step 6: Move to Image tool (Y: 267px)
       timeouts.push(setTimeout(() => {
+        setHoveredTool(null);
         setCursorPos({ x: 28, y: 267, opacity: 1, scale: 1 });
       }, 9400));
 
@@ -280,7 +284,6 @@ const InteractiveCanvasMockup = () => {
       // Step 6c: Click Image tool
       timeouts.push(setTimeout(() => {
         setActiveTool("image");
-        setHoveredTool(null);
         setCursorPos(prev => ({ ...prev, scale: 0.85 }));
       }, 10400));
 
@@ -291,6 +294,7 @@ const InteractiveCanvasMockup = () => {
 
       // Step 7: Move to Section tool (Y: 313px)
       timeouts.push(setTimeout(() => {
+        setHoveredTool(null);
         setCursorPos({ x: 28, y: 313, opacity: 1, scale: 1 });
       }, 11200));
 
@@ -302,7 +306,6 @@ const InteractiveCanvasMockup = () => {
       // Step 7c: Click Section tool
       timeouts.push(setTimeout(() => {
         setActiveTool("section");
-        setHoveredTool(null);
         setCursorPos(prev => ({ ...prev, scale: 0.85 }));
       }, 12200));
 
@@ -313,6 +316,7 @@ const InteractiveCanvasMockup = () => {
 
       // Step 8: Move to Select tool (Y: 28px)
       timeouts.push(setTimeout(() => {
+        setHoveredTool(null);
         setCursorPos({ x: 28, y: 28, opacity: 1, scale: 1 });
       }, 13000));
 
@@ -324,7 +328,6 @@ const InteractiveCanvasMockup = () => {
       // Step 8c: Click Select tool
       timeouts.push(setTimeout(() => {
         setActiveTool("select");
-        setHoveredTool(null);
         setCursorPos(prev => ({ ...prev, scale: 0.85 }));
       }, 14000));
 
@@ -335,6 +338,7 @@ const InteractiveCanvasMockup = () => {
 
       // Step 9: Exit screen to the top-right
       timeouts.push(setTimeout(() => {
+        setHoveredTool(null);
         setCursorPos({ x: 200, y: -20, opacity: 0, scale: 1 });
       }, 14800));
     };
@@ -349,7 +353,9 @@ const InteractiveCanvasMockup = () => {
   }, []);
 
   const shouldShowTooltip = (tool: string) => {
-    return hoveredTool === tool || (activeTool === tool && hoveredTool === null);
+    // Tooltip should ONLY show when hovered, and NOT when flyout is open for shapes
+    if (tool === "shapes" && isFlyoutOpen) return false;
+    return hoveredTool === tool;
   };
 
   return (
@@ -437,47 +443,47 @@ const InteractiveCanvasMockup = () => {
 
             {/* Shapes Flyout Menu display */}
             <AnimatePresence>
-              {activeTool === "shapes" && isFlyoutOpen && (
+              {isFlyoutOpen && (
                 <motion.div
                   initial={{ opacity: 0, x: -8, scale: 0.96 }}
                   animate={{ opacity: 1, x: 0, scale: 1 }}
                   exit={{ opacity: 0, x: -8, scale: 0.96 }}
                   transition={{ duration: 0.14, ease: "easeOut" }}
-                  className="absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 bg-[#111] p-1.5 rounded-2xl shadow-xl border border-neutral-800 flex gap-1.5 z-30 pointer-events-none"
+                  className="absolute left-[calc(100%+10px)] -top-2 bg-[#111] p-2 rounded-2xl shadow-[0_16px_48px_rgba(0,0,0,0.3)] flex gap-1 z-50 pointer-events-none"
                 >
                   {/* Rectangulo */}
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${activeShape === "square" ? "bg-white text-black" : "text-[#777] bg-white/5"}`}>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4.5 h-4.5">
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200 ${activeShape === "square" ? "bg-white text-black shadow-sm" : hoveredFlyoutItem === "square" ? "text-white bg-[#222]" : "text-[#777] bg-transparent"}`}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-[18px] h-[18px]">
                       <rect x="2" y="2" width="20" height="20" rx="3" />
                     </svg>
                   </div>
                   {/* Circulo */}
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${activeShape === "circle" ? "bg-white text-black" : "text-[#777] bg-white/5"}`}>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4.5 h-4.5">
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200 ${activeShape === "circle" ? "bg-white text-black shadow-sm" : hoveredFlyoutItem === "circle" ? "text-white bg-[#222]" : "text-[#777] bg-transparent"}`}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-[18px] h-[18px]">
                       <circle cx="12" cy="12" r="10" />
                     </svg>
                   </div>
                   {/* Rombo */}
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${activeShape === "diamond" ? "bg-white text-black" : "text-[#777] bg-white/5"}`}>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4.5 h-4.5">
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200 ${activeShape === "diamond" ? "bg-white text-black shadow-sm" : hoveredFlyoutItem === "diamond" ? "text-white bg-[#222]" : "text-[#777] bg-transparent"}`}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-[18px] h-[18px]">
                       <polygon points="12,2 22,12 12,22 2,12" />
                     </svg>
                   </div>
                   {/* Triángulo */}
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${activeShape === "triangle" ? "bg-white text-black" : "text-[#777] bg-white/5"}`}>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4.5 h-4.5">
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200 ${activeShape === "triangle" ? "bg-white text-black shadow-sm" : hoveredFlyoutItem === "triangle" ? "text-white bg-[#222]" : "text-[#777] bg-transparent"}`}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-[18px] h-[18px]">
                       <polygon points="12,2 22,22 2,22" />
                     </svg>
                   </div>
                   {/* Hexágono */}
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${activeShape === "hexagon" ? "bg-white text-black" : "text-[#777] bg-white/5"}`}>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4.5 h-4.5">
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200 ${activeShape === "hexagon" ? "bg-white text-black shadow-sm" : hoveredFlyoutItem === "hexagon" ? "text-white bg-[#222]" : "text-[#777] bg-transparent"}`}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-[18px] h-[18px]">
                       <polygon points="12,2 21,7 21,17 12,22 3,17 3,7" />
                     </svg>
                   </div>
                   {/* Estrella */}
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-colors ${activeShape === "star" ? "bg-white text-black" : "text-[#777] bg-white/5"}`}>
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-4.5 h-4.5">
+                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200 ${activeShape === "star" ? "bg-white text-black shadow-sm" : hoveredFlyoutItem === "star" ? "text-white bg-[#222]" : "text-[#777] bg-transparent"}`}>
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-[18px] h-[18px]">
                       <polygon points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9" />
                     </svg>
                   </div>
@@ -614,9 +620,6 @@ const CollaborationMockup = () => {
     <div className="w-full h-full relative bg-white/70 backdrop-blur-sm rounded-[1.5rem] border border-neutral-200/50 overflow-hidden flex items-center justify-center select-none">
       {/* Central Canvas Mockup containing avatars */}
       <div className="relative w-full h-full flex flex-col items-center justify-center p-4">
-        
-        {/* Connection/Activity line behind avatars for visual depth */}
-        <div className="absolute inset-x-8 h-[2px] bg-dashed border-t border-dashed border-neutral-200" />
         
         {/* Avatars Stack Row */}
         <div className="flex items-center justify-center mt-4">
