@@ -684,7 +684,7 @@ const Features = () => {
                 >
                   <div className="max-w-6xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
                     {/* Left Column: Text Content */}
-                    <div className={`flex flex-col text-left ${f.id === "ai-studio" ? "md:pl-6 lg:pl-12" : ""}`}>
+                    <div className={`flex flex-col text-left ${f.id === "ai-studio" ? "md:pl-6 lg:pl-12" : ""} ${f.id === "collab" ? "md:col-span-2 md:text-center md:items-center md:max-w-4xl md:mx-auto" : ""}`}>
                       <span className="text-xs font-semibold tracking-wider text-miiles-blue mb-3 font-sans">
                         {f.badge}
                       </span>
@@ -694,9 +694,9 @@ const Features = () => {
                       <p className="text-md font-light text-gray-500 leading-relaxed mb-8">
                         {f.description}
                       </p>
-                      <ul className="flex flex-col gap-4">
+                      <ul className={`flex flex-col gap-4 ${f.id === "collab" ? "md:flex-row md:justify-center md:gap-8 mt-4" : ""}`}>
                         {f.bullets.map((bullet, idx) => (
-                          <li key={idx} className="flex items-start gap-3 text-sm font-light text-gray-600">
+                          <li key={idx} className="flex items-start gap-3 text-sm font-light text-gray-600 text-left">
                             <div className="w-5 h-5 rounded-full bg-miiles-blue-light flex items-center justify-center shrink-0 mt-0.5 text-miiles-blue">
                               <Check size={12} strokeWidth={3} />
                             </div>
@@ -707,98 +707,55 @@ const Features = () => {
                     </div>
 
                     {/* Right Column: Mockup Container (Responsive Aspect Ratio and Padding for Mobile) */}
-                    <div 
-                      className="w-full aspect-[4/5] md:aspect-square rounded-[2.5rem] overflow-hidden border border-neutral-100 flex items-center justify-center p-6 md:p-10 hover:scale-[1.01] transition-transform duration-500"
-                      style={{
-                        background: "linear-gradient(to bottom, #FDFDFD, #F8F9FD)"
-                      }}
-                    >
-                      {f.id === "ai-studio" && (
-                        <TypewriterInput />
-                      )}
+                    {f.id !== "collab" && (
+                      <div 
+                        className="w-full aspect-[4/5] md:aspect-square rounded-[2.5rem] overflow-hidden border border-neutral-100 flex items-center justify-center p-6 md:p-10 hover:scale-[1.01] transition-transform duration-500"
+                        style={{
+                          background: "linear-gradient(to bottom, #FDFDFD, #F8F9FD)"
+                        }}
+                      >
+                        {f.id === "ai-studio" && (
+                          <TypewriterInput />
+                        )}
 
-                      {f.id === "todos" && (
-                        <div className="w-full h-full flex flex-col justify-start p-6 bg-white/70 backdrop-blur-sm rounded-[1.5rem] border border-neutral-200/50 text-left">
-                          {/* Card Title */}
-                          <div className="mb-5">
-                            <div className="h-3 w-28 bg-neutral-800 rounded mb-1.5" />
-                            <div className="h-2 w-36 bg-neutral-400 rounded" />
-                          </div>
-                          {/* Task Rows */}
-                          <div className="flex flex-col gap-3">
-                            {/* Row 1: Completed */}
-                            <div className="flex items-start gap-2.5 py-1">
-                              <div className="w-4.5 h-4.5 rounded bg-[#4059F1] text-white flex items-center justify-center shrink-0">
-                                <Check size={10} strokeWidth={3} />
+                        {f.id === "todos" && (
+                          <div className="w-full h-full flex flex-col justify-start p-6 bg-white/70 backdrop-blur-sm rounded-[1.5rem] border border-neutral-200/50 text-left">
+                            {/* Card Title */}
+                            <div className="mb-5">
+                              <div className="h-3 w-28 bg-neutral-800 rounded mb-1.5" />
+                              <div className="h-2 w-36 bg-neutral-400 rounded" />
+                            </div>
+                            {/* Task Rows */}
+                            <div className="flex flex-col gap-3">
+                              {/* Row 1: Completed */}
+                              <div className="flex items-start gap-2.5 py-1">
+                                <div className="w-4.5 h-4.5 rounded bg-[#4059F1] text-white flex items-center justify-center shrink-0">
+                                  <Check size={10} strokeWidth={3} />
+                                </div>
+                                <span className="text-[11px] text-neutral-400 line-through font-light leading-snug">
+                                  Definir objetivos y KPIs principales
+                                </span>
                               </div>
-                              <span className="text-[11px] text-neutral-400 line-through font-light leading-snug">
-                                Definir objetivos y KPIs principales
-                              </span>
-                            </div>
-                            {/* Row 2: In Progress / Multiline */}
-                            <div className="flex items-start gap-2.5 py-1">
-                              <div className="w-4.5 h-4.5 rounded border border-neutral-300 bg-white shrink-0" />
-                              <span className="text-[11px] text-neutral-850 font-light leading-snug">
-                                Campaña de teaser en TikTok e Instagram para el lanzamiento
-                              </span>
-                            </div>
-                            {/* Row 3: Add Task */}
-                            <div className="flex items-center gap-2 py-1.5 px-2 rounded-lg border border-dashed border-neutral-300 text-neutral-400 text-[10px] font-light mt-1">
-                              + Nueva Tarea...
+                              {/* Row 2: In Progress / Multiline */}
+                              <div className="flex items-start gap-2.5 py-1">
+                                <div className="w-4.5 h-4.5 rounded border border-neutral-300 bg-white shrink-0" />
+                                <span className="text-[11px] text-neutral-850 font-light leading-snug">
+                                  Campaña de teaser en TikTok e Instagram para el lanzamiento
+                                </span>
+                              </div>
+                              {/* Row 3: Add Task */}
+                              <div className="flex items-center gap-2 py-1.5 px-2 rounded-lg border border-dashed border-neutral-300 text-neutral-400 text-[10px] font-light mt-1">
+                                + Nueva Tarea...
+                              </div>
                             </div>
                           </div>
-                        </div>
-                      )}
+                        )}
 
-                      {f.id === "collab" && (
-                        <div className="w-full h-full relative p-5 bg-white/70 backdrop-blur-sm rounded-[1.5rem] border border-neutral-200/50 overflow-hidden">
-                          {/* Header: Avatars Presence Stack */}
-                          <div className="flex justify-end gap-1 mb-6">
-                            <div className="w-6 h-6 rounded-full bg-blue-500 text-white text-[9px] font-semibold flex items-center justify-center border-2 border-white ring-1 ring-neutral-100">
-                              M
-                            </div>
-                            <div className="w-6 h-6 rounded-full bg-pink-500 text-white text-[9px] font-semibold flex items-center justify-center border-2 border-white ring-1 ring-neutral-100 -ml-2">
-                              S
-                            </div>
-                            <div className="w-6 h-6 rounded-full bg-green-500 text-white text-[9px] font-semibold flex items-center justify-center border-2 border-white ring-1 ring-neutral-100 -ml-2">
-                              +1
-                            </div>
-                          </div>
-
-                          {/* Canvas content */}
-                          <div className="flex flex-col items-center gap-2 mt-4">
-                            <div className="w-40 py-2 px-3 bg-white border border-neutral-200 rounded-xl flex items-center justify-between">
-                              <div className="h-2.5 w-18 bg-neutral-200 rounded" />
-                              <div className="w-2 h-2 rounded-full bg-[#4059F1]" />
-                            </div>
-                          </div>
-
-                          {/* Mock Cursors */}
-                          {/* Cursor 1: Mateo */}
-                          <div className="absolute left-[20%] top-[45%] flex flex-col items-start gap-1 select-none pointer-events-none">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="#4059F1">
-                              <path d="M4.5 3v15.2l3.8-3.8 3.5 8.1 3-1.3-3.5-8.1 5.4.1z" />
-                            </svg>
-                            <div className="bg-[#4059F1] text-white text-[8px] px-1.5 py-0.5 rounded font-medium">
-                              Mateo
-                            </div>
-                          </div>
-                          {/* Cursor 2: Sofía */}
-                          <div className="absolute right-[25%] bottom-[25%] flex flex-col items-start gap-1 select-none pointer-events-none">
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="#EC4899">
-                              <path d="M4.5 3v15.2l3.8-3.8 3.5 8.1 3-1.3-3.5-8.1 5.4.1z" />
-                            </svg>
-                            <div className="bg-[#EC4899] text-white text-[8px] px-1.5 py-0.5 rounded font-medium">
-                              Sofía
-                            </div>
-                          </div>
-                        </div>
-                      )}
-
-                      {f.id === "canvas" && (
-                        <InteractiveCanvasMockup />
-                      )}
-                    </div>
+                        {f.id === "canvas" && (
+                          <InteractiveCanvasMockup />
+                        )}
+                      </div>
+                    )}
                   </div>
                 </div>
               ))}
