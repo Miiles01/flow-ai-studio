@@ -263,13 +263,6 @@ const InteractiveCanvasMockup = () => {
 
   return (
     <div className="w-full h-full relative bg-white/70 backdrop-blur-sm rounded-[1.5rem] border border-neutral-200/50 overflow-hidden flex items-center justify-center select-none">
-      {/* Zoom level indicator */}
-      <div className="absolute top-4 left-4 z-10">
-        <div className="px-2.5 py-1 bg-neutral-100 border border-neutral-200 text-[9px] text-neutral-500 font-medium rounded-lg">
-          100%
-        </div>
-      </div>
-
       {/* Large Toolbar in the center */}
       <div className="relative w-[58px] p-1.5 bg-white border border-neutral-200/80 rounded-[28px] shadow-[0_12px_40px_rgba(0,0,0,0.06)] flex flex-col items-center gap-1.5">
         {/* Select Tool */}
