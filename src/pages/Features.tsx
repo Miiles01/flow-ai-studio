@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
@@ -63,6 +63,84 @@ const featuresData = [
     ]
   }
 ];
+
+const TypewriterInput = () => {
+  const phrases = [
+    "Crea un embudo de ventas para mi curso online...",
+    "Diseña una campaña de marketing en redes sociales...",
+    "Estructura el flujo de onboarding de la app...",
+    "Planifica la estrategia de contenido para Instagram...",
+    "Organiza el proceso de soporte y tickets B2B..."
+  ];
+
+  const [currentText, setCurrentText] = useState("");
+  const [phraseIdx, setPhraseIdx] = useState(0);
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  useEffect(() => {
+    let timer: any;
+    const currentPhrase = phrases[phraseIdx];
+    
+    if (isDeleting) {
+      timer = setTimeout(() => {
+        setCurrentText(currentPhrase.substring(0, currentText.length - 1));
+      }, 30);
+    } else {
+      timer = setTimeout(() => {
+        setCurrentText(currentPhrase.substring(0, currentText.length + 1));
+      }, 60);
+    }
+
+    if (!isDeleting && currentText === currentPhrase) {
+      timer = setTimeout(() => {
+        setIsDeleting(true);
+      }, 1800);
+    }
+
+    if (isDeleting && currentText === "") {
+      setIsDeleting(false);
+      setPhraseIdx((prev) => (prev + 1) % phrases.length);
+    }
+
+    return () => clearTimeout(timer);
+  }, [currentText, isDeleting, phraseIdx]);
+
+  return (
+    <div className="w-full max-w-[320px] p-5 bg-white/70 backdrop-blur-sm rounded-[1.5rem] border border-neutral-200/50 text-left flex flex-col gap-3.5 shadow-none hover:scale-[1.02] transition-transform duration-300">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center gap-1.5">
+          <div className="w-2.5 h-2.5 rounded-full bg-neutral-200" />
+          <div className="w-2.5 h-2.5 rounded-full bg-neutral-200" />
+          <div className="w-2.5 h-2.5 rounded-full bg-neutral-200" />
+        </div>
+        <span className="text-[9px] font-medium tracking-wider text-neutral-400 uppercase font-sans">AI Studio</span>
+      </div>
+      
+      <div className="w-full p-3 bg-white border border-neutral-200/80 rounded-xl flex items-start gap-2.5 min-h-[76px]">
+        <div className="w-5 h-5 rounded-md bg-blue-50/80 flex items-center justify-center text-[#4059F1] shrink-0 text-[10px] mt-0.5">
+          ✦
+        </div>
+        <div className="flex-1">
+          <p className="text-[11px] text-neutral-800 font-light leading-normal min-h-[44px]">
+            {currentText}
+            <span className="inline-block w-[1.5px] h-3.5 ml-0.5 bg-[#4059F1] animate-pulse align-middle" />
+          </p>
+        </div>
+      </div>
+
+      <div className="flex justify-between items-center mt-0.5">
+        <span className="text-[9px] text-neutral-400 font-light max-w-[160px] leading-tight">Escribe tu idea para generar un flujo</span>
+        <div className={`h-7 px-3.5 text-[10px] font-medium rounded-lg flex items-center justify-center transition-all duration-300 ${
+          currentText.length > 5 
+            ? "bg-[#4059F1] text-white" 
+            : "bg-neutral-100 text-neutral-400"
+        }`}>
+          Generar
+        </div>
+      </div>
+    </div>
+  );
+};
 
 const Features = () => {
   const smootherRef = useRef<ScrollSmoother | null>(null);
@@ -157,31 +235,7 @@ const Features = () => {
                     }}
                   >
                     {f.id === "ai-studio" && (
-                      <div className="w-full h-full flex flex-col justify-between p-5 bg-white/70 backdrop-blur-sm rounded-[1.5rem] border border-neutral-200/50 text-left">
-                        {/* Top: AI Node Generation */}
-                        <div className="flex-1 flex flex-col items-center justify-center gap-3">
-                          <div className="w-36 py-2 px-3 bg-[#4059F1] text-white text-[11px] font-medium rounded-xl text-center">
-                            Estrategia de Ventas
-                          </div>
-                          <div className="w-[1.5px] h-6" style={{ backgroundColor: "#E5E7EB" }} />
-                          <div className="w-44 py-2.5 px-3 bg-white border border-neutral-200 rounded-xl flex flex-col gap-1.5">
-                            <div className="h-2 w-16 bg-neutral-200 rounded" />
-                            <div className="h-1.5 w-24 bg-neutral-100 rounded" />
-                          </div>
-                        </div>
-                        {/* Bottom: Prompt Input Simulation */}
-                        <div className="w-full p-2.5 bg-neutral-50 border border-neutral-200/80 rounded-xl flex items-center gap-2">
-                          <div className="w-4 h-4 rounded-full bg-blue-50 flex items-center justify-center text-[#4059F1] shrink-0">
-                            ✦
-                          </div>
-                          <span className="text-[10px] text-neutral-400 font-light flex-1 truncate text-left">
-                            Crea un embudo de ventas para un curso...
-                          </span>
-                          <div className="h-6 px-2.5 bg-black text-white text-[9px] font-medium rounded-lg flex items-center justify-center">
-                            Generar
-                          </div>
-                        </div>
-                      </div>
+                      <TypewriterInput />
                     )}
 
                     {f.id === "todos" && (
