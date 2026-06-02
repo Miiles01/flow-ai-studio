@@ -594,10 +594,11 @@ const InteractiveCanvasMockup = () => {
           >
             <svg className="w-5.5 h-5.5 filter drop-shadow-[0_2px_5px_rgba(0,0,0,0.15)]" viewBox="0 0 24 24">
               <path 
-                d="M4.5 3v15.2l3.8-3.8 3.5 8.1 3-1.3-3.5-8.1 5.4.1z" 
+                d="M4 3l16 8-8 2-6 7z" 
                 fill="#222222" 
                 stroke="white" 
-                strokeWidth="1.5" 
+                strokeWidth="2" 
+                strokeLinecap="round"
                 strokeLinejoin="round" 
               />
             </svg>
@@ -698,10 +699,11 @@ const CollaborationMockup = () => {
         >
           <svg className="w-6 h-6 filter drop-shadow-[0_2px_5px_rgba(0,0,0,0.15)] rotate-[15deg] shrink-0" viewBox="0 0 24 24">
             <path 
-              d="M4.5 3v15.2l3.8-3.8 3.5 8.1 3-1.3-3.5-8.1 5.4.1z" 
+              d="M4 3l16 8-8 2-6 7z" 
               fill="#222222" 
               stroke="white" 
-              strokeWidth="1.5" 
+              strokeWidth="2" 
+              strokeLinecap="round"
               strokeLinejoin="round" 
             />
           </svg>
@@ -727,10 +729,11 @@ const CollaborationMockup = () => {
         >
           <svg className="w-6 h-6 filter drop-shadow-[0_2px_5px_rgba(0,0,0,0.15)] rotate-[-10deg] shrink-0" viewBox="0 0 24 24">
             <path 
-              d="M4.5 3v15.2l3.8-3.8 3.5 8.1 3-1.3-3.5-8.1 5.4.1z" 
+              d="M4 3l16 8-8 2-6 7z" 
               fill="#222222" 
               stroke="white" 
-              strokeWidth="1.5" 
+              strokeWidth="2" 
+              strokeLinecap="round"
               strokeLinejoin="round" 
             />
           </svg>
