@@ -124,7 +124,6 @@ const TypewriterInput = () => {
           </svg>
           <span className="text-[11px] font-light text-white/70 tracking-wider">Apps</span>
         </div>
-
         <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
           currentText.length > 5 
             ? "bg-white/20 text-white" 
@@ -134,6 +133,215 @@ const TypewriterInput = () => {
             <path strokeLinecap="round" strokeLinejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" />
           </svg>
         </div>
+      </div>
+    </div>
+  );
+};
+
+const InteractiveCanvasMockup = () => {
+  const [activeTool, setActiveTool] = useState<"select" | "pan" | "shapes" | "text" | "todo">("select");
+  const [cursorPos, setCursorPos] = useState({ x: 260, y: 240, opacity: 0, scale: 1 });
+  const [isClicked, setIsClicked] = useState(false);
+
+  useEffect(() => {
+    let timeouts: any[] = [];
+
+    const runLoop = () => {
+      // Step 0: Start off-screen
+      setCursorPos({ x: 260, y: 240, opacity: 0, scale: 1 });
+      setActiveTool("select");
+
+      // Step 1: Move to Shapes tool (button center is x: 36, y: 134)
+      timeouts.push(setTimeout(() => {
+        setCursorPos({ x: 36, y: 134, opacity: 1, scale: 1 });
+      }, 1000));
+
+      // Step 2: Click Shapes tool
+      timeouts.push(setTimeout(() => {
+        setActiveTool("shapes");
+        setCursorPos(prev => ({ ...prev, scale: 0.85 }));
+      }, 1800));
+
+      // Step 2b: Unclick
+      timeouts.push(setTimeout(() => {
+        setCursorPos(prev => ({ ...prev, scale: 1 }));
+      }, 2000));
+
+      // Step 3: Move to Text tool (button center is x: 36, y: 172)
+      timeouts.push(setTimeout(() => {
+        setCursorPos({ x: 36, y: 172, opacity: 1, scale: 1 });
+      }, 2800));
+
+      // Step 4: Click Text tool
+      timeouts.push(setTimeout(() => {
+        setActiveTool("text");
+        setCursorPos(prev => ({ ...prev, scale: 0.85 }));
+      }, 3600));
+
+      // Step 4b: Unclick
+      timeouts.push(setTimeout(() => {
+        setCursorPos(prev => ({ ...prev, scale: 1 }));
+      }, 3800));
+
+      // Step 5: Move to Todo tool (button center is x: 36, y: 210)
+      timeouts.push(setTimeout(() => {
+        setCursorPos({ x: 36, y: 210, opacity: 1, scale: 1 });
+      }, 4600));
+
+      // Step 6: Click Todo tool
+      timeouts.push(setTimeout(() => {
+        setActiveTool("todo");
+        setCursorPos(prev => ({ ...prev, scale: 0.85 }));
+      }, 5400));
+
+      // Step 6b: Unclick
+      timeouts.push(setTimeout(() => {
+        setCursorPos(prev => ({ ...prev, scale: 1 }));
+      }, 5600));
+
+      // Step 7: Move to Select tool (button center is x: 36, y: 52)
+      timeouts.push(setTimeout(() => {
+        setCursorPos({ x: 36, y: 52, opacity: 1, scale: 1 });
+      }, 6400));
+
+      // Step 7b: Click Select tool
+      timeouts.push(setTimeout(() => {
+        setActiveTool("select");
+        setCursorPos(prev => ({ ...prev, scale: 0.85 }));
+      }, 7100));
+
+      // Step 7c: Unclick
+      timeouts.push(setTimeout(() => {
+        setCursorPos(prev => ({ ...prev, scale: 1 }));
+      }, 7300));
+
+      // Step 8: Exit screen
+      timeouts.push(setTimeout(() => {
+        setCursorPos({ x: 280, y: -20, opacity: 0, scale: 1 });
+      }, 8100));
+    };
+
+    runLoop();
+    const interval = setInterval(runLoop, 9500);
+
+    return () => {
+      clearInterval(interval);
+      timeouts.forEach(clearTimeout);
+    };
+  }, []);
+
+  return (
+    <div className="w-full h-full relative bg-white/70 backdrop-blur-sm rounded-[1.5rem] border border-neutral-200/50 overflow-hidden flex flex-col justify-between select-none">
+      {/* Zoom level indicator */}
+      <div className="absolute top-4 left-4 z-10">
+        <div className="px-2.5 py-1 bg-neutral-100 border border-neutral-200 text-[9px] text-neutral-500 font-medium rounded-lg">
+          100%
+        </div>
+      </div>
+
+      {/* Center Canvas display */}
+      <div className="absolute inset-0 flex items-center justify-center">
+        <svg className="w-full h-full absolute pointer-events-none" viewBox="0 0 200 200">
+          <path 
+            d="M 55 100 Q 100 70 145 100" 
+            fill="none" 
+            stroke={activeTool === "select" ? "#4059F1" : "#D4D4D4"} 
+            strokeWidth="1.5"
+            className="transition-colors duration-350"
+          />
+        </svg>
+
+        {/* Left Node */}
+        <div className={`absolute left-5 w-11 h-11 rounded-full border bg-white flex items-center justify-center transition-all duration-300 ${
+          activeTool === "shapes" ? "border-[#4059F1] scale-[1.05] ring-2 ring-[#4059F1]/10" : "border-neutral-200"
+        }`}>
+          <div className={`w-2.5 h-2.5 rounded-full transition-colors duration-300 ${activeTool === "shapes" ? "bg-[#4059F1]" : "bg-neutral-400"}`} />
+        </div>
+
+        {/* Middle Connection text label */}
+        <div className={`absolute top-[33%] px-2 py-0.5 bg-white border rounded-full text-[7.5px] font-medium z-10 transition-all duration-300 ${
+          activeTool === "text" ? "border-[#4059F1] text-[#4059F1] scale-[1.05] shadow-[0_2px_8px_rgba(64,89,241,0.1)]" : "border-neutral-200 text-neutral-500"
+        }`}>
+          Conversión
+        </div>
+
+        {/* Right Node - Todo list simulation node */}
+        <div className={`absolute right-5 p-2 w-[52px] rounded-lg border bg-white flex flex-col gap-1 transition-all duration-300 ${
+          activeTool === "todo" ? "border-[#4059F1] scale-[1.05] ring-2 ring-[#4059F1]/10" : "border-neutral-200"
+        }`}>
+          <div className="h-1.5 w-7 bg-neutral-200 rounded" />
+          <div className="flex items-center gap-1">
+            <div className={`w-1.5 h-1.5 rounded-sm border shrink-0 transition-colors duration-300 ${activeTool === "todo" ? "bg-[#4059F1] border-[#4059F1]" : "border-neutral-300"}`} />
+            <div className="h-1 w-5 bg-neutral-100 rounded" />
+          </div>
+          <div className="flex items-center gap-1">
+            <div className="w-1.5 h-1.5 rounded-sm border border-neutral-300 shrink-0" />
+            <div className="h-1 w-6 bg-neutral-100 rounded" />
+          </div>
+        </div>
+      </div>
+
+      {/* Vertical Toolbar absolute left-4, top-8 */}
+      <div className="absolute left-4 top-8 z-20 w-10 flex flex-col items-center gap-1.5 p-1 bg-white border border-neutral-200/80 rounded-[20px] shadow-[0_4px_12px_rgba(0,0,0,0.03)]">
+        {/* Select Tool */}
+        <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-200 ${
+          activeTool === "select" ? "bg-black text-white" : "text-neutral-400"
+        }`}>
+          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5" />
+          </svg>
+        </div>
+
+        {/* Pan Tool */}
+        <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-200 ${
+          activeTool === "pan" ? "bg-black text-white" : "text-neutral-400"
+        }`}>
+          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M7 11.5V14m0-2.5v-6a1.5 1.5 0 113 0m-3 6a1.5 1.5 0 00-3 0v2a7.5 7.5 0 0015 0v-5a1.5 1.5 0 00-3 0m-6-3V11m0-5.5a1.5 1.5 0 013 0v3.5" />
+          </svg>
+        </div>
+
+        <div className="w-5 h-[1px] bg-neutral-100 my-0.5" />
+
+        {/* Shapes Tool */}
+        <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-200 ${
+          activeTool === "shapes" ? "bg-black text-white" : "text-neutral-400"
+        }`}>
+          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <rect x="3" y="3" width="18" height="18" rx="2" />
+          </svg>
+        </div>
+
+        {/* Text Tool */}
+        <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-200 ${
+          activeTool === "text" ? "bg-black text-white" : "text-neutral-400"
+        }`}>
+          <span className="text-xs font-semibold font-serif">T</span>
+        </div>
+
+        {/* Todo Tool */}
+        <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-colors duration-200 ${
+          activeTool === "todo" ? "bg-black text-white" : "text-neutral-400"
+        }`}>
+          <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+            <path strokeLinecap="round" strokeLinejoin="round" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-6 9l2 2 4-4" />
+          </svg>
+        </div>
+      </div>
+
+      {/* Animated Mouse Cursor */}
+      <div 
+        className="absolute z-50 pointer-events-none select-none transition-all duration-700 ease-out"
+        style={{
+          left: `${cursorPos.x}px`,
+          top: `${cursorPos.y}px`,
+          opacity: cursorPos.opacity,
+          transform: `scale(${cursorPos.scale})`,
+        }}
+      >
+        <svg className="w-5.5 h-5.5 text-black filter drop-shadow-md" viewBox="0 0 24 24" fill="currentColor">
+          <path d="M4.5 3v15.2l3.8-3.8 3.5 8.1 3-1.3-3.5-8.1 5.4.1z" />
+        </svg>
       </div>
     </div>
   );
@@ -314,53 +522,7 @@ const Features = () => {
                     )}
 
                     {f.id === "canvas" && (
-                      <div className="w-full h-full relative p-5 bg-white/70 backdrop-blur-sm rounded-[1.5rem] border border-neutral-200/50 overflow-hidden flex flex-col justify-between">
-                        {/* Top: Zoom level indicator */}
-                        <div className="flex justify-start">
-                          <div className="px-2.5 py-1 bg-neutral-100 border border-neutral-200 text-[9px] text-neutral-500 font-medium rounded-lg">
-                            100%
-                          </div>
-                        </div>
-
-                        {/* Center: Connectors Mockup */}
-                        <div className="absolute inset-0 flex items-center justify-center">
-                          <svg className="w-full h-full absolute pointer-events-none" viewBox="0 0 200 200">
-                            <path 
-                              d="M 50 100 Q 100 70 150 100" 
-                              fill="none" 
-                              stroke="#4059F1" 
-                              strokeWidth="2"
-                            />
-                          </svg>
-                          {/* Left Node */}
-                          <div className="absolute left-4 w-12 h-12 rounded-full border border-neutral-200 bg-white flex items-center justify-center">
-                            <div className="w-2 h-2 rounded-full bg-miiles-blue" />
-                          </div>
-                          {/* Label in Middle */}
-                          <div className="absolute top-[32%] px-2.5 py-0.5 bg-white border border-neutral-200 rounded-full text-[8px] text-neutral-600 font-medium z-10">
-                            Conversión
-                          </div>
-                          {/* Right Node */}
-                          <div className="absolute right-4 w-12 h-12 rotate-45 border border-neutral-200 bg-white flex items-center justify-center">
-                            <div className="w-2 h-2 rounded-full bg-[#EC4899] -rotate-45" />
-                          </div>
-                        </div>
-
-                        {/* Bottom: Sidebar toolbar simulation */}
-                        <div className="w-full flex justify-center gap-1.5 z-10">
-                          <div className="p-1 bg-white border border-neutral-200 rounded-lg flex gap-1">
-                            <div className="w-4 h-4 rounded bg-neutral-100 flex items-center justify-center text-[9px] text-neutral-600">
-                              🖱
-                            </div>
-                            <div className="w-4 h-4 rounded bg-blue-50 flex items-center justify-center text-[9px] text-[#4059F1]">
-                              ✎
-                            </div>
-                            <div className="w-4 h-4 rounded bg-neutral-100 flex items-center justify-center text-[9px] text-neutral-600">
-                              ⚃
-                            </div>
-                          </div>
-                        </div>
-                      </div>
+                      <InteractiveCanvasMockup />
                     )}
                   </div>
                 </div>
