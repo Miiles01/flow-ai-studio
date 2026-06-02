@@ -396,40 +396,40 @@ const InteractiveCanvasMockup = () => {
                   animate={{ opacity: 1, x: 0, scale: 1 }}
                   exit={{ opacity: 0, x: -8, scale: 0.96 }}
                   transition={{ duration: 0.14, ease: "easeOut" }}
-                  className="absolute left-[calc(100%+10px)] top-1/2 -translate-y-1/2 bg-[#111] p-2 rounded-2xl shadow-[0_16px_48px_rgba(0,0,0,0.3)] grid grid-cols-2 gap-1 z-50 pointer-events-none"
+                  className="absolute left-[calc(100%+10px)] top-1/2 -translate-y-1/2 bg-[#111] p-3 rounded-2xl shadow-[0_16px_48px_rgba(0,0,0,0.3)] grid grid-cols-2 gap-2 z-50 pointer-events-none"
                 >
                   {/* Rectangulo */}
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200 ${activeShape === "square" ? "bg-white text-black shadow-sm" : hoveredFlyoutItem === "square" ? "text-white bg-[#222]" : "text-[#777] bg-transparent"}`}>
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-200 ${activeShape === "square" ? "bg-white text-black shadow-sm" : hoveredFlyoutItem === "square" ? "text-white bg-[#222]" : "text-[#777] bg-transparent"}`}>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-[18px] h-[18px]">
                       <rect x="2" y="2" width="20" height="20" rx="3" />
                     </svg>
                   </div>
                   {/* Circulo */}
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200 ${activeShape === "circle" ? "bg-white text-black shadow-sm" : hoveredFlyoutItem === "circle" ? "text-white bg-[#222]" : "text-[#777] bg-transparent"}`}>
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-200 ${activeShape === "circle" ? "bg-white text-black shadow-sm" : hoveredFlyoutItem === "circle" ? "text-white bg-[#222]" : "text-[#777] bg-transparent"}`}>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-[18px] h-[18px]">
                       <circle cx="12" cy="12" r="10" />
                     </svg>
                   </div>
                   {/* Rombo */}
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200 ${activeShape === "diamond" ? "bg-white text-black shadow-sm" : hoveredFlyoutItem === "diamond" ? "text-white bg-[#222]" : "text-[#777] bg-transparent"}`}>
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-200 ${activeShape === "diamond" ? "bg-white text-black shadow-sm" : hoveredFlyoutItem === "diamond" ? "text-white bg-[#222]" : "text-[#777] bg-transparent"}`}>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-[18px] h-[18px]">
                       <polygon points="12,2 22,12 12,22 2,12" />
                     </svg>
                   </div>
                   {/* Triángulo */}
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200 ${activeShape === "triangle" ? "bg-white text-black shadow-sm" : hoveredFlyoutItem === "triangle" ? "text-white bg-[#222]" : "text-[#777] bg-transparent"}`}>
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-200 ${activeShape === "triangle" ? "bg-white text-black shadow-sm" : hoveredFlyoutItem === "triangle" ? "text-white bg-[#222]" : "text-[#777] bg-transparent"}`}>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-[18px] h-[18px]">
                       <polygon points="12,2 22,22 2,22" />
                     </svg>
                   </div>
                   {/* Hexágono */}
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200 ${activeShape === "hexagon" ? "bg-white text-black shadow-sm" : hoveredFlyoutItem === "hexagon" ? "text-white bg-[#222]" : "text-[#777] bg-transparent"}`}>
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-200 ${activeShape === "hexagon" ? "bg-white text-black shadow-sm" : hoveredFlyoutItem === "hexagon" ? "text-white bg-[#222]" : "text-[#777] bg-transparent"}`}>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-[18px] h-[18px]">
                       <polygon points="12,2 21,7 21,17 12,22 3,17 3,7" />
                     </svg>
                   </div>
                   {/* Estrella */}
-                  <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200 ${activeShape === "star" ? "bg-white text-black shadow-sm" : hoveredFlyoutItem === "star" ? "text-white bg-[#222]" : "text-[#777] bg-transparent"}`}>
+                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-200 ${activeShape === "star" ? "bg-white text-black shadow-sm" : hoveredFlyoutItem === "star" ? "text-white bg-[#222]" : "text-[#777] bg-transparent"}`}>
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} className="w-[18px] h-[18px]">
                       <polygon points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9" />
                     </svg>
@@ -446,7 +446,7 @@ const InteractiveCanvasMockup = () => {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -6 }}
                   transition={{ duration: 0.15, ease: "easeOut" }}
-                  className="absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 bg-black text-white text-[13px] font-light py-1.5 px-3 rounded-full whitespace-nowrap shadow-lg z-30 pointer-events-none"
+                  className="absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 flex items-center leading-none bg-black text-white text-[13px] font-light py-1.5 px-3 rounded-full whitespace-nowrap shadow-lg z-30 pointer-events-none"
                 >
                   Formas
                 </motion.div>
@@ -466,7 +466,7 @@ const InteractiveCanvasMockup = () => {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -6 }}
                   transition={{ duration: 0.15, ease: "easeOut" }}
-                  className="absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 bg-black text-white text-[13px] font-light py-1.5 px-3 rounded-full whitespace-nowrap shadow-lg z-30 pointer-events-none"
+                  className="absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 flex items-center leading-none bg-black text-white text-[13px] font-light py-1.5 px-3 rounded-full whitespace-nowrap shadow-lg z-30 pointer-events-none"
                 >
                   Texto
                 </motion.div>
@@ -486,7 +486,7 @@ const InteractiveCanvasMockup = () => {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -6 }}
                   transition={{ duration: 0.15, ease: "easeOut" }}
-                  className="absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 bg-black text-white text-[13px] font-light py-1.5 px-3 rounded-full whitespace-nowrap shadow-lg z-30 pointer-events-none"
+                  className="absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 flex items-center leading-none bg-black text-white text-[13px] font-light py-1.5 px-3 rounded-full whitespace-nowrap shadow-lg z-30 pointer-events-none"
                 >
                   Lista de Tareas
                 </motion.div>
@@ -506,7 +506,7 @@ const InteractiveCanvasMockup = () => {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -6 }}
                   transition={{ duration: 0.15, ease: "easeOut" }}
-                  className="absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 bg-black text-white text-[13px] font-light py-1.5 px-3 rounded-full whitespace-nowrap shadow-lg z-30 pointer-events-none"
+                  className="absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 flex items-center leading-none bg-black text-white text-[13px] font-light py-1.5 px-3 rounded-full whitespace-nowrap shadow-lg z-30 pointer-events-none"
                 >
                   Imagen
                 </motion.div>
@@ -526,7 +526,7 @@ const InteractiveCanvasMockup = () => {
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: -6 }}
                   transition={{ duration: 0.15, ease: "easeOut" }}
-                  className="absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 bg-black text-white text-[13px] font-light py-1.5 px-3 rounded-full whitespace-nowrap shadow-lg z-30 pointer-events-none"
+                  className="absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 flex items-center leading-none bg-black text-white text-[13px] font-light py-1.5 px-3 rounded-full whitespace-nowrap shadow-lg z-30 pointer-events-none"
                 >
                   Sección
                 </motion.div>

@@ -179,9 +179,9 @@ const Toolbar = ({
               transition={{ duration: 0.14, ease: "easeOut" }}
               onMouseEnter={openFlyout}
               onMouseLeave={closeFlyout}
-              className={`absolute left-[calc(100%+10px)] top-1/2 -translate-y-1/2 rounded-2xl p-2 shadow-[0_16px_48px_rgb(0,0,0,0.3)] z-50 ${isDark ? 'bg-[#2C2C2E] border border-white/10' : 'bg-[#111]'}`}
+              className={`absolute left-[calc(100%+10px)] top-1/2 -translate-y-1/2 rounded-2xl p-3 shadow-[0_16px_48px_rgb(0,0,0,0.3)] z-50 ${isDark ? 'bg-[#2C2C2E] border border-white/10' : 'bg-[#111]'}`}
             >
-              <div className="grid grid-cols-2 gap-1">
+              <div className="grid grid-cols-2 gap-2">
                 {SHAPES.map((shape) => (
                   <button
                     key={shape.id}
@@ -192,7 +192,7 @@ const Toolbar = ({
                       setFlyoutOpen(false);
                     }}
                     title={shape.label}
-                    className={`w-10 h-10 flex items-center justify-center rounded-xl transition-all ${
+                    className={`w-12 h-12 flex items-center justify-center rounded-xl transition-all ${
                       selectedShape === shape.id
                         ? isDark ? "bg-white text-black" : "bg-white text-black"
                         : isDark ? "text-gray-400 hover:bg-white/10 hover:text-white" : "text-[#777] hover:bg-[#222] hover:text-white"
