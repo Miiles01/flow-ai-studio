@@ -697,10 +697,10 @@ const CollaborationMockup = () => {
             delay: 0.2
           }}
         >
-          <svg className="w-6 h-6 filter drop-shadow-[0_2px_5px_rgba(0,0,0,0.15)] rotate-[15deg] shrink-0" viewBox="0 0 24 24">
+          <svg className="w-6 h-6 filter drop-shadow-[0_2px_5px_rgba(0,0,0,0.15)] rotate-[-10deg] shrink-0" viewBox="0 0 24 24">
             <path 
               d="M4 3l16 8-8 2-6 7z" 
-              fill="#222222" 
+              fill="#4059F1" 
               stroke="white" 
               strokeWidth="2" 
               strokeLinecap="round"
@@ -730,7 +730,7 @@ const CollaborationMockup = () => {
           <svg className="w-6 h-6 filter drop-shadow-[0_2px_5px_rgba(0,0,0,0.15)] rotate-[-10deg] shrink-0" viewBox="0 0 24 24">
             <path 
               d="M4 3l16 8-8 2-6 7z" 
-              fill="#222222" 
+              fill="#FCB5B9" 
               stroke="white" 
               strokeWidth="2" 
               strokeLinecap="round"
