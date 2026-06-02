@@ -128,7 +128,7 @@ const Features = () => {
                 >
                   {/* Left Column: Text Content */}
                   <div className="flex flex-col text-left">
-                    <span className="text-xs font-semibold tracking-wider text-miiles-blue uppercase mb-3 font-sans">
+                    <span className="text-xs font-semibold tracking-wider text-miiles-blue mb-3 font-sans">
                       {f.badge}
                     </span>
                     <h2 className="text-3xl md:text-4xl font-normal leading-tight tracking-tight text-black mb-6">

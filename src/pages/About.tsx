@@ -143,13 +143,13 @@ const About = () => {
             <div className="max-w-6xl mx-auto">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-32 mb-40">
                 <div className="space-y-8">
-                  <h2 className="text-sm uppercase tracking-widest text-gray-500">Misión</h2>
+                  <h2 className="text-sm tracking-widest text-gray-500">Misión</h2>
                   <p className="text-4xl md:text-5xl font-normal leading-tight">
                     Convertir cada conversación en una <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>colaboración real.</span>
                   </p>
                 </div>
                 <div className="space-y-8">
-                  <h2 className="text-sm uppercase tracking-widest text-gray-500">Visión</h2>
+                  <h2 className="text-sm tracking-widest text-gray-500">Visión</h2>
                   <p className="text-4xl md:text-5xl font-normal leading-tight">
                     Ser el espacio global donde los negocios nacen de las <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>conexiones correctas.</span>
                   </p>
@@ -157,7 +157,7 @@ const About = () => {
               </div>
 
               <div className="border-t border-white/10 pt-20">
-                <h2 className="text-sm uppercase tracking-widest text-gray-500 mb-20 text-center">Nuestros Valores</h2>
+                <h2 className="text-sm tracking-widest text-gray-500 mb-20 text-center">Nuestros Valores</h2>
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
                   {[
                     { t: "Colaboración", d: "Cada conexión existe para producir algo concreto." },

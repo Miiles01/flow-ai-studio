@@ -18,14 +18,14 @@ const LandingFooter = () => {
           {/* Right side */}
           <div className="flex gap-20 md:gap-40">
             <div className="space-y-6">
-              <h4 className="text-[10px] font-normal text-gray-400 uppercase tracking-widest">Compañía</h4>
+              <h4 className="text-[10px] font-normal text-gray-400 tracking-widest">Compañía</h4>
               <div className="flex flex-col gap-4 text-sm font-light text-black">
                 <Link to="/" className="hover:opacity-50 transition-opacity">Términos y condiciones</Link>
                 <Link to="/" className="hover:opacity-50 transition-opacity">Política de privacidad</Link>
               </div>
             </div>
             <div className="space-y-6">
-              <h4 className="text-[10px] font-normal text-gray-400 uppercase tracking-widest">Redes Sociales</h4>
+              <h4 className="text-[10px] font-normal text-gray-400 tracking-widest">Redes Sociales</h4>
               <div className="flex flex-col gap-4 text-sm font-light text-black">
                 <a href="https://instagram.com/wearemiiles" target="_blank" rel="noopener noreferrer" className="hover:opacity-50 transition-opacity">Instagram</a>
                 <a href="https://tiktok.com/@wearemiiles" target="_blank" rel="noopener noreferrer" className="hover:opacity-50 transition-opacity">Tiktok</a>
