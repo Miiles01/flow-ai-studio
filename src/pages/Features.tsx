@@ -155,7 +155,7 @@ const InteractiveCanvasMockup = () => {
     let timeouts: any[] = [];
 
     const runLoop = () => {
-      // Step 0: Start off-screen
+      // Reset everything
       setCursorPos({ x: 180, y: 221, opacity: 0, scale: 1 });
       setActiveTool("select");
       setActiveShape("square");
@@ -163,192 +163,135 @@ const InteractiveCanvasMockup = () => {
       setIsFlyoutOpen(false);
       setHoveredFlyoutItem(null);
 
-      // Step 1: Move to Pan tool Y center is 74px, X is 28px
+      // ── Step 1: Pan tool (y=74) ─────────────────────────────────
+      // Cursor starts moving
       timeouts.push(setTimeout(() => {
         setCursorPos({ x: 28, y: 74, opacity: 1, scale: 1 });
-      }, 800));
-
-      // Step 1b: Hover Pan tool (fades in while moving)
+      }, 600));
+      // Cursor arrives → tooltip + highlight appear simultaneously
       timeouts.push(setTimeout(() => {
         setHoveredTool("pan");
-      }, 900));
-
-      // Step 1c: Click Pan tool (arrived at 1400)
-      timeouts.push(setTimeout(() => {
         setActiveTool("pan");
         setCursorPos(prev => ({ ...prev, scale: 0.85 }));
-      }, 1400));
-
-      // Step 1d: Unclick Pan
+      }, 1200));
+      // Release click
       timeouts.push(setTimeout(() => {
         setCursorPos(prev => ({ ...prev, scale: 1 }));
-      }, 1600));
+      }, 1400));
 
-      // Step 2: Move to Shapes tool Y center is 129px
+      // ── Step 2: Shapes tool (y=129) ─────────────────────────────
       timeouts.push(setTimeout(() => {
         setHoveredTool(null);
         setCursorPos({ x: 28, y: 129, opacity: 1, scale: 1 });
-      }, 2200));
-
-      // Step 2b: Hover Shapes tool (opens shapes flyout)
+      }, 2000));
+      // Cursor arrives → flyout opens + tooltip + highlight at once
       timeouts.push(setTimeout(() => {
         setHoveredTool("shapes");
-        setIsFlyoutOpen(true);
-      }, 2300));
-
-      // Step 2c: Click Shapes tool (arrived at 2800)
-      timeouts.push(setTimeout(() => {
         setActiveTool("shapes");
+        setIsFlyoutOpen(true);
         setCursorPos(prev => ({ ...prev, scale: 0.85 }));
-      }, 2800));
-
-      // Step 2d: Unclick Shapes
+      }, 2600));
       timeouts.push(setTimeout(() => {
         setCursorPos(prev => ({ ...prev, scale: 1 }));
-      }, 3000));
+      }, 2800));
 
-      // Step 3: Move to Círculo button in the flyout (x: 138, y: 85)
+      // ── Step 3: Click Círculo in flyout (x=138, y=85) ───────────
       timeouts.push(setTimeout(() => {
         setHoveredTool(null);
         setCursorPos({ x: 138, y: 85, opacity: 1, scale: 1 });
-      }, 3600));
-
-      // Step 3b: Hover flyout item
+      }, 3400));
+      // Cursor arrives → hover flyout item + select at once
       timeouts.push(setTimeout(() => {
         setHoveredFlyoutItem("circle");
-      }, 3700));
-
-      // Step 3c: Click Círculo shape (arrived at 4200)
-      timeouts.push(setTimeout(() => {
         setActiveShape("circle");
         setCursorPos(prev => ({ ...prev, scale: 0.85 }));
-      }, 4200));
-
-      // Step 3d: Unclick and close flyout
+      }, 4000));
+      // Release + close flyout
       timeouts.push(setTimeout(() => {
         setIsFlyoutOpen(false);
         setHoveredFlyoutItem(null);
         setCursorPos(prev => ({ ...prev, scale: 1 }));
-      }, 4400));
+      }, 4200));
 
-      // Step 4: Move to Text tool (Y: 175px)
+      // ── Step 4: Text tool (y=175) ────────────────────────────────
       timeouts.push(setTimeout(() => {
         setCursorPos({ x: 28, y: 175, opacity: 1, scale: 1 });
-      }, 5000));
-
-      // Step 4b: Hover Text tool
+      }, 4800));
+      // Cursor arrives → tooltip + highlight simultaneously
       timeouts.push(setTimeout(() => {
         setHoveredTool("text");
-      }, 5100));
-
-      // Step 4c: Click Text tool (arrived at 5600)
-      timeouts.push(setTimeout(() => {
         setActiveTool("text");
         setCursorPos(prev => ({ ...prev, scale: 0.85 }));
-      }, 5600));
-
-      // Step 4d: Unclick Text
+      }, 5400));
       timeouts.push(setTimeout(() => {
         setCursorPos(prev => ({ ...prev, scale: 1 }));
-      }, 5800));
+      }, 5600));
 
-      // Step 5: Move to Todo tool (Y: 221px)
+      // ── Step 5: Todo tool (y=221) ────────────────────────────────
       timeouts.push(setTimeout(() => {
         setHoveredTool(null);
         setCursorPos({ x: 28, y: 221, opacity: 1, scale: 1 });
-      }, 6400));
-
-      // Step 5b: Hover Todo tool
+      }, 6200));
       timeouts.push(setTimeout(() => {
         setHoveredTool("todo");
-      }, 6500));
-
-      // Step 5c: Click Todo tool (arrived at 7000)
-      timeouts.push(setTimeout(() => {
         setActiveTool("todo");
         setCursorPos(prev => ({ ...prev, scale: 0.85 }));
-      }, 7000));
-
-      // Step 5d: Unclick Todo
+      }, 6800));
       timeouts.push(setTimeout(() => {
         setCursorPos(prev => ({ ...prev, scale: 1 }));
-      }, 7200));
+      }, 7000));
 
-      // Step 6: Move to Image tool (Y: 267px)
+      // ── Step 6: Image tool (y=267) ───────────────────────────────
       timeouts.push(setTimeout(() => {
         setHoveredTool(null);
         setCursorPos({ x: 28, y: 267, opacity: 1, scale: 1 });
-      }, 7800));
-
-      // Step 6b: Hover Image tool
+      }, 7600));
       timeouts.push(setTimeout(() => {
         setHoveredTool("image");
-      }, 7900));
-
-      // Step 6c: Click Image tool (arrived at 8400)
-      timeouts.push(setTimeout(() => {
         setActiveTool("image");
         setCursorPos(prev => ({ ...prev, scale: 0.85 }));
-      }, 8400));
-
-      // Step 6d: Unclick Image
+      }, 8200));
       timeouts.push(setTimeout(() => {
         setCursorPos(prev => ({ ...prev, scale: 1 }));
-      }, 8600));
+      }, 8400));
 
-      // Step 7: Move to Section tool (Y: 313px)
+      // ── Step 7: Section tool (y=313) ─────────────────────────────
       timeouts.push(setTimeout(() => {
         setHoveredTool(null);
         setCursorPos({ x: 28, y: 313, opacity: 1, scale: 1 });
-      }, 9200));
-
-      // Step 7b: Hover Section tool
+      }, 9000));
       timeouts.push(setTimeout(() => {
         setHoveredTool("section");
-      }, 9300));
-
-      // Step 7c: Click Section tool (arrived at 9800)
-      timeouts.push(setTimeout(() => {
         setActiveTool("section");
         setCursorPos(prev => ({ ...prev, scale: 0.85 }));
-      }, 9800));
-
-      // Step 7d: Unclick Section
+      }, 9600));
       timeouts.push(setTimeout(() => {
         setCursorPos(prev => ({ ...prev, scale: 1 }));
-      }, 10000));
+      }, 9800));
 
-      // Step 8: Move to Select tool (Y: 28px)
+      // ── Step 8: Back to Select (y=28) ────────────────────────────
       timeouts.push(setTimeout(() => {
         setHoveredTool(null);
         setCursorPos({ x: 28, y: 28, opacity: 1, scale: 1 });
-      }, 10600));
-
-      // Step 8b: Hover Select tool
+      }, 10400));
       timeouts.push(setTimeout(() => {
         setHoveredTool("select");
-      }, 10700));
-
-      // Step 8c: Click Select tool (arrived at 11200)
-      timeouts.push(setTimeout(() => {
         setActiveTool("select");
         setCursorPos(prev => ({ ...prev, scale: 0.85 }));
-      }, 11200));
-
-      // Step 8d: Unclick Select
+      }, 11000));
       timeouts.push(setTimeout(() => {
         setCursorPos(prev => ({ ...prev, scale: 1 }));
-      }, 11400));
+      }, 11200));
 
-      // Step 9: Exit screen to the top-right
+      // ── Exit ─────────────────────────────────────────────────────
       timeouts.push(setTimeout(() => {
         setHoveredTool(null);
         setCursorPos({ x: 200, y: -20, opacity: 0, scale: 1 });
-      }, 12000));
+      }, 11800));
     };
 
     runLoop();
-    const interval = setInterval(runLoop, 12800);
+    const interval = setInterval(runLoop, 12600);
 
     return () => {
       clearInterval(interval);
@@ -453,7 +396,7 @@ const InteractiveCanvasMockup = () => {
                   animate={{ opacity: 1, x: 0, scale: 1 }}
                   exit={{ opacity: 0, x: -8, scale: 0.96 }}
                   transition={{ duration: 0.14, ease: "easeOut" }}
-                  className="absolute left-[calc(100%+10px)] -top-[52px] bg-[#111] p-2 rounded-2xl shadow-[0_16px_48px_rgba(0,0,0,0.3)] grid grid-cols-2 gap-1 z-50 pointer-events-none"
+                  className="absolute left-[calc(100%+10px)] top-1/2 -translate-y-1/2 bg-[#111] p-2 rounded-2xl shadow-[0_16px_48px_rgba(0,0,0,0.3)] grid grid-cols-2 gap-1 z-50 pointer-events-none"
                 >
                   {/* Rectangulo */}
                   <div className={`w-10 h-10 rounded-xl flex items-center justify-center transition-all duration-200 ${activeShape === "square" ? "bg-white text-black shadow-sm" : hoveredFlyoutItem === "square" ? "text-white bg-[#222]" : "text-[#777] bg-transparent"}`}>
