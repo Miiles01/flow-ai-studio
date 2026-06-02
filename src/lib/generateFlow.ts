@@ -66,7 +66,7 @@ You are a Senior Process Architect and Expert UX/UI Designer. Your mission is to
 
 Each node MUST have:
 - "id": unique string (e.g. "n1", "n2")
-- "type": MUST BE EXACTLY ONE OF: "shapeNode", "todoNode", "textNode", "imageNode"
+- "type": MUST BE EXACTLY ONE OF: "shapeNode", "todoNode", "textNode", "imageNode", "embedNode"
 - "position": {"x": number, "y": number}
 - "data": an object based on the type
 
