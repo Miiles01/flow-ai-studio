@@ -616,11 +616,12 @@ const CollaborationMockup = () => {
           {/* Avatar 1 */}
           <motion.div
             className="relative z-10 w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-white shadow-[0_4px_15px_rgba(0,0,0,0.08)] overflow-hidden"
-            animate={{ y: [0, -25, 0] }}
+            animate={{ y: [0, 0, -25, 0, 0] }}
             transition={{
-              duration: 1.6,
+              duration: 5,
               repeat: Infinity,
               ease: "easeInOut",
+              times: [0, 0.6, 0.75, 0.9, 1],
               delay: 0,
             }}
           >
@@ -630,11 +631,12 @@ const CollaborationMockup = () => {
           {/* Avatar 2 */}
           <motion.div
             className="relative z-20 w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-white shadow-[0_4px_15px_rgba(0,0,0,0.08)] overflow-hidden -ml-5 sm:-ml-6"
-            animate={{ y: [0, -25, 0] }}
+            animate={{ y: [0, 0, -25, 0, 0] }}
             transition={{
-              duration: 1.6,
+              duration: 5,
               repeat: Infinity,
               ease: "easeInOut",
+              times: [0, 0.6, 0.75, 0.9, 1],
               delay: 0.2,
             }}
           >
@@ -644,11 +646,12 @@ const CollaborationMockup = () => {
           {/* Avatar 3 */}
           <motion.div
             className="relative z-30 w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-white shadow-[0_4px_15px_rgba(0,0,0,0.08)] overflow-hidden -ml-5 sm:-ml-6"
-            animate={{ y: [0, -25, 0] }}
+            animate={{ y: [0, 0, -25, 0, 0] }}
             transition={{
-              duration: 1.6,
+              duration: 5,
               repeat: Infinity,
               ease: "easeInOut",
+              times: [0, 0.6, 0.75, 0.9, 1],
               delay: 0.4,
             }}
           >
@@ -658,11 +661,12 @@ const CollaborationMockup = () => {
           {/* Avatar 4 */}
           <motion.div
             className="relative z-40 w-20 h-20 sm:w-24 sm:h-24 rounded-full border-4 border-white shadow-[0_4px_15px_rgba(0,0,0,0.08)] overflow-hidden -ml-5 sm:-ml-6"
-            animate={{ y: [0, -25, 0] }}
+            animate={{ y: [0, 0, -25, 0, 0] }}
             transition={{
-              duration: 1.6,
+              duration: 5,
               repeat: Infinity,
               ease: "easeInOut",
+              times: [0, 0.6, 0.75, 0.9, 1],
               delay: 0.6,
             }}
           >
@@ -671,17 +675,19 @@ const CollaborationMockup = () => {
         </div>
 
         {/* Collaborative Presence Cursors */}
-        {/* Mateo Cursor (Blue) moving widely */}
+        {/* Mateo Cursor (Blue) - Stays in the top area, moves and pauses, never collides with avatars */}
         <motion.div 
-          className="absolute left-1/4 top-[40%] z-45 pointer-events-none"
+          className="absolute left-1/4 top-[20%] z-45 pointer-events-none"
           animate={{ 
-            x: [-80, 120, -30, 90, -80], 
-            y: [50, -60, 40, -40, 50] 
+            x: [-60, 40, 40, -20, -20, -60], 
+            y: [-10, 15, 15, -15, -15, -10] 
           }}
           transition={{ 
             duration: 8, 
             repeat: Infinity, 
-            ease: "easeInOut" 
+            ease: "easeInOut",
+            times: [0, 0.25, 0.5, 0.75, 0.85, 1],
+            delay: 0.2
           }}
         >
           <div className="flex flex-col items-start gap-1.5">
@@ -694,18 +700,19 @@ const CollaborationMockup = () => {
           </div>
         </motion.div>
 
-        {/* Sofía Cursor (Pink) moving widely */}
+        {/* Sofía Cursor (Pink) - Stays in the bottom area, moves and pauses, never collides with avatars */}
         <motion.div 
-          className="absolute right-1/4 bottom-[40%] z-45 pointer-events-none"
+          className="absolute right-1/4 bottom-[20%] z-45 pointer-events-none"
           animate={{ 
-            x: [80, -120, 30, -90, 80], 
-            y: [-50, 60, -40, 40, -50] 
+            x: [60, -40, -40, 20, 20, 60], 
+            y: [15, -10, -10, 20, 20, 15] 
           }}
           transition={{ 
             duration: 9.5, 
             repeat: Infinity, 
             ease: "easeInOut",
-            delay: 1 
+            times: [0, 0.28, 0.5, 0.72, 0.88, 1],
+            delay: 1.5 
           }}
         >
           <div className="flex flex-col items-start gap-1.5">
