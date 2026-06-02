@@ -41,50 +41,39 @@ const RotatingPrice = ({ value }: { value: string }) => {
     const ctx = gsap.context(() => {
       const currentEl = containerRef.current?.querySelector(".current-price");
       const nextEl = containerRef.current?.querySelector(".next-price");
-      
+
       if (!currentEl || !nextEl) return;
 
-      gsap.set(nextEl, { display: "inline-block", opacity: 0, position: "relative" });
       const nextWidth = (nextEl as HTMLElement).offsetWidth;
-      gsap.set(nextEl, { position: "absolute", opacity: 0 });
-
-      const splitCurrent = new SplitText(currentEl, { type: "chars", charsClass: "price-char" });
-      const splitNext = new SplitText(nextEl, { type: "chars", charsClass: "price-char" });
 
       const tl = gsap.timeline({
         onComplete: () => {
           setPrices({ current: value, next: "" });
           isAnimating.current = false;
-          splitCurrent.revert();
-          splitNext.revert();
           gsap.set(containerRef.current, { width: "auto" });
-        }
+        },
       });
 
       tl.to(containerRef.current, {
         width: nextWidth,
         duration: 0.6,
-        ease: "expo.out"
+        ease: "expo.out",
       }, 0);
 
-      gsap.set(nextEl, { autoAlpha: 1 });
-      gsap.set(splitNext.chars, { rotationX: -90, opacity: 0, transformOrigin: "50% 50% -0.5em" });
-      tl.to(splitCurrent.chars, {
+      gsap.set(nextEl, { autoAlpha: 1, rotationX: -90, transformOrigin: "50% 50% -0.5em" });
+      tl.to(currentEl, {
         rotationX: 90,
         opacity: 0,
         duration: 0.4,
         ease: "power2.in",
-        stagger: 0.03,
         transformOrigin: "50% 50% -0.5em",
       }, 0)
-        .to(splitNext.chars, {
+        .to(nextEl, {
           rotationX: 0,
           opacity: 1,
           duration: 0.6,
           ease: "power2.out",
-          stagger: 0.03,
         }, 0.1);
-
     }, containerRef);
 
     return () => ctx.revert();
