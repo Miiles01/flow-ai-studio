@@ -179,7 +179,8 @@ const Toolbar = ({
               transition={{ duration: 0.14, ease: "easeOut" }}
               onMouseEnter={openFlyout}
               onMouseLeave={closeFlyout}
-              className={`absolute left-[calc(100%+16px)] top-1/2 -translate-y-1/2 w-[128px] rounded-2xl p-3 shadow-[0_16px_48px_rgb(0,0,0,0.3)] z-50 ${isDark ? 'bg-[#2C2C2E] border border-white/10' : 'bg-[#111]'}`}
+              className={`absolute left-[calc(100%+16px)] w-[128px] rounded-2xl p-3 shadow-[0_16px_48px_rgb(0,0,0,0.3)] z-50 ${isDark ? 'bg-[#2C2C2E] border border-white/10' : 'bg-[#111]'}`}
+              style={{ top: '20px', transform: 'translateY(-50%)' }}
             >
               <div className="grid grid-cols-2 gap-2">
                 {SHAPES.map((shape) => (
