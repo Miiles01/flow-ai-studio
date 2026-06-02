@@ -810,8 +810,35 @@ const IndexContent = () => {
         const { nodes: newNodes, edges: newEdges } = await generateFlowFromPrompt(prompt);
 
         const generatedIds: string[] = [];
+
+        // ── Step 1: calculate real bounding box and grow skeleton to match ──
+        if (newNodes.length > 0) {
+          const NODE_W = 160; // typical node width used by the generator
+          const NODE_H = 80;  // typical node height
+
+          const minX = Math.min(...newNodes.map((n) => n.position.x));
+          const minY = Math.min(...newNodes.map((n) => n.position.y));
+          const maxX = Math.max(...newNodes.map((n) => n.position.x + ((n.style?.width as number) || NODE_W)));
+          const maxY = Math.max(...newNodes.map((n) => n.position.y + ((n.style?.height as number) || NODE_H)));
+
+          const bboxW = Math.max(400, maxX - minX + 80);  // +80 padding
+          const bboxH = Math.max(200, maxY - minY + 80);
+
+          // Inject dimensions into skeleton so it animates to exact flow size
+          setNodes((prev) =>
+            prev.map((n) =>
+              n.id === skeletonId
+                ? { ...n, data: { ...n.data, targetWidth: bboxW, targetHeight: bboxH } }
+                : n
+            )
+          );
+
+          // Wait for the skeleton spring animation to reach its target
+          await new Promise((res) => setTimeout(res, 380));
+        }
+
+        // ── Step 2: replace skeleton with real nodes ─────────────────────────
         setNodes((prev) => {
-          // Capturar posición final del skeleton
           const skeleton = prev.find((n) => n.id === skeletonId);
           const finalX = skeleton ? skeleton.position.x : centerPos.x - 140;
           const finalY = skeleton ? skeleton.position.y : centerPos.y - 80;
@@ -819,7 +846,6 @@ const IndexContent = () => {
           const filteredNodes = prev.filter((n) => n.id !== skeletonId);
 
           if (newNodes.length > 0) {
-            // Calcular bounds (minX, minY)
             const minX = Math.min(...newNodes.map((n) => n.position.x));
             const minY = Math.min(...newNodes.map((n) => n.position.y));
 
@@ -839,7 +865,7 @@ const IndexContent = () => {
 
         setEdges((prev) => [...prev, ...newEdges]);
 
-        // Asegurar que los nodos recién generados queden visibles
+        // Fit view to newly generated nodes
         if (generatedIds.length > 0 && reactFlowInstance) {
           setTimeout(() => {
             reactFlowInstance.fitView({
