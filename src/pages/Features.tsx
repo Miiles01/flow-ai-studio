@@ -88,7 +88,7 @@ const Features = () => {
           {/* Pricing Section Title */}
           <section className="pt-12 pb-6 flex flex-col items-center justify-center text-center px-6">
             <h2 className="text-4xl md:text-6xl font-normal leading-tight tracking-tight mb-4 max-w-4xl">
-              Nuestros <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>planes</span>
+              Nuestros planes
             </h2>
             <p className="text-md font-light text-gray-500 max-w-2xl">
               Elige el plan ideal para automatizar y escalar tu negocio.
