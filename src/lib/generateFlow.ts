@@ -84,6 +84,12 @@ Each node MUST have:
 4. "imageNode" (for visual placeholders or logos):
    - "data": {"url": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=200&auto=format&fit=crop", "width": 200, "height": 150}
 
+5. "embedNode" (to embed a real website live inside the canvas — iframe):
+   - "data": {"url": "https://sitio-real.com"} con "style": {"width": 480, "height": 320}
+   - Solo con URLs reales (ej. el "website" de un prospecto). NUNCA inventes URLs. Inclúyelo solo si aporta valor al plan/objetivos del cliente.
+
+
+
 📐 ARCHITECTURE & LAYOUT RULES (CRITICAL - PREMIUM SYMMETRICAL DESIGN):
 - PERFECT GRID ALIGNMENT: The diagram must look extremely neat, structured, and symmetric like a high-end mind map. All nodes in a sequential path must align to the exact same Y level (e.g. Y: 250).
 - CONSTANT X-SPACING: Every consecutive step in a sequence must increment X by exactly 350px (e.g. X: 100, 450, 800, 1150, 1500...). Keep spacing uniform across the entire flowchart.
