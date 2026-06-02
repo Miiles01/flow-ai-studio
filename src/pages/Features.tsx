@@ -153,12 +153,17 @@ const Features = () => {
                     </ul>
                   </div>
 
-                  {/* Right Column: Large Square Image */}
-                  <div className="w-full aspect-square rounded-[2rem] overflow-hidden shadow-xl border border-gray-100 hover:scale-[1.02] transition-transform duration-500">
+                  {/* Right Column: Large Square Image Container */}
+                  <div 
+                    className="w-full aspect-square rounded-[2.5rem] overflow-hidden shadow-xl border border-gray-100 flex items-center justify-center p-10 hover:scale-[1.01] transition-transform duration-500"
+                    style={{
+                      background: "linear-gradient(to bottom, #FDFDFD, #F8F9FD)"
+                    }}
+                  >
                     <img
                       src={f.image}
                       alt={f.title}
-                      className="w-full h-full object-cover"
+                      className="w-full h-full object-cover rounded-[1.5rem] shadow-sm border border-gray-100/50"
                     />
                   </div>
                 </div>
