@@ -1,100 +1,62 @@
-# Admin Dashboard — Plan
+# Plan: Prospectos en la IA, embeds en canvas y admin en tiempo real
 
-## Acceso (/admin)
-- Nueva ruta pública `/admin` con pantalla de login simple (input password).
-- Secret `ADMIN_PASSWORD` = `miiles24244053@AA`.
-- Edge function `admin-auth` valida password y devuelve un token firmado (JWT con HS256 usando `ADMIN_PASSWORD` como secret, exp 8h). Guardado en `localStorage` (`miiles_admin_token`).
-- Todas las edge functions admin verifican ese token en header `x-admin-token`.
-- Ruta `/admin` envuelta en `<AdminGuard>` que valida token contra `admin-auth` (verify mode).
+## Objetivo
+1. La IA del canvas usa la base de prospectos como fuente y entiende los objetivos del cliente.
+2. La IA puede insertar el sitio web del prospecto como **iframe embebido** en el canvas cuando lo considere útil según el plan/objetivos.
+3. El dashboard de Admin muestra la base de prospectos **siempre actualizada en tiempo real**.
 
-## Módulo 1 — Carga de datos (Prospectos)
+---
 
-**DB (migración):**
+## Parte 1 — Nuevo nodo de embed (iframe del sitio web)
+
+Hoy existen los nodos `shapeNode`, `todoNode`, `textNode`, `imageNode`. No hay forma de mostrar una página web embebida. Se crea uno nuevo.
+
+- **Crear `src/components/nodes/EmbedNode.tsx`**: similar a `ImageNode`, renderiza un `<iframe>` con `data.url`. Incluye:
+  - Estado vacío ("Pegar URL del sitio") + popover para editar URL (como ImageNode).
+  - `NodeResizer`, handles de conexión, barra flotante (editar URL / abrir en nueva pestaña / eliminar).
+  - `sandbox` y `referrerPolicy` seguros; fallback visible si el sitio bloquea ser embebido (X-Frame-Options) con botón "Abrir sitio".
+  - Estilos dark/light según el sistema de diseño Miiles.
+- **Registrar el tipo** en `src/pages/Index.tsx` (`nodeTypes` línea 50) como `embedNode: EmbedNode`.
+- Manejarlo en el guardado/realtime igual que el resto (no requiere cambios, ya viaja en `nodes`).
+
+## Parte 2 — IA: usar prospectos y decidir embeds (edge function `generate-flow`)
+
+Archivo: `supabase/functions/generate-flow/index.ts`.
+
+- **Recolección de prospectos más robusta**: además del match por keywords actual, si no hay coincidencias traer un set base reciente para dar contexto; ampliar el `select` para incluir `website`.
+- **Actualizar el system prompt** para:
+  - Indicar que debe **recolectar el contexto y objetivos del cliente** a partir del prompt y proponer el flujo en función de ellos.
+  - Documentar el nuevo `embedNode`: `{"type":"embedNode","data":{"url":"https://..."},"style":{"width":480,"height":320}}`.
+  - Regla: cuando un prospecto tenga `website`, la IA **puede** insertar un `embedNode` con ese sitio si lo considera útil para el plan/objetivos (no siempre obligatorio). Usar la `website` real del prospecto, nunca inventar URLs.
+- El cliente (`src/lib/generateFlow.ts`) ya pasa los nodos tal cual al canvas; solo se añade `embedNode` a la lista de tipos válidos mencionados en su prompt de instrucciones.
+
+## Parte 3 — Admin: prospectos en tiempo real
+
+Archivo: `src/components/admin/ProspectsTab.tsx`.
+
+- Suscribir un canal de Supabase Realtime a `postgres_changes` (event `*`, tabla `public.prospects`) y, al recibir cambios, recargar vía `load()` (con un pequeño debounce para lotes de importación masiva).
+- Limpiar el canal en el `return` del `useEffect`.
+- `ProspectBrain` se re-renderiza automáticamente al actualizarse `prospects`.
+
+### Migración (realtime)
+Habilitar realtime en la tabla:
+```sql
+ALTER TABLE public.prospects REPLICA IDENTITY FULL;
+ALTER PUBLICATION supabase_realtime ADD TABLE public.prospects;
 ```
-prospects (
-  id uuid pk, name text, company text, email text, phone text,
-  role text, industry text, location text, website text, notes text,
-  tags text[], source_file text, raw jsonb, created_at, updated_at
-)
-```
-- Índice GIN sobre `tags` y trigram sobre `name || company || industry` para búsqueda.
-- RLS: bloqueada para `anon`/`authenticated` (solo accesible via service role desde edge functions admin).
+RLS actual ya restringe `prospects` a admins; el panel usa token admin vía edge functions, así que tras recibir el ping de realtime se recarga con `adminFetch` (service role), evitando problemas de RLS en el cliente.
 
-**Edge function `admin-ingest`:**
-- Body: `{ filename, mime, contentBase64 }` + header `x-admin-token`.
-- CSV/Excel/TXT: parsea con `xlsx` (npm) → arrays de filas.
-- PDF: extrae texto con `pdf-parse` (npm).
-- Pasa filas/texto a Lovable AI Gateway (`google/gemini-3-flash-preview`) con `Output.object` y schema Zod `{ prospects: [{ name, company, email, phone, role, industry, location, website, notes, tags }] }`.
-- Inserta en `prospects` con `source_file = filename`.
+---
 
-**UI tab "Prospectos":**
-- Dropzone (drag&drop) + lista de últimos uploads.
-- Tabla paginada con filtros (búsqueda, tag, industria).
-- Acciones: borrar fila, borrar batch por `source_file`.
+## Detalles técnicos / notas
+- El iframe puede ser bloqueado por sitios con `X-Frame-Options: DENY`/`frame-ancestors`. Por eso el `EmbedNode` incluye fallback con enlace "Abrir sitio" en vez de quedar en blanco.
+- No se tocan landing/auth ni el flujo de guardado del canvas.
+- Verificación: generar un flujo pidiendo prospectos + "agrega su sitio web" y confirmar que aparece el iframe; importar un CSV en Admin y ver la tabla actualizarse sin recargar.
 
-## Módulo 2 — Sync con IA del tablero
-
-Modifica `supabase/functions/generate-flow/index.ts`:
-- Antes de llamar al modelo, hace `supabase.from('prospects').select(...)` filtrando por keywords del prompt (ILIKE sobre name/company/industry/tags).
-- Inyecta hasta 20 prospectos relevantes en el system prompt como "PROSPECTS DB (úsalos primero, no inventes si están aquí)".
-- Inyecta también las plantillas (módulo 4) como ejemplos few-shot.
-- Si no hay match, el modelo genera libremente (comportamiento actual).
-- Sin cambios en el cliente.
-
-## Módulo 3 — Instrucciones desde GitHub
-**Decisión del usuario:** el flujo es "edito el repo con Claude Code → Lovable sincroniza con GitHub automáticamente". No se necesita webhook ni API de GitHub.
-
-→ Las plantillas viven como archivos estáticos en `src/data/flow-templates/*.json`. Cuando el usuario edita en Claude Code y pushea, GitHub sync trae los archivos al proyecto Lovable.
-
-**Edge function `list-flow-templates`** (público, sin auth admin):
-- Lee plantillas vía import dinámico no es posible en edge → en su lugar mantenemos las plantillas también en una tabla `flow_templates` sincronizada al boot.
-
-**Mejor enfoque (simplificado):** las plantillas son archivos JSON en `src/data/flow-templates/` y se exponen al edge function vía:
-- Nueva tabla `flow_templates (id, slug, title, description, tags, nodes jsonb, edges jsonb, prompt_hint text)`.
-- Botón "Sincronizar desde repo" en /admin que sube los archivos del frontend (lee `import.meta.glob('@/data/flow-templates/*.json')`) → edge function `admin-sync-templates` upsert por slug.
-- Así el usuario edita JSON en GitHub via Claude Code y luego presiona "Sincronizar" en /admin.
-
-## Módulo 4 — Ejemplos de flujos / nodos
-- Tab "Plantillas" en /admin: lista de plantillas de `flow_templates`, preview de cada una (nombre, descripción, conteo nodos/edges, tags).
-- Botón "Sincronizar desde repo" arriba.
-- Botón "Borrar" por plantilla.
-- Las plantillas se inyectan en `generate-flow` (módulo 2).
-
-## Archivos
-
-**Nuevos:**
-- `src/pages/Admin.tsx` — layout con tabs (Prospectos, Plantillas).
-- `src/pages/AdminLogin.tsx` — form password.
-- `src/components/admin/AdminGuard.tsx`
-- `src/components/admin/ProspectsTab.tsx`
-- `src/components/admin/TemplatesTab.tsx`
-- `src/components/admin/FileDropzone.tsx`
-- `src/hooks/useAdminAuth.ts`
-- `src/data/flow-templates/example-prospecting.json` (seed)
-- `src/data/flow-templates/example-content.json` (seed)
-- `supabase/functions/admin-auth/index.ts`
-- `supabase/functions/admin-ingest/index.ts`
-- `supabase/functions/admin-prospects/index.ts` (list/delete)
-- `supabase/functions/admin-sync-templates/index.ts`
-- Migración SQL.
-
-**Modificados:**
-- `src/App.tsx` — rutas `/admin` y `/admin/login`.
-- `supabase/functions/generate-flow/index.ts` — inyección de prospectos + plantillas.
-
-## Secrets
-- `ADMIN_PASSWORD` (add_secret).
-
-## Fuera de alcance
-- Webhook GitHub (sustituido por botón sincronizar).
-- Edición visual de plantillas (se editan via Claude Code en el repo).
-- 2FA/recovery del admin.
-
-## Diagrama
-```
-Admin UI ─► admin-auth ──► JWT
-        ─► admin-ingest ─► [parse + Gemini] ─► prospects table
-        ─► admin-sync-templates ─► flow_templates table
-        
-User chat ─► generate-flow ──► fetch prospects+templates ─► Gemini ─► flow
-```
+## Archivos afectados
+- `src/components/nodes/EmbedNode.tsx` (nuevo)
+- `src/pages/Index.tsx` (registrar nodeType)
+- `supabase/functions/generate-flow/index.ts` (RAG + prompt)
+- `src/lib/generateFlow.ts` (mención del nuevo tipo)
+- `src/components/admin/ProspectsTab.tsx` (realtime)
+- Migración: habilitar realtime en `prospects`
