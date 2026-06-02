@@ -28,9 +28,8 @@ const Pricing = () => {
 
     const run = () => {
       document.querySelectorAll<HTMLElement>("#smooth-content-pricing h1").forEach((el) => {
-        const split = SplitText.create(el, { type: "lines", mask: "lines", linesClass: "line" });
-        gsap.fromTo(split.lines, { yPercent: 110 }, {
-          yPercent: 0, duration: 0.9, stagger: 0.08, ease: "osmo-ease",
+        gsap.fromTo(el, { yPercent: 20, autoAlpha: 0 }, {
+          yPercent: 0, autoAlpha: 1, duration: 0.9, ease: "osmo-ease",
           scrollTrigger: { trigger: el, start: "top 88%", once: true },
         });
       });
