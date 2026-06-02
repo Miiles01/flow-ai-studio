@@ -734,7 +734,7 @@ const CollaborationMockup = () => {
               strokeLinejoin="round" 
             />
           </svg>
-          <div className="bg-[#EC4899] text-white py-1 px-3.5 rounded-full shadow-[0_4px_12px_rgba(236,72,153,0.25)] -ml-1.5 mt-4">
+          <div className="bg-[#FCB5B9] text-neutral-800 py-1 px-3.5 rounded-full shadow-[0_4px_12px_rgba(252,181,185,0.3)] -ml-1.5 mt-4">
             <span className="text-[11px] sm:text-xs font-semibold tracking-wide">Sofía</span>
           </div>
         </motion.div>
