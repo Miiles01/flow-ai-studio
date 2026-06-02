@@ -396,7 +396,7 @@ const InteractiveCanvasMockup = () => {
                   animate={{ opacity: 1, x: 0, scale: 1 }}
                   exit={{ opacity: 0, x: -8, scale: 0.96 }}
                   transition={{ duration: 0.14, ease: "easeOut" }}
-                  className="absolute left-[calc(100%+10px)] top-1/2 -translate-y-1/2 bg-[#111] p-3 rounded-2xl shadow-[0_16px_48px_rgba(0,0,0,0.3)] grid grid-cols-2 gap-2 z-50 pointer-events-none"
+                  className="absolute left-[calc(100%+10px)] top-1/2 -translate-y-1/2 w-[128px] bg-[#111] p-3 rounded-2xl shadow-[0_16px_48px_rgba(0,0,0,0.3)] grid grid-cols-2 gap-2 z-50 pointer-events-none"
                 >
                   {/* Rectangulo */}
                   <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-200 ${activeShape === "square" ? "bg-white text-black shadow-sm" : hoveredFlyoutItem === "square" ? "text-white bg-[#222]" : "text-[#777] bg-transparent"}`}>
