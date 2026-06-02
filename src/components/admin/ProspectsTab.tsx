@@ -47,7 +47,27 @@ export default function ProspectsTab() {
     setTotal(data.total ?? 0);
   };
 
-  useEffect(() => { load(""); }, []);
+  useEffect(() => {
+    load("");
+    // Realtime: refresh the prospects base whenever rows change (imports, edits, deletes)
+    let debounce: ReturnType<typeof setTimeout> | null = null;
+    const channel = supabase
+      .channel("admin-prospects-changes")
+      .on(
+        "postgres_changes",
+        { event: "*", schema: "public", table: "prospects" },
+        () => {
+          if (debounce) clearTimeout(debounce);
+          debounce = setTimeout(() => load(""), 400);
+        }
+      )
+      .subscribe();
+    return () => {
+      if (debounce) clearTimeout(debounce);
+      supabase.removeChannel(channel);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const handleUpload = async (file: File) => {
     try {

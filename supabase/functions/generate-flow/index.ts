@@ -56,11 +56,16 @@ serve(async (req) => {
       const { data } = await supabase.from("prospects").select("name,company,email,phone,role,industry,location,website,notes,tags").or(orClauses).limit(20);
       prospects = data ?? [];
     }
+    // Fallback: if no keyword match, bring a recent base set so the AI always has client context
+    if (prospects.length === 0) {
+      const { data } = await supabase.from("prospects").select("name,company,email,phone,role,industry,location,website,notes,tags").order("created_at", { ascending: false }).limit(15);
+      prospects = data ?? [];
+    }
 
     const { data: templates } = await supabase.from("flow_templates").select("title,description,tags,prompt_hint,nodes,edges").limit(10);
 
     const prospectsBlock = prospects.length > 0
-      ? `\n\nPROSPECTOS EN LA BASE DE DATOS (úsalos como fuente primaria; si el usuario pide alguno listado aquí, refiérelo con sus datos reales):\n${JSON.stringify(prospects, null, 0)}`
+      ? `\n\nPROSPECTOS EN LA BASE DE DATOS (úsalos como fuente primaria; si el usuario pide alguno listado aquí, refiérelo con sus datos reales. Cada prospecto puede tener un campo "website" con su sitio real):\n${JSON.stringify(prospects, null, 0)}`
       : "";
 
     const templatesBlock = (templates && templates.length > 0)
@@ -85,6 +90,8 @@ Node Types and Data:
    - Use for general headers, sections, or annotations.
 4. "imageNode": {"url": "string", "width": number, "height": number}
    - Use for visual placeholders or logos.
+5. "embedNode": {"url": "https://..."} con "style": {"width": 480, "height": 320}
+   - Embebe una página web real dentro del canvas (iframe en vivo). Úsalo SOLO con URLs reales (por ejemplo el campo "website" de un prospecto de la base de datos). NUNCA inventes URLs.
 
 Rules for Premium Visual Design:
 - ALIGNMENT & SYMMETRY: Nodes in the same sequence must be aligned on the exact same horizontal grid line (e.g. Y: 250) to look like a high-end mind map.
@@ -100,6 +107,8 @@ Rules for Premium Visual Design:
 - DEFAULT BRAND COLOR: The primary brand color is #4059F1. Use it as the default accentColor for todos and stroke color for edges.
 - EDGES: Connect nodes logically. Set edge "style": {"stroke": "hex", "strokeWidth": 2}. Do NOT animate the edges (always set "animated": false or omit it).
 - When the user asks about prospects or business ideas, prefer real prospects from the database below over invented ones.
+- CONTEXTO DEL CLIENTE: Antes de diseñar, infiere el contexto, la industria y los OBJETIVOS del cliente a partir del prompt y de los prospectos disponibles, y construye el flujo en función de esos objetivos.
+- EMBEDS DE SITIO WEB: Si un prospecto relevante tiene un campo "website", PUEDES (no es obligatorio) añadir un "embedNode" con esa URL real cuando aporte valor al plan o a los objetivos planteados (p. ej. para revisar el sitio del cliente/competencia). Decide si es necesario según el plan; no lo agregues por defecto en cada flujo.
 - Respond ONLY with valid JSON containing {"nodes": [...], "edges": [...]}, no markdown.
 
 Example output:
