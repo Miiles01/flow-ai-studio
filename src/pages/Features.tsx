@@ -677,11 +677,13 @@ const Features = () => {
               {featuresData.map((f) => (
                 <div
                   key={f.id}
-                  className="horizontal-slide w-full md:w-[100vw] md:h-full md:flex-shrink-0 md:flex md:items-center md:justify-center px-6 md:px-20"
+                  className={`horizontal-slide w-full md:w-[100vw] md:h-full md:flex-shrink-0 md:flex md:items-center md:justify-center px-6 ${
+                    f.id === "ai-studio" ? "md:pl-32 md:pr-20 lg:pl-44 lg:pr-20" : "md:px-20"
+                  }`}
                 >
                   <div className="max-w-6xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
                     {/* Left Column: Text Content */}
-                    <div className="flex flex-col text-left">
+                    <div className={`flex flex-col text-left ${f.id === "ai-studio" ? "md:pl-6 lg:pl-12" : ""}`}>
                       <span className="text-xs font-semibold tracking-wider text-miiles-blue mb-3 font-sans">
                         {f.badge}
                       </span>
