@@ -8,6 +8,7 @@ import { SplitText } from "gsap/SplitText";
 import { CustomEase } from "gsap/CustomEase";
 import LandingNavbar from "@/components/LandingNavbar";
 import LandingFooter from "@/components/LandingFooter";
+import PricingTable from "@/components/PricingTable";
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText, CustomEase);
 if (!CustomEase.get("osmo-ease")) {
@@ -83,6 +84,19 @@ const Features = () => {
               ))}
             </div>
           </section>
+
+          {/* Pricing Section Title */}
+          <section className="pt-12 pb-6 flex flex-col items-center justify-center text-center px-6">
+            <h2 className="text-4xl md:text-6xl font-normal leading-tight tracking-tight mb-4 max-w-4xl">
+              Nuestros <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>planes</span>
+            </h2>
+            <p className="text-md font-light text-gray-500 max-w-2xl">
+              Elige el plan ideal para automatizar y escalar tu negocio.
+            </p>
+          </section>
+
+          {/* Pricing Table Component */}
+          <PricingTable />
 
           <LandingFooter />
         </div>
