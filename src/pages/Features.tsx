@@ -9,19 +9,62 @@ import { CustomEase } from "gsap/CustomEase";
 import LandingNavbar from "@/components/LandingNavbar";
 import LandingFooter from "@/components/LandingFooter";
 import PricingTable from "@/components/PricingTable";
+import { Check } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText, CustomEase);
 if (!CustomEase.get("osmo-ease")) {
   CustomEase.create("osmo-ease", "0.625, 0.05, 0, 1");
 }
 
-const features = [
-  { title: "Encuentra colaboraciones", description: "Descubre marcas que buscan tu perfil único." },
-  { title: "Vende en todo el mundo", description: "Conecta con vendedores globales en un solo lugar." },
-  { title: "Analítica inteligente", description: "Toma decisiones basadas en datos, no en intuición." },
-  { title: "Automatización IA", description: "Ahorra horas con flujos generados automáticamente." },
-  { title: "Pagos integrados", description: "Cobra en cualquier divisa sin fricción." },
-  { title: "Soporte 24/7", description: "Estamos contigo cuando lo necesites." },
+const featuresData = [
+  {
+    id: "ai-studio",
+    badge: "Inteligencia Artificial",
+    title: "Diseña flujos estratégicos con IA Studio",
+    description: "Describe tu proceso de negocio, embudo de ventas o estructura organizativa y deja que nuestro generador inteligente estructure y alinee un diagrama completo en segundos.",
+    bullets: [
+      "Generación instantánea a partir de descripciones de texto natural.",
+      "Alineación automática y espaciado simétrico en cuadrícula.",
+      "Asistente interactivo que refina el flujo respondiendo a tus ideas."
+    ],
+    image: "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=800&auto=format&fit=crop"
+  },
+  {
+    id: "todos",
+    badge: "Gestión de Actividades",
+    title: "Tarjetas de tareas interactivas y responsivas",
+    description: "Convierte cualquier nodo del diagrama de flujo en una lista de tareas dinámica. Las subtarjetas se adaptan en tamaño con campos de texto multilínea y auto-ajustables para no recortar tus ideas.",
+    bullets: [
+      "Campos multilínea con textareas que crecen con el contenido.",
+      "Tachado dinámico de tareas completadas y reordenamiento intuitivo.",
+      "Visualización impecable en el canvas y en el panel lateral."
+    ],
+    image: "https://images.unsplash.com/photo-1581291518655-9523c932ded7?q=80&w=800&auto=format&fit=crop"
+  },
+  {
+    id: "collab",
+    badge: "Colaboración en Vivo",
+    title: "Co-creación y presencia en tiempo real",
+    description: "Invita a tu equipo a trabajar en el mismo lienzo. Visualiza los avatares de los usuarios conectados y edita de forma concurrente sin conflictos de cambios.",
+    bullets: [
+      "Presencia visual interactiva mediante stack de avatares en el encabezado.",
+      "Sincronización instantánea de movimientos, colores y conectores.",
+      "Compartido rápido mediante URLs públicas para visualización."
+    ],
+    image: "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=800&auto=format&fit=crop"
+  },
+  {
+    id: "canvas",
+    badge: "Lienzo Avanzado",
+    title: "Canvas infinito y personalización total",
+    description: "Estructura tus ideas sin límites físicos. Conecta figuras de cualquier tipo mediante handles bidireccionales y muévete con un zoom ultra-amplio de 5% a 400%.",
+    bullets: [
+      "Líneas de conexión curvadas con etiquetas de texto editables en el centro.",
+      "Desconexión rápida de nodos arrastrando desde su mitad izquierda.",
+      "Figuras geométricas personalizables con colores vibrantes de marca."
+    ],
+    image: "https://images.unsplash.com/photo-1531403009284-440f080d1e12?q=80&w=800&auto=format&fit=crop"
+  }
 ];
 
 const Features = () => {
@@ -71,15 +114,45 @@ const Features = () => {
             </p>
           </section>
 
+          {/* Detailed Features Sections */}
           <section className="pb-32 px-6">
-            <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {features.map((f) => (
+            <div className="max-w-6xl mx-auto flex flex-col gap-36">
+              {featuresData.map((f) => (
                 <div
-                  key={f.title}
-                  className="bg-[#F5F5F8] rounded-3xl p-8 transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_60px_rgba(0,0,0,0.08)]"
+                  key={f.id}
+                  className="grid grid-cols-1 md:grid-cols-2 gap-16 items-center animate-[fade-in_1s_ease-out]"
                 >
-                  <h3 className="text-2xl font-normal mb-3 leading-tight">{f.title}</h3>
-                  <p className="text-sm font-light text-gray-500 leading-relaxed">{f.description}</p>
+                  {/* Left Column: Text Content */}
+                  <div className="flex flex-col text-left">
+                    <span className="text-xs font-semibold tracking-wider text-miiles-blue uppercase mb-3 font-sans">
+                      {f.badge}
+                    </span>
+                    <h2 className="text-3xl md:text-4xl font-normal leading-tight tracking-tight text-black mb-6">
+                      {f.title}
+                    </h2>
+                    <p className="text-md font-light text-gray-500 leading-relaxed mb-8">
+                      {f.description}
+                    </p>
+                    <ul className="flex flex-col gap-4">
+                      {f.bullets.map((bullet, idx) => (
+                        <li key={idx} className="flex items-start gap-3 text-sm font-light text-gray-600">
+                          <div className="w-5 h-5 rounded-full bg-miiles-blue-light flex items-center justify-center shrink-0 mt-0.5 text-miiles-blue">
+                            <Check size={12} strokeWidth={3} />
+                          </div>
+                          <span className="leading-normal">{bullet}</span>
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+
+                  {/* Right Column: Large Square Image */}
+                  <div className="w-full aspect-square rounded-[2rem] overflow-hidden shadow-xl border border-gray-100 hover:scale-[1.02] transition-transform duration-500">
+                    <img
+                      src={f.image}
+                      alt={f.title}
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
                 </div>
               ))}
             </div>
