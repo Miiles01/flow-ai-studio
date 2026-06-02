@@ -10,6 +10,7 @@ import LandingNavbar from "@/components/LandingNavbar";
 import LandingFooter from "@/components/LandingFooter";
 import PricingTable from "@/components/PricingTable";
 import { Check } from "lucide-react";
+import funcionesHero from "@/assets/funciones-hero.webp.asset.json";
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText, CustomEase);
 if (!CustomEase.get("osmo-ease")) {
