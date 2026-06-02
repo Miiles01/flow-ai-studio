@@ -110,7 +110,7 @@ const Features = () => {
               Presentamos a Miiles
             </h1>
             <p className="text-lg font-light text-gray-500 max-w-2xl">
-              Todo lo que necesitas para hacer crecer tu marca, en una sola plataforma.
+              Un lugar pensado para crear negocios
             </p>
           </section>
 
