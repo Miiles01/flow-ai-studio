@@ -3,13 +3,14 @@ import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
-import { Bell, Heart, ArrowRight, Loader2, Send, X, Trash2, LayoutDashboard } from "lucide-react";
+import { Bell, Heart, ArrowRight, Loader2, Send, X, Trash2, LayoutDashboard, Play } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import TutorialModal from "@/components/TutorialModal";
 
 type Program = {
   id: string;
@@ -66,6 +67,7 @@ export default function Dashboard() {
   const [selectedNotif, setSelectedNotif] = useState<Notification | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
+  const [tutorialOpen, setTutorialOpen] = useState(false);
 
   // Admin send notification state
   const [sendOpen, setSendOpen] = useState(false);
@@ -240,6 +242,58 @@ export default function Dashboard() {
         <p className="text-miiles-gray-400 mt-2 text-sm font-light">
           ¿Qué vamos hacer hoy?
         </p>
+      </motion.div>
+
+      {/* ── Banner: Descubre cómo funciona Miiles ── */}
+      <motion.div variants={sectionVariants}>
+        <div
+          className="relative w-full rounded-2xl overflow-hidden flex cursor-pointer group"
+          style={{ height: "472px" }}
+          onClick={() => setTutorialOpen(true)}
+        >
+          {/* Left: photo */}
+          <div className="relative w-[52%] h-full flex-shrink-0">
+            <img
+              src="https://images.unsplash.com/photo-1551434678-e076c223a692?w=900&q=80"
+              alt="Mujer trabajando con Miiles"
+              className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
+            />
+            <div className="absolute inset-y-0 right-0 w-16 bg-gradient-to-r from-transparent to-[#0A0A0A]" />
+          </div>
+
+          {/* Right: dark panel */}
+          <div className="flex-1 bg-[#0A0A0A] flex flex-col justify-between p-8 relative">
+            <div>
+              <span className="inline-flex items-center gap-1.5 bg-white/10 border border-white/15 text-white text-[11px] font-light px-3 py-1 rounded-full">
+                Tutorial
+              </span>
+            </div>
+            <div className="space-y-1">
+              <p className="text-white font-normal leading-[1.15]" style={{ fontSize: "clamp(28px, 3vw, 40px)" }}>
+                Descubre cómo<br />funciona
+              </p>
+              <p
+                className="text-white italic leading-[1.1]"
+                style={{
+                  fontFamily: "'Georgia', serif",
+                  fontSize: "clamp(32px, 3.5vw, 46px)",
+                  fontWeight: 400,
+                }}
+              >
+                Miiles
+              </p>
+            </div>
+            <div>
+              <button
+                onClick={(e) => { e.stopPropagation(); setTutorialOpen(true); }}
+                className="inline-flex items-center gap-2 bg-white text-black text-xs font-normal px-5 py-2.5 rounded-full hover:bg-white/90 transition-colors duration-200"
+              >
+                <Play size={11} fill="black" />
+                Empezar
+              </button>
+            </div>
+          </div>
+        </div>
       </motion.div>
 
       {/* Stats */}
@@ -512,7 +566,9 @@ export default function Dashboard() {
         </DialogContent>
       </Dialog>
 
+
       {/* Boards Carousel */}
+
       <motion.div variants={sectionVariants}>
         <div className="flex items-center justify-between mb-5">
           <h2 className="text-lg font-normal text-foreground">Mis tableros</h2>
@@ -568,5 +624,8 @@ export default function Dashboard() {
         )}
       </motion.div>
     </motion.div>
+
+      {/* Tutorial modal */}
+      <TutorialModal open={tutorialOpen} onClose={() => setTutorialOpen(false)} />
   );
 }
