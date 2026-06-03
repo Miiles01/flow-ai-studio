@@ -1,62 +1,38 @@
-# Plan: Prospectos en la IA, embeds en canvas y admin en tiempo real
+# Plan: Los prospectos no cargan en el Admin (CORS bloquea x-admin-token)
 
-## Objetivo
-1. La IA del canvas usa la base de prospectos como fuente y entiende los objetivos del cliente.
-2. La IA puede insertar el sitio web del prospecto como **iframe embebido** en el canvas cuando lo considere útil según el plan/objetivos.
-3. El dashboard de Admin muestra la base de prospectos **siempre actualizada en tiempo real**.
+## Diagnóstico
+- La tabla `prospects` tiene 100 registros y **ya está habilitada para realtime** (`supabase_realtime` la incluye). El realtime no es el problema.
+- El panel muestra "Sin prospectos" y un toast **"Failed to send a request to the Edge Function"**.
+- En los logs: el preflight `OPTIONS` de `admin-prospects` responde 200, pero el `POST` nunca se ejecuta.
+- Causa raíz: las funciones importan `corsHeaders` desde `@supabase/supabase-js@2/cors`, cuyo `Access-Control-Allow-Headers` es `authorization, x-client-info, apikey, content-type` y **no incluye `x-admin-token`**. El cliente (`adminFetch` en `useAdminAuth.ts`) envía ese header, así que el navegador bloquea la petición real. El login (`admin-auth`) funciona porque no manda `x-admin-token`.
 
----
+## Cambios
 
-## Parte 1 — Nuevo nodo de embed (iframe del sitio web)
+### 1. Definir CORS propio con `x-admin-token`
+En cada función admin reemplazar el import de cors por un objeto local que permita el header:
 
-Hoy existen los nodos `shapeNode`, `todoNode`, `textNode`, `imageNode`. No hay forma de mostrar una página web embebida. Se crea uno nuevo.
-
-- **Crear `src/components/nodes/EmbedNode.tsx`**: similar a `ImageNode`, renderiza un `<iframe>` con `data.url`. Incluye:
-  - Estado vacío ("Pegar URL del sitio") + popover para editar URL (como ImageNode).
-  - `NodeResizer`, handles de conexión, barra flotante (editar URL / abrir en nueva pestaña / eliminar).
-  - `sandbox` y `referrerPolicy` seguros; fallback visible si el sitio bloquea ser embebido (X-Frame-Options) con botón "Abrir sitio".
-  - Estilos dark/light según el sistema de diseño Miiles.
-- **Registrar el tipo** en `src/pages/Index.tsx` (`nodeTypes` línea 50) como `embedNode: EmbedNode`.
-- Manejarlo en el guardado/realtime igual que el resto (no requiere cambios, ya viaja en `nodes`).
-
-## Parte 2 — IA: usar prospectos y decidir embeds (edge function `generate-flow`)
-
-Archivo: `supabase/functions/generate-flow/index.ts`.
-
-- **Recolección de prospectos más robusta**: además del match por keywords actual, si no hay coincidencias traer un set base reciente para dar contexto; ampliar el `select` para incluir `website`.
-- **Actualizar el system prompt** para:
-  - Indicar que debe **recolectar el contexto y objetivos del cliente** a partir del prompt y proponer el flujo en función de ellos.
-  - Documentar el nuevo `embedNode`: `{"type":"embedNode","data":{"url":"https://..."},"style":{"width":480,"height":320}}`.
-  - Regla: cuando un prospecto tenga `website`, la IA **puede** insertar un `embedNode` con ese sitio si lo considera útil para el plan/objetivos (no siempre obligatorio). Usar la `website` real del prospecto, nunca inventar URLs.
-- El cliente (`src/lib/generateFlow.ts`) ya pasa los nodos tal cual al canvas; solo se añade `embedNode` a la lista de tipos válidos mencionados en su prompt de instrucciones.
-
-## Parte 3 — Admin: prospectos en tiempo real
-
-Archivo: `src/components/admin/ProspectsTab.tsx`.
-
-- Suscribir un canal de Supabase Realtime a `postgres_changes` (event `*`, tabla `public.prospects`) y, al recibir cambios, recargar vía `load()` (con un pequeño debounce para lotes de importación masiva).
-- Limpiar el canal en el `return` del `useEffect`.
-- `ProspectBrain` se re-renderiza automáticamente al actualizarse `prospects`.
-
-### Migración (realtime)
-Habilitar realtime en la tabla:
-```sql
-ALTER TABLE public.prospects REPLICA IDENTITY FULL;
-ALTER PUBLICATION supabase_realtime ADD TABLE public.prospects;
+```ts
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-admin-token",
+  "Access-Control-Allow-Methods": "POST, OPTIONS",
+};
 ```
-RLS actual ya restringe `prospects` a admins; el panel usa token admin vía edge functions, así que tras recibir el ping de realtime se recarga con `adminFetch` (service role), evitando problemas de RLS en el cliente.
 
----
+Aplicar en:
+- `supabase/functions/admin-prospects/index.ts`
+- `supabase/functions/admin-ingest/index.ts`
+- `supabase/functions/admin-auth/index.ts` (por consistencia)
 
-## Detalles técnicos / notas
-- El iframe puede ser bloqueado por sitios con `X-Frame-Options: DENY`/`frame-ancestors`. Por eso el `EmbedNode` incluye fallback con enlace "Abrir sitio" en vez de quedar en blanco.
-- No se tocan landing/auth ni el flujo de guardado del canvas.
-- Verificación: generar un flujo pidiendo prospectos + "agrega su sitio web" y confirmar que aparece el iframe; importar un CSV en Admin y ver la tabla actualizarse sin recargar.
+Quitar la línea `import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";` en cada una.
 
-## Archivos afectados
-- `src/components/nodes/EmbedNode.tsx` (nuevo)
-- `src/pages/Index.tsx` (registrar nodeType)
-- `supabase/functions/generate-flow/index.ts` (RAG + prompt)
-- `src/lib/generateFlow.ts` (mención del nuevo tipo)
-- `src/components/admin/ProspectsTab.tsx` (realtime)
-- Migración: habilitar realtime en `prospects`
+### 2. Desplegar las funciones
+Deploy de `admin-prospects`, `admin-ingest` y `admin-auth`.
+
+### 3. Verificar
+- Recargar `/admin`, confirmar que la tabla lista los 100 prospectos sin el toast de error.
+- Confirmar que la suscripción realtime ya existente en `ProspectsTab.tsx` refresca la tabla al insertar/borrar.
+
+## Notas
+- No se requiere migración: el realtime ya está activo.
+- No se toca la UI ni la lógica de negocio, solo headers CORS de las edge functions.
