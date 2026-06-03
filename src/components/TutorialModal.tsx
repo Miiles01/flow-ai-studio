@@ -192,11 +192,13 @@ export default function TutorialModal({ userId, triggerOpen }: Props) {
                           initial={{ y: "110%" }}
                           animate={{ y: "0%" }}
                           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.12 }}
-                          className="text-white italic leading-[1.1]"
+                          className="text-white"
                           style={{
+                            fontFamily: "'WelthCatritz', serif",
                             fontSize: "clamp(32px, 4.5vw, 62px)",
-                            fontFamily: "'Georgia', serif",
                             fontWeight: 400,
+                            lineHeight: 1.1,
+                            fontStyle: "italic",
                           }}
                         >
                           {current.italic}

@@ -282,12 +282,13 @@ export default function Dashboard() {
                 Descubre cómo funciona
               </p>
               <p
-                className="text-white italic"
+                className="text-white"
                 style={{
-                  fontFamily: "'Georgia', serif",
+                  fontFamily: "'WelthCatritz', serif",
                   fontSize: "clamp(30px, 3.3vw, 46px)",
                   fontWeight: 400,
                   lineHeight: 1.1,
+                  fontStyle: "italic",
                 }}
               >
                 Miiles
