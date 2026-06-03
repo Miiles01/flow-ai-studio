@@ -67,7 +67,7 @@ export default function Dashboard() {
   const [selectedNotif, setSelectedNotif] = useState<Notification | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
-  const [tutorialOpen, setTutorialOpen] = useState(false);
+  const [tutorialTrigger, setTutorialTrigger] = useState(0);
 
   // Admin send notification state
   const [sendOpen, setSendOpen] = useState(false);
@@ -249,7 +249,7 @@ export default function Dashboard() {
         <div
           className="relative w-full rounded-2xl overflow-hidden flex cursor-pointer group"
           style={{ height: "472px" }}
-          onClick={() => setTutorialOpen(true)}
+          onClick={() => setTutorialTrigger(t => t + 1)}
         >
           {/* Left: photo */}
           <div className="relative w-[52%] h-full flex-shrink-0">
@@ -285,7 +285,7 @@ export default function Dashboard() {
             </div>
             <div>
               <button
-                onClick={(e) => { e.stopPropagation(); setTutorialOpen(true); }}
+                onClick={(e) => { e.stopPropagation(); setTutorialTrigger(t => t + 1); }}
                 className="inline-flex items-center gap-2 bg-white text-black text-xs font-normal px-5 py-2.5 rounded-full hover:bg-white/90 transition-colors duration-200"
               >
                 <Play size={11} fill="black" />
@@ -626,6 +626,6 @@ export default function Dashboard() {
     </motion.div>
 
       {/* Tutorial modal */}
-      <TutorialModal open={tutorialOpen} onClose={() => setTutorialOpen(false)} />
+      <TutorialModal userId={user?.id} triggerOpen={tutorialTrigger} />
   );
 }

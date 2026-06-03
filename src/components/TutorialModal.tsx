@@ -1,50 +1,87 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ArrowRight, ArrowLeft, LayoutDashboard, Search, Users, Zap } from "lucide-react";
 
-interface TutorialModalProps {
-  open: boolean;
-  onClose: () => void;
-}
-
-const slides = [
+const STEPS = [
   {
-    icon: LayoutDashboard,
-    tag: "01 — Tableros",
+    key: "bienvenida",
+    tag: "01 — Bienvenida",
+    title: "Bienvenido\na",
+    italic: "Miiles",
+    body: "Tu espacio para crear flujos visuales con IA, descubrir programas de marcas y colaborar con otros emprendedores.",
+    icon: Zap,
+    color: "#FFD878",
+  },
+  {
+    key: "tableros",
+    tag: "02 — Tableros",
     title: "Organiza\ntus ideas",
     italic: "visualmente",
     body: "Crea tableros infinitos con nodos, textos, imágenes y marcos. Todo en tiempo real, desde cualquier dispositivo.",
-    color: "#A8FF78", // accent dot color
+    icon: LayoutDashboard,
+    color: "#A8FF78",
   },
   {
-    icon: Search,
-    tag: "02 — Programas",
+    key: "programas",
+    tag: "03 — Programas",
     title: "Descubre\noportunidades",
     italic: "para ti",
     body: "Explora programas de marcas que buscan colaboraciones. Postúlate en segundos y lleva tu carrera al siguiente nivel.",
+    icon: Search,
     color: "#78C8FF",
   },
   {
-    icon: Users,
-    tag: "03 — Perfil",
+    key: "colaboraciones",
+    tag: "04 — Colaboraciones",
     title: "Tu mejor\nversión,",
     italic: "siempre visible",
     body: "Construye un perfil profesional con tus redes, portafolio y videos. Que las marcas te encuentren a ti.",
+    icon: Users,
     color: "#FF78C8",
-  },
-  {
-    icon: Zap,
-    tag: "04 — IA",
-    title: "Potenciado\npor",
-    italic: "inteligencia artificial",
-    body: "Genera estrategias, analiza tu contenido y recibe sugerencias personalizadas con nuestra IA integrada.",
-    color: "#FFD878",
   },
 ];
 
-export default function TutorialModal({ open, onClose }: TutorialModalProps) {
+const STORAGE_PREFIX = "miiles_tutorial_seen";
+
+type Props = {
+  userId?: string | null;
+  /** Incrementar este número fuerza la apertura del modal (ej. desde el banner). */
+  triggerOpen?: number;
+};
+
+export default function TutorialModal({ userId, triggerOpen }: Props) {
+  const [open, setOpen] = useState(false);
   const [step, setStep] = useState(0);
   const [dir, setDir] = useState(1);
+
+  const storageKey = userId ? `${STORAGE_PREFIX}:${userId}` : STORAGE_PREFIX;
+
+  // Auto-abrir para nuevos usuarios
+  useEffect(() => {
+    if (userId === undefined) return;
+    try {
+      const seen = localStorage.getItem(storageKey);
+      if (!seen) setOpen(true);
+    } catch {
+      setOpen(true);
+    }
+  }, [userId, storageKey]);
+
+  // Abrir desde el banner
+  useEffect(() => {
+    if (triggerOpen && triggerOpen > 0) {
+      setStep(0);
+      setOpen(true);
+    }
+  }, [triggerOpen]);
+
+  function close() {
+    try {
+      localStorage.setItem(storageKey, "1");
+    } catch { /* ignore */ }
+    setOpen(false);
+  }
 
   const goTo = (next: number) => {
     setDir(next > step ? 1 : -1);
@@ -52,16 +89,16 @@ export default function TutorialModal({ open, onClose }: TutorialModalProps) {
   };
 
   const next = () => {
-    if (step < slides.length - 1) goTo(step + 1);
-    else onClose();
+    if (step < STEPS.length - 1) goTo(step + 1);
+    else close();
   };
 
   const prev = () => {
     if (step > 0) goTo(step - 1);
   };
 
-  const slide = slides[step];
-  const Icon = slide.icon;
+  const current = STEPS[step];
+  const Icon = current.icon;
 
   const slideVariants = {
     enter: (d: number) => ({ x: d > 0 ? 60 : -60, opacity: 0 }),
@@ -69,27 +106,27 @@ export default function TutorialModal({ open, onClose }: TutorialModalProps) {
     exit: (d: number) => ({ x: d > 0 ? -60 : 60, opacity: 0 }),
   };
 
-  return (
+  return createPortal(
     <AnimatePresence>
       {open && (
         <>
-          {/* Overlay — igual al de la landing */}
+          {/* Overlay — igual al de la landing navbar */}
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.3 }}
-            onClick={onClose}
-            className="fixed inset-0 z-50 bg-black/40 backdrop-blur-[4px] cursor-pointer"
+            onClick={close}
+            className="fixed inset-0 z-[99] bg-black/40 backdrop-blur-[4px] cursor-pointer"
           />
 
-          {/* Modal — mismo bg que el menú desplegable de la landing */}
+          {/* Modal — mismo bg #7E7E7E que el menú desplegable de la landing */}
           <motion.div
             initial={{ opacity: 0, scale: 0.96, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 20 }}
             transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed inset-4 md:inset-[5%] z-50 rounded-[32px] md:rounded-[40px] border border-white/10 shadow-[0_24px_70px_rgba(0,0,0,0.4)] overflow-hidden flex flex-col"
+            className="fixed inset-4 md:inset-[5%] z-[100] rounded-[32px] md:rounded-[40px] border border-white/10 shadow-[0_24px_70px_rgba(0,0,0,0.4)] overflow-hidden flex flex-col"
             style={{ background: "#7E7E7E" }}
             onClick={(e) => e.stopPropagation()}
           >
@@ -99,15 +136,16 @@ export default function TutorialModal({ open, onClose }: TutorialModalProps) {
                 Cómo funciona Miiles
               </span>
               <button
-                onClick={onClose}
+                onClick={close}
                 className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-center"
+                aria-label="Cerrar"
               >
                 <X size={14} className="text-white" />
               </button>
             </div>
 
             {/* Slide content */}
-            <div className="flex-1 flex flex-col md:flex-row overflow-hidden">
+            <div className="flex-1 flex flex-col md:flex-row overflow-hidden min-h-0">
               {/* Left — main content */}
               <div className="flex-1 flex flex-col justify-center px-8 md:px-12 py-8 md:py-0 relative overflow-hidden">
                 <AnimatePresence mode="wait" custom={dir}>
@@ -129,12 +167,12 @@ export default function TutorialModal({ open, onClose }: TutorialModalProps) {
                         transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.05 }}
                         className="inline-block text-white/50 text-xs font-light tracking-widest uppercase"
                       >
-                        {slide.tag}
+                        {current.tag}
                       </motion.span>
                     </div>
 
                     {/* Headline */}
-                    <div className="space-y-1">
+                    <div className="space-y-0">
                       <div className="overflow-hidden">
                         <motion.h2
                           initial={{ y: "110%" }}
@@ -146,7 +184,7 @@ export default function TutorialModal({ open, onClose }: TutorialModalProps) {
                             fontFamily: "'Poppins', sans-serif",
                           }}
                         >
-                          {slide.title}
+                          {current.title}
                         </motion.h2>
                       </div>
                       <div className="overflow-hidden">
@@ -161,7 +199,7 @@ export default function TutorialModal({ open, onClose }: TutorialModalProps) {
                             fontWeight: 400,
                           }}
                         >
-                          {slide.italic}
+                          {current.italic}
                         </motion.p>
                       </div>
                     </div>
@@ -175,7 +213,7 @@ export default function TutorialModal({ open, onClose }: TutorialModalProps) {
                         className="text-white/70 font-light leading-relaxed max-w-sm"
                         style={{ fontSize: "clamp(14px, 1.5vw, 17px)" }}
                       >
-                        {slide.body}
+                        {current.body}
                       </motion.p>
                     </div>
                   </motion.div>
@@ -195,11 +233,10 @@ export default function TutorialModal({ open, onClose }: TutorialModalProps) {
                   >
                     <div
                       className="w-24 h-24 rounded-3xl flex items-center justify-center"
-                      style={{ background: slide.color + "22", border: `1.5px solid ${slide.color}44` }}
+                      style={{ background: current.color + "22", border: `1.5px solid ${current.color}44` }}
                     >
-                      <Icon size={40} style={{ color: slide.color }} strokeWidth={1.5} />
+                      <Icon size={40} style={{ color: current.color }} strokeWidth={1.5} />
                     </div>
-                    {/* Step number big */}
                     <span
                       className="font-medium leading-none select-none"
                       style={{
@@ -220,7 +257,7 @@ export default function TutorialModal({ open, onClose }: TutorialModalProps) {
             <div className="flex items-center justify-between px-8 md:px-12 pb-8 md:pb-10 flex-shrink-0">
               {/* Dots */}
               <div className="flex gap-2">
-                {slides.map((_, i) => (
+                {STEPS.map((_, i) => (
                   <button
                     key={i}
                     onClick={() => goTo(i)}
@@ -245,7 +282,7 @@ export default function TutorialModal({ open, onClose }: TutorialModalProps) {
                   onClick={next}
                   className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-white text-black text-xs font-normal hover:bg-white/90 transition-colors"
                 >
-                  {step < slides.length - 1 ? "Siguiente" : "Empezar"}
+                  {step < STEPS.length - 1 ? "Siguiente" : "Empezar"}
                   <ArrowRight size={13} />
                 </button>
               </div>
@@ -253,6 +290,7 @@ export default function TutorialModal({ open, onClose }: TutorialModalProps) {
           </motion.div>
         </>
       )}
-    </AnimatePresence>
+    </AnimatePresence>,
+    document.body,
   );
 }
