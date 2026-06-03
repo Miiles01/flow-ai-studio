@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import TutorialModal from "@/components/TutorialModal";
+import tutorialBanner from "@/assets/tablero-banner.webp.asset.json";
 
 type Program = {
   id: string;
@@ -66,6 +67,7 @@ export default function Dashboard() {
   const [notifOpen, setNotifOpen] = useState(false);
   const [selectedNotif, setSelectedNotif] = useState<Notification | null>(null);
   const [isAdmin, setIsAdmin] = useState(false);
+  const [tutorialTrigger, setTutorialTrigger] = useState(0);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
 
   // Admin send notification state
@@ -232,7 +234,7 @@ export default function Dashboard() {
       initial="hidden"
       animate="visible"
     >
-      <TutorialModal userId={user?.id} />
+      <TutorialModal userId={user?.id} triggerOpen={tutorialTrigger} />
 
       {/* Greeting */}
       <motion.div variants={sectionVariants}>
@@ -515,7 +517,36 @@ export default function Dashboard() {
         </DialogContent>
       </Dialog>
 
+      {/* Tutorial banner */}
+      <motion.button
+        type="button"
+        variants={sectionVariants}
+        onClick={() => setTutorialTrigger((n) => n + 1)}
+        whileHover={{ y: -4, transition: { duration: 0.2 } }}
+        className="group relative block w-full overflow-hidden rounded-[24px] text-left shadow-md ring-1 ring-black/5"
+      >
+        <img
+          src={tutorialBanner.url}
+          alt="Descubre cómo funciona Miiles"
+          loading="lazy"
+          className="h-44 w-full object-cover object-center transition-transform duration-500 group-hover:scale-105 md:h-56"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-transparent" />
+        <div className="absolute inset-0 flex flex-col justify-center p-8 md:p-10">
+          <span className="text-[11px] font-light uppercase tracking-[0.2em] text-white/70">
+            Tutorial
+          </span>
+          <h3 className="mt-2 max-w-md text-xl font-normal leading-snug text-white md:text-2xl">
+            Descubre cómo funciona Miiles
+          </h3>
+          <span className="mt-4 inline-flex w-fit items-center gap-2 rounded-full bg-white px-5 py-2 text-sm font-normal text-black transition-colors group-hover:bg-miiles-pink">
+            Ver tutorial <ArrowRight size={14} />
+          </span>
+        </div>
+      </motion.button>
+
       {/* Boards Carousel */}
+
       <motion.div variants={sectionVariants}>
         <div className="flex items-center justify-between mb-5">
           <h2 className="text-lg font-normal text-foreground">Mis tableros</h2>
