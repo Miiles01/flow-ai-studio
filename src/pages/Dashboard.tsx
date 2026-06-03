@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
-import { Bell, Heart, ArrowRight, Loader2, Send, X, Trash2, LayoutDashboard, Play } from "lucide-react";
+import { Bell, Heart, ArrowRight, Loader2, Send, X, Trash2, LayoutDashboard } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -251,46 +251,47 @@ export default function Dashboard() {
           style={{ height: "472px" }}
           onClick={() => setTutorialTrigger(t => t + 1)}
         >
-          {/* Left: photo */}
-          <div className="relative w-[52%] h-full flex-shrink-0">
+          {/* Left: photo — 63% como en la referencia */}
+          <div className="relative h-full flex-shrink-0" style={{ width: '63%' }}>
             <img
-              src="https://images.unsplash.com/photo-1551434678-e076c223a692?w=900&q=80"
+              src="https://images.unsplash.com/photo-1551434678-e076c223a692?w=1000&q=85"
               alt="Mujer trabajando con Miiles"
               className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
             />
-            <div className="absolute inset-y-0 right-0 w-16 bg-gradient-to-r from-transparent to-[#0A0A0A]" />
+            <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-r from-transparent to-[#0D0D0D]" />
           </div>
 
           {/* Right: dark panel */}
-          <div className="flex-1 bg-[#0A0A0A] flex flex-col justify-between p-8 relative">
+          <div className="flex-1 bg-[#0D0D0D] flex flex-col justify-center gap-6 px-8 py-8 relative">
+            {/* Badge blanco con texto negro — igual al de la referencia */}
             <div>
-              <span className="inline-flex items-center gap-1.5 bg-white/10 border border-white/15 text-white text-[11px] font-light px-3 py-1 rounded-full">
+              <span className="inline-flex items-center bg-white text-black text-[11px] font-normal px-4 py-1.5 rounded-full">
                 Tutorial
               </span>
             </div>
-            <div className="space-y-1">
-              <p className="text-white font-normal leading-[1.15]" style={{ fontSize: "clamp(28px, 3vw, 40px)" }}>
-                Descubre cómo<br />funciona
+            {/* Texto: sans-serif grande + cursiva italic (igual a "Primeros pasos") */}
+            <div>
+              <p
+                className="text-white font-normal"
+                style={{
+                  fontFamily: "'Poppins', sans-serif",
+                  fontSize: "clamp(28px, 3vw, 42px)",
+                  lineHeight: 1.15,
+                }}
+              >
+                Descubre cómo funciona
               </p>
               <p
-                className="text-white italic leading-[1.1]"
+                className="text-white italic"
                 style={{
                   fontFamily: "'Georgia', serif",
-                  fontSize: "clamp(32px, 3.5vw, 46px)",
+                  fontSize: "clamp(30px, 3.3vw, 46px)",
                   fontWeight: 400,
+                  lineHeight: 1.1,
                 }}
               >
                 Miiles
               </p>
-            </div>
-            <div>
-              <button
-                onClick={(e) => { e.stopPropagation(); setTutorialTrigger(t => t + 1); }}
-                className="inline-flex items-center gap-2 bg-white text-black text-xs font-normal px-5 py-2.5 rounded-full hover:bg-white/90 transition-colors duration-200"
-              >
-                <Play size={11} fill="black" />
-                Empezar
-              </button>
             </div>
           </div>
         </div>
