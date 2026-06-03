@@ -234,7 +234,7 @@ export default function Dashboard() {
       initial="hidden"
       animate="visible"
     >
-      <TutorialModal userId={user?.id} />
+      <TutorialModal userId={user?.id} triggerOpen={tutorialTrigger} />
 
       {/* Greeting */}
       <motion.div variants={sectionVariants}>
