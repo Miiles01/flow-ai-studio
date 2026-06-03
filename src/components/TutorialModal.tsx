@@ -41,9 +41,11 @@ const STORAGE_PREFIX = "miiles_tutorial_seen";
 
 type Props = {
   userId?: string | null;
+  /** Increment this number to force-open the modal (e.g. from a banner click). */
+  triggerOpen?: number;
 };
 
-export default function TutorialModal({ userId }: Props) {
+export default function TutorialModal({ userId, triggerOpen }: Props) {
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(0);
 
@@ -59,6 +61,14 @@ export default function TutorialModal({ userId }: Props) {
       setOpen(true);
     }
   }, [userId, storageKey]);
+
+  // Allow opening the modal on demand (banner click)
+  useEffect(() => {
+    if (triggerOpen && triggerOpen > 0) {
+      setActive(0);
+      setOpen(true);
+    }
+  }, [triggerOpen]);
 
   function close() {
     try {
