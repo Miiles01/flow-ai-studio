@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import TutorialModal from "@/components/TutorialModal";
+import tutorialBanner from "@/assets/tablero-banner.webp.asset.json";
 
 type Program = {
   id: string;
