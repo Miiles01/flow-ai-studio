@@ -10,6 +10,7 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/u
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
+import TutorialModal from "@/components/TutorialModal";
 
 type Program = {
   id: string;
@@ -231,6 +232,8 @@ export default function Dashboard() {
       initial="hidden"
       animate="visible"
     >
+      <TutorialModal userId={user?.id} />
+
       {/* Greeting */}
       <motion.div variants={sectionVariants}>
         <h1 className={`text-2xl md:text-3xl font-normal leading-tight ${isDark ? 'text-white' : 'text-black'}`}>
