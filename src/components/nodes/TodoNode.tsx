@@ -68,22 +68,31 @@ interface AutoResizingTextareaProps extends React.TextareaHTMLAttributes<HTMLTex
 const AutoResizingTextarea = forwardRef<HTMLTextAreaElement, AutoResizingTextareaProps>(
   ({ value, onChange, className, style, rows = 1, ...props }, ref) => {
     const localRef = useRef<HTMLTextAreaElement>(null);
-    const textareaRef = (ref || localRef) as React.MutableRefObject<HTMLTextAreaElement | null>;
 
     const adjustHeight = () => {
-      const el = textareaRef.current;
+      const el = localRef.current;
       if (el) {
         el.style.height = "auto";
         el.style.height = `${el.scrollHeight}px`;
       }
     };
 
+    // Sincroniza localRef con el ref prop de React (soportando ref objeto y ref callback)
+    useEffect(() => {
+      if (!ref) return;
+      if (typeof ref === "function") {
+        ref(localRef.current);
+      } else {
+        (ref as React.MutableRefObject<HTMLTextAreaElement | null>).current = localRef.current;
+      }
+    }, [ref]);
+
     useEffect(() => {
       adjustHeight();
     }, [value]);
 
     useEffect(() => {
-      const el = textareaRef.current;
+      const el = localRef.current;
       if (!el) return;
       const observer = new ResizeObserver(() => {
         adjustHeight();
@@ -96,7 +105,7 @@ const AutoResizingTextarea = forwardRef<HTMLTextAreaElement, AutoResizingTextare
 
     return (
       <textarea
-        ref={textareaRef}
+        ref={localRef}
         value={value}
         onChange={(e) => {
           onChange?.(e);
