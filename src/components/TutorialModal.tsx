@@ -298,14 +298,13 @@ export default function TutorialModal({ userId, triggerOpen }: Props) {
                               id: "node-right",
                               type: "todoNode",
                               position: { x: 330, y: 15 },
-                              style: { width: 250, height: 240 },
+                              style: { width: 250, height: 250 },
                               data: {
                                 title: "Lista de Tareas",
                                 subtitle: "Tareas de Lanzamiento",
                                 tasks: [
                                   { id: "t1", text: "Definir propuesta de valor", completed: true },
                                   { id: "t2", text: "Diseñar landing page", completed: true },
-                                  { id: "t3", text: "Lanzar campaña de ads", completed: false },
                                 ],
                               },
                             },

@@ -494,7 +494,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
       </div>
 
       {/* ─── Task List Content Area ─── */}
-      <div className="flex-1 overflow-y-auto pr-1 flex flex-col gap-2 scrollbar-thin">
+      <div className="flex-1 min-h-0 overflow-y-auto pr-1 flex flex-col gap-2 scrollbar-thin">
         <AnimatePresence initial={false}>
           {tasks.map((task) => (
             <motion.div
