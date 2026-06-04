@@ -775,7 +775,7 @@ const Features = () => {
 
           {/* Detailed Features Sections */}
           <section className="horizontal-section-wrapper md:h-screen md:overflow-hidden md:relative pb-32 md:pb-0">
-            <div className="horizontal-track flex flex-col md:flex-row md:flex-nowrap md:w-[400vw] md:h-full gap-36 md:gap-0">
+            <div className="horizontal-track flex flex-col md:flex-row md:flex-nowrap md:w-[460vw] md:h-full gap-36 md:gap-0">
               {featuresData.map((f) => (
                 <div
                   key={f.id}
@@ -862,6 +862,8 @@ const Features = () => {
                     </div>
                 </div>
               ))}
+              {/* Invisible spacer to allow reading the last slide comfortably */}
+              <div className="hidden md:block md:w-[60vw] md:h-full md:flex-shrink-0" />
             </div>
           </section>
 
