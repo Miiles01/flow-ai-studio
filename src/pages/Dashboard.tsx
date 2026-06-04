@@ -525,7 +525,7 @@ export default function Dashboard() {
         onClick={() => setTutorialTrigger((n) => n + 1)}
         whileHover={{ y: -4, transition: { duration: 0.2 } }}
         className="group relative block w-full overflow-hidden rounded-[20px] md:rounded-[24px] text-left shadow-md ring-1 ring-black/5"
-        style={{ height: "clamp(220px, 35vw, 340px)" }}
+        style={{ height: "clamp(260px, 38vw, 380px)" }}
       >
         <img
           src={tutorialBanner.url}
