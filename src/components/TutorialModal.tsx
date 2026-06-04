@@ -3,6 +3,62 @@ import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
+import avatar3 from "@/assets/avatar3.png";
+
+// SVG Logos for Brands (Colaboraciones)
+const tiktokSvg = (
+  <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M12.525.02c1.31-.02 2.61-.01 3.91-.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.17-2.86-.74-3.94-1.74-.22-.23-.45-.47-.64-.73v6.52c-.03 2.1-.6 4.26-1.95 5.85-1.54 1.88-4.07 2.85-6.42 2.53-2.44-.22-4.83-1.84-5.72-4.19-.97-2.45-.63-5.46.99-7.53 1.45-1.93 3.97-2.92 6.36-2.5v4.03c-1.34-.23-2.82.26-3.6 1.35-.85 1.05-.88 2.65-.13 3.73.66 1.04 1.95 1.61 3.19 1.46 1.13-.1 2.18-.89 2.48-2 .16-.54.14-1.12.14-1.68V.02z" />
+  </svg>
+);
+
+const mercadoLibreSvg = (
+  <svg className="w-4 h-4 text-[#001E62] dark:text-[#FFF159] shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M6 2L3 6v14a2 2 0 002 2h14a2 2 0 002-2V6l-3-4z" />
+    <line x1="3" y1="6" x2="21" y2="6" />
+    <path d="M16 10a4 4 0 01-8 0" />
+  </svg>
+);
+
+const skincareSvg = (
+  <svg className="w-4 h-4 text-pink-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M12 22a7 7 0 007-7c0-4.3-7-13-7-13S5 10.7 5 15a7 7 0 007 7z" />
+  </svg>
+);
+
+const nikeSvg = (
+  <svg className="w-4 h-4 text-black dark:text-white shrink-0" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M21 7.23c-.34 0-.69.04-1.04.12-1.92.48-4.22 1.94-6.4 4.02-2.12 2-4.06 4.38-5.38 6.42-.58.91-.98 1.76-1.16 2.45-.07.28-.09.52-.05.7.04.16.14.28.3.34.11.04.25.04.42 0 .42-.1 1.05-.44 1.83-.99 2.5-1.78 5.76-5.06 8.35-8.39 1.95-2.52 3.19-4.58 3.52-5.74.08-.29.08-.54 0-.7-.08-.16-.25-.26-.39-.26z" />
+  </svg>
+);
+
+const adidasSvg = (
+  <svg className="w-4 h-4 text-black dark:text-white shrink-0" viewBox="0 0 24 24" fill="currentColor">
+    <path d="M2 19h3.5l3-9H5l-3 9zm6.5 0h3.5l4-12h-3.5l-4 12zm7 0H19l5-15h-3.5l-5 15z" />
+  </svg>
+);
+
+const starbucksSvg = (
+  <svg className="w-4 h-4 text-emerald-600 dark:text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+    <path d="M18 8h1a4 4 0 0 1 0 8h-1" />
+    <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z" />
+    <line x1="6" y1="1" x2="6" y2="4" />
+    <line x1="10" y1="1" x2="10" y2="4" />
+    <line x1="14" y1="1" x2="14" y2="4" />
+  </svg>
+);
+
+const BRANDS = [
+  { name: "TikTok", logo: tiktokSvg },
+  { name: "Mercado Libre", logo: mercadoLibreSvg },
+  { name: "CeraVe", logo: skincareSvg },
+  { name: "Nike", logo: nikeSvg },
+  { name: "Adidas", logo: adidasSvg },
+  { name: "Starbucks", logo: starbucksSvg },
+];
+
+const brandsRow1 = [...BRANDS, ...BRANDS];
+const brandsRow2 = [...BRANDS.slice(3), ...BRANDS.slice(0, 3), ...BRANDS.slice(3), ...BRANDS.slice(0, 3)];
 
 type Step = {
   key: string;
@@ -145,9 +201,10 @@ export default function TutorialModal({ userId, triggerOpen }: Props) {
             {/* Right panel — media + content */}
             <div className="flex flex-col flex-grow overflow-y-auto md:overflow-visible min-h-0" style={{ background: isDark ? "#000000" : "#7E7E7E" }}>
               {/* Media area */}
-              <div className="m-4 mb-0 h-32 md:h-56 rounded-2xl bg-gradient-to-br from-white/20 to-white/5 overflow-hidden flex items-center justify-center flex-shrink-0">
+              <div className="relative m-4 mb-0 h-32 md:h-56 rounded-2xl bg-gradient-to-br from-white/20 to-white/5 overflow-hidden flex items-center justify-center flex-shrink-0 select-none">
+                {/* Grid Pattern Background */}
                 <svg
-                  className="w-full h-full opacity-60"
+                  className="absolute inset-0 w-full h-full opacity-40 pointer-events-none"
                   xmlns="http://www.w3.org/2000/svg"
                   style={{
                     maskImage: "radial-gradient(ellipse, black 25%, transparent 75%)",
@@ -171,6 +228,133 @@ export default function TutorialModal({ userId, triggerOpen }: Props) {
                   </defs>
                   <rect width="100%" height="100%" fill="url(#tut-grid)" />
                 </svg>
+
+                {/* Illustration Content */}
+                <div className="relative z-10 w-full h-full flex items-center justify-center">
+                  {active === 0 && (
+                    <div className="w-full flex flex-col gap-3 justify-center py-2">
+                      {/* Row 1: Left to right marquee */}
+                      <div className="w-full overflow-hidden" style={{ maskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)" }}>
+                        <div className="flex w-max gap-4 animate-marquee">
+                          {brandsRow1.map((b, idx) => (
+                            <div key={idx} className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border backdrop-blur-md shrink-0 ${
+                              isDark ? "bg-black/60 border-white/5 text-white" : "bg-white/80 border-neutral-200/50 text-neutral-800"
+                            }`}>
+                              {b.logo}
+                              <span className="text-[11px] font-medium tracking-tight">{b.name}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Row 2: Left to right (alternate sequence/speed) */}
+                      <div className="w-full overflow-hidden" style={{ maskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)" }}>
+                        <div className="flex w-max gap-4 animate-marquee" style={{ animationDirection: "reverse", animationDuration: "18s" }}>
+                          {brandsRow2.map((b, idx) => (
+                            <div key={idx} className={`flex items-center gap-2 px-3 py-1.5 rounded-xl border backdrop-blur-md shrink-0 ${
+                              isDark ? "bg-black/60 border-white/5 text-white" : "bg-white/80 border-neutral-200/50 text-neutral-800"
+                            }`}>
+                              {b.logo}
+                              <span className="text-[11px] font-medium tracking-tight">{b.name}</span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {active === 1 && (
+                    <div className="flex items-center justify-between w-full px-6 max-w-lg relative scale-90 sm:scale-100">
+                      {/* Node 1 */}
+                      <div className={`px-2.5 py-1.5 rounded-xl border text-[10px] sm:text-[11px] font-medium shadow-sm z-10 ${
+                        isDark ? "bg-black/80 border-white/10 text-white" : "bg-white border-neutral-200 text-neutral-800"
+                      }`}>
+                        💡 Idea de Negocio
+                      </div>
+
+                      {/* Arrow 1 */}
+                      <div className="flex-1 h-[2px] border-t-2 border-dashed mx-1.5 relative z-0 border-neutral-300 dark:border-white/10 flex items-center justify-center">
+                        <div className="absolute right-0 w-1.5 h-1.5 border-t-2 border-r-2 transform rotate-45 border-neutral-400 dark:border-white/40" />
+                      </div>
+
+                      {/* Node 2 */}
+                      <div className="px-2.5 py-1.5 rounded-xl border border-[#4059F1] bg-[#4059F1]/10 text-[#4059F1] text-[10px] sm:text-[11px] font-semibold shadow-sm z-10">
+                        ✨ Análisis IA
+                      </div>
+
+                      {/* Arrow 2 */}
+                      <div className="flex-1 h-[2px] border-t-2 border-dashed mx-1.5 relative z-0 border-neutral-300 dark:border-white/10 flex items-center justify-center">
+                        <div className="absolute right-0 w-1.5 h-1.5 border-t-2 border-r-2 transform rotate-45 border-neutral-400 dark:border-white/40" />
+                      </div>
+
+                      {/* Node 3 */}
+                      <div className={`px-2.5 py-1.5 rounded-xl border text-[10px] sm:text-[11px] font-medium shadow-sm z-10 ${
+                        isDark ? "bg-black/80 border-white/10 text-white" : "bg-white border-neutral-200 text-neutral-800"
+                      }`}>
+                        📋 Estructura Canvas
+                      </div>
+
+                      {/* Cursors */}
+                      <div className="absolute left-[38%] top-[-25px] z-20 pointer-events-none flex items-start">
+                        <svg className="w-5 h-5 filter drop-shadow-[0_1px_3px_rgba(0,0,0,0.15)] rotate-[-10deg] shrink-0" viewBox="0 0 24 24">
+                          <path d="M4 3l16 8-8 2-6 7z" fill="#4059F1" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                        <div className="bg-[#4059F1] text-white py-0.5 px-1.5 rounded-full -ml-1 mt-3">
+                          <span className="text-[9px] font-semibold leading-none">Mateo</span>
+                        </div>
+                      </div>
+
+                      <div className="absolute right-[8%] bottom-[-20px] z-20 pointer-events-none flex items-start">
+                        <svg className="w-5 h-5 filter drop-shadow-[0_1px_3px_rgba(0,0,0,0.15)] rotate-[-10deg] shrink-0" viewBox="0 0 24 24">
+                          <path d="M4 3l16 8-8 2-6 7z" fill="#FCB5B9" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                        </svg>
+                        <div className="bg-[#FCB5B9] text-neutral-800 py-0.5 px-1.5 rounded-full -ml-1 mt-3">
+                          <span className="text-[9px] font-semibold leading-none">Sofía</span>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+
+                  {active === 2 && (
+                    <div className="flex items-center gap-4 sm:gap-6 max-w-sm sm:max-w-md w-full px-4 sm:px-6 scale-90 sm:scale-100">
+                      {/* Profile Card */}
+                      <div className={`p-3 sm:p-4 rounded-2xl border flex flex-col items-center gap-1.5 sm:gap-2 shrink-0 ${
+                        isDark ? "bg-black/80 border-white/10" : "bg-white border-neutral-200"
+                      }`}>
+                        <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full overflow-hidden border-2 border-[#4059F1]">
+                          <img src={avatar3} alt="Avatar" className="w-full h-full object-cover" />
+                        </div>
+                        <div className="text-center">
+                          <div className={`text-[11px] sm:text-[12px] font-semibold ${isDark ? "text-white" : "text-neutral-800"}`}>Karol Wegner</div>
+                          <div className="text-[8px] sm:text-[9px] text-[#4059F1] font-medium bg-[#4059F1]/10 px-2 py-0.5 rounded-full mt-0.5 inline-block">Creador Pro</div>
+                        </div>
+                      </div>
+
+                      {/* Info Cards */}
+                      <div className="flex flex-col gap-2 flex-grow">
+                        <div className={`p-2 sm:p-2.5 rounded-xl border flex items-center gap-2 sm:gap-2.5 shadow-sm ${
+                          isDark ? "bg-black/80 border-white/10 text-white" : "bg-white border-neutral-200 text-neutral-800"
+                        }`}>
+                          <span className="text-sm">💼</span>
+                          <div>
+                            <div className="text-[9px] sm:text-[10px] text-neutral-400 dark:text-neutral-500 font-light leading-none text-left">Portafolio</div>
+                            <div className="text-[10px] sm:text-[11px] font-medium mt-0.5 leading-none text-left">14 proyectos activos</div>
+                          </div>
+                        </div>
+
+                        <div className={`p-2 sm:p-2.5 rounded-xl border flex items-center gap-2 sm:gap-2.5 shadow-sm ${
+                          isDark ? "bg-black/80 border-white/10 text-white" : "bg-white border-neutral-200 text-neutral-800"
+                        }`}>
+                          <span className="text-sm">🤝</span>
+                          <div>
+                            <div className="text-[9px] sm:text-[10px] text-neutral-400 dark:text-neutral-500 font-light leading-none text-left">Colaboraciones</div>
+                            <div className="text-[10px] sm:text-[11px] font-medium mt-0.5 leading-none text-left">3 marcas conectadas</div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  )}
+                </div>
               </div>
 
               {/* Content */}
