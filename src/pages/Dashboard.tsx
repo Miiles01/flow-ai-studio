@@ -533,8 +533,8 @@ export default function Dashboard() {
           loading="lazy"
           className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
         />
-        {/* Texto flotante — top-right sobre la zona oscura de la imagen, sin overlay */}
-        <div className="absolute top-[8%] right-[4%] flex flex-col gap-2 md:gap-3 items-start max-w-[38%]">
+        {/* Texto flotante — alineado a la izquierda en mobile, a la derecha en desktop */}
+        <div className="absolute top-[8%] left-[6%] right-auto md:left-auto md:right-[4%] flex flex-col gap-2 md:gap-3 items-start max-w-[70%] md:max-w-[38%]">
           <span className="inline-flex items-center bg-white text-black text-[10px] md:text-[11px] font-normal px-3 md:px-4 py-1 md:py-1.5 rounded-full">
             Novedades
           </span>
