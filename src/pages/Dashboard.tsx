@@ -524,8 +524,8 @@ export default function Dashboard() {
         variants={sectionVariants}
         onClick={() => setTutorialTrigger((n) => n + 1)}
         whileHover={{ y: -4, transition: { duration: 0.2 } }}
-        className="group relative block w-full overflow-hidden rounded-[24px] text-left shadow-md ring-1 ring-black/5"
-        style={{ height: "472px" }}
+        className="group relative block w-full overflow-hidden rounded-[20px] md:rounded-[24px] text-left shadow-md ring-1 ring-black/5"
+        style={{ height: "clamp(220px, 35vw, 340px)" }}
       >
         <img
           src={tutorialBanner.url}
@@ -533,29 +533,28 @@ export default function Dashboard() {
           loading="lazy"
           className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
         />
-        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-transparent" />
-        <div className="absolute inset-0 flex flex-col justify-center p-8 md:p-10">
-          <span className="text-[11px] font-light uppercase tracking-[0.2em] text-white/70">
-            Tutorial
+        {/* Texto flotante — top-right sobre la zona oscura de la imagen, sin overlay */}
+        <div className="absolute top-[8%] right-[4%] flex flex-col gap-2 md:gap-3 items-start max-w-[38%]">
+          <span className="inline-flex items-center bg-white text-black text-[10px] md:text-[11px] font-normal px-3 md:px-4 py-1 md:py-1.5 rounded-full">
+            Novedades
           </span>
-          <h3 className="mt-2 max-w-md font-normal leading-snug text-white" style={{ fontSize: "clamp(28px, 3vw, 40px)", lineHeight: 1.15 }}>
-            Descubre cómo funciona
-          </h3>
-          <p
-            style={{
-              fontFamily: "'WelthCatritz', serif",
-              fontSize: "clamp(30px, 3.3vw, 44px)",
-              fontWeight: 400,
-              lineHeight: 1.1,
-              fontStyle: "italic",
-              color: "white",
-            }}
-          >
-            Miiles
-          </p>
-          <span className="mt-6 inline-flex w-fit items-center gap-2 rounded-full bg-white px-5 py-2 text-sm font-normal text-black transition-colors group-hover:bg-miiles-pink">
-            Ver tutorial <ArrowRight size={14} />
-          </span>
+          <div>
+            <p className="text-white font-normal leading-[1.15]" style={{ fontSize: "clamp(18px, 3.2vw, 44px)" }}>
+              Primeros
+            </p>
+            <p
+              className="text-white"
+              style={{
+                fontFamily: "'WelthCatritz', serif",
+                fontSize: "clamp(18px, 3.2vw, 44px)",
+                fontStyle: "italic",
+                fontWeight: 400,
+                lineHeight: 1.05,
+              }}
+            >
+              pasos
+            </p>
+          </div>
         </div>
       </motion.button>
 
