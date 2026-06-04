@@ -754,7 +754,7 @@ const Features = () => {
         <div id="smooth-content-features" className="bg-white text-black font-sans pb-0">
           <section className="min-h-[60vh] flex flex-col items-center justify-center text-center px-6 pt-40 pb-12">
             <h1 className="text-5xl md:text-7xl font-normal leading-tight tracking-tight mb-8 max-w-4xl">
-              Presentamos a Miiles
+              Lleva tus ideas a la realidad.
             </h1>
             <p className="text-lg font-light text-gray-500 max-w-2xl">
               Un lugar pensado para crear negocios
