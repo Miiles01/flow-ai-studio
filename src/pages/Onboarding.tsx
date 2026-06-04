@@ -60,25 +60,28 @@ export const AnimatedText = forwardRef<HTMLDivElement, { text: string; className
       className={className}
       variants={{
         visible: {
-          transition: { staggerChildren: 0.15 }
+          transition: { staggerChildren: 0.06 }
         }
       }}
     >
       {words.map((word, i) => (
-        <motion.span
-          key={i}
-          className="inline-block mr-[0.25em]"
-          variants={{
-            hidden: { y: 40, opacity: 0 },
-            visible: {
-              y: 0,
-              opacity: 1,
-              transition: { duration: 0.8, ease: "easeOut" }
-            }
-          }}
-        >
-          {word}
-        </motion.span>
+        <span key={i} className="inline-block overflow-hidden mr-[0.25em] py-[0.1em] -my-[0.1em]">
+          <motion.span
+            className="inline-block"
+            variants={{
+              hidden: { y: "110%" },
+              visible: {
+                y: "0%",
+                transition: { 
+                  duration: 0.6, 
+                  ease: [0.625, 0.05, 0, 1] 
+                }
+              }
+            }}
+          >
+            {word}
+          </motion.span>
+        </span>
       ))}
     </motion.div>
   );
