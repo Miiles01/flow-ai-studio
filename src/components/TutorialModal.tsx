@@ -298,7 +298,7 @@ export default function TutorialModal({ userId, triggerOpen }: Props) {
                               id: "node-right",
                               type: "todoNode",
                               position: { x: 330, y: 15 },
-                              style: { width: 230, height: 170 },
+                              style: { width: 250, height: 240 },
                               data: {
                                 title: "Lista de Tareas",
                                 subtitle: "Tareas de Lanzamiento",
