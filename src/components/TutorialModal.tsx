@@ -5,6 +5,12 @@ import { X } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import avatar3 from "@/assets/avatar3.png";
 
+// React Flow Imports
+import { ReactFlow, ReactFlowProvider } from "@xyflow/react";
+import "@xyflow/react/dist/style.css";
+import ShapeNode from "@/components/nodes/ShapeNode";
+import TodoNode from "@/components/nodes/TodoNode";
+
 // SVG Logos for Brands (Colaboraciones)
 const tiktokSvg = (
   <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="currentColor">
@@ -264,83 +270,71 @@ export default function TutorialModal({ userId, triggerOpen }: Props) {
                   )}
 
                   {active === 1 && (
-                    <div className="relative w-full h-full max-w-2xl mx-auto flex items-center justify-center">
-                      
-                      {/* Connection Line */}
-                      <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
-                        <path
-                          d="M 38 50 C 43 50, 43 50, 48 50" 
-                          fill="none" 
-                          stroke="#4059F1" 
-                          strokeWidth="2"
-                          vectorEffect="non-scaling-stroke"
+                    <div className="relative w-full h-full select-none z-10 flex items-center justify-center">
+                      <ReactFlowProvider>
+                        <ReactFlow
+                          nodes={[
+                            {
+                              id: "node-left",
+                              type: "shapeNode",
+                              position: { x: 50, y: 55 },
+                              style: { width: 140, height: 100 },
+                              data: {
+                                shape: "square",
+                                label: "Analizar Idea",
+                                fillColor: "#4059F1",
+                                strokeColor: "#4059F1",
+                                textColor: "#FFFFFF",
+                                bold: true,
+                              },
+                            },
+                            {
+                              id: "node-right",
+                              type: "todoNode",
+                              position: { x: 265, y: 15 },
+                              style: { width: 230, height: 180 },
+                              data: {
+                                title: "Estructura Canvas",
+                                subtitle: "Generador de Flujos",
+                                tasks: [
+                                  { id: "t1", text: "Propuesta de Valor", completed: true },
+                                  { id: "t2", text: "Modelo de Ingresos", completed: true },
+                                  { id: "t3", text: "Plan de Canales", completed: false },
+                                ],
+                              },
+                            }
+                          ]}
+                          edges={[
+                            {
+                              id: "edge-1",
+                              source: "node-left",
+                              sourceHandle: "right",
+                              target: "node-right",
+                              targetHandle: "left",
+                              animated: false,
+                              style: { stroke: "#4059F1", strokeWidth: 2, strokeDasharray: "4 4" },
+                            }
+                          ]}
+                          nodeTypes={{
+                            shapeNode: ShapeNode,
+                            todoNode: TodoNode,
+                          }}
+                          fitView
+                          fitViewOptions={{ padding: 0.1 }}
+                          panOnDrag={false}
+                          zoomOnScroll={false}
+                          zoomOnPinch={false}
+                          zoomOnDoubleClick={false}
+                          nodesDraggable={false}
+                          nodesConnectable={false}
+                          elementsSelectable={false}
+                          proOptions={{ hideAttribution: true }}
+                          style={{ width: "100%", height: "100%", background: "transparent" }}
                         />
-                      </svg>
-
-                      {/* Left Node: ShapeNode */}
-                      <div className="absolute left-[6%] top-[25%] w-[32%] h-[50%] rounded-2xl border-2 border-[#4059F1] bg-[#4059F1]/10 flex flex-col items-center justify-center p-3 text-center shadow-md select-none z-10">
-                        {/* Connection Handles */}
-                        <div className="absolute top-1/2 -translate-y-1/2 left-[-4px] w-2 h-2 rounded-full bg-white border border-[#4059F1]" />
-                        <div className="absolute top-1/2 -translate-y-1/2 right-[-4px] w-2 h-2 rounded-full bg-white border border-[#4059F1]" />
-                        <div className="absolute top-[-4px] left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-white border border-[#4059F1]" />
-                        <div className="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-white border border-[#4059F1]" />
-
-                        <span className="text-[8px] sm:text-[9px] text-[#4059F1] font-semibold bg-[#4059F1]/20 px-2 py-0.5 rounded-full mb-1 sm:mb-1.5">IA Generativa</span>
-                        <div className="text-[10px] sm:text-[12px] font-semibold text-[#4059F1] leading-tight">Analizar Idea</div>
-                      </div>
-
-                      {/* Right Node: TodoNode */}
-                      <div className={`absolute right-[6%] top-[12%] w-[46%] h-[76%] p-3 sm:p-4 rounded-2xl border flex flex-col justify-between shadow-lg select-none z-10 ${
-                        isDark ? "bg-[#1E1E1E] border-white/10 text-white" : "bg-white border-neutral-200 text-neutral-800"
-                      }`}>
-                        {/* Connection Handles */}
-                        <div className="absolute top-1/2 -translate-y-1/2 left-[-4px] w-2 h-2 rounded-full bg-white border border-[#4059F1]" />
-                        <div className="absolute top-1/2 -translate-y-1/2 right-[-4px] w-2 h-2 rounded-full bg-white border border-[#4059F1]" />
-                        <div className="absolute top-[-4px] left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-white border border-[#4059F1]" />
-                        <div className="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-white border border-[#4059F1]" />
-
-                        {/* Arrowhead pointing to Right Node left handle */}
-                        <div className="absolute left-[-11px] top-1/2 -translate-y-1/2 w-2 h-2 border-t-[2px] border-r-[2px] border-[#4059F1] transform rotate-45 pointer-events-none" />
-
-                        {/* Header */}
-                        <div>
-                          <div className="text-[11px] sm:text-[13px] font-bold leading-tight text-left">Estructura Canvas</div>
-                          <div className="text-[8px] sm:text-[9px] text-neutral-400 dark:text-neutral-500 font-light mt-0.5 text-left leading-none">Generador de Flujos</div>
-                        </div>
-
-                        {/* Tasks */}
-                        <div className="flex flex-col gap-1.5 sm:gap-2">
-                          <div className="flex items-center gap-2">
-                            <div className="w-4 h-4 sm:w-4.5 sm:h-4.5 rounded-md bg-[#4059F1] border border-[#4059F1] flex items-center justify-center shrink-0">
-                              <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
-                                <polyline points="20 6 9 17 4 12" />
-                              </svg>
-                            </div>
-                            <span className="text-[9px] sm:text-[10.5px] text-neutral-400 dark:text-neutral-500 line-through text-left truncate">Propuesta de Valor</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <div className="w-4 h-4 sm:w-4.5 sm:h-4.5 rounded-md bg-[#4059F1] border border-[#4059F1] flex items-center justify-center shrink-0">
-                              <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
-                                <polyline points="20 6 9 17 4 12" />
-                              </svg>
-                            </div>
-                            <span className="text-[9px] sm:text-[10.5px] text-neutral-400 dark:text-neutral-500 line-through text-left truncate">Modelo de Ingresos</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <div className={`w-4 h-4 sm:w-4.5 sm:h-4.5 rounded-md border-[1.5px] border-solid flex items-center justify-center shrink-0 ${
-                              isDark 
-                                ? "bg-white/[0.05] border-white/15" 
-                                : "bg-black/[0.03] border-black/15"
-                            }`} />
-                            <span className={`text-[9px] sm:text-[10.5px] font-light leading-none text-left truncate ${
-                              isDark ? "text-white" : "text-neutral-800"
-                            }`}>Plan de Canales</span>
-                          </div>
-                        </div>
-                      </div>
+                      </ReactFlowProvider>
 
                       {/* Cursors */}
-                      <div className="absolute left-[20%] top-[10%] z-20 pointer-events-none flex items-start">
+                      <div className="absolute left-[34%] top-[32%] z-50 pointer-events-none flex items-start">
                         <svg className="w-5 h-5 filter drop-shadow-[0_1px_3px_rgba(0,0,0,0.15)] rotate-[-10deg] shrink-0" viewBox="0 0 24 24">
                           <path d="M4 3l16 8-8 2-6 7z" fill="#4059F1" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
@@ -349,7 +343,7 @@ export default function TutorialModal({ userId, triggerOpen }: Props) {
                         </div>
                       </div>
 
-                      <div className="absolute right-[12%] bottom-[15%] z-20 pointer-events-none flex items-start">
+                      <div className="absolute right-[14%] bottom-[22%] z-50 pointer-events-none flex items-start">
                         <svg className="w-5 h-5 filter drop-shadow-[0_1px_3px_rgba(0,0,0,0.15)] rotate-[-10deg] shrink-0" viewBox="0 0 24 24">
                           <path d="M4 3l16 8-8 2-6 7z" fill="#FCB5B9" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
