@@ -264,38 +264,69 @@ export default function TutorialModal({ userId, triggerOpen }: Props) {
                   )}
 
                   {active === 1 && (
-                    <div className="flex items-center justify-between w-full px-6 max-w-lg relative scale-90 sm:scale-100">
-                      {/* Node 1 */}
-                      <div className={`px-2.5 py-1.5 rounded-xl border text-[10px] sm:text-[11px] font-medium shadow-sm z-10 ${
-                        isDark ? "bg-black/80 border-white/10 text-white" : "bg-white border-neutral-200 text-neutral-800"
+                    <div className="relative w-full h-full max-w-2xl mx-auto flex items-center justify-center">
+                      
+                      {/* Connection Line */}
+                      <svg className="absolute inset-0 w-full h-full pointer-events-none z-0" viewBox="0 0 100 100" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg">
+                        <path
+                          d="M 38 50 C 43 50, 43 50, 48 50" 
+                          fill="none" 
+                          stroke="#4059F1" 
+                          strokeWidth="2"
+                          vectorEffect="non-scaling-stroke"
+                        />
+                      </svg>
+
+                      {/* Left Node: ShapeNode */}
+                      <div className="absolute left-[6%] top-[25%] w-[32%] h-[50%] rounded-2xl border-2 border-[#4059F1] bg-[#4059F1]/10 flex flex-col items-center justify-center p-3 text-center shadow-md select-none z-10">
+                        {/* Connection Handles */}
+                        <div className="absolute top-1/2 -translate-y-1/2 left-[-4px] w-2 h-2 rounded-full bg-white border border-[#4059F1]" />
+                        <div className="absolute top-1/2 -translate-y-1/2 right-[-4px] w-2 h-2 rounded-full bg-white border border-[#4059F1]" />
+                        <div className="absolute top-[-4px] left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-white border border-[#4059F1]" />
+                        <div className="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-white border border-[#4059F1]" />
+
+                        <span className="text-[8px] sm:text-[9px] text-[#4059F1] font-semibold bg-[#4059F1]/20 px-2 py-0.5 rounded-full mb-1 sm:mb-1.5">IA Generativa</span>
+                        <div className="text-[10px] sm:text-[12px] font-semibold text-[#4059F1] leading-tight">Analizar Idea</div>
+                      </div>
+
+                      {/* Right Node: TodoNode */}
+                      <div className={`absolute right-[6%] top-[12%] w-[46%] h-[76%] p-3 sm:p-4 rounded-2xl border flex flex-col justify-between shadow-lg select-none z-10 ${
+                        isDark ? "bg-[#1E1E1E] border-white/10 text-white" : "bg-white border-neutral-200 text-neutral-800"
                       }`}>
-                        💡 Idea de Negocio
-                      </div>
+                        {/* Connection Handles */}
+                        <div className="absolute top-1/2 -translate-y-1/2 left-[-4px] w-2 h-2 rounded-full bg-white border border-[#4059F1]" />
+                        <div className="absolute top-1/2 -translate-y-1/2 right-[-4px] w-2 h-2 rounded-full bg-white border border-[#4059F1]" />
+                        <div className="absolute top-[-4px] left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-white border border-[#4059F1]" />
+                        <div className="absolute bottom-[-4px] left-1/2 -translate-x-1/2 w-2 h-2 rounded-full bg-white border border-[#4059F1]" />
 
-                      {/* Arrow 1 */}
-                      <div className="flex-1 h-[2px] border-t-2 border-dashed mx-1.5 relative z-0 border-neutral-300 dark:border-white/10 flex items-center justify-center">
-                        <div className="absolute right-0 w-1.5 h-1.5 border-t-2 border-r-2 transform rotate-45 border-neutral-400 dark:border-white/40" />
-                      </div>
+                        {/* Arrowhead pointing to Right Node left handle */}
+                        <div className="absolute left-[-11px] top-1/2 -translate-y-1/2 w-2 h-2 border-t-[2px] border-r-[2px] border-[#4059F1] transform rotate-45 pointer-events-none" />
 
-                      {/* Node 2 */}
-                      <div className="px-2.5 py-1.5 rounded-xl border border-[#4059F1] bg-[#4059F1]/10 text-[#4059F1] text-[10px] sm:text-[11px] font-semibold shadow-sm z-10">
-                        ✨ Análisis IA
-                      </div>
+                        {/* Header */}
+                        <div>
+                          <div className="text-[11px] sm:text-[13px] font-bold leading-tight text-left">Estructura Canvas</div>
+                          <div className="text-[8px] sm:text-[9px] text-neutral-400 dark:text-neutral-500 font-light mt-0.5 text-left leading-none">Generador de Flujos</div>
+                        </div>
 
-                      {/* Arrow 2 */}
-                      <div className="flex-1 h-[2px] border-t-2 border-dashed mx-1.5 relative z-0 border-neutral-300 dark:border-white/10 flex items-center justify-center">
-                        <div className="absolute right-0 w-1.5 h-1.5 border-t-2 border-r-2 transform rotate-45 border-neutral-400 dark:border-white/40" />
-                      </div>
-
-                      {/* Node 3 */}
-                      <div className={`px-2.5 py-1.5 rounded-xl border text-[10px] sm:text-[11px] font-medium shadow-sm z-10 ${
-                        isDark ? "bg-black/80 border-white/10 text-white" : "bg-white border-neutral-200 text-neutral-800"
-                      }`}>
-                        📋 Estructura Canvas
+                        {/* Tasks */}
+                        <div className="flex flex-col gap-1 sm:gap-1.5">
+                          <div className="flex items-center gap-1.5 sm:gap-2">
+                            <span className="w-3.5 h-3.5 rounded-full border border-emerald-500 bg-emerald-500 text-white flex items-center justify-center text-[8px] sm:text-[9px] shrink-0 font-bold">✓</span>
+                            <span className="text-[9px] sm:text-[10px] text-neutral-400 line-through text-left truncate">Propuesta de Valor</span>
+                          </div>
+                          <div className="flex items-center gap-1.5 sm:gap-2">
+                            <span className="w-3.5 h-3.5 rounded-full border border-emerald-500 bg-emerald-500 text-white flex items-center justify-center text-[8px] sm:text-[9px] shrink-0 font-bold">✓</span>
+                            <span className="text-[9px] sm:text-[10px] text-neutral-400 line-through text-left truncate">Modelo de Ingresos</span>
+                          </div>
+                          <div className="flex items-center gap-1.5 sm:gap-2">
+                            <span className={`w-3.5 h-3.5 rounded-full border shrink-0 ${isDark ? 'border-white/20' : 'border-neutral-300'}`} />
+                            <span className="text-[9px] sm:text-[10px] font-medium leading-none text-left truncate">Plan de Canales</span>
+                          </div>
+                        </div>
                       </div>
 
                       {/* Cursors */}
-                      <div className="absolute left-[38%] top-[-25px] z-20 pointer-events-none flex items-start">
+                      <div className="absolute left-[20%] top-[10%] z-20 pointer-events-none flex items-start">
                         <svg className="w-5 h-5 filter drop-shadow-[0_1px_3px_rgba(0,0,0,0.15)] rotate-[-10deg] shrink-0" viewBox="0 0 24 24">
                           <path d="M4 3l16 8-8 2-6 7z" fill="#4059F1" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
@@ -304,7 +335,7 @@ export default function TutorialModal({ userId, triggerOpen }: Props) {
                         </div>
                       </div>
 
-                      <div className="absolute right-[8%] bottom-[-20px] z-20 pointer-events-none flex items-start">
+                      <div className="absolute right-[12%] bottom-[15%] z-20 pointer-events-none flex items-start">
                         <svg className="w-5 h-5 filter drop-shadow-[0_1px_3px_rgba(0,0,0,0.15)] rotate-[-10deg] shrink-0" viewBox="0 0 24 24">
                           <path d="M4 3l16 8-8 2-6 7z" fill="#FCB5B9" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
