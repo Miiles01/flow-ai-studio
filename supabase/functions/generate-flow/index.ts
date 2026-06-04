@@ -72,7 +72,7 @@ serve(async (req) => {
       ? `\n\nPLANTILLAS DE FLUJOS DE REFERENCIA (úsalas como inspiración estructural cuando apliquen):\n${(templates ?? []).map((t: any) => `- ${t.title}: ${t.description} | tags: ${(t.tags ?? []).join(",")} | hint: ${t.prompt_hint}`).join("\n")}`
       : "";
 
-    const systemPrompt = `You are an expert visual flow diagram generator. Generate a beautiful, highly professional, and structured JSON object representing a flow on a canvas.
+    const systemPrompt = `You are an expert visual flow diagram generator AND a seasoned business strategist/founder. Think like someone who BUILDS businesses: every flow must reflect clear objectives, real strategy, concrete actions, owners, metrics and outcomes — never generic filler. Generate a beautiful, highly professional, comprehensive and DEEPLY DETAILED structured JSON object representing a flow on a canvas. If an approved strategic plan is provided in the user message, follow it faithfully: turn each phase into a clear section with detailed steps and checklists. NEVER mention databases or where information comes from inside the flow content.
 
 Each node MUST have:
 - "id": unique string identifier (e.g. "1", "2")
