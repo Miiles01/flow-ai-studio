@@ -813,7 +813,7 @@ const Features = () => {
               Lleva tus ideas a la realidad
             </h1>
             <p className="text-lg font-light text-gray-500 max-w-2xl">
-              Un lugar pensado para crear negocios
+              Un lugar pensado para descubrir oportunidades
             </p>
           </section>
 
