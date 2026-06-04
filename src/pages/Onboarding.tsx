@@ -314,7 +314,7 @@ const Onboarding = () => {
               {step === 0 && (
                 <div className="text-center space-y-6 max-w-md mx-auto">
                   <img src={onboardingHero} alt="Miiles" className="mx-auto w-full max-w-[280px] sm:max-w-sm rounded-2xl" />
-                  <AnimatedText text={`¡Hola ${displayName}!`} className="text-3xl font-semibold" />
+                  <AnimatedText text={`¡Hola ${displayName}!`} className="text-3xl font-normal" />
                   <p className="text-muted-foreground font-light text-base max-w-xs mx-auto">
                     Presentamos Miiles: una nueva forma para crear colaboraciones.
                   </p>
@@ -329,7 +329,7 @@ const Onboarding = () => {
               {/* Step 1: Avatar upload */}
               {step === 1 && (
                 <div className="text-center space-y-6 max-w-md mx-auto">
-                  <AnimatedText text="Tu foto de perfil" className="text-2xl font-semibold" />
+                  <AnimatedText text="Tu foto de perfil" className="text-2xl font-normal" />
                   <p className="text-muted-foreground font-light text-sm">
                     Agrega una foto para que las marcas te reconozcan.
                   </p>
@@ -365,7 +365,7 @@ const Onboarding = () => {
               {/* Step 1: Bio — card style like reference */}
               {step === 2 && (
                 <div className="max-w-lg mx-auto space-y-8">
-                  <AnimatedText text="Cuéntanos sobre ti" className="text-2xl font-semibold" />
+                  <AnimatedText text="Cuéntanos sobre ti" className="text-2xl font-normal" />
                   <div className="w-full">
                     <Textarea
                       value={bio}
@@ -389,7 +389,7 @@ const Onboarding = () => {
                 <div className="flex flex-col md:flex-row gap-8 md:gap-10 items-start w-full">
                   {/* Left */}
                   <div className="w-full md:w-2/5 space-y-4">
-                    <AnimatedText text="Medios de contacto" className="text-2xl font-semibold" />
+                    <AnimatedText text="Medios de contacto" className="text-2xl font-normal" />
                     <p className="text-muted-foreground font-light text-sm">
                       Agrega al menos <span className="font-normal text-foreground">3 medios de contacto</span>.
                     </p>
@@ -490,10 +490,10 @@ const Onboarding = () => {
               {step === 4 && (
                 <div className="max-w-md mx-auto space-y-6">
                   <div>
-                    <AnimatedText text="Portafolio" className="text-2xl font-semibold" />
+                    <AnimatedText text="Portafolio" className="text-2xl font-normal" />
                     <p className="text-muted-foreground font-light text-sm mt-1">
                       Agrega hasta 3 videos que representen tu mejor trabajo.{" "}
-                      <span className="font-semibold text-foreground">
+                      <span className="font-medium text-foreground">
                         Esto puede ayudar a conocer mejor tus resultados.
                       </span>
                     </p>
@@ -590,7 +590,7 @@ const Onboarding = () => {
               {step === 5 && (
                 <div className="max-w-md mx-auto space-y-6">
                   <div>
-                    <AnimatedText text="Contacto" className="text-2xl font-semibold" />
+                    <AnimatedText text="Contacto" className="text-2xl font-normal" />
                     <p className="text-muted-foreground font-light text-sm mt-1">
                       ¿Cómo pueden contactarte?
                     </p>
@@ -668,7 +668,7 @@ const Onboarding = () => {
                   <div className="mx-auto w-28 h-28">
                     <img src={onboardingDone} alt="Listo" className="w-full h-full object-contain" />
                   </div>
-                  <AnimatedText text="¡Todo listo!" className="text-3xl font-semibold" />
+                  <AnimatedText text="¡Todo listo!" className="text-3xl font-normal" />
                   <p className="text-muted-foreground font-light text-base max-w-xs mx-auto">
                     Es hora de descubrir oportunidades y pasar al siguiente nivel.
                   </p>
