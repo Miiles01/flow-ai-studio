@@ -319,11 +319,11 @@ const InteractiveCanvasMockup = () => {
             <AnimatePresence>
               {shouldShowTooltip("select") && (
                 <motion.div
-                  initial={{ opacity: 0, x: -6 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -6 }}
+                  initial={{ opacity: 0, x: -6, y: "-50%" }}
+                  animate={{ opacity: 1, x: 0, y: "-50%" }}
+                  exit={{ opacity: 0, x: -6, y: "-50%" }}
                   transition={{ duration: 0.15, ease: "easeOut" }}
-                  className="absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 bg-black text-white text-[13px] font-light py-1.5 px-3 rounded-full whitespace-nowrap shadow-lg z-30 pointer-events-none"
+                  className="absolute left-[calc(100%+12px)] top-1/2 bg-black text-white text-[13px] font-light py-1.5 px-3 rounded-full whitespace-nowrap shadow-lg z-30 pointer-events-none"
                 >
                   Seleccionar
                 </motion.div>
@@ -339,11 +339,11 @@ const InteractiveCanvasMockup = () => {
             <AnimatePresence>
               {shouldShowTooltip("pan") && (
                 <motion.div
-                  initial={{ opacity: 0, x: -6 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -6 }}
+                  initial={{ opacity: 0, x: -6, y: "-50%" }}
+                  animate={{ opacity: 1, x: 0, y: "-50%" }}
+                  exit={{ opacity: 0, x: -6, y: "-50%" }}
                   transition={{ duration: 0.15, ease: "easeOut" }}
-                  className="absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 bg-black text-white text-[13px] font-light py-1.5 px-3 rounded-full whitespace-nowrap shadow-lg z-30 pointer-events-none"
+                  className="absolute left-[calc(100%+12px)] top-1/2 bg-black text-white text-[13px] font-light py-1.5 px-3 rounded-full whitespace-nowrap shadow-lg z-30 pointer-events-none"
                 >
                   Navegar
                 </motion.div>
@@ -392,12 +392,12 @@ const InteractiveCanvasMockup = () => {
             <AnimatePresence>
               {isFlyoutOpen && (
                 <motion.div
-                  initial={{ opacity: 0, x: -8, scale: 0.96 }}
-                  animate={{ opacity: 1, x: 0, scale: 1 }}
-                  exit={{ opacity: 0, x: -8, scale: 0.96 }}
+                  initial={{ opacity: 0, x: -8, scale: 0.96, y: "-50%" }}
+                  animate={{ opacity: 1, x: 0, scale: 1, y: "-50%" }}
+                  exit={{ opacity: 0, x: -8, scale: 0.96, y: "-50%" }}
                   transition={{ duration: 0.14, ease: "easeOut" }}
                   className="absolute left-[calc(100%+16px)] w-[128px] bg-[#111] p-3 rounded-2xl shadow-[0_16px_48px_rgba(0,0,0,0.3)] grid grid-cols-2 gap-2 z-50 pointer-events-none"
-                  style={{ top: '20px', transform: 'translateY(-50%)' }}
+                  style={{ top: '20px' }}
                 >
                   {/* Rectangulo */}
                   <div className={`w-12 h-12 rounded-xl flex items-center justify-center transition-all duration-200 ${activeShape === "square" ? "bg-white text-black shadow-sm" : hoveredFlyoutItem === "square" ? "text-white bg-[#222]" : "text-[#777] bg-transparent"}`}>
@@ -443,11 +443,11 @@ const InteractiveCanvasMockup = () => {
             <AnimatePresence>
               {shouldShowTooltip("shapes") && !isFlyoutOpen && (
                 <motion.div
-                  initial={{ opacity: 0, x: -6 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -6 }}
+                  initial={{ opacity: 0, x: -6, y: "-50%" }}
+                  animate={{ opacity: 1, x: 0, y: "-50%" }}
+                  exit={{ opacity: 0, x: -6, y: "-50%" }}
                   transition={{ duration: 0.15, ease: "easeOut" }}
-                  className="absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 flex items-center leading-none bg-black text-white text-[13px] font-light py-1.5 px-3 rounded-full whitespace-nowrap shadow-lg z-30 pointer-events-none"
+                  className="absolute left-[calc(100%+12px)] top-1/2 flex items-center leading-none bg-black text-white text-[13px] font-light py-1.5 px-3 rounded-full whitespace-nowrap shadow-lg z-30 pointer-events-none"
                 >
                   Formas
                 </motion.div>
@@ -463,11 +463,11 @@ const InteractiveCanvasMockup = () => {
             <AnimatePresence>
               {shouldShowTooltip("text") && (
                 <motion.div
-                  initial={{ opacity: 0, x: -6 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -6 }}
+                  initial={{ opacity: 0, x: -6, y: "-50%" }}
+                  animate={{ opacity: 1, x: 0, y: "-50%" }}
+                  exit={{ opacity: 0, x: -6, y: "-50%" }}
                   transition={{ duration: 0.15, ease: "easeOut" }}
-                  className="absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 flex items-center leading-none bg-black text-white text-[13px] font-light py-1.5 px-3 rounded-full whitespace-nowrap shadow-lg z-30 pointer-events-none"
+                  className="absolute left-[calc(100%+12px)] top-1/2 flex items-center leading-none bg-black text-white text-[13px] font-light py-1.5 px-3 rounded-full whitespace-nowrap shadow-lg z-30 pointer-events-none"
                 >
                   Texto
                 </motion.div>
@@ -483,11 +483,11 @@ const InteractiveCanvasMockup = () => {
             <AnimatePresence>
               {shouldShowTooltip("todo") && (
                 <motion.div
-                  initial={{ opacity: 0, x: -6 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -6 }}
+                  initial={{ opacity: 0, x: -6, y: "-50%" }}
+                  animate={{ opacity: 1, x: 0, y: "-50%" }}
+                  exit={{ opacity: 0, x: -6, y: "-50%" }}
                   transition={{ duration: 0.15, ease: "easeOut" }}
-                  className="absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 flex items-center leading-none bg-black text-white text-[13px] font-light py-1.5 px-3 rounded-full whitespace-nowrap shadow-lg z-30 pointer-events-none"
+                  className="absolute left-[calc(100%+12px)] top-1/2 flex items-center leading-none bg-black text-white text-[13px] font-light py-1.5 px-3 rounded-full whitespace-nowrap shadow-lg z-30 pointer-events-none"
                 >
                   Lista de Tareas
                 </motion.div>
@@ -503,11 +503,11 @@ const InteractiveCanvasMockup = () => {
             <AnimatePresence>
               {shouldShowTooltip("image") && (
                 <motion.div
-                  initial={{ opacity: 0, x: -6 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -6 }}
+                  initial={{ opacity: 0, x: -6, y: "-50%" }}
+                  animate={{ opacity: 1, x: 0, y: "-50%" }}
+                  exit={{ opacity: 0, x: -6, y: "-50%" }}
                   transition={{ duration: 0.15, ease: "easeOut" }}
-                  className="absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 flex items-center leading-none bg-black text-white text-[13px] font-light py-1.5 px-3 rounded-full whitespace-nowrap shadow-lg z-30 pointer-events-none"
+                  className="absolute left-[calc(100%+12px)] top-1/2 flex items-center leading-none bg-black text-white text-[13px] font-light py-1.5 px-3 rounded-full whitespace-nowrap shadow-lg z-30 pointer-events-none"
                 >
                   Imagen
                 </motion.div>
@@ -523,11 +523,11 @@ const InteractiveCanvasMockup = () => {
             <AnimatePresence>
               {shouldShowTooltip("section") && (
                 <motion.div
-                  initial={{ opacity: 0, x: -6 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={{ opacity: 0, x: -6 }}
+                  initial={{ opacity: 0, x: -6, y: "-50%" }}
+                  animate={{ opacity: 1, x: 0, y: "-50%" }}
+                  exit={{ opacity: 0, x: -6, y: "-50%" }}
                   transition={{ duration: 0.15, ease: "easeOut" }}
-                  className="absolute left-[calc(100%+12px)] top-1/2 -translate-y-1/2 flex items-center leading-none bg-black text-white text-[13px] font-light py-1.5 px-3 rounded-full whitespace-nowrap shadow-lg z-30 pointer-events-none"
+                  className="absolute left-[calc(100%+12px)] top-1/2 flex items-center leading-none bg-black text-white text-[13px] font-light py-1.5 px-3 rounded-full whitespace-nowrap shadow-lg z-30 pointer-events-none"
                 >
                   Sección
                 </motion.div>
