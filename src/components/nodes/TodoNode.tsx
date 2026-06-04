@@ -502,12 +502,12 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
               initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, x: -10 }}
-              className="group/item flex items-center gap-3 py-1.5 px-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-200 select-text"
+              className="group/item flex items-start gap-3 py-1.5 px-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-200 select-text"
             >
               {/* Checkbox */}
               <button
                 onClick={() => handleToggleTask(task.id)}
-                className={`w-5 h-5 rounded-md flex items-center justify-center border-[1.5px] border-solid transition-all shrink-0 duration-200 ${
+                className={`w-5 h-5 rounded-md flex items-center justify-center border-[1.5px] border-solid transition-all shrink-0 duration-200 mt-[3px] ${
                   task.completed
                     ? ""
                     : isDarkMode
@@ -536,7 +536,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
               </button>
 
               {/* Task Text Input & Custom Animated Strikethrough */}
-              <div className="relative flex-1 min-w-0 flex items-center select-text">
+              <div className="relative flex-1 min-w-0 select-text">
                 <AutoResizingTextarea
                   ref={(el) => (taskInputRefs.current[task.id] = el)}
                   value={task.text}

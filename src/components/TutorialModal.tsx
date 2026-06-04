@@ -275,13 +275,27 @@ export default function TutorialModal({ userId, triggerOpen }: Props) {
                         <ReactFlow
                           nodes={[
                             {
+                              id: "node-start",
+                              type: "shapeNode",
+                              position: { x: 20, y: 50 },
+                              style: { width: 100, height: 100 },
+                              data: {
+                                shape: "circle",
+                                label: "1. Brainstorm",
+                                fillColor: "#10B981",
+                                strokeColor: "#10B981",
+                                textColor: "#FFFFFF",
+                                bold: true,
+                              },
+                            },
+                            {
                               id: "node-left",
                               type: "shapeNode",
-                              position: { x: 50, y: 55 },
-                              style: { width: 140, height: 100 },
+                              position: { x: 160, y: 55 },
+                              style: { width: 130, height: 90 },
                               data: {
                                 shape: "square",
-                                label: "Analizar Idea",
+                                label: "2. Analizar Idea",
                                 fillColor: "#4059F1",
                                 strokeColor: "#4059F1",
                                 textColor: "#FFFFFF",
@@ -291,8 +305,8 @@ export default function TutorialModal({ userId, triggerOpen }: Props) {
                             {
                               id: "node-right",
                               type: "todoNode",
-                              position: { x: 265, y: 15 },
-                              style: { width: 230, height: 180 },
+                              position: { x: 330, y: 15 },
+                              style: { width: 230, height: 170 },
                               data: {
                                 title: "Lista de Tareas",
                                 subtitle: "Tareas de Lanzamiento",
@@ -302,17 +316,49 @@ export default function TutorialModal({ userId, triggerOpen }: Props) {
                                   { id: "t3", text: "Lanzar campaña de ads", completed: false },
                                 ],
                               },
+                            },
+                            {
+                              id: "node-end",
+                              type: "shapeNode",
+                              position: { x: 600, y: 45 },
+                              style: { width: 110, height: 110 },
+                              data: {
+                                shape: "diamond",
+                                label: "4. Lanzamiento 🚀",
+                                fillColor: "#8B5CF6",
+                                strokeColor: "#8B5CF6",
+                                textColor: "#FFFFFF",
+                                bold: true,
+                              },
                             }
                           ]}
                           edges={[
                             {
                               id: "edge-1",
+                              source: "node-start",
+                              sourceHandle: "right",
+                              target: "node-left",
+                              targetHandle: "left",
+                              animated: true,
+                              style: { stroke: "#10B981", strokeWidth: 2, strokeDasharray: "4 4" },
+                            },
+                            {
+                              id: "edge-2",
                               source: "node-left",
                               sourceHandle: "right",
                               target: "node-right",
                               targetHandle: "left",
                               animated: false,
                               style: { stroke: "#4059F1", strokeWidth: 2, strokeDasharray: "4 4" },
+                            },
+                            {
+                              id: "edge-3",
+                              source: "node-right",
+                              sourceHandle: "right",
+                              target: "node-end",
+                              targetHandle: "left",
+                              animated: false,
+                              style: { stroke: "#8B5CF6", strokeWidth: 2, strokeDasharray: "4 4" },
                             }
                           ]}
                           nodeTypes={{
@@ -320,7 +366,7 @@ export default function TutorialModal({ userId, triggerOpen }: Props) {
                             todoNode: TodoNode,
                           }}
                           fitView
-                          fitViewOptions={{ padding: 0.1 }}
+                          fitViewOptions={{ padding: 0.08 }}
                           panOnDrag={false}
                           zoomOnScroll={false}
                           zoomOnPinch={false}
@@ -334,7 +380,7 @@ export default function TutorialModal({ userId, triggerOpen }: Props) {
                       </ReactFlowProvider>
 
                       {/* Cursors */}
-                      <div className="absolute left-[34%] top-[32%] z-50 pointer-events-none flex items-start">
+                      <div className="absolute left-[24%] top-[30%] z-50 pointer-events-none flex items-start">
                         <svg className="w-5 h-5 filter drop-shadow-[0_1px_3px_rgba(0,0,0,0.15)] rotate-[-10deg] shrink-0" viewBox="0 0 24 24">
                           <path d="M4 3l16 8-8 2-6 7z" fill="#4059F1" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
@@ -343,7 +389,7 @@ export default function TutorialModal({ userId, triggerOpen }: Props) {
                         </div>
                       </div>
 
-                      <div className="absolute right-[14%] bottom-[22%] z-50 pointer-events-none flex items-start">
+                      <div className="absolute right-[16%] bottom-[18%] z-50 pointer-events-none flex items-start">
                         <svg className="w-5 h-5 filter drop-shadow-[0_1px_3px_rgba(0,0,0,0.15)] rotate-[-10deg] shrink-0" viewBox="0 0 24 24">
                           <path d="M4 3l16 8-8 2-6 7z" fill="#FCB5B9" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
