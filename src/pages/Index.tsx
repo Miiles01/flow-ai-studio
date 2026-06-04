@@ -68,6 +68,39 @@ const RAINBOW_COLORS = [
   { name: "Negro", value: "#1F2937" },
 ];
 
+const isWhiteColor = (color: string | undefined): boolean => {
+  if (!color) return false;
+  const cleaned = color.trim().toLowerCase();
+  return cleaned === "#ffffff" || cleaned === "white" || cleaned === "#fff" || cleaned === "#fafafa" || cleaned === "#f3f4f6";
+};
+
+const isBlackColor = (color: string | undefined): boolean => {
+  if (!color) return false;
+  const cleaned = color.trim().toLowerCase();
+  return cleaned === "#000000" || cleaned === "black" || cleaned === "#000" || cleaned === "#111827" || cleaned === "#1f2937" || cleaned === "#1c1c1e";
+};
+
+const isColorDark = (colorHex: string): boolean => {
+  if (!colorHex || colorHex === "transparent") return false;
+  const hex = colorHex.replace("#", "").trim();
+  if (hex.toLowerCase() === "white") return false;
+  if (hex.toLowerCase() === "black") return true;
+  
+  if (hex.length === 3) {
+    const r = parseInt(hex[0] + hex[0], 16);
+    const g = parseInt(hex[1] + hex[1], 16);
+    const b = parseInt(hex[2] + hex[2], 16);
+    return (r * 299 + g * 587 + b * 114) / 1000 < 140;
+  }
+  if (hex.length === 6) {
+    const r = parseInt(hex.substring(0, 2), 16);
+    const g = parseInt(hex.substring(2, 4), 16);
+    const b = parseInt(hex.substring(4, 6), 16);
+    return (r * 299 + g * 587 + b * 114) / 1000 < 140;
+  }
+  return false;
+};
+
 interface AutoResizingTextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   value: string;
 }
@@ -2035,15 +2068,26 @@ const IndexContent = () => {
                         );
                       };
 
-                      const isCardDark = isDark || d.backgroundColor === "#1F2937" || d.backgroundColor === "#111827";
-                      const effectiveTextColor = d.textColor || (isCardDark ? "#FFFFFF" : "#1F2937");
+                      // Reacción dinámica en modo oscuro: si tiene fondo blanco, se pone oscuro.
+                      const rawBg = d.backgroundColor ?? (isDark ? "#1F2937" : "#FFFFFF");
+                      const isWhiteBg = isWhiteColor(rawBg);
+                      const backgroundColor = isDark && isWhiteBg ? "#1F2937" : rawBg;
+
+                      const isCardDark = backgroundColor === "transparent" || !d.backgroundColor
+                        ? isDark
+                        : isColorDark(backgroundColor);
+
+                      // Reacción dinámica en modo oscuro: si tiene texto negro o fondo blanco, se pone blanco.
+                      const rawTextColor = d.textColor ?? (isCardDark ? "#FFFFFF" : "#1F2937");
+                      const isBlackText = isBlackColor(rawTextColor);
+                      const effectiveTextColor = isDark && (isBlackText || isWhiteBg) ? "#FFFFFF" : rawTextColor;
 
                       return (
                         <div
                           key={node.id}
                           className="rounded-2xl border p-5 space-y-3 relative group/card transition-colors duration-300 cursor-pointer"
                           style={{
-                            backgroundColor: d.backgroundColor || (isDark ? "#1C1C1E" : "#FAFAFA"),
+                            backgroundColor: backgroundColor || (isDark ? "#1C1C1E" : "#FAFAFA"),
                             borderColor: isCardDark ? "rgba(255,255,255,0.1)" : "#E5E7EB"
                           }}
                           onMouseEnter={() => setPanelCardHover(node.id)}
