@@ -108,7 +108,7 @@ export default function TutorialModal({ userId, triggerOpen }: Props) {
             exit={{ opacity: 0, scale: 0.96, y: 12 }}
             transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
             className="relative z-10 w-full max-w-4xl max-h-[90vh] md:max-h-none md:h-[520px] overflow-hidden rounded-[28px] shadow-2xl flex flex-col md:grid md:grid-cols-[40%_60%]"
-            style={{ background: isDark ? "#333333" : "#7E7E7E" }}
+            style={{ background: isDark ? "#000000" : "#7E7E7E" }}
           >
             {/* Close button — Movido como hijo directo para que quede fijo en mobile */}
             <button
@@ -143,7 +143,7 @@ export default function TutorialModal({ userId, triggerOpen }: Props) {
             </div>
 
             {/* Right panel — media + content */}
-            <div className="flex flex-col flex-grow overflow-y-auto md:overflow-visible min-h-0" style={{ background: isDark ? "#333333" : "#7E7E7E" }}>
+            <div className="flex flex-col flex-grow overflow-y-auto md:overflow-visible min-h-0" style={{ background: isDark ? "#000000" : "#7E7E7E" }}>
               {/* Media area */}
               <div className="m-4 mb-0 h-32 md:h-56 rounded-2xl bg-gradient-to-br from-white/20 to-white/5 overflow-hidden flex items-center justify-center flex-shrink-0">
                 <svg
