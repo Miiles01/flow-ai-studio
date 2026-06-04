@@ -76,7 +76,7 @@ const STEPS: Step[] = [
   },
   {
     key: "modelos_ia",
-    title: "Modelos de Negocio con IA",
+    title: "Generador de modelos de negocio",
     description:
       "Crea tableros interactivos y modela tus flujos de trabajo con inteligencia artificial para acelerar el crecimiento de tus ideas.",
   },
