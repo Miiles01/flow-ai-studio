@@ -1876,6 +1876,18 @@ const IndexContent = () => {
         )}
       </AnimatePresence>
 
+      <AnimatePresence>
+        {planResult && (
+          <PlanPanel
+            plan={planResult}
+            isDark={isDark}
+            isGenerating={isGenerating}
+            onApprove={handlePlanApprove}
+            onClose={() => setPlanResult(null)}
+          />
+        )}
+      </AnimatePresence>
+
 
       {/* ─── Mobile View Warning Toast ─── */}
       <AnimatePresence>
