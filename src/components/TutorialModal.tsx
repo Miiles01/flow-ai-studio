@@ -347,40 +347,17 @@ export default function TutorialModal({ userId, triggerOpen }: Props) {
                   )}
 
                   {active === 2 && (
-                    <div className="flex items-center gap-4 sm:gap-6 max-w-sm sm:max-w-md w-full px-4 sm:px-6 scale-90 sm:scale-100">
+                    <div className="flex items-center justify-center w-full px-4 sm:px-6">
                       {/* Profile Card */}
-                      <div className={`p-3 sm:p-4 rounded-2xl border flex flex-col items-center gap-1.5 sm:gap-2 shrink-0 ${
+                      <div className={`p-4 sm:p-5 rounded-2xl border flex flex-col items-center gap-2 sm:gap-2.5 shrink-0 shadow-lg ${
                         isDark ? "bg-black/80 border-white/10" : "bg-white border-neutral-200"
-                      }`}>
-                        <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full overflow-hidden border-2 border-[#4059F1]">
+                      }`} style={{ width: "160px" }}>
+                        <div className="w-14 h-14 sm:w-16 sm:h-16 rounded-full overflow-hidden border-2 border-[#4059F1]">
                           <img src={avatar3} alt="Avatar" className="w-full h-full object-cover" />
                         </div>
                         <div className="text-center">
-                          <div className={`text-[11px] sm:text-[12px] font-semibold ${isDark ? "text-white" : "text-neutral-800"}`}>Karol Wegner</div>
-                          <div className="text-[8px] sm:text-[9px] text-[#4059F1] font-medium bg-[#4059F1]/10 px-2 py-0.5 rounded-full mt-0.5 inline-block">Creador Pro</div>
-                        </div>
-                      </div>
-
-                      {/* Info Cards */}
-                      <div className="flex flex-col gap-2 flex-grow">
-                        <div className={`p-2 sm:p-2.5 rounded-xl border flex items-center gap-2 sm:gap-2.5 shadow-sm ${
-                          isDark ? "bg-black/80 border-white/10 text-white" : "bg-white border-neutral-200 text-neutral-800"
-                        }`}>
-                          <span className="text-sm">💼</span>
-                          <div>
-                            <div className="text-[9px] sm:text-[10px] text-neutral-400 dark:text-neutral-500 font-light leading-none text-left">Portafolio</div>
-                            <div className="text-[10px] sm:text-[11px] font-medium mt-0.5 leading-none text-left">14 proyectos activos</div>
-                          </div>
-                        </div>
-
-                        <div className={`p-2 sm:p-2.5 rounded-xl border flex items-center gap-2 sm:gap-2.5 shadow-sm ${
-                          isDark ? "bg-black/80 border-white/10 text-white" : "bg-white border-neutral-200 text-neutral-800"
-                        }`}>
-                          <span className="text-sm">🤝</span>
-                          <div>
-                            <div className="text-[9px] sm:text-[10px] text-neutral-400 dark:text-neutral-500 font-light leading-none text-left">Colaboraciones</div>
-                            <div className="text-[10px] sm:text-[11px] font-medium mt-0.5 leading-none text-left">3 marcas conectadas</div>
-                          </div>
+                          <div className={`text-[12px] sm:text-[13px] font-semibold ${isDark ? "text-white" : "text-neutral-800"}`}>Laura Morales</div>
+                          <div className="text-[8px] sm:text-[9px] text-[#4059F1] font-semibold bg-[#4059F1]/10 px-2 py-0.5 rounded-full mt-1 inline-block">Creador Pro</div>
                         </div>
                       </div>
                     </div>
