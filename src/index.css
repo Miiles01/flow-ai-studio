@@ -424,3 +424,12 @@
 .multi-select-active .react-flow__node-frameNode .rounded-lg.pointer-events-none {
   border-color: #D1D5DB !important;
 }
+
+/* Utility to hide scrollbars */
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}

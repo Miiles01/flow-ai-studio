@@ -111,21 +111,30 @@ export default function TutorialModal({ userId, triggerOpen }: Props) {
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.96, y: 12 }}
             transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
-            className="relative z-10 w-full max-w-4xl overflow-hidden rounded-[28px] shadow-2xl grid grid-cols-1 md:grid-cols-[40%_60%]"
+            className="relative z-10 w-full max-w-4xl max-h-[90vh] md:max-h-none overflow-hidden rounded-[28px] shadow-2xl flex flex-col md:grid md:grid-cols-[40%_60%]"
             style={{ background: "#7E7E7E" }}
           >
+            {/* Close button — Movido como hijo directo para que quede fijo en mobile */}
+            <button
+              onClick={close}
+              className="absolute right-4 top-4 md:right-5 md:top-5 z-50 flex h-9 w-9 items-center justify-center rounded-full bg-white text-black shadow-md hover:bg-gray-100 transition-colors"
+              aria-label="Cerrar"
+            >
+              <X size={18} />
+            </button>
+
             {/* Left panel — title + steps */}
-            <div className="p-8 md:p-10 flex flex-col">
-              <h2 className="text-3xl md:text-4xl font-normal leading-tight text-white">
+            <div className="p-6 pb-2 md:p-10 flex flex-col flex-shrink-0">
+              <h2 className="text-2xl md:text-4xl font-normal leading-tight text-white pr-10 md:pr-0">
                 {STEPS[0].title}
               </h2>
 
-              <nav className="mt-10 space-y-1">
+              <nav className="mt-4 md:mt-10 flex md:flex-col gap-1.5 overflow-x-auto md:overflow-visible pb-2 md:pb-0 scrollbar-none">
                 {STEPS.map((s, i) => (
                   <button
                     key={s.key}
                     onClick={() => setActive(i)}
-                    className={`block w-full text-left px-4 py-2.5 rounded-xl text-sm transition-colors ${
+                    className={`shrink-0 block text-left px-4 py-2 rounded-xl text-xs md:text-sm transition-colors w-auto md:w-full ${
                       i === active
                         ? "bg-white/15 text-white font-medium"
                         : "text-white/60 hover:text-white hover:bg-white/5"
@@ -138,18 +147,9 @@ export default function TutorialModal({ userId, triggerOpen }: Props) {
             </div>
 
             {/* Right panel — media + content */}
-            <div className="flex flex-col" style={{ background: "#7E7E7E" }}>
-              {/* Close button */}
-              <button
-                onClick={close}
-                className="absolute right-5 top-5 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-white text-black shadow-md hover:bg-gray-100 transition-colors"
-                aria-label="Cerrar"
-              >
-                <X size={18} />
-              </button>
-
+            <div className="flex flex-col flex-grow overflow-y-auto md:overflow-visible min-h-0" style={{ background: "#7E7E7E" }}>
               {/* Media area */}
-              <div className="m-4 mb-0 h-44 md:h-56 rounded-2xl bg-gradient-to-br from-white/20 to-white/5 overflow-hidden flex items-center justify-center">
+              <div className="m-4 mb-0 h-32 md:h-56 rounded-2xl bg-gradient-to-br from-white/20 to-white/5 overflow-hidden flex items-center justify-center flex-shrink-0">
                 <svg
                   className="w-full h-full opacity-60"
                   xmlns="http://www.w3.org/2000/svg"
@@ -174,7 +174,7 @@ export default function TutorialModal({ userId, triggerOpen }: Props) {
               </div>
 
               {/* Content */}
-              <div className="p-8 md:p-10 flex flex-col flex-1">
+              <div className="p-6 md:p-10 flex flex-col flex-grow">
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={step.key}
@@ -183,17 +183,17 @@ export default function TutorialModal({ userId, triggerOpen }: Props) {
                     exit={{ opacity: 0, y: -8 }}
                     transition={{ duration: 0.25 }}
                   >
-                    <h3 className="text-2xl font-normal text-white">
+                    <h3 className="text-xl md:text-2xl font-normal text-white">
                       {step.title}
                     </h3>
-                    <p className="mt-3 text-sm font-light leading-relaxed text-white/70">
+                    <p className="mt-2.5 md:mt-3 text-xs md:text-sm font-light leading-relaxed text-white/70">
                       {step.description}
                     </p>
                   </motion.div>
                 </AnimatePresence>
 
                 {/* Step dots */}
-                <div className="flex gap-1.5 mt-6">
+                <div className="flex gap-1.5 mt-5 md:mt-6">
                   {STEPS.map((s, i) => (
                     <span
                       key={s.key}
@@ -205,16 +205,16 @@ export default function TutorialModal({ userId, triggerOpen }: Props) {
                 </div>
 
                 {/* Actions */}
-                <div className="mt-auto pt-8 flex items-center justify-end gap-3">
+                <div className="mt-6 md:mt-auto pt-6 md:pt-8 flex items-center justify-end gap-3">
                   <button
                     onClick={close}
-                    className="rounded-full bg-black text-white px-6 py-2.5 text-sm hover:bg-zinc-900 transition-colors"
+                    className="rounded-full bg-black text-white px-5 md:px-6 py-2 md:py-2.5 text-xs md:text-sm hover:bg-zinc-900 transition-colors"
                   >
                     Probar ahora
                   </button>
                   <button
                     onClick={next}
-                    className="rounded-full bg-white text-black px-6 py-2.5 text-sm hover:bg-gray-100 transition-colors"
+                    className="rounded-full bg-white text-black px-5 md:px-6 py-2 md:py-2.5 text-xs md:text-sm hover:bg-gray-100 transition-colors"
                   >
                     {isLast ? "Listo" : "Siguiente"}
                   </button>
