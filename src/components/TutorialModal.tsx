@@ -12,28 +12,22 @@ type Step = {
 
 const STEPS: Step[] = [
   {
-    key: "bienvenida",
-    title: "Bienvenido a Miiles",
-    description:
-      "Miiles es tu espacio para crear flujos visuales con IA, descubrir programas de marcas y colaborar con otros emprendedores. Este tutorial rápido te muestra cómo funciona.",
-  },
-  {
-    key: "tableros",
-    title: "Tableros con IA",
-    description:
-      "Crea tableros de flujo desde cero o pídele a la IA que los genere por ti. Describe tu objetivo y Miiles construye el diagrama, las tareas y los nodos automáticamente.",
-  },
-  {
-    key: "programas",
-    title: "Programas de marcas",
-    description:
-      "Explora los programas activos de marcas que buscan creadores y expertos. Aplica, sigue tu progreso y recibe notificaciones cuando avances en cada etapa.",
-  },
-  {
     key: "colaboraciones",
     title: "Colaboraciones",
     description:
-      "Miiles te muestra los negocios que están buscando expertos en tu industria. Ofrece tus servicios y crea alianzas estratégicas con otros emprendedores.",
+      "Encuentra marcas líderes y colabora con ellas en proyectos creativos para redes sociales y estrategias digitales de alto impacto.",
+  },
+  {
+    key: "modelos_ia",
+    title: "Modelos de Negocio con IA",
+    description:
+      "Crea tableros interactivos y modela tus flujos de trabajo con inteligencia artificial para acelerar el crecimiento de tus ideas.",
+  },
+  {
+    key: "perfil",
+    title: "Perfil y Portafolio",
+    description:
+      "Gestiona tu perfil profesional, diseña un portafolio que capte la atención de las marcas y recibe invitaciones a colaboraciones especiales.",
   },
 ];
 
@@ -126,7 +120,7 @@ export default function TutorialModal({ userId, triggerOpen }: Props) {
             {/* Left panel — title + steps */}
             <div className="p-6 pb-2 md:p-10 flex flex-col flex-shrink-0">
               <h2 className="text-2xl md:text-4xl font-normal leading-tight text-white pr-10 md:pr-0">
-                {STEPS[0].title}
+                Bienvenido a Miiles
               </h2>
 
               <nav className="mt-4 md:mt-10 flex md:flex-col gap-1.5 overflow-x-auto md:overflow-visible pb-2 md:pb-0 scrollbar-none">
