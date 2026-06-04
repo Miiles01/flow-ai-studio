@@ -274,9 +274,9 @@ export default function TutorialModal({ userId, triggerOpen }: Props) {
                               data: {
                                 shape: "circle",
                                 label: "1. Brainstorm",
-                                fillColor: "#10B981",
+                                fillColor: "#FFFFFF",
                                 strokeColor: "#10B981",
-                                textColor: "#FFFFFF",
+                                textColor: "#111827",
                                 bold: true,
                               },
                             },
@@ -288,9 +288,9 @@ export default function TutorialModal({ userId, triggerOpen }: Props) {
                               data: {
                                 shape: "square",
                                 label: "2. Analizar Idea",
-                                fillColor: "#4059F1",
+                                fillColor: "#FFFFFF",
                                 strokeColor: "#4059F1",
-                                textColor: "#FFFFFF",
+                                textColor: "#111827",
                                 bold: true,
                               },
                             },
@@ -317,9 +317,8 @@ export default function TutorialModal({ userId, triggerOpen }: Props) {
                               data: {
                                 shape: "diamond",
                                 label: "4. Lanzamiento 🚀",
-                                fillColor: "#8B5CF6",
-                                strokeColor: "#8B5CF6",
-                                textColor: "#FFFFFF",
+                                fillColor: "#FFFFFF",
+                                textColor: "#111827",
                                 bold: true,
                               },
                             }

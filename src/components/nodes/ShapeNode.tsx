@@ -455,7 +455,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
         preserveAspectRatio="none"
         className="absolute inset-0"
         style={{
-          fill: nodeData.fillColor || (isDark ? "#2C2C2E" : "white"),
+          fill: fillColor,
           stroke: nodeData.strokeColor || (isDark ? "#444446" : "#D1D5DB"),
           strokeWidth: selected ? 2 : 1.5,
           filter: selected ? "drop-shadow(0 0 6px rgba(64,89,241,0.15))" : "none",
