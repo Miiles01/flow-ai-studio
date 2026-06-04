@@ -433,3 +433,19 @@
   -ms-overflow-style: none;  /* IE and Edge */
   scrollbar-width: none;  /* Firefox */
 }
+
+/* Override inline black text styles in dark mode */
+.dark .react-flow__node-textNode [style*="color: rgb(0, 0, 0)"],
+.dark .react-flow__node-textNode [style*="color: rgb(17, 24, 39)"],
+.dark .react-flow__node-textNode [style*="color: #000000"],
+.dark .react-flow__node-textNode [style*="color:#000000"],
+.dark .react-flow__node-textNode [style*="color: #000"],
+.dark .react-flow__node-textNode [style*="color: black"],
+.dark .react-flow__node-textNode b,
+.dark .react-flow__node-textNode span {
+  color: #FFFFFF !important;
+}
+
+.dark .react-flow__node-textNode a {
+  color: #60a5fa !important; /* light blue for links in dark mode */
+}

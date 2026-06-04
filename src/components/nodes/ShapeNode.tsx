@@ -123,6 +123,18 @@ const isColorDark = (colorHex: string): boolean => {
   return false;
 };
 
+const isWhiteColor = (color: string | undefined): boolean => {
+  if (!color) return false;
+  const cleaned = color.trim().toLowerCase();
+  return cleaned === "#ffffff" || cleaned === "white" || cleaned === "#fff" || cleaned === "#fafafa" || cleaned === "#f3f4f6";
+};
+
+const isBlackColor = (color: string | undefined): boolean => {
+  if (!color) return false;
+  const cleaned = color.trim().toLowerCase();
+  return cleaned === "#000000" || cleaned === "black" || cleaned === "#000" || cleaned === "#111827" || cleaned === "#1f2937" || cleaned === "#1c1c1e";
+};
+
 const ShapeNode = ({ id, data, selected }: NodeProps) => {
   const nodeData = data as ShapeNodeData;
   const shape = nodeData.shape || "square";
@@ -161,16 +173,25 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
     updateNodeData({ label });
   };
 
-  const fillColor = nodeData.fillColor || (isDark ? "#2C2C2E" : "#FFFFFF");
+  // Reacción dinámica en modo oscuro: si tiene fondo blanco, se pone oscuro.
+  const rawFill = nodeData.fillColor || (isDark ? "#2C2C2E" : "#FFFFFF");
+  const isWhiteFill = isWhiteColor(rawFill);
+  const fillColor = isDark && isWhiteFill ? "#2C2C2E" : rawFill;
+
   const isFillDark = fillColor === "transparent" ? isDark : isColorDark(fillColor);
   const defaultTextColor = isFillDark ? "#FFFFFF" : "#111827";
+
+  // Reacción dinámica en modo oscuro: si tiene texto negro, se pone blanco.
+  const rawTextColor = nodeData.textColor || defaultTextColor;
+  const isBlackText = isBlackColor(rawTextColor);
+  const textColor = isDark && (isBlackText || isWhiteFill) ? "#FFFFFF" : rawTextColor;
 
   const textStyle: React.CSSProperties = {
     fontSize: `${nodeData.fontSize || 14}px`,
     fontWeight: nodeData.bold ? "bold" : "normal",
     fontStyle: nodeData.italic ? "italic" : "normal",
     textDecoration: nodeData.underline ? "underline" : "none",
-    color: nodeData.textColor || defaultTextColor,
+    color: textColor,
   };
 
   return (

@@ -112,6 +112,18 @@ const AutoResizingTextarea = forwardRef<HTMLTextAreaElement, AutoResizingTextare
 );
 AutoResizingTextarea.displayName = "AutoResizingTextarea";
 
+const isWhiteColor = (color: string | undefined): boolean => {
+  if (!color) return false;
+  const cleaned = color.trim().toLowerCase();
+  return cleaned === "#ffffff" || cleaned === "white" || cleaned === "#fff" || cleaned === "#fafafa" || cleaned === "#f3f4f6";
+};
+
+const isBlackColor = (color: string | undefined): boolean => {
+  if (!color) return false;
+  const cleaned = color.trim().toLowerCase();
+  return cleaned === "#000000" || cleaned === "black" || cleaned === "#000" || cleaned === "#111827" || cleaned === "#1f2937" || cleaned === "#1c1c1e";
+};
+
 const TodoNode = ({ id, data, selected }: NodeProps) => {
   const { getNodes, setNodes } = useReactFlow();
   const selectedNodes = getNodes().filter((n) => n.selected);
@@ -129,12 +141,21 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
     { id: "t3", text: "Validar prototipos con usuarios", completed: false },
   ];
   const fontSize = nodeData.fontSize ?? 14;
-  const backgroundColor = nodeData.backgroundColor ?? (isDark ? "#1F2937" : "#FFFFFF");
+
+  // Reacción dinámica en modo oscuro: si tiene fondo blanco, se pone oscuro.
+  const rawBg = nodeData.backgroundColor ?? (isDark ? "#1F2937" : "#FFFFFF");
+  const isWhiteBg = isWhiteColor(rawBg);
+  const backgroundColor = isDark && isWhiteBg ? "#1F2937" : rawBg;
+
   const accentColor = nodeData.accentColor ?? "#4059F1";
   const isDarkMode = backgroundColor === "transparent" || !nodeData.backgroundColor
     ? isDark
     : isColorDark(backgroundColor);
-  const textColor = nodeData.textColor ?? (isDarkMode ? "#FFFFFF" : "#1F2937");
+
+  // Reacción dinámica en modo oscuro: si tiene texto negro, se pone blanco.
+  const rawTextColor = nodeData.textColor ?? (isDarkMode ? "#FFFFFF" : "#1F2937");
+  const isBlackText = isBlackColor(rawTextColor);
+  const textColor = isDark && (isBlackText || isWhiteBg) ? "#FFFFFF" : rawTextColor;
 
   const [activePicker, setActivePicker] = useState<"bg" | "accent" | "text" | null>(null);
   const taskInputRefs = useRef<Record<string, HTMLTextAreaElement | null>>({});

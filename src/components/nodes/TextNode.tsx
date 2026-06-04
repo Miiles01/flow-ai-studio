@@ -78,6 +78,12 @@ function LinkPopover({
   );
 }
 
+const isBlackColor = (color: string | undefined): boolean => {
+  if (!color) return false;
+  const cleaned = color.trim().toLowerCase();
+  return cleaned === "#000000" || cleaned === "black" || cleaned === "#000" || cleaned === "#111827" || cleaned === "#1f2937" || cleaned === "#1c1c1e";
+};
+
 // ─── TextNode ───────────────────────────────────────────────────
 const TextNode = ({ id, data, selected }: NodeProps) => {
   const { getNodes, setNodes } = useReactFlow();
@@ -213,7 +219,10 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
     if (align !== (nodeData.align ?? "left")) commitData({ align });
   }, [align, nodeData.align, commitData]);
 
-  const textColor = nodeData.textColor ?? (isDark ? "#FFFFFF" : "#111827");
+  // Reacción dinámica en modo oscuro: si tiene texto negro, se pone blanco.
+  const rawTextColor = nodeData.textColor ?? (isDark ? "#FFFFFF" : "#111827");
+  const isBlackText = isBlackColor(rawTextColor);
+  const textColor = isDark && isBlackText ? "#FFFFFF" : rawTextColor;
 
   // Text color: apply to whole editor
   useEffect(() => {
