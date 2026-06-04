@@ -1857,7 +1857,7 @@ const IndexContent = () => {
               exit={{ opacity: 0, y: 10 }}
               transition={{ duration: 0.2 }}
             >
-              <AIPromptBar onGenerate={handleAIGenerate} isGenerating={isGenerating || isClarifying} />
+              <AIPromptBar onGenerate={handleAIGenerate} isGenerating={isGenerating || isClarifying || isPlanning} />
             </motion.div>
           )}
         </AnimatePresence>
