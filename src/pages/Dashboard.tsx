@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import TutorialModal from "@/components/TutorialModal";
+import tutorialBanner from "@/assets/tablero-banner.webp.asset.json";
 
 type Program = {
   id: string;
@@ -245,59 +246,6 @@ export default function Dashboard() {
         </p>
       </motion.div>
 
-      {/* ── Banner: Descubre cómo funciona Miiles ── */}
-      <motion.div variants={sectionVariants}>
-        <div
-          className="relative w-full rounded-2xl overflow-hidden flex cursor-pointer group"
-          style={{ height: "472px" }}
-          onClick={() => setTutorialTrigger(t => t + 1)}
-        >
-          {/* Left: photo — 63% como en la referencia */}
-          <div className="relative h-full flex-shrink-0" style={{ width: '63%' }}>
-            <img
-              src="https://images.unsplash.com/photo-1551434678-e076c223a692?w=1000&q=85"
-              alt="Mujer trabajando con Miiles"
-              className="w-full h-full object-cover object-center transition-transform duration-700 group-hover:scale-[1.03]"
-            />
-            <div className="absolute inset-y-0 right-0 w-24 bg-gradient-to-r from-transparent to-[#0D0D0D]" />
-          </div>
-
-          {/* Right: dark panel */}
-          <div className="flex-1 bg-[#0D0D0D] flex flex-col justify-center gap-6 px-8 py-8 relative">
-            {/* Badge blanco con texto negro — igual al de la referencia */}
-            <div>
-              <span className="inline-flex items-center bg-white text-black text-[11px] font-normal px-4 py-1.5 rounded-full">
-                Tutorial
-              </span>
-            </div>
-            {/* Texto: sans-serif grande + cursiva italic (igual a "Primeros pasos") */}
-            <div>
-              <p
-                className="text-white font-normal"
-                style={{
-                  fontFamily: "'Poppins', sans-serif",
-                  fontSize: "clamp(28px, 3vw, 42px)",
-                  lineHeight: 1.15,
-                }}
-              >
-                Descubre cómo funciona
-              </p>
-              <p
-                className="text-white"
-                style={{
-                  fontFamily: "'WelthCatritz', serif",
-                  fontSize: "clamp(30px, 3.3vw, 46px)",
-                  fontWeight: 400,
-                  lineHeight: 1.1,
-                  fontStyle: "italic",
-                }}
-              >
-                Miiles
-              </p>
-            </div>
-          </div>
-        </div>
-      </motion.div>
 
       {/* Stats */}
       <motion.div variants={sectionVariants} className="grid grid-cols-2 gap-5">
@@ -569,6 +517,47 @@ export default function Dashboard() {
         </DialogContent>
       </Dialog>
 
+
+      {/* Tutorial banner */}
+      <motion.button
+        type="button"
+        variants={sectionVariants}
+        onClick={() => setTutorialTrigger((n) => n + 1)}
+        whileHover={{ y: -4, transition: { duration: 0.2 } }}
+        className="group relative block w-full overflow-hidden rounded-[24px] text-left shadow-md ring-1 ring-black/5"
+        style={{ height: "472px" }}
+      >
+        <img
+          src={tutorialBanner.url}
+          alt="Descubre cómo funciona Miiles"
+          loading="lazy"
+          className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+        />
+        <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/30 to-transparent" />
+        <div className="absolute inset-0 flex flex-col justify-center p-8 md:p-10">
+          <span className="text-[11px] font-light uppercase tracking-[0.2em] text-white/70">
+            Tutorial
+          </span>
+          <h3 className="mt-2 max-w-md font-normal leading-snug text-white" style={{ fontSize: "clamp(28px, 3vw, 40px)", lineHeight: 1.15 }}>
+            Descubre cómo funciona
+          </h3>
+          <p
+            style={{
+              fontFamily: "'WelthCatritz', serif",
+              fontSize: "clamp(30px, 3.3vw, 44px)",
+              fontWeight: 400,
+              lineHeight: 1.1,
+              fontStyle: "italic",
+              color: "white",
+            }}
+          >
+            Miiles
+          </p>
+          <span className="mt-6 inline-flex w-fit items-center gap-2 rounded-full bg-white px-5 py-2 text-sm font-normal text-black transition-colors group-hover:bg-miiles-pink">
+            Ver tutorial <ArrowRight size={14} />
+          </span>
+        </div>
+      </motion.button>
 
       {/* Boards Carousel */}
 
