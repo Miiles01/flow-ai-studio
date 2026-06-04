@@ -84,10 +84,12 @@ Each node MUST have:
 Node Types and Data:
 1. "shapeNode": {"shape": "square"|"circle"|"diamond"|"hexagon"|"star", "label": "text", "fillColor": "hex", "textColor": "hex", "fontSize": 14}
    - Use "circle" for start/end points, "diamond" for decision points, and "square" or other shapes for general processes.
-2. "todoNode": {"title": "text", "subtitle": "text", "tasks": [{"id": "t1", "text": "detailed task description", "completed": boolean}], "backgroundColor": "hex", "accentColor": "hex", "textColor": "hex"}
-   - Use for phases with actionable checklist items. Do not make tasks generic; customize them in detail based on the user request.
-3. "textNode": {"html": "<b>Title</b>", "fontSize": 24, "textColor": "hex"}
+2. "todoNode": {"title": "text", "subtitle": "text", "tasks": [{"id": "t1", "text": "detailed task description", "completed": boolean}], "backgroundColor": "#FFFFFF", "accentColor": "hex", "textColor": "#000000"}
+   - Use for phases with actionable checklist items.
+   - CRITICAL COLOR RULE: Checklist backgrounds MUST ALWAYS be "#FFFFFF" (pure white) and text/labels/title/subtitle MUST ALWAYS be "#000000" (pure black). NEVER use dark backgrounds or other colors for todoNode.
+3. "textNode": {"html": "<b style='color:#000000'>Title</b>", "fontSize": 24, "textColor": "#000000"}
    - Use for general headers, sections, or annotations.
+   - CRITICAL COLOR RULE: Titles and text nodes MUST ALWAYS use "#000000" (pure black) for "textColor" and inside HTML style attributes. NEVER use gray or any other colors for titles.
 4. "imageNode": {"url": "string", "width": number, "height": number}
    - Use for visual placeholders or logos.
 5. "embedNode": {"url": "https://..."} con "style": {"width": 480, "height": 320}
@@ -100,10 +102,9 @@ Rules for Premium Visual Design:
   - Offset one branch (e.g. "Yes") downwards by exactly 200px (Y: +200) and keep that branch straight (Y constant).
   - Offset the other branch (e.g. "No") upwards by exactly 200px (Y: -200) and keep that branch straight (Y constant).
   - This forms clean, straight parallel lanes and avoids random angles or overlaps.
-- COLOR CONTRAST: Ensure high readability. If you set a dark card "backgroundColor" (e.g., #1F2937, #111827, #0F172A), you MUST set "textColor" to "#FFFFFF" or a very light gray. If you use a light card background, use dark text (e.g., #1F2937).
-- COLOR PALETTES: Choose a cohesive palette. Avoid mixing random conflicting colors. Use sleek combinations:
-  - Dark Premium: Dark card backgrounds (#1F2937, #1E1E24) with vibrant brand accents (#4059F1, #10B981, #EC4899, #8B5CF6) and white text.
-  - Light Clean: White (#FFFFFF) or soft gray (#F3F4F6) card backgrounds with brand accents (#4059F1) and dark text (#1F2937).
+- COLOR RULES: Checklists (todoNodes) MUST be "#FFFFFF" (pure white) with "#000000" (pure black) text. Titles (textNodes) MUST be "#000000" (pure black). Other shapeNodes can use vibrant palettes.
+- COLOR PALETTES: Choose a cohesive palette for shapeNodes. Avoid mixing random conflicting colors. Use sleek combinations:
+  - shapeNodes: vibrant accents (#4059F1, #10B981, #EC4899, #8B5CF6) with white text.
 - DEFAULT BRAND COLOR: The primary brand color is #4059F1. Use it as the default accentColor for todos and stroke color for edges.
 - EDGES: Connect nodes logically. Set edge "style": {"stroke": "hex", "strokeWidth": 2}. Do NOT animate the edges (always set "animated": false or omit it).
 - When the user asks about prospects or business ideas, prefer real prospects from the database below over invented ones.
@@ -112,7 +113,7 @@ Rules for Premium Visual Design:
 - Respond ONLY with valid JSON containing {"nodes": [...], "edges": [...]}, no markdown.
 
 Example output:
-{"nodes": [{"id":"1","type":"textNode","position":{"x":50,"y":50},"data":{"html":"<b>Inicio</b>","fontSize":24,"textColor":"#4059F1"}},{"id":"2","type":"shapeNode","position":{"x":50,"y":120},"style":{"width":140,"height":140},"data":{"shape":"circle","label":"Inicio del Flujo","fillColor":"#4059F1","textColor":"#FFFFFF"}},{"id":"3","type":"todoNode","position":{"x":350,"y":70},"style":{"width":280,"height":240},"data":{"title":"Fase de Planificación","subtitle":"Prerrequisitos obligatorios","tasks":[{"id":"t1","text":"Analizar requerimientos del cliente","completed":false},{"id":"t2","text":"Crear bocetos preliminares","completed":false}],"backgroundColor":"#1F2937","accentColor":"#4059F1","textColor":"#FFFFFF"}}], "edges": [{"id":"e2-3","source":"2","target":"3","animated":false,"style":{"stroke":"#4059F1","strokeWidth":2}}]}${prospectsBlock}${templatesBlock}`;
+{"nodes": [{"id":"1","type":"textNode","position":{"x":50,"y":50},"data":{"html":"<b style='color:#000000'>Inicio</b>","fontSize":24,"textColor":"#000000"}},{"id":"2","type":"shapeNode","position":{"x":50,"y":120},"style":{"width":140,"height":140},"data":{"shape":"circle","label":"Inicio del Flujo","fillColor":"#4059F1","textColor":"#FFFFFF"}},{"id":"3","type":"todoNode","position":{"x":350,"y":70},"style":{"width":280,"height":240},"data":{"title":"Fase de Planificación","subtitle":"Prerrequisitos obligatorios","tasks":[{"id":"t1","text":"Analizar requerimientos del cliente","completed":false},{"id":"t2","text":"Crear bocetos preliminares","completed":false}],"backgroundColor":"#FFFFFF","accentColor":"#4059F1","textColor":"#000000"}}], "edges": [{"id":"e2-3","source":"2","target":"3","animated":false,"style":{"stroke":"#4059F1","strokeWidth":2}}]}${prospectsBlock}${templatesBlock}`;
 
     const response = await fetch(
       "https://ai.gateway.lovable.dev/v1/chat/completions",

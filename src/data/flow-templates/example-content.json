@@ -9,7 +9,7 @@
       "id": "1",
       "type": "text",
       "position": { "x": 50, "y": -50 },
-      "data": { "html": "<b>Fase 1: Ideación</b>", "fontSize": 24, "textColor": "#4059F1" }
+      "data": { "html": "<b style='color:#000000'>Fase 1: Ideación</b>", "fontSize": 24, "textColor": "#000000" }
     },
     {
       "id": "2",
@@ -38,9 +38,9 @@
           { "id": "t2", "text": "Preparar cámara", "completed": false },
           { "id": "t3", "text": "Grabar audio limpio", "completed": false }
         ],
-        "backgroundColor": "#1F2937",
+        "backgroundColor": "#FFFFFF",
         "accentColor": "#A855F7",
-        "textColor": "#FFFFFF"
+        "textColor": "#000000"
       }
     },
     {

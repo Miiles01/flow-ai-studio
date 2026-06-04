@@ -76,10 +76,12 @@ Each node MUST have:
    - Palettes: Use vibrant, modern colors like #4059F1 (Royal Blue), #F36F56 (Coral), #45B382 (Emerald), #F5A623 (Amber), #8B5CF6 (Purple). NEVER use plain white backgrounds. Always use white text (#FFFFFF) on dark/colored backgrounds for high contrast.
 
 2. "todoNode" (for checklists or complex grouped tasks):
-   - "data": {"title": "Main Step", "subtitle": "Description", "tasks": [{"id": "t1", "text": "Task 1", "completed": boolean}], "backgroundColor": "#1C1C1E", "accentColor": "#4059F1"}
+   - "data": {"title": "Main Step", "subtitle": "Description", "tasks": [{"id": "t1", "text": "Task 1", "completed": boolean}], "backgroundColor": "#FFFFFF", "textColor": "#000000", "accentColor": "#4059F1"}
+   - CRITICAL COLOR RULE: Checklist backgrounds MUST ALWAYS be "#FFFFFF" (pure white) and text/labels MUST ALWAYS be "#000000" (pure black). NEVER use dark backgrounds or other colors for todoNode.
 
 3. "textNode" (for large contextual titles or section headers):
-   - "data": {"html": "<b>SECTION TITLE</b><br><span style='font-size:14px'>Description</span>", "fontSize": 24, "textColor": "#A3A8B8"}
+   - "data": {"html": "<b style='color:#000000'>SECTION TITLE</b><br><span style='font-size:14px;color:#000000'>Description</span>", "fontSize": 24, "textColor": "#000000"}
+   - CRITICAL COLOR RULE: Titles and text nodes MUST ALWAYS use "#000000" (pure black) for "textColor" and inside style attributes. NEVER use gray or any other colors for titles.
 
 4. "imageNode" (for visual placeholders or logos):
    - "data": {"url": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=200&auto=format&fit=crop", "width": 200, "height": 150}
