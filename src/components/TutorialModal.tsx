@@ -82,7 +82,7 @@ const STEPS: Step[] = [
   },
   {
     key: "perfil",
-    title: "Perfil y Portafolio",
+    title: "Gestiona tu portafolio",
     description:
       "Gestiona tu perfil profesional, diseña un portafolio que capte la atención de las marcas y recibe invitaciones a colaboraciones especiales.",
   },
