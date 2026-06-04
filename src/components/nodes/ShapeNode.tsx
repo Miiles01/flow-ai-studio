@@ -1,8 +1,59 @@
-import { memo, useState, useRef, useEffect } from "react";
+import { memo, useState, useRef, useEffect, forwardRef } from "react";
 import { Handle, Position, type NodeProps, NodeResizer, useReactFlow, useViewport } from "@xyflow/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "@/contexts/ThemeContext";
 import { Square, Circle, Triangle, Hexagon, Star, Plus, Minus, Palette, Bold, Italic, Underline, Diamond, Trash2, Baseline, Check } from "lucide-react";
+
+interface AutoResizingTextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
+  value: string;
+}
+
+const AutoResizingTextarea = forwardRef<HTMLTextAreaElement, AutoResizingTextareaProps>(
+  ({ value, onChange, className, style, rows = 1, ...props }, ref) => {
+    const localRef = useRef<HTMLTextAreaElement>(null);
+    const textareaRef = (ref || localRef) as React.MutableRefObject<HTMLTextAreaElement | null>;
+
+    const adjustHeight = () => {
+      const el = textareaRef.current;
+      if (el) {
+        el.style.height = "auto";
+        el.style.height = `${el.scrollHeight}px`;
+      }
+    };
+
+    useEffect(() => {
+      adjustHeight();
+    }, [value]);
+
+    useEffect(() => {
+      const el = textareaRef.current;
+      if (!el) return;
+      const observer = new ResizeObserver(() => {
+        adjustHeight();
+      });
+      observer.observe(el);
+      return () => {
+        observer.disconnect();
+      };
+    }, []);
+
+    return (
+      <textarea
+        ref={textareaRef}
+        value={value}
+        onChange={(e) => {
+          onChange?.(e);
+          adjustHeight();
+        }}
+        className={`${className} resize-none overflow-hidden`}
+        rows={rows}
+        style={style}
+        {...props}
+      />
+    );
+  }
+);
+AutoResizingTextarea.displayName = "AutoResizingTextarea";
 
 export type ShapeNodeData = {
   shape: string;
@@ -78,7 +129,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
   const [label, setLabel] = useState(nodeData.label || "");
   const [editing, setEditing] = useState(false);
   const [activePicker, setActivePicker] = useState<"fill" | "border" | "text" | null>(null);
-  const inputRef = useRef<HTMLInputElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
   const { setNodes, getNodes } = useReactFlow();
   const { zoom } = useViewport();
   const { isDark } = useTheme();
@@ -387,19 +438,23 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
       {/* Label */}
       <div className="absolute inset-0 flex items-center justify-center z-10 px-3 pointer-events-none">
         {editing ? (
-          <input
+          <AutoResizingTextarea
             ref={inputRef}
             value={label}
             onChange={(e) => setLabel(e.target.value)}
             onBlur={handleBlur}
-            onKeyDown={(e) => e.key === "Enter" && handleBlur()}
-            className="bg-transparent text-center outline-none w-full pointer-events-auto nodrag nopan font-sans"
+            onKeyDown={(e) => {
+              if (e.key === "Escape") {
+                handleBlur();
+              }
+            }}
+            className="bg-transparent text-center outline-none w-full pointer-events-auto nodrag nopan font-sans whitespace-pre-wrap break-words resize-none overflow-hidden"
             style={textStyle}
             onClick={(e) => e.stopPropagation()}
           />
         ) : (
           <span 
-            className="text-center select-none leading-snug break-all font-sans"
+            className="text-center select-none leading-snug whitespace-pre-wrap break-words font-sans"
             style={textStyle}
           >
             {label}

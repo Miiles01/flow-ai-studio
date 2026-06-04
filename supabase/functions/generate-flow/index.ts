@@ -84,6 +84,7 @@ Each node MUST have:
 Node Types and Data:
 1. "shapeNode": {"shape": "square"|"circle"|"diamond"|"hexagon"|"star", "label": "text", "fillColor": "hex", "textColor": "hex", "fontSize": 14}
    - Use "circle" for start/end points, "diamond" for decision points, and "square" or other shapes for general processes.
+   - LINE BREAKS FOR BALANCED TEXT: The UI renders newlines perfectly and wraps words cleanly. You MUST insert explicit '\n' in the "label" string to split long lines into balanced rows (e.g. use "Creación de\nContenido" or "Enviar\nEmail Frío" or "¿Presupuesto\npara Ads?" instead of single long lines) so words do not break awkwardly.
 2. "todoNode": {"title": "text", "subtitle": "text", "tasks": [{"id": "t1", "text": "detailed task description", "completed": boolean}], "backgroundColor": "#FFFFFF", "accentColor": "hex", "textColor": "#000000"}
    - Use for phases with actionable checklist items.
    - CRITICAL COLOR RULE: Checklist backgrounds MUST ALWAYS be "#FFFFFF" (pure white) and text/labels/title/subtitle MUST ALWAYS be "#000000" (pure black). NEVER use dark backgrounds or other colors for todoNode.

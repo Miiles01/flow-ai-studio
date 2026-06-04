@@ -74,6 +74,7 @@ Each node MUST have:
 1. "shapeNode" (for steps, decisions, start/end):
    - "data": {"shape": "square"|"circle"|"diamond"|"hexagon"|"document", "label": "Text here", "fillColor": "#Hex", "textColor": "#Hex", "fontSize": 14}
    - Palettes: Use vibrant, modern colors like #4059F1 (Royal Blue), #F36F56 (Coral), #45B382 (Emerald), #F5A623 (Amber), #8B5CF6 (Purple). NEVER use plain white backgrounds. Always use white text (#FFFFFF) on dark/colored backgrounds for high contrast.
+   - LINE BREAKS FOR BALANCED TEXT: The UI renders newlines perfectly and wraps words cleanly. You MUST insert explicit '\n' in the "label" string to split long lines into balanced rows (e.g. use "Creación de\nContenido" or "Enviar\nEmail Frío" or "¿Presupuesto\npara Ads?" instead of single long lines) so words do not break awkwardly.
 
 2. "todoNode" (for checklists or complex grouped tasks):
    - "data": {"title": "Main Step", "subtitle": "Description", "tasks": [{"id": "t1", "text": "Task 1", "completed": boolean}], "backgroundColor": "#FFFFFF", "textColor": "#000000", "accentColor": "#4059F1"}
