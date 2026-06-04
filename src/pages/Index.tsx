@@ -893,6 +893,26 @@ const IndexContent = () => {
     [setNodes, setEdges, reactFlowInstance]
   );
 
+  // Genera un plan estratégico interno y lo muestra para aprobación antes de construir el flujo.
+  const proceedToPlanning = useCallback(
+    async (prompt: string) => {
+      setIsPlanning(true);
+      try {
+        const plan = await planFlow(prompt);
+        if (plan && (plan.phases.length > 0 || plan.summary)) {
+          setPlanPrompt(prompt);
+          setPlanResult(plan);
+          return;
+        }
+        // Si el plan falla, no bloquees: genera directo.
+        await runGenerate(prompt);
+      } finally {
+        setIsPlanning(false);
+      }
+    },
+    [runGenerate]
+  );
+
   // Primero entiende la intención: si el prompt es muy general, abre el panel de preguntas.
   const handleAIGenerate = useCallback(
     async (prompt: string) => {
