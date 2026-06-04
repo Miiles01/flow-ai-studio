@@ -149,6 +149,10 @@ export default function TutorialModal({ userId, triggerOpen }: Props) {
                 <svg
                   className="w-full h-full opacity-60"
                   xmlns="http://www.w3.org/2000/svg"
+                  style={{
+                    maskImage: "radial-gradient(ellipse, black 25%, transparent 75%)",
+                    WebkitMaskImage: "radial-gradient(ellipse, black 25%, transparent 75%)"
+                  }}
                 >
                   <defs>
                     <pattern
