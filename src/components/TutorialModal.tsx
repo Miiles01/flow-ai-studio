@@ -1,44 +1,39 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, ArrowRight, ArrowLeft, LayoutDashboard, Search, Users, Zap } from "lucide-react";
+import { X } from "lucide-react";
 
-const STEPS = [
+type Step = {
+  key: string;
+  title: string;
+  description: string;
+  media?: string;
+};
+
+const STEPS: Step[] = [
   {
     key: "bienvenida",
-    tag: "01 — Bienvenida",
-    title: "Bienvenido\na",
-    italic: "Miiles",
-    body: "Tu espacio para crear flujos visuales con IA, descubrir programas de marcas y colaborar con otros emprendedores.",
-    icon: Zap,
-    color: "#FFD878",
+    title: "Bienvenido a Miiles",
+    description:
+      "Miiles es tu espacio para crear flujos visuales con IA, descubrir programas de marcas y colaborar con otros emprendedores. Este tutorial rápido te muestra cómo funciona.",
   },
   {
     key: "tableros",
-    tag: "02 — Tableros",
-    title: "Organiza\ntus ideas",
-    italic: "visualmente",
-    body: "Crea tableros infinitos con nodos, textos, imágenes y marcos. Todo en tiempo real, desde cualquier dispositivo.",
-    icon: LayoutDashboard,
-    color: "#A8FF78",
+    title: "Tableros con IA",
+    description:
+      "Crea tableros de flujo desde cero o pídele a la IA que los genere por ti. Describe tu objetivo y Miiles construye el diagrama, las tareas y los nodos automáticamente.",
   },
   {
     key: "programas",
-    tag: "03 — Programas",
-    title: "Descubre\noportunidades",
-    italic: "para ti",
-    body: "Explora programas de marcas que buscan colaboraciones. Postúlate en segundos y lleva tu carrera al siguiente nivel.",
-    icon: Search,
-    color: "#78C8FF",
+    title: "Programas de marcas",
+    description:
+      "Explora los programas activos de marcas que buscan creadores y expertos. Aplica, sigue tu progreso y recibe notificaciones cuando avances en cada etapa.",
   },
   {
     key: "colaboraciones",
-    tag: "04 — Colaboraciones",
-    title: "Tu mejor\nversión,",
-    italic: "siempre visible",
-    body: "Construye un perfil profesional con tus redes, portafolio y videos. Que las marcas te encuentren a ti.",
-    icon: Users,
-    color: "#FF78C8",
+    title: "Colaboraciones",
+    description:
+      "Miiles te muestra los negocios que están buscando expertos en tu industria. Ofrece tus servicios y crea alianzas estratégicas con otros emprendedores.",
   },
 ];
 
@@ -46,19 +41,18 @@ const STORAGE_PREFIX = "miiles_tutorial_seen";
 
 type Props = {
   userId?: string | null;
-  /** Incrementar este número fuerza la apertura del modal (ej. desde el banner). */
+  /** Increment this number to force-open the modal (e.g. from a banner click). */
   triggerOpen?: number;
 };
 
 export default function TutorialModal({ userId, triggerOpen }: Props) {
   const [open, setOpen] = useState(false);
-  const [step, setStep] = useState(0);
-  const [dir, setDir] = useState(1);
+  const [active, setActive] = useState(0);
 
   const storageKey = userId ? `${STORAGE_PREFIX}:${userId}` : STORAGE_PREFIX;
 
-  // Auto-abrir para nuevos usuarios
   useEffect(() => {
+    // Wait until we know which user we are dealing with
     if (userId === undefined) return;
     try {
       const seen = localStorage.getItem(storageKey);
@@ -68,10 +62,10 @@ export default function TutorialModal({ userId, triggerOpen }: Props) {
     }
   }, [userId, storageKey]);
 
-  // Abrir desde el banner
+  // Allow opening the modal on demand (banner click)
   useEffect(() => {
     if (triggerOpen && triggerOpen > 0) {
-      setStep(0);
+      setActive(0);
       setOpen(true);
     }
   }, [triggerOpen]);
@@ -79,218 +73,156 @@ export default function TutorialModal({ userId, triggerOpen }: Props) {
   function close() {
     try {
       localStorage.setItem(storageKey, "1");
-    } catch { /* ignore */ }
+    } catch {
+      /* ignore */
+    }
     setOpen(false);
   }
 
-  const goTo = (next: number) => {
-    setDir(next > step ? 1 : -1);
-    setStep(next);
-  };
+  function next() {
+    if (active < STEPS.length - 1) {
+      setActive((a) => a + 1);
+    } else {
+      close();
+    }
+  }
 
-  const next = () => {
-    if (step < STEPS.length - 1) goTo(step + 1);
-    else close();
-  };
-
-  const prev = () => {
-    if (step > 0) goTo(step - 1);
-  };
-
-  const current = STEPS[step];
-  const Icon = current.icon;
-
-  const slideVariants = {
-    enter: (d: number) => ({ x: d > 0 ? 60 : -60, opacity: 0 }),
-    center: { x: 0, opacity: 1 },
-    exit: (d: number) => ({ x: d > 0 ? -60 : 60, opacity: 0 }),
-  };
+  const step = STEPS[active];
+  const isLast = active === STEPS.length - 1;
 
   return createPortal(
     <AnimatePresence>
       {open && (
-        <>
-          {/* Overlay — igual al de la landing navbar */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3 }}
+        <motion.div
+          className="fixed inset-0 z-[100] flex items-center justify-center p-4"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+        >
+          {/* Backdrop — igual al overlay del menú de la landing */}
+          <div
+            className="absolute inset-0 bg-black/40 backdrop-blur-sm"
             onClick={close}
-            className="fixed inset-0 z-[99] bg-black/40 backdrop-blur-[4px] cursor-pointer"
           />
 
-          {/* Modal — mismo bg #7E7E7E que el menú desplegable de la landing */}
+          {/* Card — bg-[#7E7E7E] igual al menú desplegable de la landing */}
           <motion.div
-            initial={{ opacity: 0, scale: 0.96, y: 20 }}
+            initial={{ opacity: 0, scale: 0.96, y: 12 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.96, y: 20 }}
-            transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed inset-4 md:inset-[5%] z-[100] rounded-[32px] md:rounded-[40px] border border-white/10 shadow-[0_24px_70px_rgba(0,0,0,0.4)] overflow-hidden flex flex-col"
+            exit={{ opacity: 0, scale: 0.96, y: 12 }}
+            transition={{ duration: 0.3, ease: [0.25, 0.1, 0.25, 1] }}
+            className="relative z-10 w-full max-w-4xl overflow-hidden rounded-[28px] shadow-2xl grid grid-cols-1 md:grid-cols-[40%_60%]"
             style={{ background: "#7E7E7E" }}
-            onClick={(e) => e.stopPropagation()}
           >
-            {/* Header */}
-            <div className="flex items-center justify-between px-8 md:px-12 pt-8 md:pt-10 flex-shrink-0">
-              <span className="text-white/60 text-xs font-light tracking-widest uppercase">
-                Cómo funciona Miiles
-              </span>
+            {/* Left panel — title + steps */}
+            <div className="p-8 md:p-10 flex flex-col">
+              <h2 className="text-3xl md:text-4xl font-normal leading-tight text-white">
+                {STEPS[0].title}
+              </h2>
+
+              <nav className="mt-10 space-y-1">
+                {STEPS.map((s, i) => (
+                  <button
+                    key={s.key}
+                    onClick={() => setActive(i)}
+                    className={`block w-full text-left px-4 py-2.5 rounded-xl text-sm transition-colors ${
+                      i === active
+                        ? "bg-white/15 text-white font-medium"
+                        : "text-white/60 hover:text-white hover:bg-white/5"
+                    }`}
+                  >
+                    {s.title}
+                  </button>
+                ))}
+              </nav>
+            </div>
+
+            {/* Right panel — media + content */}
+            <div className="flex flex-col" style={{ background: "#7E7E7E" }}>
+              {/* Close button */}
               <button
                 onClick={close}
-                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-center"
+                className="absolute right-5 top-5 z-20 flex h-9 w-9 items-center justify-center rounded-full bg-white text-black shadow-md hover:bg-gray-100 transition-colors"
                 aria-label="Cerrar"
               >
-                <X size={14} className="text-white" />
+                <X size={18} />
               </button>
-            </div>
 
-            {/* Slide content */}
-            <div className="flex-1 flex flex-col md:flex-row overflow-hidden min-h-0">
-              {/* Left — main content */}
-              <div className="flex-1 flex flex-col justify-center px-8 md:px-12 py-8 md:py-0 relative overflow-hidden">
-                <AnimatePresence mode="wait" custom={dir}>
-                  <motion.div
-                    key={step}
-                    custom={dir}
-                    variants={slideVariants}
-                    initial="enter"
-                    animate="center"
-                    exit="exit"
-                    transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
-                    className="space-y-6"
-                  >
-                    {/* Tag */}
-                    <div className="overflow-hidden">
-                      <motion.span
-                        initial={{ y: "110%" }}
-                        animate={{ y: "0%" }}
-                        transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1], delay: 0.05 }}
-                        className="inline-block text-white/50 text-xs font-light tracking-widest uppercase"
-                      >
-                        {current.tag}
-                      </motion.span>
-                    </div>
-
-                    {/* Headline */}
-                    <div className="space-y-0">
-                      <div className="overflow-hidden">
-                        <motion.h2
-                          initial={{ y: "110%" }}
-                          animate={{ y: "0%" }}
-                          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.08 }}
-                          className="text-white font-medium leading-[1.1] whitespace-pre-line"
-                          style={{
-                            fontSize: "clamp(36px, 5vw, 68px)",
-                            fontFamily: "'Poppins', sans-serif",
-                          }}
-                        >
-                          {current.title}
-                        </motion.h2>
-                      </div>
-                      <div className="overflow-hidden">
-                        <motion.p
-                          initial={{ y: "110%" }}
-                          animate={{ y: "0%" }}
-                          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.12 }}
-                          className="text-white"
-                          style={{
-                            fontFamily: "'WelthCatritz', serif",
-                            fontSize: "clamp(32px, 4.5vw, 62px)",
-                            fontWeight: 400,
-                            lineHeight: 1.1,
-                            fontStyle: "italic",
-                          }}
-                        >
-                          {current.italic}
-                        </motion.p>
-                      </div>
-                    </div>
-
-                    {/* Body */}
-                    <div className="overflow-hidden">
-                      <motion.p
-                        initial={{ y: "110%" }}
-                        animate={{ y: "0%" }}
-                        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.16 }}
-                        className="text-white/70 font-light leading-relaxed max-w-sm"
-                        style={{ fontSize: "clamp(14px, 1.5vw, 17px)" }}
-                      >
-                        {current.body}
-                      </motion.p>
-                    </div>
-                  </motion.div>
-                </AnimatePresence>
+              {/* Media area */}
+              <div className="m-4 mb-0 h-44 md:h-56 rounded-2xl bg-gradient-to-br from-white/20 to-white/5 overflow-hidden flex items-center justify-center">
+                <svg
+                  className="w-full h-full opacity-60"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <defs>
+                    <pattern
+                      id="tut-grid"
+                      width="40"
+                      height="40"
+                      patternUnits="userSpaceOnUse"
+                    >
+                      <path
+                        d="M 40 0 L 0 0 0 40"
+                        fill="none"
+                        stroke="rgba(255,255,255,0.15)"
+                        strokeWidth="1"
+                      />
+                    </pattern>
+                  </defs>
+                  <rect width="100%" height="100%" fill="url(#tut-grid)" />
+                </svg>
               </div>
 
-              {/* Right — icon panel */}
-              <div className="hidden md:flex w-[38%] flex-shrink-0 items-center justify-center border-l border-white/10 relative overflow-hidden">
+              {/* Content */}
+              <div className="p-8 md:p-10 flex flex-col flex-1">
                 <AnimatePresence mode="wait">
                   <motion.div
-                    key={step}
-                    initial={{ opacity: 0, scale: 0.8 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.8 }}
-                    transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
-                    className="flex flex-col items-center gap-4"
+                    key={step.key}
+                    initial={{ opacity: 0, y: 8 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -8 }}
+                    transition={{ duration: 0.25 }}
                   >
-                    <div
-                      className="w-24 h-24 rounded-3xl flex items-center justify-center"
-                      style={{ background: current.color + "22", border: `1.5px solid ${current.color}44` }}
-                    >
-                      <Icon size={40} style={{ color: current.color }} strokeWidth={1.5} />
-                    </div>
-                    <span
-                      className="font-medium leading-none select-none"
-                      style={{
-                        fontSize: "clamp(80px, 10vw, 140px)",
-                        color: "rgba(255,255,255,0.06)",
-                        fontFamily: "'Poppins', sans-serif",
-                        lineHeight: 1,
-                      }}
-                    >
-                      0{step + 1}
-                    </span>
+                    <h3 className="text-2xl font-normal text-white">
+                      {step.title}
+                    </h3>
+                    <p className="mt-3 text-sm font-light leading-relaxed text-white/70">
+                      {step.description}
+                    </p>
                   </motion.div>
                 </AnimatePresence>
-              </div>
-            </div>
 
-            {/* Footer — nav */}
-            <div className="flex items-center justify-between px-8 md:px-12 pb-8 md:pb-10 flex-shrink-0">
-              {/* Dots */}
-              <div className="flex gap-2">
-                {STEPS.map((_, i) => (
-                  <button
-                    key={i}
-                    onClick={() => goTo(i)}
-                    className={`h-1.5 rounded-full transition-all duration-300 ${
-                      i === step ? "w-6 bg-white" : "w-1.5 bg-white/30"
-                    }`}
-                  />
-                ))}
-              </div>
+                {/* Step dots */}
+                <div className="flex gap-1.5 mt-6">
+                  {STEPS.map((s, i) => (
+                    <span
+                      key={s.key}
+                      className={`h-1.5 rounded-full transition-all ${
+                        i === active ? "w-6 bg-white" : "w-1.5 bg-white/30"
+                      }`}
+                    />
+                  ))}
+                </div>
 
-              {/* Arrows */}
-              <div className="flex items-center gap-3">
-                {step > 0 && (
+                {/* Actions */}
+                <div className="mt-auto pt-8 flex items-center justify-end gap-3">
                   <button
-                    onClick={prev}
-                    className="w-10 h-10 rounded-full bg-white/10 hover:bg-white/20 transition-colors flex items-center justify-center"
+                    onClick={close}
+                    className="rounded-full bg-black text-white px-6 py-2.5 text-sm hover:bg-zinc-900 transition-colors"
                   >
-                    <ArrowLeft size={16} className="text-white" />
+                    Probar ahora
                   </button>
-                )}
-                <button
-                  onClick={next}
-                  className="flex items-center gap-2 px-6 py-2.5 rounded-full bg-white text-black text-xs font-normal hover:bg-white/90 transition-colors"
-                >
-                  {step < STEPS.length - 1 ? "Siguiente" : "Empezar"}
-                  <ArrowRight size={13} />
-                </button>
+                  <button
+                    onClick={next}
+                    className="rounded-full bg-white text-black px-6 py-2.5 text-sm hover:bg-gray-100 transition-colors"
+                  >
+                    {isLast ? "Listo" : "Siguiente"}
+                  </button>
+                </div>
               </div>
             </div>
           </motion.div>
-        </>
+        </motion.div>
       )}
     </AnimatePresence>,
     document.body,
