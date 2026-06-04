@@ -294,12 +294,12 @@ export default function TutorialModal({ userId, triggerOpen }: Props) {
                               position: { x: 265, y: 15 },
                               style: { width: 230, height: 180 },
                               data: {
-                                title: "Estructura Canvas",
-                                subtitle: "Generador de Flujos",
+                                title: "Lista de Tareas",
+                                subtitle: "Tareas de Lanzamiento",
                                 tasks: [
-                                  { id: "t1", text: "Propuesta de Valor", completed: true },
-                                  { id: "t2", text: "Modelo de Ingresos", completed: true },
-                                  { id: "t3", text: "Plan de Canales", completed: false },
+                                  { id: "t1", text: "Definir propuesta de valor", completed: true },
+                                  { id: "t2", text: "Diseñar landing page", completed: true },
+                                  { id: "t3", text: "Lanzar campaña de ads", completed: false },
                                 ],
                               },
                             }
