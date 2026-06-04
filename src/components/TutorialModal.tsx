@@ -309,18 +309,32 @@ export default function TutorialModal({ userId, triggerOpen }: Props) {
                         </div>
 
                         {/* Tasks */}
-                        <div className="flex flex-col gap-1 sm:gap-1.5">
-                          <div className="flex items-center gap-1.5 sm:gap-2">
-                            <span className="w-3.5 h-3.5 rounded-full border border-emerald-500 bg-emerald-500 text-white flex items-center justify-center text-[8px] sm:text-[9px] shrink-0 font-bold">✓</span>
-                            <span className="text-[9px] sm:text-[10px] text-neutral-400 line-through text-left truncate">Propuesta de Valor</span>
+                        <div className="flex flex-col gap-1.5 sm:gap-2">
+                          <div className="flex items-center gap-2">
+                            <div className="w-4 h-4 sm:w-4.5 sm:h-4.5 rounded-md bg-[#4059F1] border border-[#4059F1] flex items-center justify-center shrink-0">
+                              <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
+                                <polyline points="20 6 9 17 4 12" />
+                              </svg>
+                            </div>
+                            <span className="text-[9px] sm:text-[10.5px] text-neutral-400 dark:text-neutral-500 line-through text-left truncate">Propuesta de Valor</span>
                           </div>
-                          <div className="flex items-center gap-1.5 sm:gap-2">
-                            <span className="w-3.5 h-3.5 rounded-full border border-emerald-500 bg-emerald-500 text-white flex items-center justify-center text-[8px] sm:text-[9px] shrink-0 font-bold">✓</span>
-                            <span className="text-[9px] sm:text-[10px] text-neutral-400 line-through text-left truncate">Modelo de Ingresos</span>
+                          <div className="flex items-center gap-2">
+                            <div className="w-4 h-4 sm:w-4.5 sm:h-4.5 rounded-md bg-[#4059F1] border border-[#4059F1] flex items-center justify-center shrink-0">
+                              <svg className="w-2.5 h-2.5 sm:w-3 sm:h-3 text-white" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round">
+                                <polyline points="20 6 9 17 4 12" />
+                              </svg>
+                            </div>
+                            <span className="text-[9px] sm:text-[10.5px] text-neutral-400 dark:text-neutral-500 line-through text-left truncate">Modelo de Ingresos</span>
                           </div>
-                          <div className="flex items-center gap-1.5 sm:gap-2">
-                            <span className={`w-3.5 h-3.5 rounded-full border shrink-0 ${isDark ? 'border-white/20' : 'border-neutral-300'}`} />
-                            <span className="text-[9px] sm:text-[10px] font-medium leading-none text-left truncate">Plan de Canales</span>
+                          <div className="flex items-center gap-2">
+                            <div className={`w-4 h-4 sm:w-4.5 sm:h-4.5 rounded-md border-[1.5px] border-solid flex items-center justify-center shrink-0 ${
+                              isDark 
+                                ? "bg-white/[0.05] border-white/15" 
+                                : "bg-black/[0.03] border-black/15"
+                            }`} />
+                            <span className={`text-[9px] sm:text-[10.5px] font-light leading-none text-left truncate ${
+                              isDark ? "text-white" : "text-neutral-800"
+                            }`}>Plan de Canales</span>
                           </div>
                         </div>
                       </div>
