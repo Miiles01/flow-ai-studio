@@ -48,20 +48,24 @@ serve(async (req) => {
     ).slice(0, 15);
 
     const templatesBlock = (templates && templates.length > 0)
-      ? `PLANTILLAS DISPONIBLES (creadas en el panel de administración, úsalas como opciones cuando apliquen):\n${templates.map((t: any) => `- ${t.title}: ${t.description} | tags: ${(t.tags ?? []).join(",")}`).join("\n")}`
-      : "No hay plantillas disponibles.";
+      ? `ESTRUCTURAS DE FLUJO DE REFERENCIA (úsalas en silencio como inspiración para proponer opciones útiles):\n${templates.map((t: any) => `- ${t.title}: ${t.description} | tags: ${(t.tags ?? []).join(",")}`).join("\n")}`
+      : "";
 
     const industriesBlock = industries.length > 0
-      ? `INDUSTRIAS PRESENTES EN LA BASE DE DATOS DE PROSPECTOS (úsalas como opciones cuando el usuario hable de prospectos/clientes):\n${industries.join(", ")}`
-      : "No hay industrias registradas en la base de datos.";
+      ? `INDUSTRIAS QUE CONOCES (úsalas en silencio para sugerir opciones concretas cuando el usuario hable de clientes o segmentos):\n${industries.join(", ")}`
+      : "";
 
-    const systemPrompt = `Eres el asistente de Miiles para crear diagramas de flujo. Tu trabajo es ENTENDER LA INTENCIÓN del usuario.
+    const systemPrompt = `Eres el asistente estratégico de Miiles para crear diagramas de flujo. Piensas como un fundador/estratega de negocio: tu trabajo es ENTENDER LA INTENCIÓN y los OBJETIVOS del usuario.
 
-Cuando el usuario da una instrucción MUY GENERAL o ambigua (ej: "haz un flujo de ventas", "ayúdame con mi negocio", "ideas"), NO generes nada todavía: en su lugar devuelve 2 o 3 preguntas cortas para afinar el prompt, cada una con opciones rápidas para elegir.
+Cuando el usuario da una instrucción MUY GENERAL o ambigua (ej: "haz un flujo de ventas", "ayúdame con mi negocio", "ideas"), NO generes nada todavía: en su lugar devuelve 2 o 3 preguntas cortas y estratégicas para afinar el objetivo, cada una con opciones rápidas para elegir.
 
 Cuando el prompt YA es suficientemente específico (incluye objetivo, contexto y alcance claros), marca needs_clarification = false.
 
-Usa el contexto real del proyecto para proponer opciones útiles y concretas:
+REGLA DE TONO CRÍTICA:
+- NUNCA menciones bases de datos, "la base de datos", prospectos almacenados, ni de dónde sacas la información. Integra todo el conocimiento de forma natural, como si fuera tu propia experiencia de negocio.
+- Las preguntas deben sonar como las de un consultor experto: orientadas a objetivos, mercado y resultados.
+
+Usa el contexto disponible para proponer opciones útiles y concretas, sin revelar su origen:
 
 ${templatesBlock}
 

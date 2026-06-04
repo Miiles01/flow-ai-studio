@@ -41,11 +41,13 @@ import SkeletonNode from "@/components/nodes/SkeletonNode";
 import Toolbar from "@/components/Toolbar";
 import AIPromptBar from "@/components/AIPromptBar";
 import ClarifyPanel from "@/components/ClarifyPanel";
+import PlanPanel from "@/components/PlanPanel";
 import EditableEdge from "@/components/EditableEdge";
 import EmbedNode from "@/components/nodes/EmbedNode";
 
 import { generateFlowFromPrompt } from "@/lib/generateFlow";
 import { clarifyPrompt, buildEnrichedPrompt, type ClarifyResult } from "@/lib/clarifyFlow";
+import { planFlow, buildPlanContext, type PlanResult } from "@/lib/planFlow";
 
 const SHAPE_TYPES = ["square", "circle", "diamond", "hexagon", "star", "document", "cloud", "database", "cylinder", "callout", "speech", "heart"];
 const nodeTypes = { flowNode: FlowNode, shapeNode: ShapeNode, textNode: TextNode, todoNode: TodoNode, imageNode: ImageNode, embedNode: EmbedNode, frameNode: FrameNode, skeletonNode: SkeletonNode };
@@ -129,6 +131,9 @@ const IndexContent = () => {
   const [isClarifying, setIsClarifying] = useState(false);
   const [clarifyResult, setClarifyResult] = useState<ClarifyResult | null>(null);
   const [pendingPrompt, setPendingPrompt] = useState("");
+  const [isPlanning, setIsPlanning] = useState(false);
+  const [planResult, setPlanResult] = useState<PlanResult | null>(null);
+  const [planPrompt, setPlanPrompt] = useState("");
   const [name, setName] = useState("Tablero sin título");
   const [loading, setLoading] = useState(true);
   const [saveState, setSaveState] = useState<"idle" | "dirty" | "saving" | "saved" | "error">("idle");
@@ -888,6 +893,26 @@ const IndexContent = () => {
     [setNodes, setEdges, reactFlowInstance]
   );
 
+  // Genera un plan estratégico interno y lo muestra para aprobación antes de construir el flujo.
+  const proceedToPlanning = useCallback(
+    async (prompt: string) => {
+      setIsPlanning(true);
+      try {
+        const plan = await planFlow(prompt);
+        if (plan && (plan.phases.length > 0 || plan.summary)) {
+          setPlanPrompt(prompt);
+          setPlanResult(plan);
+          return;
+        }
+        // Si el plan falla, no bloquees: genera directo.
+        await runGenerate(prompt);
+      } finally {
+        setIsPlanning(false);
+      }
+    },
+    [runGenerate]
+  );
+
   // Primero entiende la intención: si el prompt es muy general, abre el panel de preguntas.
   const handleAIGenerate = useCallback(
     async (prompt: string) => {
@@ -899,12 +924,12 @@ const IndexContent = () => {
           setClarifyResult(result);
           return;
         }
-        await runGenerate(result.refined_prompt || prompt);
+        await proceedToPlanning(result.refined_prompt || prompt);
       } finally {
         setIsClarifying(false);
       }
     },
-    [runGenerate]
+    [proceedToPlanning]
   );
 
   const handleClarifyConfirm = useCallback(
@@ -912,16 +937,25 @@ const IndexContent = () => {
       if (!clarifyResult) return;
       const enriched = buildEnrichedPrompt(pendingPrompt, clarifyResult, answers);
       setClarifyResult(null);
-      await runGenerate(enriched);
+      await proceedToPlanning(enriched);
     },
-    [clarifyResult, pendingPrompt, runGenerate]
+    [clarifyResult, pendingPrompt, proceedToPlanning]
   );
 
   const handleClarifySkip = useCallback(async () => {
     const base = pendingPrompt;
     setClarifyResult(null);
-    await runGenerate(base);
-  }, [pendingPrompt, runGenerate]);
+    await proceedToPlanning(base);
+  }, [pendingPrompt, proceedToPlanning]);
+
+  const handlePlanApprove = useCallback(async () => {
+    if (!planResult) return;
+    const enriched = buildPlanContext(planPrompt, planResult);
+    setPlanResult(null);
+    await runGenerate(enriched);
+  }, [planResult, planPrompt, runGenerate]);
+
+
 
 
   // Debounced autosave: only after id exists (not "new"). For "new", first manual save creates the row.
@@ -1823,7 +1857,7 @@ const IndexContent = () => {
               exit={{ opacity: 0, y: 10 }}
               transition={{ duration: 0.2 }}
             >
-              <AIPromptBar onGenerate={handleAIGenerate} isGenerating={isGenerating || isClarifying} />
+              <AIPromptBar onGenerate={handleAIGenerate} isGenerating={isGenerating || isClarifying || isPlanning} />
             </motion.div>
           )}
         </AnimatePresence>
@@ -1838,6 +1872,18 @@ const IndexContent = () => {
             onConfirm={handleClarifyConfirm}
             onSkip={handleClarifySkip}
             onClose={() => setClarifyResult(null)}
+          />
+        )}
+      </AnimatePresence>
+
+      <AnimatePresence>
+        {planResult && (
+          <PlanPanel
+            plan={planResult}
+            isDark={isDark}
+            isGenerating={isGenerating}
+            onApprove={handlePlanApprove}
+            onClose={() => setPlanResult(null)}
           />
         )}
       </AnimatePresence>
