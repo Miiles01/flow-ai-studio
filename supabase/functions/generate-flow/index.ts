@@ -87,6 +87,7 @@ Node Types and Data:
 2. "todoNode": {"title": "text", "subtitle": "text", "tasks": [{"id": "t1", "text": "detailed task description", "completed": boolean}], "backgroundColor": "#FFFFFF", "accentColor": "hex", "textColor": "#000000"}
    - Use for phases with actionable checklist items.
    - CRITICAL COLOR RULE: Checklist backgrounds MUST ALWAYS be "#FFFFFF" (pure white) and text/labels/title/subtitle MUST ALWAYS be "#000000" (pure black). NEVER use dark backgrounds or other colors for todoNode.
+   - RESPONSIVE WRAPPING: Title, subtitle, and task items automatically wrap to new lines and auto-resize height if long or if container is small. Write complete, detailed task items without fear of text clipping.
 3. "textNode": {"html": "<b style='color:#000000'>Title</b>", "fontSize": 24, "textColor": "#000000"}
    - Use for general headers, sections, or annotations.
    - CRITICAL COLOR RULE: Titles and text nodes MUST ALWAYS use "#000000" (pure black) for "textColor" and inside HTML style attributes. NEVER use gray or any other colors for titles.

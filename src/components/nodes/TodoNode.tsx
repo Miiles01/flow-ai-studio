@@ -82,6 +82,18 @@ const AutoResizingTextarea = forwardRef<HTMLTextAreaElement, AutoResizingTextare
       adjustHeight();
     }, [value]);
 
+    useEffect(() => {
+      const el = textareaRef.current;
+      if (!el) return;
+      const observer = new ResizeObserver(() => {
+        adjustHeight();
+      });
+      observer.observe(el);
+      return () => {
+        observer.disconnect();
+      };
+    }, []);
+
     return (
       <textarea
         ref={textareaRef}
@@ -417,28 +429,35 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
       {/* ─── Headers (Title & Subtitle) ─── */}
       <div className="flex flex-col gap-1.5 select-text mb-4">
         {showTitle && (
-          <input
+          <AutoResizingTextarea
             value={title}
             onChange={(e) => updateNodeData({ title: e.target.value })}
-            className="bg-transparent font-sans font-semibold focus:outline-none border-none p-0 w-full placeholder-gray-400"
+            onKeyDown={(e) => {
+              if (e.key === "Enter") {
+                e.preventDefault();
+              }
+            }}
+            className="bg-transparent font-sans font-semibold focus:outline-none border-none p-0 w-full placeholder-gray-400 whitespace-pre-wrap break-words resize-none overflow-hidden"
             placeholder="Título de la Lista"
             style={{
               fontSize: `${fontSize * 1.3}px`,
               color: textColor,
+              lineHeight: 1.25,
             }}
           />
         )}
         {showSubtitle && (
-          <input
+          <AutoResizingTextarea
             value={subtitle}
             onChange={(e) => updateNodeData({ subtitle: e.target.value })}
-            className="bg-transparent font-sans font-light focus:outline-none border-none p-0 w-full placeholder-gray-400"
+            className="bg-transparent font-sans font-light focus:outline-none border-none p-0 w-full placeholder-gray-400 whitespace-pre-wrap break-words resize-none overflow-hidden"
             placeholder="Añade un subtítulo descriptivo..."
             style={{
               fontSize: `${fontSize * 0.95}px`,
               color: textColor === "#1F2937" || textColor === "#111827"
                 ? (isDarkMode ? "#9CA3AF" : "#6B7280")
                 : `${textColor}cc`,
+              lineHeight: 1.3,
             }}
           />
         )}
@@ -487,14 +506,14 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
               </button>
 
               {/* Task Text Input & Custom Animated Strikethrough */}
-              <div className="relative flex-1 flex items-center select-text">
+              <div className="relative flex-1 min-w-0 flex items-center select-text">
                 <AutoResizingTextarea
                   ref={(el) => (taskInputRefs.current[task.id] = el)}
                   value={task.text}
                   onChange={(e) => handleTaskTextChange(task.id, e.target.value)}
                   onKeyDown={(e) => handleKeyDown(e, task.id)}
                   placeholder="Añadir una tarea..."
-                  className="bg-transparent w-full focus:outline-none border-none font-sans font-light focus:ring-0 placeholder-gray-400/80 leading-normal p-0"
+                  className="bg-transparent w-full focus:outline-none border-none font-sans font-light focus:ring-0 placeholder-gray-400/80 leading-normal p-0 whitespace-pre-wrap break-words resize-none overflow-hidden"
                   style={{
                     fontSize: `${fontSize}px`,
                     color: task.completed

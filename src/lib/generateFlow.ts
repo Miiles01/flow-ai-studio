@@ -78,6 +78,7 @@ Each node MUST have:
 2. "todoNode" (for checklists or complex grouped tasks):
    - "data": {"title": "Main Step", "subtitle": "Description", "tasks": [{"id": "t1", "text": "Task 1", "completed": boolean}], "backgroundColor": "#FFFFFF", "textColor": "#000000", "accentColor": "#4059F1"}
    - CRITICAL COLOR RULE: Checklist backgrounds MUST ALWAYS be "#FFFFFF" (pure white) and text/labels MUST ALWAYS be "#000000" (pure black). NEVER use dark backgrounds or other colors for todoNode.
+   - RESPONSIVE WRAPPING: Title, subtitle, and task items automatically wrap to new lines and auto-resize height if long or if container is small. Write complete, detailed task items without fear of text clipping.
 
 3. "textNode" (for large contextual titles or section headers):
    - "data": {"html": "<b style='color:#000000'>SECTION TITLE</b><br><span style='font-size:14px;color:#000000'>Description</span>", "fontSize": 24, "textColor": "#000000"}
