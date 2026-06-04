@@ -904,12 +904,12 @@ const IndexContent = () => {
           setClarifyResult(result);
           return;
         }
-        await runGenerate(result.refined_prompt || prompt);
+        await proceedToPlanning(result.refined_prompt || prompt);
       } finally {
         setIsClarifying(false);
       }
     },
-    [runGenerate]
+    [proceedToPlanning]
   );
 
   const handleClarifyConfirm = useCallback(
@@ -917,16 +917,25 @@ const IndexContent = () => {
       if (!clarifyResult) return;
       const enriched = buildEnrichedPrompt(pendingPrompt, clarifyResult, answers);
       setClarifyResult(null);
-      await runGenerate(enriched);
+      await proceedToPlanning(enriched);
     },
-    [clarifyResult, pendingPrompt, runGenerate]
+    [clarifyResult, pendingPrompt, proceedToPlanning]
   );
 
   const handleClarifySkip = useCallback(async () => {
     const base = pendingPrompt;
     setClarifyResult(null);
-    await runGenerate(base);
-  }, [pendingPrompt, runGenerate]);
+    await proceedToPlanning(base);
+  }, [pendingPrompt, proceedToPlanning]);
+
+  const handlePlanApprove = useCallback(async () => {
+    if (!planResult) return;
+    const enriched = buildPlanContext(planPrompt, planResult);
+    setPlanResult(null);
+    await runGenerate(enriched);
+  }, [planResult, planPrompt, runGenerate]);
+
+
 
 
   // Debounced autosave: only after id exists (not "new"). For "new", first manual save creates the row.
