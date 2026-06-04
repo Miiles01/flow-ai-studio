@@ -65,7 +65,8 @@ const BRANDS = [
   { name: "Shopify", logo: shopifyLogo },
 ];
 
-const brandsRow1 = [...BRANDS, ...BRANDS, ...BRANDS]; // Repeat 3 times for a smooth continuous scroll in 1 row
+const brandsRow1 = [...BRANDS, ...BRANDS, ...BRANDS, ...BRANDS];
+const brandsRow2 = [...BRANDS.slice().reverse(), ...BRANDS.slice().reverse(), ...BRANDS.slice().reverse(), ...BRANDS.slice().reverse()];
 
 type Step = {
   key: string;
@@ -247,12 +248,27 @@ export default function TutorialModal({ userId, triggerOpen }: Props) {
                 {/* Illustration Content */}
                 <div className="relative z-10 w-full h-full flex items-center justify-center">
                   {active === 0 && (
-                    <div className="w-full flex items-center justify-center py-2">
+                    <div className="w-full flex flex-col items-center justify-center gap-4 py-2">
                       {/* Row 1: Left to right marquee */}
-                      <div className="w-full overflow-hidden" style={{ maskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)" }}>
+                      <div className="w-full overflow-hidden" style={{ maskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)" }}>
                         <div className="flex w-max gap-3.5 animate-marquee">
                           {brandsRow1.map((b, idx) => (
-                            <div key={idx} className={`flex items-center justify-center px-6 sm:px-8 h-18 sm:h-24 rounded-[20px] border backdrop-blur-md shrink-0 ${
+                            <div key={idx} className={`flex items-center justify-center px-6 sm:px-8 h-15 sm:h-20 rounded-[20px] border backdrop-blur-md shrink-0 ${
+                              isDark 
+                                ? "bg-black/60 border-white/5 text-white" 
+                                : "bg-white/85 border-neutral-200/60 text-neutral-900 shadow-sm"
+                            }`}>
+                              {b.logo}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* Row 2: Right to left marquee */}
+                      <div className="w-full overflow-hidden" style={{ maskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)" }}>
+                        <div className="flex w-max gap-3.5 animate-marquee" style={{ animationDirection: "reverse" }}>
+                          {brandsRow2.map((b, idx) => (
+                            <div key={idx} className={`flex items-center justify-center px-6 sm:px-8 h-15 sm:h-20 rounded-[20px] border backdrop-blur-md shrink-0 ${
                               isDark 
                                 ? "bg-black/60 border-white/5 text-white" 
                                 : "bg-white/85 border-neutral-200/60 text-neutral-900 shadow-sm"

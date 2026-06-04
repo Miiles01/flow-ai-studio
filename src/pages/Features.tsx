@@ -73,13 +73,14 @@ const BRANDS = [
   { name: "Shopify", logo: shopifyLogo },
 ];
 
-const brandsRow1 = [...BRANDS, ...BRANDS, ...BRANDS];
+const brandsRow1 = [...BRANDS, ...BRANDS, ...BRANDS, ...BRANDS];
+const brandsRow2 = [...BRANDS.slice().reverse(), ...BRANDS.slice().reverse(), ...BRANDS.slice().reverse(), ...BRANDS.slice().reverse()];
 
 const featuresData = [
   {
     id: "colaboraciones",
     badge: "Colaboraciones",
-    title: "Colabora con marcas líderes en proyectos de alto impacto",
+    title: "Colabora con marcas",
     description: "Encuentra marcas líderes y colabora con ellas en proyectos creativos para redes sociales y estrategias digitales de alto impacto. Conéctate con audiencias globales de forma sencilla.",
     bullets: [
       "Conexión directa con marcas de primer nivel mundial.",
@@ -836,12 +837,12 @@ const Features = () => {
                 <div
                   key={f.id}
                   className={`horizontal-slide w-full md:w-[100vw] md:h-full md:flex-shrink-0 md:flex md:items-center md:justify-center px-6 ${
-                    f.id === "ai-studio" ? "md:pl-32 md:pr-20 lg:pl-44 lg:pr-20" : "md:px-20"
+                    f.id === "colaboraciones" ? "md:pl-32 md:pr-20 lg:pl-44 lg:pr-20" : "md:px-20"
                   }`}
                 >
                   <div className="max-w-6xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
                     {/* Left Column: Text Content */}
-                    <div className={`flex flex-col text-left ${f.id === "ai-studio" ? "md:pl-6 lg:pl-12" : ""}`}>
+                    <div className={`flex flex-col text-left ${f.id === "colaboraciones" ? "md:pl-6 lg:pl-12" : ""}`}>
                       <span className="text-xs font-semibold tracking-wider text-miiles-blue mb-3 font-sans">
                         {f.badge}
                       </span>
@@ -865,7 +866,9 @@ const Features = () => {
 
                     {/* Right Column: Mockup Container (Responsive Aspect Ratio and Padding for Mobile) */}
                     <div 
-                      className="w-full aspect-[4/5] md:aspect-square rounded-[2.5rem] overflow-hidden border border-neutral-100 flex items-center justify-center p-6 md:p-10 hover:scale-[1.01] transition-transform duration-500"
+                      className={`w-full aspect-[4/5] md:aspect-square rounded-[2.5rem] overflow-hidden border border-neutral-100 flex items-center justify-center hover:scale-[1.01] transition-transform duration-500 ${
+                        f.id === "colaboraciones" ? "p-0" : "p-6 md:p-10"
+                      }`}
                       style={{
                         background: "linear-gradient(to bottom, #FDFDFD, #F8F9FD)"
                       }}
@@ -875,12 +878,50 @@ const Features = () => {
                       )}
 
                       {f.id === "colaboraciones" && (
-                        <div className="w-full flex items-center justify-center py-2 bg-white/70 backdrop-blur-sm rounded-[1.5rem] border border-neutral-200/50">
+                        <div className="w-full h-full relative flex flex-col justify-center gap-5 overflow-hidden bg-white/30 backdrop-blur-sm rounded-[2.5rem]">
+                          {/* Grid Pattern Background */}
+                          <svg
+                            className="absolute inset-0 w-full h-full opacity-30 pointer-events-none"
+                            xmlns="http://www.w3.org/2000/svg"
+                            style={{
+                              maskImage: "radial-gradient(ellipse, black 40%, transparent 80%)",
+                              WebkitMaskImage: "radial-gradient(ellipse, black 40%, transparent 80%)"
+                            }}
+                          >
+                            <defs>
+                              <pattern
+                                id="features-colab-grid"
+                                width="32"
+                                height="32"
+                                patternUnits="userSpaceOnUse"
+                              >
+                                <path
+                                  d="M 32 0 L 0 0 0 32"
+                                  fill="none"
+                                  stroke="rgba(0,0,0,0.06)"
+                                  strokeWidth="1"
+                                />
+                              </pattern>
+                            </defs>
+                            <rect width="100%" height="100%" fill="url(#features-colab-grid)" />
+                          </svg>
+
                           {/* Row 1: Left to right marquee */}
-                          <div className="w-full overflow-hidden" style={{ maskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)" }}>
+                          <div className="w-full overflow-hidden relative z-10" style={{ maskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)" }}>
                             <div className="flex w-max gap-3.5 animate-marquee">
                               {brandsRow1.map((b, idx) => (
-                                <div key={idx} className="flex items-center justify-center px-6 sm:px-8 h-18 sm:h-24 rounded-[20px] border border-neutral-200/60 bg-white/85 text-neutral-900 shadow-sm backdrop-blur-md shrink-0">
+                                <div key={idx} className="flex items-center justify-center px-6 sm:px-8 h-16 sm:h-20 rounded-[20px] border border-neutral-200/50 bg-white/90 text-neutral-900 shadow-sm backdrop-blur-md shrink-0">
+                                  {b.logo}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+
+                          {/* Row 2: Right to left marquee */}
+                          <div className="w-full overflow-hidden relative z-10" style={{ maskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)" }}>
+                            <div className="flex w-max gap-3.5 animate-marquee" style={{ animationDirection: "reverse" }}>
+                              {brandsRow2.map((b, idx) => (
+                                <div key={idx} className="flex items-center justify-center px-6 sm:px-8 h-16 sm:h-20 rounded-[20px] border border-neutral-200/50 bg-white/90 text-neutral-900 shadow-sm backdrop-blur-md shrink-0">
                                   {b.logo}
                                 </div>
                               ))}
