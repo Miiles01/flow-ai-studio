@@ -129,6 +129,9 @@ const IndexContent = () => {
   const [isClarifying, setIsClarifying] = useState(false);
   const [clarifyResult, setClarifyResult] = useState<ClarifyResult | null>(null);
   const [pendingPrompt, setPendingPrompt] = useState("");
+  const [isPlanning, setIsPlanning] = useState(false);
+  const [planResult, setPlanResult] = useState<PlanResult | null>(null);
+  const [planPrompt, setPlanPrompt] = useState("");
   const [name, setName] = useState("Tablero sin título");
   const [loading, setLoading] = useState(true);
   const [saveState, setSaveState] = useState<"idle" | "dirty" | "saving" | "saved" | "error">("idle");
