@@ -10,6 +10,8 @@ import DashboardLayout from "@/components/DashboardLayout";
 import Landing from "./pages/Landing";
 import About from "./pages/About";
 import Pricing from "./pages/Pricing";
+import BusinessInquiry from "./pages/BusinessInquiry";
+import BusinessInquiryThanks from "./pages/BusinessInquiryThanks";
 import Features from "./pages/Features";
 import Dashboard from "./pages/Dashboard";
 import Boards from "./pages/Boards";
@@ -89,6 +91,8 @@ const App = () => (
               <Route path="/" element={<Landing />} />
               <Route path="/acerca-de" element={<About />} />
               <Route path="/precios" element={<Pricing />} />
+              <Route path="/precios/negocios" element={<BusinessInquiry />} />
+              <Route path="/precios/negocios/gracias" element={<BusinessInquiryThanks />} />
               <Route path="/funciones" element={<Features />} />
               <Route path="/dashboard" element={<DashboardRoute><Dashboard /></DashboardRoute>} />
               <Route path="/boards" element={<DashboardRoute><Boards /></DashboardRoute>} />
