@@ -191,6 +191,33 @@ const Profile = () => {
     navigate("/login");
   };
 
+  // Show a confirmation when returning from a successful checkout.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("checkout") === "success") {
+      toast.success("¡Pago recibido! Tu plan Pro se activará en unos segundos.");
+      window.history.replaceState({}, "", "/profile#plan");
+    }
+  }, []);
+
+  const handleManageSubscription = async () => {
+    setOpeningPortal(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("create-portal-session", {
+        body: {
+          returnUrl: `${window.location.origin}/profile#plan`,
+          environment: getStripeEnvironment(),
+        },
+      });
+      if (error || !data?.url) throw new Error(error?.message || data?.error || "No se pudo abrir el portal");
+      window.open(data.url, "_blank");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "No se pudo abrir el portal de suscripción");
+    } finally {
+      setOpeningPortal(false);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex items-center justify-center h-full">
