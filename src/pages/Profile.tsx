@@ -134,6 +134,16 @@ const Profile = () => {
       });
   }, [user]);
 
+  // Keep the displayed plan in sync with the live subscription state.
+  useEffect(() => {
+    if (isActive && subscription) {
+      setPlan(subscription.price_id?.startsWith("pro") ? "pro" : plan);
+    } else if (subscription && !isActive && (plan === "pro")) {
+      setPlan("free");
+    }
+  }, [isActive, subscription]);
+
+
   useEffect(() => {
     if (!loading && window.location.hash === "#plan") {
       const timer = setTimeout(() => {
