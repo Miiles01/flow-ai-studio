@@ -16,6 +16,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import AvatarUpload from "@/components/AvatarUpload";
+import { UpgradeProDialog } from "@/components/UpgradeProDialog";
+import { useSubscription } from "@/hooks/useSubscription";
+import { getStripeEnvironment } from "@/lib/stripe";
 
 import { getVideoEmbedUrl } from "@/lib/videoEmbed";
 
