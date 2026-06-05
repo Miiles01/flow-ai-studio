@@ -202,7 +202,7 @@ export default function PricingTable() {
                 ))}
               </ul>
               <Link
-                to="/login"
+                to={plan.customPrice ? "/precios/negocios" : "/login"}
                 className={`text-center px-8 py-4 rounded-full text-xs font-normal transition-all duration-300 font-sans ${
                   plan.highlighted 
                     ? "bg-white text-black hover:bg-opacity-90" 

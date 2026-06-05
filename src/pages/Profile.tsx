@@ -16,6 +16,9 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import AvatarUpload from "@/components/AvatarUpload";
+import { UpgradeProDialog } from "@/components/UpgradeProDialog";
+import { useSubscription } from "@/hooks/useSubscription";
+import { getStripeEnvironment } from "@/lib/stripe";
 
 import { getVideoEmbedUrl } from "@/lib/videoEmbed";
 
@@ -58,6 +61,9 @@ const Profile = () => {
   const { isDark } = useTheme();
   const navigate = useNavigate();
   const [plan, setPlan] = useState("free");
+  const [upgradeOpen, setUpgradeOpen] = useState(false);
+  const [openingPortal, setOpeningPortal] = useState(false);
+  const { subscription, isActive } = useSubscription();
   const planRef = useRef<HTMLDivElement>(null);
   const [displayName, setDisplayName] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
@@ -128,6 +134,16 @@ const Profile = () => {
       });
   }, [user]);
 
+  // Keep the displayed plan in sync with the live subscription state.
+  useEffect(() => {
+    if (isActive && subscription) {
+      setPlan(subscription.price_id?.startsWith("pro") ? "pro" : plan);
+    } else if (subscription && !isActive && (plan === "pro")) {
+      setPlan("free");
+    }
+  }, [isActive, subscription]);
+
+
   useEffect(() => {
     if (!loading && window.location.hash === "#plan") {
       const timer = setTimeout(() => {
@@ -183,6 +199,33 @@ const Profile = () => {
   const handleSignOut = async () => {
     await signOut();
     navigate("/login");
+  };
+
+  // Show a confirmation when returning from a successful checkout.
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    if (params.get("checkout") === "success") {
+      toast.success("¡Pago recibido! Tu plan Pro se activará en unos segundos.");
+      window.history.replaceState({}, "", "/profile#plan");
+    }
+  }, []);
+
+  const handleManageSubscription = async () => {
+    setOpeningPortal(true);
+    try {
+      const { data, error } = await supabase.functions.invoke("create-portal-session", {
+        body: {
+          returnUrl: `${window.location.origin}/profile#plan`,
+          environment: getStripeEnvironment(),
+        },
+      });
+      if (error || !data?.url) throw new Error(error?.message || data?.error || "No se pudo abrir el portal");
+      window.open(data.url, "_blank");
+    } catch (e) {
+      toast.error(e instanceof Error ? e.message : "No se pudo abrir el portal de suscripción");
+    } finally {
+      setOpeningPortal(false);
+    }
   };
 
   if (loading) {
@@ -393,7 +436,7 @@ const Profile = () => {
               <CardHeader className="pb-4">
                 <CardTitle className="text-base">Tu plan</CardTitle>
               </CardHeader>
-              <CardContent>
+              <CardContent className="space-y-4">
                 <div 
                   className={`
                     p-5 rounded-2xl border transition-all duration-300 flex items-center justify-between
@@ -409,23 +452,59 @@ const Profile = () => {
                       {plan === "pro" ? "Plan Pro" : plan === "business" || plan === "negocios" ? "Plan Negocios" : "Plan Gratis"}
                     </span>
                     <span className="text-xs font-light text-muted-foreground block">
-                      Ciclo: {plan === "free" ? "No aplica" : "Mensual"}
+                      {plan === "free"
+                        ? "Gratis para siempre"
+                        : subscription?.cancel_at_period_end && subscription?.current_period_end
+                          ? `Se cancela el ${new Date(subscription.current_period_end).toLocaleDateString("es-MX")}`
+                          : subscription?.current_period_end
+                            ? `Se renueva el ${new Date(subscription.current_period_end).toLocaleDateString("es-MX")}`
+                            : "Ciclo activo"}
                     </span>
                   </div>
                   
                   <div className="text-right">
                     <span className="text-2xl font-semibold block">
-                      {plan === "pro" ? "$179" : plan === "business" || plan === "negocios" ? "$499" : "$0"}
+                      {plan === "pro"
+                        ? (subscription?.price_id === "pro_yearly" ? "$1,800" : "$179")
+                        : plan === "business" || plan === "negocios" ? "Custom" : "$0"}
                     </span>
                     <span className="text-[10px] font-light text-muted-foreground block">
-                      {plan === "free" ? "Gratis para siempre" : "MXN / mes"}
+                      {plan === "free"
+                        ? "Gratis para siempre"
+                        : plan === "pro"
+                          ? (subscription?.price_id === "pro_yearly" ? "MXN / año" : "MXN / mes")
+                          : "Plan a medida"}
                     </span>
                   </div>
                 </div>
+
+                {plan === "free" ? (
+                  <Button
+                    type="button"
+                    onClick={() => setUpgradeOpen(true)}
+                    className={`w-full rounded-full ${isDark ? "bg-white text-black hover:bg-gray-100" : "bg-black text-white hover:bg-miiles-pink"}`}
+                  >
+                    Mejorar a Pro
+                  </Button>
+                ) : isActive && subscription ? (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={openingPortal}
+                    onClick={handleManageSubscription}
+                    className="w-full rounded-full"
+                  >
+                    {openingPortal ? <Loader2 size={16} className="mr-2 animate-spin" /> : null}
+                    Gestionar suscripción
+                  </Button>
+                ) : null}
               </CardContent>
             </Card>
           </div>
         </form>
+
+        <UpgradeProDialog open={upgradeOpen} onOpenChange={setUpgradeOpen} />
+
 
         <Separator className="my-6" />
 
