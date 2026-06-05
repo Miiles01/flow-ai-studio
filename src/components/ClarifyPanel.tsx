@@ -15,9 +15,23 @@ type ClarifyPanelProps = {
 const ClarifyPanel = ({ result, isDark, isGenerating, onConfirm, onSkip, onClose }: ClarifyPanelProps) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string[]>>({});
+  const [customOpen, setCustomOpen] = useState<Record<string, boolean>>({});
+  const [customText, setCustomText] = useState<Record<string, string>>({});
 
   const q = result.questions[currentStep];
   const totalSteps = result.questions.length;
+
+  /** Merges selected options with any custom "Otro" text for confirmation. */
+  const buildAnswers = (): Record<string, string[]> => {
+    const merged: Record<string, string[]> = {};
+    for (const question of result.questions) {
+      const selected = [...(answers[question.id] ?? [])];
+      const extra = (customText[question.id] ?? "").trim();
+      if (extra) selected.push(extra);
+      if (selected.length > 0) merged[question.id] = selected;
+    }
+    return merged;
+  };
 
   const toggleOption = (option: string) => {
     if (!q) return;
