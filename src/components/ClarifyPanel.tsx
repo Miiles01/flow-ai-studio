@@ -15,9 +15,23 @@ type ClarifyPanelProps = {
 const ClarifyPanel = ({ result, isDark, isGenerating, onConfirm, onSkip, onClose }: ClarifyPanelProps) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string[]>>({});
+  const [customOpen, setCustomOpen] = useState<Record<string, boolean>>({});
+  const [customText, setCustomText] = useState<Record<string, string>>({});
 
   const q = result.questions[currentStep];
   const totalSteps = result.questions.length;
+
+  /** Merges selected options with any custom "Otro" text for confirmation. */
+  const buildAnswers = (): Record<string, string[]> => {
+    const merged: Record<string, string[]> = {};
+    for (const question of result.questions) {
+      const selected = [...(answers[question.id] ?? [])];
+      const extra = (customText[question.id] ?? "").trim();
+      if (extra) selected.push(extra);
+      if (selected.length > 0) merged[question.id] = selected;
+    }
+    return merged;
+  };
 
   const toggleOption = (option: string) => {
     if (!q) return;
@@ -41,7 +55,7 @@ const ClarifyPanel = ({ result, isDark, isGenerating, onConfirm, onSkip, onClose
     if (currentStep < totalSteps - 1) {
       setCurrentStep((prev) => prev + 1);
     } else {
-      onConfirm(answers);
+      onConfirm(buildAnswers());
     }
   };
 
@@ -52,6 +66,7 @@ const ClarifyPanel = ({ result, isDark, isGenerating, onConfirm, onSkip, onClose
   };
 
   const hasAnswerSelected = q ? (answers[q.id] ?? []).length > 0 : false;
+
 
   if (!q) return null;
 
@@ -142,7 +157,60 @@ const ClarifyPanel = ({ result, isDark, isGenerating, onConfirm, onSkip, onClose
                     </button>
                   );
                 })}
+
+                {(() => {
+                  const open = customOpen[q.id] ?? false;
+                  const hasText = (customText[q.id] ?? "").trim().length > 0;
+                  const active = open || hasText;
+                  return (
+                    <button
+                      onClick={() => setCustomOpen((prev) => ({ ...prev, [q.id]: !open }))}
+                      className={`px-3.5 py-2 rounded-full text-xs font-light transition-all border cursor-pointer select-none ${
+                        active
+                          ? "bg-[#4059F1] text-white border-[#4059F1] shadow-[0_4px_12px_rgba(64,89,241,0.2)]"
+                          : isDark
+                          ? "bg-white/5 text-white/70 border-white/10 hover:bg-white/10 hover:text-white"
+                          : "bg-[#F3F4F8] text-[#374151] border-transparent hover:bg-neutral-200"
+                      }`}
+                    >
+                      + Otro
+                    </button>
+                  );
+                })()}
               </div>
+
+              <AnimatePresence>
+                {(customOpen[q.id] ?? false) && (
+                  <motion.div
+                    initial={{ height: 0, opacity: 0 }}
+                    animate={{ height: "auto", opacity: 1 }}
+                    exit={{ height: 0, opacity: 0 }}
+                    transition={{ duration: 0.2 }}
+                    className="overflow-hidden"
+                  >
+                    <input
+                      autoFocus
+                      value={customText[q.id] ?? ""}
+                      onChange={(e) =>
+                        setCustomText((prev) => ({ ...prev, [q.id]: e.target.value }))
+                      }
+                      onKeyDown={(e) => {
+                        if (e.key === "Enter") {
+                          e.preventDefault();
+                          handleNext();
+                        }
+                      }}
+                      placeholder="Cuéntame más para afinar tu respuesta…"
+                      className={`mt-1 w-full rounded-2xl px-4 py-2.5 text-[13px] font-light outline-none transition-colors border ${
+                        isDark
+                          ? "bg-white/5 border-white/10 text-white placeholder:text-white/40 focus:border-[#4059F1]"
+                          : "bg-[#F7F7F8] border-neutral-200/60 text-black placeholder:text-[#9499AE] focus:border-[#4059F1]"
+                      }`}
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+
             </motion.div>
           </AnimatePresence>
         </div>
