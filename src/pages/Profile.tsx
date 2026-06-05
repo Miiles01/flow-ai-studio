@@ -61,6 +61,9 @@ const Profile = () => {
   const { isDark } = useTheme();
   const navigate = useNavigate();
   const [plan, setPlan] = useState("free");
+  const [upgradeOpen, setUpgradeOpen] = useState(false);
+  const [openingPortal, setOpeningPortal] = useState(false);
+  const { subscription, isActive } = useSubscription();
   const planRef = useRef<HTMLDivElement>(null);
   const [displayName, setDisplayName] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
