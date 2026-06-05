@@ -55,7 +55,7 @@ const ClarifyPanel = ({ result, isDark, isGenerating, onConfirm, onSkip, onClose
     if (currentStep < totalSteps - 1) {
       setCurrentStep((prev) => prev + 1);
     } else {
-      onConfirm(answers);
+      onConfirm(buildAnswers());
     }
   };
 
@@ -66,6 +66,7 @@ const ClarifyPanel = ({ result, isDark, isGenerating, onConfirm, onSkip, onClose
   };
 
   const hasAnswerSelected = q ? (answers[q.id] ?? []).length > 0 : false;
+
 
   if (!q) return null;
 
