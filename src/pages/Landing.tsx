@@ -261,7 +261,7 @@ const Landing = () => {
     const cardsContainer = cardsContainerRef.current;
     if (!root || !cardsContainer) return;
 
-    const cards = cardsContainer.querySelectorAll(".mwg-card");
+    const cards = cardsContainer.querySelectorAll(".mwg-card, .mwg-sticker");
     if (cards.length === 0) return;
 
     let scrollTween: gsap.core.Tween | null = null;
@@ -492,105 +492,112 @@ const Landing = () => {
               {/* Horizontal Scroll Cards Track */}
               <div className="cards-wrapper absolute inset-0 flex items-center pointer-events-none z-20">
                 <div ref={cardsContainerRef} className="cards flex gap-20 items-center">
-                  {[...heroCardsData, ...heroCardsData].map((card, idx) => (
-                    <div
-                      key={idx}
-                      className="mwg-card"
-                      style={{
-                        backgroundColor: card.bg,
-                        color: card.textCol,
-                        width: card.width,
-                        height: card.height,
-                        minWidth: card.width,
-                        minHeight: card.height,
-                        maxWidth: card.width,
-                        maxHeight: card.height,
-                        padding: card.type === "image" ? "0px" : undefined,
-                        boxShadow: card.type === "image" ? "none" : undefined,
-                        borderRadius: card.type === "image" ? "0px" : undefined,
-                        whiteSpace: "normal",
-                      }}
-                    >
-                      {card.type === "todolist" && (
-                        <div style={{ display: "flex", flexDirection: "column", height: "100%", textAlign: "left", fontFamily: "'Poppins', sans-serif", whiteSpace: "normal" }}>
-                          <div style={{ fontSize: "9px", fontWeight: 500, opacity: 0.5, marginBottom: "6px" }}>
-                            {card.header}
-                          </div>
-                          <div style={{ fontSize: "11px", fontWeight: 600, lineHeight: 1.35, marginBottom: "10px" }}>
-                            {card.title}
-                          </div>
-                          <div style={{ display: "flex", flexDirection: "column", gap: "5px", flexGrow: 1 }}>
-                            {card.items?.map((item, itemIdx) => (
-                              <div key={itemIdx} style={{ display: "flex", alignItems: "center", fontSize: "10px", opacity: item.checked ? 0.45 : 0.8, textDecoration: item.checked ? "line-through" : "none" }}>
-                                {item.checked ? (
-                                  <span style={{ width: "11px", height: "11px", borderRadius: "50%", backgroundColor: card.textCol, display: "inline-flex", alignItems: "center", justifyContent: "center", marginRight: "6px", fontSize: "7px", color: card.bg === "#FFFFFF" ? "#FFF" : (card.bg === "#1E293B" ? "#1E293B" : "#FFF"), fontWeight: "bold" }}>✓</span>
-                                ) : (
-                                  <span style={{ width: "11px", height: "11px", borderRadius: "50%", border: `1px solid ${card.textCol}40`, display: "inline-block", marginRight: "6px" }}></span>
-                                )}
-                                <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.text}</span>
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
+                  {[...heroCardsData, ...heroCardsData].map((card, idx) => {
+                    if (card.type === "image" && "src" in card) {
+                      return (
+                        <img 
+                          key={idx}
+                          className="mwg-sticker"
+                          src={(card as any).src} 
+                          alt="miiles graphic decal" 
+                          style={{ 
+                            width: card.width,
+                            height: card.height,
+                            minWidth: card.width,
+                            minHeight: card.height,
+                            maxWidth: card.width,
+                            maxHeight: card.height,
+                            objectFit: "contain",
+                            flexShrink: 0,
+                            pointerEvents: "none",
+                          }}
+                        />
+                      );
+                    }
 
-                      {card.type === "list" && (
-                        <div style={{ display: "flex", flexDirection: "column", height: "100%", textAlign: "left", fontFamily: "'Poppins', sans-serif", whiteSpace: "normal" }}>
-                          <div style={{ fontSize: "9px", fontWeight: 500, opacity: 0.5, marginBottom: "6px" }}>
-                            {card.header}
-                          </div>
-                          <div style={{ display: "flex", flexDirection: "column", gap: "5px", flexGrow: 1, justifyContent: "center" }}>
-                            {card.items?.map((item, itemIdx) => (
-                              <div key={itemIdx} style={{ fontSize: "10.5px", fontWeight: 500, opacity: 0.85, paddingLeft: "2px" }}>
-                                • {item.text}
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      )}
-
-                      {card.type === "note" && (
-                        <div style={{ display: "flex", flexDirection: "column", height: "100%", textAlign: "left", fontFamily: "'Poppins', sans-serif", whiteSpace: "normal" }}>
-                          <div style={{ fontSize: "9px", fontWeight: 500, opacity: 0.5, marginBottom: "6px" }}>
-                            {card.header}
-                          </div>
-                          <div style={{ fontSize: "11px", fontWeight: 600, lineHeight: 1.35, marginBottom: "8px" }}>
-                            {card.title}
-                          </div>
-                          <div style={{ fontSize: "9.5px", fontWeight: 300, lineHeight: 1.4, opacity: 0.6, flexGrow: 1, display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
-                            {card.text}
-                          </div>
-                          {card.footer && (
-                            <div style={{ fontSize: "8px", fontWeight: 500, opacity: 0.5, textAlign: "right", marginTop: "auto", paddingTop: "6px" }}>
-                              {card.footer}
+                    return (
+                      <div
+                        key={idx}
+                        className="mwg-card"
+                        style={{
+                          backgroundColor: card.bg,
+                          color: card.textCol,
+                          width: card.width,
+                          height: card.height,
+                          minWidth: card.width,
+                          minHeight: card.height,
+                          maxWidth: card.width,
+                          maxHeight: card.height,
+                          whiteSpace: "normal",
+                        }}
+                      >
+                        {card.type === "todolist" && (
+                          <div style={{ display: "flex", flexDirection: "column", height: "100%", textAlign: "left", fontFamily: "'Poppins', sans-serif", whiteSpace: "normal" }}>
+                            <div style={{ fontSize: "9px", fontWeight: 500, opacity: 0.5, marginBottom: "6px" }}>
+                              {card.header}
                             </div>
-                          )}
-                        </div>
-                      )}
-
-                      {card.type === "neon" && (
-                        <div style={{ display: "flex", flexDirection: "column", height: "100%", justifyContent: "center", textAlign: "left", fontFamily: "'Poppins', sans-serif", padding: "2px", whiteSpace: "normal" }}>
-                          <div style={{ fontSize: "12px", fontWeight: 600, lineHeight: 1.4 }}>
-                            {card.text}
+                            <div style={{ fontSize: "11px", fontWeight: 600, lineHeight: 1.35, marginBottom: "10px" }}>
+                              {card.title}
+                            </div>
+                            <div style={{ display: "flex", flexDirection: "column", gap: "5px", flexGrow: 1 }}>
+                              {card.items?.map((item, itemIdx) => (
+                                <div key={itemIdx} style={{ display: "flex", alignItems: "center", fontSize: "10px", opacity: item.checked ? 0.45 : 0.8, textDecoration: item.checked ? "line-through" : "none" }}>
+                                  {item.checked ? (
+                                    <span style={{ width: "11px", height: "11px", borderRadius: "50%", backgroundColor: card.textCol, display: "inline-flex", alignItems: "center", justifyContent: "center", marginRight: "6px", fontSize: "7px", color: card.bg === "#FFFFFF" ? "#FFF" : (card.bg === "#1E293B" ? "#1E293B" : "#FFF"), fontWeight: "bold" }}>✓</span>
+                                  ) : (
+                                    <span style={{ width: "11px", height: "11px", borderRadius: "50%", border: `1px solid ${card.textCol}40`, display: "inline-block", marginRight: "6px" }}></span>
+                                  )}
+                                  <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.text}</span>
+                                </div>
+                              ))}
+                            </div>
                           </div>
-                        </div>
-                      )}
+                        )}
 
-                      {card.type === "image" && "src" in card && (
-                        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", width: "100%" }}>
-                          <img 
-                            src={(card as any).src} 
-                            alt="miiles graphic decal" 
-                            style={{ 
-                              maxWidth: "100%", 
-                              maxHeight: "100%", 
-                              objectFit: "contain" 
-                            }} 
-                          />
-                        </div>
-                      )}
-                    </div>
-                  ))}
+                        {card.type === "list" && (
+                          <div style={{ display: "flex", flexDirection: "column", height: "100%", textAlign: "left", fontFamily: "'Poppins', sans-serif", whiteSpace: "normal" }}>
+                            <div style={{ fontSize: "9px", fontWeight: 500, opacity: 0.5, marginBottom: "6px" }}>
+                              {card.header}
+                            </div>
+                            <div style={{ display: "flex", flexDirection: "column", gap: "5px", flexGrow: 1, justifyContent: "center" }}>
+                              {card.items?.map((item, itemIdx) => (
+                                <div key={itemIdx} style={{ fontSize: "10.5px", fontWeight: 500, opacity: 0.85, paddingLeft: "2px" }}>
+                                  • {item.text}
+                                </div>
+                              ))}
+                            </div>
+                          </div>
+                        )}
+
+                        {card.type === "note" && (
+                          <div style={{ display: "flex", flexDirection: "column", height: "100%", textAlign: "left", fontFamily: "'Poppins', sans-serif", whiteSpace: "normal" }}>
+                            <div style={{ fontSize: "9px", fontWeight: 500, opacity: 0.5, marginBottom: "6px" }}>
+                              {card.header}
+                            </div>
+                            <div style={{ fontSize: "11px", fontWeight: 600, lineHeight: 1.35, marginBottom: "8px" }}>
+                              {card.title}
+                            </div>
+                            <div style={{ fontSize: "9.5px", fontWeight: 300, lineHeight: 1.4, opacity: 0.6, flexGrow: 1, display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
+                              {card.text}
+                            </div>
+                            {card.footer && (
+                              <div style={{ fontSize: "8px", fontWeight: 500, opacity: 0.5, textAlign: "right", marginTop: "auto", paddingTop: "6px" }}>
+                                {card.footer}
+                              </div>
+                            )}
+                          </div>
+                        )}
+
+                        {card.type === "neon" && (
+                          <div style={{ display: "flex", flexDirection: "column", height: "100%", justifyContent: "center", textAlign: "left", fontFamily: "'Poppins', sans-serif", padding: "2px", whiteSpace: "normal" }}>
+                            <div style={{ fontSize: "12px", fontWeight: 600, lineHeight: 1.4 }}>
+                              {card.text}
+                            </div>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               </div>
 
