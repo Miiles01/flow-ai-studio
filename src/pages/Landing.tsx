@@ -599,22 +599,15 @@ const Landing = () => {
             <div className="pin-height">
               <div className="container">
                 <p className="paragraphs">
-                  Presentamos Miiles: una nueva manera de unificar todas tus ideas de negocio y empezar a crear.
+                  Unifica tus ideas de negocio<br />
+                  conéctalas en un canvas visual<br />
+                  y empieza a crear sin límites.
                 </p>
                 <p className="paragraphs">
-                  Conecta tus proyectos en un canvas visual diseñado para la acción, la colaboración y el crecimiento.
+                  Encuentra los socios ideales<br />
+                  construye con la fuerza correcta<br />
+                  y dale vida a tus proyectos hoy.
                 </p>
-                <p className="paragraphs">
-                  No dejes tus ideas en el papel; dales vida junto a los socios y la fuerza de ventas que necesitas.
-                </p>
-
-                <div className="bottom">
-                  <img src={logoImg} alt="Miiles Logo" />
-                  <p>
-                    <span>Miiles Studio</span> <br />
-                    Unificar ideas. Empezar a crear.
-                  </p>
-                </div>
               </div>
             </div>
           </section>
