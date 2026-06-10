@@ -32,7 +32,7 @@ const heroCardsData = [
     ],
     bg: "#FDF2F8", // Soft pink
     textCol: "#1E293B",
-    width: "165px",
+    width: "175px",
     height: "175px",
   },
   {
@@ -43,7 +43,7 @@ const heroCardsData = [
     bg: "#FFFFFF",
     textCol: "#1E293B",
     footer: "Lanzamiento Q3 ▾",
-    width: "180px",
+    width: "220px",
     height: "220px",
   },
   {
@@ -56,16 +56,16 @@ const heroCardsData = [
     ],
     bg: "#EFF6FF", // Soft blue
     textCol: "#1E293B",
-    width: "150px",
-    height: "150px",
+    width: "155px",
+    height: "155px",
   },
   {
     type: "neon",
     text: "Idea SaaS: Canvas visual para creadores digitales y diseñadores independientes.",
     bg: "#FDF2F8", // Soft pink
     textCol: "#1E293B",
-    width: "145px",
-    height: "145px",
+    width: "150px",
+    height: "150px",
   },
   {
     type: "todolist",
@@ -78,8 +78,8 @@ const heroCardsData = [
     ],
     bg: "#FFFFFF",
     textCol: "#1E293B",
-    width: "180px",
-    height: "190px",
+    width: "185px",
+    height: "185px",
   },
   {
     type: "note",
@@ -88,7 +88,7 @@ const heroCardsData = [
     text: "Permite cobrar en dólares y retirar en moneda local de manera instantánea con comisiones mínimas.",
     bg: "#1E293B", // Dark slate / Black
     textCol: "#F8FAFC",
-    width: "180px",
+    width: "210px",
     height: "210px",
   },
   {
@@ -96,8 +96,8 @@ const heroCardsData = [
     text: "Idea: Agencia productizada de desarrollo y diseño Webflow/Framer.",
     bg: "#EFF6FF", // Soft blue
     textCol: "#1E293B",
-    width: "145px",
-    height: "145px",
+    width: "150px",
+    height: "150px",
   },
   {
     type: "todolist",
@@ -110,7 +110,7 @@ const heroCardsData = [
     ],
     bg: "#FFFFFF",
     textCol: "#1E293B",
-    width: "165px",
+    width: "175px",
     height: "175px",
   }
 ];
