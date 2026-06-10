@@ -127,9 +127,6 @@ const Landing = () => {
     const root = heroRef.current;
     if (!root) return;
 
-    const isMobile = window.innerWidth <= 768;
-    if (isMobile) return;
-
     const trailCards = [
       {
         type: "todolist",
@@ -242,6 +239,7 @@ const Landing = () => {
     const clampY = gsap.utils.clamp(0, H);
 
     function applyMove(clientX: number, clientY: number) {
+      if (window.innerWidth < 768) return; // Disable effect on mobile dynamically
       if (window.scrollY > 250) return; // Only spawn notes when scroll is near the top
 
       const rect = root.getBoundingClientRect();
