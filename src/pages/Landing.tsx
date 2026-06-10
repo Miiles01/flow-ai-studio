@@ -74,10 +74,27 @@ const Landing = () => {
     animate("[data-anim-heading]", 40, 0.8);
     animate("[data-split]", 15, 0.5);
 
+    // Animación del título principal sin SplitText para evitar cortes
+    gsap.fromTo(
+      ".no-split",
+      { opacity: 0, y: 45 },
+      {
+        opacity: 1,
+        y: 0,
+        duration: 1.2,
+        ease: "power3.out",
+        scrollTrigger: {
+          trigger: ".no-split",
+          start: "top 90%",
+          once: true,
+        },
+      }
+    );
+
     // SplitText line reveal en h1/h2/h3
     const splits: SplitText[] = [];
     const runSplit = () => {
-      document.querySelectorAll<HTMLElement>("#smooth-content h1, #smooth-content h2, #smooth-content h3").forEach((el) => {
+      document.querySelectorAll<HTMLElement>("#smooth-content h1:not(.no-split), #smooth-content h2, #smooth-content h3").forEach((el) => {
         const split = SplitText.create(el, { type: "lines", mask: "lines", linesClass: "line" });
         splits.push(split);
         gsap.fromTo(
@@ -105,24 +122,24 @@ const Landing = () => {
     };
   }, []);
 
-  // Mouse-trail animation mwg_062 with flowchart pastel notes
+  // Mouse-trail animation mwg_062 with sticky notes (post-its)
   useEffect(() => {
     const root = heroRef.current;
     if (!root) return;
 
     const trailCards = [
-      { text: "Idea de negocio", type: "Idea", bg: "#FFFBEB", textCol: "#D97706", borderCol: "#FDE68A" },
-      { text: "Nota X", type: "Nota", bg: "#FDF2F8", textCol: "#DB2777", borderCol: "#FBCFE8" },
-      { text: "Tarea de planeación", type: "Tarea", bg: "#EFF6FF", textCol: "#2563EB", borderCol: "#BFDBFE" },
-      { text: "Dependiente", type: "Conexión", bg: "#FAF5FF", textCol: "#7C3AED", borderCol: "#E9D5FF" },
-      { text: "Flujo de ventas", type: "Flujo", bg: "#ECFDF5", textCol: "#059669", borderCol: "#A7F3D0" },
-      { text: "Automatización con IA", type: "Acción", bg: "#FFF7ED", textCol: "#EA580C", borderCol: "#FED7AA" },
-      { text: "Aprobado", type: "Estado", bg: "#F0F9FF", textCol: "#0284C7", borderCol: "#BAE6FD" },
-      { text: "Pendiente de revisión", type: "Estado", bg: "#FEF2F2", textCol: "#DC2626", borderCol: "#FECACA" },
-      { text: "Modelo Canvas", type: "Canvas", bg: "#F0FDF4", textCol: "#16A34A", borderCol: "#BBF7D0" },
-      { text: "Socio clave", type: "Contacto", bg: "#FFFDF5", textCol: "#B45309", borderCol: "#FEF3C7" },
-      { text: "Canal de distribución", type: "Canal", bg: "#F5F3FF", textCol: "#6D28D9", borderCol: "#DDD6FE" },
-      { text: "Propuesta de valor", type: "Canvas", bg: "#FFF5F5", textCol: "#C53030", borderCol: "#FED7D7" },
+      { text: "Lanzar MVP ya! 🚀", bg: "#FEF08A", textCol: "#854D0E", borderCol: "#FDE047" },
+      { text: "Integrar Stripe API 💳", bg: "#BFDBFE", textCol: "#1E40AF", borderCol: "#93C5FD" },
+      { text: "Definir buyer persona 👥", bg: "#FBCFE8", textCol: "#9D174D", borderCol: "#F9A8D4" },
+      { text: "Automatizar con AI ⚡", bg: "#A7F3D0", textCol: "#065F46", borderCol: "#6EE7B7" },
+      { text: "Campañas TikTok 📱", bg: "#E9D5FF", textCol: "#6B21A8", borderCol: "#D8B4FE" },
+      { text: "Reunión 10:00 AM 📅", bg: "#FED7AA", textCol: "#C2410C", borderCol: "#FDBA74" },
+      { text: "Socio clave 🤝", bg: "#FEF08A", textCol: "#854D0E", borderCol: "#FDE047" },
+      { text: "Prototipo canvas 🎨", bg: "#BFDBFE", textCol: "#1E40AF", borderCol: "#93C5FD" },
+      { text: "Flujo aprobado ✔", bg: "#A7F3D0", textCol: "#065F46", borderCol: "#6EE7B7" },
+      { text: "Landing page v2 🌐", bg: "#FBCFE8", textCol: "#9D174D", borderCol: "#F9A8D4" },
+      { text: "Diseño UI/UX ✨", bg: "#E9D5FF", textCol: "#6B21A8", borderCol: "#D8B4FE" },
+      { text: "Modelo de negocio 📊", bg: "#FED7AA", textCol: "#C2410C", borderCol: "#FDBA74" },
     ];
 
     let isTouch = false;
@@ -190,31 +207,25 @@ const Landing = () => {
       const currentCard = trailCards[indexCard];
       
       card.innerHTML = `
-        <div style="display: flex; flex-direction: column; width: 100%; height: 100%; justify-content: space-between; text-align: left;">
-          <div style="font-size: 8px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; opacity: 0.6; margin-bottom: 2px;">
-            ${currentCard.type}
-          </div>
-          <div style="font-size: ${window.innerWidth <= 768 ? "10px" : "12px"}; font-weight: 500; line-height: 1.3; flex-grow: 1; display: flex; align-items: center; color: ${currentCard.textCol};">
+        <!-- Sticky Tape -->
+        <div style="position: absolute; top: -6px; left: 50%; transform: translateX(-50%) rotate(${(Math.random() - 0.5) * 6}deg); width: 45px; height: 14px; background-color: rgba(255, 255, 255, 0.45); backdrop-filter: blur(1px); border: 1px solid rgba(255, 255, 255, 0.25); box-shadow: 0 1px 2px rgba(0,0,0,0.03); z-index: 10;"></div>
+        
+        <!-- Post-it Content -->
+        <div style="display: flex; flex-direction: column; width: 100%; height: 100%; justify-content: center; align-items: center; text-align: center;">
+          <div style="font-size: ${window.innerWidth <= 768 ? "11px" : "13px"}; font-weight: 500; line-height: 1.35; color: ${currentCard.textCol}; word-wrap: break-word; font-family: 'Poppins', sans-serif;">
             ${currentCard.text}
-          </div>
-          <div style="display: flex; align-items: center; gap: 4px; margin-top: 4px; font-size: 8px; opacity: 0.7;">
-            <span style="width: 4px; height: 4px; border-radius: 50%; background-color: ${currentCard.textCol};"></span>
-            <span>Conectado</span>
           </div>
         </div>
       `;
 
       card.style.position = "absolute";
-      card.style.width = window.innerWidth <= 768 ? "120px" : "165px";
-      card.style.height = window.innerWidth <= 768 ? "75px" : "100px";
+      card.style.width = window.innerWidth <= 768 ? "95px" : "125px";
+      card.style.height = window.innerWidth <= 768 ? "95px" : "125px";
       card.style.backgroundColor = currentCard.bg;
-      card.style.color = currentCard.textCol;
-      card.style.border = `1.5px solid ${currentCard.borderCol}`;
-      card.style.borderRadius = "14px";
-      card.style.boxShadow = "0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05)";
-      card.style.padding = "10px 12px";
-      card.style.fontFamily = "'Poppins', sans-serif";
-      card.style.zIndex = "5";
+      card.style.border = `1px solid ${currentCard.borderCol}`;
+      card.style.boxShadow = "0 8px 20px -4px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05), inset 0 -3px 0 rgba(0,0,0,0.03)";
+      card.style.padding = "10px";
+      card.style.zIndex = "20"; // elevated above z-10 text/buttons
       card.style.pointerEvents = "none";
       card.style.left = "0px";
       card.style.top = "0px";
@@ -309,7 +320,7 @@ const Landing = () => {
               </span>
               
               <h1
-                className="text-5xl md:text-6xl lg:text-7xl font-normal leading-tight tracking-tight mb-10 text-center"
+                className="no-split text-6xl md:text-8xl lg:text-[95px] font-normal leading-[1.1] tracking-tight mb-10 text-center"
               >
                 <span className="block">¿Muchas <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>ideas</span></span>
                 <span className="block">de negocio?</span>
