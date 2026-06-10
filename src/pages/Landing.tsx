@@ -45,9 +45,9 @@ const heroCardsData = [
   {
     type: "image",
     src: estrellaImg,
-    bg: "#FFFFFF",
-    width: "160px",
-    height: "160px",
+    bg: "transparent",
+    width: "70px",
+    height: "70px",
   },
   {
     type: "note",
@@ -63,9 +63,9 @@ const heroCardsData = [
   {
     type: "image",
     src: flechaImg,
-    bg: "#FFFFFF",
-    width: "150px",
-    height: "150px",
+    bg: "transparent",
+    width: "80px",
+    height: "80px",
   },
   {
     type: "list",
@@ -83,9 +83,9 @@ const heroCardsData = [
   {
     type: "image",
     src: florImg,
-    bg: "#FFFFFF",
-    width: "170px",
-    height: "170px",
+    bg: "transparent",
+    width: "75px",
+    height: "75px",
   },
   {
     type: "neon",
@@ -112,9 +112,9 @@ const heroCardsData = [
   {
     type: "image",
     src: miilesImg,
-    bg: "#FFFFFF",
-    width: "160px",
-    height: "160px",
+    bg: "transparent",
+    width: "70px",
+    height: "70px",
   },
   {
     type: "note",
@@ -129,9 +129,9 @@ const heroCardsData = [
   {
     type: "image",
     src: sonrisaImg,
-    bg: "#FFFFFF",
-    width: "150px",
-    height: "150px",
+    bg: "transparent",
+    width: "65px",
+    height: "65px",
   },
   {
     type: "todolist",
@@ -501,7 +501,9 @@ const Landing = () => {
                         color: card.textCol,
                         width: card.width,
                         height: card.height,
-                        padding: card.type === "image" ? "16px" : undefined,
+                        padding: card.type === "image" ? "0px" : undefined,
+                        boxShadow: card.type === "image" ? "none" : undefined,
+                        borderRadius: card.type === "image" ? "0px" : undefined,
                       }}
                     >
                       {card.type === "todolist" && (
