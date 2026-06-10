@@ -145,13 +145,12 @@ const Terms = () => {
                         <button
                           key={section.id}
                           onClick={() => handleScrollTo(section.id)}
-                          className={`text-left text-sm py-2 px-3 rounded-xl transition-all duration-300 flex items-center gap-2.5 ${
+                          className={`text-left text-sm py-2 px-3 rounded-xl transition-all duration-300 flex items-center ${
                             isActive
                               ? "font-medium text-miiles-blue bg-[#E8ECFE]/50 translate-x-1"
                               : "font-light text-neutral-500 hover:text-neutral-900 hover:bg-white/70 hover:translate-x-1"
                           }`}
                         >
-                          <span className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${isActive ? "bg-miiles-blue scale-100" : "bg-transparent scale-0"}`} />
                           <span className="truncate">{section.title}</span>
                         </button>
                       );
