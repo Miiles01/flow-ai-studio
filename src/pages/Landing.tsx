@@ -161,16 +161,16 @@ const Landing = () => {
           { text: "Milk" },
           { text: "Ice cream" },
         ],
-        bg: "#FFFFFF",
+        bg: "#EFF6FF", // Soft blue
         textCol: "#1E293B",
         width: "150px",
         height: "150px",
       },
       {
-        type: "neon",
+        type: "neon", // (acting as a plain text card)
         text: "Loving the vibe of these grainy vintage photos. Let's do more of that",
-        bg: "#BEF264", // Neon lime
-        textCol: "#0F172A",
+        bg: "#FDF2F8", // Soft pink
+        textCol: "#1E293B",
         width: "145px",
         height: "145px",
       },
@@ -192,7 +192,7 @@ const Landing = () => {
         header: "Contrasts",
         title: "Some notes want to stand out. Contrast by color helps.",
         text: "Capture ideas and organize them in a natural way that supercharges your brain. Put notes freely on a board.",
-        bg: "#1E293B", // Dark slate
+        bg: "#1E293B", // Dark slate / Black
         textCol: "#F8FAFC",
         width: "180px",
         height: "210px",
@@ -200,8 +200,8 @@ const Landing = () => {
       {
         type: "neon",
         text: "Fleeting notes attached to a bigger note being worked on",
-        bg: "#A3E635", // Neon green
-        textCol: "#0F172A",
+        bg: "#EFF6FF", // Soft blue
+        textCol: "#1E293B",
         width: "145px",
         height: "145px",
       },
