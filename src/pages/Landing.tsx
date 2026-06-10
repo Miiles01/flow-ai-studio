@@ -623,9 +623,9 @@ const Landing = () => {
                   y empieza a crear.
                 </p>
                 <p className="paragraphs">
-                  Un espacio para conectar,<br />
-                  colaborar con talento<br />
-                  y co-crear sin límites.
+                  Un espacio para<br />
+                  conectar y co-crear<br />
+                  sin límites.
                 </p>
               </div>
             </div>
