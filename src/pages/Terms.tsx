@@ -115,7 +115,7 @@ const Terms = () => {
             <div className="absolute top-0 right-1/4 w-[500px] h-[500px] rounded-full bg-gradient-to-br from-[#FEEDED] via-[#E8ECFE]/40 to-transparent blur-3xl opacity-60 pointer-events-none" />
             
             <div className="max-w-4xl mx-auto text-center relative z-10">
-              <span className="text-xs font-semibold tracking-wider text-miiles-blue uppercase mb-3 block">
+              <span className="text-xs font-semibold tracking-wider text-miiles-blue mb-3 block">
                 Información Legal
               </span>
               <h1 className="text-4xl md:text-6xl font-normal tracking-tight text-neutral-900 mb-6">
@@ -135,7 +135,7 @@ const Terms = () => {
               <div className="hidden lg:block w-[250px]">
                 {/* Sticky Sidebar Index */}
                 <aside ref={sidebarRef} className="bg-neutral-50/50 backdrop-blur-md border border-neutral-100 p-5 rounded-[24px] w-[250px]">
-                  <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-400 mb-4 px-2">
+                  <h3 className="text-xs font-semibold tracking-wider text-neutral-400 mb-4 px-2">
                     Índice
                   </h3>
                   <nav className="flex flex-col gap-1.5">
