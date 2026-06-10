@@ -128,18 +128,97 @@ const Landing = () => {
     if (!root) return;
 
     const trailCards = [
-      { text: "Lanzar MVP ya! 🚀", bg: "#FEF08A", textCol: "#854D0E", borderCol: "#FDE047" },
-      { text: "Integrar Stripe API 💳", bg: "#BFDBFE", textCol: "#1E40AF", borderCol: "#93C5FD" },
-      { text: "Definir buyer persona 👥", bg: "#FBCFE8", textCol: "#9D174D", borderCol: "#F9A8D4" },
-      { text: "Automatizar con AI ⚡", bg: "#A7F3D0", textCol: "#065F46", borderCol: "#6EE7B7" },
-      { text: "Campañas TikTok 📱", bg: "#E9D5FF", textCol: "#6B21A8", borderCol: "#D8B4FE" },
-      { text: "Reunión 10:00 AM 📅", bg: "#FED7AA", textCol: "#C2410C", borderCol: "#FDBA74" },
-      { text: "Socio clave 🤝", bg: "#FEF08A", textCol: "#854D0E", borderCol: "#FDE047" },
-      { text: "Prototipo canvas 🎨", bg: "#BFDBFE", textCol: "#1E40AF", borderCol: "#93C5FD" },
-      { text: "Flujo aprobado ✔", bg: "#A7F3D0", textCol: "#065F46", borderCol: "#6EE7B7" },
-      { text: "Landing page v2 🌐", bg: "#FBCFE8", textCol: "#9D174D", borderCol: "#F9A8D4" },
-      { text: "Diseño UI/UX ✨", bg: "#E9D5FF", textCol: "#6B21A8", borderCol: "#D8B4FE" },
-      { text: "Modelo de negocio 📊", bg: "#FED7AA", textCol: "#C2410C", borderCol: "#FDBA74" },
+      {
+        type: "todolist",
+        header: "Today ▾",
+        title: "Stuff I got to get done TODAY",
+        items: [
+          { text: "Just throw in stickies", checked: true },
+          { text: "Can have due dates", checked: false },
+          { text: "Floats on top", checked: false },
+        ],
+        bg: "#FDF2F8", // Soft pink
+        textCol: "#1E293B",
+        width: "165px",
+        height: "175px",
+      },
+      {
+        type: "note",
+        header: "A note",
+        title: "Longer form notes show up as paper. They can have due dates too.",
+        text: "Capture ideas and organize them in a natural way that supercharges your brain. Put notes freely on a two-dimensional board.",
+        bg: "#FFFFFF",
+        textCol: "#1E293B",
+        footer: "On Friday ▾",
+        width: "180px",
+        height: "220px",
+      },
+      {
+        type: "list",
+        header: "Pickup",
+        items: [
+          { text: "Bread" },
+          { text: "Milk" },
+          { text: "Ice cream" },
+        ],
+        bg: "#FFFFFF",
+        textCol: "#1E293B",
+        width: "150px",
+        height: "150px",
+      },
+      {
+        type: "neon",
+        text: "Loving the vibe of these grainy vintage photos. Let's do more of that",
+        bg: "#BEF264", // Neon lime
+        textCol: "#0F172A",
+        width: "145px",
+        height: "145px",
+      },
+      {
+        type: "todolist",
+        header: "Untitled",
+        title: "Spatial organisation for keeping notes, prose and tasks.",
+        items: [
+          { text: "Create a paper", checked: true },
+          { text: "Some level of detail", checked: false },
+        ],
+        bg: "#FFFFFF",
+        textCol: "#1E293B",
+        width: "180px",
+        height: "190px",
+      },
+      {
+        type: "note",
+        header: "Contrasts",
+        title: "Some notes want to stand out. Contrast by color helps.",
+        text: "Capture ideas and organize them in a natural way that supercharges your brain. Put notes freely on a board.",
+        bg: "#1E293B", // Dark slate
+        textCol: "#F8FAFC",
+        width: "180px",
+        height: "210px",
+      },
+      {
+        type: "neon",
+        text: "Fleeting notes attached to a bigger note being worked on",
+        bg: "#A3E635", // Neon green
+        textCol: "#0F172A",
+        width: "145px",
+        height: "145px",
+      },
+      {
+        type: "todolist",
+        header: "Marketing",
+        title: "Launch campaign checklist",
+        items: [
+          { text: "Setup landing page", checked: true },
+          { text: "TikTok video script", checked: false },
+          { text: "Run beta test", checked: false },
+        ],
+        bg: "#FFFFFF",
+        textCol: "#1E293B",
+        width: "165px",
+        height: "175px",
+      }
     ];
 
     let isTouch = false;
@@ -206,29 +285,89 @@ const Landing = () => {
       const card = document.createElement("div");
       const currentCard = trailCards[indexCard];
       
-      card.innerHTML = `
-        <!-- Sticky Tape -->
-        <div style="position: absolute; top: -6px; left: 50%; transform: translateX(-50%) rotate(${(Math.random() - 0.5) * 6}deg); width: 45px; height: 14px; background-color: rgba(255, 255, 255, 0.45); backdrop-filter: blur(1px); border: 1px solid rgba(255, 255, 255, 0.25); box-shadow: 0 1px 2px rgba(0,0,0,0.03); z-index: 10;"></div>
-        
-        <!-- Post-it Content -->
-        <div style="display: flex; flex-direction: column; width: 100%; height: 100%; justify-content: center; align-items: center; text-align: center;">
-          <div style="font-size: ${window.innerWidth <= 768 ? "11px" : "13px"}; font-weight: 500; line-height: 1.35; color: ${currentCard.textCol}; word-wrap: break-word; font-family: 'Poppins', sans-serif;">
-            ${currentCard.text}
+      let innerHTML = "";
+
+      if (currentCard.type === "todolist") {
+        innerHTML = `
+          <div style="display: flex; flex-direction: column; height: 100%; text-align: left; font-family: 'Poppins', sans-serif;">
+            <div style="font-size: 9px; font-weight: 500; opacity: 0.5; margin-bottom: 6px; color: ${currentCard.textCol};">
+              ${currentCard.header}
+            </div>
+            <div style="font-size: 11px; font-weight: 600; line-height: 1.35; margin-bottom: 10px; color: ${currentCard.textCol};">
+              ${currentCard.title}
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 5px; flex-grow: 1;">
+              ${currentCard.items ? currentCard.items.map(item => `
+                <div style="display: flex; align-items: center; font-size: 10px; color: ${currentCard.textCol}; opacity: ${item.checked ? 0.45 : 0.8}; text-decoration: ${item.checked ? 'line-through' : 'none'}; font-family: 'Poppins', sans-serif;">
+                  ${item.checked 
+                    ? `<span style="width: 11px; height: 11px; border-radius: 50%; background-color: ${currentCard.textCol}; display: inline-flex; align-items: center; justify-content: center; margin-right: 6px; font-size: 7px; color: ${currentCard.bg === '#FFFFFF' ? '#FFF' : (currentCard.bg === '#1E293B' ? '#1E293B' : '#FFF')}; font-weight: bold; shrink: 0; font-family: 'Poppins', sans-serif;">✓</span>`
+                    : `<span style="width: 11px; height: 11px; border-radius: 50%; border: 1px solid ${currentCard.textCol}40; display: inline-block; margin-right: 6px; shrink: 0;"></span>`
+                  }
+                  <span style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${item.text}</span>
+                </div>
+              `).join('') : ''}
+            </div>
           </div>
-        </div>
-      `;
+        `;
+      } else if (currentCard.type === "list") {
+        innerHTML = `
+          <div style="display: flex; flex-direction: column; height: 100%; text-align: left; font-family: 'Poppins', sans-serif;">
+            <div style="font-size: 9px; font-weight: 500; opacity: 0.5; margin-bottom: 6px; color: ${currentCard.textCol};">
+              ${currentCard.header}
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 5px; flex-grow: 1; justify-content: center;">
+              ${currentCard.items ? currentCard.items.map(item => `
+                <div style="font-size: 10.5px; font-weight: 500; color: ${currentCard.textCol}; opacity: 0.85; padding-left: 2px; font-family: 'Poppins', sans-serif;">
+                  • ${item.text}
+                </div>
+              `).join('') : ''}
+            </div>
+          </div>
+        `;
+      } else if (currentCard.type === "note") {
+        innerHTML = `
+          <div style="display: flex; flex-direction: column; height: 100%; text-align: left; font-family: 'Poppins', sans-serif;">
+            <div style="font-size: 9px; font-weight: 500; opacity: 0.5; margin-bottom: 6px; color: ${currentCard.textCol};">
+              ${currentCard.header}
+            </div>
+            <div style="font-size: 11px; font-weight: 600; line-height: 1.35; margin-bottom: 8px; color: ${currentCard.textCol};">
+              ${currentCard.title}
+            </div>
+            <div style="font-size: 9.5px; font-weight: 300; line-height: 1.4; opacity: 0.6; flex-grow: 1; color: ${currentCard.textCol}; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden; font-family: 'Poppins', sans-serif;">
+              ${currentCard.text}
+            </div>
+            ${currentCard.footer ? `
+              <div style="font-size: 8px; font-weight: 500; opacity: 0.5; text-align: right; margin-top: auto; padding-top: 6px; color: ${currentCard.textCol}; font-family: 'Poppins', sans-serif;">
+                ${currentCard.footer}
+              </div>
+            ` : ''}
+          </div>
+        `;
+      } else if (currentCard.type === "neon") {
+        innerHTML = `
+          <div style="display: flex; flex-direction: column; height: 100%; justify-content: center; text-align: left; font-family: 'Poppins', sans-serif; padding: 2px;">
+            <div style="font-size: 12px; font-weight: 600; line-height: 1.4; color: ${currentCard.textCol}; font-family: 'Poppins', sans-serif;">
+              ${currentCard.text}
+            </div>
+          </div>
+        `;
+      }
+
+      card.innerHTML = innerHTML;
 
       card.style.position = "absolute";
-      card.style.width = window.innerWidth <= 768 ? "95px" : "125px";
-      card.style.height = window.innerWidth <= 768 ? "95px" : "125px";
+      card.style.width = window.innerWidth <= 768 ? "120px" : currentCard.width;
+      card.style.height = window.innerWidth <= 768 ? "120px" : currentCard.height;
       card.style.backgroundColor = currentCard.bg;
       card.style.border = "none";
-      card.style.boxShadow = "0 8px 20px -4px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05), inset 0 -3px 0 rgba(0,0,0,0.03)";
-      card.style.padding = "10px";
+      card.style.boxShadow = "0 10px 30px rgba(0, 0, 0, 0.04), 0 2px 8px rgba(0, 0, 0, 0.02)";
+      card.style.borderRadius = "16px";
+      card.style.padding = "14px";
       card.style.zIndex = "20"; // elevated above z-10 text/buttons
       card.style.pointerEvents = "none";
       card.style.left = "0px";
       card.style.top = "0px";
+      card.style.overflow = "hidden";
 
       root.appendChild(card);
 
