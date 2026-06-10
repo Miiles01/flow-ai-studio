@@ -19,11 +19,6 @@ import LandingNavbar from "@/components/LandingNavbar";
 import LandingFooter from "@/components/LandingFooter";
 
 // Graphic assets copied from Downloads
-import estrellaImg from "@/assets/miiles/Estrella.png";
-import flechaImg from "@/assets/miiles/Flecha.png";
-import florImg from "@/assets/miiles/Flor.svg";
-import miilesImg from "@/assets/miiles/Miiles.svg";
-import sonrisaImg from "@/assets/miiles/Sonrisa.svg";
 
 const brandLogos = [brand1, brand2, brand3, brand4, brand5, brand6];
 
@@ -55,127 +50,6 @@ const orbitNotes = [
 ];
 
 
-const heroCardsData = [
-  {
-    type: "todolist",
-    header: "Validación ▾",
-    title: "Validar ideas de negocio",
-    items: [
-      { text: "Crear landing page mínima", checked: true },
-      { text: "Ejecutar anuncios de prueba", checked: false },
-      { text: "Entrevistar 10 clientes", checked: false },
-    ],
-    bg: "#FDF2F8", // Pink
-    textCol: "#1E293B",
-    width: "180px",
-    height: "180px",
-  },
-  {
-    type: "image",
-    src: estrellaImg,
-    bg: "transparent",
-    width: "45px",
-    height: "45px",
-  },
-  {
-    type: "note",
-    header: "SaaS B2B",
-    title: "Herramienta de automatización de ventas con IA",
-    text: "Permite a fundadores delegar su prospección de clientes usando agentes de IA entrenados en su modelo.",
-    bg: "#FFFFFF", // White
-    textCol: "#1E293B",
-    footer: "Lanzamiento Q3 ▾",
-    width: "180px",
-    height: "180px",
-  },
-  {
-    type: "image",
-    src: flechaImg,
-    bg: "transparent",
-    width: "55px",
-    height: "55px",
-  },
-  {
-    type: "list",
-    header: "Modelos",
-    items: [
-      { text: "Suscripción mensual" },
-      { text: "Comisión por venta" },
-      { text: "Licencia perpetua" },
-    ],
-    bg: "#EFF6FF", // Blue
-    textCol: "#1E293B",
-    width: "180px",
-    height: "180px",
-  },
-  {
-    type: "image",
-    src: florImg,
-    bg: "transparent",
-    width: "50px",
-    height: "50px",
-  },
-  {
-    type: "neon",
-    text: "Idea SaaS: Canvas visual para creadores digitales y diseñadores independientes.",
-    bg: "#FDF2F8", // Pink
-    textCol: "#1E293B",
-    width: "180px",
-    height: "180px",
-  },
-  {
-    type: "todolist",
-    header: "Marketing ▾",
-    title: "Estrategia de lanzamiento",
-    items: [
-      { text: "Guion de video para TikTok", checked: true },
-      { text: "Publicar en Product Hunt", checked: false },
-      { text: "Campaña con afiliados", checked: false },
-    ],
-    bg: "#FFFFFF", // White
-    textCol: "#1E293B",
-    width: "180px",
-    height: "180px",
-  },
-  {
-    type: "image",
-    src: miilesImg,
-    bg: "transparent",
-    width: "45px",
-    height: "45px",
-  },
-  {
-    type: "note",
-    header: "Fintech Latam",
-    title: "Plataforma de cobros para freelancers",
-    text: "Permite cobrar en dólares y retirar en moneda local de manera instantánea con comisiones mínimas.",
-    bg: "#1E293B", // Black/Dark Slate
-    textCol: "#F8FAFC",
-    width: "180px",
-    height: "180px",
-  },
-  {
-    type: "image",
-    src: sonrisaImg,
-    bg: "transparent",
-    width: "40px",
-    height: "40px",
-  },
-  {
-    type: "todolist",
-    header: "Operaciones ▾",
-    title: "Tareas previas a lanzar",
-    items: [
-      { text: "Configurar pasarela Stripe", checked: true },
-      { text: "Registrar dominio .app", checked: false },
-      { text: "Subir video de demo", checked: false },
-    ],
-    bg: "#FFFFFF", // White
-    textCol: "#1E293B",
-    width: "180px",
-    height: "180px",
-  }
-];
 
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText, CustomEase, InertiaPlugin);
@@ -186,7 +60,6 @@ if (!CustomEase.get("osmo-ease")) {
 const Landing = () => {
   const smootherRef = useRef<ScrollSmoother | null>(null);
   const videoWrapRef = useRef<HTMLDivElement>(null);
-  const heroRef = useRef<HTMLDivElement>(null);
   const scrollTextSectionRef = useRef<HTMLDivElement>(null);
   const orbitSectionRef = useRef<HTMLDivElement>(null);
 
@@ -271,101 +144,6 @@ const Landing = () => {
     };
   }, []);
 
-  const cardsContainerRef = useRef<HTMLDivElement>(null);
-
-  // Drifting Notes Hero Animation (mwg_effect094)
-  useEffect(() => {
-    const root = heroRef.current;
-    const cardsContainer = cardsContainerRef.current;
-    if (!root || !cardsContainer) return;
-
-    const cards = cardsContainer.querySelectorAll(".mwg-card, .mwg-sticker");
-    if (cards.length === 0) return;
-
-    let scrollTween: gsap.core.Tween | null = null;
-    const individualTweens: gsap.core.Tween[] = [];
-
-    const initHeroAnimation = () => {
-      const distance = cardsContainer.clientWidth - window.innerWidth;
-      const isPortrait = window.innerWidth < window.innerHeight;
-
-      // Reset any existing transformations
-      gsap.set(cardsContainer, { clearProps: "x" });
-      gsap.set(cards, { clearProps: "all" });
-
-      scrollTween = gsap.to(cardsContainer, {
-        x: () => -(cardsContainer.clientWidth - window.innerWidth),
-        ease: "none",
-        scrollTrigger: {
-          trigger: root,
-          pin: true,
-          pinType: "transform",
-          scrub: true,
-          start: "top top",
-          end: () => "+=" + (cardsContainer.clientWidth - window.innerWidth),
-          invalidateOnRefresh: true,
-        },
-      });
-
-      cards.forEach((card, i) => {
-        const sign = i % 2 === 0 ? 1 : -1;
-        const rotation = (Math.random() - 0.5) * 6;
-        const amplitude = isPortrait ? 0.32 : 0.38;
-
-        const driftTween = gsap.fromTo(
-          card,
-          { rotation: rotation },
-          {
-            rotation: -rotation,
-            y: () => sign * -amplitude * window.innerHeight,
-            yPercent: () => sign * 35,
-            yoyo: true,
-            repeat: 1,
-            ease: "power1.inOut",
-            scrollTrigger: {
-              trigger: card,
-              containerAnimation: scrollTween!,
-              start: "left 95%",
-              end: "right 5%",
-              scrub: true,
-            },
-          }
-        );
-        individualTweens.push(driftTween);
-
-        const scaleTween = gsap.to(card, {
-          scale: 1.25,
-          yoyo: true,
-          repeat: 1,
-          ease: "back.inOut(2.5)",
-          scrollTrigger: {
-            trigger: card,
-            containerAnimation: scrollTween!,
-            start: "left 95%",
-            end: "right 5%",
-            scrub: true,
-          },
-        });
-        individualTweens.push(scaleTween);
-      });
-
-      ScrollTrigger.refresh();
-    };
-
-    const timer = setTimeout(initHeroAnimation, 100);
-
-    return () => {
-      clearTimeout(timer);
-      if (scrollTween) {
-        if (scrollTween.scrollTrigger) scrollTween.scrollTrigger.kill();
-        scrollTween.kill();
-      }
-      individualTweens.forEach((t) => {
-        if (t.scrollTrigger) t.scrollTrigger.kill();
-        t.kill();
-      });
-    };
-  }, []);
 
   // 3D Scroll Perspective Text Animation (mwg_effect053)
   useEffect(() => {
@@ -571,156 +349,35 @@ const Landing = () => {
       <div id="smooth-wrapper" style={{ overflow: "hidden", position: "fixed", width: "100%", height: "100%", top: 0, left: 0 }}>
         <div id="smooth-content" className="bg-white text-black font-sans overflow-hidden">
 
-          {/* HERO (mwg_effect094 - Drifting Notes Horizontal Scroll) */}
-          <section ref={heroRef} className="mwg_effect094 bg-white text-black relative">
-            <div className="container relative">
-              
-              {/* HERO Content in Center */}
-              <div className="hero-center-content max-w-4xl mx-auto flex flex-col items-center absolute pointer-events-none">
-                <div className="pointer-events-auto flex flex-col items-center">
-                  <img 
-                    data-anim-heading 
-                    src={logoImg} 
-                    alt="Miiles Logo" 
-                    className="w-14 h-14 mx-auto mb-3" 
-                  />
-                  <span data-anim-heading className="text-[22px] font-normal mb-8 tracking-tight">
-                    Miiles
-                  </span>
-                  
-                  <h1
-                    className="no-split text-4xl sm:text-5xl md:text-8xl lg:text-[95px] font-normal leading-[1.1] tracking-tight mb-10 text-center"
-                  >
-                    <span className="block">¿Muchas <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>ideas</span></span>
-                    <span className="block">de negocio?</span>
-                  </h1>
+          {/* HERO */}
+          <section className="min-h-screen bg-white text-black flex flex-col items-center justify-center text-center px-6 py-24 relative">
+            <img 
+              data-anim-heading 
+              src={logoImg} 
+              alt="Miiles Logo" 
+              className="w-14 h-14 mx-auto mb-3" 
+            />
+            <span data-anim-heading className="text-[22px] font-normal mb-8 tracking-tight">
+              Miiles
+            </span>
+            
+            <h1
+              className="no-split text-4xl sm:text-5xl md:text-8xl lg:text-[95px] font-normal leading-[1.1] tracking-tight mb-10"
+            >
+              <span className="block">¿Muchas <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>ideas</span></span>
+              <span className="block">de negocio?</span>
+            </h1>
 
-                  <div data-anim-heading className="flex items-center justify-center gap-4 flex-wrap">
-                    <Link
-                      to="/login"
-                      className="px-8 py-4 rounded-full bg-black text-white text-[15px] font-normal hover:-translate-y-2 transition-transform duration-300 flex items-center gap-2"
-                    >
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M12 0C12.3 8.8 15.2 11.7 24 12C15.2 12.3 12.3 15.2 12 24C11.7 15.2 8.8 12.3 0 12C8.8 11.7 11.7 8.8 12 0Z" />
-                      </svg>
-                      Unirse ahora
-                    </Link>
-                  </div>
-                </div>
-              </div>
-
-              {/* Horizontal Scroll Cards Track */}
-              <div className="cards-wrapper absolute inset-0 flex items-center pointer-events-none z-20">
-                <div ref={cardsContainerRef} className="cards flex gap-20 items-center">
-                  {[...heroCardsData, ...heroCardsData].map((card, idx) => {
-                    if (card.type === "image" && "src" in card) {
-                      return (
-                        <img 
-                          key={idx}
-                          className="mwg-sticker"
-                          src={(card as any).src} 
-                          alt="miiles graphic decal" 
-                          style={{ 
-                            width: card.width,
-                            height: card.height,
-                            minWidth: card.width,
-                            minHeight: card.height,
-                            maxWidth: card.width,
-                            maxHeight: card.height,
-                            objectFit: "contain",
-                            flexShrink: 0,
-                            pointerEvents: "none",
-                          }}
-                        />
-                      );
-                    }
-
-                    return (
-                      <div
-                        key={idx}
-                        className="mwg-card"
-                        style={{
-                          backgroundColor: card.bg,
-                          color: card.textCol,
-                          width: card.width,
-                          height: card.height,
-                          minWidth: card.width,
-                          minHeight: card.height,
-                          maxWidth: card.width,
-                          maxHeight: card.height,
-                          whiteSpace: "normal",
-                        }}
-                      >
-                        {card.type === "todolist" && (
-                          <div style={{ display: "flex", flexDirection: "column", height: "100%", textAlign: "left", fontFamily: "'Poppins', sans-serif", whiteSpace: "normal" }}>
-                            <div style={{ fontSize: "9px", fontWeight: 500, opacity: 0.5, marginBottom: "6px" }}>
-                              {card.header}
-                            </div>
-                            <div style={{ fontSize: "11px", fontWeight: 600, lineHeight: 1.35, marginBottom: "10px" }}>
-                              {card.title}
-                            </div>
-                            <div style={{ display: "flex", flexDirection: "column", gap: "5px", flexGrow: 1 }}>
-                              {card.items?.map((item, itemIdx) => (
-                                <div key={itemIdx} style={{ display: "flex", alignItems: "center", fontSize: "10px", opacity: item.checked ? 0.45 : 0.8, textDecoration: item.checked ? "line-through" : "none" }}>
-                                  {item.checked ? (
-                                    <span style={{ width: "11px", height: "11px", borderRadius: "50%", backgroundColor: card.textCol, display: "inline-flex", alignItems: "center", justifyContent: "center", marginRight: "6px", fontSize: "7px", color: card.bg === "#FFFFFF" ? "#FFF" : (card.bg === "#1E293B" ? "#1E293B" : "#FFF"), fontWeight: "bold" }}>✓</span>
-                                  ) : (
-                                    <span style={{ width: "11px", height: "11px", borderRadius: "50%", border: `1px solid ${card.textCol}40`, display: "inline-block", marginRight: "6px" }}></span>
-                                  )}
-                                  <span style={{ overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>{item.text}</span>
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-
-                        {card.type === "list" && (
-                          <div style={{ display: "flex", flexDirection: "column", height: "100%", textAlign: "left", fontFamily: "'Poppins', sans-serif", whiteSpace: "normal" }}>
-                            <div style={{ fontSize: "9px", fontWeight: 500, opacity: 0.5, marginBottom: "6px" }}>
-                              {card.header}
-                            </div>
-                            <div style={{ display: "flex", flexDirection: "column", gap: "5px", flexGrow: 1, justifyContent: "center" }}>
-                              {card.items?.map((item, itemIdx) => (
-                                <div key={itemIdx} style={{ fontSize: "10.5px", fontWeight: 500, opacity: 0.85, paddingLeft: "2px" }}>
-                                  • {item.text}
-                                </div>
-                              ))}
-                            </div>
-                          </div>
-                        )}
-
-                        {card.type === "note" && (
-                          <div style={{ display: "flex", flexDirection: "column", height: "100%", textAlign: "left", fontFamily: "'Poppins', sans-serif", whiteSpace: "normal" }}>
-                            <div style={{ fontSize: "9px", fontWeight: 500, opacity: 0.5, marginBottom: "6px" }}>
-                              {card.header}
-                            </div>
-                            <div style={{ fontSize: "11px", fontWeight: 600, lineHeight: 1.35, marginBottom: "8px" }}>
-                              {card.title}
-                            </div>
-                            <div style={{ fontSize: "9.5px", fontWeight: 300, lineHeight: 1.4, opacity: 0.6, flexGrow: 1, display: "-webkit-box", WebkitLineClamp: 3, WebkitBoxOrient: "vertical", overflow: "hidden" }}>
-                              {card.text}
-                            </div>
-                            {card.footer && (
-                              <div style={{ fontSize: "8px", fontWeight: 500, opacity: 0.5, textAlign: "right", marginTop: "auto", paddingTop: "6px" }}>
-                                {card.footer}
-                              </div>
-                            )}
-                          </div>
-                        )}
-
-                        {card.type === "neon" && (
-                          <div style={{ display: "flex", flexDirection: "column", height: "100%", justifyContent: "center", textAlign: "left", fontFamily: "'Poppins', sans-serif", padding: "2px", whiteSpace: "normal" }}>
-                            <div style={{ fontSize: "12px", fontWeight: 600, lineHeight: 1.4 }}>
-                              {card.text}
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
+            <div data-anim-heading className="flex items-center justify-center gap-4 flex-wrap">
+              <Link
+                to="/login"
+                className="px-8 py-4 rounded-full bg-black text-white text-[15px] font-normal hover:-translate-y-2 transition-transform duration-300 flex items-center gap-2"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 0C12.3 8.8 15.2 11.7 24 12C15.2 12.3 12.3 15.2 12 24C11.7 15.2 8.8 12.3 0 12C8.8 11.7 11.7 8.8 12 0Z" />
+                </svg>
+                Unirse ahora
+              </Link>
             </div>
           </section>
 
