@@ -29,6 +29,7 @@ const Landing = () => {
   const smootherRef = useRef<ScrollSmoother | null>(null);
   const videoWrapRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
+  const scrollTextSectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     smootherRef.current = ScrollSmoother.create({
@@ -441,6 +442,101 @@ const Landing = () => {
     };
   }, []);
 
+  // 3D Scroll Perspective Text Animation (mwg_effect053)
+  useEffect(() => {
+    const root = scrollTextSectionRef.current;
+    if (!root) return;
+
+    const pinHeight = root.querySelector(".pin-height") as HTMLElement;
+    const container = root.querySelector(".container") as HTMLElement;
+    const paragraphs = root.querySelectorAll(".paragraphs");
+
+    if (!pinHeight || !container || paragraphs.length === 0) return;
+
+    let splits: SplitText[] = [];
+    let pinTrigger: ScrollTrigger | null = null;
+    let tl: gsap.core.Timeline | null = null;
+
+    const initAnimation = () => {
+      // Create SplitText lines
+      splits = Array.from(paragraphs).map((p) => {
+        const split = SplitText.create(p as HTMLElement, { type: "lines", linesClass: "line" });
+        split.lines.forEach((line) => {
+          line.innerHTML = `<div class="line-inner">${line.innerHTML}</div>`;
+        });
+        return split;
+      });
+
+      // Initial state: hide paragraphs after the first one
+      splits.forEach((split, i) => {
+        if (i > 0) {
+          gsap.set(split.lines, { rotationY: 90 });
+        }
+      });
+
+      // Pin the container
+      pinTrigger = ScrollTrigger.create({
+        trigger: pinHeight,
+        start: "top top",
+        end: "bottom bottom",
+        pin: container,
+        pinType: "transform",
+      });
+
+      // Create rotation timeline
+      tl = gsap.timeline({
+        scrollTrigger: {
+          trigger: pinHeight,
+          start: "top top",
+          end: "bottom bottom",
+          scrub: true,
+        },
+      });
+
+      splits.forEach((split, i) => {
+        if (splits[i + 1]) {
+          const currentLines = split.lines;
+          const nextLines = splits[i + 1].lines;
+
+          tl!.to(currentLines, {
+            rotationY: -90,
+            stagger: 0.07,
+            duration: 1,
+            ease: "back.inOut(1.5)",
+          });
+
+          tl!.to(
+            nextLines,
+            {
+              rotationY: 0,
+              stagger: 0.07,
+              duration: 1,
+              ease: "back.inOut(1.5)",
+            },
+            "<"
+          );
+        }
+      });
+    };
+
+    const fontsReady = (document as Document & { fonts?: { ready: Promise<unknown> } }).fonts?.ready;
+    if (fontsReady) {
+      fontsReady.then(initAnimation);
+    } else {
+      const timer = setTimeout(initAnimation, 100);
+      return () => clearTimeout(timer);
+    }
+
+    return () => {
+      splits.forEach((s) => s.revert());
+      if (pinTrigger) pinTrigger.kill();
+      if (tl) {
+        if (tl.scrollTrigger) tl.scrollTrigger.kill();
+        tl.kill();
+      }
+    };
+  }, []);
+
   return (
     <>
       <LandingNavbar />
@@ -493,6 +589,31 @@ const Landing = () => {
                   {[...brandLogos, ...brandLogos].map((logo, i) => (
                     <img key={i} src={logo} alt="" className="h-6 md:h-7 w-auto opacity-70 shrink-0" />
                   ))}
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* 3D SCROLL TEXT PERSPECTIVE (mwg_effect053) */}
+          <section ref={scrollTextSectionRef} className="mwg_effect053 bg-white text-black relative z-10">
+            <div className="pin-height">
+              <div className="container">
+                <p className="paragraphs">
+                  Presentamos Miiles: una nueva manera de unificar todas tus ideas de negocio y empezar a crear.
+                </p>
+                <p className="paragraphs">
+                  Conecta tus proyectos en un canvas visual diseñado para la acción, la colaboración y el crecimiento.
+                </p>
+                <p className="paragraphs">
+                  No dejes tus ideas en el papel; dales vida junto a los socios y la fuerza de ventas que necesitas.
+                </p>
+
+                <div className="bottom">
+                  <img src={logoImg} alt="Miiles Logo" />
+                  <p>
+                    <span>Miiles Studio</span> <br />
+                    Unificar ideas. Empezar a crear.
+                  </p>
                 </div>
               </div>
             </div>

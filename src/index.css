@@ -449,3 +449,62 @@
 .dark .react-flow__node-textNode a {
   color: #60a5fa !important; /* light blue for links in dark mode */
 }
+
+/* 3D Scroll Text Animation (mwg_effect053) */
+.mwg_effect053 {
+  width: 100%;
+}
+.mwg_effect053 .pin-height {
+  height: 600vh;
+}
+.mwg_effect053 .container {
+  height: 100vh;
+  perspective: 300vw;
+  display: grid;
+  place-items: center;
+  position: relative;
+}
+.mwg_effect053 .paragraphs {
+  grid-area: 1/1;
+  font-size: max(22px, 5.5vw);
+  line-height: 1.1;
+  width: 75%;
+  margin: 0 auto;
+  text-align: center;
+  transform-style: preserve-3d;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+}
+.mwg_effect053 .line {
+  transform-style: preserve-3d;
+}
+.mwg_effect053 .line-inner {
+  transform: translate3d(0, 0, 33vw);
+  backface-visibility: hidden;
+  display: inline-block;
+}
+.mwg_effect053 .bottom {
+  position: absolute;
+  bottom: 3rem;
+  left: 3rem;
+  display: flex;
+  gap: 1.5rem;
+  align-items: center;
+}
+.mwg_effect053 .bottom img {
+  width: max(80px, 5vw);
+  height: max(80px, 5vw);
+  object-fit: contain;
+  border-radius: 9999px;
+  background-color: #f3f4f6;
+  padding: 0.5rem;
+}
+.mwg_effect053 .bottom p {
+  font-size: max(14px, 1.1vw);
+  line-height: 1.4;
+  text-align: left;
+}
+.mwg_effect053 .bottom p span {
+  color: #9CA3AF;
+  font-weight: 300;
+}
