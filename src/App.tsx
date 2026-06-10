@@ -13,6 +13,8 @@ import Pricing from "./pages/Pricing";
 import BusinessInquiry from "./pages/BusinessInquiry";
 import BusinessInquiryThanks from "./pages/BusinessInquiryThanks";
 import Features from "./pages/Features";
+import Terms from "./pages/Terms";
+import Privacy from "./pages/Privacy";
 import Dashboard from "./pages/Dashboard";
 import Boards from "./pages/Boards";
 import Programs from "./pages/Programs";
@@ -94,6 +96,8 @@ const App = () => (
               <Route path="/precios/negocios" element={<BusinessInquiry />} />
               <Route path="/precios/negocios/gracias" element={<BusinessInquiryThanks />} />
               <Route path="/funciones" element={<Features />} />
+              <Route path="/terminos" element={<Terms />} />
+              <Route path="/privacidad" element={<Privacy />} />
               <Route path="/dashboard" element={<DashboardRoute><Dashboard /></DashboardRoute>} />
               <Route path="/boards" element={<DashboardRoute><Boards /></DashboardRoute>} />
               <Route path="/boards/new" element={<ProtectedRoute><Index /></ProtectedRoute>} />

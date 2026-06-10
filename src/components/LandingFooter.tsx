@@ -20,8 +20,8 @@ const LandingFooter = () => {
             <div className="space-y-6">
               <h4 className="text-[10px] font-normal text-gray-400 tracking-widest">Compañía</h4>
               <div className="flex flex-col gap-4 text-sm font-light text-black">
-                <Link to="/" className="hover:opacity-50 transition-opacity">Términos y condiciones</Link>
-                <Link to="/" className="hover:opacity-50 transition-opacity">Política de privacidad</Link>
+                <Link to="/terminos" className="hover:opacity-50 transition-opacity">Términos y condiciones</Link>
+                <Link to="/privacidad" className="hover:opacity-50 transition-opacity">Política de privacidad</Link>
               </div>
             </div>
             <div className="space-y-6">
