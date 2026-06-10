@@ -18,6 +18,13 @@ import brand6 from "@/assets/miiles/brands/brand6.svg";
 import LandingNavbar from "@/components/LandingNavbar";
 import LandingFooter from "@/components/LandingFooter";
 
+// Graphic assets copied from Downloads
+import estrellaImg from "@/assets/miiles/Estrella.png";
+import flechaImg from "@/assets/miiles/Flecha.png";
+import florImg from "@/assets/miiles/Flor.svg";
+import miilesImg from "@/assets/miiles/Miiles.svg";
+import sonrisaImg from "@/assets/miiles/Sonrisa.svg";
+
 const brandLogos = [brand1, brand2, brand3, brand4, brand5, brand6];
 
 const heroCardsData = [
@@ -36,6 +43,13 @@ const heroCardsData = [
     height: "175px",
   },
   {
+    type: "image",
+    src: estrellaImg,
+    bg: "#FFFFFF",
+    width: "160px",
+    height: "160px",
+  },
+  {
     type: "note",
     header: "SaaS B2B",
     title: "Herramienta de automatización de ventas con IA",
@@ -45,6 +59,13 @@ const heroCardsData = [
     footer: "Lanzamiento Q3 ▾",
     width: "220px",
     height: "220px",
+  },
+  {
+    type: "image",
+    src: flechaImg,
+    bg: "#FFFFFF",
+    width: "150px",
+    height: "150px",
   },
   {
     type: "list",
@@ -58,6 +79,13 @@ const heroCardsData = [
     textCol: "#1E293B",
     width: "155px",
     height: "155px",
+  },
+  {
+    type: "image",
+    src: florImg,
+    bg: "#FFFFFF",
+    width: "170px",
+    height: "170px",
   },
   {
     type: "neon",
@@ -82,6 +110,13 @@ const heroCardsData = [
     height: "185px",
   },
   {
+    type: "image",
+    src: miilesImg,
+    bg: "#FFFFFF",
+    width: "160px",
+    height: "160px",
+  },
+  {
     type: "note",
     header: "Fintech Latam",
     title: "Plataforma de cobros para freelancers",
@@ -92,10 +127,9 @@ const heroCardsData = [
     height: "210px",
   },
   {
-    type: "neon",
-    text: "Idea: Agencia productizada de desarrollo y diseño Webflow/Framer.",
-    bg: "#EFF6FF", // Soft blue
-    textCol: "#1E293B",
+    type: "image",
+    src: sonrisaImg,
+    bg: "#FFFFFF",
     width: "150px",
     height: "150px",
   },
@@ -114,6 +148,7 @@ const heroCardsData = [
     height: "175px",
   }
 ];
+
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText, CustomEase, InertiaPlugin);
 if (!CustomEase.get("osmo-ease")) {
@@ -421,7 +456,7 @@ const Landing = () => {
             <div className="container relative">
               
               {/* HERO Content in Center */}
-              <div className="hero-center-content max-w-4xl mx-auto flex flex-col items-center relative z-10 pointer-events-none">
+              <div className="hero-center-content max-w-4xl mx-auto flex flex-col items-center absolute pointer-events-none">
                 <div className="pointer-events-auto flex flex-col items-center">
                   <img 
                     data-anim-heading 
@@ -466,6 +501,7 @@ const Landing = () => {
                         color: card.textCol,
                         width: card.width,
                         height: card.height,
+                        padding: card.type === "image" ? "16px" : undefined,
                       }}
                     >
                       {card.type === "todolist" && (
@@ -530,6 +566,20 @@ const Landing = () => {
                           <div style={{ fontSize: "12px", fontWeight: 600, lineHeight: 1.4 }}>
                             {card.text}
                           </div>
+                        </div>
+                      )}
+
+                      {card.type === "image" && "src" in card && (
+                        <div style={{ display: "flex", alignItems: "center", justifyContent: "center", height: "100%", width: "100%" }}>
+                          <img 
+                            src={(card as any).src} 
+                            alt="miiles graphic decal" 
+                            style={{ 
+                              maxWidth: "100%", 
+                              maxHeight: "100%", 
+                              objectFit: "contain" 
+                            }} 
+                          />
                         </div>
                       )}
                     </div>
