@@ -222,7 +222,7 @@ const Landing = () => {
       card.style.width = window.innerWidth <= 768 ? "95px" : "125px";
       card.style.height = window.innerWidth <= 768 ? "95px" : "125px";
       card.style.backgroundColor = currentCard.bg;
-      card.style.border = `1px solid ${currentCard.borderCol}`;
+      card.style.border = "none";
       card.style.boxShadow = "0 8px 20px -4px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05), inset 0 -3px 0 rgba(0,0,0,0.03)";
       card.style.padding = "10px";
       card.style.zIndex = "20"; // elevated above z-10 text/buttons
