@@ -160,6 +160,9 @@ const Landing = () => {
   const videoWrapRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
   const scrollTextSectionRef = useRef<HTMLDivElement>(null);
+  const ctaSectionRef = useRef<HTMLElement>(null);
+  const ctaContainerRef = useRef<HTMLDivElement>(null);
+  const ctaTextRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     smootherRef.current = ScrollSmoother.create({
@@ -205,22 +208,7 @@ const Landing = () => {
     animate("[data-anim-heading]", 40, 0.8);
     animate("[data-split]", 15, 0.5);
 
-    // Animación del título principal sin SplitText para evitar cortes
-    gsap.fromTo(
-      ".no-split",
-      { opacity: 0, y: 45 },
-      {
-        opacity: 1,
-        y: 0,
-        duration: 1.2,
-        ease: "power3.out",
-        scrollTrigger: {
-          trigger: ".no-split",
-          start: "top 90%",
-          once: true,
-        },
-      }
-    );
+    // Removed main heading animation as per user request
 
     // SplitText line reveal en h1/h2/h3
     const splits: SplitText[] = [];
@@ -428,10 +416,49 @@ const Landing = () => {
 
     const fontsReady = (document as Document & { fonts?: { ready: Promise<unknown> } }).fonts?.ready;
     if (fontsReady) {
-      fontsReady.then(initAnimation);
+      fontsReady.then(() => {
+        initAnimation();
+        initCtaAnimation();
+      });
     } else {
-      const timer = setTimeout(initAnimation, 100);
+      const timer = setTimeout(() => {
+        initAnimation();
+        initCtaAnimation();
+      }, 100);
       return () => clearTimeout(timer);
+    }
+
+    function initCtaAnimation() {
+      if (!ctaSectionRef.current || !ctaContainerRef.current || !ctaTextRef.current) return;
+
+      const ctaSplit = new SplitText(ctaTextRef.current, { type: "chars", charsClass: "letter" });
+      const distance = ctaTextRef.current.clientWidth - window.innerWidth;
+
+      const ctaScrollTween = gsap.to(ctaTextRef.current, {
+        x: -distance,
+        ease: "none",
+        scrollTrigger: {
+          trigger: ctaContainerRef.current,
+          pin: true,
+          end: "+=" + distance,
+          scrub: true,
+        },
+      });
+
+      ctaSplit.chars.forEach((letter) => {
+        gsap.from(letter, {
+          yPercent: (Math.random() - 0.5) * 400,
+          rotation: (Math.random() - 0.5) * 60,
+          ease: "elastic.out(1.2, 1)",
+          scrollTrigger: {
+            trigger: letter,
+            containerAnimation: ctaScrollTween,
+            start: "left 90%",
+            end: "left 10%",
+            scrub: 0.5,
+          },
+        });
+      });
     }
 
     return () => {
@@ -722,22 +749,26 @@ const Landing = () => {
             </div>
           </section>
 
-          {/* CTA FINAL */}
-          <section className="py-32 px-6 bg-white">
-            <div className="max-w-4xl mx-auto text-center">
-              <h2 className="text-4xl md:text-6xl font-normal leading-tight tracking-tight mb-12">
-                Vamos a construir tu nuevo negocio <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>automatizado</span>
-              </h2>
-              <Link
-                to="/register"
-                className="inline-flex items-center gap-2 px-10 py-5 rounded-full bg-black text-white text-base font-light hover:-translate-y-2 transition-transform duration-300"
-              >
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 0C12.3 8.8 15.2 11.7 24 12C15.2 12.3 12.3 15.2 12 24C11.7 15.2 8.8 12.3 0 12C8.8 11.7 11.7 8.8 12 0Z" />
-                </svg>
-                Prueba Miiles gratis
-              </Link>
+          {/* CTA FINAL (mwg_effect011) */}
+          <section ref={ctaSectionRef} className="mwg_effect011 bg-white">
+            <p className="scroll pointer-events-none opacity-40">Scroll</p>
+            <div ref={ctaContainerRef} className="container">
+              <div ref={ctaTextRef} className="text">
+                Vamos a construir tu nuevo negocio&nbsp;<span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>automatizado</span>
+              </div>
             </div>
+          </section>
+
+          <section className="pb-32 px-6 bg-white flex justify-center pt-8">
+            <Link
+              to="/register"
+              className="inline-flex items-center gap-2 px-10 py-5 rounded-full bg-black text-white text-base font-light hover:-translate-y-2 transition-transform duration-300"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <path d="M12 0C12.3 8.8 15.2 11.7 24 12C15.2 12.3 12.3 15.2 12 24C11.7 15.2 8.8 12.3 0 12C8.8 11.7 11.7 8.8 12 0Z" />
+              </svg>
+              Prueba Miiles gratis
+            </Link>
           </section>
 
           <LandingFooter />

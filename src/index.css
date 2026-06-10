@@ -567,3 +567,38 @@
   pointer-events: none;
   white-space: normal;
 }
+
+/* ------------------------------------- */
+/* mwg_effect011 - Horizontal Scroll Text CTA */
+/* ------------------------------------- */
+.mwg_effect011 {
+    overflow: hidden;
+    position: relative;
+    background-color: white;
+    color: black;
+}
+.mwg_effect011 .scroll {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    font-size: 1.2vw;
+}
+.mwg_effect011 .container {
+    display: flex;
+    align-items: center;
+    height: 100vh;
+    position: relative;
+    width: 100%;
+}
+.mwg_effect011 .text {
+    padding: 0 101vw;
+    display: flex;
+    width: max-content;
+    white-space: nowrap;
+    font: 500 normal 10vw/0.9 'Inter', sans-serif;
+    letter-spacing: -0.04em;
+}
+.mwg_effect011 .letter {
+    display: inline-block;
+}
