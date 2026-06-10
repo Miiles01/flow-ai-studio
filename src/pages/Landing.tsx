@@ -37,10 +37,10 @@ const heroCardsData = [
       { text: "Ejecutar anuncios de prueba", checked: false },
       { text: "Entrevistar 10 clientes", checked: false },
     ],
-    bg: "#FFFBEB", // Yellow
-    textCol: "#D97706",
-    width: "175px",
-    height: "175px",
+    bg: "#FDF2F8", // Pink
+    textCol: "#1E293B",
+    width: "180px",
+    height: "180px",
   },
   {
     type: "image",
@@ -54,11 +54,11 @@ const heroCardsData = [
     header: "SaaS B2B",
     title: "Herramienta de automatización de ventas con IA",
     text: "Permite a fundadores delegar su prospección de clientes usando agentes de IA entrenados en su modelo.",
-    bg: "#EFF6FF", // Blue
-    textCol: "#2563EB",
+    bg: "#FFFFFF", // White
+    textCol: "#1E293B",
     footer: "Lanzamiento Q3 ▾",
-    width: "220px",
-    height: "220px",
+    width: "180px",
+    height: "180px",
   },
   {
     type: "image",
@@ -75,10 +75,10 @@ const heroCardsData = [
       { text: "Comisión por venta" },
       { text: "Licencia perpetua" },
     ],
-    bg: "#FAF5FF", // Purple
-    textCol: "#7C3AED",
-    width: "155px",
-    height: "155px",
+    bg: "#EFF6FF", // Blue
+    textCol: "#1E293B",
+    width: "180px",
+    height: "180px",
   },
   {
     type: "image",
@@ -90,10 +90,10 @@ const heroCardsData = [
   {
     type: "neon",
     text: "Idea SaaS: Canvas visual para creadores digitales y diseñadores independientes.",
-    bg: "#ECFDF5", // Green
-    textCol: "#059669",
-    width: "150px",
-    height: "150px",
+    bg: "#FDF2F8", // Pink
+    textCol: "#1E293B",
+    width: "180px",
+    height: "180px",
   },
   {
     type: "todolist",
@@ -104,10 +104,10 @@ const heroCardsData = [
       { text: "Publicar en Product Hunt", checked: false },
       { text: "Campaña con afiliados", checked: false },
     ],
-    bg: "#FFF7ED", // Orange
-    textCol: "#EA580C",
-    width: "185px",
-    height: "185px",
+    bg: "#FFFFFF", // White
+    textCol: "#1E293B",
+    width: "180px",
+    height: "180px",
   },
   {
     type: "image",
@@ -121,10 +121,10 @@ const heroCardsData = [
     header: "Fintech Latam",
     title: "Plataforma de cobros para freelancers",
     text: "Permite cobrar en dólares y retirar en moneda local de manera instantánea con comisiones mínimas.",
-    bg: "#F0F9FF", // Light Blue
-    textCol: "#0284C7",
-    width: "210px",
-    height: "210px",
+    bg: "#1E293B", // Black/Dark Slate
+    textCol: "#F8FAFC",
+    width: "180px",
+    height: "180px",
   },
   {
     type: "image",
@@ -142,10 +142,10 @@ const heroCardsData = [
       { text: "Registrar dominio .app", checked: false },
       { text: "Subir video de demo", checked: false },
     ],
-    bg: "#F0FDF4", // Light Green
-    textCol: "#16A34A",
-    width: "175px",
-    height: "175px",
+    bg: "#FFFFFF", // White
+    textCol: "#1E293B",
+    width: "180px",
+    height: "180px",
   }
 ];
 
