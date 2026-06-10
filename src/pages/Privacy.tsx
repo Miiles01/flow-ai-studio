@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import LandingNavbar from "@/components/LandingNavbar";
 import LandingFooter from "@/components/LandingFooter";
 import gsap from "gsap";
@@ -9,6 +9,16 @@ gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
 const Privacy = () => {
   const smootherRef = useRef<ScrollSmoother | null>(null);
+  const [activeSection, setActiveSection] = useState("recoleccion");
+
+  const sections = [
+    { id: "recoleccion", title: "1. Recopilación de Información" },
+    { id: "uso", title: "2. Uso de la Información" },
+    { id: "compartir", title: "3. Cómo Compartimos la Información" },
+    { id: "seguridad", title: "4. Seguridad de tus Datos" },
+    { id: "derechos", title: "5. Tus Derechos de Privacidad" },
+    { id: "contacto", title: "6. Información de Contacto" },
+  ];
 
   useEffect(() => {
     smootherRef.current = ScrollSmoother.create({
@@ -36,25 +46,42 @@ const Privacy = () => {
       }
     );
 
+    // Setup intersection observer for scrollspy
+    const observerOptions = {
+      root: null,
+      rootMargin: "-20% 0px -60% 0px", // triggers when section is in upper-mid viewport
+      threshold: 0,
+    };
+
+    const observerCallback = (entries: IntersectionObserverEntry[]) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          setActiveSection(entry.target.id);
+        }
+      });
+    };
+
+    const observer = new IntersectionObserver(observerCallback, observerOptions);
+
+    sections.forEach((section) => {
+      const element = document.getElementById(section.id);
+      if (element) {
+        observer.observe(element);
+      }
+    });
+
     return () => {
       smootherRef.current?.kill();
       ScrollTrigger.getAll().forEach((t) => t.kill());
+      observer.disconnect();
     };
   }, []);
-
-  const sections = [
-    { id: "recoleccion", title: "1. Recopilación de Información" },
-    { id: "uso", title: "2. Uso de la Información" },
-    { id: "compartir", title: "3. Cómo Compartimos la Información" },
-    { id: "seguridad", title: "4. Seguridad de tus Datos" },
-    { id: "derechos", title: "5. Tus Derechos de Privacidad" },
-    { id: "contacto", title: "6. Información de Contacto" },
-  ];
 
   const handleScrollTo = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
       smootherRef.current?.scrollTo(element, true, "top 100");
+      setActiveSection(id);
     }
   };
 
@@ -88,20 +115,28 @@ const Privacy = () => {
             <div className="grid grid-cols-1 lg:grid-cols-[250px_1fr] gap-16 items-start">
               
               {/* Sticky Sidebar Index */}
-              <aside className="hidden lg:block sticky top-28 bg-neutral-50/50 backdrop-blur-md border border-neutral-100 p-6 rounded-[24px]">
+              <aside className="hidden lg:block sticky top-28 bg-neutral-50/50 backdrop-blur-md border border-neutral-100 p-5 rounded-[24px] min-w-[240px]">
                 <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-400 mb-4 px-2">
                   Índice
                 </h3>
-                <nav className="flex flex-col gap-2">
-                  {sections.map((section) => (
-                    <button
-                      key={section.id}
-                      onClick={() => handleScrollTo(section.id)}
-                      className="text-left text-sm font-light text-neutral-600 hover:text-miiles-blue hover:translate-x-1 transition-all py-1.5 px-2 rounded-lg hover:bg-white/60"
-                    >
-                      {section.title}
-                    </button>
-                  ))}
+                <nav className="flex flex-col gap-1.5">
+                  {sections.map((section) => {
+                    const isActive = activeSection === section.id;
+                    return (
+                      <button
+                        key={section.id}
+                        onClick={() => handleScrollTo(section.id)}
+                        className={`text-left text-sm py-2 px-3 rounded-xl transition-all duration-300 flex items-center gap-2.5 ${
+                          isActive
+                            ? "font-medium text-miiles-blue bg-[#E8ECFE]/50 translate-x-1"
+                            : "font-light text-neutral-500 hover:text-neutral-900 hover:bg-white/70 hover:translate-x-1"
+                        }`}
+                      >
+                        <span className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${isActive ? "bg-miiles-blue scale-100" : "bg-transparent scale-0"}`} />
+                        <span className="truncate">{section.title}</span>
+                      </button>
+                    );
+                  })}
                 </nav>
               </aside>
 
