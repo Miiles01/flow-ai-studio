@@ -241,14 +241,15 @@ const Landing = () => {
       gsap.set(cards, { clearProps: "all" });
 
       scrollTween = gsap.to(cardsContainer, {
-        x: -distance,
+        x: () => -(cardsContainer.clientWidth - window.innerWidth),
         ease: "none",
         scrollTrigger: {
           trigger: root,
           pin: true,
+          pinType: "transform",
           scrub: true,
           start: "top top",
-          end: () => "+=" + distance,
+          end: () => "+=" + (cardsContainer.clientWidth - window.innerWidth),
           invalidateOnRefresh: true,
         },
       });
@@ -294,6 +295,8 @@ const Landing = () => {
         });
         individualTweens.push(scaleTween);
       });
+
+      ScrollTrigger.refresh();
     };
 
     const timer = setTimeout(initHeroAnimation, 100);
