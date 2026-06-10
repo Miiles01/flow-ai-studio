@@ -239,6 +239,8 @@ const Landing = () => {
     const clampY = gsap.utils.clamp(0, H);
 
     function applyMove(clientX: number, clientY: number) {
+      if (window.scrollY > 250) return; // Only spawn notes when scroll is near the top
+
       const rect = root.getBoundingClientRect();
       const valX = clientX - rect.left;
       const valY = clientY - rect.top;
@@ -446,7 +448,7 @@ const Landing = () => {
         <div id="smooth-content" className="bg-white text-black font-sans overflow-hidden">
 
           {/* HERO */}
-          <section ref={heroRef} className="min-h-[85vh] flex flex-col items-center justify-center text-center px-6 pt-32 pb-10 relative overflow-hidden">
+          <section ref={heroRef} className="min-h-[85vh] flex flex-col items-center justify-center text-center px-6 pt-32 pb-10 relative">
             <div className="max-w-4xl mx-auto flex flex-col items-center relative z-10">
               <img 
                 data-anim-heading 
