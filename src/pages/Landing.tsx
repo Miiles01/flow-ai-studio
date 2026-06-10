@@ -105,24 +105,24 @@ const Landing = () => {
     };
   }, []);
 
-  // Mouse-trail animation mwg_062
+  // Mouse-trail animation mwg_062 with flowchart pastel notes
   useEffect(() => {
     const root = heroRef.current;
     if (!root) return;
 
-    const images = [
-      "/mwg_062/01.png",
-      "/mwg_062/02.png",
-      "/mwg_062/03.png",
-      "/mwg_062/04.png",
-      "/mwg_062/05.png",
-      "/mwg_062/06.png",
-      "/mwg_062/07.png",
-      "/mwg_062/08.png",
-      "/mwg_062/09.png",
-      "/mwg_062/10.png",
-      "/mwg_062/11.png",
-      "/mwg_062/12.png",
+    const trailCards = [
+      { text: "Idea de negocio", type: "Idea", bg: "#FFFBEB", textCol: "#D97706", borderCol: "#FDE68A" },
+      { text: "Nota X", type: "Nota", bg: "#FDF2F8", textCol: "#DB2777", borderCol: "#FBCFE8" },
+      { text: "Tarea de planeación", type: "Tarea", bg: "#EFF6FF", textCol: "#2563EB", borderCol: "#BFDBFE" },
+      { text: "Dependiente", type: "Conexión", bg: "#FAF5FF", textCol: "#7C3AED", borderCol: "#E9D5FF" },
+      { text: "Flujo de ventas", type: "Flujo", bg: "#ECFDF5", textCol: "#059669", borderCol: "#A7F3D0" },
+      { text: "Automatización con IA", type: "Acción", bg: "#FFF7ED", textCol: "#EA580C", borderCol: "#FED7AA" },
+      { text: "Aprobado", type: "Estado", bg: "#F0F9FF", textCol: "#0284C7", borderCol: "#BAE6FD" },
+      { text: "Pendiente de revisión", type: "Estado", bg: "#FEF2F2", textCol: "#DC2626", borderCol: "#FECACA" },
+      { text: "Modelo Canvas", type: "Canvas", bg: "#F0FDF4", textCol: "#16A34A", borderCol: "#BBF7D0" },
+      { text: "Socio clave", type: "Contacto", bg: "#FFFDF5", textCol: "#B45309", borderCol: "#FEF3C7" },
+      { text: "Canal de distribución", type: "Canal", bg: "#F5F3FF", textCol: "#6D28D9", borderCol: "#DDD6FE" },
+      { text: "Propuesta de valor", type: "Canvas", bg: "#FFF5F5", textCol: "#C53030", borderCol: "#FED7D7" },
     ];
 
     let isTouch = false;
@@ -135,7 +135,7 @@ const Landing = () => {
     let oldIncrX = 0;
     let oldIncrY = 0;
     let resetDist = window.innerWidth / (isTouch ? 3 : 8);
-    let indexImg = 0;
+    let indexCard = 0;
 
     const W = window.innerWidth;
     const H = window.innerHeight;
@@ -186,32 +186,52 @@ const Landing = () => {
     root.addEventListener("touchmove", handleTouchMove, { passive: true });
 
     function createMedia(x: number, y: number, deltaX: number, deltaY: number) {
-      const image = document.createElement("img");
-      image.setAttribute("src", images[indexImg]);
+      const card = document.createElement("div");
+      const currentCard = trailCards[indexCard];
+      
+      card.innerHTML = `
+        <div style="display: flex; flex-direction: column; width: 100%; height: 100%; justify-content: space-between; text-align: left;">
+          <div style="font-size: 8px; text-transform: uppercase; letter-spacing: 0.05em; font-weight: 600; opacity: 0.6; margin-bottom: 2px;">
+            ${currentCard.type}
+          </div>
+          <div style="font-size: ${window.innerWidth <= 768 ? "10px" : "12px"}; font-weight: 500; line-height: 1.3; flex-grow: 1; display: flex; align-items: center; color: ${currentCard.textCol};">
+            ${currentCard.text}
+          </div>
+          <div style="display: flex; align-items: center; gap: 4px; margin-top: 4px; font-size: 8px; opacity: 0.7;">
+            <span style="width: 4px; height: 4px; border-radius: 50%; background-color: ${currentCard.textCol};"></span>
+            <span>Conectado</span>
+          </div>
+        </div>
+      `;
 
-      image.style.width = window.innerWidth <= 768 ? "35vw" : "14vw";
-      image.style.height = window.innerWidth <= 768 ? "35vw" : "14vw";
-      image.style.position = "absolute";
-      image.style.objectFit = "cover";
-      image.style.zIndex = "5";
-      image.style.borderRadius = "0.4vw";
-      image.style.pointerEvents = "none";
-      image.style.left = "0px";
-      image.style.top = "0px";
+      card.style.position = "absolute";
+      card.style.width = window.innerWidth <= 768 ? "120px" : "165px";
+      card.style.height = window.innerWidth <= 768 ? "75px" : "100px";
+      card.style.backgroundColor = currentCard.bg;
+      card.style.color = currentCard.textCol;
+      card.style.border = `1.5px solid ${currentCard.borderCol}`;
+      card.style.borderRadius = "14px";
+      card.style.boxShadow = "0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05)";
+      card.style.padding = "10px 12px";
+      card.style.fontFamily = "'Poppins', sans-serif";
+      card.style.zIndex = "5";
+      card.style.pointerEvents = "none";
+      card.style.left = "0px";
+      card.style.top = "0px";
 
-      root.appendChild(image);
+      root.appendChild(card);
 
       const tl = gsap.timeline({
         onComplete: () => {
-          if (root.contains(image)) {
-            root.removeChild(image);
+          if (root.contains(card)) {
+            root.removeChild(card);
           }
           tl && tl.kill();
         },
       });
 
       tl.fromTo(
-        image,
+        card,
         {
           xPercent: -50 + (Math.random() - 0.5) * 80,
           yPercent: -50 + (Math.random() - 0.5) * 10,
@@ -227,7 +247,7 @@ const Landing = () => {
       );
 
       tl.fromTo(
-        image,
+        card,
         {
           x,
           y,
@@ -249,14 +269,14 @@ const Landing = () => {
         "<"
       );
 
-      tl.to(image, {
+      tl.to(card, {
         duration: 0.3,
         scale: 0.5,
         delay: 0.2,
         ease: "back.in(1.5)",
       });
 
-      indexImg = (indexImg + 1) % images.length;
+      indexCard = (indexCard + 1) % trailCards.length;
     }
 
     return () => {
