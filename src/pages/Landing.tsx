@@ -188,6 +188,8 @@ const Landing = () => {
   const videoWrapRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
   const scrollTextSectionRef = useRef<HTMLDivElement>(null);
+  const orbitSectionRef = useRef<HTMLDivElement>(null);
+
   const ctaSectionRef = useRef<HTMLElement>(null);
   const ctaContainerRef = useRef<HTMLDivElement>(null);
   const ctaTextRef = useRef<HTMLDivElement>(null);
