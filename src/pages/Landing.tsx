@@ -7,6 +7,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
 import { SplitText } from "gsap/SplitText";
 import { CustomEase } from "gsap/CustomEase";
+import { InertiaPlugin } from "gsap/InertiaPlugin";
 import logoImg from "@/assets/logo.png";
 import brand1 from "@/assets/miiles/brands/brand1.svg";
 import brand2 from "@/assets/miiles/brands/brand2.svg";
@@ -19,7 +20,7 @@ import LandingFooter from "@/components/LandingFooter";
 
 const brandLogos = [brand1, brand2, brand3, brand4, brand5, brand6];
 
-gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText, CustomEase);
+gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText, CustomEase, InertiaPlugin);
 if (!CustomEase.get("osmo-ease")) {
   CustomEase.create("osmo-ease", "0.625, 0.05, 0, 1");
 }
@@ -27,6 +28,7 @@ if (!CustomEase.get("osmo-ease")) {
 const Landing = () => {
   const smootherRef = useRef<ScrollSmoother | null>(null);
   const videoWrapRef = useRef<HTMLDivElement>(null);
+  const heroRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     smootherRef.current = ScrollSmoother.create({
@@ -103,6 +105,169 @@ const Landing = () => {
     };
   }, []);
 
+  // Mouse-trail animation mwg_062
+  useEffect(() => {
+    const root = heroRef.current;
+    if (!root) return;
+
+    const images = [
+      "/mwg_062/01.png",
+      "/mwg_062/02.png",
+      "/mwg_062/03.png",
+      "/mwg_062/04.png",
+      "/mwg_062/05.png",
+      "/mwg_062/06.png",
+      "/mwg_062/07.png",
+      "/mwg_062/08.png",
+      "/mwg_062/09.png",
+      "/mwg_062/10.png",
+      "/mwg_062/11.png",
+      "/mwg_062/12.png",
+    ];
+
+    let isTouch = false;
+    const mm = gsap.matchMedia();
+    mm.add("(hover: none)", () => {
+      isTouch = true;
+    });
+
+    let incr = 0;
+    let oldIncrX = 0;
+    let oldIncrY = 0;
+    let resetDist = window.innerWidth / (isTouch ? 3 : 8);
+    let indexImg = 0;
+
+    const W = window.innerWidth;
+    const H = window.innerHeight;
+    const clampX = gsap.utils.clamp(0, W);
+    const clampY = gsap.utils.clamp(0, H);
+
+    function applyMove(clientX: number, clientY: number) {
+      const rect = root.getBoundingClientRect();
+      const valX = clientX - rect.left;
+      const valY = clientY - rect.top;
+
+      incr += Math.abs(clientX - oldIncrX) + Math.abs(clientY - oldIncrY);
+
+      if (incr > resetDist) {
+        incr = 0;
+        createMedia(valX, valY, clientX - oldIncrX, clientY - oldIncrY);
+      }
+
+      oldIncrX = clientX;
+      oldIncrY = clientY;
+    }
+
+    function handleMouseMove(e: MouseEvent) {
+      applyMove(e.clientX, e.clientY);
+    }
+    function handleTouchMove(e: TouchEvent) {
+      if (!e.touches || !e.touches[0]) return;
+      applyMove(e.touches[0].clientX, e.touches[0].clientY);
+    }
+
+    const initPointer = (clientX: number, clientY: number) => {
+      oldIncrX = clientX;
+      oldIncrY = clientY;
+    };
+
+    const handleMouseMoveOnce = (e: MouseEvent) => {
+      initPointer(e.clientX, e.clientY);
+    };
+    const handleTouchStartOnce = (e: TouchEvent) => {
+      if (!e.touches || !e.touches[0]) return;
+      initPointer(e.touches[0].clientX, e.touches[0].clientY);
+    };
+
+    root.addEventListener("mousemove", handleMouseMoveOnce, { once: true });
+    root.addEventListener("touchstart", handleTouchStartOnce, { once: true, passive: true });
+
+    root.addEventListener("mousemove", handleMouseMove);
+    root.addEventListener("touchmove", handleTouchMove, { passive: true });
+
+    function createMedia(x: number, y: number, deltaX: number, deltaY: number) {
+      const image = document.createElement("img");
+      image.setAttribute("src", images[indexImg]);
+
+      image.style.width = window.innerWidth <= 768 ? "35vw" : "14vw";
+      image.style.height = window.innerWidth <= 768 ? "35vw" : "14vw";
+      image.style.position = "absolute";
+      image.style.objectFit = "cover";
+      image.style.zIndex = "5";
+      image.style.borderRadius = "0.4vw";
+      image.style.pointerEvents = "none";
+      image.style.left = "0px";
+      image.style.top = "0px";
+
+      root.appendChild(image);
+
+      const tl = gsap.timeline({
+        onComplete: () => {
+          if (root.contains(image)) {
+            root.removeChild(image);
+          }
+          tl && tl.kill();
+        },
+      });
+
+      tl.fromTo(
+        image,
+        {
+          xPercent: -50 + (Math.random() - 0.5) * 80,
+          yPercent: -50 + (Math.random() - 0.5) * 10,
+          scaleX: 1.3,
+          scaleY: 1.3,
+        },
+        {
+          scaleX: 1,
+          scaleY: 1,
+          ease: "elastic.out(2, 0.6)",
+          duration: 0.6,
+        }
+      );
+
+      tl.fromTo(
+        image,
+        {
+          x,
+          y,
+          rotation: (Math.random() - 0.5) * 30,
+        },
+        {
+          rotation: (Math.random() - 0.5) * 30,
+          inertia: {
+            x: {
+              velocity: deltaX * 40,
+              end: x,
+            },
+            y: {
+              velocity: deltaY * 40,
+              end: y,
+            },
+          },
+        },
+        "<"
+      );
+
+      tl.to(image, {
+        duration: 0.3,
+        scale: 0.5,
+        delay: 0.2,
+        ease: "back.in(1.5)",
+      });
+
+      indexImg = (indexImg + 1) % images.length;
+    }
+
+    return () => {
+      mm.revert();
+      root.removeEventListener("mousemove", handleMouseMoveOnce);
+      root.removeEventListener("touchstart", handleTouchStartOnce);
+      root.removeEventListener("mousemove", handleMouseMove);
+      root.removeEventListener("touchmove", handleTouchMove);
+    };
+  }, []);
+
   return (
     <>
       <LandingNavbar />
@@ -111,8 +276,8 @@ const Landing = () => {
         <div id="smooth-content" className="bg-white text-black font-sans overflow-hidden">
 
           {/* HERO */}
-          <section className="min-h-[85vh] flex flex-col items-center justify-center text-center px-6 pt-32 pb-10 relative overflow-hidden">
-            <div className="max-w-4xl mx-auto flex flex-col items-center">
+          <section ref={heroRef} className="min-h-[85vh] flex flex-col items-center justify-center text-center px-6 pt-32 pb-10 relative overflow-hidden">
+            <div className="max-w-4xl mx-auto flex flex-col items-center relative z-10">
               <img 
                 data-anim-heading 
                 src={logoImg} 
@@ -126,10 +291,8 @@ const Landing = () => {
               <h1
                 className="text-5xl md:text-6xl lg:text-7xl font-normal leading-tight tracking-tight mb-10 text-center"
               >
-                <span className="block">Trabaja más</span>
-                <span className="block" style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic", color: "#000" }}>
-                  inteligente
-                </span>
+                <span className="block">¿Muchas <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>ideas</span></span>
+                <span className="block">de negocio?</span>
               </h1>
 
               <div data-anim-heading className="flex items-center justify-center gap-4 flex-wrap">
@@ -140,25 +303,8 @@ const Landing = () => {
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 0C12.3 8.8 15.2 11.7 24 12C15.2 12.3 12.3 15.2 12 24C11.7 15.2 8.8 12.3 0 12C8.8 11.7 11.7 8.8 12 0Z" />
                   </svg>
-                  Prueba Gratis
+                  Unirse ahora
                 </Link>
-                <Link
-                  to="/funciones"
-                  className="px-8 py-4 rounded-full bg-white text-black text-[15px] font-normal shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_8px_30px_rgb(0,0,0,0.08)] hover:-translate-y-2 transition-all duration-300"
-                >
-                  Funciones
-                </Link>
-              </div>
-            </div>
-          </section>
-
-          {/* BRAND CAROUSEL */}
-          <section className="py-8 px-[10%] md:px-[20%] overflow-hidden">
-            <div className="relative w-full" style={{ maskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)" }}>
-              <div className="flex w-max animate-marquee gap-20 items-center">
-                {[...brandLogos, ...brandLogos].map((logo, i) => (
-                  <img key={i} src={logo} alt="" className="h-6 md:h-7 w-auto opacity-70 shrink-0" />
-                ))}
               </div>
             </div>
           </section>
@@ -178,6 +324,20 @@ const Landing = () => {
                 playsInline
                 className="w-full h-full object-cover"
               />
+            </div>
+          </section>
+
+          {/* BRAND CAROUSEL (Relocated) */}
+          <section className="py-16 overflow-hidden">
+            <h4 className="text-center text-xs font-light text-gray-400 mb-8 tracking-widest">
+              Elegido por
+            </h4>
+            <div className="relative w-full" style={{ maskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)" }}>
+              <div className="flex w-max animate-marquee gap-20 items-center">
+                {[...brandLogos, ...brandLogos].map((logo, i) => (
+                  <img key={i} src={logo} alt="" className="h-6 md:h-7 w-auto opacity-70 shrink-0" />
+                ))}
+              </div>
             </div>
           </section>
 
