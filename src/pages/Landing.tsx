@@ -501,6 +501,69 @@ const Landing = () => {
     };
   }, []);
 
+  // Orbiting words + notes animation (mwg_effect040)
+  useEffect(() => {
+    const root = orbitSectionRef.current;
+    if (!root) return;
+
+    const pinHeight = root.querySelector(".pin-height") as HTMLElement;
+    const container = root.querySelector(".container") as HTMLElement;
+    const leftCircle = root.querySelector(".parent-circle-left") as HTMLElement;
+    const rightCircle = root.querySelector(".parent-circle-right") as HTMLElement;
+    if (!pinHeight || !container || !leftCircle || !rightCircle) return;
+
+    const angle = 14;
+    const ctx = gsap.context(() => {
+      const leftItems = leftCircle.querySelectorAll(".circle");
+      const rightItems = rightCircle.querySelectorAll(".circle");
+
+      leftItems.forEach((el, index) => {
+        gsap.set(el, { rotation: index * angle });
+        gsap.set(el.querySelector("p"), { rotation: -index * angle });
+      });
+      rightItems.forEach((el, index) => {
+        gsap.set(el, { rotation: index * angle });
+        gsap.set(el.querySelector(".note"), { rotation: -index * angle });
+      });
+
+      const total = 180 + angle * leftItems.length;
+
+      gsap.to(".scroll", {
+        autoAlpha: 0,
+        duration: 0.2,
+        scrollTrigger: {
+          trigger: root,
+          start: "top top",
+          end: "top top-=1",
+          toggleActions: "play none reverse none",
+        },
+      });
+
+      const st = {
+        trigger: pinHeight,
+        start: "top top",
+        end: "bottom bottom",
+        scrub: true,
+      } as const;
+
+      ScrollTrigger.create({
+        trigger: pinHeight,
+        pin: container,
+        pinType: "transform",
+        start: "top top",
+        end: "bottom bottom",
+      });
+
+      gsap.to(leftCircle, { rotation: -total, ease: "none", scrollTrigger: st });
+      gsap.to(leftCircle.querySelectorAll("p"), { rotation: "+=" + total, ease: "none", scrollTrigger: st });
+      gsap.to(rightCircle, { rotation: -total, ease: "none", scrollTrigger: st });
+      gsap.to(rightCircle.querySelectorAll(".note"), { rotation: "+=" + total, ease: "none", scrollTrigger: st });
+    }, root);
+
+    return () => ctx.revert();
+  }, []);
+
+
   return (
     <>
       <LandingNavbar />
