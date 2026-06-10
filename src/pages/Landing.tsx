@@ -127,6 +127,9 @@ const Landing = () => {
     const root = heroRef.current;
     if (!root) return;
 
+    const isMobile = window.innerWidth <= 768;
+    if (isMobile) return;
+
     const trailCards = [
       {
         type: "todolist",
@@ -461,7 +464,7 @@ const Landing = () => {
               </span>
               
               <h1
-                className="no-split text-6xl md:text-8xl lg:text-[95px] font-normal leading-[1.1] tracking-tight mb-10 text-center"
+                className="no-split text-4xl sm:text-5xl md:text-8xl lg:text-[95px] font-normal leading-[1.1] tracking-tight mb-10 text-center"
               >
                 <span className="block">¿Muchas <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>ideas</span></span>
                 <span className="block">de negocio?</span>
