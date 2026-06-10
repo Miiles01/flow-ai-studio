@@ -130,12 +130,12 @@ const Landing = () => {
     const trailCards = [
       {
         type: "todolist",
-        header: "Today ▾",
-        title: "Stuff I got to get done TODAY",
+        header: "Hoy ▾",
+        title: "Cosas por hacer HOY",
         items: [
-          { text: "Just throw in stickies", checked: true },
-          { text: "Can have due dates", checked: false },
-          { text: "Floats on top", checked: false },
+          { text: "Soltar notas adhesivas", checked: true },
+          { text: "Agregar fechas límite", checked: false },
+          { text: "Mantener flotando arriba", checked: false },
         ],
         bg: "#FDF2F8", // Soft pink
         textCol: "#1E293B",
@@ -144,22 +144,22 @@ const Landing = () => {
       },
       {
         type: "note",
-        header: "A note",
-        title: "Longer form notes show up as paper. They can have due dates too.",
-        text: "Capture ideas and organize them in a natural way that supercharges your brain. Put notes freely on a two-dimensional board.",
+        header: "Una nota",
+        title: "Las notas extensas se muestran como papel y pueden tener fechas.",
+        text: "Captura ideas y organízalas de manera de potenciar tu cerebro. Coloca notas libremente en un tablero bidimensional.",
         bg: "#FFFFFF",
         textCol: "#1E293B",
-        footer: "On Friday ▾",
+        footer: "El viernes ▾",
         width: "180px",
         height: "220px",
       },
       {
         type: "list",
-        header: "Pickup",
+        header: "Compras",
         items: [
-          { text: "Bread" },
-          { text: "Milk" },
-          { text: "Ice cream" },
+          { text: "Pan" },
+          { text: "Leche" },
+          { text: "Helado" },
         ],
         bg: "#EFF6FF", // Soft blue
         textCol: "#1E293B",
@@ -168,7 +168,7 @@ const Landing = () => {
       },
       {
         type: "neon", // (acting as a plain text card)
-        text: "Loving the vibe of these grainy vintage photos. Let's do more of that",
+        text: "Me encanta la estética de estas fotos retro con grano. Hagamos más de eso.",
         bg: "#FDF2F8", // Soft pink
         textCol: "#1E293B",
         width: "145px",
@@ -176,11 +176,11 @@ const Landing = () => {
       },
       {
         type: "todolist",
-        header: "Untitled",
-        title: "Spatial organisation for keeping notes, prose and tasks.",
+        header: "Sin título",
+        title: "Organización espacial para guardar notas, textos y tareas.",
         items: [
-          { text: "Create a paper", checked: true },
-          { text: "Some level of detail", checked: false },
+          { text: "Crear un documento", checked: true },
+          { text: "Agregar nivel de detalle", checked: false },
         ],
         bg: "#FFFFFF",
         textCol: "#1E293B",
@@ -189,9 +189,9 @@ const Landing = () => {
       },
       {
         type: "note",
-        header: "Contrasts",
-        title: "Some notes want to stand out. Contrast by color helps.",
-        text: "Capture ideas and organize them in a natural way that supercharges your brain. Put notes freely on a board.",
+        header: "Contrastes",
+        title: "Algunas notas necesitan destacar. El contraste de color ayuda.",
+        text: "Captura ideas y organízalas de manera natural para potenciar tu cerebro. Coloca notas libremente en un tablero.",
         bg: "#1E293B", // Dark slate / Black
         textCol: "#F8FAFC",
         width: "180px",
@@ -199,7 +199,7 @@ const Landing = () => {
       },
       {
         type: "neon",
-        text: "Fleeting notes attached to a bigger note being worked on",
+        text: "Notas rápidas vinculadas a una nota principal en la que se está trabajando.",
         bg: "#EFF6FF", // Soft blue
         textCol: "#1E293B",
         width: "145px",
@@ -208,11 +208,11 @@ const Landing = () => {
       {
         type: "todolist",
         header: "Marketing",
-        title: "Launch campaign checklist",
+        title: "Lista de lanzamiento de campaña",
         items: [
-          { text: "Setup landing page", checked: true },
-          { text: "TikTok video script", checked: false },
-          { text: "Run beta test", checked: false },
+          { text: "Configurar landing page", checked: true },
+          { text: "Guion de video para TikTok", checked: false },
+          { text: "Ejecutar prueba beta", checked: false },
         ],
         bg: "#FFFFFF",
         textCol: "#1E293B",
@@ -486,11 +486,13 @@ const Landing = () => {
             <h4 className="text-center text-xs font-light text-gray-400 mb-8 tracking-widest">
               Elegido por
             </h4>
-            <div className="relative w-full" style={{ maskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)" }}>
-              <div className="flex w-max animate-marquee gap-20 items-center">
-                {[...brandLogos, ...brandLogos].map((logo, i) => (
-                  <img key={i} src={logo} alt="" className="h-6 md:h-7 w-auto opacity-70 shrink-0" />
-                ))}
+            <div className="px-[10%] md:px-[20%]">
+              <div className="relative w-full" style={{ maskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)" }}>
+                <div className="flex w-max animate-marquee gap-20 items-center">
+                  {[...brandLogos, ...brandLogos].map((logo, i) => (
+                    <img key={i} src={logo} alt="" className="h-6 md:h-7 w-auto opacity-70 shrink-0" />
+                  ))}
+                </div>
               </div>
             </div>
           </section>
