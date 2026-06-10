@@ -647,6 +647,33 @@ const Landing = () => {
             </div>
           </section>
 
+          {/* ORBITING WORDS + NOTES (mwg_effect040) */}
+          <section ref={orbitSectionRef} className="mwg_effect040">
+            <p className="scroll">Scroll</p>
+            <div className="pin-height">
+              <div className="container">
+                <div className="parent-circle parent-circle-left">
+                  {orbitWords.map((word) => (
+                    <div className="circle" key={word}>
+                      <p className="label">{word}</p>
+                    </div>
+                  ))}
+                </div>
+                <div className="parent-circle parent-circle-right">
+                  {orbitNotes.map((note) => (
+                    <div className="circle" key={note.title}>
+                      <div className="note" style={{ background: note.bg }}>
+                        <span className="note-tag">{note.tag}</span>
+                        <span className="note-title">{note.title}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+
+
           {/* 3D SCROLL TEXT PERSPECTIVE (mwg_effect053) */}
           <section ref={scrollTextSectionRef} className="mwg_effect053 bg-white text-black relative z-10">
             <div className="pin-height">
