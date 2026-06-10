@@ -599,14 +599,14 @@ const Landing = () => {
             <div className="pin-height">
               <div className="container">
                 <p className="paragraphs">
-                  Unifica tus ideas de negocio<br />
-                  conéctalas en un canvas visual<br />
-                  y empieza a crear sin límites.
+                  Unifica tus ideas<br />
+                  conéctalas en un canvas<br />
+                  y empieza a crear.
                 </p>
                 <p className="paragraphs">
-                  Encuentra los socios ideales<br />
-                  construye con la fuerza correcta<br />
-                  y dale vida a tus proyectos hoy.
+                  Encuentra socios<br />
+                  construye tu equipo<br />
+                  y hazlo realidad hoy.
                 </p>
               </div>
             </div>
