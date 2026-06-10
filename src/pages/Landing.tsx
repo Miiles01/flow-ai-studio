@@ -623,9 +623,9 @@ const Landing = () => {
                   y empieza a crear.
                 </p>
                 <p className="paragraphs">
-                  Encuentra socios<br />
-                  construye tu equipo<br />
-                  y hazlo realidad hoy.
+                  Un espacio para conectar,<br />
+                  colaborar con talento<br />
+                  y co-crear sin límites.
                 </p>
               </div>
             </div>
