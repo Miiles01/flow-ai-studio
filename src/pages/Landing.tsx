@@ -481,6 +481,20 @@ const Landing = () => {
             </div>
           </section>
 
+          {/* BRAND CAROUSEL (Relocated) */}
+          <section className="py-16 overflow-hidden">
+            <h4 className="text-center text-xs font-light text-gray-400 mb-8 tracking-widest">
+              Elegido por
+            </h4>
+            <div className="relative w-full" style={{ maskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)" }}>
+              <div className="flex w-max animate-marquee gap-20 items-center">
+                {[...brandLogos, ...brandLogos].map((logo, i) => (
+                  <img key={i} src={logo} alt="" className="h-6 md:h-7 w-auto opacity-70 shrink-0" />
+                ))}
+              </div>
+            </div>
+          </section>
+
           {/* VIDEO */}
           <section className="py-24 flex justify-center items-center overflow-hidden">
             <div
@@ -496,20 +510,6 @@ const Landing = () => {
                 playsInline
                 className="w-full h-full object-cover"
               />
-            </div>
-          </section>
-
-          {/* BRAND CAROUSEL (Relocated) */}
-          <section className="py-16 overflow-hidden">
-            <h4 className="text-center text-xs font-light text-gray-400 mb-8 tracking-widest">
-              Elegido por
-            </h4>
-            <div className="relative w-full" style={{ maskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)" }}>
-              <div className="flex w-max animate-marquee gap-20 items-center">
-                {[...brandLogos, ...brandLogos].map((logo, i) => (
-                  <img key={i} src={logo} alt="" className="h-6 md:h-7 w-auto opacity-70 shrink-0" />
-                ))}
-              </div>
             </div>
           </section>
 
