@@ -27,6 +27,34 @@ import sonrisaImg from "@/assets/miiles/Sonrisa.svg";
 
 const brandLogos = [brand1, brand2, brand3, brand4, brand5, brand6];
 
+// Orbiting words (what an entrepreneur does) + notes
+const orbitWords = [
+  "Investigación",
+  "Pitch",
+  "Canvas",
+  "IA",
+  "Validación",
+  "Branding",
+  "Finanzas",
+  "Estrategia",
+  "Ventas",
+  "Prototipo",
+];
+
+const orbitNotes = [
+  { tag: "Idea", title: "Mapa de oportunidad", bg: "#FEEDED" },
+  { tag: "Mercado", title: "Tamaño del mercado", bg: "#E8ECFE" },
+  { tag: "Cliente", title: "Perfil del usuario", bg: "#FFFFFF" },
+  { tag: "Modelo", title: "Fuentes de ingreso", bg: "#FEF9C3" },
+  { tag: "Roadmap", title: "Plan a 90 días", bg: "#DCFCE7" },
+  { tag: "Equipo", title: "Roles clave", bg: "#FFFFFF" },
+  { tag: "Métricas", title: "KPIs de tracción", bg: "#E8ECFE" },
+  { tag: "Pitch", title: "Deck inversión", bg: "#FCE7F3" },
+  { tag: "Growth", title: "Canales de adquisición", bg: "#FEEDED" },
+  { tag: "Producto", title: "MVP listo", bg: "#FFFFFF" },
+];
+
+
 const heroCardsData = [
   {
     type: "todolist",
@@ -160,6 +188,8 @@ const Landing = () => {
   const videoWrapRef = useRef<HTMLDivElement>(null);
   const heroRef = useRef<HTMLDivElement>(null);
   const scrollTextSectionRef = useRef<HTMLDivElement>(null);
+  const orbitSectionRef = useRef<HTMLDivElement>(null);
+
   const ctaSectionRef = useRef<HTMLElement>(null);
   const ctaContainerRef = useRef<HTMLDivElement>(null);
   const ctaTextRef = useRef<HTMLDivElement>(null);
@@ -471,6 +501,69 @@ const Landing = () => {
     };
   }, []);
 
+  // Orbiting words + notes animation (mwg_effect040)
+  useEffect(() => {
+    const root = orbitSectionRef.current;
+    if (!root) return;
+
+    const pinHeight = root.querySelector(".pin-height") as HTMLElement;
+    const container = root.querySelector(".container") as HTMLElement;
+    const leftCircle = root.querySelector(".parent-circle-left") as HTMLElement;
+    const rightCircle = root.querySelector(".parent-circle-right") as HTMLElement;
+    if (!pinHeight || !container || !leftCircle || !rightCircle) return;
+
+    const angle = 14;
+    const ctx = gsap.context(() => {
+      const leftItems = leftCircle.querySelectorAll(".circle");
+      const rightItems = rightCircle.querySelectorAll(".circle");
+
+      leftItems.forEach((el, index) => {
+        gsap.set(el, { rotation: index * angle });
+        gsap.set(el.querySelector("p"), { rotation: -index * angle });
+      });
+      rightItems.forEach((el, index) => {
+        gsap.set(el, { rotation: index * angle });
+        gsap.set(el.querySelector(".note"), { rotation: -index * angle });
+      });
+
+      const total = 180 + angle * leftItems.length;
+
+      gsap.to(".scroll", {
+        autoAlpha: 0,
+        duration: 0.2,
+        scrollTrigger: {
+          trigger: root,
+          start: "top top",
+          end: "top top-=1",
+          toggleActions: "play none reverse none",
+        },
+      });
+
+      const st = {
+        trigger: pinHeight,
+        start: "top top",
+        end: "bottom bottom",
+        scrub: true,
+      } as const;
+
+      ScrollTrigger.create({
+        trigger: pinHeight,
+        pin: container,
+        pinType: "transform",
+        start: "top top",
+        end: "bottom bottom",
+      });
+
+      gsap.to(leftCircle, { rotation: -total, ease: "none", scrollTrigger: st });
+      gsap.to(leftCircle.querySelectorAll("p"), { rotation: "+=" + total, ease: "none", scrollTrigger: st });
+      gsap.to(rightCircle, { rotation: -total, ease: "none", scrollTrigger: st });
+      gsap.to(rightCircle.querySelectorAll(".note"), { rotation: "+=" + total, ease: "none", scrollTrigger: st });
+    }, root);
+
+    return () => ctx.revert();
+  }, []);
+
+
   return (
     <>
       <LandingNavbar />
@@ -646,6 +739,33 @@ const Landing = () => {
               </div>
             </div>
           </section>
+
+          {/* ORBITING WORDS + NOTES (mwg_effect040) */}
+          <section ref={orbitSectionRef} className="mwg_effect040">
+            <p className="scroll">Scroll</p>
+            <div className="pin-height">
+              <div className="container">
+                <div className="parent-circle parent-circle-left">
+                  {orbitWords.map((word) => (
+                    <div className="circle" key={word}>
+                      <p className="label">{word}</p>
+                    </div>
+                  ))}
+                </div>
+                <div className="parent-circle parent-circle-right">
+                  {orbitNotes.map((note) => (
+                    <div className="circle" key={note.title}>
+                      <div className="note" style={{ background: note.bg }}>
+                        <span className="note-tag">{note.tag}</span>
+                        <span className="note-title">{note.title}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+
 
           {/* 3D SCROLL TEXT PERSPECTIVE (mwg_effect053) */}
           <section ref={scrollTextSectionRef} className="mwg_effect053 bg-white text-black relative z-10">

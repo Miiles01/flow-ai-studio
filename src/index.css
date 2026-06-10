@@ -509,6 +509,92 @@
   font-weight: 300;
 }
 
+/* Orbiting words + notes (mwg_effect040) */
+.mwg_effect040 {
+  width: 100%;
+  background: #121212;
+  color: #f1f1f1;
+}
+.mwg_effect040 .scroll {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  font-size: 22px;
+  letter-spacing: 0.05em;
+}
+.mwg_effect040 .pin-height {
+  height: 500vh;
+}
+.mwg_effect040 .container {
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+.mwg_effect040 .parent-circle {
+  width: 80vw;
+  height: 80vw;
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
+}
+.mwg_effect040 .parent-circle-left {
+  right: 52%;
+}
+.mwg_effect040 .parent-circle-right {
+  left: 52%;
+}
+.mwg_effect040 .circle {
+  position: absolute;
+  inset: 0;
+}
+.mwg_effect040 .label {
+  position: absolute;
+  right: 50%;
+  top: 100%;
+  transform: translate(0, -50%);
+  transform-origin: 100% 50%;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  font-size: 4vw;
+  line-height: normal;
+  white-space: nowrap;
+  margin: 0;
+}
+.mwg_effect040 .note {
+  width: 12vw;
+  height: 12vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translate(0, -50%);
+  transform-origin: 0 50%;
+  border-radius: 0.8vw;
+  padding: 1.1vw;
+  box-sizing: border-box;
+  text-align: left;
+  color: #1c1e2a;
+  font-family: 'Poppins', sans-serif;
+  filter: drop-shadow(0px 4px 24px rgba(0, 0, 0, 0.25));
+}
+.mwg_effect040 .note .note-tag {
+  font-size: 0.85vw;
+  font-weight: 500;
+  opacity: 0.55;
+}
+.mwg_effect040 .note .note-title {
+  font-size: 1.15vw;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+
+
 /* 3D Drifting Notes Hero Animation (mwg_effect094) */
 .mwg_effect094 {
   overflow: hidden;
