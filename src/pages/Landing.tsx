@@ -27,6 +27,34 @@ import sonrisaImg from "@/assets/miiles/Sonrisa.svg";
 
 const brandLogos = [brand1, brand2, brand3, brand4, brand5, brand6];
 
+// Orbiting words (what an entrepreneur does) + notes
+const orbitWords = [
+  "Investigación",
+  "Pitch",
+  "Canvas",
+  "IA",
+  "Validación",
+  "Branding",
+  "Finanzas",
+  "Estrategia",
+  "Ventas",
+  "Prototipo",
+];
+
+const orbitNotes = [
+  { tag: "Idea", title: "Mapa de oportunidad", bg: "#FEEDED" },
+  { tag: "Mercado", title: "Tamaño del mercado", bg: "#E8ECFE" },
+  { tag: "Cliente", title: "Perfil del usuario", bg: "#FFFFFF" },
+  { tag: "Modelo", title: "Fuentes de ingreso", bg: "#FEF9C3" },
+  { tag: "Roadmap", title: "Plan a 90 días", bg: "#DCFCE7" },
+  { tag: "Equipo", title: "Roles clave", bg: "#FFFFFF" },
+  { tag: "Métricas", title: "KPIs de tracción", bg: "#E8ECFE" },
+  { tag: "Pitch", title: "Deck inversión", bg: "#FCE7F3" },
+  { tag: "Growth", title: "Canales de adquisición", bg: "#FEEDED" },
+  { tag: "Producto", title: "MVP listo", bg: "#FFFFFF" },
+];
+
+
 const heroCardsData = [
   {
     type: "todolist",
