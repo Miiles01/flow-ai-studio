@@ -512,7 +512,7 @@ const Landing = () => {
                       }}
                     >
                       {card.type === "todolist" && (
-                        <div style={{ display: "flex", flexDirection: "column", height: "100%", textAlign: "left", fontFamily: "'Poppins', sans-serif" }}>
+                        <div style={{ display: "flex", flexDirection: "column", height: "100%", textAlign: "left", fontFamily: "'Poppins', sans-serif", whiteSpace: "normal" }}>
                           <div style={{ fontSize: "9px", fontWeight: 500, opacity: 0.5, marginBottom: "6px" }}>
                             {card.header}
                           </div>
@@ -535,7 +535,7 @@ const Landing = () => {
                       )}
 
                       {card.type === "list" && (
-                        <div style={{ display: "flex", flexDirection: "column", height: "100%", textAlign: "left", fontFamily: "'Poppins', sans-serif" }}>
+                        <div style={{ display: "flex", flexDirection: "column", height: "100%", textAlign: "left", fontFamily: "'Poppins', sans-serif", whiteSpace: "normal" }}>
                           <div style={{ fontSize: "9px", fontWeight: 500, opacity: 0.5, marginBottom: "6px" }}>
                             {card.header}
                           </div>
@@ -550,7 +550,7 @@ const Landing = () => {
                       )}
 
                       {card.type === "note" && (
-                        <div style={{ display: "flex", flexDirection: "column", height: "100%", textAlign: "left", fontFamily: "'Poppins', sans-serif" }}>
+                        <div style={{ display: "flex", flexDirection: "column", height: "100%", textAlign: "left", fontFamily: "'Poppins', sans-serif", whiteSpace: "normal" }}>
                           <div style={{ fontSize: "9px", fontWeight: 500, opacity: 0.5, marginBottom: "6px" }}>
                             {card.header}
                           </div>
@@ -569,7 +569,7 @@ const Landing = () => {
                       )}
 
                       {card.type === "neon" && (
-                        <div style={{ display: "flex", flexDirection: "column", height: "100%", justifyContent: "center", textAlign: "left", fontFamily: "'Poppins', sans-serif", padding: "2px" }}>
+                        <div style={{ display: "flex", flexDirection: "column", height: "100%", justifyContent: "center", textAlign: "left", fontFamily: "'Poppins', sans-serif", padding: "2px", whiteSpace: "normal" }}>
                           <div style={{ fontSize: "12px", fontWeight: 600, lineHeight: 1.4 }}>
                             {card.text}
                           </div>
