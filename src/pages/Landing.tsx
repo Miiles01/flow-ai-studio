@@ -600,7 +600,7 @@ const Landing = () => {
               <div className="container">
                 <p className="paragraphs">
                   Unifica tus ideas<br />
-                  conéctalas en un canvas<br />
+                  en un lugar<br />
                   y empieza a crear.
                 </p>
                 <p className="paragraphs">
