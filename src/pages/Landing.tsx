@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import videoHome from "@/assets/miiles/videohome.mp4";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
