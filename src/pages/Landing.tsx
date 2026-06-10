@@ -37,8 +37,8 @@ const heroCardsData = [
       { text: "Ejecutar anuncios de prueba", checked: false },
       { text: "Entrevistar 10 clientes", checked: false },
     ],
-    bg: "#FDF2F8", // Soft pink
-    textCol: "#1E293B",
+    bg: "#FFFBEB", // Yellow
+    textCol: "#D97706",
     width: "175px",
     height: "175px",
   },
@@ -54,8 +54,8 @@ const heroCardsData = [
     header: "SaaS B2B",
     title: "Herramienta de automatización de ventas con IA",
     text: "Permite a fundadores delegar su prospección de clientes usando agentes de IA entrenados en su modelo.",
-    bg: "#FFFFFF",
-    textCol: "#1E293B",
+    bg: "#EFF6FF", // Blue
+    textCol: "#2563EB",
     footer: "Lanzamiento Q3 ▾",
     width: "220px",
     height: "220px",
@@ -75,8 +75,8 @@ const heroCardsData = [
       { text: "Comisión por venta" },
       { text: "Licencia perpetua" },
     ],
-    bg: "#EFF6FF", // Soft blue
-    textCol: "#1E293B",
+    bg: "#FAF5FF", // Purple
+    textCol: "#7C3AED",
     width: "155px",
     height: "155px",
   },
@@ -90,8 +90,8 @@ const heroCardsData = [
   {
     type: "neon",
     text: "Idea SaaS: Canvas visual para creadores digitales y diseñadores independientes.",
-    bg: "#FDF2F8", // Soft pink
-    textCol: "#1E293B",
+    bg: "#ECFDF5", // Green
+    textCol: "#059669",
     width: "150px",
     height: "150px",
   },
@@ -104,8 +104,8 @@ const heroCardsData = [
       { text: "Publicar en Product Hunt", checked: false },
       { text: "Campaña con afiliados", checked: false },
     ],
-    bg: "#FFFFFF",
-    textCol: "#1E293B",
+    bg: "#FFF7ED", // Orange
+    textCol: "#EA580C",
     width: "185px",
     height: "185px",
   },
@@ -121,8 +121,8 @@ const heroCardsData = [
     header: "Fintech Latam",
     title: "Plataforma de cobros para freelancers",
     text: "Permite cobrar en dólares y retirar en moneda local de manera instantánea con comisiones mínimas.",
-    bg: "#1E293B", // Dark slate / Black
-    textCol: "#F8FAFC",
+    bg: "#F0F9FF", // Light Blue
+    textCol: "#0284C7",
     width: "210px",
     height: "210px",
   },
@@ -142,8 +142,8 @@ const heroCardsData = [
       { text: "Registrar dominio .app", checked: false },
       { text: "Subir video de demo", checked: false },
     ],
-    bg: "#FFFFFF",
-    textCol: "#1E293B",
+    bg: "#F0FDF4", // Light Green
+    textCol: "#16A34A",
     width: "175px",
     height: "175px",
   }
@@ -261,7 +261,7 @@ const Landing = () => {
     const cardsContainer = cardsContainerRef.current;
     if (!root || !cardsContainer) return;
 
-    const cards = cardsContainer.querySelectorAll(".card");
+    const cards = cardsContainer.querySelectorAll(".mwg-card");
     if (cards.length === 0) return;
 
     let scrollTween: gsap.core.Tween | null = null;
@@ -495,15 +495,20 @@ const Landing = () => {
                   {[...heroCardsData, ...heroCardsData].map((card, idx) => (
                     <div
                       key={idx}
-                      className="card"
+                      className="mwg-card"
                       style={{
                         backgroundColor: card.bg,
                         color: card.textCol,
                         width: card.width,
                         height: card.height,
+                        minWidth: card.width,
+                        minHeight: card.height,
+                        maxWidth: card.width,
+                        maxHeight: card.height,
                         padding: card.type === "image" ? "0px" : undefined,
                         boxShadow: card.type === "image" ? "none" : undefined,
                         borderRadius: card.type === "image" ? "0px" : undefined,
+                        whiteSpace: "normal",
                       }}
                     >
                       {card.type === "todolist" && (
