@@ -23,12 +23,12 @@ const brandLogos = [brand1, brand2, brand3, brand4, brand5, brand6];
 const heroCardsData = [
   {
     type: "todolist",
-    header: "Hoy ▾",
-    title: "Cosas por hacer HOY",
+    header: "Validación ▾",
+    title: "Validar ideas de negocio",
     items: [
-      { text: "Soltar notas adhesivas", checked: true },
-      { text: "Agregar fechas límite", checked: false },
-      { text: "Mantener flotando arriba", checked: false },
+      { text: "Crear landing page mínima", checked: true },
+      { text: "Ejecutar anuncios de prueba", checked: false },
+      { text: "Entrevistar 10 clientes", checked: false },
     ],
     bg: "#FDF2F8", // Soft pink
     textCol: "#1E293B",
@@ -37,22 +37,22 @@ const heroCardsData = [
   },
   {
     type: "note",
-    header: "Una nota",
-    title: "Las notas extensas se muestran como papel y pueden tener fechas.",
-    text: "Captura ideas y organízalas de manera de potenciar tu cerebro. Coloca notas libremente en un tablero bidimensional.",
+    header: "SaaS B2B",
+    title: "Herramienta de automatización de ventas con IA",
+    text: "Permite a fundadores delegar su prospección de clientes usando agentes de IA entrenados en su modelo.",
     bg: "#FFFFFF",
     textCol: "#1E293B",
-    footer: "El viernes ▾",
+    footer: "Lanzamiento Q3 ▾",
     width: "180px",
     height: "220px",
   },
   {
     type: "list",
-    header: "Compras",
+    header: "Modelos",
     items: [
-      { text: "Pan" },
-      { text: "Leche" },
-      { text: "Helado" },
+      { text: "Suscripción mensual" },
+      { text: "Comisión por venta" },
+      { text: "Licencia perpetua" },
     ],
     bg: "#EFF6FF", // Soft blue
     textCol: "#1E293B",
@@ -60,8 +60,8 @@ const heroCardsData = [
     height: "150px",
   },
   {
-    type: "neon", // (acting as a plain text card)
-    text: "Me encanta la estética de estas fotos retro con grano. Hagamos más de eso.",
+    type: "neon",
+    text: "Idea SaaS: Canvas visual para creadores digitales y diseñadores independientes.",
     bg: "#FDF2F8", // Soft pink
     textCol: "#1E293B",
     width: "145px",
@@ -69,11 +69,12 @@ const heroCardsData = [
   },
   {
     type: "todolist",
-    header: "Sin título",
-    title: "Organización espacial para guardar notas, textos y tareas.",
+    header: "Marketing ▾",
+    title: "Estrategia de lanzamiento",
     items: [
-      { text: "Crear un documento", checked: true },
-      { text: "Agregar nivel de detalle", checked: false },
+      { text: "Guion de video para TikTok", checked: true },
+      { text: "Publicar en Product Hunt", checked: false },
+      { text: "Campaña con afiliados", checked: false },
     ],
     bg: "#FFFFFF",
     textCol: "#1E293B",
@@ -82,9 +83,9 @@ const heroCardsData = [
   },
   {
     type: "note",
-    header: "Contrastes",
-    title: "Algunas notas necesitan destacar. El contraste de color ayuda.",
-    text: "Captura ideas y organízalas de manera natural para potenciar tu cerebro. Coloca notas libremente en un tablero.",
+    header: "Fintech Latam",
+    title: "Plataforma de cobros para freelancers",
+    text: "Permite cobrar en dólares y retirar en moneda local de manera instantánea con comisiones mínimas.",
     bg: "#1E293B", // Dark slate / Black
     textCol: "#F8FAFC",
     width: "180px",
@@ -92,7 +93,7 @@ const heroCardsData = [
   },
   {
     type: "neon",
-    text: "Notas rápidas vinculadas a una nota principal en la que se está trabajando.",
+    text: "Idea: Agencia productizada de desarrollo y diseño Webflow/Framer.",
     bg: "#EFF6FF", // Soft blue
     textCol: "#1E293B",
     width: "145px",
@@ -100,12 +101,12 @@ const heroCardsData = [
   },
   {
     type: "todolist",
-    header: "Marketing",
-    title: "Lista de lanzamiento de campaña",
+    header: "Operaciones ▾",
+    title: "Tareas previas a lanzar",
     items: [
-      { text: "Configurar landing page", checked: true },
-      { text: "Guion de video para TikTok", checked: false },
-      { text: "Ejecutar prueba beta", checked: false },
+      { text: "Configurar pasarela Stripe", checked: true },
+      { text: "Registrar dominio .app", checked: false },
+      { text: "Subir video de demo", checked: false },
     ],
     bg: "#FFFFFF",
     textCol: "#1E293B",
@@ -451,7 +452,7 @@ const Landing = () => {
               </div>
 
               {/* Horizontal Scroll Cards Track */}
-              <div className="cards-wrapper absolute inset-0 flex items-center pointer-events-none z-0">
+              <div className="cards-wrapper absolute inset-0 flex items-center pointer-events-none z-20">
                 <div ref={cardsContainerRef} className="cards flex gap-20 items-center">
                   {[...heroCardsData, ...heroCardsData].map((card, idx) => (
                     <div
