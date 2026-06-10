@@ -9,6 +9,8 @@ gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
 const Privacy = () => {
   const smootherRef = useRef<ScrollSmoother | null>(null);
+  const sidebarRef = useRef<HTMLElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const [activeSection, setActiveSection] = useState("recoleccion");
 
   const sections = [
@@ -46,6 +48,20 @@ const Privacy = () => {
       }
     );
 
+    // Setup ScrollTrigger pinning for sticky sidebar
+    let pinTrigger: ScrollTrigger | null = null;
+    if (sidebarRef.current && containerRef.current) {
+      pinTrigger = ScrollTrigger.create({
+        trigger: sidebarRef.current,
+        start: "top 112px", // 112px is equivalent to top-28
+        endTrigger: containerRef.current,
+        end: () => `bottom top+=${sidebarRef.current ? sidebarRef.current.offsetHeight + 112 : 500}`,
+        pin: true,
+        pinSpacing: false,
+        invalidateOnRefresh: true,
+      });
+    }
+
     // Setup intersection observer for scrollspy
     const observerOptions = {
       root: null,
@@ -72,6 +88,7 @@ const Privacy = () => {
 
     return () => {
       smootherRef.current?.kill();
+      pinTrigger?.kill();
       ScrollTrigger.getAll().forEach((t) => t.kill());
       observer.disconnect();
     };
@@ -112,33 +129,36 @@ const Privacy = () => {
 
           {/* Content area: Sidebar + Main Text */}
           <section className="py-16 px-6 max-w-6xl mx-auto relative z-10">
-            <div className="grid grid-cols-1 lg:grid-cols-[250px_1fr] gap-16 items-start">
+            <div ref={containerRef} className="grid grid-cols-1 lg:grid-cols-[250px_1fr] gap-16">
               
-              {/* Sticky Sidebar Index */}
-              <aside className="hidden lg:block sticky top-28 bg-neutral-50/50 backdrop-blur-md border border-neutral-100 p-5 rounded-[24px] min-w-[240px]">
-                <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-400 mb-4 px-2">
-                  Índice
-                </h3>
-                <nav className="flex flex-col gap-1.5">
-                  {sections.map((section) => {
-                    const isActive = activeSection === section.id;
-                    return (
-                      <button
-                        key={section.id}
-                        onClick={() => handleScrollTo(section.id)}
-                        className={`text-left text-sm py-2 px-3 rounded-xl transition-all duration-300 flex items-center gap-2.5 ${
-                          isActive
-                            ? "font-medium text-miiles-blue bg-[#E8ECFE]/50 translate-x-1"
-                            : "font-light text-neutral-500 hover:text-neutral-900 hover:bg-white/70 hover:translate-x-1"
-                        }`}
-                      >
-                        <span className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${isActive ? "bg-miiles-blue scale-100" : "bg-transparent scale-0"}`} />
-                        <span className="truncate">{section.title}</span>
-                      </button>
-                    );
-                  })}
-                </nav>
-              </aside>
+              {/* Sidebar container grid cell */}
+              <div className="hidden lg:block w-[250px]">
+                {/* Sticky Sidebar Index */}
+                <aside ref={sidebarRef} className="bg-neutral-50/50 backdrop-blur-md border border-neutral-100 p-5 rounded-[24px] w-[250px]">
+                  <h3 className="text-xs font-semibold uppercase tracking-wider text-neutral-400 mb-4 px-2">
+                    Índice
+                  </h3>
+                  <nav className="flex flex-col gap-1.5">
+                    {sections.map((section) => {
+                      const isActive = activeSection === section.id;
+                      return (
+                        <button
+                          key={section.id}
+                          onClick={() => handleScrollTo(section.id)}
+                          className={`text-left text-sm py-2 px-3 rounded-xl transition-all duration-300 flex items-center gap-2.5 ${
+                            isActive
+                              ? "font-medium text-miiles-blue bg-[#E8ECFE]/50 translate-x-1"
+                              : "font-light text-neutral-500 hover:text-neutral-900 hover:bg-white/70 hover:translate-x-1"
+                          }`}
+                        >
+                          <span className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${isActive ? "bg-miiles-blue scale-100" : "bg-transparent scale-0"}`} />
+                          <span className="truncate">{section.title}</span>
+                        </button>
+                      );
+                    })}
+                  </nav>
+                </aside>
+              </div>
 
               {/* Main content document */}
               <article className="fade-in-legal space-y-12 text-left">
