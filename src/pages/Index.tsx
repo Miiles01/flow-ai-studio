@@ -2224,7 +2224,27 @@ const IndexContent = () => {
                             }
                           }}
                         >
+                          {/* Quick copy (hover) */}
+                          <button
+                            onClick={async (e) => {
+                              e.stopPropagation();
+                              const text = buildTasksInstructions({ title, subtitle, tasks } as TodoListLike);
+                              await copyTextToClipboard(text);
+                              setCopiedCardId(node.id);
+                              setTimeout(() => setCopiedCardId((c) => (c === node.id ? null : c)), 1600);
+                            }}
+                            title={copiedCardId === node.id ? "¡Copiado!" : "Copiar esta lista como instrucciones para IA"}
+                            className={`absolute top-3 right-3 z-10 w-7 h-7 flex items-center justify-center rounded-lg border transition-all duration-200 ${
+                              copiedCardId === node.id
+                                ? "bg-black text-white border-black opacity-100"
+                                : `opacity-0 group-hover/card:opacity-100 ${isCardDark ? "bg-white/10 text-white/80 border-white/10 hover:bg-white/20" : "bg-white text-[#6B7280] border-[#E5E7EB] hover:text-black hover:bg-[#F3F4F6]"}`
+                            }`}
+                          >
+                            {copiedCardId === node.id ? <Check size={13} strokeWidth={2.5} /> : <Copy size={13} strokeWidth={2} />}
+                          </button>
+
                           {/* Card header */}
+
                           <div className="space-y-1">
                             {title && (
                               <div className="text-[16px] font-semibold truncate" style={{ color: effectiveTextColor }}>
