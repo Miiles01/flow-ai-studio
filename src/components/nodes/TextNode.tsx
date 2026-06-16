@@ -4,6 +4,7 @@ import {
   Bold, Italic, Underline, Link2, AlignLeft, AlignCenter, AlignRight,
   ExternalLink, Trash2, Minus, Plus, Baseline, Check,
 } from "lucide-react";
+import NodeExtendHandles from "@/components/nodes/NodeExtendHandles";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTheme } from "@/contexts/ThemeContext";
 
@@ -551,6 +552,8 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
           </div>
         );
       })}
+
+      <NodeExtendHandles nodeId={id} />
     </motion.div>
   );
 };
