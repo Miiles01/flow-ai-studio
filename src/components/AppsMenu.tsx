@@ -113,7 +113,14 @@ const AppsMenu = ({ isDark }: AppsMenuProps) => {
         </PopoverContent>
       </Popover>
 
-      <AddAppModal open={addOpen} onClose={() => setAddOpen(false)} onCreate={createApp} />
+      <AddAppModal
+        open={addOpen}
+        onClose={() => setAddOpen(false)}
+        onCreate={createApp}
+        customApps={customApps}
+        onToggle={toggleApp}
+        onDelete={deleteApp}
+      />
     </>
   );
 };
