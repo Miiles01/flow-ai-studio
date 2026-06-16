@@ -1095,6 +1095,13 @@ const IndexContent = () => {
   // Primero entiende la intención: si el prompt es muy general, abre el panel de preguntas.
   const handleAIGenerate = useCallback(
     async (prompt: string) => {
+      // Modo ampliación: generar a partir del elemento seleccionado (sin clarify/plan).
+      if (extendTarget) {
+        const target = extendTarget;
+        setExtendTarget(null);
+        await runExtendGenerate(prompt, target);
+        return;
+      }
       setIsClarifying(true);
       try {
         const result = await clarifyPrompt(prompt);
@@ -1108,7 +1115,7 @@ const IndexContent = () => {
         setIsClarifying(false);
       }
     },
-    [proceedToPlanning]
+    [proceedToPlanning, extendTarget, runExtendGenerate]
   );
 
   const handleClarifyConfirm = useCallback(
