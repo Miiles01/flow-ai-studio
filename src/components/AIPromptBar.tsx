@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowUp, Loader2, EyeOff } from "lucide-react";
+import { ArrowUp, Loader2, EyeOff, X } from "lucide-react";
 import logoImg from "@/assets/logo.png";
 import { useTheme } from "@/contexts/ThemeContext";
 import AppsMenu from "@/components/AppsMenu";
