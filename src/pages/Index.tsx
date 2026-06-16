@@ -16,7 +16,7 @@ import {
   type Edge,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { ArrowLeft, Loader2, Check, Cloud, CloudOff, Settings2, EyeOff, Eye, Trash2, Undo2, Redo2, Palette, Square, Type, Baseline, Sparkles, PanelRight, ListChecks, Plus, Share2, Sun, Moon, EyeIcon } from "lucide-react";
+import { ArrowLeft, Loader2, Check, Cloud, CloudOff, Settings2, EyeOff, Eye, Trash2, Undo2, Redo2, Palette, Square, Type, Baseline, Sparkles, PanelRight, ListChecks, Plus, Share2, Sun, Moon, EyeIcon, Copy } from "lucide-react";
 import ShareDialog from "@/components/ShareDialog";
 import PresenceStack from "@/components/PresenceStack";
 import { useFlowRealtime, type PresenceUser } from "@/hooks/useFlowRealtime";
@@ -1046,6 +1046,40 @@ const IndexContent = () => {
     persistRef.current();
   }, []);
 
+  const [duplicating, setDuplicating] = useState(false);
+  const duplicateBoard = useCallback(async () => {
+    if (!user || duplicating) return;
+    setDuplicating(true);
+    try {
+      const sanitizedNodes = nodes.map((n) => {
+        const { selected, dragging, resizing, ...rest } = n as Node & { resizing?: boolean };
+        return rest;
+      });
+      const sanitizedEdges = edges.map((e) => {
+        const { selected, ...rest } = e as Edge;
+        return rest;
+      });
+      const { data, error } = await supabase
+        .from("flows")
+        .insert([{
+          user_id: user.id,
+          name: `${name} (copia)`,
+          nodes: JSON.parse(JSON.stringify(sanitizedNodes)),
+          edges: JSON.parse(JSON.stringify(sanitizedEdges)),
+        }])
+        .select()
+        .single();
+      if (error || !data) {
+        toast.error("No se pudo duplicar el tablero");
+        return;
+      }
+      toast.success("Tablero duplicado");
+      navigate(`/boards/${data.id}`);
+    } finally {
+      setDuplicating(false);
+    }
+  }, [user, duplicating, nodes, edges, name, navigate]);
+
   // Mark dirty + schedule autosave on changes
   useEffect(() => {
     if (loading) return;
@@ -1381,6 +1415,21 @@ const IndexContent = () => {
                       </span>
                     </button>
 
+                    {isOwner && (
+                      <button
+                        onClick={() => { setSettingsOpen(false); duplicateBoard(); }}
+                        disabled={duplicating}
+                        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors text-left disabled:opacity-50 ${isDark ? 'hover:bg-white/10' : 'hover:bg-[#F3F4F6]'}`}
+                      >
+                        {duplicating
+                          ? <Loader2 size={15} strokeWidth={1.5} className="animate-spin shrink-0 text-[#9CA3AF]" />
+                          : <Copy size={15} strokeWidth={1.5} className={isDark ? 'text-[#9CA3AF] shrink-0' : 'text-[#6B7280] shrink-0'} />
+                        }
+                        <span className={`text-[13px] font-normal ${isDark ? 'text-white' : 'text-black'}`}>
+                          Duplicar tablero
+                        </span>
+                      </button>
+                    )}
 
 
                     <button
