@@ -1415,6 +1415,21 @@ const IndexContent = () => {
                       </span>
                     </button>
 
+                    {isOwner && (
+                      <button
+                        onClick={() => { setSettingsOpen(false); duplicateBoard(); }}
+                        disabled={duplicating}
+                        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors text-left disabled:opacity-50 ${isDark ? 'hover:bg-white/10' : 'hover:bg-[#F3F4F6]'}`}
+                      >
+                        {duplicating
+                          ? <Loader2 size={15} strokeWidth={1.5} className="animate-spin shrink-0 text-[#9CA3AF]" />
+                          : <Copy size={15} strokeWidth={1.5} className={isDark ? 'text-[#9CA3AF] shrink-0' : 'text-[#6B7280] shrink-0'} />
+                        }
+                        <span className={`text-[13px] font-normal ${isDark ? 'text-white' : 'text-black'}`}>
+                          Duplicar tablero
+                        </span>
+                      </button>
+                    )}
 
 
                     <button
