@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import videoHome from "@/assets/miiles/videohome.mp4";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -17,10 +17,37 @@ import brand5 from "@/assets/miiles/brands/brand5.svg";
 import brand6 from "@/assets/miiles/brands/brand6.svg";
 import LandingNavbar from "@/components/LandingNavbar";
 import LandingFooter from "@/components/LandingFooter";
+// Graphic assets copied from Downloads
 
 const brandLogos = [brand1, brand2, brand3, brand4, brand5, brand6];
 
-// Removed graphic assets and heroCardsData as per user request
+// Orbiting words (what an entrepreneur does) + notes
+const orbitWords = [
+  "Investigación",
+  "Pitch",
+  "Canvas",
+  "IA",
+  "Validación",
+  "Branding",
+  "Finanzas",
+  "Estrategia",
+  "Ventas",
+  "Prototipo",
+];
+
+const orbitNotes = [
+  { tag: "Idea", title: "Mapa de oportunidad", bg: "#FEEDED" },
+  { tag: "Mercado", title: "Tamaño del mercado", bg: "#E8ECFE" },
+  { tag: "Cliente", title: "Perfil del usuario", bg: "#FFFFFF" },
+  { tag: "Modelo", title: "Fuentes de ingreso", bg: "#FEF9C3" },
+  { tag: "Roadmap", title: "Plan a 90 días", bg: "#DCFCE7" },
+  { tag: "Equipo", title: "Roles clave", bg: "#FFFFFF" },
+  { tag: "Métricas", title: "KPIs de tracción", bg: "#E8ECFE" },
+  { tag: "Pitch", title: "Deck inversión", bg: "#FCE7F3" },
+  { tag: "Growth", title: "Canales de adquisición", bg: "#FEEDED" },
+  { tag: "Producto", title: "MVP listo", bg: "#FFFFFF" },
+];
+
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText, CustomEase, InertiaPlugin);
 if (!CustomEase.get("osmo-ease")) {
@@ -30,9 +57,9 @@ if (!CustomEase.get("osmo-ease")) {
 const Landing = () => {
   const smootherRef = useRef<ScrollSmoother | null>(null);
   const videoWrapRef = useRef<HTMLDivElement>(null);
-  const heroRef = useRef<HTMLDivElement>(null);
   const scrollTextSectionRef = useRef<HTMLDivElement>(null);
   const section059Ref = useRef<HTMLElement>(null);
+  const orbitSectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     smootherRef.current = ScrollSmoother.create({
@@ -306,43 +333,103 @@ const Landing = () => {
     };
   }, []);
 
+  // Orbiting words + notes animation (mwg_effect040)
+  useEffect(() => {
+    const root = orbitSectionRef.current;
+    if (!root) return;
+
+    const pinHeight = root.querySelector(".pin-height") as HTMLElement;
+    const container = root.querySelector(".container") as HTMLElement;
+    const leftCircle = root.querySelector(".parent-circle-left") as HTMLElement;
+    const rightCircle = root.querySelector(".parent-circle-right") as HTMLElement;
+    if (!pinHeight || !container || !leftCircle || !rightCircle) return;
+
+    const angle = 14;
+    const ctx = gsap.context(() => {
+      const leftItems = leftCircle.querySelectorAll(".circle");
+      const rightItems = rightCircle.querySelectorAll(".circle");
+
+      leftItems.forEach((el, index) => {
+        gsap.set(el, { rotation: index * angle });
+        gsap.set(el.querySelector("p"), { rotation: -index * angle });
+      });
+      rightItems.forEach((el, index) => {
+        gsap.set(el, { rotation: index * angle });
+        gsap.set(el.querySelector(".note"), { rotation: -index * angle });
+      });
+
+      const total = 180 + angle * leftItems.length;
+
+      gsap.to(".scroll", {
+        autoAlpha: 0,
+        duration: 0.2,
+        scrollTrigger: {
+          trigger: root,
+          start: "top top",
+          end: "top top-=1",
+          toggleActions: "play none reverse none",
+        },
+      });
+
+      const st = {
+        trigger: pinHeight,
+        start: "top top",
+        end: "bottom bottom",
+        scrub: true,
+      } as const;
+
+      ScrollTrigger.create({
+        trigger: pinHeight,
+        pin: container,
+        pinType: "transform",
+        start: "top top",
+        end: "bottom bottom",
+      });
+
+      gsap.to(leftCircle, { rotation: -total, ease: "none", scrollTrigger: st });
+      gsap.to(leftCircle.querySelectorAll("p"), { rotation: "+=" + total, ease: "none", scrollTrigger: st });
+      gsap.to(rightCircle, { rotation: -total, ease: "none", scrollTrigger: st });
+      gsap.to(rightCircle.querySelectorAll(".note"), { rotation: "+=" + total, ease: "none", scrollTrigger: st });
+    }, root);
+
+    return () => ctx.revert();
+  }, []);
   return (
     <>
-      <LandingNavbar />
+          <LandingNavbar />
 
       <div id="smooth-wrapper" style={{ overflow: "hidden", position: "fixed", width: "100%", height: "100%", top: 0, left: 0 }}>
         <div id="smooth-content" className="bg-white text-black font-sans overflow-hidden">
 
           {/* HERO */}
-          <section className="bg-white text-black pt-32 pb-8">
-            <div className="container mx-auto px-6">
-              <div className="max-w-4xl mx-auto flex flex-col items-center">
-                <img 
-                  src={logoImg} 
-                  alt="Miiles Logo" 
-                  className="w-14 h-14 mx-auto mb-3" 
-                />
-                <span className="text-[22px] font-normal mb-8 tracking-tight">
-                  Miiles
-                </span>
-                
-                <h1 className="text-4xl sm:text-5xl md:text-8xl lg:text-[95px] font-normal leading-[1.1] tracking-tight mb-10 text-center">
-                  <span className="block">¿Muchas <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>ideas</span></span>
-                  <span className="block">de negocio?</span>
-                </h1>
+          <section className="min-h-screen bg-white text-black flex flex-col items-center justify-center text-center px-6 py-24 relative">
+            <img 
+              data-anim-heading 
+              src={logoImg} 
+              alt="Miiles Logo" 
+              className="w-14 h-14 mx-auto mb-3" 
+            />
+            <span data-anim-heading className="text-[22px] font-normal mb-8 tracking-tight">
+              Miiles
+            </span>
+            
+            <h1
+              className="no-split text-4xl sm:text-5xl md:text-8xl lg:text-[95px] font-normal leading-[1.1] tracking-tight mb-10"
+            >
+              <span className="block">¿Muchas <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>ideas</span></span>
+              <span className="block">de negocio?</span>
+            </h1>
 
-                <div className="flex items-center justify-center gap-4 flex-wrap">
-                  <Link
-                    to="/login"
-                    className="px-8 py-4 rounded-full bg-black text-white text-[15px] font-normal hover:-translate-y-2 transition-transform duration-300 flex items-center gap-2"
-                  >
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                      <path d="M12 0C12.3 8.8 15.2 11.7 24 12C15.2 12.3 12.3 15.2 12 24C11.7 15.2 8.8 12.3 0 12C8.8 11.7 11.7 8.8 12 0Z" />
-                    </svg>
-                    Unirse ahora
-                  </Link>
-                </div>
-              </div>
+            <div data-anim-heading className="flex items-center justify-center gap-4 flex-wrap">
+              <Link
+                to="/login"
+                className="px-8 py-4 rounded-full bg-black text-white text-[15px] font-normal hover:-translate-y-2 transition-transform duration-300 flex items-center gap-2"
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                  <path d="M12 0C12.3 8.8 15.2 11.7 24 12C15.2 12.3 12.3 15.2 12 24C11.7 15.2 8.8 12.3 0 12C8.8 11.7 11.7 8.8 12 0Z" />
+                </svg>
+                Unirse ahora
+              </Link>
             </div>
           </section>
 
@@ -361,6 +448,33 @@ const Landing = () => {
               </div>
             </div>
           </section>
+
+          {/* ORBITING WORDS + NOTES (mwg_effect040) */}
+          <section ref={orbitSectionRef} className="mwg_effect040">
+            <p className="scroll">Scroll</p>
+            <div className="pin-height">
+              <div className="container">
+                <div className="parent-circle parent-circle-left">
+                  {orbitWords.map((word) => (
+                    <div className="circle" key={word}>
+                      <p className="label">{word}</p>
+                    </div>
+                  ))}
+                </div>
+                <div className="parent-circle parent-circle-right">
+                  {orbitNotes.map((note) => (
+                    <div className="circle" key={note.title}>
+                      <div className="note" style={{ background: note.bg }}>
+                        <span className="note-tag">{note.tag}</span>
+                        <span className="note-title">{note.title}</span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </section>
+
 
           {/* 3D SCROLL TEXT PERSPECTIVE (mwg_effect053) */}
           <section ref={scrollTextSectionRef} className="mwg_effect053 bg-white text-black relative z-10">

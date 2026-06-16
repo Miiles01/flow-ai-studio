@@ -509,64 +509,92 @@
   font-weight: 300;
 }
 
-/* 3D Drifting Notes Hero Animation (mwg_effect094) */
-.mwg_effect094 {
-  overflow: hidden;
-  position: relative;
+/* Orbiting words + notes (mwg_effect040) */
+.mwg_effect040 {
   width: 100%;
+  background: #ffffff;
+  color: #1c1e2a;
 }
-.mwg_effect094 .container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 100vh;
-  width: 100%;
-  max-width: 100% !important;
-  padding: 0;
-  margin: 0;
-}
-.mwg_effect094 .hero-center-content {
-  position: absolute !important;
+.mwg_effect040 .scroll {
+  position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
-  width: 90%;
-  text-align: center;
-  z-index: 1 !important;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  font-size: 22px;
+  letter-spacing: 0.05em;
 }
-.mwg_effect094 .cards-wrapper {
+.mwg_effect040 .pin-height {
+  height: 500vh;
+}
+.mwg_effect040 .container {
+  height: 100vh;
+  overflow: hidden;
+  position: relative;
+}
+.mwg_effect040 .parent-circle {
+  width: 80vw;
+  height: 80vw;
+  position: absolute;
+  top: 50%;
+  transform: translate(0, -50%);
+}
+.mwg_effect040 .parent-circle-left {
+  right: 52%;
+}
+.mwg_effect040 .parent-circle-right {
+  left: 52%;
+}
+.mwg_effect040 .circle {
   position: absolute;
   inset: 0;
-  overflow: hidden;
-  width: 100%;
-  height: 100%;
-  z-index: 20 !important;
-  pointer-events: none;
 }
-.mwg_effect094 .cards {
-  display: flex;
-  width: max-content;
+.mwg_effect040 .label {
+  position: absolute;
+  right: 50%;
+  top: 100%;
+  transform: translate(0, -50%);
+  transform-origin: 100% 50%;
+  font-family: 'Poppins', sans-serif;
+  font-weight: 500;
+  font-size: 4vw;
+  line-height: normal;
   white-space: nowrap;
-  gap: 40px;
-  will-change: transform;
-  padding: 0 110vw;
-  align-items: center;
-  height: 100%;
-  pointer-events: none;
+  margin: 0;
 }
-.mwg_effect094 .mwg-card {
-  position: relative;
-  flex-shrink: 0;
-  border-radius: 16px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.04), 0 2px 8px rgba(0, 0, 0, 0.02);
-  overflow: hidden;
-  padding: 24px;
+.mwg_effect040 .note {
+  width: 12vw;
+  height: 12vw;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  position: absolute;
+  left: 50%;
+  top: 0;
+  transform: translate(0, -50%);
+  transform-origin: 0 50%;
+  border-radius: 0.8vw;
+  padding: 1.1vw;
   box-sizing: border-box;
   text-align: left;
-  z-index: 21 !important;
-  pointer-events: none;
-  white-space: normal;
+  color: #1c1e2a;
+  font-family: 'Poppins', sans-serif;
+  filter: drop-shadow(0px 4px 24px rgba(0, 0, 0, 0.25));
 }
+.mwg_effect040 .note .note-tag {
+  font-size: 0.85vw;
+  font-weight: 500;
+  opacity: 0.55;
+}
+.mwg_effect040 .note .note-title {
+  font-size: 1.15vw;
+  font-weight: 600;
+  line-height: 1.25;
+}
+
+
+
 
 /* ------------------------------------- */
 /* mwg_effect011 - Horizontal Scroll Text CTA */
