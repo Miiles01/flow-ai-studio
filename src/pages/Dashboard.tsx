@@ -256,9 +256,9 @@ export default function Dashboard() {
           onClick={() => setNotifOpen(true)}
         >
           <div className="w-8 h-8 rounded-sm bg-background shadow-sm flex items-center justify-center mb-3 relative">
-            <Bell size={16} className="text-miiles-blue" />
+            <Bell size={16} className={isDark ? "text-white" : "text-black"} />
             {unreadCount > 0 && (
-              <span className="absolute -top-1 -right-1 w-4 h-4 rounded-full bg-miiles-pink text-[9px] text-white flex items-center justify-center">
+              <span className={`absolute -top-1 -right-1 w-4 h-4 rounded-full text-[9px] flex items-center justify-center ${isDark ? "bg-white text-black" : "bg-black text-white"}`}>
                 {unreadCount}
               </span>
             )}
@@ -273,7 +273,7 @@ export default function Dashboard() {
           onClick={() => setAppsOpen(true)}
         >
           <div className="w-8 h-8 rounded-sm bg-background shadow-sm flex items-center justify-center mb-3">
-            <Heart size={16} className="text-miiles-pink" />
+            <Heart size={16} className={isDark ? "text-white" : "text-black"} />
           </div>
           <p className="text-2xl font-normal text-foreground">{savedCount}</p>
           <p className="text-xs text-miiles-gray-400 font-light mt-1">Proyectos</p>
