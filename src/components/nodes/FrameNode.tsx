@@ -3,6 +3,7 @@ import { type NodeProps, NodeResizer, useReactFlow, useViewport } from "@xyflow/
 import { Trash2, Palette, Square } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "@/contexts/ThemeContext";
+import NodeExtendHandles from "@/components/nodes/NodeExtendHandles";
 
 export type FrameNodeData = {
   label?: string;
@@ -228,6 +229,8 @@ const FrameNode = ({ id, data, selected }: NodeProps) => {
           backgroundColor: fillColor === "transparent" ? "transparent" : fillColor,
         }}
       />
+
+      <NodeExtendHandles nodeId={id} />
     </div>
   );
 };
