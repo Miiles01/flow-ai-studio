@@ -54,6 +54,26 @@ if (!CustomEase.get("osmo-ease")) {
   CustomEase.create("osmo-ease", "0.625, 0.05, 0, 1");
 }
 
+const renderWord = (word: string, isItalic = false) => {
+  return (
+    <span className="word">
+      {word.split("").map((char, idx) => (
+        <span key={idx} className="letter">
+          <span
+            style={
+              isItalic
+                ? { fontFamily: "'Welth Catritz', serif", fontStyle: "italic", textTransform: "none" }
+                : undefined
+            }
+          >
+            {char}
+          </span>
+        </span>
+      ))}
+    </span>
+  );
+};
+
 const Landing = () => {
   const smootherRef = useRef<ScrollSmoother | null>(null);
   const videoWrapRef = useRef<HTMLDivElement>(null);
@@ -136,6 +156,31 @@ const Landing = () => {
       splits.forEach((s) => s.revert());
       gsap.set(animated, { clearProps: "all" });
     };
+  }, []);
+
+  // Hero Title Entrance Animation (mwg_effect046 style)
+  useEffect(() => {
+    const letters = document.querySelectorAll('.hero-title .letter > span');
+    if (letters.length === 0) return;
+
+    const shuffleArray = (array: Element[]) => {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    };
+
+    const shuffled = shuffleArray(Array.from(letters));
+
+    gsap.from(shuffled, {
+      y: '110%',
+      ease: 'power4.out',
+      duration: 1.0,
+      stagger: 0.03,
+      delay: 0.3
+    });
   }, []);
 
   // Removed Drifting Notes Hero Animation logic
@@ -414,10 +459,14 @@ const Landing = () => {
             </span>
             
             <h1
-              className="no-split text-4xl sm:text-5xl md:text-8xl lg:text-[95px] font-normal leading-[1.1] tracking-tight mb-10"
+              className="hero-title no-split text-4xl sm:text-5xl md:text-8xl lg:text-[95px] font-normal leading-[1.1] tracking-tight mb-10"
             >
-              <span className="block">¿Muchas <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>ideas</span></span>
-              <span className="block">de negocio?</span>
+              <span className="block">
+                {renderWord("¿Muchas")} {renderWord("ideas", true)}
+              </span>
+              <span className="block">
+                {renderWord("de")} {renderWord("negocio?")}
+              </span>
             </h1>
 
             <div data-anim-heading className="flex items-center justify-center gap-4 flex-wrap">

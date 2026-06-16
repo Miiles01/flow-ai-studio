@@ -734,3 +734,19 @@
     font-weight: 600;
 }
 
+/* ------------------------------------- */
+/* Hero Title Entrance Animation Styles  */
+/* ------------------------------------- */
+.hero-title .word {
+    display: inline-block;
+    white-space: nowrap;
+}
+.hero-title .letter {
+    display: inline-block;
+    overflow: hidden;
+    clip-path: polygon(-5% -20%, -5% 120%, 105% 120%, 105% -20%);
+    vertical-align: bottom;
+}
+.hero-title .letter span {
+    display: inline-block;
+}
