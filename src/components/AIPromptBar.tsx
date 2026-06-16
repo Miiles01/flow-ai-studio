@@ -109,6 +109,20 @@ const AIPromptBar = ({ onGenerate, isGenerating, forceOpen, extendLabel, onCance
 
             {/* Main Prompt Bar */}
             <div className={`bg-black rounded-[40px] pt-8 pb-4 px-6 shadow-2xl transition-all duration-300 relative z-10 w-full ${isDark ? 'ring-1 ring-white/10' : ''}`}>
+              {extendLabel && (
+                <div className="flex items-center justify-center gap-2 mb-3">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#4059F1]/20 text-[#9DB0FF] text-[11px] font-light">
+                    {extendLabel}
+                    <button
+                      onClick={() => onCancelExtend?.()}
+                      className="text-white/60 hover:text-white transition-colors"
+                      title="Cancelar ampliación"
+                    >
+                      <X size={12} strokeWidth={2} />
+                    </button>
+                  </span>
+                </div>
+              )}
               <textarea
                 ref={textareaRef}
                 rows={1}
@@ -117,7 +131,7 @@ const AIPromptBar = ({ onGenerate, isGenerating, forceOpen, extendLabel, onCance
                 onKeyDown={handleKeyDown}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
-                placeholder="Describe tu flujo o idea..."
+                placeholder={extendLabel ? "¿Qué quieres generar a partir de aquí?" : "Describe tu flujo o idea..."}
                 className="w-full bg-transparent text-white font-light text-[15px] placeholder:text-white/40 outline-none resize-none overflow-hidden min-h-[44px] leading-relaxed text-center placeholder:text-center"
                 disabled={isGenerating}
               />
