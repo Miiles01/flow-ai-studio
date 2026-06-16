@@ -543,7 +543,7 @@ const Landing = () => {
         <div id="smooth-content" className="bg-white text-black font-sans overflow-hidden">
 
           {/* HERO */}
-          <section className="min-h-screen bg-white text-black flex flex-col items-center justify-center text-center px-6 py-24 relative">
+          <section className="min-h-screen bg-white text-black flex flex-col items-center justify-center text-center px-6 py-24 relative z-10">
             <img 
               data-anim-heading 
               src={logoImg} 
@@ -582,7 +582,7 @@ const Landing = () => {
           </section>
 
           {/* BRAND CAROUSEL (Relocated) */}
-          <section className="pt-4 pb-6 overflow-hidden">
+          <section className="pt-4 pb-6 overflow-hidden bg-white relative z-10">
             <h4 className="text-center text-xs font-light text-gray-400 mb-8 tracking-widest">
               Elegido por
             </h4>
