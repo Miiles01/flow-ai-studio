@@ -11,6 +11,7 @@ import {
   useViewport,
   ReactFlowProvider,
   useReactFlow,
+  useUpdateNodeInternals,
   type Connection,
   type Node,
   type Edge,
@@ -147,7 +148,8 @@ const IndexContent = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { isDark, toggleTheme } = useTheme();
-  const { setCenter } = useReactFlow();
+  const { setCenter, getNodes } = useReactFlow();
+  const updateNodeInternals = useUpdateNodeInternals();
 
   const isMobile = useIsMobile();
   const [showMobileWarning, setShowMobileWarning] = useState(false);
@@ -160,7 +162,28 @@ const IndexContent = () => {
     }
   }, [isMobile]);
 
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
+  const [nodes, setNodes, onNodesChangeRaw] = useNodesState([]);
+  const onNodesChange = useCallback(
+    (changes: any[]) => {
+      onNodesChangeRaw(changes);
+      
+      // Force-update internal coordinates for modified nodes and their children
+      changes.forEach((change) => {
+        if (change.type === "position" || change.type === "dimensions") {
+          updateNodeInternals(change.id);
+          
+          // Update any child nodes
+          const currentNodes = getNodes();
+          currentNodes.forEach((n) => {
+            if (n.parentId === change.id) {
+              updateNodeInternals(n.id);
+            }
+          });
+        }
+      });
+    },
+    [onNodesChangeRaw, updateNodeInternals, getNodes]
+  );
   const [edges, setEdges, onEdgesChange] = useEdgesState([]);
   const [isGenerating, setIsGenerating] = useState(false);
   const [isClarifying, setIsClarifying] = useState(false);
@@ -238,7 +261,7 @@ const IndexContent = () => {
     nodeStates: Array<{ id: string; x: number; y: number; w: number; h: number; fontSize: number }>;
   } | null>(null);
 
-  // Compute bounding box around all selected nodes in canvas coordinates
+  // Compute bounding box around all selected nodes in canvas coordinates (absolute space)
   const selectionBounds = useMemo(() => {
     if (selectedNodes.length <= 1) return null;
     let minX = Infinity;
@@ -247,15 +270,28 @@ const IndexContent = () => {
     let maxY = -Infinity;
 
     selectedNodes.forEach((node) => {
-      const x = node.position.x;
-      const y = node.position.y;
+      // Resolve absolute coordinates by accumulating parent positions
+      let absX = node.position.x;
+      let absY = node.position.y;
+      let pId = node.parentId;
+      while (pId) {
+        const parent = nodes.find((n) => n.id === pId);
+        if (parent) {
+          absX += parent.position.x;
+          absY += parent.position.y;
+          pId = parent.parentId;
+        } else {
+          break;
+        }
+      }
+
       const w = (node.style?.width as number) || (node.measured?.width) || 100;
       const h = (node.style?.height as number) || (node.measured?.height) || 100;
 
-      if (x < minX) minX = x;
-      if (y < minY) minY = y;
-      if (x + w > maxX) maxX = x + w;
-      if (y + h > maxY) maxY = y + h;
+      if (absX < minX) minX = absX;
+      if (absY < minY) minY = absY;
+      if (absX + w > maxX) maxX = absX + w;
+      if (absY + h > maxY) maxY = absY + h;
     });
 
     return {
@@ -264,7 +300,7 @@ const IndexContent = () => {
       w: maxX - minX,
       h: maxY - minY,
     };
-  }, [selectedNodes]);
+  }, [selectedNodes, nodes]);
 
   // Handle pointer down on transform handles
   const handleTransformStart = useCallback((e: React.PointerEvent, handle: string) => {
@@ -272,15 +308,30 @@ const IndexContent = () => {
     e.preventDefault();
     e.stopPropagation();
 
-    // Capture initial states
-    const nodeStates = selectedNodes.map((n) => ({
-      id: n.id,
-      x: n.position.x,
-      y: n.position.y,
-      w: (n.style?.width as number) || (n.measured?.width) || 100,
-      h: (n.style?.height as number) || (n.measured?.height) || 100,
-      fontSize: n.data?.fontSize || 14,
-    }));
+    // Capture initial absolute states
+    const nodeStates = selectedNodes.map((n) => {
+      let absX = n.position.x;
+      let absY = n.position.y;
+      let pId = n.parentId;
+      while (pId) {
+        const parent = nodes.find((p) => p.id === pId);
+        if (parent) {
+          absX += parent.position.x;
+          absY += parent.position.y;
+          pId = parent.parentId;
+        } else {
+          break;
+        }
+      }
+      return {
+        id: n.id,
+        x: absX,
+        y: absY,
+        w: (n.style?.width as number) || (n.measured?.width) || 100,
+        h: (n.style?.height as number) || (n.measured?.height) || 100,
+        fontSize: n.data?.fontSize || 14,
+      };
+    });
 
     resizeStartRef.current = {
       pointerX: e.clientX,
@@ -290,7 +341,7 @@ const IndexContent = () => {
     };
 
     setResizing(handle);
-  }, [selectionBounds, selectedNodes]);
+  }, [selectionBounds, selectedNodes, nodes]);
 
   // Pointer Move Listener (window-level)
   useEffect(() => {
@@ -374,14 +425,43 @@ const IndexContent = () => {
         }
       }
 
-      setNodes((nds) =>
-        nds.map((node) => {
+      setNodes((nds) => {
+        // Pre-calculate absolute positions for all nodes in the next frame
+        const nextAbsolutePositions: Record<string, { x: number; y: number }> = {};
+
+        nds.forEach((n) => {
+          const startState = start.nodeStates.find((s) => s.id === n.id);
+          if (startState) {
+            // Selected node gets scaled inside the new bounds
+            const relX = (startState.x - start.bounds.x) / start.bounds.w;
+            const relY = (startState.y - start.bounds.y) / start.bounds.h;
+            nextAbsolutePositions[n.id] = {
+              x: nextX + relX * nextW,
+              y: nextY + relY * nextH,
+            };
+          } else {
+            // Unselected node position is stationary, resolve its absolute position
+            let absX = n.position.x;
+            let absY = n.position.y;
+            let pId = n.parentId;
+            while (pId) {
+              const parent = nds.find((p) => p.id === pId);
+              if (parent) {
+                absX += parent.position.x;
+                absY += parent.position.y;
+                pId = parent.parentId;
+              } else {
+                break;
+              }
+            }
+            nextAbsolutePositions[n.id] = { x: absX, y: absY };
+          }
+        });
+
+        return nds.map((node) => {
           const startState = start.nodeStates.find((s) => s.id === node.id);
           if (!startState) return node;
 
-          // Compute initial relative positions in the bounds
-          const relX = (startState.x - start.bounds.x) / start.bounds.w;
-          const relY = (startState.y - start.bounds.y) / start.bounds.h;
           const relW = startState.w / start.bounds.w;
           const relH = startState.h / start.bounds.h;
 
@@ -389,11 +469,24 @@ const IndexContent = () => {
           const nodeScale = scaledW / startState.w;
           const nextFontSize = Math.max(6, Math.round(startState.fontSize * nodeScale));
 
+          // Convert computed absolute position back to relative if it has a parent
+          const myAbs = nextAbsolutePositions[node.id];
+          let relativeX = myAbs.x;
+          let relativeY = myAbs.y;
+
+          if (node.parentId) {
+            const parentAbs = nextAbsolutePositions[node.parentId];
+            if (parentAbs) {
+              relativeX = myAbs.x - parentAbs.x;
+              relativeY = myAbs.y - parentAbs.y;
+            }
+          }
+
           return {
             ...node,
             position: {
-              x: nextX + relX * nextW,
-              y: nextY + relY * nextH,
+              x: relativeX,
+              y: relativeY,
             },
             style: {
               ...node.style,
@@ -405,8 +498,8 @@ const IndexContent = () => {
               fontSize: nextFontSize,
             },
           };
-        })
-      );
+        });
+      });
     };
 
     const handlePointerUp = () => {
@@ -422,6 +515,20 @@ const IndexContent = () => {
       window.removeEventListener("pointerup", handlePointerUp);
     };
   }, [resizing, vpZoom, selectionBounds, setNodes]);
+
+  // Sync node internals during group resizing to ensure edges stay snapped in real-time
+  useEffect(() => {
+    if (!resizing) return;
+
+    selectedNodes.forEach((node) => {
+      updateNodeInternals(node.id);
+      nodes.forEach((n) => {
+        if (n.parentId === node.id) {
+          updateNodeInternals(n.id);
+        }
+      });
+    });
+  }, [nodes, resizing, selectedNodes, updateNodeInternals]);
 
   // Group Toolbar Colors Picker helper
   const [groupPicker, setGroupPicker] = useState<"fill" | "border" | "text" | null>(null);
