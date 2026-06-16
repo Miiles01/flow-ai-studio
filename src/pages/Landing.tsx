@@ -36,16 +36,104 @@ const orbitWords = [
 ];
 
 const orbitNotes = [
-  { tag: "Idea", title: "Mapa de oportunidad", bg: "#FEEDED" },
-  { tag: "Mercado", title: "Tamaño del mercado", bg: "#E8ECFE" },
-  { tag: "Cliente", title: "Perfil del usuario", bg: "#FFFFFF" },
-  { tag: "Modelo", title: "Fuentes de ingreso", bg: "#FEF9C3" },
-  { tag: "Roadmap", title: "Plan a 90 días", bg: "#DCFCE7" },
-  { tag: "Equipo", title: "Roles clave", bg: "#FFFFFF" },
-  { tag: "Métricas", title: "KPIs de tracción", bg: "#E8ECFE" },
-  { tag: "Pitch", title: "Deck inversión", bg: "#FCE7F3" },
-  { tag: "Growth", title: "Canales de adquisición", bg: "#FEEDED" },
-  { tag: "Producto", title: "MVP listo", bg: "#FFFFFF" },
+  {
+    tag: "Idea",
+    title: "Mapa de oportunidad",
+    bg: "#FEEDED",
+    type: "text",
+    content: "Resolver fricción en B2B SaaS. Integrar APIs automatizadas.",
+  },
+  {
+    tag: "Mercado",
+    title: "Tamaño de mercado",
+    bg: "#E8ECFE",
+    type: "text",
+    content: "TAM: $15B global. SOM: $120M en LATAM año 1-3.",
+  },
+  {
+    tag: "Cliente",
+    title: "Perfil de usuario",
+    bg: "#FFFFFF",
+    type: "todo",
+    todos: [
+      { text: "Entrevistar founders", checked: true },
+      { text: "Definir Buyer Persona", checked: true },
+      { text: "Validar dolor principal", checked: false },
+    ],
+  },
+  {
+    tag: "Modelo",
+    title: "Fuentes de ingreso",
+    bg: "#FEF9C3",
+    type: "todo",
+    todos: [
+      { text: "Suscripción B2B", checked: true },
+      { text: "Fee transaccional 2%", checked: false },
+      { text: "Licencias Enterprise", checked: false },
+    ],
+  },
+  {
+    tag: "Roadmap",
+    title: "Plan a 90 días",
+    bg: "#DCFCE7",
+    type: "todo",
+    todos: [
+      { text: "Lanzar MVP beta", checked: true },
+      { text: "Primeros 100 usuarios", checked: true },
+      { text: "Validar retención", checked: false },
+    ],
+  },
+  {
+    tag: "Equipo",
+    title: "Roles clave",
+    bg: "#FFFFFF",
+    type: "todo",
+    todos: [
+      { text: "Contratar CTO técnico", checked: true },
+      { text: "Lead AI Engineer", checked: false },
+      { text: "Growth Marketer", checked: false },
+    ],
+  },
+  {
+    tag: "Métricas",
+    title: "KPIs de tracción",
+    bg: "#E8ECFE",
+    type: "text",
+    content: "LTV/CAC > 3x. Churn < 2%. MRR inicial target: $10k.",
+  },
+  {
+    tag: "Pitch",
+    title: "Deck inversión",
+    bg: "#FCE7F3",
+    type: "todo",
+    todos: [
+      { text: "Narrativa del dolor", checked: true },
+      { text: "Tamaño del mercado", checked: true },
+      { text: "Unidad económica", checked: false },
+    ],
+  },
+  {
+    tag: "Growth",
+    title: "Adquisición",
+    bg: "#FEEDED",
+    type: "todo",
+    todos: [
+      { text: "SEO orgánico", checked: true },
+      { text: "Outbound AI automatizado", checked: true },
+      { text: "Pauta performance", checked: false },
+    ],
+  },
+  {
+    tag: "Producto",
+    title: "MVP listo",
+    bg: "#FFFFFF",
+    type: "todo",
+    todos: [
+      { text: "Editor de prompts", checked: true },
+      { text: "Integración LLM API", checked: true },
+      { text: "Exportar reportes", checked: false },
+    ],
+  },
 ];
 
 
@@ -494,7 +582,7 @@ const Landing = () => {
           </section>
 
           {/* BRAND CAROUSEL (Relocated) */}
-          <section className="pt-4 pb-16 overflow-hidden">
+          <section className="pt-4 pb-6 overflow-hidden">
             <h4 className="text-center text-xs font-light text-gray-400 mb-8 tracking-widest">
               Elegido por
             </h4>
@@ -526,7 +614,29 @@ const Landing = () => {
                     <div className="circle" key={note.title}>
                       <div className="note" style={{ background: note.bg }}>
                         <span className="note-tag">{note.tag}</span>
-                        <span className="note-title">{note.title}</span>
+                        <h4 className="note-title">{note.title}</h4>
+                        {note.type === "todo" && note.todos ? (
+                          <div className="note-todos flex flex-col gap-1.5 overflow-hidden mt-1.5 w-full">
+                            {note.todos.map((todo, idx) => (
+                              <div key={idx} className="flex items-center gap-1.5 text-[0.8vw] text-neutral-800 leading-tight">
+                                <span className={`w-[0.9vw] h-[0.9vw] min-w-[0.9vw] min-h-[0.9vw] border border-neutral-400 rounded-sm flex items-center justify-center shrink-0 ${todo.checked ? 'bg-neutral-800 border-neutral-800' : 'bg-transparent'}`}>
+                                  {todo.checked && (
+                                    <svg viewBox="0 0 24 24" fill="none" className="w-[0.6vw] h-[0.6vw] stroke-white stroke-[3]">
+                                      <polyline points="20 6 9 17 4 12" />
+                                    </svg>
+                                  )}
+                                </span>
+                                <span className={`truncate ${todo.checked ? 'line-through opacity-45 text-neutral-500' : 'text-neutral-800 font-normal'}`}>
+                                  {todo.text}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        ) : (
+                          <p className="note-content text-[0.85vw] font-light text-neutral-700 leading-relaxed mt-1.5 italic">
+                            "{note.content}"
+                          </p>
+                        )}
                       </div>
                     </div>
                   ))}
@@ -537,7 +647,7 @@ const Landing = () => {
 
 
           {/* 3D SCROLL TEXT PERSPECTIVE (mwg_effect053) */}
-          <section ref={scrollTextSectionRef} className="mwg_effect053 bg-white text-black relative z-10">
+          <section ref={scrollTextSectionRef} className="mwg_effect053 bg-[#4059F1] text-white relative z-10">
             <div className="pin-height">
               <div className="container">
                 <p className="paragraphs">
@@ -555,7 +665,7 @@ const Landing = () => {
           </section>
 
           {/* VIDEO */}
-          <section className="py-24 flex justify-center items-center overflow-hidden">
+          <section className="py-24 flex justify-center items-center overflow-hidden bg-white">
             <div
               ref={videoWrapRef}
               style={{ width: "65%" }}
@@ -573,7 +683,7 @@ const Landing = () => {
           </section>
 
           {/* VALUE PROP + 2 COLUMNS (FUNCIONES) */}
-          <section className="py-32 px-6 scroll-mt-24">
+          <section className="py-32 px-6 scroll-mt-24 bg-black text-white">
             <div className="max-w-6xl mx-auto">
               <h2 className="text-5xl md:text-7xl font-normal leading-tight tracking-tight text-center mb-20">
                 <span className="block">Un sistema.</span>
@@ -584,8 +694,8 @@ const Landing = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                 {/* COL 1 — Encuentra colaboraciones */}
-                <div data-anim-heading className="flex flex-col bg-white rounded-3xl p-6 cursor-pointer transition-all duration-300 hover:-translate-y-3 hover:shadow-[0_20px_60px_rgba(0,0,0,0.08)] group">
-                  <div className="rounded-2xl overflow-hidden bg-[#F5F5F8] mb-8">
+                <div data-anim-heading className="flex flex-col bg-zinc-950 border border-zinc-900 rounded-3xl p-6 cursor-pointer transition-all duration-300 hover:-translate-y-3 hover:shadow-[0_20px_60px_rgba(255,255,255,0.05)] group">
+                  <div className="rounded-2xl overflow-hidden bg-zinc-900/50 mb-8">
                     <img
                       src="https://wearemiiles.com/wp-content/uploads/2026/01/3232-932x1024.png"
                       alt="Encuentra colaboraciones"
@@ -595,14 +705,14 @@ const Landing = () => {
                   <h3 className="text-3xl md:text-4xl font-normal text-center mb-4 leading-tight">
                     Encuentra colaboraciones
                   </h3>
-                  <p data-split className="text-sm font-light text-gray-500 text-center leading-relaxed max-w-sm mx-auto">
+                  <p data-split className="text-sm font-light text-zinc-400 text-center leading-relaxed max-w-sm mx-auto">
                     En Miiles encontrarás oportunidades únicas para impulsar tu marca.
                   </p>
                 </div>
 
                 {/* COL 2 — Haz que tu idea suene */}
-                <div data-anim-heading className="flex flex-col bg-white rounded-3xl p-6 cursor-pointer transition-all duration-300 hover:-translate-y-3 hover:shadow-[0_20px_60px_rgba(0,0,0,0.08)] group">
-                  <div className="rounded-2xl overflow-hidden bg-[#F5F5F8] mb-8">
+                <div data-anim-heading className="flex flex-col bg-zinc-950 border border-zinc-900 rounded-3xl p-6 cursor-pointer transition-all duration-300 hover:-translate-y-3 hover:shadow-[0_20px_60px_rgba(255,255,255,0.05)] group">
+                  <div className="rounded-2xl overflow-hidden bg-zinc-900/50 mb-8">
                     <img
                       src="https://wearemiiles.com/wp-content/uploads/2026/01/new233-933x1024.png"
                       alt="Haz que tu idea suene"
@@ -612,7 +722,7 @@ const Landing = () => {
                   <h3 className="text-3xl md:text-4xl font-normal text-center mb-4 leading-tight">
                     Haz que tu idea suene con fuerza de ventas
                   </h3>
-                  <p data-split className="text-sm font-light text-gray-500 text-center leading-relaxed max-w-sm mx-auto">
+                  <p data-split className="text-sm font-light text-zinc-400 text-center leading-relaxed max-w-sm mx-auto">
                     Si tu marca vende servicios o productos, haz que otros vendedores en todo el mundo también los ofrezcan.
                   </p>
                 </div>
@@ -620,7 +730,7 @@ const Landing = () => {
             </div>
           </section>
           {/* TESTIMONIO */}
-          <section className="py-40 px-6">
+          <section className="py-40 px-6 bg-[#FCB5B9] text-black">
             <div className="max-w-4xl mx-auto text-center flex flex-col items-center">
               <span className="text-6xl md:text-8xl font-serif leading-none mb-4 text-black">“</span>
               <h2 className="text-4xl md:text-6xl font-normal leading-tight tracking-tight mb-12">
@@ -633,12 +743,12 @@ const Landing = () => {
               />
               <div className="flex flex-col items-center">
                 <span className="text-sm font-normal text-black">Karol Wegner</span>
-                <span className="text-[10px] text-gray-400 font-light mt-1">CEO de BeeSpeaker</span>
+                <span className="text-[10px] text-neutral-700 font-light mt-1">CEO de BeeSpeaker</span>
               </div>
             </div>
           </section>
 
-          <section ref={section059Ref} className="mwg_effect059 bg-white">
+          <section ref={section059Ref} className="mwg_effect059 bg-[#4059F1]">
             <div className="pin-height">
               <div className="mwg-container">
                 <svg id="mysvg" fill="none" width="3898" height="891" viewBox="0 0 3898 891" xmlns="http://www.w3.org/2000/svg">
