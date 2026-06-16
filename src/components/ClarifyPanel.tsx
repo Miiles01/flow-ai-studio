@@ -173,7 +173,7 @@ const ClarifyPanel = ({ result, isDark, isGenerating, onConfirm, onSkip, onClose
                           : "bg-[#F3F4F8] text-[#374151] border-transparent hover:bg-neutral-200"
                       }`}
                     >
-                      + Otro
+                      Otro
                     </button>
                   );
                 })()}
