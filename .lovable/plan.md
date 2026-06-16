@@ -1,38 +1,45 @@
-# Plan: Los prospectos no cargan en el Admin (CORS bloquea x-admin-token)
+## Apps / Conectores por usuario (v1: UI + guardado + toggles)
 
-## Diagnóstico
-- La tabla `prospects` tiene 100 registros y **ya está habilitada para realtime** (`supabase_realtime` la incluye). El realtime no es el problema.
-- El panel muestra "Sin prospectos" y un toast **"Failed to send a request to the Edge Function"**.
-- En los logs: el preflight `OPTIONS` de `admin-prospects` responde 200, pero el `POST` nunca se ejecuta.
-- Causa raíz: las funciones importan `corsHeaders` desde `@supabase/supabase-js@2/cors`, cuyo `Access-Control-Allow-Headers` es `authorization, x-client-info, apikey, content-type` y **no incluye `x-admin-token`**. El cliente (`adminFetch` en `useAdminAuth.ts`) envía ese header, así que el navegador bloquea la petición real. El login (`admin-auth`) funciona porque no manda `x-admin-token`.
+Construir un menú "Apps" en la barra de IA del editor de flujos que despliega un panel con apps activables. Por defecto viene **"Búsqueda en la web"** (logo de Google) activada. El usuario puede agregar sus propias apps mediante un popup (estilo el modal de bienvenida), activarlas/desactivarlas, y todo se guarda por usuario en la base de datos. En esta versión la IA **aún no ejecuta** las apps — solo se prepara la base (UI + persistencia + toggles).
 
-## Cambios
+### 1. Base de datos
+Nueva tabla `user_apps` (scoped a `auth.uid()`):
+- `name` (texto, nombre que da el usuario)
+- `connector_type` (`mcp` | `api`)
+- `url` (endpoint del servidor MCP o API REST)
+- `api_key` (token opcional)
+- `enabled` (boolean, default true)
+- `is_builtin` (boolean — para distinguir la app por defecto si se materializa)
+- estándar: `id`, `user_id`, `created_at`, `updated_at`
 
-### 1. Definir CORS propio con `x-admin-token`
-En cada función admin reemplazar el import de cors por un objeto local que permita el header:
+RLS: el usuario solo ve/edita sus propias apps (`auth.uid() = user_id`). GRANTs a `authenticated` y `service_role`. Trigger de `updated_at`.
 
-```ts
-const corsHeaders = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type, x-admin-token",
-  "Access-Control-Allow-Methods": "POST, OPTIONS",
-};
-```
+La app **"Búsqueda en la web"** se trata como built-in fija en el frontend (siempre presente, activada por defecto, su estado on/off también se guarda). No requiere fila salvo para recordar si el usuario la apagó.
 
-Aplicar en:
-- `supabase/functions/admin-prospects/index.ts`
-- `supabase/functions/admin-ingest/index.ts`
-- `supabase/functions/admin-auth/index.ts` (por consistencia)
+### 2. Panel de Apps (nuevo componente `AppsMenu.tsx`)
+- Se abre al hacer clic en el botón **Apps** de `AIPromptBar.tsx` (hoy es un `div` decorativo sin acción).
+- Popover/menú con estética del proyecto (dark/light), similar a la captura de referencia: lista de apps con su ícono/inicial, nombre y un **switch** (toggle) a la derecha.
+- Primer ítem fijo: **Búsqueda en la web** con logo de Google, activado por defecto.
+- Debajo, las apps del usuario traídas de `user_apps`, cada una con toggle y opción de eliminar.
+- Al final: botón **"+ Agregar app"** que abre el popup de creación.
 
-Quitar la línea `import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";` en cada una.
+### 3. Popup de creación (nuevo componente `AddAppModal.tsx`)
+- Modal estilo `TutorialModal` (mismo lenguaje visual: overlay con blur, card redondeada).
+- Campos:
+  - **Nombre** de la app
+  - **Tipo**: selector "Servidor MCP" o "API / Endpoint"
+  - **URL** (endpoint MCP remoto o URL de la API)
+  - **API key / token** (opcional)
+- Validación con `zod` (nombre requerido, URL válida `https://`).
+- Al guardar: inserta en `user_apps` para el usuario actual y refresca la lista.
 
-### 2. Desplegar las funciones
-Deploy de `admin-prospects`, `admin-ingest` y `admin-auth`.
+### 4. Estado y persistencia
+- Hook `useUserApps.ts`: carga, crea, actualiza (toggle enabled), elimina apps vía el cliente Supabase.
+- El estado de toggles persiste en la DB; la built-in "Búsqueda en la web" guarda su on/off (en `user_apps` como fila built-in o en `profiles`/localStorage — se usará una fila `is_builtin` para mantenerlo en DB).
 
-### 3. Verificar
-- Recargar `/admin`, confirmar que la tabla lista los 100 prospectos sin el toast de error.
-- Confirmar que la suscripción realtime ya existente en `ProspectsTab.tsx` refresca la tabla al insertar/borrar.
+### 5. Integración con la barra
+- `AIPromptBar.tsx`: convertir el chip "Apps" en botón que abre `AppsMenu`. Mantener el diseño actual (negro, redondeado).
+- Sin cambios en `generate-flow` ni en la lógica de IA en esta versión (la ejecución por la IA queda para una fase posterior).
 
-## Notas
-- No se requiere migración: el realtime ya está activo.
-- No se toca la UI ni la lógica de negocio, solo headers CORS de las edge functions.
+### Nota técnica
+La opción "Tipo: Servidor MCP" guarda URL + token pero **no** se conecta ni ejecuta todavía. Cuando quieras la fase 2 (que la IA realmente llame estas herramientas), se añadirá la infraestructura MCP/AI SDK en el edge function `generate-flow`. Lo dejo preparado en el esquema para no migrar de nuevo.

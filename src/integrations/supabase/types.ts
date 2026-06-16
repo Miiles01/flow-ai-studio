@@ -527,6 +527,48 @@ export type Database = {
           },
         ]
       }
+      user_apps: {
+        Row: {
+          api_key: string | null
+          builtin_key: string | null
+          connector_type: string
+          created_at: string
+          enabled: boolean
+          id: string
+          is_builtin: boolean
+          name: string
+          updated_at: string
+          url: string | null
+          user_id: string
+        }
+        Insert: {
+          api_key?: string | null
+          builtin_key?: string | null
+          connector_type?: string
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          is_builtin?: boolean
+          name: string
+          updated_at?: string
+          url?: string | null
+          user_id: string
+        }
+        Update: {
+          api_key?: string | null
+          builtin_key?: string | null
+          connector_type?: string
+          created_at?: string
+          enabled?: boolean
+          id?: string
+          is_builtin?: boolean
+          name?: string
+          updated_at?: string
+          url?: string | null
+          user_id?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
