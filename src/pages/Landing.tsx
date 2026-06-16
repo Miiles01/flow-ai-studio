@@ -292,7 +292,7 @@ const Landing = () => {
 
       const initAnimation = () => {
         const pinHeight = root.querySelector(".pin-height") as HTMLElement;
-        const container = root.querySelector(".container") as HTMLElement;
+        const container = root.querySelector(".mwg-container") as HTMLElement;
         const svg = root.querySelector("#mysvg") as SVGSVGElement;
         const path = root.querySelector("#mypath") as SVGPathElement;
         const tp = root.querySelector("#textpath") as SVGTextPathElement;
@@ -635,10 +635,9 @@ const Landing = () => {
             </div>
           </section>
 
-          {/* CTA FINAL (mwg_effect059) */}
           <section ref={section059Ref} className="mwg_effect059 bg-white">
             <div className="pin-height">
-              <div className="container">
+              <div className="mwg-container">
                 <svg id="mysvg" fill="none" width="3898" height="891" viewBox="0 0 3898 891" xmlns="http://www.w3.org/2000/svg">
                   <path id="mypath" d="M0.398438 611.016C175.398 377.517 857.398 -285.484 1461.4 139.638C1911.53 456.46 2114.4 805.516 2679.4 611.016C3088.4 470.219 3704.54 -33.3124 4354.9 781.516C4700.9 1215.02 5305.6 1466.52 6108.4 328.516" />
                   <text id="text">

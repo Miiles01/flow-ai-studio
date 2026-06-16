@@ -718,11 +718,12 @@
 .mwg_effect059 .pin-height {
     height: 500vh;
 }
-.mwg_effect059 .container {
+.mwg_effect059 .mwg-container {
     height: 100vh;
     overflow: hidden;
     position: relative;
-    width: 100%;
+    width: 100vw;
+    max-width: 100vw;
 }
 .mwg_effect059 svg {
     width: 300vw;
