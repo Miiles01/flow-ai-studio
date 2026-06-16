@@ -1,8 +1,9 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { LayoutGrid, ArrowUp, Loader2, EyeOff } from "lucide-react";
+import { ArrowUp, Loader2, EyeOff } from "lucide-react";
 import logoImg from "@/assets/logo.png";
 import { useTheme } from "@/contexts/ThemeContext";
+import AppsMenu from "@/components/AppsMenu";
 
 type AIPromptBarProps = {
   onGenerate: (prompt: string) => void;
