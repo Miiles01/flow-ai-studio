@@ -147,7 +147,7 @@ const isBlackColor = (color: string | undefined): boolean => {
 const ShapeNode = ({ id, data, selected }: NodeProps) => {
   const nodeData = data as ShapeNodeData;
   const shape = nodeData.shape || "square";
-  const [label, setLabel] = useState(nodeData.label || "");
+  const [label, setLabel] = useState((nodeData.label || "").replace(/<br\s*\/?>/gi, "\n"));
   const [editing, setEditing] = useState(false);
   const [activePicker, setActivePicker] = useState<"fill" | "border" | "text" | null>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
