@@ -22,7 +22,6 @@ export type NewUserApp = {
   api_key?: string | null;
 };
 
-// Built-in app shown to every user (web search), default enabled.
 export const WEB_SEARCH_KEY = "web_search";
 
 export function useUserApps() {
@@ -57,10 +56,8 @@ export function useUserApps() {
     load();
   }, [load]);
 
-  // The built-in web-search app is enabled unless a row says otherwise.
   const webSearchRow = apps.find((a) => a.is_builtin && a.builtin_key === WEB_SEARCH_KEY);
   const webSearchEnabled = webSearchRow ? webSearchRow.enabled : true;
-
   const customApps = apps.filter((a) => !a.is_builtin);
 
   const createApp = useCallback(
@@ -108,7 +105,6 @@ export function useUserApps() {
         await toggleApp(webSearchRow.id, enabled);
         return;
       }
-      // Materialize the built-in row to remember the off state.
       const { error } = await supabase.from("user_apps").insert({
         user_id: user.id,
         name: "Búsqueda en la web",

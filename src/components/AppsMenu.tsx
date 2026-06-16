@@ -53,14 +53,12 @@ const AppsMenu = ({ isDark }: AppsMenuProps) => {
           }`}
         >
           <div className="max-h-[320px] overflow-y-auto scrollbar-hide">
-            {/* Built-in: Web search */}
             <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl">
               <GoogleIcon className="w-6 h-6 shrink-0" />
               <span className={`flex-1 text-sm font-normal ${rowText}`}>Búsqueda en la web</span>
               <Switch checked={webSearchEnabled} onCheckedChange={toggleWebSearch} />
             </div>
 
-            {/* Custom apps */}
             {customApps.map((app) => (
               <div key={app.id} className="group flex items-center gap-3 px-3 py-2.5 rounded-xl">
                 <div
