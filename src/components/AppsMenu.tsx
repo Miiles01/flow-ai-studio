@@ -46,7 +46,7 @@ const AppsMenu = ({ isDark }: AppsMenuProps) => {
         </PopoverTrigger>
         <PopoverContent
           side="top"
-          align="start"
+          align="center"
           sideOffset={12}
           className={`w-80 p-2 rounded-2xl border shadow-2xl ${
             isDark ? "bg-[#15161d] border-white/10" : "bg-white border-miiles-gray-200"
