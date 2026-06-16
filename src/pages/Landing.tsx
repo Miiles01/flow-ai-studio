@@ -641,7 +641,7 @@ const Landing = () => {
                 <svg id="mysvg" fill="none" width="3898" height="891" viewBox="0 0 3898 891" xmlns="http://www.w3.org/2000/svg">
                   <path id="mypath" d="M0.398438 611.016C175.398 377.517 857.398 -285.484 1461.4 139.638C1911.53 456.46 2114.4 805.516 2679.4 611.016C3088.4 470.219 3704.54 -33.3124 4354.9 781.516C4700.9 1215.02 5305.6 1466.52 6108.4 328.516" />
                   <text id="text">
-                    <textPath id="textpath" href="#mypath" textAnchor="start" fontSize="180">
+                    <textPath id="textpath" href="#mypath" textAnchor="start" fontSize="260">
                       Es horaaaaaa de crearrrrrrrrr
                     </textPath>
                   </text>
