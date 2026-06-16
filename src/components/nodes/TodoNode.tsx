@@ -590,49 +590,16 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
         </AnimatePresence>
       </div>
 
-      {/* Bottom bar: Add Task (left) + Copy / Download tasks (right) */}
-      <div className="flex items-center gap-2 mt-2 shrink-0">
-        <button
-          onClick={() => handleAddTask()}
-          className="flex-1 flex items-center gap-2 py-2 px-2 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 text-gray-400 hover:text-gray-600 hover:border-gray-400 hover:bg-black/5 dark:hover:bg-white/5 transition-all text-left"
-          style={{ fontSize: `${fontSize * 0.9}px` }}
-        >
-          <Plus size={13} />
-          <span>Nueva Tarea...</span>
-        </button>
+      {/* Add Task Button at bottom of list */}
+      <button
+        onClick={() => handleAddTask()}
+        className="flex items-center gap-2 py-2 px-2 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 text-gray-400 hover:text-gray-600 hover:border-gray-400 hover:bg-black/5 dark:hover:bg-white/5 transition-all text-left mt-2 shrink-0"
+        style={{ fontSize: `${fontSize * 0.9}px` }}
+      >
+        <Plus size={13} />
+        <span>Nueva Tarea...</span>
+      </button>
 
-        <button
-          onClick={handleCopyTasks}
-          onMouseDown={(e) => e.stopPropagation()}
-          title="Copiar todas las tareas como instrucciones para IA"
-          className={`nodrag flex items-center gap-1.5 py-2 px-3 rounded-xl transition-all duration-200 shrink-0 ${
-            copied
-              ? "bg-black text-white"
-              : isDark
-              ? "bg-white/10 text-white/80 hover:bg-white/15"
-              : "bg-[#F3F4F6] text-[#4B4F63] hover:bg-[#E5E7EB]"
-          }`}
-          style={{ fontSize: `${fontSize * 0.85}px` }}
-        >
-          {copied ? <Check size={13} strokeWidth={2.5} /> : <Copy size={13} strokeWidth={2} />}
-          <span>{copied ? "¡Copiado!" : "Copiar tareas"}</span>
-        </button>
-
-        <button
-          onClick={handleDownloadTasks}
-          onMouseDown={(e) => e.stopPropagation()}
-          title="Descargar tareas como archivo de instrucciones"
-          className={`nodrag flex items-center justify-center w-9 py-2 rounded-xl transition-all duration-200 shrink-0 ${
-            downloaded
-              ? "bg-black text-white"
-              : isDark
-              ? "bg-white/10 text-white/80 hover:bg-white/15"
-              : "bg-[#F3F4F6] text-[#4B4F63] hover:bg-[#E5E7EB]"
-          }`}
-        >
-          {downloaded ? <Check size={13} strokeWidth={2.5} /> : <Download size={13} strokeWidth={2} />}
-        </button>
-      </div>
 
       </div>
 
