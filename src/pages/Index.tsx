@@ -721,25 +721,12 @@ const IndexContent = () => {
     [reactFlowInstance, nodes, setNodes, setEdges]
   );
 
+  // Moving a node must NEVER remove its connections — keep edges intact while dragging.
   const onNodeDragStart = useCallback(
-    (event: any, node: Node) => {
-      const nodeElement = document.querySelector(`[data-id="${node.id}"]`);
-      if (!nodeElement) return;
-
-      const rect = nodeElement.getBoundingClientRect();
-      const clientX = event.clientX ?? (event.touches?.[0]?.clientX);
-      
-      if (typeof clientX !== "number") return;
-
-      const clickX = clientX - rect.left;
-      const relativeX = clickX / rect.width;
-
-      if (relativeX < 0.5) {
-        // Disconnect! Remove all edges where this node is source or target
-        setEdges((eds) => eds.filter((e) => e.source !== node.id && e.target !== node.id));
-      }
+    (_event: any, _node: Node) => {
+      // intentionally left empty: dragging should not disconnect nodes
     },
-    [setEdges]
+    []
   );
 
   // ── Frame parent-child: attach/detach nodes on drag stop ──────────────────
