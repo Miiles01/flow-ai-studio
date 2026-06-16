@@ -548,7 +548,7 @@ const Landing = () => {
               data-anim-heading 
               src={logoImg} 
               alt="Miiles Logo" 
-              className="w-14 h-14 mx-auto mb-3" 
+              className="w-14 h-14 mx-auto mb-3 logo-spin" 
             />
             <span data-anim-heading className="text-[22px] font-normal mb-8 tracking-tight">
               Miiles

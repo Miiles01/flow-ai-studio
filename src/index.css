@@ -771,3 +771,22 @@
 .hero-title .letter span {
     display: inline-block;
 }
+
+/* Isotipo rotation animation loop */
+@keyframes logo-spin-loop {
+  0% {
+    transform: rotate(0deg);
+  }
+  75% {
+    transform: rotate(0deg);
+  }
+  90% {
+    transform: rotate(360deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}
+.logo-spin {
+  animation: logo-spin-loop 8s cubic-bezier(0.25, 1, 0.5, 1) infinite;
+}
