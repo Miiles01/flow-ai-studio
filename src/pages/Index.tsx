@@ -1534,6 +1534,7 @@ const IndexContent = () => {
   }
 
   return (
+    <FlowExtendContext.Provider value={flowExtendValue}>
     <div className={`w-screen h-screen overflow-hidden relative flex flex-col transition-colors duration-300 ${isDark ? 'dark bg-[#0f0f11]' : 'bg-background'}`}>
       {/* Top bar */}
       <header className="absolute top-0 left-0 right-0 h-20 flex items-center justify-between px-6 z-20 pointer-events-none">
