@@ -55,10 +55,39 @@ function assignOptimalHandles(nodes: Node[], edges: Edge[]): Edge[] {
   });
 }
 
+export type ExtendContext = {
+  side: "top" | "bottom" | "left" | "right";
+  summary: string;
+};
+
+const SIDE_DIRECTION: Record<string, string> = {
+  top: "hacia ARRIBA",
+  bottom: "hacia ABAJO",
+  left: "hacia la IZQUIERDA",
+  right: "hacia la DERECHA",
+};
+
 export async function generateFlowFromPrompt(
-  prompt: string
+  prompt: string,
+  extendContext?: ExtendContext
 ): Promise<{ nodes: Node[]; edges: Edge[] }> {
-  const enhancedPrompt = `${prompt}
+  const extendBlock = extendContext
+    ? `\n\n---
+🔗 MODO AMPLIACIÓN (CONTINÚA UN FLUJO EXISTENTE):
+El usuario YA tiene este elemento en su canvas y quiere AMPLIAR el flujo a partir de él, ${SIDE_DIRECTION[extendContext.side] || ""}.
+ELEMENTO DE ORIGEN (léelo, entiéndelo y continúa de forma coherente a partir de aquí):
+"""
+${extendContext.summary}
+"""
+REGLAS DE AMPLIACIÓN:
+- NO repitas ni regeneres el elemento de origen; genera SOLO los nuevos nodos que surgen a partir de él.
+- Los nuevos nodos deben ser una continuación lógica y coherente con el contenido del elemento de origen y con la petición del usuario.
+- Posiciona los nodos nuevos comenzando en x:0, y:0 y crecientes; el sistema los reubicará junto al elemento de origen.
+- Mantén el mismo idioma, tono y estilo visual que el elemento de origen.\n`
+    : "";
+
+  const enhancedPrompt = `${prompt}${extendBlock}
+
 
 ---
 CRITICAL INSTRUCTION FOR AI: Ignore any previous formatting rules. You MUST return a JSON OBJECT with "nodes" and "edges" arrays.

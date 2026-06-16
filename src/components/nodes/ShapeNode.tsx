@@ -3,6 +3,7 @@ import { Handle, Position, type NodeProps, NodeResizer, useReactFlow, useViewpor
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "@/contexts/ThemeContext";
 import { Square, Circle, Triangle, Hexagon, Star, Plus, Minus, Palette, Bold, Italic, Underline, Diamond, Trash2, Baseline, Check } from "lucide-react";
+import NodeExtendHandles from "@/components/nodes/NodeExtendHandles";
 
 interface AutoResizingTextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   value: string;
@@ -518,6 +519,8 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
           </div>
         );
       })}
+
+      <NodeExtendHandles nodeId={id} />
     </motion.div>
   );
 };

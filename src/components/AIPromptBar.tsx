@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowUp, Loader2, EyeOff } from "lucide-react";
+import { ArrowUp, Loader2, EyeOff, X } from "lucide-react";
 import logoImg from "@/assets/logo.png";
 import { useTheme } from "@/contexts/ThemeContext";
 import AppsMenu from "@/components/AppsMenu";
@@ -8,9 +8,12 @@ import AppsMenu from "@/components/AppsMenu";
 type AIPromptBarProps = {
   onGenerate: (prompt: string) => void;
   isGenerating: boolean;
+  forceOpen?: boolean;
+  extendLabel?: string | null;
+  onCancelExtend?: () => void;
 };
 
-const AIPromptBar = ({ onGenerate, isGenerating }: AIPromptBarProps) => {
+const AIPromptBar = ({ onGenerate, isGenerating, forceOpen, extendLabel, onCancelExtend }: AIPromptBarProps) => {
   const [prompt, setPrompt] = useState("");
   const [isExpanded, setIsExpanded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -18,6 +21,14 @@ const AIPromptBar = ({ onGenerate, isGenerating }: AIPromptBarProps) => {
   const { isDark } = useTheme();
   
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    if (forceOpen) {
+      setIsExpanded(true);
+      // enfoca el input al activar el modo ampliación
+      setTimeout(() => textareaRef.current?.focus(), 60);
+    }
+  }, [forceOpen]);
 
   useEffect(() => {
     if (textareaRef.current) {
@@ -98,6 +109,20 @@ const AIPromptBar = ({ onGenerate, isGenerating }: AIPromptBarProps) => {
 
             {/* Main Prompt Bar */}
             <div className={`bg-black rounded-[40px] pt-8 pb-4 px-6 shadow-2xl transition-all duration-300 relative z-10 w-full ${isDark ? 'ring-1 ring-white/10' : ''}`}>
+              {extendLabel && (
+                <div className="flex items-center justify-center gap-2 mb-3">
+                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#4059F1]/20 text-[#9DB0FF] text-[11px] font-light">
+                    {extendLabel}
+                    <button
+                      onClick={() => onCancelExtend?.()}
+                      className="text-white/60 hover:text-white transition-colors"
+                      title="Cancelar ampliación"
+                    >
+                      <X size={12} strokeWidth={2} />
+                    </button>
+                  </span>
+                </div>
+              )}
               <textarea
                 ref={textareaRef}
                 rows={1}
@@ -106,7 +131,7 @@ const AIPromptBar = ({ onGenerate, isGenerating }: AIPromptBarProps) => {
                 onKeyDown={handleKeyDown}
                 onFocus={() => setIsFocused(true)}
                 onBlur={() => setIsFocused(false)}
-                placeholder="Describe tu flujo o idea..."
+                placeholder={extendLabel ? "¿Qué quieres generar a partir de aquí?" : "Describe tu flujo o idea..."}
                 className="w-full bg-transparent text-white font-light text-[15px] placeholder:text-white/40 outline-none resize-none overflow-hidden min-h-[44px] leading-relaxed text-center placeholder:text-center"
                 disabled={isGenerating}
               />

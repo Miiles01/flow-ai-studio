@@ -1,6 +1,7 @@
 import { memo, useState, useRef, useCallback } from "react";
 import { Handle, Position, type NodeProps, NodeResizer, useReactFlow, useViewport } from "@xyflow/react";
 import { ImageIcon, Link2, Maximize2, Minimize2, AlertTriangle, RotateCcw, Trash2, Check } from "lucide-react";
+import NodeExtendHandles from "@/components/nodes/NodeExtendHandles";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTheme } from "@/contexts/ThemeContext";
 
@@ -295,6 +296,8 @@ const ImageNode = ({ id, data, selected }: NodeProps) => {
           />
         )}
       </div>
+
+      <NodeExtendHandles nodeId={id} />
     </motion.div>
   );
 };
