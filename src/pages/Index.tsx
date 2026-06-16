@@ -2477,7 +2477,7 @@ const IndexContent = () => {
                         </div>
                       </button>
                     </TooltipTrigger>
-                    <TooltipContent side="top" sideOffset={8} className="text-[12px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
+                    <TooltipContent side="top" align="center" sideOffset={8} className="text-[12px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
                       Copiar instrucciones
                     </TooltipContent>
                   </Tooltip>
@@ -2501,7 +2501,7 @@ const IndexContent = () => {
                         {downloadedAll ? <Check size={14} strokeWidth={2.5} /> : <Download size={14} strokeWidth={2} />}
                       </button>
                     </TooltipTrigger>
-                    <TooltipContent side="top" sideOffset={8} className="text-[12px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
+                    <TooltipContent side="top" align="center" sideOffset={8} className="text-[12px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
                       Descargar instrucciones
                     </TooltipContent>
                   </Tooltip>
