@@ -1427,7 +1427,7 @@ const IndexContent = () => {
 
                     {isOwner && (
                       <button
-                        onClick={() => { setSettingsOpen(false); duplicateBoard(); }}
+                        onClick={() => { setSettingsOpen(false); openDuplicateDialog(); }}
                         disabled={duplicating}
                         className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors text-left disabled:opacity-50 ${isDark ? 'hover:bg-white/10' : 'hover:bg-[#F3F4F6]'}`}
                       >
