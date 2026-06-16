@@ -602,3 +602,107 @@
 .mwg_effect011 .letter {
     display: inline-block;
 }
+
+/* ------------------------------------- */
+/* mwg_effect040 - Dual Rotating Circles */
+/* ------------------------------------- */
+.mwg_effect040 {
+    position: relative;
+    background-color: #FFFFFF;
+    color: #121212;
+}
+.mwg_effect040 .scroll {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 1.2vw;
+    z-index: 10;
+    pointer-events: none;
+}
+.mwg_effect040 .pin-height {
+    height: 500vh;
+}
+.mwg_effect040 .container {
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+}
+.mwg_effect040 .parent-circle {
+    width: 80vw;
+    height: 80vw;
+    position: absolute;
+    top: 50%;
+    transform: translate(0, -50%);
+}
+.mwg_effect040 .parent-circle-left {
+    right: 52%;
+}
+.mwg_effect040 .parent-circle-right {
+    left: 52%;
+}
+.mwg_effect040 .circle {
+    position: absolute;
+    inset: 0;
+}
+.mwg_effect040 .label {
+    position: absolute;
+    right: 50%;
+    top: 100%;
+    transform: translate(0, -50%);
+    transform-origin: 100% 50%;
+    font: 400 normal 4vw/normal 'Inter', sans-serif;
+    white-space: nowrap;
+    color: #111;
+}
+.mwg_effect040 .media {
+    width: 14vw;
+    height: 14vw;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translate(0, -50%);
+    transform-origin: 0 50%;
+    border-radius: 12px;
+    filter: drop-shadow(0px 4px 24px rgba(0, 0, 0, 0.06));
+    padding: 1.5vw;
+    box-sizing: border-box;
+    text-align: left;
+}
+
+/* ------------------------------------- */
+/* mwg_effect059 - Curve Text Animation  */
+/* ------------------------------------- */
+.mwg_effect059 {
+    position: relative;
+    background-color: #FFFFFF;
+    color: #121212;
+}
+.mwg_effect059 .pin-height {
+    height: 500vh;
+}
+.mwg_effect059 .container {
+    height: 100vh;
+    overflow: hidden;
+    position: relative;
+    width: 100%;
+}
+.mwg_effect059 svg {
+    width: 300vw;
+    height: auto;
+    display: block;
+    position: absolute;
+    left: 0;
+    top: 50%;
+    transform: translate(0, -50%);
+    overflow: visible;
+}
+.mwg_effect059 text {
+    fill: #000000;
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+}
+
