@@ -1046,6 +1046,40 @@ const IndexContent = () => {
     persistRef.current();
   }, []);
 
+  const [duplicating, setDuplicating] = useState(false);
+  const duplicateBoard = useCallback(async () => {
+    if (!user || duplicating) return;
+    setDuplicating(true);
+    try {
+      const sanitizedNodes = nodes.map((n) => {
+        const { selected, dragging, resizing, ...rest } = n as Node & { resizing?: boolean };
+        return rest;
+      });
+      const sanitizedEdges = edges.map((e) => {
+        const { selected, ...rest } = e as Edge;
+        return rest;
+      });
+      const { data, error } = await supabase
+        .from("flows")
+        .insert([{
+          user_id: user.id,
+          name: `${name} (copia)`,
+          nodes: JSON.parse(JSON.stringify(sanitizedNodes)),
+          edges: JSON.parse(JSON.stringify(sanitizedEdges)),
+        }])
+        .select()
+        .single();
+      if (error || !data) {
+        toast.error("No se pudo duplicar el tablero");
+        return;
+      }
+      toast.success("Tablero duplicado");
+      navigate(`/boards/${data.id}`);
+    } finally {
+      setDuplicating(false);
+    }
+  }, [user, duplicating, nodes, edges, name, navigate]);
+
   // Mark dirty + schedule autosave on changes
   useEffect(() => {
     if (loading) return;
