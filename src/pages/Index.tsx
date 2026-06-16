@@ -2051,7 +2051,7 @@ const IndexContent = () => {
             animate={{ x: 0, opacity: 1 }}
             exit={{ x: "100%", opacity: 0 }}
             transition={{ type: "spring", damping: 28, stiffness: 260 }}
-            className={`absolute top-0 right-0 h-full z-50 flex flex-col select-none pointer-events-auto ${isDark ? 'bg-black border-l border-white/10 text-white' : 'bg-white border-l border-gray-100 text-black'}`}
+            className={`absolute top-0 right-0 h-full z-50 flex flex-col select-none pointer-events-auto ${isDark ? 'bg-black border-l border-white/30 text-white' : 'bg-white border-l border-black text-black'}`}
             style={{ width: panelWidth }}
           >
             {/* Drag-resize handle */}
