@@ -2320,7 +2320,66 @@ const IndexContent = () => {
                 );
               })()}
             </div>
+
+            {/* Footer: copy / download all tasks */}
+            {(() => {
+              const todoNodes = nodes.filter((n) => n.type === "todoNode");
+              if (todoNodes.length === 0) return null;
+
+              const buildAll = () => {
+                const blocks = todoNodes.map((n) => {
+                  const d = n.data as any;
+                  return buildTasksInstructions({
+                    title: d.title || "Lista de Tareas",
+                    subtitle: d.subtitle || "",
+                    tasks: d.tasks ?? [],
+                  } as TodoListLike);
+                });
+                return blocks.join("\n\n---\n\n");
+              };
+
+              return (
+                <div className={`flex items-center gap-2 px-4 py-3 border-t ${isDark ? 'border-white/10' : 'border-[#F3F4F6]'}`}>
+                  <button
+                    onClick={async () => {
+                      await copyTextToClipboard(buildAll());
+                      setCopiedAll(true);
+                      setTimeout(() => setCopiedAll(false), 1600);
+                    }}
+                    title="Copiar todas las tareas como instrucciones para IA"
+                    className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-full text-[13px] font-medium transition-all duration-200 ${
+                      copiedAll
+                        ? "bg-black text-white"
+                        : isDark
+                        ? "bg-white/10 text-white hover:bg-white/15"
+                        : "bg-black text-white hover:bg-miiles-pink"
+                    }`}
+                  >
+                    {copiedAll ? <Check size={14} strokeWidth={2.5} /> : <Copy size={14} strokeWidth={2} />}
+                    <span>{copiedAll ? "¡Copiado!" : "Copiar tareas"}</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      downloadTextFile("tareas.md", buildAll());
+                      setDownloadedAll(true);
+                      setTimeout(() => setDownloadedAll(false), 1600);
+                    }}
+                    title="Descargar todas las tareas como archivo de instrucciones"
+                    className={`w-11 h-11 flex items-center justify-center rounded-full transition-all duration-200 shrink-0 ${
+                      downloadedAll
+                        ? "bg-black text-white"
+                        : isDark
+                        ? "bg-white/10 text-white hover:bg-white/15"
+                        : "bg-[#F3F4F6] text-[#4B4F63] hover:bg-[#E5E7EB]"
+                    }`}
+                  >
+                    {downloadedAll ? <Check size={14} strokeWidth={2.5} /> : <Download size={14} strokeWidth={2} />}
+                  </button>
+                </div>
+              );
+            })()}
           </motion.aside>
+
         )}
       </AnimatePresence>
     </div>
