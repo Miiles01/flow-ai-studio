@@ -83,7 +83,8 @@ REGLAS DE AMPLIACIÓN:
 - NO repitas ni regeneres el elemento de origen; genera SOLO los nuevos nodos que surgen a partir de él.
 - Los nuevos nodos deben ser una continuación lógica y coherente con el contenido del elemento de origen y con la petición del usuario.
 - Posiciona los nodos nuevos comenzando en x:0, y:0 y crecientes; el sistema los reubicará junto al elemento de origen.
-- Mantén el mismo idioma, tono y estilo visual que el elemento de origen.\n`
+- Mantén el mismo idioma, tono y estilo visual que el elemento de origen.
+- NO generes un nodo de título grande (NO uses "textNode" como encabezado suelto al inicio). En modo ampliación NO se necesita título; continúa directamente con más formas/nodos (shapeNode, todoNode, etc.) conectados entre sí a partir del elemento de origen.\n`
     : "";
 
   const enhancedPrompt = `${prompt}${extendBlock}
