@@ -487,8 +487,9 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
             className="text-center select-none leading-snug whitespace-pre-wrap break-words font-sans"
             style={textStyle}
           >
-            {label}
+            {label.replace(/<br\s*\/?>/gi, "\n")}
           </span>
+
         )}
       </div>
 
