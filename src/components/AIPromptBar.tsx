@@ -8,9 +8,12 @@ import AppsMenu from "@/components/AppsMenu";
 type AIPromptBarProps = {
   onGenerate: (prompt: string) => void;
   isGenerating: boolean;
+  forceOpen?: boolean;
+  extendLabel?: string | null;
+  onCancelExtend?: () => void;
 };
 
-const AIPromptBar = ({ onGenerate, isGenerating }: AIPromptBarProps) => {
+const AIPromptBar = ({ onGenerate, isGenerating, forceOpen, extendLabel, onCancelExtend }: AIPromptBarProps) => {
   const [prompt, setPrompt] = useState("");
   const [isExpanded, setIsExpanded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -18,6 +21,14 @@ const AIPromptBar = ({ onGenerate, isGenerating }: AIPromptBarProps) => {
   const { isDark } = useTheme();
   
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+
+  useEffect(() => {
+    if (forceOpen) {
+      setIsExpanded(true);
+      // enfoca el input al activar el modo ampliación
+      setTimeout(() => textareaRef.current?.focus(), 60);
+    }
+  }, [forceOpen]);
 
   useEffect(() => {
     if (textareaRef.current) {
