@@ -169,36 +169,8 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
   const textColor = isDark && (isBlackText || isWhiteBg) ? "#FFFFFF" : rawTextColor;
 
   const [activePicker, setActivePicker] = useState<"bg" | "accent" | "text" | null>(null);
-  const [copied, setCopied] = useState(false);
-  const [downloaded, setDownloaded] = useState(false);
   const taskInputRefs = useRef<Record<string, HTMLTextAreaElement | null>>({});
 
-  const handleCopyTasks = async (e?: React.MouseEvent) => {
-    e?.stopPropagation();
-    const text = buildTasksInstructions({ title, subtitle, tasks });
-    try {
-      await navigator.clipboard.writeText(text);
-    } catch {
-      // Fallback para entornos sin permisos de clipboard
-      const ta = document.createElement("textarea");
-      ta.value = text;
-      document.body.appendChild(ta);
-      ta.select();
-      document.execCommand("copy");
-      document.body.removeChild(ta);
-    }
-    setCopied(true);
-    setTimeout(() => setCopied(false), 1600);
-  };
-
-  const handleDownloadTasks = (e?: React.MouseEvent) => {
-    e?.stopPropagation();
-    const text = buildTasksInstructions({ title, subtitle, tasks });
-    const safeName = (title || "tareas").trim().replace(/[^\p{L}\p{N}\-_ ]/gu, "").replace(/\s+/g, "-").toLowerCase() || "tareas";
-    downloadTextFile(`${safeName}.md`, text);
-    setDownloaded(true);
-    setTimeout(() => setDownloaded(false), 1600);
-  };
 
 
   const updateNodeData = (newData: Partial<TodoNodeData>) => {
