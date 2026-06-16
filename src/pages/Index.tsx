@@ -2102,7 +2102,7 @@ const IndexContent = () => {
               }}
             >
               {/* Línea indicadora de agarre siempre visible */}
-              <div className={`absolute left-0 top-0 w-[2px] h-full ${isDark ? 'bg-white/20' : 'bg-black'}`} />
+              <div className={`absolute left-0 top-0 w-[1px] h-full ${isDark ? 'bg-white/20' : 'bg-black'}`} />
               {/* Indicador de hover azul suave */}
               <div className="absolute left-0 top-0 w-[4px] h-full opacity-0 group-hover:opacity-100 bg-[#4059F1]/40 transition-opacity" />
             </div>
