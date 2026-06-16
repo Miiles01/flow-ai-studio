@@ -220,6 +220,20 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
     if (align !== (nodeData.align ?? "left")) commitData({ align });
   }, [align, nodeData.align, commitData]);
 
+  // Sync external fontSize and alignment updates (e.g., from group resizing) to local state
+  useEffect(() => {
+    if (nodeData.fontSize !== undefined && nodeData.fontSize !== fontSize) {
+      setFontSize(nodeData.fontSize);
+    }
+  }, [nodeData.fontSize]);
+
+  useEffect(() => {
+    const defaultAlign = nodeData.align ?? "left";
+    if (defaultAlign !== align) {
+      setAlign(defaultAlign);
+    }
+  }, [nodeData.align]);
+
   // Reacción dinámica en modo oscuro: si tiene texto negro, se pone blanco.
   const rawTextColor = nodeData.textColor ?? (isDark ? "#FFFFFF" : "#111827");
   const isBlackText = isBlackColor(rawTextColor);
