@@ -164,7 +164,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
 
   // Sync label local state if nodeData changes
   useEffect(() => {
-    setLabel(nodeData.label || "");
+    setLabel((nodeData.label || "").replace(/<br\s*\/?>/gi, "\n"));
   }, [nodeData.label]);
 
   const updateNodeData = (newData: Partial<ShapeNodeData>) => {
