@@ -173,7 +173,7 @@ const ClarifyPanel = ({ result, isDark, isGenerating, onConfirm, onSkip, onClose
                           : "bg-[#F3F4F8] text-[#374151] border-transparent hover:bg-neutral-200"
                       }`}
                     >
-                      + Otro
+                      Otro
                     </button>
                   );
                 })()}
@@ -216,16 +216,8 @@ const ClarifyPanel = ({ result, isDark, isGenerating, onConfirm, onSkip, onClose
         </div>
 
         {/* Footer Actions */}
-        <div className="flex items-center justify-between gap-3 mt-6 pt-4 border-t border-dashed border-neutral-200/10">
-          <button
-            onClick={onSkip}
-            disabled={isGenerating}
-            className={`text-xs font-light transition-colors disabled:opacity-40 cursor-pointer ${
-              isDark ? "text-white/50 hover:text-white/80" : "text-[#6B7280] hover:text-black"
-            }`}
-          >
-            Generar de todos modos
-          </button>
+        <div className="flex items-center justify-end gap-3 mt-6 pt-4 border-t border-dashed border-neutral-200/10">
+          
           
           <button
             onClick={handleNext}
