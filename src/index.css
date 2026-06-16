@@ -705,9 +705,15 @@
 /* mwg_effect059 - Curve Text Animation  */
 /* ------------------------------------- */
 .mwg_effect059 {
+    display: none;
     position: relative;
     background-color: #FFFFFF;
     color: #121212;
+}
+@media (min-width: 768px) {
+    .mwg_effect059 {
+        display: block;
+    }
 }
 .mwg_effect059 .pin-height {
     height: 500vh;
