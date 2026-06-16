@@ -1466,11 +1466,41 @@ const IndexContent = () => {
 
         setNodes((nds) => {
           const createdNode = nds.find((n) => n.id === finalId);
-          if (!createdNode || createdNode.type === "frameNode") {
+          if (!createdNode) {
             return nds.map((n) =>
               n.id === finalId ? { ...n, selected: true } : { ...n, selected: false }
             );
           }
+
+          // ── When a SECTION is created, adopt all elements under its bounds ──
+          if (createdNode.type === "frameNode") {
+            const fx = createdNode.position.x;
+            const fy = createdNode.position.y;
+            const fw = (createdNode.style?.width as number) || 300;
+            const fh = (createdNode.style?.height as number) || 200;
+
+            return nds.map((n) => {
+              if (n.id === finalId) return { ...n, selected: true };
+              // Skip other frames and nodes that already belong to a parent
+              if (n.type === "frameNode" || n.parentId) return { ...n, selected: false };
+
+              const nW = (n.measured?.width ?? (n.style?.width as number)) || 100;
+              const nH = (n.measured?.height ?? (n.style?.height as number)) || 100;
+              const ncx = n.position.x + nW / 2;
+              const ncy = n.position.y + nH / 2;
+
+              if (ncx >= fx && ncx <= fx + fw && ncy >= fy && ncy <= fy + fh) {
+                return {
+                  ...n,
+                  parentId: finalId,
+                  position: { x: n.position.x - fx, y: n.position.y - fy },
+                  selected: false,
+                };
+              }
+              return { ...n, selected: false };
+            });
+          }
+
 
           const sections = nds.filter((n) => n.type === "frameNode" && n.id !== finalId);
           if (sections.length === 0) {
