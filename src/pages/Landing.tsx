@@ -470,10 +470,10 @@ const Landing = () => {
               className="hero-title no-split text-4xl sm:text-5xl md:text-8xl lg:text-[95px] font-normal leading-[1.1] tracking-tight mb-10"
             >
               <span className="block">
-                {renderWord("Más")} {renderWord("acción,", true)}
+                {renderWord("Hoy")} {renderWord("es")} {renderWord("un")} {renderWord("buen")} {renderWord("día")}
               </span>
               <span className="block">
-                {renderWord("menos")} {renderWord("excusas.")}
+                {renderWord("para")} {renderWord("crear", true)}
               </span>
             </h1>
 
