@@ -112,10 +112,7 @@ const AIPromptBar = ({ onGenerate, isGenerating }: AIPromptBarProps) => {
               
               <div className="flex items-center justify-between mt-2">
                 <div className="flex items-center gap-3">
-                  <div className="flex items-center gap-2 bg-white/10 h-10 px-4 rounded-full cursor-pointer hover:bg-white/20 transition-all group">
-                    <LayoutGrid size={15} strokeWidth={1.5} className="text-white/70 group-hover:text-white transition-colors" />
-                    <span className="text-[13px] font-light text-white/70 group-hover:text-white transition-colors tracking-wider">Apps</span>
-                  </div>
+                  <AppsMenu isDark={isDark} />
                 </div>
 
                 <div className="flex items-center gap-3">
