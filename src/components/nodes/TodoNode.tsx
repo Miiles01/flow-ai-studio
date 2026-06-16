@@ -298,8 +298,24 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
         width: "100%",
         height: "100%",
       }}
-      className="relative w-full h-full"
+      className="relative w-full h-full group/todo"
     >
+      {/* ─── Quick Copy (hover corner) ─── */}
+      <button
+        onClick={handleCopyTasks}
+        onMouseDown={(e) => e.stopPropagation()}
+        title={copied ? "¡Copiado!" : "Copiar tareas como instrucciones para IA"}
+        className={`nodrag absolute top-3 right-3 z-[1100] w-7 h-7 flex items-center justify-center rounded-lg shadow-sm border transition-all duration-200 opacity-0 group-hover/todo:opacity-100 ${
+          copied
+            ? "bg-black text-white border-black opacity-100"
+            : isDark
+            ? "bg-[#1C1C1E] text-white/70 border-white/10 hover:text-white hover:bg-white/10"
+            : "bg-white text-[#6B7280] border-[#E5E7EB] hover:text-black hover:bg-[#F3F4F6]"
+        }`}
+      >
+        {copied ? <Check size={13} strokeWidth={2.5} /> : <Copy size={13} strokeWidth={2} />}
+      </button>
+
       <div
         style={{
           width: "100%",
