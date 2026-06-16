@@ -679,9 +679,13 @@
     top: 100%;
     transform: translate(0, -50%);
     transform-origin: 100% 50%;
-    font: 400 normal 4vw/normal 'Inter', sans-serif;
+    font: 500 normal 4vw/normal 'Poppins', sans-serif;
     white-space: nowrap;
     color: #111;
+}
+.mwg_effect040,
+.mwg_effect040 * {
+    font-family: 'Poppins', sans-serif !important;
 }
 .mwg_effect040 .media {
     width: 14vw;
@@ -726,8 +730,8 @@
     max-width: 100vw;
 }
 .mwg_effect059 svg {
-    width: 300vw;
-    height: auto;
+    height: 80vh;
+    width: auto;
     display: block;
     position: absolute;
     left: 0;
