@@ -473,7 +473,7 @@ const Landing = () => {
                 {renderWord("Hoy")} {renderWord("es")} {renderWord("un")} {renderWord("buen")} {renderWord("día")}
               </span>
               <span className="block">
-                {renderWord("para")} {renderWord("crear", true)}
+                {renderWord("para")} {renderWord("crear")}
               </span>
             </h1>
 
