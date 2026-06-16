@@ -1047,8 +1047,17 @@ const IndexContent = () => {
   }, []);
 
   const [duplicating, setDuplicating] = useState(false);
+  const [duplicateDialogOpen, setDuplicateDialogOpen] = useState(false);
+  const [duplicateName, setDuplicateName] = useState("");
+
+  const openDuplicateDialog = useCallback(() => {
+    setDuplicateName(`${name} copia`);
+    setDuplicateDialogOpen(true);
+  }, [name]);
+
   const duplicateBoard = useCallback(async () => {
     if (!user || duplicating) return;
+    const finalName = duplicateName.trim() || `${name} copia`;
     setDuplicating(true);
     try {
       const sanitizedNodes = nodes.map((n) => {
@@ -1059,26 +1068,27 @@ const IndexContent = () => {
         const { selected, ...rest } = e as Edge;
         return rest;
       });
-      const { data, error } = await supabase
+      const { error } = await supabase
         .from("flows")
         .insert([{
           user_id: user.id,
-          name: `${name} (copia)`,
+          name: finalName,
           nodes: JSON.parse(JSON.stringify(sanitizedNodes)),
           edges: JSON.parse(JSON.stringify(sanitizedEdges)),
         }])
         .select()
         .single();
-      if (error || !data) {
+      if (error) {
         toast.error("No se pudo duplicar el tablero");
         return;
       }
-      toast.success("Tablero duplicado");
-      navigate(`/boards/${data.id}`);
+      toast.success("Copia creada en tus tableros");
+      setDuplicateDialogOpen(false);
     } finally {
       setDuplicating(false);
     }
-  }, [user, duplicating, nodes, edges, name, navigate]);
+  }, [user, duplicating, duplicateName, nodes, edges, name]);
+
 
   // Mark dirty + schedule autosave on changes
   useEffect(() => {
