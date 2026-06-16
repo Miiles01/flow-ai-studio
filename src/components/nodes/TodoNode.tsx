@@ -3,6 +3,7 @@ import { Handle, Position, type NodeProps, NodeResizer, useReactFlow } from "@xy
 import {
   Plus, Trash2, ArrowUp, ArrowDown, Minus, Check, Baseline, Heading1, Heading2, Square,
 } from "lucide-react";
+import NodeExtendHandles from "@/components/nodes/NodeExtendHandles";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTheme } from "@/contexts/ThemeContext";
 
@@ -628,6 +629,8 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
           </div>
         );
       })}
+
+      <NodeExtendHandles nodeId={id} />
     </motion.div>
   );
 };
