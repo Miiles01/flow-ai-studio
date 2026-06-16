@@ -750,8 +750,16 @@
 .hero-title .letter {
     display: inline-block;
     overflow: hidden;
-    clip-path: polygon(-5% -20%, -5% 120%, 105% 120%, 105% -20%);
     vertical-align: bottom;
+    padding-bottom: 0.25em;
+    padding-top: 0.15em;
+    margin-bottom: -0.25em;
+    margin-top: -0.15em;
+    padding-left: 0.08em;
+    padding-right: 0.08em;
+    margin-left: -0.08em;
+    margin-right: -0.08em;
+    clip-path: polygon(-10% -30%, -10% 130%, 110% 130%, 110% -30%);
 }
 .hero-title .letter span {
     display: inline-block;

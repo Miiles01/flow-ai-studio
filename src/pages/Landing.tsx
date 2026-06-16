@@ -175,7 +175,7 @@ const Landing = () => {
     const shuffled = shuffleArray(Array.from(letters));
 
     gsap.from(shuffled, {
-      y: '110%',
+      y: '130%',
       ease: 'power4.out',
       duration: 1.0,
       stagger: 0.03,
