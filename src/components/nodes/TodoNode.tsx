@@ -2,14 +2,18 @@ import { memo, useState, useRef, useEffect, forwardRef } from "react";
 import { Handle, Position, type NodeProps, NodeResizer, useReactFlow } from "@xyflow/react";
 import {
   Plus, Trash2, ArrowUp, ArrowDown, Minus, Check, Baseline, Heading1, Heading2, Square,
+  Copy, Download,
 } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTheme } from "@/contexts/ThemeContext";
+import { buildTasksInstructions, downloadTextFile } from "@/lib/todoInstructions";
 
 export type TodoItem = {
   id: string;
   text: string;
   completed: boolean;
+  /** Información adicional generada por la IA, normalmente oculta al usuario. */
+  note?: string;
 };
 
 export type TodoNodeData = {
@@ -167,7 +171,37 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
   const textColor = isDark && (isBlackText || isWhiteBg) ? "#FFFFFF" : rawTextColor;
 
   const [activePicker, setActivePicker] = useState<"bg" | "accent" | "text" | null>(null);
+  const [copied, setCopied] = useState(false);
+  const [downloaded, setDownloaded] = useState(false);
   const taskInputRefs = useRef<Record<string, HTMLTextAreaElement | null>>({});
+
+  const handleCopyTasks = async (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    const text = buildTasksInstructions({ title, subtitle, tasks });
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      // Fallback para entornos sin permisos de clipboard
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+    }
+    setCopied(true);
+    setTimeout(() => setCopied(false), 1600);
+  };
+
+  const handleDownloadTasks = (e?: React.MouseEvent) => {
+    e?.stopPropagation();
+    const text = buildTasksInstructions({ title, subtitle, tasks });
+    const safeName = (title || "tareas").trim().replace(/[^\p{L}\p{N}\-_ ]/gu, "").replace(/\s+/g, "-").toLowerCase() || "tareas";
+    downloadTextFile(`${safeName}.md`, text);
+    setDownloaded(true);
+    setTimeout(() => setDownloaded(false), 1600);
+  };
+
 
   const updateNodeData = (newData: Partial<TodoNodeData>) => {
     setNodes((nds) =>
@@ -264,8 +298,24 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
         width: "100%",
         height: "100%",
       }}
-      className="relative w-full h-full"
+      className="relative w-full h-full group/todo"
     >
+      {/* ─── Quick Copy (hover corner) ─── */}
+      <button
+        onClick={handleCopyTasks}
+        onMouseDown={(e) => e.stopPropagation()}
+        title={copied ? "¡Copiado!" : "Copiar tareas como instrucciones para IA"}
+        className={`nodrag absolute top-3 right-3 z-[1100] w-7 h-7 flex items-center justify-center rounded-lg shadow-sm border transition-all duration-200 opacity-0 group-hover/todo:opacity-100 ${
+          copied
+            ? "bg-black text-white border-black opacity-100"
+            : isDark
+            ? "bg-[#1C1C1E] text-white/70 border-white/10 hover:text-white hover:bg-white/10"
+            : "bg-white text-[#6B7280] border-[#E5E7EB] hover:text-black hover:bg-[#F3F4F6]"
+        }`}
+      >
+        {copied ? <Check size={13} strokeWidth={2.5} /> : <Copy size={13} strokeWidth={2} />}
+      </button>
+
       <div
         style={{
           width: "100%",
@@ -584,15 +634,50 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
         </AnimatePresence>
       </div>
 
-      {/* Add Task Button at bottom of list */}
-      <button
-        onClick={() => handleAddTask()}
-        className="flex items-center gap-2 py-2 px-2 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 text-gray-400 hover:text-gray-600 hover:border-gray-400 hover:bg-black/5 dark:hover:bg-white/5 transition-all text-left mt-2 shrink-0"
-        style={{ fontSize: `${fontSize * 0.9}px` }}
-      >
-        <Plus size={13} />
-        <span>Nueva Tarea...</span>
-      </button>
+      {/* Bottom bar: Add Task (left) + Copy / Download tasks (right) */}
+      <div className="flex items-center gap-2 mt-2 shrink-0">
+        <button
+          onClick={() => handleAddTask()}
+          className="flex-1 flex items-center gap-2 py-2 px-2 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 text-gray-400 hover:text-gray-600 hover:border-gray-400 hover:bg-black/5 dark:hover:bg-white/5 transition-all text-left"
+          style={{ fontSize: `${fontSize * 0.9}px` }}
+        >
+          <Plus size={13} />
+          <span>Nueva Tarea...</span>
+        </button>
+
+        <button
+          onClick={handleCopyTasks}
+          onMouseDown={(e) => e.stopPropagation()}
+          title="Copiar todas las tareas como instrucciones para IA"
+          className={`nodrag flex items-center gap-1.5 py-2 px-3 rounded-xl transition-all duration-200 shrink-0 ${
+            copied
+              ? "bg-black text-white"
+              : isDark
+              ? "bg-white/10 text-white/80 hover:bg-white/15"
+              : "bg-[#F3F4F6] text-[#4B4F63] hover:bg-[#E5E7EB]"
+          }`}
+          style={{ fontSize: `${fontSize * 0.85}px` }}
+        >
+          {copied ? <Check size={13} strokeWidth={2.5} /> : <Copy size={13} strokeWidth={2} />}
+          <span>{copied ? "¡Copiado!" : "Copiar tareas"}</span>
+        </button>
+
+        <button
+          onClick={handleDownloadTasks}
+          onMouseDown={(e) => e.stopPropagation()}
+          title="Descargar tareas como archivo de instrucciones"
+          className={`nodrag flex items-center justify-center w-9 py-2 rounded-xl transition-all duration-200 shrink-0 ${
+            downloaded
+              ? "bg-black text-white"
+              : isDark
+              ? "bg-white/10 text-white/80 hover:bg-white/15"
+              : "bg-[#F3F4F6] text-[#4B4F63] hover:bg-[#E5E7EB]"
+          }`}
+        >
+          {downloaded ? <Check size={13} strokeWidth={2.5} /> : <Download size={13} strokeWidth={2} />}
+        </button>
+      </div>
+
       </div>
 
       {/* ─── Fully Bidirectional Connection Handles ─── */}
