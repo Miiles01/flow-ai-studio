@@ -147,10 +147,10 @@ export default function TutorialModal({ userId, triggerOpen }: Props) {
             {/* Close button — Movido como hijo directo para que quede fijo en mobile */}
             <button
               onClick={close}
-              className="absolute right-4 top-4 md:right-5 md:top-5 z-50 flex h-9 w-9 items-center justify-center rounded-full bg-white text-black shadow-md hover:bg-gray-100 transition-colors"
+              className="absolute right-4 top-4 md:right-5 md:top-5 z-50 flex h-9 w-9 items-center justify-center transition-opacity opacity-70 hover:opacity-100 text-white"
               aria-label="Cerrar"
             >
-              <X size={18} />
+              <X size={18} strokeWidth={1.5} />
             </button>
 
             {/* Left panel — title + steps */}

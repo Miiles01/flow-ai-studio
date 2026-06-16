@@ -124,10 +124,12 @@ export default function AddAppModal({ open, onClose, onCreate, customApps, onTog
           >
             <button
               onClick={handleClose}
-              className="absolute right-4 top-4 z-50 flex h-9 w-9 items-center justify-center rounded-full bg-white text-black shadow-md hover:bg-gray-100 transition-colors"
+              className={`absolute right-4 top-4 z-50 flex h-9 w-9 items-center justify-center transition-opacity opacity-70 hover:opacity-100 ${
+                isDark ? "text-white" : "text-black"
+              }`}
               aria-label="Cerrar"
             >
-              <X size={18} />
+              <X size={18} strokeWidth={1.5} />
             </button>
 
             {/* Left panel — info */}
