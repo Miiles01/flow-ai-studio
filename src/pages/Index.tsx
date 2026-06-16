@@ -2161,7 +2161,13 @@ const IndexContent = () => {
               exit={{ opacity: 0, y: 10 }}
               transition={{ duration: 0.2 }}
             >
-              <AIPromptBar onGenerate={handleAIGenerate} isGenerating={isGenerating || isClarifying || isPlanning} />
+              <AIPromptBar
+                onGenerate={handleAIGenerate}
+                isGenerating={isGenerating || isClarifying || isPlanning}
+                forceOpen={!!extendTarget}
+                extendLabel={extendTarget ? "Ampliando desde este elemento" : null}
+                onCancelExtend={() => setExtendTarget(null)}
+              />
             </motion.div>
           )}
         </AnimatePresence>
