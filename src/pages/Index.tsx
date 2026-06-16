@@ -183,6 +183,22 @@ const IndexContent = () => {
   const isDraggingPanel = useRef(false);
   const [panelCardPicker, setPanelCardPicker] = useState<{ nodeId: string; type: "bg" | "text" } | null>(null);
   const [panelCardHover, setPanelCardHover] = useState<string | null>(null);
+  const [copiedCardId, setCopiedCardId] = useState<string | null>(null);
+  const [copiedAll, setCopiedAll] = useState(false);
+  const [downloadedAll, setDownloadedAll] = useState(false);
+
+  const copyTextToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      const ta = document.createElement("textarea");
+      ta.value = text;
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand("copy");
+      document.body.removeChild(ta);
+    }
+  };
   const settingsRef = useRef<HTMLDivElement>(null);
   const nodeCounter = useRef(0);
   const lastSavedRef = useRef<string>("");
