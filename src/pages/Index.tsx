@@ -2073,7 +2073,7 @@ const IndexContent = () => {
           >
             {/* Drag-resize handle */}
             <div
-              className="absolute top-0 left-0 w-1.5 h-full cursor-col-resize z-10 group"
+              className="absolute top-0 left-0 w-2 h-full cursor-col-resize z-10 group"
               onPointerDown={(e) => {
                 e.preventDefault();
                 isDraggingPanel.current = true;
@@ -2101,7 +2101,10 @@ const IndexContent = () => {
                 window.addEventListener("pointerup", onUp);
               }}
             >
-              <div className="absolute left-0 top-0 w-[3px] h-full opacity-0 group-hover:opacity-100 bg-[#E5E7EB] transition-opacity rounded-full" />
+              {/* Línea indicadora de agarre siempre visible */}
+              <div className={`absolute left-0 top-0 w-[2px] h-full ${isDark ? 'bg-white/20' : 'bg-black'}`} />
+              {/* Indicador de hover azul suave */}
+              <div className="absolute left-0 top-0 w-[4px] h-full opacity-0 group-hover:opacity-100 bg-[#4059F1]/40 transition-opacity" />
             </div>
             {/* Header */}
             <div className={`flex items-center justify-between px-5 pt-5 pb-4 border-b ${isDark ? 'border-white/10' : 'border-[#F3F4F6]'}`}>
