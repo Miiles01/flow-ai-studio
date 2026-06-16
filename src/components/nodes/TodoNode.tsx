@@ -2,14 +2,18 @@ import { memo, useState, useRef, useEffect, forwardRef } from "react";
 import { Handle, Position, type NodeProps, NodeResizer, useReactFlow } from "@xyflow/react";
 import {
   Plus, Trash2, ArrowUp, ArrowDown, Minus, Check, Baseline, Heading1, Heading2, Square,
+  Copy, Download,
 } from "lucide-react";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTheme } from "@/contexts/ThemeContext";
+import { buildTasksInstructions, downloadTextFile } from "@/lib/todoInstructions";
 
 export type TodoItem = {
   id: string;
   text: string;
   completed: boolean;
+  /** Información adicional generada por la IA, normalmente oculta al usuario. */
+  note?: string;
 };
 
 export type TodoNodeData = {
