@@ -112,7 +112,7 @@ const ImageNode = ({ id, data, selected }: NodeProps) => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 4 }}
               transition={{ duration: 0.15 }}
-              className={`flex items-center gap-1 px-2 py-1.5 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border ${isDark ? 'bg-[#1C1C1E] border-white/10' : 'bg-white border-[#F3F4F6]'}`}
+              className={`flex items-center gap-1 px-2 py-1.5 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.03)] border ${isDark ? 'bg-[#1C1C1E] border-white/10' : 'bg-white border-[#F3F4F6]'}`}
             >
               {/* URL button */}
               <button
@@ -171,7 +171,7 @@ const ImageNode = ({ id, data, selected }: NodeProps) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.12 }}
-            className={`absolute top-[calc(100%+10px)] left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 rounded-2xl shadow-[0_8px_32px_rgb(0,0,0,0.14)] px-3 py-2.5 border ${isDark ? 'bg-[#1C1C1E] border-white/10' : 'bg-white border-[#F3F4F6]'}`}
+            className={`absolute top-[calc(100%+10px)] left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.03)] px-3 py-2.5 border ${isDark ? 'bg-[#1C1C1E] border-white/10' : 'bg-white border-[#F3F4F6]'}`}
             style={{ minWidth: 300 }}
             onMouseDown={(e) => e.stopPropagation()}
           >

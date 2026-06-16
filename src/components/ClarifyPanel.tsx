@@ -77,7 +77,7 @@ const ClarifyPanel = ({ result, isDark, isGenerating, onConfirm, onSkip, onClose
         animate={{ y: 0, opacity: 1, scale: 1 }}
         exit={{ y: 24, opacity: 0, scale: 0.97 }}
         transition={{ type: "spring", bounce: 0.3, duration: 0.5 }}
-        className={`pointer-events-auto w-full max-w-xl rounded-[24px] p-5 shadow-[0_24px_50px_rgba(0,0,0,0.18)] border ${
+        className={`pointer-events-auto w-full max-w-xl rounded-[24px] p-5 shadow-[0_24px_50px_rgba(0,0,0,0.06)] border ${
           isDark
             ? "bg-[#1C1C1E] border-white/10 text-white"
             : "bg-white border-[#F3F4F6] text-black"
@@ -147,7 +147,7 @@ const ClarifyPanel = ({ result, isDark, isGenerating, onConfirm, onSkip, onClose
                       onClick={() => toggleOption(option)}
                       className={`px-3.5 py-2 rounded-full text-xs font-light transition-all border cursor-pointer select-none ${
                         selected
-                          ? "bg-[#4059F1] text-white border-[#4059F1] shadow-[0_4px_12px_rgba(64,89,241,0.2)] hover:scale-102"
+                          ? "bg-[#4059F1] text-white border-[#4059F1] shadow-[0_4px_12px_rgba(64,89,241,0.06)] hover:scale-102"
                           : isDark
                           ? "bg-white/5 text-white/70 border-white/10 hover:bg-white/10 hover:text-white"
                           : "bg-[#F3F4F8] text-[#374151] border-transparent hover:bg-neutral-200"
@@ -167,7 +167,7 @@ const ClarifyPanel = ({ result, isDark, isGenerating, onConfirm, onSkip, onClose
                       onClick={() => setCustomOpen((prev) => ({ ...prev, [q.id]: !open }))}
                       className={`px-3.5 py-2 rounded-full text-xs font-light transition-all border cursor-pointer select-none ${
                         active
-                          ? "bg-[#4059F1] text-white border-[#4059F1] shadow-[0_4px_12px_rgba(64,89,241,0.2)]"
+                          ? "bg-[#4059F1] text-white border-[#4059F1] shadow-[0_4px_12px_rgba(64,89,241,0.06)]"
                           : isDark
                           ? "bg-white/5 text-white/70 border-white/10 hover:bg-white/10 hover:text-white"
                           : "bg-[#F3F4F8] text-[#374151] border-transparent hover:bg-neutral-200"

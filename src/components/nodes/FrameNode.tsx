@@ -107,7 +107,7 @@ const FrameNode = ({ id, data, selected }: NodeProps) => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 4 }}
               transition={{ duration: 0.15 }}
-              className={`flex items-center gap-1 px-2 py-1.5 rounded-2xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] relative ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-[#F3F4F6]'}`}
+              className={`flex items-center gap-1 px-2 py-1.5 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.03)] relative ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-[#F3F4F6]'}`}
             >
               {/* Fill Color Picker */}
               <button
@@ -145,7 +145,7 @@ const FrameNode = ({ id, data, selected }: NodeProps) => {
 
               {/* Fill Color Popover */}
               {activePicker === "fill" && (
-                <div className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px] ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-gray-100'}`}>
+                <div className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.03)] p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px] ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-gray-100'}`}>
                   {RAINBOW_COLORS.map((c) => (
                     <button
                       key={c.value}
@@ -169,7 +169,7 @@ const FrameNode = ({ id, data, selected }: NodeProps) => {
 
               {/* Border Color Popover */}
               {activePicker === "border" && (
-                <div className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px] ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-gray-100'}`}>
+                <div className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.03)] p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px] ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-gray-100'}`}>
                   {RAINBOW_COLORS.map((c) => (
                     <button
                       key={c.value}

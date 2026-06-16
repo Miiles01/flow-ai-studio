@@ -37,7 +37,7 @@ const FlowNode = ({ data, selected }: NodeProps) => {
       className={`
         relative px-6 py-4 rounded-[16px] min-w-[180px] max-w-[260px] ${isDark ? 'bg-[#1C1C1E]' : 'bg-white'}
         transition-all duration-300 font-sans border-[1.5px]
-        ${selected ? "border-[#4F46E5] shadow-sm" : isDark ? "border-white/5 shadow-[0_8px_30px_rgba(0,0,0,0.2)]" : "border-transparent shadow-[0_8px_30px_rgb(0,0,0,0.04)]"}
+        ${selected ? "border-[#4F46E5] shadow-sm" : isDark ? "border-white/5 shadow-[0_8px_30px_rgba(0,0,0,0.1)]" : "border-transparent shadow-[0_8px_30px_rgba(0,0,0,0.015)]"}
       `}
     >
       {/* ─── Fully Bidirectional Connection Handles ─── */}

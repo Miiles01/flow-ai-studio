@@ -71,8 +71,8 @@
     --radius-xl: 32px;
     --radius-full: 9999px;
 
-    --shadow-sm: 8px 6px 30px 0px rgba(24, 2, 56, 0.03);
-    --shadow-md: 0px 100px 170px 0px rgba(39, 39, 62, 0.05);
+    --shadow-sm: 8px 6px 30px 0px rgba(24, 2, 56, 0.015);
+    --shadow-md: 0px 100px 170px 0px rgba(39, 39, 62, 0.02);
 
     --font-sans: 'Poppins', system-ui, sans-serif;
   }
@@ -107,8 +107,8 @@
     --popover-foreground: 0 0% 95%;
 
     --gradient-card: linear-gradient(to right, hsl(222 20% 10%), hsl(222 20% 12%));
-    --shadow-sm: 8px 6px 30px 0px rgba(0, 0, 0, 0.2);
-    --shadow-md: 0px 100px 170px 0px rgba(0, 0, 0, 0.3);
+    --shadow-sm: 8px 6px 30px 0px rgba(0, 0, 0, 0.1);
+    --shadow-md: 0px 100px 170px 0px rgba(0, 0, 0, 0.15);
   }
 }
 
@@ -580,7 +580,7 @@
   text-align: left;
   color: inherit;
   font-family: 'Poppins', sans-serif;
-  filter: drop-shadow(0px 6px 20px rgba(0, 0, 0, 0.04));
+  filter: drop-shadow(0px 6px 20px rgba(0, 0, 0, 0.015));
 }
 .mwg_effect040 .note .note-tag {
   font-size: 0.85vw;
@@ -699,7 +699,7 @@
     transform: translate(0, -50%);
     transform-origin: 0 50%;
     border-radius: 12px;
-    filter: drop-shadow(0px 4px 24px rgba(0, 0, 0, 0.06));
+    filter: drop-shadow(0px 4px 24px rgba(0, 0, 0, 0.02));
     padding: 1.5vw;
     box-sizing: border-box;
     text-align: left;

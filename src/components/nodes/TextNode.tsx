@@ -46,7 +46,7 @@ function LinkPopover({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 4 }}
       transition={{ duration: 0.12 }}
-      className={`absolute -bottom-11 left-0 flex items-center gap-1.5 rounded-xl shadow-[0_4px_20px_rgb(0,0,0,0.14)] px-2.5 py-1.5 z-30 pointer-events-auto ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white'}`}
+      className={`absolute -bottom-11 left-0 flex items-center gap-1.5 rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] px-2.5 py-1.5 z-30 pointer-events-auto ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white'}`}
       style={{ whiteSpace: "nowrap" }}
       onMouseDown={(e) => e.stopPropagation()}
     >
@@ -281,7 +281,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
               exit={{ opacity: 0, y: 4 }}
               transition={{ duration: 0.15 }}
             >
-              <div className={`flex items-center gap-0.5 rounded-xl shadow-[0_4px_24px_rgb(0,0,0,0.12)] px-2 py-1.5 ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white'}`}>
+              <div className={`flex items-center gap-0.5 rounded-xl shadow-[0_4px_24px_rgba(0,0,0,0.03)] px-2 py-1.5 ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white'}`}>
                 {/* Font size */}
                 <button
                   onClick={() => setFontSize((f) => Math.max(10, f - 1))}
@@ -419,7 +419,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                     <Baseline size={13} style={{ color: textColor }} className="stroke-[2.5]" />
                   </button>
                   {activePicker === "text" && (
-                    <div className={`absolute top-8 left-1/2 -translate-x-1/2 rounded-xl shadow-[0_4px_25px_rgba(0,0,0,0.18)] p-2.5 flex gap-1.5 z-50 ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-[#E5E7EB]'}`}>
+                    <div className={`absolute top-8 left-1/2 -translate-x-1/2 rounded-xl shadow-[0_4px_25px_rgba(0,0,0,0.04)] p-2.5 flex gap-1.5 z-50 ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-[#E5E7EB]'}`}>
                       {TEXT_COLOR_PALETTE.map((c) => (
                         <button
                           key={c.value}
@@ -460,7 +460,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -4 }}
                     transition={{ duration: 0.12 }}
-                    className={`absolute top-[calc(100%+6px)] left-1/2 -translate-x-1/2 flex items-center gap-2 rounded-xl shadow-[0_8px_32px_rgb(0,0,0,0.14)] px-3 py-2 z-40 ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white'}`}
+                    className={`absolute top-[calc(100%+6px)] left-1/2 -translate-x-1/2 flex items-center gap-2 rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.03)] px-3 py-2 z-40 ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white'}`}
                     style={{ minWidth: 280 }}
                     onMouseDown={(e) => e.stopPropagation()}
                   >
