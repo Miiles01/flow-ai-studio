@@ -932,6 +932,146 @@ const IndexContent = () => {
     [setNodes, setEdges, reactFlowInstance]
   );
 
+  // Resumen legible del contenido de un nodo, para que la IA entienda de dónde parte.
+  const summarizeNode = useCallback((node: Node): string => {
+    const d = (node.data || {}) as Record<string, any>;
+    const clean = (s: any) => String(s ?? "").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+    switch (node.type) {
+      case "shapeNode":
+        return `Forma (${d.shape || "square"}) con el texto: "${clean(d.label)}"`;
+      case "textNode":
+        return `Bloque de texto: "${clean(d.html)}"`;
+      case "todoNode": {
+        const tasks = Array.isArray(d.tasks) ? d.tasks.map((t: any) => `- ${clean(t.text)}`).join("\n") : "";
+        return `Lista de tareas "${clean(d.title)}"${d.subtitle ? ` (${clean(d.subtitle)})` : ""}:\n${tasks}`;
+      }
+      case "imageNode":
+        return `Imagen${d.url ? ` (${d.url})` : ""}`;
+      case "embedNode":
+        return `Sitio web embebido: ${d.url || ""}`;
+      case "frameNode":
+        return `Sección titulada: "${clean(d.label) || "Sección"}"`;
+      default:
+        return clean(d.label || d.title || d.html) || "Elemento del flujo";
+    }
+  }, []);
+
+  // Amplía el flujo a partir de un elemento existente, en la dirección elegida.
+  const runExtendGenerate = useCallback(
+    async (prompt: string, target: FlowExtendTarget) => {
+      const sourceNode = nodes.find((n) => n.id === target.nodeId);
+      if (!sourceNode) {
+        toast.error("No se encontró el elemento de origen");
+        return;
+      }
+
+      setIsGenerating(true);
+      const skeletonId = `ai-skeleton-${Date.now()}`;
+
+      const srcW = (sourceNode.style?.width as number) || (sourceNode.width as number) || 160;
+      const srcH = (sourceNode.style?.height as number) || (sourceNode.height as number) || 100;
+      const GAP = 140;
+
+      // Posición aproximada del skeleton según la dirección
+      const skeletonPos = { x: sourceNode.position.x, y: sourceNode.position.y };
+      if (target.side === "right") skeletonPos.x = sourceNode.position.x + srcW + GAP;
+      if (target.side === "left") skeletonPos.x = sourceNode.position.x - GAP - 320;
+      if (target.side === "bottom") skeletonPos.y = sourceNode.position.y + srcH + GAP;
+      if (target.side === "top") skeletonPos.y = sourceNode.position.y - GAP - 220;
+
+      const skeletonNode: Node = {
+        id: skeletonId,
+        type: "skeletonNode",
+        position: skeletonPos,
+        data: {},
+      };
+      setNodes((prev) => [...prev, skeletonNode]);
+
+      try {
+        const extendContext: ExtendContext = {
+          side: target.side,
+          summary: summarizeNode(sourceNode),
+        };
+        const { nodes: newNodes, edges: newEdges } = await generateFlowFromPrompt(prompt, extendContext);
+
+        if (newNodes.length === 0) {
+          setNodes((prev) => prev.filter((n) => n.id !== skeletonId));
+          toast.error("La IA no generó nodos nuevos");
+          return;
+        }
+
+        const minX = Math.min(...newNodes.map((n) => n.position.x));
+        const minY = Math.min(...newNodes.map((n) => n.position.y));
+        const NODE_W = 160;
+        const NODE_H = 80;
+        const maxX = Math.max(...newNodes.map((n) => n.position.x + ((n.style?.width as number) || NODE_W)));
+        const maxY = Math.max(...newNodes.map((n) => n.position.y + ((n.style?.height as number) || NODE_H)));
+        const groupW = maxX - minX;
+        const groupH = maxY - minY;
+
+        // Punto de anclaje (esquina superior izquierda del grupo generado)
+        let baseX = sourceNode.position.x;
+        let baseY = sourceNode.position.y;
+        if (target.side === "right") { baseX = sourceNode.position.x + srcW + GAP; baseY = sourceNode.position.y; }
+        if (target.side === "left") { baseX = sourceNode.position.x - GAP - groupW; baseY = sourceNode.position.y; }
+        if (target.side === "bottom") { baseX = sourceNode.position.x; baseY = sourceNode.position.y + srcH + GAP; }
+        if (target.side === "top") { baseX = sourceNode.position.x; baseY = sourceNode.position.y - GAP - groupH; }
+
+        const offsetNodes = newNodes.map((n) => ({
+          ...n,
+          position: {
+            x: baseX + (n.position.x - minX),
+            y: baseY + (n.position.y - minY),
+          },
+        }));
+        const generatedIds = offsetNodes.map((n) => String(n.id));
+
+        setNodes((prev) => [...prev.filter((n) => n.id !== skeletonId), ...offsetNodes]);
+
+        // Conecta el elemento de origen con el primer nodo generado
+        const oppositeHandle: Record<ExtendSide, string> = { top: "bottom", bottom: "top", left: "right", right: "left" };
+        const connectingEdge: Edge = {
+          id: `e-extend-${sourceNode.id}-${generatedIds[0]}-${Date.now()}`,
+          source: sourceNode.id,
+          sourceHandle: target.side,
+          target: generatedIds[0],
+          targetHandle: oppositeHandle[target.side],
+          animated: false,
+          style: { stroke: "#4059F1", strokeWidth: 2 },
+        };
+        setEdges((prev) => [...prev, connectingEdge, ...newEdges]);
+
+        if (reactFlowInstance) {
+          setTimeout(() => {
+            reactFlowInstance.fitView({
+              nodes: [{ id: sourceNode.id }, ...generatedIds.map((id) => ({ id }))],
+              padding: 0.25,
+              duration: 600,
+            });
+          }, 100);
+        }
+
+        toast.success(`Flujo ampliado con ${newNodes.length} nodos`);
+      } catch (err) {
+        setNodes((prev) => prev.filter((n) => n.id !== skeletonId));
+        const message = err instanceof Error ? err.message : "Error desconocido";
+        toast.error(message);
+      } finally {
+        setIsGenerating(false);
+      }
+    },
+    [nodes, setNodes, setEdges, reactFlowInstance, summarizeNode]
+  );
+
+  const requestExtend = useCallback((nodeId: string, side: ExtendSide) => {
+    setExtendTarget({ nodeId, side });
+  }, []);
+
+  const flowExtendValue = useMemo(
+    () => ({ active: extendTarget, requestExtend }),
+    [extendTarget, requestExtend]
+  );
+
   // Genera un plan estratégico interno y lo muestra para aprobación antes de construir el flujo.
   const proceedToPlanning = useCallback(
     async (prompt: string) => {
