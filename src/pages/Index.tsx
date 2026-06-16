@@ -169,6 +169,7 @@ const IndexContent = () => {
   const [isPlanning, setIsPlanning] = useState(false);
   const [planResult, setPlanResult] = useState<PlanResult | null>(null);
   const [planPrompt, setPlanPrompt] = useState("");
+  const [extendTarget, setExtendTarget] = useState<FlowExtendTarget | null>(null);
   const [name, setName] = useState("Tablero sin título");
   const [loading, setLoading] = useState(true);
   const [saveState, setSaveState] = useState<"idle" | "dirty" | "saving" | "saved" | "error">("idle");
