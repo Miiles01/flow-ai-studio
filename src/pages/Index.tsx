@@ -2102,7 +2102,7 @@ const IndexContent = () => {
               }}
             >
               {/* Línea indicadora de agarre siempre visible */}
-              <div className={`absolute left-0 top-0 w-[1px] h-full ${isDark ? 'bg-white/20' : 'bg-black'}`} />
+              <div className={`absolute left-0 top-0 w-[1px] h-full ${isDark ? 'bg-white/10' : 'bg-gray-200'}`} />
               {/* Indicador de hover azul suave */}
               <div className="absolute left-0 top-0 w-[4px] h-full opacity-0 group-hover:opacity-100 bg-[#4059F1]/40 transition-opacity" />
             </div>
@@ -2342,7 +2342,7 @@ const IndexContent = () => {
               };
 
               return (
-                <div className={`flex items-center gap-2 px-4 py-3 border-t ${isDark ? 'border-white/10' : 'border-[#F3F4F6]'}`}>
+                <div className={`flex items-center justify-center gap-3 px-4 py-3 border-t ${isDark ? 'border-white/10' : 'border-[#F3F4F6]'}`}>
                   <button
                     onClick={async () => {
                       await copyTextToClipboard(buildAll());
@@ -2350,16 +2350,35 @@ const IndexContent = () => {
                       setTimeout(() => setCopiedAll(false), 1600);
                     }}
                     title="Copiar todas las tareas como instrucciones para IA"
-                    className={`flex-1 flex items-center justify-center gap-2 py-2.5 rounded-full text-[13px] font-medium transition-all duration-200 ${
+                    className={`w-fit h-11 flex items-center justify-center gap-3 px-4 rounded-full transition-all duration-200 shrink-0 ${
                       copiedAll
-                        ? "bg-black text-white"
+                        ? (isDark ? "bg-white text-black" : "bg-black text-white")
                         : isDark
                         ? "bg-white/10 text-white hover:bg-white/15"
-                        : "bg-black text-white hover:bg-miiles-pink"
+                        : "bg-[#F3F4F6] text-[#4B4F63] hover:bg-[#E5E7EB]"
                     }`}
                   >
                     {copiedAll ? <Check size={14} strokeWidth={2.5} /> : <Copy size={14} strokeWidth={2} />}
-                    <span>{copiedAll ? "¡Copiado!" : "Copiar tareas"}</span>
+                    
+                    <div className={`w-px h-4 shrink-0 ${copiedAll ? (isDark ? 'bg-black/20' : 'bg-white/20') : (isDark ? 'bg-white/20' : 'bg-gray-300')}`} />
+                    
+                    <div className="flex items-center gap-1.5 shrink-0">
+                      {/* ChatGPT Logo */}
+                      <svg viewBox="0 0 24 24" className="w-[15px] h-[15px] fill-current" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M21.74 11.75a3.86 3.86 0 0 0-.5-1.95 3.89 3.89 0 0 0-1.25-1.4 3.9 3.9 0 0 0-.2-3.1 3.9 3.9 0 0 0-2-2.1c-.8-.33-1.66-.4-2.52-.22a3.88 3.88 0 0 0-2.8-1.57A3.9 3.9 0 0 0 9.24 3a3.88 3.88 0 0 0-3.1 1.25A3.9 3.9 0 0 0 4.74 6a3.88 3.88 0 0 0-2 2.78 3.9 3.9 0 0 0 .34 3.22A3.88 3.88 0 0 0 2.26 14a3.9 3.9 0 0 0 2 2.52 3.86 3.86 0 0 0-.22 2.7 3.9 3.9 0 0 0 1.95 2.1 3.9 3.9 0 0 0 3.1-.2A3.88 3.88 0 0 0 12 22.74a3.9 3.9 0 0 0 2.74-1.22 3.88 3.88 0 0 0 3.1.2 3.9 3.9 0 0 0 2-1.95 3.86 3.86 0 0 0 .22-2.7 3.88 3.88 0 0 0 1.68-3.32zm-7.6 8.35a2.53 2.53 0 0 1-1.37.4 2.56 2.56 0 0 1-2.56-2.56v-3.76l3.24 1.87a1.27 1.27 0 0 0 1.27.05v3.94a.22.22 0 0 1-.58.06zm-5.74-2.31a2.56 2.56 0 0 1-.22-1.4 2.56 2.56 0 0 1 1.28-2.22l3.25-1.87v3.74a1.26 1.26 0 0 0-.64 1.1v3.9a.21.21 0 0 1-.21-.06.2.2 0 0 1-.06-.15v-3.04zm-3.52-5.46a2.56 2.56 0 0 1 1.16-.8 2.56 2.56 0 0 1 2.56.64l3.25 1.88v-3.74a1.26 1.26 0 0 0-.64-1.1L8 5.38a.22.22 0 0 1-.16.58zm6.54-5.91a2.56 2.56 0 0 1 1.36-.4 2.56 2.56 0 0 1 2.56 2.56v3.75l-3.25-1.88a1.26 1.26 0 0 0-1.27 0v-3.93c0-.04.2-.1.6-.1zm5.75 2.3a2.56 2.56 0 0 1 .22 1.4 2.56 2.56 0 0 1-1.28 2.22l-3.25 1.88V9.18a1.26 1.26 0 0 0 .64-1.1v-3.9c.04 0 .1.1.2.2z" />
+                      </svg>
+                      {/* Gemini Logo */}
+                      <svg viewBox="0 0 24 24" className="w-[15px] h-[15px]" xmlns="http://www.w3.org/2000/svg">
+                        <defs>
+                          <linearGradient id="gemini-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+                            <stop offset="0%" stopColor="#9BC5FC" />
+                            <stop offset="50%" stopColor="#C1B3FC" />
+                            <stop offset="100%" stopColor="#FFB0B3" />
+                          </linearGradient>
+                        </defs>
+                        <path d="M12 2C12 2 13 8 18 12C13 16 12 22 12 22C12 22 11 16 6 12C11 8 12 2 12 2Z" fill="url(#gemini-grad)" />
+                      </svg>
+                    </div>
                   </button>
                   <button
                     onClick={() => {
