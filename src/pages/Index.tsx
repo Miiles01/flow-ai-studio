@@ -1497,6 +1497,64 @@ const IndexContent = () => {
           <ShareDialog open={shareOpen} onOpenChange={setShareOpen} flowId={id} />
         )}
 
+        <AnimatePresence>
+          {duplicateDialogOpen && (
+            <motion.div
+              className="fixed inset-0 z-[200] flex items-center justify-center p-4 pointer-events-auto"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            >
+              <div
+                className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+                onClick={() => !duplicating && setDuplicateDialogOpen(false)}
+              />
+              <motion.div
+                initial={{ opacity: 0, scale: 0.96, y: 12 }}
+                animate={{ opacity: 1, scale: 1, y: 0 }}
+                exit={{ opacity: 0, scale: 0.96, y: 12 }}
+                transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
+                className={`relative z-10 w-full max-w-sm rounded-3xl shadow-2xl p-6 ${isDark ? 'bg-[#1C1C1E] border border-white/10 text-white' : 'bg-white text-black'}`}
+              >
+                <h3 className={`text-base font-normal ${isDark ? 'text-white' : 'text-black'}`}>
+                  ¿Cómo quieres llamar a este nuevo tablero?
+                </h3>
+                <p className={`mt-1 text-[13px] font-light ${isDark ? 'text-white/50' : 'text-[#6B7280]'}`}>
+                  Se creará una copia en tus tableros. Tú seguirás en el tablero actual.
+                </p>
+                <input
+                  autoFocus
+                  value={duplicateName}
+                  onChange={(e) => setDuplicateName(e.target.value)}
+                  onKeyDown={(e) => { if (e.key === "Enter" && !duplicating) duplicateBoard(); }}
+                  maxLength={120}
+                  className={`mt-4 w-full rounded-xl px-4 py-3 text-sm outline-none transition-colors ${isDark ? 'bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:border-white/25' : 'bg-[#F7F7F8] border border-[#E5E7EB] text-black placeholder:text-[#9CA3AF] focus:border-[#9CA3AF]'}`}
+                  placeholder="Nombre del tablero"
+                />
+                <div className="mt-5 flex items-center justify-end gap-2">
+                  <button
+                    onClick={() => setDuplicateDialogOpen(false)}
+                    disabled={duplicating}
+                    className={`rounded-full px-4 py-2.5 text-[13px] font-normal transition-colors disabled:opacity-50 ${isDark ? 'hover:bg-white/10 text-white' : 'hover:bg-[#F3F4F6] text-black'}`}
+                  >
+                    Cancelar
+                  </button>
+                  <button
+                    onClick={duplicateBoard}
+                    disabled={duplicating}
+                    className={`flex items-center gap-2 rounded-full px-5 py-2.5 text-[13px] font-medium transition-colors disabled:opacity-50 ${isDark ? 'bg-white text-black hover:bg-white/90' : 'bg-black text-white hover:bg-miiles-pink'}`}
+                  >
+                    {duplicating ? <Loader2 size={15} className="animate-spin" /> : <Copy size={15} strokeWidth={1.5} />}
+                    Duplicar tablero
+                  </button>
+                </div>
+              </motion.div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
+
+
 
 
 
