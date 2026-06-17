@@ -1,11 +1,13 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Check } from "lucide-react";
+import LandingNavbar from "@/components/LandingNavbar";
 import LandingFooter from "@/components/LandingFooter";
 
 const BusinessInquiryThanks = () => {
   return (
     <>
+      <LandingNavbar />
       <div className="bg-white text-black font-sans min-h-screen">
         <section className="max-w-2xl mx-auto px-6 pt-48 pb-32 text-center flex flex-col items-center">
           <motion.div

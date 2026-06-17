@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import LandingNavbar from "@/components/LandingNavbar";
 import LandingFooter from "@/components/LandingFooter";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -103,6 +104,7 @@ const Privacy = () => {
 
   return (
     <>
+      <LandingNavbar />
 
       <div id="smooth-wrapper-privacy" style={{ overflow: "hidden", position: "fixed", width: "100%", height: "100%", top: 0, left: 0 }}>
         <div id="smooth-content-privacy" className="bg-white text-black font-sans pb-0">

@@ -6,6 +6,7 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
 import { SplitText } from "gsap/SplitText";
 import { CustomEase } from "gsap/CustomEase";
+import LandingNavbar from "@/components/LandingNavbar";
 import LandingFooter from "@/components/LandingFooter";
 import PricingTable from "@/components/PricingTable";
 import { Check, MousePointer, Hand, Type, ListTodo, ImageIcon, SquareDashed } from "lucide-react";
@@ -767,6 +768,7 @@ const Features = () => {
 
   return (
     <>
+      <LandingNavbar />
       <div id="smooth-wrapper-features" style={{ overflow: "hidden", position: "fixed", width: "100%", height: "100%", top: 0, left: 0 }}>
         <div id="smooth-content-features" className="bg-white text-black font-sans pb-0">
           <section className="min-h-[60vh] flex flex-col items-center justify-center text-center px-6 pt-40 pb-12">
