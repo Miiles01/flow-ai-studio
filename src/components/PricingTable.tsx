@@ -103,13 +103,13 @@ const plans = [
   },
   {
     name: "Pro",
-    monthlyPrice: "179",
-    annualPrice: "1,800",
+    monthlyPrice: "386.67",
+    annualPrice: "3,712.00",
     description: "Para creadores en crecimiento",
     features: ["Proyectos ilimitados", "Colaboraciones ilimitadas", "Analítica avanzada", "Soporte prioritario"],
     cta: "Empezar Pro",
     highlighted: true,
-    annualBadge: "Ahorra con el plan anual",
+    annualBadge: "Ahorra 20% con el plan anual",
   },
   {
     name: "Negocios",
