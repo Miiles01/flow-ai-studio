@@ -9,9 +9,10 @@ type Props = {
   trends: Trend[];
   startIndex: number | null;
   onClose: () => void;
+  onView?: (id: string) => void;
 };
 
-export function TrendStoryViewer({ trends, startIndex, onClose }: Props) {
+export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props) {
   const { isDark } = useTheme();
   const [index, setIndex] = useState(0);
 
@@ -21,6 +22,10 @@ export function TrendStoryViewer({ trends, startIndex, onClose }: Props) {
 
   const open = startIndex !== null && trends.length > 0;
   const trend = open ? trends[Math.min(index, trends.length - 1)] : null;
+
+  useEffect(() => {
+    if (open && trend) onView?.(trend.id);
+  }, [open, trend?.id]);
 
   const goPrev = () => setIndex((i) => (i - 1 + trends.length) % trends.length);
   const goNext = () => setIndex((i) => (i + 1) % trends.length);

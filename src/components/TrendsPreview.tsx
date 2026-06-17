@@ -5,10 +5,41 @@ import { useTheme } from "@/contexts/ThemeContext";
 import { useTrends } from "@/hooks/useTrends";
 import { TrendStoryViewer } from "@/components/TrendStoryViewer";
 
+const VIEWED_KEY = "miiles_viewed_trends";
+
+function getViewed(): Set<string> {
+  try {
+    return new Set(JSON.parse(localStorage.getItem(VIEWED_KEY) || "[]"));
+  } catch {
+    return new Set();
+  }
+}
+
 export function TrendsPreview() {
   const { isDark } = useTheme();
   const { trends, loading } = useTrends();
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [viewed, setViewed] = useState<Set<string>>(() => getViewed());
+
+  const markViewed = (id: string) => {
+    setViewed((prev) => {
+      if (prev.has(id)) return prev;
+      const next = new Set(prev);
+      next.add(id);
+      try {
+        localStorage.setItem(VIEWED_KEY, JSON.stringify([...next]));
+      } catch {
+        // ignore
+      }
+      return next;
+    });
+  };
+
+  const openStory = (i: number) => {
+    setOpenIndex(i);
+    const t = trends[i];
+    if (t) markViewed(t.id);
+  };
 
   return (
     <div>
@@ -31,35 +62,45 @@ export function TrendsPreview() {
                 <div className={`h-2 w-14 rounded-full ${isDark ? "bg-white/5" : "bg-miiles-gray-100"}`} />
               </div>
             ))
-          : trends.map((t, i) => (
-              <motion.button
-                key={t.id}
-                whileHover={{ y: -6, transition: { duration: 0.2 } }}
-                onClick={() => setOpenIndex(i)}
-                className="flex flex-col items-center gap-2 snap-start flex-shrink-0 w-[88px]"
-              >
-                <div
-                  className="w-[88px] h-[140px] rounded-[20px] p-[2.5px]"
-                  style={{
-                    background: "linear-gradient(135deg, #4059F1, #FCB5B9)",
-                  }}
+          : trends.map((t, i) => {
+              const isViewed = viewed.has(t.id);
+              return (
+                <motion.button
+                  key={t.id}
+                  whileHover={{ y: -6, transition: { duration: 0.2 } }}
+                  onClick={() => openStory(i)}
+                  className="flex flex-col items-center gap-2 snap-start flex-shrink-0 w-[88px]"
                 >
-                  <div className="w-full h-full rounded-[18px] overflow-hidden bg-black flex items-center justify-center">
-                    {t.thumbnail_url ? (
-                      <img src={t.thumbnail_url} alt={t.title} className="w-full h-full object-cover" />
-                    ) : (
-                      <Newspaper size={22} className="text-white/40" strokeWidth={1.2} />
-                    )}
+                  <div
+                    className="w-[88px] h-[140px] rounded-[20px] p-[2.5px]"
+                    style={
+                      isViewed
+                        ? { background: isDark ? "hsl(222 10% 30%)" : "hsl(222 10% 80%)" }
+                        : { background: "linear-gradient(135deg, #4059F1, #FCB5B9)" }
+                    }
+                  >
+                    <div className="w-full h-full rounded-[18px] overflow-hidden bg-black flex items-center justify-center">
+                      {t.thumbnail_url ? (
+                        <img src={t.thumbnail_url} alt={t.title} className="w-full h-full object-cover" />
+                      ) : (
+                        <Newspaper size={22} className="text-white/40" strokeWidth={1.2} />
+                      )}
+                    </div>
                   </div>
-                </div>
-                <span className="text-[11px] font-light text-foreground/80 leading-tight text-center line-clamp-2 w-full">
-                  {t.title}
-                </span>
-              </motion.button>
-            ))}
+                  <span className="text-[11px] font-light text-foreground/80 leading-tight text-center line-clamp-2 w-full">
+                    {t.title}
+                  </span>
+                </motion.button>
+              );
+            })}
       </div>
 
-      <TrendStoryViewer trends={trends} startIndex={openIndex} onClose={() => setOpenIndex(null)} />
+      <TrendStoryViewer
+        trends={trends}
+        startIndex={openIndex}
+        onClose={() => setOpenIndex(null)}
+        onView={markViewed}
+      />
     </div>
   );
 }
