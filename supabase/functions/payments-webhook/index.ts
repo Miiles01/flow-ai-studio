@@ -62,6 +62,11 @@ async function upsertSubscription(subscription: any, env: StripeEnv) {
   // Keep profiles.plan in sync so the app gates features by plan.
   const active = isActiveStatus(subscription.status, periodEnd);
   await syncProfilePlan(userId, active ? planFromPriceId(priceId) : "free");
+
+  // Mark affiliate referral as converted when the user has an active paid plan.
+  if (active && planFromPriceId(priceId) !== "free") {
+    await getSupabase().rpc("mark_referral_purchased", { p_user_id: userId });
+  }
 }
 
 async function handleSubscriptionDeleted(subscription: any, env: StripeEnv) {
