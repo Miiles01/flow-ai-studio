@@ -555,7 +555,7 @@ const Landing = () => {
             </span>
             
             <h1
-              className="hero-title no-split text-[42px] sm:text-6xl md:text-8xl lg:text-[95px] font-normal leading-[1.1] tracking-tight mb-10"
+              className="hero-title no-split text-[42px] sm:text-6xl md:text-8xl lg:text-[95px] font-normal leading-[1.1] tracking-tight mb-6"
             >
               <span className="block md:inline">
                 {renderWord("Hoy")} {renderWord("es")}{" "}
@@ -567,6 +567,13 @@ const Landing = () => {
                 {renderWord("para")} {renderWord("crear")}
               </span>
             </h1>
+
+            <p 
+              data-anim-heading 
+              className="text-base sm:text-lg md:text-xl font-light text-gray-500 mb-10 tracking-wide"
+            >
+              Imagina, escribe, créalo.
+            </p>
 
             <div data-anim-heading className="flex items-center justify-center gap-4 flex-wrap">
               <Link
