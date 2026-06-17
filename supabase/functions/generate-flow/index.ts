@@ -104,7 +104,7 @@ function mapGoogleMaps(items: any[]): any[] {
     phone: s(it.phone) ?? s(it.phoneUnformatted),
     role: null,
     industry: s(it.categoryName) ?? (Array.isArray(it.categories) ? s(it.categories[0]) : null),
-    location: s(it.address) ?? [s(it.city), s(it.state)].filter(Boolean).join(", ") || null,
+    location: s(it.address) ?? ([s(it.city), s(it.state)].filter(Boolean).join(", ") || null),
     website: s(it.website) ?? s(it.url),
     notes: s(it.description) ?? null,
     tags: Array.isArray(it.categories) ? it.categories.filter((x: any) => typeof x === "string").slice(0, 6) : [],
