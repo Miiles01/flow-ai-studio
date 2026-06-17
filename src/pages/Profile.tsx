@@ -101,6 +101,7 @@ const Profile = () => {
       .then(({ data }) => {
         if (data) {
           setDisplayName(data.display_name || "");
+          setUsername((data as any).username || "");
           setAvatarUrl(data.avatar_url || "");
           setInstagramHandle(data.instagram_handle || "");
           setTiktokHandle(data.tiktok_handle || "");
