@@ -21,6 +21,45 @@ export function TrendsPreview() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const [viewed, setViewed] = useState<Set<string>>(() => getViewed());
 
+  // Mouse Drag Scroll State
+  const [isDragging, setIsDragging] = useState(false);
+  const [startX, setStartX] = useState(0);
+  const [scrollLeftState, setScrollLeftState] = useState(0);
+  const [dragMoved, setDragMoved] = useState(false);
+
+  const handleMouseDown = (e: React.MouseEvent<HTMLDivElement>) => {
+    const el = e.currentTarget;
+    setIsDragging(true);
+    setStartX(e.pageX - el.offsetLeft);
+    setScrollLeftState(el.scrollLeft);
+    setDragMoved(false);
+  };
+
+  const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (!isDragging) return;
+    e.preventDefault();
+    const el = e.currentTarget;
+    const x = e.pageX - el.offsetLeft;
+    const walk = (x - startX) * 1.5; // multiplier to adjust scrolling speed
+    if (Math.abs(walk) > 3) {
+      setDragMoved(true);
+    }
+    el.scrollLeft = scrollLeftState - walk;
+  };
+
+  const handleMouseUp = () => {
+    setIsDragging(false);
+    if (dragMoved) {
+      // Keep dragMoved true for 50ms to allow click interception
+      setTimeout(() => setDragMoved(false), 50);
+    }
+  };
+
+  const handleMouseLeave = () => {
+    setIsDragging(false);
+    setDragMoved(false);
+  };
+
   const markViewed = (id: string) => {
     setViewed((prev) => {
       if (prev.has(id)) return prev;
@@ -48,10 +87,16 @@ export function TrendsPreview() {
         Noticias y tendencias de negocios
       </p>
 
-      <div className="flex gap-4 overflow-x-auto pt-2 pb-4 snap-x snap-mandatory scrollbar-hide -mx-8 px-8 md:mx-0 md:px-0">
+      <div
+        onMouseDown={handleMouseDown}
+        onMouseMove={handleMouseMove}
+        onMouseUp={handleMouseUp}
+        onMouseLeave={handleMouseLeave}
+        className="flex gap-4 overflow-x-auto pt-2 pb-4 scrollbar-hide -mx-8 px-8 md:mx-0 md:px-0 select-none cursor-grab active:cursor-grabbing"
+      >
         {loading || trends.length === 0
           ? Array.from({ length: 5 }).map((_, i) => (
-              <div key={i} className="flex flex-col items-center gap-2 snap-start flex-shrink-0">
+              <div key={i} className="flex flex-col items-center gap-2 flex-shrink-0">
                 <div
                   className={`w-[88px] h-[140px] rounded-[20px] flex items-center justify-center ${
                     isDark ? "bg-white/5 ring-1 ring-white/10" : "bg-miiles-gray-50 shadow-sm"
@@ -68,8 +113,15 @@ export function TrendsPreview() {
                 <motion.button
                   key={t.id}
                   whileHover={{ y: -6, transition: { duration: 0.2 } }}
-                  onClick={() => openStory(i)}
-                  className="flex flex-col items-center gap-2 snap-start flex-shrink-0 w-[88px]"
+                  onClick={(e) => {
+                    if (dragMoved) {
+                      e.preventDefault();
+                      e.stopPropagation();
+                      return;
+                    }
+                    openStory(i);
+                  }}
+                  className="flex flex-col items-center gap-2 flex-shrink-0 w-[88px]"
                 >
                   <div
                     className="w-[88px] h-[140px] rounded-[20px] p-[2.5px]"

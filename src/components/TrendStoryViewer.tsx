@@ -16,9 +16,17 @@ type Props = {
 export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props) {
   const { isDark } = useTheme();
   const [index, setIndex] = useState(0);
+  const [progress, setProgress] = useState(0);
+  const [isPaused, setIsPaused] = useState(false);
+
+  const STORY_DURATION = 5000; // 5 seconds per story
 
   useEffect(() => {
-    if (startIndex !== null) setIndex(startIndex);
+    if (startIndex !== null) {
+      setIndex(startIndex);
+      setProgress(0);
+      setIsPaused(false);
+    }
   }, [startIndex]);
 
   const open = startIndex !== null && trends.length > 0;
@@ -28,9 +36,39 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
     if (open && trend) onView?.(trend.id);
   }, [open, trend?.id]);
 
-  const goPrev = () => setIndex((i) => (i - 1 + trends.length) % trends.length);
-  const goNext = () => setIndex((i) => (i + 1) % trends.length);
+  const goPrev = () => {
+    setProgress(0);
+    setIndex((i) => (i - 1 + trends.length) % trends.length);
+  };
+  
+  const goNext = () => {
+    setProgress(0);
+    setIndex((i) => (i + 1) % trends.length);
+  };
 
+  // Auto-advance interval
+  useEffect(() => {
+    if (!open || isPaused) return;
+
+    const interval = setInterval(() => {
+      setProgress((p) => {
+        if (p >= 100) {
+          clearInterval(interval);
+          if (index < trends.length - 1) {
+            setIndex((i) => i + 1);
+          } else {
+            onClose();
+          }
+          return 0;
+        }
+        return p + (50 / STORY_DURATION) * 100;
+      });
+    }, 50);
+
+    return () => clearInterval(interval);
+  }, [open, index, isPaused, trends.length, onClose]);
+
+  // Keyboard navigation
   useEffect(() => {
     if (!open) return;
     const onKey = (e: KeyboardEvent) => {
@@ -49,8 +87,13 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
       >
         {trend && (
           <>
-            {/* Media — vertical phone/reel format */}
-            <div className="relative w-full h-[220px] md:h-full flex-shrink-0 bg-black flex items-center justify-center overflow-hidden select-none">
+            {/* Media — vertical phone/reel format with hold-to-pause */}
+            <div
+              className="relative w-full h-[220px] md:h-full flex-shrink-0 bg-black flex items-center justify-center overflow-hidden select-none cursor-pointer"
+              onPointerDown={() => setIsPaused(true)}
+              onPointerUp={() => setIsPaused(false)}
+              onPointerLeave={() => setIsPaused(false)}
+            >
               <AnimatePresence mode="wait">
                 <motion.div
                   key={trend.id}
@@ -70,11 +113,23 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
 
               {/* Story progress bars */}
               <div className="absolute top-3 left-3 right-3 flex gap-1 z-10">
-                {trends.map((_, i) => (
-                  <div key={i} className="h-0.5 flex-1 rounded-full bg-white/30 overflow-hidden">
-                    <div className={`h-full bg-white transition-all ${i <= index ? "w-full" : "w-0"}`} />
-                  </div>
-                ))}
+                {trends.map((_, i) => {
+                  let w = "0%";
+                  if (i < index) w = "100%";
+                  else if (i === index) w = `${progress}%`;
+
+                  return (
+                    <div key={i} className="h-0.5 flex-1 rounded-full bg-white/30 overflow-hidden">
+                      <div
+                        className="h-full bg-white"
+                        style={{
+                          width: w,
+                          transition: i === index ? "none" : "width 0.1s linear",
+                        }}
+                      />
+                    </div>
+                  );
+                })}
               </div>
             </div>
 
