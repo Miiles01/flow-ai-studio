@@ -2,6 +2,9 @@ import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import gsap from "gsap";
+import { SplitText } from "gsap/SplitText";
+
+gsap.registerPlugin(SplitText);
 
 // Checkbox Icon Component
 const CheckIcon = ({ highlighted }: { highlighted?: boolean }) => {
@@ -22,7 +25,7 @@ const CheckIcon = ({ highlighted }: { highlighted?: boolean }) => {
   );
 };
 
-// 3D Rotating Price Animation Component
+// 3D Rotating Price Animation Component (Flip Board Stagger)
 const RotatingPrice = ({ value }: { value: string }) => {
   const containerRef = useRef<HTMLDivElement>(null);
   const [prices, setPrices] = useState({ current: value, next: "" });
@@ -43,36 +46,59 @@ const RotatingPrice = ({ value }: { value: string }) => {
 
       if (!currentEl || !nextEl) return;
 
+      // Make nextEl visible temporarily to measure width
+      gsap.set(nextEl, { autoAlpha: 1, position: "absolute", left: 0, top: 0 });
       const nextWidth = (nextEl as HTMLElement).offsetWidth;
+      gsap.set(nextEl, { autoAlpha: 0 });
+
+      // Split text into characters
+      const currentSplit = SplitText.create(currentEl, { type: "chars" });
+      const nextSplit = SplitText.create(nextEl, { type: "chars" });
 
       const tl = gsap.timeline({
         onComplete: () => {
+          // Revert splits to restore original DOM structure
+          currentSplit.revert();
+          nextSplit.revert();
           setPrices({ current: value, next: "" });
           isAnimating.current = false;
           gsap.set(containerRef.current, { width: "auto" });
         },
       });
 
+      // Animate container width to fit the next price text smoothly
       tl.to(containerRef.current, {
         width: nextWidth,
-        duration: 0.6,
+        duration: 0.4,
         ease: "expo.out",
       }, 0);
 
-      gsap.set(nextEl, { autoAlpha: 1, rotationX: -90, transformOrigin: "50% 50% -0.5em" });
-      tl.to(currentEl, {
-        rotationX: 90,
+      // Setup initial state for next price characters (folded back from top)
+      gsap.set(nextSplit.chars, {
+        rotationX: -90,
+        transformOrigin: "50% 0%",
         opacity: 0,
-        duration: 0.4,
+      });
+      gsap.set(nextEl, { autoAlpha: 1 });
+
+      // Flip old price characters downwards
+      tl.to(currentSplit.chars, {
+        rotationX: 90,
+        transformOrigin: "50% 100%",
+        opacity: 0,
+        stagger: { each: 0.05, from: "start" },
+        duration: 0.25,
         ease: "power2.in",
-        transformOrigin: "50% 50% -0.5em",
-      }, 0)
-        .to(nextEl, {
-          rotationX: 0,
-          opacity: 1,
-          duration: 0.6,
-          ease: "power2.out",
-        }, 0.1);
+      }, 0);
+
+      // Flip new price characters downwards (as requested: duration 0.3s, power2.out, stagger 0.08s)
+      tl.to(nextSplit.chars, {
+        rotationX: 0,
+        opacity: 1,
+        stagger: { each: 0.08, from: "start" },
+        duration: 0.3,
+        ease: "power2.out",
+      }, 0.08); // Starts slightly before current finish for overlap
     }, containerRef);
 
     return () => ctx.revert();
