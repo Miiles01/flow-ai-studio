@@ -298,6 +298,19 @@ const Profile = () => {
                 </div>
               </div>
               <div>
+                <label className="text-xs text-muted-foreground mb-1.5 block font-light">Nombre de usuario</label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">@</span>
+                  <Input
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value.replace(/\s/g, ""))}
+                    placeholder="tunombre"
+                    className="pl-8"
+                  />
+                </div>
+                <p className="text-[11px] text-muted-foreground font-light mt-1">Tu link de afiliado: miiles.app/?ref={username || "tunombre"}</p>
+              </div>
+              <div>
                 <label className="text-xs text-muted-foreground mb-1.5 block font-light">Nicho</label>
                 <div className="relative">
                   <Tag size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
