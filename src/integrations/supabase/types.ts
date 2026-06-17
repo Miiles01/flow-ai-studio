@@ -341,6 +341,7 @@ export type Database = {
           twitter_handle: string | null
           updated_at: string
           user_id: string
+          username: string | null
           video_url_1: string | null
           video_url_2: string | null
           video_url_3: string | null
@@ -362,6 +363,7 @@ export type Database = {
           twitter_handle?: string | null
           updated_at?: string
           user_id: string
+          username?: string | null
           video_url_1?: string | null
           video_url_2?: string | null
           video_url_3?: string | null
@@ -383,6 +385,7 @@ export type Database = {
           twitter_handle?: string | null
           updated_at?: string
           user_id?: string
+          username?: string | null
           video_url_1?: string | null
           video_url_2?: string | null
           video_url_3?: string | null
@@ -441,6 +444,39 @@ export type Database = {
           tags?: string[]
           updated_at?: string
           website?: string | null
+        }
+        Relationships: []
+      }
+      referrals: {
+        Row: {
+          created_at: string
+          id: string
+          purchased: boolean
+          purchased_at: string | null
+          referred_at: string
+          referred_id: string
+          referrer_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          purchased?: boolean
+          purchased_at?: string | null
+          referred_at?: string
+          referred_id: string
+          referrer_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          purchased?: boolean
+          purchased_at?: string | null
+          referred_at?: string
+          referred_id?: string
+          referrer_id?: string
+          updated_at?: string
         }
         Relationships: []
       }
@@ -636,6 +672,13 @@ export type Database = {
           user_id: string
         }[]
       }
+      get_referral_stats: {
+        Args: never
+        Returns: {
+          total_purchased: number
+          total_referrals: number
+        }[]
+      }
       has_active_subscription: {
         Args: { check_env?: string; user_uuid: string }
         Returns: boolean
@@ -649,6 +692,11 @@ export type Database = {
       }
       is_flow_owner: { Args: { _flow_id: string }; Returns: boolean }
       join_flow_by_token: { Args: { p_token: string }; Returns: string }
+      mark_referral_purchased: {
+        Args: { p_user_id: string }
+        Returns: undefined
+      }
+      register_referral: { Args: { p_username: string }; Returns: boolean }
       show_limit: { Args: never; Returns: number }
       show_trgm: { Args: { "": string }; Returns: string[] }
       toggle_applicant_like: {
