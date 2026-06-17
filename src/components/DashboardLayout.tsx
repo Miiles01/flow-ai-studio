@@ -162,7 +162,7 @@ function SidebarBody() {
           {collapsed ? (
             <button
               type="button"
-              title="afiliados"
+              title="Afiliados"
               className={`mb-2 mx-auto w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-[1.04] ${
                 isDark ? "bg-white/10 text-white hover:bg-white/15" : "bg-zinc-100 text-black hover:bg-zinc-200"
               }`}
@@ -181,7 +181,7 @@ function SidebarBody() {
               </div>
               <div className="min-w-0">
                 <p className={`text-[13px] font-normal leading-tight ${isDark ? "text-white" : "text-black"}`}>
-                  afiliados
+                  Afiliados
                 </p>
                 <p className="text-[11px] text-muted-foreground font-light leading-tight mt-0.5">
                   Comparte tu link y recibe comisiones

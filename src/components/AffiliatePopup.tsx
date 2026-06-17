@@ -88,7 +88,7 @@ export function AffiliatePopup({ children }: { children: React.ReactNode }) {
               <Gift size={18} className={isDark ? "text-white" : "text-black"} strokeWidth={1.7} />
             </div>
             <div>
-              <p className="text-[15px] font-normal">afiliados</p>
+              <p className="text-[15px] font-normal">Afiliados</p>
               <p className="text-[11px] text-muted-foreground font-light">Comparte tu link y recibe comisiones</p>
             </div>
           </div>
