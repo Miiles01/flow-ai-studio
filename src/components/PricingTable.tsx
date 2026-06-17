@@ -143,9 +143,12 @@ export default function PricingTable() {
           </button>
           <button
             onClick={() => setCycle("annually")}
-            className={`relative z-10 flex-1 py-2.5 text-xs font-normal transition-colors duration-300 ${cycle === "annually" ? "text-white" : "text-gray-400"}`}
+            className={`relative z-10 flex-1 py-2.5 text-xs font-normal transition-colors duration-300 flex items-center justify-center gap-1.5 ${cycle === "annually" ? "text-white" : "text-gray-400"}`}
           >
             Anual
+            <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${cycle === "annually" ? "bg-white/20 text-white" : "bg-miiles-blue/10 text-miiles-blue"}`}>
+              -20%
+            </span>
           </button>
         </div>
       </section>
