@@ -215,7 +215,11 @@ serve(async (req) => {
       const plan = await classifyIntent(prompt, LOVABLE_API_KEY);
       if (plan.needsSearch && plan.channel && plan.query) {
         apifyChannel = plan.channel;
-        try {
+
+        // The Apify actor can be slow; run it as a task and wait at most ~22s.
+        // If it returns in time → use in this flow + save to brain.
+        // If not → keep running in the background and ingest into the brain for next time.
+        const apifyTask = (async (): Promise<any[]> => {
           if (plan.channel === "google_maps") {
             const searchString = plan.location ? `${plan.query} ${plan.location}` : plan.query;
             const items = await runApify(APIFY_ACTORS.google_maps, {
@@ -223,31 +227,48 @@ serve(async (req) => {
               maxCrawledPlacesPerSearch: plan.limit,
               language: "es",
             }, APIFY_API_TOKEN);
-            apifyFound = mapGoogleMaps(items);
-          } else {
-            const items = await runApify(APIFY_ACTORS.instagram, {
-              search: plan.query,
-              searchType: "user",
-              searchLimit: plan.limit,
-              resultsType: "details",
-              resultsLimit: plan.limit,
-              addParentData: false,
-            }, APIFY_API_TOKEN);
-            apifyFound = mapInstagram(items);
+            return mapGoogleMaps(items);
           }
+          const items = await runApify(APIFY_ACTORS.instagram, {
+            search: plan.query,
+            searchType: "user",
+            searchLimit: plan.limit,
+            resultsType: "details",
+            resultsLimit: plan.limit,
+            addParentData: false,
+          }, APIFY_API_TOKEN);
+          return mapInstagram(items);
+        })();
+
+        const TIMEOUT = Symbol("timeout");
+        let winner: any[] | typeof TIMEOUT;
+        try {
+          winner = await Promise.race([
+            apifyTask,
+            new Promise<typeof TIMEOUT>((res) => setTimeout(() => res(TIMEOUT), 22000)),
+          ]);
         } catch (e) {
           console.error("Apify search failed:", e);
+          winner = [];
         }
-        // Always save to the brain (deduped)
-        if (apifyFound.length > 0) {
-          await ingestProspects(supabase, apifyFound);
-          // Merge into the context the AI uses for the flow (front of the list)
-          const slim = apifyFound.map((p) => ({
-            name: p.name, company: p.company, email: p.email, phone: p.phone,
-            role: p.role, industry: p.industry, location: p.location,
-            website: p.website, notes: p.notes, tags: p.tags,
-          }));
-          prospects = [...slim, ...prospects];
+
+        if (winner === TIMEOUT) {
+          // Finish the search in the background and save to the brain for next time.
+          const bg = apifyTask
+            .then((found) => found.length > 0 ? ingestProspects(supabase, found) : null)
+            .catch((e) => console.error("Apify background ingest failed:", e));
+          (globalThis as any).EdgeRuntime?.waitUntil?.(bg);
+        } else {
+          apifyFound = Array.isArray(winner) ? winner : [];
+          if (apifyFound.length > 0) {
+            await ingestProspects(supabase, apifyFound); // always save to the brain (deduped)
+            const slim = apifyFound.map((p) => ({
+              name: p.name, company: p.company, email: p.email, phone: p.phone,
+              role: p.role, industry: p.industry, location: p.location,
+              website: p.website, notes: p.notes, tags: p.tags,
+            }));
+            prospects = [...slim, ...prospects];
+          }
         }
       }
     }
