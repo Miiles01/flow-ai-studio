@@ -21,6 +21,7 @@ import { useSubscription } from "@/hooks/useSubscription";
 import { getStripeEnvironment } from "@/lib/stripe";
 
 import { getVideoEmbedUrl } from "@/lib/videoEmbed";
+import { isValidUsername } from "@/lib/referral";
 
 function VideoLinkPopover({ value, onSave, onCancel }: { value: string; onSave: (v: string) => void; onCancel: () => void }) {
   const [draft, setDraft] = useState(value);
