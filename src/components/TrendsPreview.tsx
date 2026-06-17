@@ -18,6 +18,7 @@ function getViewed(): Set<string> {
 export function TrendsPreview() {
   const { isDark } = useTheme();
   const { trends, loading } = useTrends();
+  const displayTrends = trends.slice(0, 10);
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const [viewed, setViewed] = useState<Set<string>>(() => getViewed());
 
@@ -45,7 +46,7 @@ export function TrendsPreview() {
   useEffect(() => {
     const timer = setTimeout(checkScrollFades, 200);
     return () => clearTimeout(timer);
-  }, [trends, loading]);
+  }, [displayTrends, loading]);
 
   useEffect(() => {
     window.addEventListener("resize", checkScrollFades);
@@ -101,7 +102,7 @@ export function TrendsPreview() {
 
   const openStory = (i: number) => {
     setOpenIndex(i);
-    const t = trends[i];
+    const t = displayTrends[i];
     if (t) markViewed(t.id);
   };
 
@@ -130,7 +131,7 @@ export function TrendsPreview() {
           onMouseLeave={handleMouseLeave}
           className="flex gap-4 overflow-x-auto pt-2 pb-4 scrollbar-hide -mx-8 px-8 md:mx-0 md:px-0 select-none cursor-grab active:cursor-grabbing"
         >
-          {loading || trends.length === 0
+          {loading || displayTrends.length === 0
             ? Array.from({ length: 5 }).map((_, i) => (
                 <div key={i} className="flex flex-col items-center gap-2 flex-shrink-0">
                   <div
@@ -143,7 +144,7 @@ export function TrendsPreview() {
                   <div className={`h-2 w-14 rounded-full ${isDark ? "bg-white/5" : "bg-miiles-gray-100"}`} />
                 </div>
               ))
-            : trends.map((t, i) => {
+            : displayTrends.map((t, i) => {
                 const isViewed = viewed.has(t.id);
                 return (
                   <motion.button
@@ -192,7 +193,7 @@ export function TrendsPreview() {
       </div>
 
       <TrendStoryViewer
-        trends={trends}
+        trends={displayTrends}
         startIndex={openIndex}
         onClose={() => setOpenIndex(null)}
         onView={markViewed}
