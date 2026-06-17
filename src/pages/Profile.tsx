@@ -166,11 +166,17 @@ const Profile = () => {
   const handleSave = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (!user) return;
+    const trimmedUsername = username.trim();
+    if (trimmedUsername && !isValidUsername(trimmedUsername)) {
+      toast.error("Nombre de usuario inválido: usa 3-30 letras, números, guion o guion bajo");
+      return;
+    }
     setSaving(true);
     const { error } = await supabase
       .from("profiles")
       .update({
         display_name: displayName,
+        username: trimmedUsername || null,
         avatar_url: avatarUrl,
         instagram_handle: instagramHandle,
         tiktok_handle: tiktokHandle,
@@ -183,10 +189,11 @@ const Profile = () => {
         video_url_1: videoUrl1,
         video_url_2: videoUrl2,
         video_url_3: videoUrl3,
-      })
+      } as any)
       .eq("user_id", user.id);
     if (error) {
-      toast.error("Error al guardar");
+      const isUnique = (error as any).code === "23505" || /duplicate|unique/i.test(error.message || "");
+      toast.error(isUnique ? "Ese nombre de usuario ya está en uso" : "Error al guardar");
       setSaving(false);
     } else {
       toast.success("Perfil actualizado");
