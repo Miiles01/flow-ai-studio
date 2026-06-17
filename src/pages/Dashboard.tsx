@@ -11,6 +11,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import TutorialModal from "@/components/TutorialModal";
+import { TrendsPreview } from "@/components/TrendsPreview";
 import tutorialBanner from "@/assets/tablero-banner.webp.asset.json";
 
 type Program = {
@@ -278,6 +279,11 @@ export default function Dashboard() {
           <p className="text-2xl font-normal text-foreground">{savedCount}</p>
           <p className="text-xs text-miiles-gray-400 font-light mt-1">Proyectos</p>
         </motion.div>
+      </motion.div>
+
+      {/* Tendencias preview — visible para todos los usuarios */}
+      <motion.div variants={sectionVariants}>
+        <TrendsPreview />
       </motion.div>
 
       {/* Admin: send notification button */}
