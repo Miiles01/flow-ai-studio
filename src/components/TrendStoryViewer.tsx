@@ -16,22 +16,30 @@ type Props = {
 export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props) {
   const { isDark } = useTheme();
   const [index, setIndex] = useState(0);
+  const [slideIndex, setSlideIndex] = useState(0);
   const [progress, setProgress] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
   const [pointerDownTime, setPointerDownTime] = useState<number>(0);
 
   const STORY_DURATION = 5000; // 5 seconds per story
 
+  const open = startIndex !== null && trends.length > 0;
+  const trend = open ? trends[Math.min(index, trends.length - 1)] : null;
+
+  const slides = trend
+    ? trend.bullets.slice(0, 3).length > 0
+      ? trend.bullets.slice(0, 3)
+      : [trend.summary || ""]
+    : [];
+
   useEffect(() => {
     if (startIndex !== null) {
       setIndex(startIndex);
+      setSlideIndex(0);
       setProgress(0);
       setIsPaused(false);
     }
   }, [startIndex]);
-
-  const open = startIndex !== null && trends.length > 0;
-  const trend = open ? trends[Math.min(index, trends.length - 1)] : null;
 
   useEffect(() => {
     if (open && trend) onView?.(trend.id);
@@ -39,12 +47,32 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
 
   const goPrev = () => {
     setProgress(0);
-    setIndex((i) => (i - 1 + trends.length) % trends.length);
+    if (slideIndex > 0) {
+      setSlideIndex((s) => s - 1);
+    } else {
+      if (index > 0) {
+        const prevIndex = index - 1;
+        const prevTrend = trends[prevIndex];
+        const prevBullets = prevTrend.bullets.slice(0, 3);
+        const prevSlidesCount = prevBullets.length > 0 ? prevBullets.length : 1;
+        setIndex(prevIndex);
+        setSlideIndex(prevSlidesCount - 1);
+      }
+    }
   };
   
   const goNext = () => {
     setProgress(0);
-    setIndex((i) => (i + 1) % trends.length);
+    if (slideIndex < slides.length - 1) {
+      setSlideIndex((s) => s + 1);
+    } else {
+      if (index < trends.length - 1) {
+        setIndex((i) => i + 1);
+        setSlideIndex(0);
+      } else {
+        onClose();
+      }
+    }
   };
 
   // Auto-advance interval
@@ -55,10 +83,17 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
       setProgress((p) => {
         if (p >= 100) {
           clearInterval(interval);
-          if (index < trends.length - 1) {
-            setIndex((i) => i + 1);
+          if (slideIndex < slides.length - 1) {
+            setSlideIndex((s) => s + 1);
+            setProgress(0);
           } else {
-            onClose();
+            if (index < trends.length - 1) {
+              setIndex((i) => i + 1);
+              setSlideIndex(0);
+              setProgress(0);
+            } else {
+              onClose();
+            }
           }
           return 0;
         }
@@ -67,7 +102,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
     }, 50);
 
     return () => clearInterval(interval);
-  }, [open, index, isPaused, trends.length, onClose]);
+  }, [open, index, slideIndex, isPaused, trends.length, slides.length, onClose]);
 
   // Keyboard navigation
   useEffect(() => {
@@ -78,7 +113,15 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [open, trends.length]);
+  }, [open, trends.length, slideIndex, index]);
+
+  const activeImage = trend
+    ? [
+        trend.media_url || trend.thumbnail_url || storyReelPlaceholder,
+        "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=500",
+        "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=500"
+      ][slideIndex % 3]
+    : storyReelPlaceholder;
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
@@ -113,7 +156,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
             >
               <AnimatePresence mode="wait">
                 <motion.div
-                  key={trend.id}
+                  key={`${trend.id}-${slideIndex}`}
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}
                   exit={{ opacity: 0 }}
@@ -121,7 +164,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
                   className="absolute inset-0 flex items-center justify-center"
                 >
                   <img
-                    src={storyReelPlaceholder}
+                    src={activeImage}
                     alt={trend.title}
                     className="w-full h-full object-cover"
                   />
@@ -130,10 +173,10 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
 
               {/* Story progress bars */}
               <div className="absolute top-3 left-3 right-3 flex gap-1 z-10">
-                {trends.map((_, i) => {
+                {slides.map((_, i) => {
                   let w = "0%";
-                  if (i < index) w = "100%";
-                  else if (i === index) w = `${progress}%`;
+                  if (i < slideIndex) w = "100%";
+                  else if (i === slideIndex) w = `${progress}%`;
 
                   return (
                     <div key={i} className="h-0.5 flex-1 rounded-full bg-white/30 overflow-hidden">
@@ -141,7 +184,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
                         className="h-full bg-white"
                         style={{
                           width: w,
-                          transition: i === index ? "none" : "width 0.1s linear",
+                          transition: i === slideIndex ? "none" : "width 0.1s linear",
                         }}
                       />
                     </div>
@@ -178,22 +221,16 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
                   })}
                 </p>
 
-                {trend.summary && (
+                {trend.bullets.length > 0 ? (
+                  <div className="mt-6 p-5 rounded-2xl bg-white/5 border border-white/10">
+                    <span className="text-[10px] text-white/40 uppercase tracking-widest block mb-2 font-medium">Tema {slideIndex + 1} de {slides.length}</span>
+                    <p className="text-base font-light text-white leading-relaxed">{slides[slideIndex]}</p>
+                  </div>
+                ) : trend.summary ? (
                   <p className="text-sm font-light text-white/80 leading-relaxed mt-4 whitespace-pre-wrap">
                     {trend.summary}
                   </p>
-                )}
-
-                {trend.bullets.length > 0 && (
-                  <ul className="mt-4 space-y-2">
-                    {trend.bullets.slice(0, 3).map((b, i) => (
-                      <li key={i} className="flex gap-2 text-sm font-light text-white/80 leading-relaxed">
-                        <span className="text-white/40 mt-0.5">•</span>
-                        <span>{b}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
+                ) : null}
 
                 {trend.links.length > 0 && (
                   <div className="mt-5 flex flex-col gap-2">
