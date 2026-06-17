@@ -66,6 +66,7 @@ const Profile = () => {
   const { subscription, isActive } = useSubscription();
   const planRef = useRef<HTMLDivElement>(null);
   const [displayName, setDisplayName] = useState("");
+  const [username, setUsername] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
   const [instagramHandle, setInstagramHandle] = useState("");
   const [tiktokHandle, setTiktokHandle] = useState("");
