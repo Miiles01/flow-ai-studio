@@ -18,6 +18,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
   const [index, setIndex] = useState(0);
   const [progress, setProgress] = useState(0);
   const [isPaused, setIsPaused] = useState(false);
+  const [pointerDownTime, setPointerDownTime] = useState<number>(0);
 
   const STORY_DURATION = 5000; // 5 seconds per story
 
@@ -87,11 +88,27 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
       >
         {trend && (
           <>
-            {/* Media — vertical phone/reel format with hold-to-pause */}
+            {/* Media — vertical phone/reel format with hold-to-pause and tap-to-navigate */}
             <div
               className="relative w-full h-[220px] md:h-full flex-shrink-0 bg-black flex items-center justify-center overflow-hidden select-none cursor-pointer"
-              onPointerDown={() => setIsPaused(true)}
-              onPointerUp={() => setIsPaused(false)}
+              onPointerDown={(e) => {
+                setPointerDownTime(Date.now());
+                setIsPaused(true);
+              }}
+              onPointerUp={(e) => {
+                setIsPaused(false);
+                const duration = Date.now() - pointerDownTime;
+                if (duration < 250) {
+                  const rect = e.currentTarget.getBoundingClientRect();
+                  const clickX = e.clientX - rect.left;
+                  const width = rect.width;
+                  if (clickX < width * 0.3) {
+                    goPrev();
+                  } else {
+                    goNext();
+                  }
+                }
+              }}
               onPointerLeave={() => setIsPaused(false)}
             >
               <AnimatePresence mode="wait">
@@ -151,7 +168,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
                 </button>
               </div>
 
-              <div className="flex-1 overflow-y-auto px-6 pb-4 scrollbar-hide">
+              <div className="flex-1 overflow-y-auto px-6 pb-8 scrollbar-hide">
                 <h2 className="text-xl font-normal text-white leading-snug">{trend.title}</h2>
                 <p className="text-[11px] text-white/50 font-light mt-1">
                   {new Date(trend.published_at).toLocaleDateString("es-ES", {
@@ -194,29 +211,6 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
                     ))}
                   </div>
                 )}
-              </div>
-
-              {/* Navigation Footer */}
-              <div className="flex items-center justify-between px-6 py-4 border-t border-white/10">
-                <button
-                  onClick={goPrev}
-                  disabled={trends.length <= 1}
-                  className="w-10 h-10 rounded-full flex items-center justify-center transition-colors disabled:opacity-30 bg-white/10 text-white hover:bg-white/15"
-                  aria-label="Anterior"
-                >
-                  <ChevronLeft size={18} />
-                </button>
-                <span className="text-xs text-white/60 font-light">
-                  {index + 1} / {trends.length}
-                </span>
-                <button
-                  onClick={goNext}
-                  disabled={trends.length <= 1}
-                  className="w-10 h-10 rounded-full flex items-center justify-center transition-colors disabled:opacity-30 bg-white/10 text-white hover:bg-white/15"
-                  aria-label="Siguiente"
-                >
-                  <ChevronRight size={18} />
-                </button>
               </div>
             </div>
           </>
