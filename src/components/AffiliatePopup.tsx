@@ -3,7 +3,7 @@ import { Gift, Copy, Check, Loader2, Link2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { supabase } from "@/integrations/supabase/client";
-import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
+import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { isValidUsername } from "@/lib/referral";
 import { toast } from "sonner";
@@ -75,22 +75,20 @@ export function AffiliatePopup({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <Popover open={open} onOpenChange={setOpen}>
-      <PopoverTrigger asChild>{children}</PopoverTrigger>
-      <PopoverContent
-        align="start"
-        sideOffset={10}
-        className={`w-80 rounded-[24px] p-5 border shadow-[0_12px_40px_rgba(0,0,0,0.08)] backdrop-blur-md transition-colors duration-300 ${
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild>{children}</DialogTrigger>
+      <DialogContent
+        className={`sm:max-w-md rounded-[24px] p-6 border shadow-[0_12px_40px_rgba(0,0,0,0.08)] backdrop-blur-md transition-colors duration-300 ${
           isDark ? "bg-zinc-950/95 border-white/10 text-white" : "bg-white/95 border-[#F3F4F6] text-black"
         }`}
       >
-        <div className="space-y-4">
+        <div className="space-y-4 pt-4 md:pt-0">
           <div className="flex items-center gap-2.5">
-            <div className={`w-9 h-9 rounded-full flex items-center justify-center ${isDark ? "bg-white/10" : "bg-miiles-blue-light"}`}>
-              <Gift size={18} className={isDark ? "text-white" : "text-miiles-blue"} strokeWidth={1.7} />
+            <div className={`w-9 h-9 rounded-full flex items-center justify-center ${isDark ? "bg-white/10" : "bg-zinc-100"}`}>
+              <Gift size={18} className={isDark ? "text-white" : "text-black"} strokeWidth={1.7} />
             </div>
             <div>
-              <p className="text-[15px] font-normal">Programa de afiliados</p>
+              <p className="text-[15px] font-normal">afiliados</p>
               <p className="text-[11px] text-muted-foreground font-light">Comparte tu link y recibe comisiones</p>
             </div>
           </div>
@@ -154,7 +152,7 @@ export function AffiliatePopup({ children }: { children: React.ReactNode }) {
             </>
           )}
         </div>
-      </PopoverContent>
-    </Popover>
+      </DialogContent>
+    </Dialog>
   );
 }
