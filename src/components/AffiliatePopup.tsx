@@ -149,11 +149,11 @@ export function AffiliatePopup({ children }: { children: React.ReactNode }) {
               <div className={`flex items-center justify-around pt-3 border-t ${isDark ? "border-white/10" : "border-gray-100"}`}>
                 <div className="text-center">
                   <p className="text-lg font-normal">{stats.total}</p>
-                  <p className="text-[10px] text-muted-foreground font-light">usaron tu link</p>
+                  <p className="text-[10px] text-muted-foreground font-light">Usaron tu link</p>
                 </div>
                 <div className="text-center">
                   <p className="text-lg font-normal">{stats.purchased}</p>
-                  <p className="text-[10px] text-muted-foreground font-light">compraron un plan</p>
+                  <p className="text-[10px] text-muted-foreground font-light">Compraron un plan</p>
                 </div>
               </div>
             </>
