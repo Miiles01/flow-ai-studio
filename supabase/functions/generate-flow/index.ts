@@ -18,6 +18,151 @@ function extractKeywords(prompt: string): string[] {
   )).slice(0, 8);
 }
 
+// ─── Apify: actor IDs ─────────────────────────────────────────────────────
+const APIFY_ACTORS = {
+  google_maps: "compass~crawler-google-places",
+  instagram: "apify~instagram-scraper",
+};
+
+type SearchPlan = {
+  needsSearch: boolean;
+  channel: "instagram" | "google_maps" | null;
+  query: string;
+  location: string | null;
+  limit: number;
+};
+
+// Ask the model whether the user wants to DISCOVER new real prospects, and on which channel.
+async function classifyIntent(prompt: string, apiKey: string): Promise<SearchPlan> {
+  const sys = `Eres un clasificador de intención para un generador de flujos de prospección.
+Decide si el usuario quiere DESCUBRIR cuentas/negocios/prospectos REALES y NUEVOS (no solo planear).
+Canales disponibles:
+- "instagram": cuando busca cuentas, creadores, marcas o perfiles de Instagram.
+- "google_maps": cuando busca negocios locales, empresas, tiendas o lugares (por nicho + ubicación).
+Si el usuario solo quiere un plan/estrategia sin buscar prospectos reales, needsSearch=false.
+Responde SOLO JSON válido con esta forma:
+{"needsSearch":boolean,"channel":"instagram"|"google_maps"|null,"query":"términos de búsqueda limpios","location":"ciudad/país o null","limit":6}
+El "query" debe ser conciso y en el idioma del usuario. limit entre 4 y 8.`;
+  try {
+    const r = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "google/gemini-3-flash-preview",
+        messages: [
+          { role: "system", content: sys },
+          { role: "user", content: prompt },
+        ],
+      }),
+    });
+    if (!r.ok) return { needsSearch: false, channel: null, query: "", location: null, limit: 6 };
+    const j = await r.json();
+    const c = j.choices?.[0]?.message?.content ?? "";
+    const cleaned = c.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+    const parsed = JSON.parse(cleaned);
+    return {
+      needsSearch: !!parsed.needsSearch,
+      channel: parsed.channel === "instagram" || parsed.channel === "google_maps" ? parsed.channel : null,
+      query: typeof parsed.query === "string" ? parsed.query : "",
+      location: typeof parsed.location === "string" && parsed.location ? parsed.location : null,
+      limit: Math.min(8, Math.max(4, Number(parsed.limit) || 6)),
+    };
+  } catch (e) {
+    console.error("classifyIntent failed:", e);
+    return { needsSearch: false, channel: null, query: "", location: null, limit: 6 };
+  }
+}
+
+// Run an Apify actor synchronously and return its dataset items.
+async function runApify(actor: string, input: unknown, token: string): Promise<any[]> {
+  const url = `https://api.apify.com/v2/acts/${actor}/run-sync-get-dataset-items?token=${token}&timeout=90`;
+  const r = await fetch(url, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify(input),
+  });
+  if (!r.ok) {
+    const t = await r.text();
+    console.error("Apify error:", actor, r.status, t.slice(0, 500));
+    return [];
+  }
+  const items = await r.json();
+  return Array.isArray(items) ? items : [];
+}
+
+function s(v: unknown): string | null {
+  if (typeof v === "string" && v.trim()) return v.trim();
+  return null;
+}
+
+// Map raw Apify items into prospect rows.
+function mapGoogleMaps(items: any[]): any[] {
+  return items.map((it) => ({
+    name: s(it.title),
+    company: s(it.title),
+    email: s(it.email) ?? (Array.isArray(it.emails) ? s(it.emails[0]) : null),
+    phone: s(it.phone) ?? s(it.phoneUnformatted),
+    role: null,
+    industry: s(it.categoryName) ?? (Array.isArray(it.categories) ? s(it.categories[0]) : null),
+    location: s(it.address) ?? [s(it.city), s(it.state)].filter(Boolean).join(", ") || null,
+    website: s(it.website) ?? s(it.url),
+    notes: s(it.description) ?? null,
+    tags: Array.isArray(it.categories) ? it.categories.filter((x: any) => typeof x === "string").slice(0, 6) : [],
+    source_file: "apify-google-maps",
+    raw: it,
+  })).filter((p) => p.name);
+}
+
+function mapInstagram(items: any[]): any[] {
+  return items.map((it) => {
+    const username = s(it.username) ?? s(it.ownerUsername);
+    return {
+      name: s(it.fullName) ?? s(it.full_name) ?? username,
+      company: s(it.fullName) ?? s(it.full_name) ?? username,
+      email: s(it.businessEmail) ?? s(it.public_email),
+      phone: s(it.businessPhoneNumber),
+      role: null,
+      industry: s(it.businessCategoryName) ?? s(it.category),
+      location: s(it.city) ?? null,
+      website: s(it.externalUrl) ?? (username ? `https://instagram.com/${username}` : null),
+      notes: s(it.biography) ?? null,
+      tags: username ? [`@${username}`] : [],
+      source_file: "apify-instagram",
+      raw: it,
+    };
+  }).filter((p) => p.name);
+}
+
+// Insert prospects into the "brain", deduping by website/company.
+async function ingestProspects(supabase: any, rows: any[]): Promise<any[]> {
+  if (rows.length === 0) return [];
+  const websites = rows.map((r) => r.website).filter(Boolean);
+  const companies = rows.map((r) => r.company).filter(Boolean);
+  const existing = new Set<string>();
+  if (websites.length) {
+    const { data } = await supabase.from("prospects").select("website").in("website", websites);
+    (data ?? []).forEach((d: any) => d.website && existing.add(`w:${d.website.toLowerCase()}`));
+  }
+  if (companies.length) {
+    const { data } = await supabase.from("prospects").select("company").in("company", companies);
+    (data ?? []).forEach((d: any) => d.company && existing.add(`c:${d.company.toLowerCase()}`));
+  }
+  const seen = new Set<string>();
+  const fresh = rows.filter((r) => {
+    const wk = r.website ? `w:${r.website.toLowerCase()}` : null;
+    const ck = r.company ? `c:${r.company.toLowerCase()}` : null;
+    if ((wk && existing.has(wk)) || (ck && existing.has(ck))) return false;
+    const dedupKey = wk ?? ck ?? JSON.stringify(r.raw);
+    if (seen.has(dedupKey)) return false;
+    seen.add(dedupKey);
+    return true;
+  });
+  if (fresh.length === 0) return rows; // nothing new, still return found for the flow
+  const { error } = await supabase.from("prospects").insert(fresh);
+  if (error) console.error("ingestProspects insert error:", error.message);
+  return rows;
+}
+
 serve(async (req) => {
   if (req.method === "OPTIONS") {
     return new Response(null, { headers: corsHeaders });
@@ -28,6 +173,7 @@ serve(async (req) => {
     if (!LOVABLE_API_KEY) {
       throw new Error("LOVABLE_API_KEY is not configured");
     }
+    const APIFY_API_TOKEN = Deno.env.get("APIFY_API_TOKEN");
 
     const { prompt } = await req.json();
     if (!prompt || typeof prompt !== "string") {
@@ -62,10 +208,58 @@ serve(async (req) => {
       prospects = data ?? [];
     }
 
+    // ─── Apify channel: discover NEW real prospects when intent requires it ──
+    let apifyFound: any[] = [];
+    let apifyChannel: string | null = null;
+    if (APIFY_API_TOKEN) {
+      const plan = await classifyIntent(prompt, LOVABLE_API_KEY);
+      if (plan.needsSearch && plan.channel && plan.query) {
+        apifyChannel = plan.channel;
+        try {
+          if (plan.channel === "google_maps") {
+            const searchString = plan.location ? `${plan.query} ${plan.location}` : plan.query;
+            const items = await runApify(APIFY_ACTORS.google_maps, {
+              searchStringsArray: [searchString],
+              maxCrawledPlacesPerSearch: plan.limit,
+              language: "es",
+            }, APIFY_API_TOKEN);
+            apifyFound = mapGoogleMaps(items);
+          } else {
+            const items = await runApify(APIFY_ACTORS.instagram, {
+              search: plan.query,
+              searchType: "user",
+              searchLimit: plan.limit,
+              resultsType: "details",
+              resultsLimit: plan.limit,
+              addParentData: false,
+            }, APIFY_API_TOKEN);
+            apifyFound = mapInstagram(items);
+          }
+        } catch (e) {
+          console.error("Apify search failed:", e);
+        }
+        // Always save to the brain (deduped)
+        if (apifyFound.length > 0) {
+          await ingestProspects(supabase, apifyFound);
+          // Merge into the context the AI uses for the flow (front of the list)
+          const slim = apifyFound.map((p) => ({
+            name: p.name, company: p.company, email: p.email, phone: p.phone,
+            role: p.role, industry: p.industry, location: p.location,
+            website: p.website, notes: p.notes, tags: p.tags,
+          }));
+          prospects = [...slim, ...prospects];
+        }
+      }
+    }
+
     const { data: templates } = await supabase.from("flow_templates").select("title,description,tags,prompt_hint,nodes,edges").limit(10);
 
     const prospectsBlock = prospects.length > 0
-      ? `\n\nPROSPECTOS EN LA BASE DE DATOS (úsalos como fuente primaria; si el usuario pide alguno listado aquí, refiérelo con sus datos reales. Cada prospecto puede tener un campo "website" con su sitio real):\n${JSON.stringify(prospects, null, 0)}`
+      ? `\n\nPROSPECTOS EN LA BASE DE DATOS (úsalos como fuente primaria; si el usuario pide alguno listado aquí, refiérelo con sus datos reales. Cada prospecto puede tener un campo "website" con su sitio/perfil real):\n${JSON.stringify(prospects, null, 0)}`
+      : "";
+
+    const apifyBlock = apifyFound.length > 0
+      ? `\n\nPROSPECTOS RECIÉN ENCONTRADOS EN VIVO (canal ${apifyChannel}). Estos son cuentas/negocios REALES descubiertos para esta petición. DEBES incluirlos en el flujo: por cada uno crea un "embedNode" o un "textNode" con su enlace real (campo "website") para que el usuario pueda hacer clic y verlo. Preséntalos como los prospectos objetivo del flujo:\n${JSON.stringify(apifyFound.map((p) => ({ name: p.name, industry: p.industry, location: p.location, website: p.website, notes: p.notes })), null, 0)}`
       : "";
 
     const templatesBlock = (templates && templates.length > 0)
@@ -91,12 +285,12 @@ Node Types and Data:
    - CRITICAL COLOR RULE: Checklist backgrounds MUST ALWAYS be "#FFFFFF" (pure white) and text/labels/title/subtitle MUST ALWAYS be "#000000" (pure black). NEVER use dark backgrounds or other colors for todoNode.
    - RESPONSIVE WRAPPING: Title, subtitle, and task items automatically wrap to new lines and auto-resize height if long or if container is small. Write complete, detailed task items without fear of text clipping.
 3. "textNode": {"html": "<b style='color:#000000'>Title</b>", "fontSize": 24, "textColor": "#000000"}
-   - Use for general headers, sections, or annotations.
+   - Use for general headers, sections, or annotations. También para mostrar un enlace clicable de un prospecto: usa "<a href='URL_REAL' style='color:#4059F1'>Nombre del prospecto</a>".
    - CRITICAL COLOR RULE: Titles and text nodes MUST ALWAYS use "#000000" (pure black) for "textColor" and inside HTML style attributes. NEVER use gray or any other colors for titles.
 4. "imageNode": {"url": "string", "width": number, "height": number}
    - Use for visual placeholders or logos.
 5. "embedNode": {"url": "https://..."} con "style": {"width": 480, "height": 320}
-   - Embebe una página web real dentro del canvas (iframe en vivo). Úsalo SOLO con URLs reales (por ejemplo el campo "website" de un prospecto de la base de datos). NUNCA inventes URLs.
+   - Embebe una página web real dentro del canvas (iframe en vivo). Úsalo SOLO con URLs reales (por ejemplo el campo "website" de un prospecto de la base de datos o de los prospectos recién encontrados). NUNCA inventes URLs.
 
 Rules for Premium Visual Design:
 - ALIGNMENT & SYMMETRY: Nodes in the same sequence must be aligned on the exact same horizontal grid line (e.g. Y: 250) to look like a high-end mind map.
@@ -112,11 +306,11 @@ Rules for Premium Visual Design:
 - EDGES: Connect nodes logically. Set edge "style": {"stroke": "hex", "strokeWidth": 2}. Do NOT animate the edges (always set "animated": false or omit it).
 - When the user asks about prospects or business ideas, prefer real prospects from the database below over invented ones.
 - CONTEXTO DEL CLIENTE: Antes de diseñar, infiere el contexto, la industria y los OBJETIVOS del cliente a partir del prompt y de los prospectos disponibles, y construye el flujo en función de esos objetivos.
-- EMBEDS DE SITIO WEB: Si un prospecto relevante tiene un campo "website", PUEDES (no es obligatorio) añadir un "embedNode" con esa URL real cuando aporte valor al plan o a los objetivos planteados (p. ej. para revisar el sitio del cliente/competencia). Decide si es necesario según el plan; no lo agregues por defecto en cada flujo.
+- EMBEDS / ENLACES DE PROSPECTOS: Si hay "PROSPECTOS RECIÉN ENCONTRADOS EN VIVO", DEBES incluir cada uno en el flujo con su enlace real (embedNode con su "website", o textNode con un <a href> clicable). Para prospectos de la base de datos con "website", PUEDES añadir un "embedNode" cuando aporte valor.
 - Respond ONLY with valid JSON containing {"nodes": [...], "edges": [...]}, no markdown.
 
 Example output:
-{"nodes": [{"id":"1","type":"textNode","position":{"x":50,"y":50},"data":{"html":"<b style='color:#000000'>Inicio</b>","fontSize":24,"textColor":"#000000"}},{"id":"2","type":"shapeNode","position":{"x":50,"y":120},"style":{"width":140,"height":140},"data":{"shape":"circle","label":"Inicio del Flujo","fillColor":"#4059F1","textColor":"#FFFFFF"}},{"id":"3","type":"todoNode","position":{"x":350,"y":70},"style":{"width":280,"height":240},"data":{"title":"Fase de Planificación","subtitle":"Prerrequisitos obligatorios","tasks":[{"id":"t1","text":"Analizar requerimientos del cliente","completed":false},{"id":"t2","text":"Crear bocetos preliminares","completed":false}],"backgroundColor":"#FFFFFF","accentColor":"#4059F1","textColor":"#000000"}}], "edges": [{"id":"e2-3","source":"2","target":"3","animated":false,"style":{"stroke":"#4059F1","strokeWidth":2}}]}${prospectsBlock}${templatesBlock}`;
+{"nodes": [{"id":"1","type":"textNode","position":{"x":50,"y":50},"data":{"html":"<b style='color:#000000'>Inicio</b>","fontSize":24,"textColor":"#000000"}},{"id":"2","type":"shapeNode","position":{"x":50,"y":120},"style":{"width":140,"height":140},"data":{"shape":"circle","label":"Inicio del Flujo","fillColor":"#4059F1","textColor":"#FFFFFF"}},{"id":"3","type":"todoNode","position":{"x":350,"y":70},"style":{"width":280,"height":240},"data":{"title":"Fase de Planificación","subtitle":"Prerrequisitos obligatorios","tasks":[{"id":"t1","text":"Analizar requerimientos del cliente","completed":false},{"id":"t2","text":"Crear bocetos preliminares","completed":false}],"backgroundColor":"#FFFFFF","accentColor":"#4059F1","textColor":"#000000"}}], "edges": [{"id":"e2-3","source":"2","target":"3","animated":false,"style":{"stroke":"#4059F1","strokeWidth":2}}]}${apifyBlock}${prospectsBlock}${templatesBlock}`;
 
     const response = await fetch(
       "https://ai.gateway.lovable.dev/v1/chat/completions",
@@ -179,7 +373,15 @@ Example output:
       nodes = parsedData;
     }
 
-    return new Response(JSON.stringify({ nodes, edges, steps: nodes, used_prospects: prospects.length, used_templates: templates?.length ?? 0 }), {
+    return new Response(JSON.stringify({
+      nodes,
+      edges,
+      steps: nodes,
+      used_prospects: prospects.length,
+      used_templates: templates?.length ?? 0,
+      apify_channel: apifyChannel,
+      apify_found: apifyFound.length,
+    }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (error) {
