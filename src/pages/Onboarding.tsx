@@ -184,6 +184,7 @@ const Onboarding = () => {
 
   // Form state
   const [bio, setBio] = useState("");
+  const [username, setUsername] = useState("");
   const [socials, setSocials] = useState<Record<string, string>>({
     instagram: "",
     tiktok: "",
