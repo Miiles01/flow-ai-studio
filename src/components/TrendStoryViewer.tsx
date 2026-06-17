@@ -221,16 +221,18 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
                   })}
                 </p>
 
-                {trend.bullets.length > 0 ? (
+                {trend.bullets.length > 0 && (
                   <div className="mt-6 p-5 rounded-2xl bg-white/5 border border-white/10">
                     <span className="text-[10px] text-white/40 uppercase tracking-widest block mb-2 font-medium">Tema {slideIndex + 1} de {slides.length}</span>
-                    <p className="text-base font-light text-white leading-relaxed">{slides[slideIndex]}</p>
+                    <p className="text-base font-medium text-white leading-relaxed">{slides[slideIndex]}</p>
                   </div>
-                ) : trend.summary ? (
+                )}
+
+                {trend.summary && (
                   <p className="text-sm font-light text-white/80 leading-relaxed mt-4 whitespace-pre-wrap">
                     {trend.summary}
                   </p>
-                ) : null}
+                )}
 
                 {trend.links.length > 0 && (
                   <div className="mt-5 flex flex-col gap-2">
