@@ -1,56 +1,78 @@
-# Programa de Afiliados
+# Plan: Tendencias (Noticias de negocios)
 
-Cualquier usuario puede compartir su link `miiles.app/?ref=suusuario`. Quien llegue por ese link y compre un plan queda registrado como referido de quien lo invitó, para hacer las transferencias de comisiones por fuera.
+Una nueva sección de noticias/tendencias de negocios, visible para **todos los usuarios** (gratis, pro, negocios). Tendrá su propio "cerebro" interno (base de datos que se autolimpia) alimentado por **Claude** mediante una automatización externa que llama a un endpoint seguro.
 
-## 1. Nombre de usuario (`username`)
+## 1. Base de datos — nuevo cerebro de tendencias
 
-- Nuevo campo `username` en la tabla de perfiles, único e insensible a mayúsculas.
-- A los perfiles ya existentes se les genera un username aleatorio (ej. `manuel_a3f9`) para que su link funcione de inmediato; luego lo pueden editar.
-- Editable en dos lugares:
-  - **Onboarding**: un paso/campo nuevo para elegir nombre de usuario (con validación de disponibilidad).
-  - **Perfil → ajustes**: campo para cambiarlo cuando quieran.
-- Validación: solo letras, números, guion y guion bajo; entre 3 y 30 caracteres; debe estar libre.
+Nueva tabla `trends` (separada del cerebro de prospectos):
 
-## 2. Card en el sidebar (arriba del perfil)
+```text
+trends
+├─ id            uuid
+├─ title         text        (título de la noticia)
+├─ summary       text        (descripción larga, scrolleable)
+├─ media_url     text        (imagen/video vertical tipo teléfono)
+├─ media_type    text        ('image' | 'video')
+├─ thumbnail_url text        (miniatura para el story del carrusel)
+├─ links         jsonb       (lista de { label, url } para botones/links externos)
+├─ bullets       jsonb       (lista de strings para viñetas)
+├─ category      text        (ej. "negocios")
+├─ source        text        (fuente / "claude-agent")
+├─ published_at  timestamptz
+├─ expires_at    timestamptz (se autolimpia tras ~unas semanas)
+├─ is_active     boolean
+├─ created_at / updated_at
+```
 
-- En `DashboardLayout`, justo encima de la card de perfil, se añade una card (blanca en claro / negra en oscuro siguiendo el sistema de diseño).
-- Contenido: icono de regalo + texto "Únete al programa de afiliados" y subtítulo "Comparte tu link y recibe comisiones".
-- Al hacer clic abre el popup de afiliados. En estado colapsado del sidebar se muestra solo el icono de regalo.
+- **Lectura pública**: política RLS que permite a cualquier usuario autenticado leer tendencias activas y no expiradas (`is_active = true AND expires_at > now()`).
+- **Escritura**: solo `service_role` (vía el endpoint de automatización). Ningún usuario puede insertar/editar desde el cliente.
+- GRANTs: `SELECT` a `authenticated`; `ALL` a `service_role`.
+- Autolimpieza: las consultas filtran por `expires_at > now()`, y un cron diario opcional borra las expiradas para mantener la tabla limpia.
 
-## 3. Popup de afiliados
+## 2. Endpoint para Claude — `ingest-trends` (edge function)
 
-- Muestra el username del usuario ya cargado (sin tener que escribir nada).
-- Botón **"Generar link"** que arma `https://miiles.app/?ref=usuario` y permite copiarlo.
-- Si el usuario aún no tiene username (caso raro), se le pide crear uno ahí mismo antes de generar.
-- Abajo, un mini resumen: "X personas usaron tu link · Y compraron un plan".
+Mismo patrón que `auto-ingest` (autenticado con `x-automation-key` = `AUTOMATION_SECRET`, que ya existe):
 
-## 4. Tracking del referido
+- Recibe `{ trends: [...] }` con título, resumen, media_url, links, bullets, etc.
+- Deduplica por título.
+- Asigna `expires_at` (por defecto +21 días) si no viene en el payload.
+- Inserta con `service_role`.
 
-- Cuando alguien entra a la app con `?ref=usuario`, se guarda ese username en `localStorage` (referrer pendiente), si la URL trae un ref válido.
-- El link manda al visitante al **login/registro**.
-- Al crear cuenta (registro normal o Google), si hay un referrer pendiente y no es uno mismo, se registra la relación referido→referidor una sola vez y se limpia el pendiente.
-- Cuando el referido compra un plan, se marca esa relación como "convertida" (compró), para el conteo de comisiones.
+Claude (vía tu automatización externa: Make/n8n/script con cron) llamará a este endpoint periódicamente para alimentar el cerebro. **Te entregaré la URL del endpoint y el formato JSON exacto** para que conectes a Claude. La `AUTOMATION_SECRET` ya está configurada.
 
-## 5. Detalle técnico
+## 3. Vista previa en Inicio — Stories de Instagram
 
-### Base de datos (migración)
-- `profiles.username TEXT UNIQUE` (con índice único case-insensitive). Backfill de usernames aleatorios para perfiles existentes.
-- Nueva tabla `referrals`:
-  - `referrer_id` (quién invitó), `referred_id` (quién se registró, único), `referred_at`, `purchased` (bool), `purchased_at`.
-  - GRANTs estándar + RLS: el referidor puede leer sus propias filas; inserciones vía función `SECURITY DEFINER`.
-- Función `register_referral(p_username text)`: resuelve el username al `referrer_id`, valida que no sea el propio usuario y crea la fila si no existe.
-- Función `get_referral_stats()`: devuelve total de referidos y total con `purchased = true` del usuario actual (para el popup).
-- Función `mark_referral_purchased(p_user_id uuid)`: marca `purchased = true` para el referido.
+En `Dashboard.tsx`, debajo de las tarjetas de Notificaciones/Proyectos:
 
-### Frontend
-- `Register.tsx` y el login con Google: leer `?ref=` / `localStorage` y llamar `register_referral` tras el alta.
-- App raíz: capturar `?ref=` al cargar y guardarlo en `localStorage`.
-- Nuevo componente `AffiliatePopup` (Popover/Dialog) usado desde la card del sidebar.
-- Perfil y Onboarding: campo de username con verificación de disponibilidad.
+- Título **"Tendencias"**.
+- Carrusel horizontal scrolleable (mismo patrón de carrusel del proyecto: `overflow-x-auto snap-x scrollbar-hide` con bleed en mobile).
+- Cada "story" = círculo/tarjeta vertical con anillo tipo Instagram + miniatura + título corto.
+- Al hacer clic → abre el **popup de detalle** (componente compartido).
+- Si no hay datos: muestra placeholders vacíos (skeletons tipo story) como pediste.
 
-### Atribución de la compra
-- En `payments-webhook`, cuando una suscripción pasa a activa, llamar a `mark_referral_purchased(userId)` para marcar la relación del comprador (si fue referido).
+## 4. Popup de detalle (componente `TrendStoryViewer`)
 
-## Notas
-- El link usa `?ref=` para evitar choques con rutas reales (login, precios, perfil, etc.).
-- Por ahora solo se guarda la relación referido→referidor y si compró; los pagos de comisión se gestionan por fuera.
+Dialog grande con dos columnas:
+
+- **Derecha**: media vertical tipo teléfono (video vertical autoplay o imagen vertical), formato 9:16.
+- **Izquierda**: título + descripción scrolleable, con soporte de viñetas (bullets) y botones/links que abren enlaces externos en nueva pestaña.
+- **Botones de navegación** (anterior / siguiente) para deslizar entre stories sin cerrar el popup, estilo visor de stories.
+- En mobile se apila (media arriba, texto abajo).
+- Sigue el sistema de diseño Miiles (dark/light, `rounded`, Poppins, botones `rounded-full`).
+
+## 5. Página completa del dashboard — `/trends`
+
+- Nueva ruta `/trends` en `App.tsx` (dentro de `DashboardRoute`).
+- Nuevo ítem **"Tendencias"** en `mainNav` de `DashboardLayout.tsx`, **debajo de "Tableros"** (icono tipo `Newspaper`/`Sparkles`).
+- La página muestra todas las tendencias activas en una grilla de cards; al hacer clic abre el mismo `TrendStoryViewer`.
+
+## Detalles técnicos
+- Hook `useTrends()` que consulta `trends` activas ordenadas por `published_at desc`.
+- `TrendStoryViewer` reutilizado en Inicio y en `/trends`.
+- Datos de media: Claude envía URLs externas (imagen/video). No requiere subir archivos a storage en esta fase.
+- Sin lógica de pago/plan: acceso universal.
+
+## Lo que necesito de ti (después de implementar)
+- Confirmar la herramienta de automatización donde correrás a Claude (Make, n8n, script con cron, etc.) para darte la URL + JSON del endpoint `ingest-trends`.
+
+¿Procedo a construirlo así?

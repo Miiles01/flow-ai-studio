@@ -20,6 +20,7 @@ import Boards from "./pages/Boards";
 import Programs from "./pages/Programs";
 import ProgramDetail from "./pages/ProgramDetail";
 import SearchAI from "./pages/SearchAI";
+import Trends from "./pages/Trends";
 import Index from "./pages/Index";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
@@ -113,6 +114,7 @@ const App = () => (
               <Route path="/privacidad" element={<Privacy />} />
               <Route path="/dashboard" element={<DashboardRoute><Dashboard /></DashboardRoute>} />
               <Route path="/boards" element={<DashboardRoute><Boards /></DashboardRoute>} />
+              <Route path="/trends" element={<DashboardRoute><Trends /></DashboardRoute>} />
               <Route path="/boards/new" element={<ProtectedRoute><Index /></ProtectedRoute>} />
               <Route path="/boards/join/:token" element={<JoinFlow />} />
               <Route path="/boards/:id" element={<Index />} />

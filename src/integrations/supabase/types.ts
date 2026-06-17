@@ -528,6 +528,60 @@ export type Database = {
         }
         Relationships: []
       }
+      trends: {
+        Row: {
+          bullets: Json
+          category: string
+          created_at: string
+          expires_at: string
+          id: string
+          is_active: boolean
+          links: Json
+          media_type: string
+          media_url: string | null
+          published_at: string
+          source: string | null
+          summary: string | null
+          thumbnail_url: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          bullets?: Json
+          category?: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          is_active?: boolean
+          links?: Json
+          media_type?: string
+          media_url?: string | null
+          published_at?: string
+          source?: string | null
+          summary?: string | null
+          thumbnail_url?: string | null
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          bullets?: Json
+          category?: string
+          created_at?: string
+          expires_at?: string
+          id?: string
+          is_active?: boolean
+          links?: Json
+          media_type?: string
+          media_url?: string | null
+          published_at?: string
+          source?: string | null
+          summary?: string | null
+          thumbnail_url?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       user_applications: {
         Row: {
           created_at: string
