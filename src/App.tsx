@@ -32,8 +32,20 @@ import JoinFlow from "./pages/JoinFlow";
 import Admin from "./pages/Admin";
 import AuthLayout from "./components/AuthLayout";
 import { useEffect, useState } from "react";
+import { capturePendingReferral, registerPendingReferral } from "@/lib/referral";
 
 const queryClient = new QueryClient();
+
+const ReferralTracker = () => {
+  const { user } = useAuth();
+  useEffect(() => {
+    capturePendingReferral();
+  }, []);
+  useEffect(() => {
+    if (user) registerPendingReferral();
+  }, [user]);
+  return null;
+};
 
 const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
   const { user, loading } = useAuth();
