@@ -15,7 +15,6 @@ import brand3 from "@/assets/miiles/brands/brand3.svg";
 import brand4 from "@/assets/miiles/brands/brand4.svg";
 import brand5 from "@/assets/miiles/brands/brand5.svg";
 import brand6 from "@/assets/miiles/brands/brand6.svg";
-import LandingNavbar from "@/components/LandingNavbar";
 import LandingFooter from "@/components/LandingFooter";
 // Graphic assets copied from Downloads
 
@@ -537,7 +536,6 @@ const Landing = () => {
   }, []);
   return (
     <>
-          <LandingNavbar />
 
       <div id="smooth-wrapper" style={{ overflow: "hidden", position: "fixed", width: "100%", height: "100%", top: 0, left: 0 }}>
         <div id="smooth-content" className="bg-white text-black font-sans overflow-hidden">
