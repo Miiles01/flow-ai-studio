@@ -118,6 +118,7 @@ const Profile = () => {
 
           setOriginalData({
             displayName: data.display_name || "",
+            username: (data as any).username || "",
             avatarUrl: data.avatar_url || "",
             instagramHandle: data.instagram_handle || "",
             tiktokHandle: data.tiktok_handle || "",
