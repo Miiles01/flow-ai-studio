@@ -157,7 +157,7 @@ const Profile = () => {
   }, [loading, window.location.hash]);
 
   const currentData = {
-    displayName, avatarUrl, instagramHandle, tiktokHandle, twitterHandle,
+    displayName, username, avatarUrl, instagramHandle, tiktokHandle, twitterHandle,
     youtubeHandle, bio, niche, phone, portfolioUrl, videoUrl1, videoUrl2, videoUrl3
   };
 
