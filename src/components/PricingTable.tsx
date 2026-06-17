@@ -120,7 +120,7 @@ const RotatingPrice = ({ value }: { value: string }) => {
 
 const plans = [
   {
-    name: "Free",
+    name: "Gratis",
     monthlyPrice: "0",
     annualPrice: "0",
     description: "Para explorar Miiles",
