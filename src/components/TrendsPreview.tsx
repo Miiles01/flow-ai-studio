@@ -5,10 +5,41 @@ import { useTheme } from "@/contexts/ThemeContext";
 import { useTrends } from "@/hooks/useTrends";
 import { TrendStoryViewer } from "@/components/TrendStoryViewer";
 
+const VIEWED_KEY = "miiles_viewed_trends";
+
+function getViewed(): Set<string> {
+  try {
+    return new Set(JSON.parse(localStorage.getItem(VIEWED_KEY) || "[]"));
+  } catch {
+    return new Set();
+  }
+}
+
 export function TrendsPreview() {
   const { isDark } = useTheme();
   const { trends, loading } = useTrends();
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [viewed, setViewed] = useState<Set<string>>(() => getViewed());
+
+  const markViewed = (id: string) => {
+    setViewed((prev) => {
+      if (prev.has(id)) return prev;
+      const next = new Set(prev);
+      next.add(id);
+      try {
+        localStorage.setItem(VIEWED_KEY, JSON.stringify([...next]));
+      } catch {
+        // ignore
+      }
+      return next;
+    });
+  };
+
+  const openStory = (i: number) => {
+    setOpenIndex(i);
+    const t = trends[i];
+    if (t) markViewed(t.id);
+  };
 
   return (
     <div>
