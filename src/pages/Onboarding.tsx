@@ -380,6 +380,19 @@ const Onboarding = () => {
                       className="min-h-[140px] font-light bg-transparent border-none shadow-none resize-none focus-visible:ring-0 focus:ring-0 p-0 text-base rounded-none outline-none"
                       maxLength={200}
                     />
+                    <div className="mt-6 pt-6 border-t border-border">
+                      <label className="text-sm font-normal block mb-2">Elige tu nombre de usuario</label>
+                      <div className="relative">
+                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">@</span>
+                        <Input
+                          value={username}
+                          onChange={(e) => setUsername(e.target.value.replace(/\s/g, ""))}
+                          placeholder="tunombre"
+                          className="pl-8"
+                        />
+                      </div>
+                      <p className="text-xs text-muted-foreground font-light mt-1.5">Te identifica en tu link de afiliado. Podrás cambiarlo después.</p>
+                    </div>
                     <div className="flex items-center justify-between mt-4">
                       <span className="text-xs text-muted-foreground">{bio.length}/200 caracteres</span>
                       <Button onClick={next} size="sm" className="rounded-full px-6 text-xs">
