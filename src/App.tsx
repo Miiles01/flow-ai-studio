@@ -101,6 +101,7 @@ const App = () => (
       <ThemeProvider>
         <BrowserRouter>
           <AuthProvider>
+            <ReferralTracker />
             <Routes>
               <Route path="/" element={<Landing />} />
               <Route path="/acerca-de" element={<About />} />
