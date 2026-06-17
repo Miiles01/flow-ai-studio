@@ -229,6 +229,7 @@ const Onboarding = () => {
       .from("profiles")
       .update({
         bio,
+        ...(username.trim() ? { username: username.trim() } : {}),
         avatar_url: avatarUrl || null,
         instagram_handle: socials.instagram || null,
         tiktok_handle: socials.tiktok || null,
@@ -244,7 +245,8 @@ const Onboarding = () => {
       .eq("user_id", user.id);
     setSaving(false);
     if (error) {
-      toast.error("Error al guardar tu perfil");
+      const isUnique = (error as any).code === "23505" || /duplicate|unique/i.test(error.message || "");
+      toast.error(isUnique ? "Ese nombre de usuario ya está en uso" : "Error al guardar tu perfil");
       return false;
     }
     return true;
