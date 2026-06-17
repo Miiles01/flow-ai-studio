@@ -127,9 +127,16 @@ export function AffiliatePopup({ children }: { children: React.ReactNode }) {
                 </button>
               ) : (
                 <div className="space-y-2">
-                  <div className={`flex items-center gap-2 rounded-2xl px-3 py-2.5 ${isDark ? "bg-white/5" : "bg-muted"}`}>
+                  <div
+                    onClick={copyLink}
+                    className={`flex items-center gap-2 rounded-2xl px-3 py-2.5 cursor-pointer transition-all ${
+                      isDark
+                        ? "bg-white/5 hover:bg-white/10 active:bg-white/15"
+                        : "bg-muted hover:bg-zinc-200/60 active:bg-zinc-200"
+                    }`}
+                  >
                     <span className="text-xs font-light truncate flex-1">{link}</span>
-                    <button type="button" onClick={copyLink} className="flex-shrink-0 p-1 rounded-md hover:opacity-70 transition-opacity">
+                    <button type="button" className="flex-shrink-0 p-1 rounded-md hover:opacity-70 transition-opacity">
                       {copied ? <Check size={15} className="text-green-500" /> : <Copy size={15} />}
                     </button>
                   </div>
