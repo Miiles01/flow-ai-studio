@@ -103,7 +103,7 @@ const plans = [
   },
   {
     name: "Pro",
-    monthlyPrice: "386.67",
+    monthlyPrice: "386",
     annualPrice: "3,712.00",
     description: "Para creadores en crecimiento",
     features: ["Proyectos ilimitados", "Colaboraciones ilimitadas", "Analítica avanzada", "Soporte prioritario"],
