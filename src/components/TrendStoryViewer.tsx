@@ -186,7 +186,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
 
                 {trend.bullets.length > 0 && (
                   <ul className="mt-4 space-y-2">
-                    {trend.bullets.map((b, i) => (
+                    {trend.bullets.slice(0, 3).map((b, i) => (
                       <li key={i} className="flex gap-2 text-sm font-light text-white/80 leading-relaxed">
                         <span className="text-white/40 mt-0.5">•</span>
                         <span>{b}</span>
