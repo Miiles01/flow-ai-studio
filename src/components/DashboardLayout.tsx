@@ -1,7 +1,8 @@
 import { ReactNode, useEffect, useState, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Home, ShoppingBag, User, Bot, Plus, MessageSquare, Trash2, LayoutDashboard } from "lucide-react";
+import { Home, ShoppingBag, User, Bot, Plus, MessageSquare, Trash2, LayoutDashboard, Gift } from "lucide-react";
 import logoImg from "@/assets/logo.png";
+import { AffiliatePopup } from "@/components/AffiliatePopup";
 import { useAuth } from "@/contexts/AuthContext";
 import { usePlan } from "@/hooks/usePlan";
 import { supabase } from "@/integrations/supabase/client";
