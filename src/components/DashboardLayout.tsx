@@ -1,7 +1,8 @@
 import { ReactNode, useEffect, useState, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Home, ShoppingBag, User, Bot, Plus, MessageSquare, Trash2, LayoutDashboard } from "lucide-react";
+import { Home, ShoppingBag, User, Bot, Plus, MessageSquare, Trash2, LayoutDashboard, Gift } from "lucide-react";
 import logoImg from "@/assets/logo.png";
+import { AffiliatePopup } from "@/components/AffiliatePopup";
 import { useAuth } from "@/contexts/AuthContext";
 import { usePlan } from "@/hooks/usePlan";
 import { supabase } from "@/integrations/supabase/client";
@@ -156,7 +157,42 @@ function SidebarBody() {
 
         <div className="flex-1" />
 
+        {/* Affiliate program card */}
+        <AffiliatePopup>
+          {collapsed ? (
+            <button
+              type="button"
+              title="Programa de afiliados"
+              className={`mb-2 mx-auto w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-[1.04] ${
+                isDark ? "bg-white/10 text-white hover:bg-white/15" : "bg-miiles-blue-light text-miiles-blue hover:bg-miiles-blue-light/80"
+              }`}
+            >
+              <Gift size={18} strokeWidth={1.7} />
+            </button>
+          ) : (
+            <button
+              type="button"
+              className={`mx-6 mb-3 px-3 py-3 rounded-[20px] flex items-center gap-3 text-left transition-all hover:scale-[1.01] ${
+                isDark ? "bg-white/5 hover:bg-white/10 border border-white/10" : "bg-white hover:bg-miiles-gray-50 border border-[#F3F4F6] shadow-sm"
+              }`}
+            >
+              <div className={`w-9 h-9 rounded-full flex items-center justify-center flex-shrink-0 ${isDark ? "bg-white/10" : "bg-miiles-blue-light"}`}>
+                <Gift size={17} className={isDark ? "text-white" : "text-miiles-blue"} strokeWidth={1.7} />
+              </div>
+              <div className="min-w-0">
+                <p className={`text-[13px] font-normal leading-tight ${isDark ? "text-white" : "text-black"}`}>
+                  Únete al programa de afiliados
+                </p>
+                <p className="text-[11px] text-muted-foreground font-light leading-tight mt-0.5">
+                  Comparte tu link y recibe comisiones
+                </p>
+              </div>
+            </button>
+          )}
+        </AffiliatePopup>
+
         {/* User profile card at bottom */}
+
         {collapsed ? (
           <div
             className="mb-6 mt-3 flex justify-center cursor-pointer hover:opacity-80 transition-opacity"

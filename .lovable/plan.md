@@ -1,54 +1,56 @@
-# Extender flujo con IA desde cualquier componente
+# Programa de Afiliados
 
-## Objetivo
-Al pasar el cursor cerca de un lado (arriba/abajo/izquierda/derecha) de cualquier componente del canvas (forma, texto, lista de tareas, imagen, sección — nunca las líneas/edges), aparece una cajita blanca con una estrella negra. Al hacer clic, esa cajita se "selecciona" (estado activo, bien resuelto en light y dark mode) y se abre el input de IA. Lo que el usuario escriba genera nuevos componentes **a partir de ese elemento**, leyendo su contenido y continuando el flujo en la dirección elegida, conectados con una línea.
+Cualquier usuario puede compartir su link `miiles.app/?ref=suusuario`. Quien llegue por ese link y compre un plan queda registrado como referido de quien lo invitó, para hacer las transferencias de comisiones por fuera.
 
-## Experiencia
-```text
-        [ ✦ ]   ← cajita blanca + estrella negra (hover arriba)
-[ ✦ ] [ COMPONENTE ] [ ✦ ]
-        [ ✦ ]   ← al hacer clic: se activa, abre input, IA genera hacia abajo
-```
+## 1. Nombre de usuario (`username`)
 
-## Componente compartido nuevo: `NodeExtendHandles`
-`src/components/nodes/NodeExtendHandles.tsx`
-- Recibe `nodeId` y se monta dentro de cada nodo.
-- Renderiza 4 zonas de hover (top/bottom/left/right), una por lado, justo por fuera del borde del nodo (sin tapar las bolitas de conexión).
-- En hover de un lado aparece una cajita blanca redondeada con la estrella negra (icono importado del SVG subido `Estrella.svg`).
-  - Light: caja `bg-white` borde sutil + estrella negra.
-  - Dark: caja `bg-[#1C1C1E]` borde `white/10` + estrella (invertida a blanca en dark).
-  - Estado activo (cuando ese lado fue clicado): caja oscura/resaltada con `ring` azul de marca.
-- Escala con el zoom (igual patrón que las toolbars: `scale(1/zoom)`).
-- Al hacer clic dispara un callback global (ver contexto abajo) con `{ nodeId, side }`.
+- Nuevo campo `username` en la tabla de perfiles, único e insensible a mayúsculas.
+- A los perfiles ya existentes se les genera un username aleatorio (ej. `manuel_a3f9`) para que su link funcione de inmediato; luego lo pueden editar.
+- Editable en dos lugares:
+  - **Onboarding**: un paso/campo nuevo para elegir nombre de usuario (con validación de disponibilidad).
+  - **Perfil → ajustes**: campo para cambiarlo cuando quieran.
+- Validación: solo letras, números, guion y guion bajo; entre 3 y 30 caracteres; debe estar libre.
 
-Se importa y se renderiza en: `ShapeNode`, `TextNode`, `TodoNode`, `ImageNode`, `FrameNode`. (Los edges quedan excluidos por definición.)
+## 2. Card en el sidebar (arriba del perfil)
 
-## Conexión nodo → página (contexto de extensión)
-- Nuevo contexto ligero `FlowExtendContext` (o un callback pasado por `nodeTypes`/evento) para que `NodeExtendHandles` avise a `Index.tsx`.
-- En `Index.tsx` se guarda estado `extendTarget: { nodeId, side } | null`.
-- Al setear `extendTarget`: se abre el `AIPromptBar` expandido y se muestra un pequeño rótulo ("Ampliando desde este elemento") + botón para cancelar. El lado activo se marca como seleccionado en el nodo.
+- En `DashboardLayout`, justo encima de la card de perfil, se añade una card (blanca en claro / negra en oscuro siguiendo el sistema de diseño).
+- Contenido: icono de regalo + texto "Únete al programa de afiliados" y subtítulo "Comparte tu link y recibe comisiones".
+- Al hacer clic abre el popup de afiliados. En estado colapsado del sidebar se muestra solo el icono de regalo.
 
-## Generación a partir del elemento
-- Cuando hay `extendTarget`, `AIPromptBar.onGenerate` enruta a una nueva función `runExtendGenerate(prompt, extendTarget)` en lugar del flujo normal de clarify/plan (generación directa, más rápida, como pidió el usuario).
-- `runExtendGenerate`:
-  1. Lee el nodo origen de `nodes` y arma un resumen de su contenido (tipo, label/título/subtítulo/tareas/texto).
-  2. Llama a `generateFlowFromPrompt` con un `context` nuevo que describe: el elemento origen, su contenido, la dirección (side) y la instrucción de "continuar/ampliar el flujo a partir de aquí".
-  3. Coloca los nodos generados **desplazados desde el nodo origen** según el lado: right → +X, left → −X, bottom → +Y, top → −Y (usando bounding box + offset desde la posición del origen).
-  4. Crea un edge desde el `handle` del lado elegido del nodo origen hacia el primer nodo generado (reutiliza la lógica de `sourceHandle`/`targetHandle` opuesta ya existente).
-  5. `fitView` a los nodos nuevos, igual que hoy.
-- `generateFlowFromPrompt` (`src/lib/generateFlow.ts`) acepta un parámetro opcional `extendContext` que se inyecta al prompt.
+## 3. Popup de afiliados
 
-## Backend (`supabase/functions/generate-flow/index.ts`)
-- Aceptar campo opcional en el body con el contexto del elemento origen y la dirección.
-- Añadir al system/user prompt una sección de "MODO AMPLIACIÓN": instruir a la IA a leer el elemento origen, entender de dónde parte y **continuar** generando nuevos nodos coherentes (sin repetir el origen), respetando dirección y estilo. Mantener el resto del comportamiento intacto.
+- Muestra el username del usuario ya cargado (sin tener que escribir nada).
+- Botón **"Generar link"** que arma `https://miiles.app/?ref=usuario` y permite copiarlo.
+- Si el usuario aún no tiene username (caso raro), se le pide crear uno ahí mismo antes de generar.
+- Abajo, un mini resumen: "X personas usaron tu link · Y compraron un plan".
 
-## Detalles técnicos
-- Icono: importar `Estrella.svg` subido a `src/assets/miiles/` y usarlo como `<img>` dentro de la cajita (invertible en dark con filtro o variante).
-- Las zonas de hover usan `nodrag nopan` y `stopPropagation` para no mover el nodo ni iniciar conexión.
-- No tocar landing/auth. Respetar tokens y patrones de dark mode del sistema de diseño.
-- Reusar `assignOptimalHandles` para los edges nuevos.
+## 4. Tracking del referido
 
-## Verificación
-- Probar en una lista de tareas (caso del usuario): hover abajo → estrella → clic → input → "qué otras tareas pueden salir" → genera hacia abajo conectado.
-- Probar en forma, texto, imagen y sección, en los 4 lados, en light y dark.
-- Confirmar que las líneas/edges no muestran la estrella.
+- Cuando alguien entra a la app con `?ref=usuario`, se guarda ese username en `localStorage` (referrer pendiente), si la URL trae un ref válido.
+- El link manda al visitante al **login/registro**.
+- Al crear cuenta (registro normal o Google), si hay un referrer pendiente y no es uno mismo, se registra la relación referido→referidor una sola vez y se limpia el pendiente.
+- Cuando el referido compra un plan, se marca esa relación como "convertida" (compró), para el conteo de comisiones.
+
+## 5. Detalle técnico
+
+### Base de datos (migración)
+- `profiles.username TEXT UNIQUE` (con índice único case-insensitive). Backfill de usernames aleatorios para perfiles existentes.
+- Nueva tabla `referrals`:
+  - `referrer_id` (quién invitó), `referred_id` (quién se registró, único), `referred_at`, `purchased` (bool), `purchased_at`.
+  - GRANTs estándar + RLS: el referidor puede leer sus propias filas; inserciones vía función `SECURITY DEFINER`.
+- Función `register_referral(p_username text)`: resuelve el username al `referrer_id`, valida que no sea el propio usuario y crea la fila si no existe.
+- Función `get_referral_stats()`: devuelve total de referidos y total con `purchased = true` del usuario actual (para el popup).
+- Función `mark_referral_purchased(p_user_id uuid)`: marca `purchased = true` para el referido.
+
+### Frontend
+- `Register.tsx` y el login con Google: leer `?ref=` / `localStorage` y llamar `register_referral` tras el alta.
+- App raíz: capturar `?ref=` al cargar y guardarlo en `localStorage`.
+- Nuevo componente `AffiliatePopup` (Popover/Dialog) usado desde la card del sidebar.
+- Perfil y Onboarding: campo de username con verificación de disponibilidad.
+
+### Atribución de la compra
+- En `payments-webhook`, cuando una suscripción pasa a activa, llamar a `mark_referral_purchased(userId)` para marcar la relación del comprador (si fue referido).
+
+## Notas
+- El link usa `?ref=` para evitar choques con rutas reales (login, precios, perfil, etc.).
+- Por ahora solo se guarda la relación referido→referidor y si compró; los pagos de comisión se gestionan por fuera.

@@ -21,6 +21,7 @@ import { useSubscription } from "@/hooks/useSubscription";
 import { getStripeEnvironment } from "@/lib/stripe";
 
 import { getVideoEmbedUrl } from "@/lib/videoEmbed";
+import { isValidUsername } from "@/lib/referral";
 
 function VideoLinkPopover({ value, onSave, onCancel }: { value: string; onSave: (v: string) => void; onCancel: () => void }) {
   const [draft, setDraft] = useState(value);
@@ -66,6 +67,7 @@ const Profile = () => {
   const { subscription, isActive } = useSubscription();
   const planRef = useRef<HTMLDivElement>(null);
   const [displayName, setDisplayName] = useState("");
+  const [username, setUsername] = useState("");
   const [avatarUrl, setAvatarUrl] = useState("");
   const [instagramHandle, setInstagramHandle] = useState("");
   const [tiktokHandle, setTiktokHandle] = useState("");
@@ -100,6 +102,7 @@ const Profile = () => {
       .then(({ data }) => {
         if (data) {
           setDisplayName(data.display_name || "");
+          setUsername((data as any).username || "");
           setAvatarUrl(data.avatar_url || "");
           setInstagramHandle(data.instagram_handle || "");
           setTiktokHandle(data.tiktok_handle || "");
@@ -116,6 +119,7 @@ const Profile = () => {
 
           setOriginalData({
             displayName: data.display_name || "",
+            username: (data as any).username || "",
             avatarUrl: data.avatar_url || "",
             instagramHandle: data.instagram_handle || "",
             tiktokHandle: data.tiktok_handle || "",
@@ -154,7 +158,7 @@ const Profile = () => {
   }, [loading, window.location.hash]);
 
   const currentData = {
-    displayName, avatarUrl, instagramHandle, tiktokHandle, twitterHandle,
+    displayName, username, avatarUrl, instagramHandle, tiktokHandle, twitterHandle,
     youtubeHandle, bio, niche, phone, portfolioUrl, videoUrl1, videoUrl2, videoUrl3
   };
 
@@ -163,11 +167,17 @@ const Profile = () => {
   const handleSave = async (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (!user) return;
+    const trimmedUsername = username.trim();
+    if (trimmedUsername && !isValidUsername(trimmedUsername)) {
+      toast.error("Nombre de usuario inválido: usa 3-30 letras, números, guion o guion bajo");
+      return;
+    }
     setSaving(true);
     const { error } = await supabase
       .from("profiles")
       .update({
         display_name: displayName,
+        username: trimmedUsername || null,
         avatar_url: avatarUrl,
         instagram_handle: instagramHandle,
         tiktok_handle: tiktokHandle,
@@ -180,10 +190,11 @@ const Profile = () => {
         video_url_1: videoUrl1,
         video_url_2: videoUrl2,
         video_url_3: videoUrl3,
-      })
+      } as any)
       .eq("user_id", user.id);
     if (error) {
-      toast.error("Error al guardar");
+      const isUnique = (error as any).code === "23505" || /duplicate|unique/i.test(error.message || "");
+      toast.error(isUnique ? "Ese nombre de usuario ya está en uso" : "Error al guardar");
       setSaving(false);
     } else {
       toast.success("Perfil actualizado");
@@ -285,6 +296,19 @@ const Profile = () => {
                   <User size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                   <Input value={displayName} onChange={(e) => setDisplayName(e.target.value)} className="pl-9" />
                 </div>
+              </div>
+              <div>
+                <label className="text-xs text-muted-foreground mb-1.5 block font-light">Nombre de usuario</label>
+                <div className="relative">
+                  <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">@</span>
+                  <Input
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value.replace(/\s/g, ""))}
+                    placeholder="tunombre"
+                    className="pl-8"
+                  />
+                </div>
+                <p className="text-[11px] text-muted-foreground font-light mt-1">Tu link de afiliado: miiles.app/?ref={username || "tunombre"}</p>
               </div>
               <div>
                 <label className="text-xs text-muted-foreground mb-1.5 block font-light">Nicho</label>
