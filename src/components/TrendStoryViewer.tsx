@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useTheme } from "@/contexts/ThemeContext";
-import { ChevronLeft, ChevronRight, ExternalLink, X, Newspaper } from "lucide-react";
+import { ChevronLeft, ChevronRight, ExternalLink, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Trend } from "@/hooks/useTrends";
+import storyReelPlaceholder from "@/assets/story-reel-placeholder.png";
 
 type Props = {
   trends: Trend[];
@@ -43,12 +44,13 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent
-        className="p-0 overflow-hidden border-none max-w-3xl w-[95vw] md:w-full rounded-[28px] gap-0 [&>button]:hidden"
+        className="p-0 overflow-hidden border-none max-w-4xl w-[95vw] md:h-[580px] rounded-[28px] shadow-2xl flex flex-col md:grid md:grid-cols-[40%_60%] gap-0 [&>button]:hidden transition-colors duration-300"
+        style={{ background: isDark ? "#000000" : "#7E7E7E" }}
       >
         {trend && (
-          <div className="flex flex-col md:flex-row max-h-[85vh]">
-            {/* Media — vertical phone format */}
-            <div className="relative md:w-[44%] flex-shrink-0 bg-black flex items-center justify-center aspect-[9/16] md:aspect-auto">
+          <>
+            {/* Media — vertical phone/reel format */}
+            <div className="relative w-full h-[220px] md:h-full flex-shrink-0 bg-black flex items-center justify-center overflow-hidden select-none">
               <AnimatePresence mode="wait">
                 <motion.div
                   key={trend.id}
@@ -58,26 +60,11 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
                   transition={{ duration: 0.25 }}
                   className="absolute inset-0 flex items-center justify-center"
                 >
-                  {trend.media_url ? (
-                    trend.media_type === "video" ? (
-                      <video
-                        src={trend.media_url}
-                        className="w-full h-full object-cover"
-                        autoPlay
-                        muted
-                        loop
-                        playsInline
-                        controls
-                      />
-                    ) : (
-                      <img src={trend.media_url} alt={trend.title} className="w-full h-full object-cover" />
-                    )
-                  ) : (
-                    <div className="flex flex-col items-center gap-2 text-white/30">
-                      <Newspaper size={40} strokeWidth={1.2} />
-                      <span className="text-xs font-light">Sin contenido</span>
-                    </div>
-                  )}
+                  <img
+                    src={storyReelPlaceholder}
+                    alt={trend.title}
+                    className="w-full h-full object-cover"
+                  />
                 </motion.div>
               </AnimatePresence>
 
@@ -91,25 +78,27 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
               </div>
             </div>
 
-            {/* Text content */}
+            {/* Text content panel */}
             <div
-              className={`flex-1 flex flex-col min-w-0 ${isDark ? "bg-[hsl(222,20%,11%)]" : "bg-white"}`}
+              className="flex-grow flex flex-col min-h-0 md:h-[580px] overflow-hidden"
+              style={{ background: isDark ? "#000000" : "#7E7E7E" }}
             >
               <div className="flex items-center justify-between px-6 pt-5 pb-2">
-                <span className="text-[11px] uppercase tracking-wide text-miiles-gray-400 font-light">
+                <span className="text-[11px] uppercase tracking-wide text-white/60 font-medium">
                   {trend.category}
                 </span>
                 <button
                   onClick={onClose}
-                  className={`p-1.5 rounded-full transition-colors ${isDark ? "hover:bg-white/10 text-white" : "hover:bg-miiles-gray-100 text-black"}`}
+                  className="p-1.5 rounded-full transition-colors hover:bg-white/10 text-white"
+                  aria-label="Cerrar"
                 >
                   <X size={16} />
                 </button>
               </div>
 
               <div className="flex-1 overflow-y-auto px-6 pb-4 scrollbar-hide">
-                <h2 className="text-xl font-normal text-foreground leading-snug">{trend.title}</h2>
-                <p className="text-[11px] text-miiles-gray-400 font-light mt-1">
+                <h2 className="text-xl font-normal text-white leading-snug">{trend.title}</h2>
+                <p className="text-[11px] text-white/50 font-light mt-1">
                   {new Date(trend.published_at).toLocaleDateString("es-ES", {
                     day: "numeric",
                     month: "long",
@@ -118,7 +107,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
                 </p>
 
                 {trend.summary && (
-                  <p className="text-sm font-light text-foreground/80 leading-relaxed mt-4 whitespace-pre-wrap">
+                  <p className="text-sm font-light text-white/80 leading-relaxed mt-4 whitespace-pre-wrap">
                     {trend.summary}
                   </p>
                 )}
@@ -126,8 +115,8 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
                 {trend.bullets.length > 0 && (
                   <ul className="mt-4 space-y-2">
                     {trend.bullets.map((b, i) => (
-                      <li key={i} className="flex gap-2 text-sm font-light text-foreground/80 leading-relaxed">
-                        <span className="text-miiles-blue mt-0.5">•</span>
+                      <li key={i} className="flex gap-2 text-sm font-light text-white/80 leading-relaxed">
+                        <span className="text-white/40 mt-0.5">•</span>
                         <span>{b}</span>
                       </li>
                     ))}
@@ -142,11 +131,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
                         href={l.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className={`flex items-center justify-between gap-2 px-4 py-3 rounded-full text-sm font-light transition-all hover:scale-[1.01] ${
-                          isDark
-                            ? "bg-white/10 text-white border border-white/10 hover:bg-white/15"
-                            : "bg-miiles-gray-50 text-black hover:bg-miiles-gray-100 border border-[#F3F4F6]"
-                        }`}
+                        className="flex items-center justify-between gap-2 px-4 py-3 rounded-full text-sm font-light transition-all hover:scale-[1.01] bg-white/10 text-white border border-white/10 hover:bg-white/15"
                       >
                         <span className="truncate">{l.label || l.url}</span>
                         <ExternalLink size={14} className="flex-shrink-0" />
@@ -156,32 +141,30 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
                 )}
               </div>
 
-              {/* Navigation */}
-              <div className={`flex items-center justify-between px-6 py-4 border-t ${isDark ? "border-white/10" : "border-[#F3F4F6]"}`}>
+              {/* Navigation Footer */}
+              <div className="flex items-center justify-between px-6 py-4 border-t border-white/10">
                 <button
                   onClick={goPrev}
                   disabled={trends.length <= 1}
-                  className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors disabled:opacity-30 ${
-                    isDark ? "bg-white/10 text-white hover:bg-white/15" : "bg-miiles-gray-50 text-black hover:bg-miiles-gray-100"
-                  }`}
+                  className="w-10 h-10 rounded-full flex items-center justify-center transition-colors disabled:opacity-30 bg-white/10 text-white hover:bg-white/15"
+                  aria-label="Anterior"
                 >
                   <ChevronLeft size={18} />
                 </button>
-                <span className="text-xs text-miiles-gray-400 font-light">
+                <span className="text-xs text-white/60 font-light">
                   {index + 1} / {trends.length}
                 </span>
                 <button
                   onClick={goNext}
                   disabled={trends.length <= 1}
-                  className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors disabled:opacity-30 ${
-                    isDark ? "bg-white/10 text-white hover:bg-white/15" : "bg-miiles-gray-50 text-black hover:bg-miiles-gray-100"
-                  }`}
+                  className="w-10 h-10 rounded-full flex items-center justify-center transition-colors disabled:opacity-30 bg-white/10 text-white hover:bg-white/15"
+                  aria-label="Siguiente"
                 >
                   <ChevronRight size={18} />
                 </button>
               </div>
             </div>
-          </div>
+          </>
         )}
       </DialogContent>
     </Dialog>
