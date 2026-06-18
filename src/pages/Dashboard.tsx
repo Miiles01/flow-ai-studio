@@ -281,7 +281,7 @@ export default function Dashboard() {
         </motion.div>
       </motion.div>
 
-      {/* Tendencias preview — visible para todos los usuarios */}
+      {/* Descubrimientos preview — visible para todos los usuarios */}
       <motion.div variants={sectionVariants}>
         <TrendsPreview />
       </motion.div>

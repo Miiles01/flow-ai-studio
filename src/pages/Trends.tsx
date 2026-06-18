@@ -23,10 +23,10 @@ export default function Trends() {
     <div className="p-8 md:px-12 md:pb-12 md:pt-48 max-w-5xl mx-auto space-y-8">
       <div>
         <h1 className={`text-2xl md:text-3xl font-normal leading-tight ${isDark ? "text-white" : "text-black"}`}>
-          Tendencias
+          Descubrimientos
         </h1>
         <p className="text-miiles-gray-400 mt-2 text-sm font-light">
-          Noticias y tendencias del mundo de los negocios, actualizadas constantemente.
+          Nuevas actualizaciones estratégicas, actualizadas constantemente.
         </p>
       </div>
 
@@ -37,7 +37,7 @@ export default function Trends() {
       ) : trends.length === 0 ? (
         <div className={`flex flex-col items-center justify-center py-24 gap-3 rounded-2xl ${isDark ? "bg-white/5" : "bg-miiles-gray-50"}`}>
           <Newspaper size={36} className="text-miiles-gray-400" strokeWidth={1.2} />
-          <p className="text-sm text-miiles-gray-400 font-light">Aún no hay tendencias. Vuelve pronto.</p>
+          <p className="text-sm text-miiles-gray-400 font-light">Aún no hay descubrimientos. Vuelve pronto.</p>
         </div>
       ) : (
         <motion.div

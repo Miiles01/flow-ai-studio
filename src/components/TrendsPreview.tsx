@@ -108,9 +108,9 @@ export function TrendsPreview() {
 
   return (
     <div>
-      <h2 className="text-lg font-normal text-foreground mb-1">Tendencias</h2>
+      <h2 className="text-lg font-normal text-foreground mb-1">Descubrimientos</h2>
       <p className="text-xs text-miiles-gray-400 font-light mb-4">
-        Noticias y tendencias de negocios
+        Nuevas actualizaciones estratégicas
       </p>
 
       <div className="relative">
