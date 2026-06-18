@@ -3,8 +3,27 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { useTheme } from "@/contexts/ThemeContext";
 import { ChevronLeft, ChevronRight, ExternalLink, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
-import type { Trend } from "@/hooks/useTrends";
+import type { Trend, TrendLink } from "@/hooks/useTrends";
 import storyReelPlaceholder from "@/assets/story-reel-placeholder.png";
+
+const getSummaryParagraph = (summary: string | null, idx: number, totalSlides: number) => {
+  if (!summary) return "";
+  const paragraphs = summary.split(/\n\s*\n+/).map(p => p.trim()).filter(Boolean);
+  if (paragraphs.length === 0) return "";
+  if (paragraphs.length === 1) {
+    return paragraphs[0];
+  }
+  return paragraphs[idx] || "";
+};
+
+const getSlideLinks = (links: TrendLink[], idx: number) => {
+  if (!links || links.length === 0) return [];
+  if (links.length === 1) {
+    return links;
+  }
+  const link = links[idx];
+  return link ? [link] : [];
+};
 
 type Props = {
   trends: Trend[];
@@ -234,35 +253,56 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
                   })}
                 </p>
 
-                {trend.bullets.length > 0 && (
-                  <div className="mt-6 p-5 rounded-2xl bg-white/5 border border-white/10">
-                    <span className="text-[10px] text-white/40 uppercase tracking-widest block mb-2 font-medium">Tema {slideIndex + 1} de {slides.length}</span>
-                    <p className="text-base font-medium text-white leading-relaxed">{slides[slideIndex]}</p>
-                  </div>
-                )}
+                <AnimatePresence mode="wait">
+                  <motion.div
+                    key={`${trend.id}-${slideIndex}`}
+                    initial={{ opacity: 0, y: 10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -10 }}
+                    transition={{ duration: 0.2 }}
+                    className="mt-6 space-y-4"
+                  >
+                    {trend.bullets.length > 0 && (
+                      <div className="p-5 rounded-2xl bg-white/5 border border-white/10">
+                        <span className="text-[10px] text-white/40 uppercase tracking-widest block mb-2 font-medium">
+                          Tema {slideIndex + 1} de {slides.length}
+                        </span>
+                        <p className="text-base font-medium text-white leading-relaxed">
+                          {slides[slideIndex]}
+                        </p>
+                      </div>
+                    )}
 
-                {trend.summary && (
-                  <p className="text-sm font-light text-white/80 leading-relaxed mt-4 whitespace-pre-wrap">
-                    {trend.summary}
-                  </p>
-                )}
+                    {(() => {
+                      const paragraph = getSummaryParagraph(trend.summary, slideIndex, slides.length);
+                      return paragraph ? (
+                        <p className="text-sm font-light text-white/80 leading-relaxed whitespace-pre-wrap">
+                          {paragraph}
+                        </p>
+                      ) : null;
+                    })()}
 
-                {trend.links.length > 0 && (
-                  <div className="mt-5 flex flex-col gap-2">
-                    {trend.links.map((l, i) => (
-                      <a
-                        key={i}
-                        href={l.url}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="flex items-center justify-between gap-2 px-4 py-3 rounded-full text-sm font-light transition-all hover:scale-[1.01] bg-white/10 text-white border border-white/10 hover:bg-white/15"
-                      >
-                        <span className="truncate">{l.label || l.url}</span>
-                        <ExternalLink size={14} className="flex-shrink-0" />
-                      </a>
-                    ))}
-                  </div>
-                )}
+                    {(() => {
+                      const slideLinks = getSlideLinks(trend.links, slideIndex);
+                      return slideLinks.length > 0 ? (
+                        <div className="flex flex-col gap-2 pt-2">
+                          {slideLinks.map((l, i) => (
+                            <a
+                              key={i}
+                              href={l.url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="flex items-center justify-between gap-2 px-4 py-3 rounded-full text-sm font-light transition-all hover:scale-[1.01] bg-white/10 text-white border border-white/10 hover:bg-white/15"
+                            >
+                              <span className="truncate">{l.label || l.url}</span>
+                              <ExternalLink size={14} className="flex-shrink-0" />
+                            </a>
+                          ))}
+                        </div>
+                      ) : null;
+                    })()}
+                  </motion.div>
+                </AnimatePresence>
               </div>
             </div>
 
