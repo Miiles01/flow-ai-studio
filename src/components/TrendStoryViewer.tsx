@@ -126,14 +126,27 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent
-        className="p-0 overflow-hidden border-none max-w-4xl w-[95vw] md:h-[580px] rounded-[28px] shadow-2xl flex flex-col md:grid md:grid-cols-[40%_60%] gap-0 [&>button]:hidden transition-colors duration-300"
+        className="p-0 overflow-visible border-none max-w-4xl w-[95vw] md:h-[580px] rounded-[28px] shadow-2xl flex flex-col md:grid md:grid-cols-[40%_60%] gap-0 [&>button.right-4]:hidden transition-colors duration-300"
         style={{ background: isDark ? "#000000" : "#7E7E7E" }}
       >
         {trend && (
           <>
+            {/* Left Navigation Arrow (Outside) */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                goPrev();
+              }}
+              disabled={trends.length <= 1}
+              className="absolute left-[-70px] lg:left-[-90px] top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/40 hover:bg-black/60 backdrop-blur-md text-white border border-white/10 hidden md:flex items-center justify-center transition-all hover:scale-105 active:scale-95 disabled:opacity-30 z-50 pointer-events-auto cursor-pointer"
+              aria-label="Anterior"
+            >
+              <ChevronLeft size={24} strokeWidth={2} />
+            </button>
+
             {/* Media — vertical phone/reel format with hold-to-pause and tap-to-navigate */}
             <div
-              className="relative w-full h-[220px] md:h-full flex-shrink-0 bg-black flex items-center justify-center overflow-hidden select-none cursor-pointer"
+              className="relative w-full h-[220px] md:h-full flex-shrink-0 bg-black flex items-center justify-center overflow-hidden select-none cursor-pointer rounded-t-[28px] md:rounded-t-none md:rounded-l-[28px]"
               onPointerDown={(e) => {
                 setPointerDownTime(Date.now());
                 setIsPaused(true);
@@ -195,7 +208,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
 
             {/* Text content panel */}
             <div
-              className="flex-grow flex flex-col min-h-0 md:h-[580px] overflow-hidden"
+              className="flex-grow flex flex-col min-h-0 md:h-[580px] overflow-hidden rounded-b-[28px] md:rounded-b-none md:rounded-r-[28px]"
               style={{ background: isDark ? "#000000" : "#7E7E7E" }}
             >
               <div className="flex items-center justify-between px-6 pt-5 pb-2">
@@ -252,6 +265,19 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
                 )}
               </div>
             </div>
+
+            {/* Right Navigation Arrow (Outside) */}
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                goNext();
+              }}
+              disabled={trends.length <= 1}
+              className="absolute right-[-70px] lg:right-[-90px] top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/40 hover:bg-black/60 backdrop-blur-md text-white border border-white/10 hidden md:flex items-center justify-center transition-all hover:scale-105 active:scale-95 disabled:opacity-30 z-50 pointer-events-auto cursor-pointer"
+              aria-label="Siguiente"
+            >
+              <ChevronRight size={24} strokeWidth={2} />
+            </button>
           </>
         )}
       </DialogContent>
