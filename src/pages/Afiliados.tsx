@@ -1495,7 +1495,7 @@ const Afiliados = () => {
           </div>
 
           {/* ── BOARD MOCKUP ───────────────────────────────────────────── */}
-          <section className="py-32 px-6 bg-white">
+          <section className="py-12 md:py-32 px-6 bg-white">
             <div className="max-w-5xl mx-auto">
               <div data-fade>
                 <BoardMockup />
@@ -1504,7 +1504,7 @@ const Afiliados = () => {
           </section>
 
           {/* ── CÓMO FUNCIONA + DASHBOARD MOCKUP ───────────────────────── */}
-          <section id="como-funciona" className="py-48 px-6 scroll-mt-24">
+          <section id="como-funciona" className="py-20 md:py-48 px-6 scroll-mt-24">
             <div className="max-w-5xl mx-auto">
               <div className="text-center mb-20">
                 <h2 className="text-4xl md:text-6xl font-normal leading-[1.3] tracking-tight pb-2">
