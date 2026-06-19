@@ -131,8 +131,9 @@ const LandingNavbar = ({ onMenuAction, cta }: LandingNavbarProps) => {
                     transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
                     className="flex flex-col gap-1.5 text-xs font-light text-white/50"
                   >
-                    <Link to="/terminos" className="hover:text-white/80 transition-colors">Términos y condiciones</Link>
-                    <Link to="/privacidad" className="hover:text-white/80 transition-colors">Política de privacidad</Link>
+                    <Link to="/afiliados" onClick={() => setIsMenuOpen(false)} className="hover:text-white/80 transition-colors">Afiliados</Link>
+                    <Link to="/terminos" onClick={() => setIsMenuOpen(false)} className="hover:text-white/80 transition-colors">Términos y condiciones</Link>
+                    <Link to="/privacidad" onClick={() => setIsMenuOpen(false)} className="hover:text-white/80 transition-colors">Política de privacidad</Link>
                   </motion.div>
                 </div>
               </div>
