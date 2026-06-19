@@ -116,7 +116,63 @@ const findFreePosition = (
   return { x: start.x, y: maxBottom + pad };
 };
 
-const isWhiteColor = (color: string | undefined): boolean => {
+// Remap node ids to be globally unique, rewriting edge endpoints to match.
+// Pass `existingIds` to also avoid colliding with nodes already on the canvas.
+const uniquifyFlow = (
+  newNodes: Node[],
+  newEdges: Edge[],
+  existingIds?: Set<string>
+): { nodes: Node[]; edges: Edge[] } => {
+  const idMap = new Map<string, string>();
+  const used = new Set<string>(existingIds ? Array.from(existingIds) : []);
+  const suffix = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+
+  const nodes = newNodes.map((n, i) => {
+    const oldId = String(n.id);
+    let newId = oldId;
+    if (used.has(newId)) newId = `${oldId}-${suffix}-${i}`;
+    used.add(newId);
+    idMap.set(oldId, newId);
+    return { ...n, id: newId };
+  });
+
+  // Fix parentId references that point to remapped nodes.
+  const fixedNodes = nodes.map((n) =>
+    n.parentId && idMap.has(n.parentId) ? { ...n, parentId: idMap.get(n.parentId) } : n
+  );
+
+  const edges = newEdges.map((e) => ({
+    ...e,
+    source: idMap.get(String(e.source)) ?? e.source,
+    target: idMap.get(String(e.target)) ?? e.target,
+  }));
+
+  return { nodes: fixedNodes, edges };
+};
+
+// Remove nodes/edges with duplicate ids that may have been persisted previously.
+const dedupeFlow = (
+  loadedNodes: Node[],
+  loadedEdges: Edge[]
+): { nodes: Node[]; edges: Edge[] } => {
+  const seen = new Set<string>();
+  const nodes = loadedNodes.filter((n) => {
+    const key = String(n.id);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+  const seenEdges = new Set<string>();
+  const edges = loadedEdges.filter((e) => {
+    const key = String(e.id ?? `${e.source}-${e.target}`);
+    if (seenEdges.has(key)) return false;
+    seenEdges.add(key);
+    return true;
+  });
+  return { nodes, edges };
+};
+
+
   if (!color) return false;
   const cleaned = color.trim().toLowerCase();
   return cleaned === "#ffffff" || cleaned === "white" || cleaned === "#fff" || cleaned === "#fafafa" || cleaned === "#f3f4f6";
