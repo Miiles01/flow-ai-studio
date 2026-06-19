@@ -112,14 +112,6 @@ export function AffiliatePopup({ children }: { children: React.ReactNode }) {
                     {savingUsername ? <Loader2 size={16} className="animate-spin mx-auto" /> : "Guardar"}
                   </button>
                 </div>
-              ) : !link ? (
-                <button
-                  type="button"
-                  onClick={generateLink}
-                  className="w-full flex items-center justify-center gap-2 rounded-full py-3 text-sm font-normal bg-black text-white border border-white/10 hover:opacity-90 transition-opacity"
-                >
-                  <Link2 size={16} /> Generar link
-                </button>
               ) : (
                 <div className="space-y-2">
                   <div
