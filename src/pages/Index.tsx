@@ -172,7 +172,7 @@ const dedupeFlow = (
   return { nodes, edges };
 };
 
-
+const isWhiteColor = (color: string | undefined): boolean => {
   if (!color) return false;
   const cleaned = color.trim().toLowerCase();
   return cleaned === "#ffffff" || cleaned === "white" || cleaned === "#fff" || cleaned === "#fafafa" || cleaned === "#f3f4f6";
