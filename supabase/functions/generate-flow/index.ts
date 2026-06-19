@@ -213,7 +213,8 @@ serve(async (req) => {
     let apifyFound: any[] = [];
     let apifyChannel: string | null = null;
     if (APIFY_API_TOKEN) {
-      const plan = await classifyIntent(prompt, LOVABLE_API_KEY);
+      const searchGuidance = await loadInstruction(supabase, "search");
+      const plan = await classifyIntent(prompt, LOVABLE_API_KEY, searchGuidance);
       if (plan.needsSearch && plan.channel && plan.query) {
         apifyChannel = plan.channel;
 
