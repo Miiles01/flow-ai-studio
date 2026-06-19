@@ -1179,6 +1179,24 @@ const IndexContent = () => {
         if (target.side === "bottom") { baseX = sourceNode.position.x; baseY = sourceNode.position.y + srcH + GAP; }
         if (target.side === "top") { baseX = sourceNode.position.x; baseY = sourceNode.position.y - GAP - groupH; }
 
+        // Evita colisiones con otros flujos existentes (excluyendo el nodo de origen),
+        // empujando el grupo en la dirección de expansión hasta encontrar espacio libre.
+        const obstacles = nodes
+          .filter((n) => n.id !== sourceNode.id && n.id !== skeletonId)
+          .map(getNodeRect);
+        if (obstacles.length > 0) {
+          const PAD = 60;
+          const stepX = target.side === "left" ? -(groupW + PAD) : (groupW + PAD);
+          const stepY = target.side === "top" ? -(groupH + PAD) : (groupH + PAD);
+          const horizontal = target.side === "left" || target.side === "right";
+          for (let i = 0; i < 20; i++) {
+            const candidate: Rect = { x: baseX, y: baseY, w: groupW, h: groupH };
+            if (!obstacles.some((o) => rectsOverlap(candidate, o, PAD))) break;
+            if (horizontal) baseX += stepX;
+            else baseY += stepY;
+          }
+        }
+
         const offsetNodes = newNodes.map((n) => ({
           ...n,
           position: {
@@ -1187,6 +1205,7 @@ const IndexContent = () => {
           },
         }));
         const generatedIds = offsetNodes.map((n) => String(n.id));
+
 
         setNodes((prev) => [...prev.filter((n) => n.id !== skeletonId), ...offsetNodes]);
 
