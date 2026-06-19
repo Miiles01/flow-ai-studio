@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
+import { loadInstructions } from "../_shared/flow-instructions.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -333,6 +334,7 @@ Rules for Premium Visual Design:
 Example output:
 {"nodes": [{"id":"1","type":"textNode","position":{"x":50,"y":50},"data":{"html":"<b style='color:#000000'>Inicio</b>","fontSize":24,"textColor":"#000000"}},{"id":"2","type":"shapeNode","position":{"x":50,"y":120},"style":{"width":140,"height":140},"data":{"shape":"circle","label":"Inicio del Flujo","fillColor":"#4059F1","textColor":"#FFFFFF"}},{"id":"3","type":"todoNode","position":{"x":350,"y":70},"style":{"width":280,"height":240},"data":{"title":"Fase de Planificación","subtitle":"Prerrequisitos obligatorios","tasks":[{"id":"t1","text":"Analizar requerimientos del cliente","completed":false},{"id":"t2","text":"Crear bocetos preliminares","completed":false}],"backgroundColor":"#FFFFFF","accentColor":"#4059F1","textColor":"#000000"}}], "edges": [{"id":"e2-3","source":"2","target":"3","animated":false,"style":{"stroke":"#4059F1","strokeWidth":2}}]}${apifyBlock}${prospectsBlock}${templatesBlock}`;
 
+    const customInstructions = await loadInstructions(supabase, "generate");
     const response = await fetch(
       "https://ai.gateway.lovable.dev/v1/chat/completions",
       {
@@ -344,7 +346,7 @@ Example output:
         body: JSON.stringify({
           model: "google/gemini-3-flash-preview",
           messages: [
-            { role: "system", content: systemPrompt },
+            { role: "system", content: systemPrompt + customInstructions },
             { role: "user", content: prompt },
           ],
         }),

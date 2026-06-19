@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
+import { loadInstructions } from "../_shared/flow-instructions.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -93,6 +94,7 @@ Reglas:
 - "refined_prompt" siempre presente: si no se necesita aclaración, repite/mejora el prompt original.
 - No incluyas markdown ni texto fuera del JSON.`;
 
+    const customInstructions = await loadInstructions(supabase, "clarify");
     const response = await fetch(
       "https://ai.gateway.lovable.dev/v1/chat/completions",
       {
@@ -104,7 +106,7 @@ Reglas:
         body: JSON.stringify({
           model: "google/gemini-3-flash-preview",
           messages: [
-            { role: "system", content: systemPrompt },
+            { role: "system", content: systemPrompt + customInstructions },
             { role: "user", content: prompt },
           ],
         }),
