@@ -1217,7 +1217,9 @@ const IndexContent = () => {
           side: target.side,
           summary: summarizeNode(sourceNode),
         };
-        const { nodes: newNodes, edges: newEdges } = await generateFlowFromPrompt(prompt, extendContext);
+        const rawExtend = await generateFlowFromPrompt(prompt, extendContext);
+        const existingExtendIds = new Set(nodes.map((n) => String(n.id)));
+        const { nodes: newNodes, edges: newEdges } = uniquifyFlow(rawExtend.nodes, rawExtend.edges, existingExtendIds);
 
         if (newNodes.length === 0) {
           setNodes((prev) => prev.filter((n) => n.id !== skeletonId));
