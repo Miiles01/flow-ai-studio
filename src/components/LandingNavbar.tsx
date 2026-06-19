@@ -4,9 +4,10 @@ import { motion, AnimatePresence } from "framer-motion";
 
 interface LandingNavbarProps {
   onMenuAction?: (id: string) => void;
+  cta?: React.ReactNode;
 }
 
-const LandingNavbar = ({ onMenuAction }: LandingNavbarProps) => {
+const LandingNavbar = ({ onMenuAction, cta }: LandingNavbarProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [menuKey, setMenuKey] = useState(0);
 
@@ -60,12 +61,13 @@ const LandingNavbar = ({ onMenuAction }: LandingNavbarProps) => {
           </Link>
 
           <div className="flex items-center gap-4 md:gap-6 shrink-0">
-            <button 
+            <button
               onClick={toggleMenu}
               className="text-sm font-normal hover:opacity-50 transition-colors duration-500 tracking-tight text-black"
             >
               {isMenuOpen ? "Cerrar" : "Menú"}
             </button>
+            {cta}
             <Link
               to="/login"
               className="text-xs font-normal px-5 py-2.5 rounded-full bg-black text-white transition-all duration-500 hover:scale-105"
