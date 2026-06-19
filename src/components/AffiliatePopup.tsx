@@ -32,6 +32,7 @@ export function AffiliatePopup({ children }: { children: React.ReactNode }) {
       const uname = (profileRes.data as any)?.username || "";
       setUsername(uname);
       setUsernameDraft(uname);
+      if (uname) setLink(`${BASE}/?ref=${uname}`);
       const row = Array.isArray(statsRes.data) ? statsRes.data[0] : statsRes.data;
       setStats({
         total: Number((row as any)?.total_referrals ?? 0),
@@ -56,21 +57,15 @@ export function AffiliatePopup({ children }: { children: React.ReactNode }) {
       return;
     }
     setUsername(value);
+    setLink(`${BASE}/?ref=${value}`);
     toast.success("Nombre de usuario guardado");
-  };
-
-  const generateLink = () => {
-    if (!username) {
-      toast.error("Primero crea tu nombre de usuario");
-      return;
-    }
-    setLink(`${BASE}/?ref=${username}`);
   };
 
   const copyLink = async () => {
     if (!link) return;
     await navigator.clipboard.writeText(link);
     setCopied(true);
+    toast.success("¡Link copiado con éxito!");
     setTimeout(() => setCopied(false), 1800);
   };
 
@@ -117,14 +112,6 @@ export function AffiliatePopup({ children }: { children: React.ReactNode }) {
                     {savingUsername ? <Loader2 size={16} className="animate-spin mx-auto" /> : "Guardar"}
                   </button>
                 </div>
-              ) : !link ? (
-                <button
-                  type="button"
-                  onClick={generateLink}
-                  className="w-full flex items-center justify-center gap-2 rounded-full py-3 text-sm font-normal bg-black text-white border border-white/10 hover:opacity-90 transition-opacity"
-                >
-                  <Link2 size={16} /> Generar link
-                </button>
               ) : (
                 <div className="space-y-2">
                   <div
