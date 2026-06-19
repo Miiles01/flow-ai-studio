@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import ProspectsTab from "@/components/admin/ProspectsTab";
 import TemplatesTab from "@/components/admin/TemplatesTab";
 import BusinessInquiriesTab from "@/components/admin/BusinessInquiriesTab";
-import { LogOut, Database, FileCode, Loader2, Briefcase } from "lucide-react";
+import InstructionsTab from "@/components/admin/InstructionsTab";
+import { LogOut, Database, FileCode, Loader2, Briefcase, Brain } from "lucide-react";
 
 export default function Admin() {
   const { valid, checking, logout } = useAdminAuth();
