@@ -38,6 +38,24 @@ export type Database = {
         }
         Relationships: []
       }
+      ai_instructions: {
+        Row: {
+          content: string
+          key: string
+          updated_at: string
+        }
+        Insert: {
+          content?: string
+          key: string
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          key?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       ai_messages: {
         Row: {
           content: string

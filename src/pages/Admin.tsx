@@ -5,7 +5,8 @@ import { Button } from "@/components/ui/button";
 import ProspectsTab from "@/components/admin/ProspectsTab";
 import TemplatesTab from "@/components/admin/TemplatesTab";
 import BusinessInquiriesTab from "@/components/admin/BusinessInquiriesTab";
-import { LogOut, Database, FileCode, Loader2, Briefcase } from "lucide-react";
+import InstructionsTab from "@/components/admin/InstructionsTab";
+import { LogOut, Database, FileCode, Loader2, Briefcase, Brain } from "lucide-react";
 
 export default function Admin() {
   const { valid, checking, logout } = useAdminAuth();
@@ -44,6 +45,9 @@ export default function Admin() {
             <TabsTrigger value="business" className="data-[state=active]:bg-white data-[state=active]:text-black">
               <Briefcase className="h-4 w-4" /> Negocios
             </TabsTrigger>
+            <TabsTrigger value="instructions" className="data-[state=active]:bg-white data-[state=active]:text-black">
+              <Brain className="h-4 w-4" /> Instrucciones IA
+            </TabsTrigger>
           </TabsList>
 
           <TabsContent value="prospects" className="mt-6">
@@ -54,6 +58,9 @@ export default function Admin() {
           </TabsContent>
           <TabsContent value="business" className="mt-6">
             <BusinessInquiriesTab />
+          </TabsContent>
+          <TabsContent value="instructions" className="mt-6">
+            <InstructionsTab />
           </TabsContent>
         </Tabs>
       </main>

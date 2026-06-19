@@ -1,5 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
+import { loadInstructions, loadInstruction } from "../_shared/flow-instructions.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -33,13 +34,13 @@ type SearchPlan = {
 };
 
 // Ask the model whether the user wants to DISCOVER new real prospects, and on which channel.
-async function classifyIntent(prompt: string, apiKey: string): Promise<SearchPlan> {
+async function classifyIntent(prompt: string, apiKey: string, searchGuidance?: string): Promise<SearchPlan> {
   const sys = `Eres un clasificador de intención para un generador de flujos de prospección.
 Decide si el usuario quiere DESCUBRIR cuentas/negocios/prospectos REALES y NUEVOS (no solo planear).
 Canales disponibles:
 - "instagram": cuando busca cuentas, creadores, marcas o perfiles de Instagram.
 - "google_maps": cuando busca negocios locales, empresas, tiendas o lugares (por nicho + ubicación).
-Si el usuario solo quiere un plan/estrategia sin buscar prospectos reales, needsSearch=false.
+Si el usuario solo quiere un plan/estrategia sin buscar prospectos reales, needsSearch=false.${searchGuidance && searchGuidance.trim() ? `\n\n=== REGLAS DE BÚSQUEDA DE MIILES (PRIORIDAD ALTA) ===\n${searchGuidance.trim()}\n=== FIN REGLAS DE BÚSQUEDA ===` : ""}
 Responde SOLO JSON válido con esta forma:
 {"needsSearch":boolean,"channel":"instagram"|"google_maps"|null,"query":"términos de búsqueda limpios","location":"ciudad/país o null","limit":6}
 El "query" debe ser conciso y en el idioma del usuario. limit entre 4 y 8.`;
@@ -212,7 +213,8 @@ serve(async (req) => {
     let apifyFound: any[] = [];
     let apifyChannel: string | null = null;
     if (APIFY_API_TOKEN) {
-      const plan = await classifyIntent(prompt, LOVABLE_API_KEY);
+      const searchGuidance = await loadInstruction(supabase, "search");
+      const plan = await classifyIntent(prompt, LOVABLE_API_KEY, searchGuidance);
       if (plan.needsSearch && plan.channel && plan.query) {
         apifyChannel = plan.channel;
 
@@ -333,6 +335,7 @@ Rules for Premium Visual Design:
 Example output:
 {"nodes": [{"id":"1","type":"textNode","position":{"x":50,"y":50},"data":{"html":"<b style='color:#000000'>Inicio</b>","fontSize":24,"textColor":"#000000"}},{"id":"2","type":"shapeNode","position":{"x":50,"y":120},"style":{"width":140,"height":140},"data":{"shape":"circle","label":"Inicio del Flujo","fillColor":"#4059F1","textColor":"#FFFFFF"}},{"id":"3","type":"todoNode","position":{"x":350,"y":70},"style":{"width":280,"height":240},"data":{"title":"Fase de Planificación","subtitle":"Prerrequisitos obligatorios","tasks":[{"id":"t1","text":"Analizar requerimientos del cliente","completed":false},{"id":"t2","text":"Crear bocetos preliminares","completed":false}],"backgroundColor":"#FFFFFF","accentColor":"#4059F1","textColor":"#000000"}}], "edges": [{"id":"e2-3","source":"2","target":"3","animated":false,"style":{"stroke":"#4059F1","strokeWidth":2}}]}${apifyBlock}${prospectsBlock}${templatesBlock}`;
 
+    const customInstructions = await loadInstructions(supabase, "generate");
     const response = await fetch(
       "https://ai.gateway.lovable.dev/v1/chat/completions",
       {
@@ -344,7 +347,7 @@ Example output:
         body: JSON.stringify({
           model: "google/gemini-3-flash-preview",
           messages: [
-            { role: "system", content: systemPrompt },
+            { role: "system", content: systemPrompt + customInstructions },
             { role: "user", content: prompt },
           ],
         }),

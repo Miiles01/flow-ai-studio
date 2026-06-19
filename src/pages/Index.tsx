@@ -71,6 +71,107 @@ const RAINBOW_COLORS = [
   { name: "Negro", value: "#1F2937" },
 ];
 
+type Rect = { x: number; y: number; w: number; h: number };
+
+const DEFAULT_NODE_W = 160;
+const DEFAULT_NODE_H = 80;
+
+// Bounding rect of a node taking style/measured size into account.
+const getNodeRect = (n: Node): Rect => {
+  const w = (n.style?.width as number) || (n.width as number) || DEFAULT_NODE_W;
+  const h = (n.style?.height as number) || (n.height as number) || DEFAULT_NODE_H;
+  return { x: n.position.x, y: n.position.y, w, h };
+};
+
+const rectsOverlap = (a: Rect, b: Rect, pad = 0): boolean =>
+  a.x < b.x + b.w + pad &&
+  a.x + a.w + pad > b.x &&
+  a.y < b.y + b.h + pad &&
+  a.y + a.h + pad > b.y;
+
+// Find a free top-left position for a group of size (w,h), starting at `start`.
+// Scans outward (right, then down rows) until it stops colliding with `obstacles`.
+const findFreePosition = (
+  start: { x: number; y: number },
+  w: number,
+  h: number,
+  obstacles: Rect[],
+  pad = 80
+): { x: number; y: number } => {
+  if (obstacles.length === 0) return start;
+  const stepX = w + pad;
+  const stepY = h + pad;
+  const maxCols = 12;
+  const maxRows = 12;
+  for (let row = 0; row < maxRows; row++) {
+    for (let col = 0; col < maxCols; col++) {
+      const candidate: Rect = { x: start.x + col * stepX, y: start.y + row * stepY, w, h };
+      if (!obstacles.some((o) => rectsOverlap(candidate, o, pad))) {
+        return { x: candidate.x, y: candidate.y };
+      }
+    }
+  }
+  // Fallback: drop it below everything.
+  const maxBottom = Math.max(...obstacles.map((o) => o.y + o.h));
+  return { x: start.x, y: maxBottom + pad };
+};
+
+// Remap node ids to be globally unique, rewriting edge endpoints to match.
+// Pass `existingIds` to also avoid colliding with nodes already on the canvas.
+const uniquifyFlow = (
+  newNodes: Node[],
+  newEdges: Edge[],
+  existingIds?: Set<string>
+): { nodes: Node[]; edges: Edge[] } => {
+  const idMap = new Map<string, string>();
+  const used = new Set<string>(existingIds ? Array.from(existingIds) : []);
+  const suffix = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+
+  const nodes = newNodes.map((n, i) => {
+    const oldId = String(n.id);
+    let newId = oldId;
+    if (used.has(newId)) newId = `${oldId}-${suffix}-${i}`;
+    used.add(newId);
+    idMap.set(oldId, newId);
+    return { ...n, id: newId };
+  });
+
+  // Fix parentId references that point to remapped nodes.
+  const fixedNodes = nodes.map((n) =>
+    n.parentId && idMap.has(n.parentId) ? { ...n, parentId: idMap.get(n.parentId) } : n
+  );
+
+  const edges = newEdges.map((e) => ({
+    ...e,
+    source: idMap.get(String(e.source)) ?? e.source,
+    target: idMap.get(String(e.target)) ?? e.target,
+  }));
+
+  return { nodes: fixedNodes, edges };
+};
+
+// Remove nodes/edges with duplicate ids that may have been persisted previously.
+const dedupeFlow = (
+  loadedNodes: Node[],
+  loadedEdges: Edge[]
+): { nodes: Node[]; edges: Edge[] } => {
+  const seen = new Set<string>();
+  const nodes = loadedNodes.filter((n) => {
+    const key = String(n.id);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+  const seenEdges = new Set<string>();
+  const edges = loadedEdges.filter((e) => {
+    const key = String(e.id ?? `${e.source}-${e.target}`);
+    if (seenEdges.has(key)) return false;
+    seenEdges.add(key);
+    return true;
+  });
+  return { nodes, edges };
+};
+
 const isWhiteColor = (color: string | undefined): boolean => {
   if (!color) return false;
   const cleaned = color.trim().toLowerCase();
@@ -505,6 +606,20 @@ const IndexContent = () => {
     const handlePointerUp = () => {
       setResizing(null);
       resizeStartRef.current = null;
+
+      // Defer to ensure React has finished rendering/updating the DOM layout for the resized nodes
+      setTimeout(() => {
+        const currentNodes = getNodes();
+        const activeSelectedNodes = currentNodes.filter((n) => n.selected);
+        activeSelectedNodes.forEach((node) => {
+          updateNodeInternals(node.id);
+          currentNodes.forEach((n) => {
+            if (n.parentId === node.id) {
+              updateNodeInternals(n.id);
+            }
+          });
+        });
+      }, 0);
     };
 
     window.addEventListener("pointermove", handlePointerMove);
@@ -514,21 +629,7 @@ const IndexContent = () => {
       window.removeEventListener("pointermove", handlePointerMove);
       window.removeEventListener("pointerup", handlePointerUp);
     };
-  }, [resizing, vpZoom, selectionBounds, setNodes]);
-
-  // Sync node internals during group resizing to ensure edges stay snapped in real-time
-  useEffect(() => {
-    if (!resizing) return;
-
-    selectedNodes.forEach((node) => {
-      updateNodeInternals(node.id);
-      nodes.forEach((n) => {
-        if (n.parentId === node.id) {
-          updateNodeInternals(n.id);
-        }
-      });
-    });
-  }, [nodes, resizing, selectedNodes, updateNodeInternals]);
+  }, [resizing, vpZoom, selectionBounds, setNodes, updateNodeInternals, getNodes]);
 
   // Group Toolbar Colors Picker helper
   const [groupPicker, setGroupPicker] = useState<"fill" | "border" | "text" | null>(null);
@@ -613,8 +714,11 @@ const IndexContent = () => {
           return;
         }
         setName(f.name || "Tablero");
-        setNodes((f.nodes as Node[]) || []);
-        setEdges((f.edges as Edge[]) || []);
+        {
+          const { nodes: dn, edges: de } = dedupeFlow((f.nodes as Node[]) || [], (f.edges as Edge[]) || []);
+          setNodes(dn);
+          setEdges(de);
+        }
         setOwnerId(f.user_id);
         setPublicRole((f.public_role as "editor" | "viewer") || "viewer");
         lastSavedRef.current = JSON.stringify({ name: f.name, nodes: f.nodes, edges: f.edges });
@@ -641,11 +745,13 @@ const IndexContent = () => {
         return;
       }
       setName(data.name || "Tablero");
-      const loadedNodes = ((data.nodes as unknown) as Node[]) || [];
-      const loadedEdges = ((data.edges as unknown) as Edge[]) || [];
+      const rawNodes = ((data.nodes as unknown) as Node[]) || [];
+      const rawEdges = ((data.edges as unknown) as Edge[]) || [];
+      const { nodes: loadedNodes, edges: loadedEdges } = dedupeFlow(rawNodes, rawEdges);
       setNodes(loadedNodes);
       setEdges(loadedEdges);
       setOwnerId((data as any).user_id);
+
 
       // If not owner, look up collaborator role
       if ((data as any).user_id !== user.id) {
@@ -958,7 +1064,9 @@ const IndexContent = () => {
       setNodes((prev) => [...prev, skeletonNode]);
 
       try {
-        const { nodes: newNodes, edges: newEdges } = await generateFlowFromPrompt(prompt);
+        const raw = await generateFlowFromPrompt(prompt);
+        const existingIds = new Set(nodes.map((n) => String(n.id)));
+        const { nodes: newNodes, edges: newEdges } = uniquifyFlow(raw.nodes, raw.edges, existingIds);
 
         const generatedIds: string[] = [];
 
@@ -991,20 +1099,29 @@ const IndexContent = () => {
         // ── Step 2: replace skeleton with real nodes ─────────────────────────
         setNodes((prev) => {
           const skeleton = prev.find((n) => n.id === skeletonId);
-          const finalX = skeleton ? skeleton.position.x : centerPos.x - 140;
-          const finalY = skeleton ? skeleton.position.y : centerPos.y - 80;
-
           const filteredNodes = prev.filter((n) => n.id !== skeletonId);
 
           if (newNodes.length > 0) {
             const minX = Math.min(...newNodes.map((n) => n.position.x));
             const minY = Math.min(...newNodes.map((n) => n.position.y));
+            const maxX = Math.max(...newNodes.map((n) => n.position.x + ((n.style?.width as number) || DEFAULT_NODE_W)));
+            const maxY = Math.max(...newNodes.map((n) => n.position.y + ((n.style?.height as number) || DEFAULT_NODE_H)));
+            const groupW = maxX - minX;
+            const groupH = maxY - minY;
+
+            // Independent flow: find a free area so it never overlaps existing flows.
+            const desired = {
+              x: skeleton ? skeleton.position.x : centerPos.x - 140,
+              y: skeleton ? skeleton.position.y : centerPos.y - 80,
+            };
+            const obstacles = filteredNodes.map(getNodeRect);
+            const free = findFreePosition(desired, groupW, groupH, obstacles);
 
             const offsetNodes = newNodes.map((n) => ({
               ...n,
               position: {
-                x: finalX + (n.position.x - minX),
-                y: finalY + (n.position.y - minY),
+                x: free.x + (n.position.x - minX),
+                y: free.y + (n.position.y - minY),
               },
             }));
             offsetNodes.forEach((n) => generatedIds.push(String(n.id)));
@@ -1013,6 +1130,7 @@ const IndexContent = () => {
 
           return filteredNodes;
         });
+
 
         setEdges((prev) => [...prev, ...newEdges]);
 
@@ -1036,7 +1154,7 @@ const IndexContent = () => {
         setIsGenerating(false);
       }
     },
-    [setNodes, setEdges, reactFlowInstance]
+    [nodes, setNodes, setEdges, reactFlowInstance]
   );
 
   // Resumen legible del contenido de un nodo, para que la IA entienda de dónde parte.
@@ -1099,7 +1217,9 @@ const IndexContent = () => {
           side: target.side,
           summary: summarizeNode(sourceNode),
         };
-        const { nodes: newNodes, edges: newEdges } = await generateFlowFromPrompt(prompt, extendContext);
+        const rawExtend = await generateFlowFromPrompt(prompt, extendContext);
+        const existingExtendIds = new Set(nodes.map((n) => String(n.id)));
+        const { nodes: newNodes, edges: newEdges } = uniquifyFlow(rawExtend.nodes, rawExtend.edges, existingExtendIds);
 
         if (newNodes.length === 0) {
           setNodes((prev) => prev.filter((n) => n.id !== skeletonId));
@@ -1124,6 +1244,24 @@ const IndexContent = () => {
         if (target.side === "bottom") { baseX = sourceNode.position.x; baseY = sourceNode.position.y + srcH + GAP; }
         if (target.side === "top") { baseX = sourceNode.position.x; baseY = sourceNode.position.y - GAP - groupH; }
 
+        // Evita colisiones con otros flujos existentes (excluyendo el nodo de origen),
+        // empujando el grupo en la dirección de expansión hasta encontrar espacio libre.
+        const obstacles = nodes
+          .filter((n) => n.id !== sourceNode.id && n.id !== skeletonId)
+          .map(getNodeRect);
+        if (obstacles.length > 0) {
+          const PAD = 60;
+          const stepX = target.side === "left" ? -(groupW + PAD) : (groupW + PAD);
+          const stepY = target.side === "top" ? -(groupH + PAD) : (groupH + PAD);
+          const horizontal = target.side === "left" || target.side === "right";
+          for (let i = 0; i < 20; i++) {
+            const candidate: Rect = { x: baseX, y: baseY, w: groupW, h: groupH };
+            if (!obstacles.some((o) => rectsOverlap(candidate, o, PAD))) break;
+            if (horizontal) baseX += stepX;
+            else baseY += stepY;
+          }
+        }
+
         const offsetNodes = newNodes.map((n) => ({
           ...n,
           position: {
@@ -1132,6 +1270,7 @@ const IndexContent = () => {
           },
         }));
         const generatedIds = offsetNodes.map((n) => String(n.id));
+
 
         setNodes((prev) => [...prev.filter((n) => n.id !== skeletonId), ...offsetNodes]);
 
@@ -1771,7 +1910,7 @@ const IndexContent = () => {
           </div>
 
           {/* Share button (owner only) */}
-          {isOwner && id && id !== "new" && (
+          {!hideTools && isOwner && id && id !== "new" && (
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
@@ -1865,17 +2004,19 @@ const IndexContent = () => {
         {/* Right Area: Avatars + Controls */}
         <div className="hidden md:flex items-center gap-4 pointer-events-none">
           {/* Desktop Avatars */}
-          <div className="flex items-center gap-2 z-50">
-            {!canEdit && (
-              <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-light pointer-events-auto ${isDark ? 'bg-black text-white/80 ring-1 ring-white/10' : 'bg-white text-[#6B7280] shadow-[0_8px_30px_rgb(0,0,0,0.06)]'}`}>
-                <EyeIcon size={12} strokeWidth={1.5} />
-                Solo lectura
+          {!hideTools && (
+            <div className="flex items-center gap-2 z-50">
+              {!canEdit && (
+                <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-light pointer-events-auto ${isDark ? 'bg-black text-white/80 ring-1 ring-white/10' : 'bg-white text-[#6B7280] shadow-[0_8px_30px_rgb(0,0,0,0.06)]'}`}>
+                  <EyeIcon size={12} strokeWidth={1.5} />
+                  Solo lectura
+                </div>
+              )}
+              <div className="pointer-events-auto">
+                <PresenceStack users={activeUsersForPresence} localUserId={identityForPresence.id} />
               </div>
-            )}
-            <div className="pointer-events-auto">
-              <PresenceStack users={activeUsersForPresence} localUserId={identityForPresence.id} />
             </div>
-          </div>
+          )}
 
           {/* History controls + task panel toggle */}
           {!hideTools && (
@@ -1950,17 +2091,19 @@ const IndexContent = () => {
 
 
       {/* Avatars: Bottom Right (Mobile) */}
-      <div className="md:hidden absolute bottom-5 right-4 flex flex-col items-end gap-2 pointer-events-none z-50">
-        {!canEdit && (
-          <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-light pointer-events-auto ${isDark ? 'bg-black text-white/80 ring-1 ring-white/10' : 'bg-white text-[#6B7280] shadow-[0_8px_30px_rgb(0,0,0,0.06)]'}`}>
-            <EyeIcon size={12} strokeWidth={1.5} />
-            Lectura
+      {!hideTools && (
+        <div className="md:hidden absolute bottom-5 right-4 flex flex-col items-end gap-2 pointer-events-none z-50">
+          {!canEdit && (
+            <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-light pointer-events-auto ${isDark ? 'bg-black text-white/80 ring-1 ring-white/10' : 'bg-white text-[#6B7280] shadow-[0_8px_30px_rgb(0,0,0,0.06)]'}`}>
+              <EyeIcon size={12} strokeWidth={1.5} />
+              Lectura
+            </div>
+          )}
+          <div className="pointer-events-auto">
+            <PresenceStack users={activeUsersForPresence} localUserId={identityForPresence.id} />
           </div>
-        )}
-        <div className="pointer-events-auto">
-          <PresenceStack users={activeUsersForPresence} localUserId={identityForPresence.id} />
         </div>
-      </div>
+      )}
 
       <div className="flex-1 relative" onPointerDown={handlePointerDown}>
         <ReactFlow
@@ -2007,162 +2150,85 @@ const IndexContent = () => {
                 top: selectionBounds.y * vpZoom + vpY,
                 width: selectionBounds.w * vpZoom,
                 height: selectionBounds.h * vpZoom,
-                border: "1.5px solid #4059F1",
                 pointerEvents: "none",
                 zIndex: 9000,
-                boxShadow: "0 0 0 1px rgba(64, 89, 241, 0.15)",
               }}
             >
-              {/* Handles wrapper to get hover & pointer events */}
+              {/* Same Figma-style corner guides used by single elements */}
               <div className="absolute inset-0 pointer-events-none">
-                {/* Corner Handles */}
-                {/* Top Left (nw) */}
                 <div
                   onPointerDown={(e) => handleTransformStart(e, "nw")}
                   style={{
                     position: "absolute",
-                    top: -5,
-                    left: -5,
-                    width: 10,
-                    height: 10,
-                    backgroundColor: "#4059F1",
-                    border: "1.5px solid #FFF",
-                    borderRadius: "2px",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
+                    top: 0,
+                    left: 0,
+                    width: 12,
+                    height: 12,
+                    transform: "translate(-50%, -50%)",
+                    background: "transparent",
+                    borderTop: "2.5px solid #4059F1",
+                    borderLeft: "2.5px solid #4059F1",
+                    borderRadius: 0,
+                    boxShadow: "none",
                     boxSizing: "border-box",
                     cursor: "nwse-resize",
                     pointerEvents: "auto",
                   }}
                 />
-                {/* Top Right (ne) */}
                 <div
                   onPointerDown={(e) => handleTransformStart(e, "ne")}
                   style={{
                     position: "absolute",
-                    top: -5,
-                    right: -5,
-                    width: 10,
-                    height: 10,
-                    backgroundColor: "#4059F1",
-                    border: "1.5px solid #FFF",
-                    borderRadius: "2px",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
+                    top: 0,
+                    right: 0,
+                    width: 12,
+                    height: 12,
+                    transform: "translate(50%, -50%)",
+                    background: "transparent",
+                    borderTop: "2.5px solid #4059F1",
+                    borderRight: "2.5px solid #4059F1",
+                    borderRadius: 0,
+                    boxShadow: "none",
                     boxSizing: "border-box",
                     cursor: "nesw-resize",
                     pointerEvents: "auto",
                   }}
                 />
-                {/* Bottom Right (se) */}
                 <div
                   onPointerDown={(e) => handleTransformStart(e, "se")}
                   style={{
                     position: "absolute",
-                    bottom: -5,
-                    right: -5,
-                    width: 10,
-                    height: 10,
-                    backgroundColor: "#4059F1",
-                    border: "1.5px solid #FFF",
-                    borderRadius: "2px",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
+                    bottom: 0,
+                    right: 0,
+                    width: 12,
+                    height: 12,
+                    transform: "translate(50%, 50%)",
+                    background: "transparent",
+                    borderBottom: "2.5px solid #4059F1",
+                    borderRight: "2.5px solid #4059F1",
+                    borderRadius: 0,
+                    boxShadow: "none",
                     boxSizing: "border-box",
                     cursor: "nwse-resize",
                     pointerEvents: "auto",
                   }}
                 />
-                {/* Bottom Left (sw) */}
                 <div
                   onPointerDown={(e) => handleTransformStart(e, "sw")}
                   style={{
                     position: "absolute",
-                    bottom: -5,
-                    left: -5,
-                    width: 10,
-                    height: 10,
-                    backgroundColor: "#4059F1",
-                    border: "1.5px solid #FFF",
-                    borderRadius: "2px",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
+                    bottom: 0,
+                    left: 0,
+                    width: 12,
+                    height: 12,
+                    transform: "translate(-50%, 50%)",
+                    background: "transparent",
+                    borderBottom: "2.5px solid #4059F1",
+                    borderLeft: "2.5px solid #4059F1",
+                    borderRadius: 0,
+                    boxShadow: "none",
                     boxSizing: "border-box",
                     cursor: "nesw-resize",
-                    pointerEvents: "auto",
-                  }}
-                />
-
-                {/* Side Handles */}
-                {/* Top (n) */}
-                <div
-                  onPointerDown={(e) => handleTransformStart(e, "n")}
-                  style={{
-                    position: "absolute",
-                    top: -4,
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                    width: 8,
-                    height: 8,
-                    backgroundColor: "#4059F1",
-                    border: "1.5px solid #FFF",
-                    borderRadius: "2px",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
-                    boxSizing: "border-box",
-                    cursor: "ns-resize",
-                    pointerEvents: "auto",
-                  }}
-                />
-                {/* Right (e) */}
-                <div
-                  onPointerDown={(e) => handleTransformStart(e, "e")}
-                  style={{
-                    position: "absolute",
-                    top: "50%",
-                    right: -4,
-                    transform: "translateY(-50%)",
-                    width: 8,
-                    height: 8,
-                    backgroundColor: "#4059F1",
-                    border: "1.5px solid #FFF",
-                    borderRadius: "2px",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
-                    boxSizing: "border-box",
-                    cursor: "ew-resize",
-                    pointerEvents: "auto",
-                  }}
-                />
-                {/* Bottom (s) */}
-                <div
-                  onPointerDown={(e) => handleTransformStart(e, "s")}
-                  style={{
-                    position: "absolute",
-                    bottom: -4,
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                    width: 8,
-                    height: 8,
-                    backgroundColor: "#4059F1",
-                    border: "1.5px solid #FFF",
-                    borderRadius: "2px",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
-                    boxSizing: "border-box",
-                    cursor: "ns-resize",
-                    pointerEvents: "auto",
-                  }}
-                />
-                {/* Left (w) */}
-                <div
-                  onPointerDown={(e) => handleTransformStart(e, "w")}
-                  style={{
-                    position: "absolute",
-                    top: "50%",
-                    left: -4,
-                    transform: "translateY(-50%)",
-                    width: 8,
-                    height: 8,
-                    backgroundColor: "#4059F1",
-                    border: "1.5px solid #FFF",
-                    borderRadius: "2px",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
-                    boxSizing: "border-box",
-                    cursor: "ew-resize",
                     pointerEvents: "auto",
                   }}
                 />

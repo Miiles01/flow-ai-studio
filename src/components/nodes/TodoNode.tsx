@@ -76,7 +76,8 @@ const AutoResizingTextarea = forwardRef<HTMLTextAreaElement, AutoResizingTextare
       const el = localRef.current;
       if (el) {
         el.style.height = "auto";
-        el.style.height = `${el.scrollHeight}px`;
+        const nextHeight = `${el.scrollHeight}px`;
+        if (el.style.height !== nextHeight) el.style.height = nextHeight;
       }
     };
 
@@ -97,11 +98,14 @@ const AutoResizingTextarea = forwardRef<HTMLTextAreaElement, AutoResizingTextare
     useEffect(() => {
       const el = localRef.current;
       if (!el) return;
+      let frame = 0;
       const observer = new ResizeObserver(() => {
-        adjustHeight();
+        cancelAnimationFrame(frame);
+        frame = requestAnimationFrame(adjustHeight);
       });
       observer.observe(el);
       return () => {
+        cancelAnimationFrame(frame);
         observer.disconnect();
       };
     }, []);
@@ -509,7 +513,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
               initial={{ opacity: 0, y: 5 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, x: -10 }}
-              className="group/item flex items-start gap-3 py-1.5 px-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-200 select-text"
+              className="group/item flex items-start gap-3 py-1.5 px-2 rounded-[25px] hover:bg-black/5 dark:hover:bg-white/5 transition-all duration-200 select-text"
             >
               {/* Checkbox */}
               <button
@@ -592,14 +596,16 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
       </div>
 
       {/* Add Task Button at bottom of list */}
-      <button
-        onClick={() => handleAddTask()}
-        className="flex items-center gap-2 py-2 px-2 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 text-gray-400 hover:text-gray-600 hover:border-gray-400 hover:bg-black/5 dark:hover:bg-white/5 transition-all text-left mt-2 shrink-0"
-        style={{ fontSize: `${fontSize * 0.9}px` }}
-      >
-        <Plus size={13} />
-        <span>Nueva Tarea...</span>
-      </button>
+      {selected && (
+        <button
+          onClick={() => handleAddTask()}
+          className="flex items-center gap-2 py-2 px-2 rounded-xl border border-dashed border-gray-300 dark:border-gray-600 text-gray-400 hover:text-gray-600 hover:border-gray-400 hover:bg-black/5 dark:hover:bg-white/5 transition-all text-left mt-2 shrink-0"
+          style={{ fontSize: `${fontSize * 0.9}px` }}
+        >
+          <Plus size={13} />
+          <span>Nueva Tarea...</span>
+        </button>
+      )}
 
 
       </div>
