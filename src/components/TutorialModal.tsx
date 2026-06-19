@@ -3,7 +3,7 @@ import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
-import avatar3 from "@/assets/avatar3.png";
+import avatar3 from "@/assets/avatar3.webp";
 
 // React Flow Imports
 import { ReactFlow, ReactFlowProvider } from "@xyflow/react";

@@ -9,8 +9,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import AvatarUpload from "@/components/AvatarUpload";
-import onboardingHero from "@/assets/onboarding-hero.png";
-import onboardingDone from "@/assets/onboarding-done.png";
+import onboardingHero from "@/assets/onboarding-hero.webp";
+import onboardingDone from "@/assets/onboarding-done.webp";
 import { getVideoEmbedUrl } from "@/lib/videoEmbed";
 
 const TOTAL_STEPS = 7;

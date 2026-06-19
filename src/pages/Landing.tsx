@@ -8,7 +8,7 @@ import { ScrollSmoother } from "gsap/ScrollSmoother";
 import { SplitText } from "gsap/SplitText";
 import { CustomEase } from "gsap/CustomEase";
 import { InertiaPlugin } from "gsap/InertiaPlugin";
-import logoImg from "@/assets/logo.png";
+import logoImg from "@/assets/logo.webp";
 import brand1 from "@/assets/miiles/brands/brand1.svg";
 import brand2 from "@/assets/miiles/brands/brand2.svg";
 import brand3 from "@/assets/miiles/brands/brand3.svg";

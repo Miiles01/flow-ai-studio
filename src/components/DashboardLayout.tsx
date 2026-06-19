@@ -1,7 +1,7 @@
 import { ReactNode, useEffect, useState, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Home, ShoppingBag, User, Bot, Plus, MessageSquare, Trash2, LayoutDashboard, Gift, Newspaper } from "lucide-react";
-import logoImg from "@/assets/logo.png";
+import logoImg from "@/assets/logo.webp";
 import { AffiliatePopup } from "@/components/AffiliatePopup";
 import { useAuth } from "@/contexts/AuthContext";
 import { usePlan } from "@/hooks/usePlan";
