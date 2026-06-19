@@ -1036,20 +1036,29 @@ const IndexContent = () => {
         // ── Step 2: replace skeleton with real nodes ─────────────────────────
         setNodes((prev) => {
           const skeleton = prev.find((n) => n.id === skeletonId);
-          const finalX = skeleton ? skeleton.position.x : centerPos.x - 140;
-          const finalY = skeleton ? skeleton.position.y : centerPos.y - 80;
-
           const filteredNodes = prev.filter((n) => n.id !== skeletonId);
 
           if (newNodes.length > 0) {
             const minX = Math.min(...newNodes.map((n) => n.position.x));
             const minY = Math.min(...newNodes.map((n) => n.position.y));
+            const maxX = Math.max(...newNodes.map((n) => n.position.x + ((n.style?.width as number) || DEFAULT_NODE_W)));
+            const maxY = Math.max(...newNodes.map((n) => n.position.y + ((n.style?.height as number) || DEFAULT_NODE_H)));
+            const groupW = maxX - minX;
+            const groupH = maxY - minY;
+
+            // Independent flow: find a free area so it never overlaps existing flows.
+            const desired = {
+              x: skeleton ? skeleton.position.x : centerPos.x - 140,
+              y: skeleton ? skeleton.position.y : centerPos.y - 80,
+            };
+            const obstacles = filteredNodes.map(getNodeRect);
+            const free = findFreePosition(desired, groupW, groupH, obstacles);
 
             const offsetNodes = newNodes.map((n) => ({
               ...n,
               position: {
-                x: finalX + (n.position.x - minX),
-                y: finalY + (n.position.y - minY),
+                x: free.x + (n.position.x - minX),
+                y: free.y + (n.position.y - minY),
               },
             }));
             offsetNodes.forEach((n) => generatedIds.push(String(n.id)));
@@ -1058,6 +1067,7 @@ const IndexContent = () => {
 
           return filteredNodes;
         });
+
 
         setEdges((prev) => [...prev, ...newEdges]);
 
