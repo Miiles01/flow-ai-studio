@@ -78,3 +78,25 @@ export async function loadInstructions(
   if (parts.length === 0) return "";
   return `\n\n=== INSTRUCCIONES PERSONALIZADAS DE MIILES (PRIORIDAD ALTA) ===\n${parts.join("\n\n")}\n=== FIN INSTRUCCIONES PERSONALIZADAS ===`;
 }
+
+/**
+ * Carga el contenido CRUDO de una sola instrucción (sin formato de bloque).
+ * Usa el override de admins si existe; si no, el DEFAULT del archivo.
+ */
+export async function loadInstruction(
+  supabase: { from: (t: string) => any },
+  key: InstructionKey,
+): Promise<string> {
+  let text = DEFAULTS[key];
+  try {
+    const { data } = await supabase
+      .from("ai_instructions")
+      .select("content")
+      .eq("key", key)
+      .maybeSingle();
+    if (data?.content?.trim()) text = data.content;
+  } catch (_e) {
+    // fallback al default
+  }
+  return text;
+}
