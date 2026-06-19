@@ -9,8 +9,8 @@ import { CustomEase } from "gsap/CustomEase";
 import { MorphSVGPlugin } from "gsap/MorphSVGPlugin";
 import LandingNavbar from "@/components/LandingNavbar";
 import LandingFooter from "@/components/LandingFooter";
-import logoImg from "@/assets/logo.png";
-import creadoresHeroImg from "@/assets/creadores-hero.jpg";
+import logoImg from "@/assets/logo.webp";
+import creadoresHeroImg from "@/assets/creadores-hero.webp";
 import { MousePointer, Hand, Square, Type, ListTodo, Image as ImageIcon, SquareDashed, ArrowLeft, Settings2, Share2, Undo2, Redo2, PanelRight, Plus, Minus } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText, CustomEase, MorphSVGPlugin);
@@ -1551,19 +1551,19 @@ const Afiliados = () => {
                   <path id="h104-line" d="M0 195H644H1288H1932H2576" />
                   <path id="h104-wave" d="M0.21875 190.5C0.21875 190.5 382.004 0.5 644.219 0.5C906.434 0.5 1051.3 78.1239 1288.22 190.5C1531.72 306 1668.87 390.5 1932.22 390.5C2195.57 390.5 2576.22 190.5 2576.22 190.5" style={{ opacity: 0 }} />
                   <g id="h104-track">
-                    <image href="/afiliados/arrow.png" height={300} clipPath="url(#h104-round-clip)" />
+                    <image href="/afiliados/arrow.webp" height={300} clipPath="url(#h104-round-clip)" />
                     <text className="h104-seg" fill="black" fontSize={350}>
                       <textPath href="#h104-line" textAnchor="start">Empieza</textPath>
                     </text>
-                    <image href="/afiliados/estrella.png" height={300} clipPath="url(#h104-round-clip)" />
+                    <image href="/afiliados/estrella.webp" height={300} clipPath="url(#h104-round-clip)" />
                     <text className="h104-seg" fill="black" fontSize={350}>
                       <textPath href="#h104-line" textAnchor="start">tu camino</textPath>
                     </text>
-                    <image href="/afiliados/sonrisa.png" height={300} clipPath="url(#h104-round-clip)" />
+                    <image href="/afiliados/sonrisa.webp" height={300} clipPath="url(#h104-round-clip)" />
                     <text className="h104-seg" fill="black" fontSize={350}>
                       <textPath href="#h104-line" textAnchor="start">hoy</textPath>
                     </text>
-                    <image href="/afiliados/group18.png" height={300} clipPath="url(#h104-round-clip)" />
+                    <image href="/afiliados/group18.webp" height={300} clipPath="url(#h104-round-clip)" />
                   </g>
                 </svg>
               </div>

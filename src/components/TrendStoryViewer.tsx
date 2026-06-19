@@ -4,7 +4,7 @@ import { useTheme } from "@/contexts/ThemeContext";
 import { ChevronLeft, ChevronRight, ExternalLink, X } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import type { Trend, TrendLink } from "@/hooks/useTrends";
-import storyReelPlaceholder from "@/assets/story-reel-placeholder.png";
+import storyReelPlaceholder from "@/assets/story-reel-placeholder.webp";
 
 const getSummaryParagraph = (summary: string | null, idx: number, totalSlides: number) => {
   if (!summary) return "";
