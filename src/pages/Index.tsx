@@ -116,6 +116,62 @@ const findFreePosition = (
   return { x: start.x, y: maxBottom + pad };
 };
 
+// Remap node ids to be globally unique, rewriting edge endpoints to match.
+// Pass `existingIds` to also avoid colliding with nodes already on the canvas.
+const uniquifyFlow = (
+  newNodes: Node[],
+  newEdges: Edge[],
+  existingIds?: Set<string>
+): { nodes: Node[]; edges: Edge[] } => {
+  const idMap = new Map<string, string>();
+  const used = new Set<string>(existingIds ? Array.from(existingIds) : []);
+  const suffix = Date.now().toString(36) + Math.random().toString(36).slice(2, 6);
+
+  const nodes = newNodes.map((n, i) => {
+    const oldId = String(n.id);
+    let newId = oldId;
+    if (used.has(newId)) newId = `${oldId}-${suffix}-${i}`;
+    used.add(newId);
+    idMap.set(oldId, newId);
+    return { ...n, id: newId };
+  });
+
+  // Fix parentId references that point to remapped nodes.
+  const fixedNodes = nodes.map((n) =>
+    n.parentId && idMap.has(n.parentId) ? { ...n, parentId: idMap.get(n.parentId) } : n
+  );
+
+  const edges = newEdges.map((e) => ({
+    ...e,
+    source: idMap.get(String(e.source)) ?? e.source,
+    target: idMap.get(String(e.target)) ?? e.target,
+  }));
+
+  return { nodes: fixedNodes, edges };
+};
+
+// Remove nodes/edges with duplicate ids that may have been persisted previously.
+const dedupeFlow = (
+  loadedNodes: Node[],
+  loadedEdges: Edge[]
+): { nodes: Node[]; edges: Edge[] } => {
+  const seen = new Set<string>();
+  const nodes = loadedNodes.filter((n) => {
+    const key = String(n.id);
+    if (seen.has(key)) return false;
+    seen.add(key);
+    return true;
+  });
+  const seenEdges = new Set<string>();
+  const edges = loadedEdges.filter((e) => {
+    const key = String(e.id ?? `${e.source}-${e.target}`);
+    if (seenEdges.has(key)) return false;
+    seenEdges.add(key);
+    return true;
+  });
+  return { nodes, edges };
+};
+
 const isWhiteColor = (color: string | undefined): boolean => {
   if (!color) return false;
   const cleaned = color.trim().toLowerCase();
@@ -658,8 +714,11 @@ const IndexContent = () => {
           return;
         }
         setName(f.name || "Tablero");
-        setNodes((f.nodes as Node[]) || []);
-        setEdges((f.edges as Edge[]) || []);
+        {
+          const { nodes: dn, edges: de } = dedupeFlow((f.nodes as Node[]) || [], (f.edges as Edge[]) || []);
+          setNodes(dn);
+          setEdges(de);
+        }
         setOwnerId(f.user_id);
         setPublicRole((f.public_role as "editor" | "viewer") || "viewer");
         lastSavedRef.current = JSON.stringify({ name: f.name, nodes: f.nodes, edges: f.edges });
@@ -686,11 +745,13 @@ const IndexContent = () => {
         return;
       }
       setName(data.name || "Tablero");
-      const loadedNodes = ((data.nodes as unknown) as Node[]) || [];
-      const loadedEdges = ((data.edges as unknown) as Edge[]) || [];
+      const rawNodes = ((data.nodes as unknown) as Node[]) || [];
+      const rawEdges = ((data.edges as unknown) as Edge[]) || [];
+      const { nodes: loadedNodes, edges: loadedEdges } = dedupeFlow(rawNodes, rawEdges);
       setNodes(loadedNodes);
       setEdges(loadedEdges);
       setOwnerId((data as any).user_id);
+
 
       // If not owner, look up collaborator role
       if ((data as any).user_id !== user.id) {
@@ -1003,7 +1064,9 @@ const IndexContent = () => {
       setNodes((prev) => [...prev, skeletonNode]);
 
       try {
-        const { nodes: newNodes, edges: newEdges } = await generateFlowFromPrompt(prompt);
+        const raw = await generateFlowFromPrompt(prompt);
+        const existingIds = new Set(nodes.map((n) => String(n.id)));
+        const { nodes: newNodes, edges: newEdges } = uniquifyFlow(raw.nodes, raw.edges, existingIds);
 
         const generatedIds: string[] = [];
 
@@ -1091,7 +1154,7 @@ const IndexContent = () => {
         setIsGenerating(false);
       }
     },
-    [setNodes, setEdges, reactFlowInstance]
+    [nodes, setNodes, setEdges, reactFlowInstance]
   );
 
   // Resumen legible del contenido de un nodo, para que la IA entienda de dónde parte.
@@ -1154,7 +1217,9 @@ const IndexContent = () => {
           side: target.side,
           summary: summarizeNode(sourceNode),
         };
-        const { nodes: newNodes, edges: newEdges } = await generateFlowFromPrompt(prompt, extendContext);
+        const rawExtend = await generateFlowFromPrompt(prompt, extendContext);
+        const existingExtendIds = new Set(nodes.map((n) => String(n.id)));
+        const { nodes: newNodes, edges: newEdges } = uniquifyFlow(rawExtend.nodes, rawExtend.edges, existingExtendIds);
 
         if (newNodes.length === 0) {
           setNodes((prev) => prev.filter((n) => n.id !== skeletonId));
