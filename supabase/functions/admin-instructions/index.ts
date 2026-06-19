@@ -22,7 +22,7 @@ async function verifyToken(token: string | null, secret: string) {
   } catch { return false; }
 }
 
-const VALID_KEYS = ["global", "generate", "clarify", "plan"];
+const VALID_KEYS = ["global", "generate", "clarify", "plan", "search"];
 
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });

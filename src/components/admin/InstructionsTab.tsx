@@ -12,6 +12,7 @@ const SECTIONS: { key: string; title: string; help: string }[] = [
   { key: "generate", title: "Generar flujo", help: "Cómo construir el diagrama final (nodos, fases, estructura)." },
   { key: "clarify", title: "Preguntas / Intención", help: "Cómo hacer preguntas y entender la intención cuando el prompt es ambiguo." },
   { key: "plan", title: "Plan estratégico", help: "Cómo planear las fases antes de construir el flujo." },
+  { key: "search", title: "Búsqueda (qué buscar)", help: "Qué y cuándo buscar en vivo: canales (Instagram / Google Maps), cuándo descubrir prospectos reales y cómo armar los términos de búsqueda." },
 ];
 
 export default function InstructionsTab() {
