@@ -1064,7 +1064,9 @@ const IndexContent = () => {
       setNodes((prev) => [...prev, skeletonNode]);
 
       try {
-        const { nodes: newNodes, edges: newEdges } = await generateFlowFromPrompt(prompt);
+        const raw = await generateFlowFromPrompt(prompt);
+        const existingIds = new Set(nodes.map((n) => String(n.id)));
+        const { nodes: newNodes, edges: newEdges } = uniquifyFlow(raw.nodes, raw.edges, existingIds);
 
         const generatedIds: string[] = [];
 
