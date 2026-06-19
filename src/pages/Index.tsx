@@ -714,8 +714,11 @@ const IndexContent = () => {
           return;
         }
         setName(f.name || "Tablero");
-        setNodes((f.nodes as Node[]) || []);
-        setEdges((f.edges as Edge[]) || []);
+        {
+          const { nodes: dn, edges: de } = dedupeFlow((f.nodes as Node[]) || [], (f.edges as Edge[]) || []);
+          setNodes(dn);
+          setEdges(de);
+        }
         setOwnerId(f.user_id);
         setPublicRole((f.public_role as "editor" | "viewer") || "viewer");
         lastSavedRef.current = JSON.stringify({ name: f.name, nodes: f.nodes, edges: f.edges });
