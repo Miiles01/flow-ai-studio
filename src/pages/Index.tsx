@@ -1154,7 +1154,7 @@ const IndexContent = () => {
         setIsGenerating(false);
       }
     },
-    [setNodes, setEdges, reactFlowInstance]
+    [nodes, setNodes, setEdges, reactFlowInstance]
   );
 
   // Resumen legible del contenido de un nodo, para que la IA entienda de dónde parte.
