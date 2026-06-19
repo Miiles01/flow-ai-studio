@@ -14,8 +14,26 @@ export default function EditableEdge({
   markerEnd,
   label,
   selected,
+  data,
 }: EdgeProps) {
-  const [edgePath, labelX, labelY] = getBezierPath({
+  const { setEdges, getViewport } = useReactFlow();
+  const { isDark } = useTheme();
+
+  // Control points offsets for dragging the line
+  const offsetX = (data?.offsetX as number) || 0;
+  const offsetY = (data?.offsetY as number) || 0;
+
+  const midX = (sourceX + targetX) / 2;
+  const midY = (sourceY + targetY) / 2;
+  const controlX = midX + offsetX;
+  const controlY = midY + offsetY;
+
+  // Custom path using quadratic bezier if offset is present, else standard bezier
+  const customPath = `M ${sourceX},${sourceY} Q ${controlX},${controlY} ${targetX},${targetY}`;
+  const customLabelX = midX + 0.5 * offsetX;
+  const customLabelY = midY + 0.5 * offsetY;
+
+  const [defaultPath, defaultLabelX, defaultLabelY] = getBezierPath({
     sourceX,
     sourceY,
     sourcePosition,
@@ -24,8 +42,14 @@ export default function EditableEdge({
     targetPosition,
   });
 
-  const { setEdges } = useReactFlow();
-  const { isDark } = useTheme();
+  const edgePath = (offsetX !== 0 || offsetY !== 0) ? customPath : defaultPath;
+  const labelX = (offsetX !== 0 || offsetY !== 0) ? customLabelX : defaultLabelX;
+  const labelY = (offsetX !== 0 || offsetY !== 0) ? customLabelY : defaultLabelY;
+
+  const [isHovered, setIsHovered] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+  const dragStartRef = useRef<{ pointerX: number; pointerY: number; startOffsetX: number; startOffsetY: number } | null>(null);
+
   const [isEditing, setIsEditing] = useState(false);
   const [labelText, setLabelText] = useState(typeof label === "string" ? label : "");
   const inputRef = useRef<HTMLInputElement>(null);
@@ -44,6 +68,85 @@ export default function EditableEdge({
       }, 50);
     }
   }, [isEditing]);
+
+  const handlePointerDown = (e: React.PointerEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    setIsDragging(true);
+    dragStartRef.current = {
+      pointerX: e.clientX,
+      pointerY: e.clientY,
+      startOffsetX: offsetX,
+      startOffsetY: offsetY,
+    };
+  };
+
+  useEffect(() => {
+    if (!isDragging || !dragStartRef.current) return;
+
+    const handlePointerMove = (e: PointerEvent) => {
+      const start = dragStartRef.current;
+      if (!start) return;
+
+      const viewport = getViewport();
+      const zoom = viewport.zoom;
+
+      const dx = (e.clientX - start.pointerX) / zoom;
+      const dy = (e.clientY - start.pointerY) / zoom;
+
+      const nextOffsetX = start.startOffsetX + dx;
+      const nextOffsetY = start.startOffsetY + dy;
+
+      setEdges((eds) =>
+        eds.map((edge) => {
+          if (edge.id === id) {
+            return {
+              ...edge,
+              data: {
+                ...edge.data,
+                offsetX: nextOffsetX,
+                offsetY: nextOffsetY,
+              },
+            };
+          }
+          return edge;
+        })
+      );
+    };
+
+    const handlePointerUp = () => {
+      setIsDragging(false);
+      dragStartRef.current = null;
+    };
+
+    window.addEventListener("pointermove", handlePointerMove);
+    window.addEventListener("pointerup", handlePointerUp);
+
+    return () => {
+      window.removeEventListener("pointermove", handlePointerMove);
+      window.removeEventListener("pointerup", handlePointerUp);
+    };
+  }, [isDragging, id, setEdges, getViewport]);
+
+  const handleReset = (e: React.MouseEvent) => {
+    e.stopPropagation();
+    setEdges((eds) =>
+      eds.map((edge) => {
+        if (edge.id === id) {
+          return {
+            ...edge,
+            data: {
+              ...edge.data,
+              offsetX: 0,
+              offsetY: 0,
+            },
+          };
+        }
+        return edge;
+      })
+    );
+  };
 
   const handleStartEdit = (e: React.MouseEvent) => {
     e.stopPropagation();
@@ -73,11 +176,52 @@ export default function EditableEdge({
   };
 
   const hasLabel = labelText.trim().length > 0;
+  const showHandle = selected || isHovered || isDragging;
 
   return (
     <>
-      <BaseEdge path={edgePath} markerEnd={markerEnd} style={style} />
+      <g
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        className="cursor-pointer"
+      >
+        {/* Invisible wider path to make hovering/clicking easier */}
+        <path
+          d={edgePath}
+          fill="none"
+          stroke="transparent"
+          strokeWidth={15}
+          className="cursor-pointer"
+        />
+        <BaseEdge path={edgePath} markerEnd={markerEnd} style={style} />
+      </g>
+      
       <EdgeLabelRenderer>
+        {/* Draggable control point handle */}
+        {showHandle && (
+          <div
+            style={{
+              position: "absolute",
+              transform: `translate(-50%, -50%) translate(${controlX}px,${controlY}px)`,
+              pointerEvents: "all",
+            }}
+            className="nodrag nopan select-none z-40"
+            onPointerDown={handlePointerDown}
+            onDoubleClick={handleReset}
+          >
+            <div
+              className={`w-[18px] h-[18px] rounded-full border-[1.5px] border-white cursor-grab active:cursor-grabbing shadow-[0_2px_8px_rgba(0,0,0,0.15)] flex items-center justify-center transition-transform hover:scale-125 ${
+                isDragging
+                  ? "bg-[#4059F1] scale-125 cursor-grabbing"
+                  : "bg-white border-[#4059F1] hover:bg-[#4059F1]/10"
+              }`}
+              title="Arrastrar para curvar la línea (Doble clic para restablecer)"
+            >
+              <div className={`w-1.5 h-1.5 rounded-full ${isDragging ? "bg-white" : "bg-[#4059F1]"}`} />
+            </div>
+          </div>
+        )}
+
         <div
           style={{
             position: "absolute",

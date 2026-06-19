@@ -606,6 +606,20 @@ const IndexContent = () => {
     const handlePointerUp = () => {
       setResizing(null);
       resizeStartRef.current = null;
+
+      // Defer to ensure React has finished rendering/updating the DOM layout for the resized nodes
+      setTimeout(() => {
+        const currentNodes = getNodes();
+        const activeSelectedNodes = currentNodes.filter((n) => n.selected);
+        activeSelectedNodes.forEach((node) => {
+          updateNodeInternals(node.id);
+          currentNodes.forEach((n) => {
+            if (n.parentId === node.id) {
+              updateNodeInternals(n.id);
+            }
+          });
+        });
+      }, 0);
     };
 
     window.addEventListener("pointermove", handlePointerMove);
@@ -615,21 +629,7 @@ const IndexContent = () => {
       window.removeEventListener("pointermove", handlePointerMove);
       window.removeEventListener("pointerup", handlePointerUp);
     };
-  }, [resizing, vpZoom, selectionBounds, setNodes]);
-
-  // Sync node internals during group resizing to ensure edges stay snapped in real-time
-  useEffect(() => {
-    if (!resizing) return;
-
-    selectedNodes.forEach((node) => {
-      updateNodeInternals(node.id);
-      nodes.forEach((n) => {
-        if (n.parentId === node.id) {
-          updateNodeInternals(n.id);
-        }
-      });
-    });
-  }, [nodes, resizing, selectedNodes, updateNodeInternals]);
+  }, [resizing, vpZoom, selectionBounds, setNodes, updateNodeInternals, getNodes]);
 
   // Group Toolbar Colors Picker helper
   const [groupPicker, setGroupPicker] = useState<"fill" | "border" | "text" | null>(null);
@@ -1910,7 +1910,7 @@ const IndexContent = () => {
           </div>
 
           {/* Share button (owner only) */}
-          {isOwner && id && id !== "new" && (
+          {!hideTools && isOwner && id && id !== "new" && (
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
@@ -2004,17 +2004,19 @@ const IndexContent = () => {
         {/* Right Area: Avatars + Controls */}
         <div className="hidden md:flex items-center gap-4 pointer-events-none">
           {/* Desktop Avatars */}
-          <div className="flex items-center gap-2 z-50">
-            {!canEdit && (
-              <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-light pointer-events-auto ${isDark ? 'bg-black text-white/80 ring-1 ring-white/10' : 'bg-white text-[#6B7280] shadow-[0_8px_30px_rgb(0,0,0,0.06)]'}`}>
-                <EyeIcon size={12} strokeWidth={1.5} />
-                Solo lectura
+          {!hideTools && (
+            <div className="flex items-center gap-2 z-50">
+              {!canEdit && (
+                <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-light pointer-events-auto ${isDark ? 'bg-black text-white/80 ring-1 ring-white/10' : 'bg-white text-[#6B7280] shadow-[0_8px_30px_rgb(0,0,0,0.06)]'}`}>
+                  <EyeIcon size={12} strokeWidth={1.5} />
+                  Solo lectura
+                </div>
+              )}
+              <div className="pointer-events-auto">
+                <PresenceStack users={activeUsersForPresence} localUserId={identityForPresence.id} />
               </div>
-            )}
-            <div className="pointer-events-auto">
-              <PresenceStack users={activeUsersForPresence} localUserId={identityForPresence.id} />
             </div>
-          </div>
+          )}
 
           {/* History controls + task panel toggle */}
           {!hideTools && (
@@ -2089,17 +2091,19 @@ const IndexContent = () => {
 
 
       {/* Avatars: Bottom Right (Mobile) */}
-      <div className="md:hidden absolute bottom-5 right-4 flex flex-col items-end gap-2 pointer-events-none z-50">
-        {!canEdit && (
-          <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-light pointer-events-auto ${isDark ? 'bg-black text-white/80 ring-1 ring-white/10' : 'bg-white text-[#6B7280] shadow-[0_8px_30px_rgb(0,0,0,0.06)]'}`}>
-            <EyeIcon size={12} strokeWidth={1.5} />
-            Lectura
+      {!hideTools && (
+        <div className="md:hidden absolute bottom-5 right-4 flex flex-col items-end gap-2 pointer-events-none z-50">
+          {!canEdit && (
+            <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-light pointer-events-auto ${isDark ? 'bg-black text-white/80 ring-1 ring-white/10' : 'bg-white text-[#6B7280] shadow-[0_8px_30px_rgb(0,0,0,0.06)]'}`}>
+              <EyeIcon size={12} strokeWidth={1.5} />
+              Lectura
+            </div>
+          )}
+          <div className="pointer-events-auto">
+            <PresenceStack users={activeUsersForPresence} localUserId={identityForPresence.id} />
           </div>
-        )}
-        <div className="pointer-events-auto">
-          <PresenceStack users={activeUsersForPresence} localUserId={identityForPresence.id} />
         </div>
-      </div>
+      )}
 
       <div className="flex-1 relative" onPointerDown={handlePointerDown}>
         <ReactFlow
