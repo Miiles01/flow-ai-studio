@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
-import { loadInstructions } from "../_shared/flow-instructions.ts";
+import { loadInstructions, loadInstruction } from "../_shared/flow-instructions.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -34,13 +34,13 @@ type SearchPlan = {
 };
 
 // Ask the model whether the user wants to DISCOVER new real prospects, and on which channel.
-async function classifyIntent(prompt: string, apiKey: string): Promise<SearchPlan> {
+async function classifyIntent(prompt: string, apiKey: string, searchGuidance?: string): Promise<SearchPlan> {
   const sys = `Eres un clasificador de intención para un generador de flujos de prospección.
 Decide si el usuario quiere DESCUBRIR cuentas/negocios/prospectos REALES y NUEVOS (no solo planear).
 Canales disponibles:
 - "instagram": cuando busca cuentas, creadores, marcas o perfiles de Instagram.
 - "google_maps": cuando busca negocios locales, empresas, tiendas o lugares (por nicho + ubicación).
-Si el usuario solo quiere un plan/estrategia sin buscar prospectos reales, needsSearch=false.
+Si el usuario solo quiere un plan/estrategia sin buscar prospectos reales, needsSearch=false.${searchGuidance && searchGuidance.trim() ? `\n\n=== REGLAS DE BÚSQUEDA DE MIILES (PRIORIDAD ALTA) ===\n${searchGuidance.trim()}\n=== FIN REGLAS DE BÚSQUEDA ===` : ""}
 Responde SOLO JSON válido con esta forma:
 {"needsSearch":boolean,"channel":"instagram"|"google_maps"|null,"query":"términos de búsqueda limpios","location":"ciudad/país o null","limit":6}
 El "query" debe ser conciso y en el idioma del usuario. limit entre 4 y 8.`;
@@ -213,7 +213,8 @@ serve(async (req) => {
     let apifyFound: any[] = [];
     let apifyChannel: string | null = null;
     if (APIFY_API_TOKEN) {
-      const plan = await classifyIntent(prompt, LOVABLE_API_KEY);
+      const searchGuidance = await loadInstruction(supabase, "search");
+      const plan = await classifyIntent(prompt, LOVABLE_API_KEY, searchGuidance);
       if (plan.needsSearch && plan.channel && plan.query) {
         apifyChannel = plan.channel;
 

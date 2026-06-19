@@ -15,7 +15,7 @@
 // instrucciones y las añaden a su prompt de sistema en cada generación.
 // ============================================================================
 
-export type InstructionKey = "global" | "generate" | "clarify" | "plan";
+export type InstructionKey = "global" | "generate" | "clarify" | "plan" | "search";
 
 // Instrucciones aplicadas SIEMPRE, en las tres etapas.
 export const DEFAULT_GLOBAL = `Habla y piensa siempre en español neutro.
@@ -33,11 +33,19 @@ Solo pide aclaración cuando el prompt sea realmente ambiguo.`;
 // Instrucciones extra al PLANEAR la estrategia (fases) antes de construir.
 export const DEFAULT_PLAN = `Define fases accionables, métricas y entregables concretos antes de construir el flujo.`;
 
+// Instrucciones que controlan QUÉ y CUÁNDO buscar en vivo (web / prospectos reales).
+// Esto guía al clasificador de intención: decide si hay que descubrir cuentas/negocios
+// REALES y NUEVOS, en qué canal (instagram / google_maps) y con qué términos.
+export const DEFAULT_SEARCH = `Busca prospectos REALES y NUEVOS solo cuando el usuario quiera DESCUBRIR cuentas, creadores, marcas o negocios (no cuando solo quiere un plan o estrategia).
+Usa "instagram" para cuentas, creadores, marcas o perfiles; usa "google_maps" para negocios locales por nicho + ubicación.
+Genera un "query" conciso, limpio y en el idioma del usuario; extrae la ubicación si la menciona.`;
+
 const DEFAULTS: Record<InstructionKey, string> = {
   global: DEFAULT_GLOBAL,
   generate: DEFAULT_GENERATE,
   clarify: DEFAULT_CLARIFY,
   plan: DEFAULT_PLAN,
+  search: DEFAULT_SEARCH,
 };
 
 /**
@@ -69,4 +77,26 @@ export async function loadInstructions(
   const parts = [global, stageText].filter((p) => p && p.trim());
   if (parts.length === 0) return "";
   return `\n\n=== INSTRUCCIONES PERSONALIZADAS DE MIILES (PRIORIDAD ALTA) ===\n${parts.join("\n\n")}\n=== FIN INSTRUCCIONES PERSONALIZADAS ===`;
+}
+
+/**
+ * Carga el contenido CRUDO de una sola instrucción (sin formato de bloque).
+ * Usa el override de admins si existe; si no, el DEFAULT del archivo.
+ */
+export async function loadInstruction(
+  supabase: { from: (t: string) => any },
+  key: InstructionKey,
+): Promise<string> {
+  let text = DEFAULTS[key];
+  try {
+    const { data } = await supabase
+      .from("ai_instructions")
+      .select("content")
+      .eq("key", key)
+      .maybeSingle();
+    if (data?.content?.trim()) text = data.content;
+  } catch (_e) {
+    // fallback al default
+  }
+  return text;
 }
