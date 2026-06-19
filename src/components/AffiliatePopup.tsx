@@ -32,6 +32,7 @@ export function AffiliatePopup({ children }: { children: React.ReactNode }) {
       const uname = (profileRes.data as any)?.username || "";
       setUsername(uname);
       setUsernameDraft(uname);
+      if (uname) setLink(`${BASE}/?ref=${uname}`);
       const row = Array.isArray(statsRes.data) ? statsRes.data[0] : statsRes.data;
       setStats({
         total: Number((row as any)?.total_referrals ?? 0),
@@ -56,21 +57,15 @@ export function AffiliatePopup({ children }: { children: React.ReactNode }) {
       return;
     }
     setUsername(value);
+    setLink(`${BASE}/?ref=${value}`);
     toast.success("Nombre de usuario guardado");
-  };
-
-  const generateLink = () => {
-    if (!username) {
-      toast.error("Primero crea tu nombre de usuario");
-      return;
-    }
-    setLink(`${BASE}/?ref=${username}`);
   };
 
   const copyLink = async () => {
     if (!link) return;
     await navigator.clipboard.writeText(link);
     setCopied(true);
+    toast.success("¡Link copiado con éxito!");
     setTimeout(() => setCopied(false), 1800);
   };
 
