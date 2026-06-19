@@ -1,6 +1,6 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
-import { loadInstructions } from "../_shared/flow-instructions.ts";
+import { loadInstructions, loadInstruction } from "../_shared/flow-instructions.ts";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
