@@ -76,7 +76,8 @@ const AutoResizingTextarea = forwardRef<HTMLTextAreaElement, AutoResizingTextare
       const el = localRef.current;
       if (el) {
         el.style.height = "auto";
-        el.style.height = `${el.scrollHeight}px`;
+        const nextHeight = `${el.scrollHeight}px`;
+        if (el.style.height !== nextHeight) el.style.height = nextHeight;
       }
     };
 
@@ -97,11 +98,14 @@ const AutoResizingTextarea = forwardRef<HTMLTextAreaElement, AutoResizingTextare
     useEffect(() => {
       const el = localRef.current;
       if (!el) return;
+      let frame = 0;
       const observer = new ResizeObserver(() => {
-        adjustHeight();
+        cancelAnimationFrame(frame);
+        frame = requestAnimationFrame(adjustHeight);
       });
       observer.observe(el);
       return () => {
+        cancelAnimationFrame(frame);
         observer.disconnect();
       };
     }, []);

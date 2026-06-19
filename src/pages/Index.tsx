@@ -2146,162 +2146,85 @@ const IndexContent = () => {
                 top: selectionBounds.y * vpZoom + vpY,
                 width: selectionBounds.w * vpZoom,
                 height: selectionBounds.h * vpZoom,
-                border: "1.5px solid #4059F1",
                 pointerEvents: "none",
                 zIndex: 9000,
-                boxShadow: "0 0 0 1px rgba(64, 89, 241, 0.15)",
               }}
             >
-              {/* Handles wrapper to get hover & pointer events */}
+              {/* Same Figma-style corner guides used by single elements */}
               <div className="absolute inset-0 pointer-events-none">
-                {/* Corner Handles */}
-                {/* Top Left (nw) */}
                 <div
                   onPointerDown={(e) => handleTransformStart(e, "nw")}
                   style={{
                     position: "absolute",
-                    top: -5,
-                    left: -5,
-                    width: 10,
-                    height: 10,
-                    backgroundColor: "#4059F1",
-                    border: "1.5px solid #FFF",
-                    borderRadius: "2px",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
+                    top: 0,
+                    left: 0,
+                    width: 12,
+                    height: 12,
+                    transform: "translate(-50%, -50%)",
+                    background: "transparent",
+                    borderTop: "2.5px solid #4059F1",
+                    borderLeft: "2.5px solid #4059F1",
+                    borderRadius: 0,
+                    boxShadow: "none",
                     boxSizing: "border-box",
                     cursor: "nwse-resize",
                     pointerEvents: "auto",
                   }}
                 />
-                {/* Top Right (ne) */}
                 <div
                   onPointerDown={(e) => handleTransformStart(e, "ne")}
                   style={{
                     position: "absolute",
-                    top: -5,
-                    right: -5,
-                    width: 10,
-                    height: 10,
-                    backgroundColor: "#4059F1",
-                    border: "1.5px solid #FFF",
-                    borderRadius: "2px",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
+                    top: 0,
+                    right: 0,
+                    width: 12,
+                    height: 12,
+                    transform: "translate(50%, -50%)",
+                    background: "transparent",
+                    borderTop: "2.5px solid #4059F1",
+                    borderRight: "2.5px solid #4059F1",
+                    borderRadius: 0,
+                    boxShadow: "none",
                     boxSizing: "border-box",
                     cursor: "nesw-resize",
                     pointerEvents: "auto",
                   }}
                 />
-                {/* Bottom Right (se) */}
                 <div
                   onPointerDown={(e) => handleTransformStart(e, "se")}
                   style={{
                     position: "absolute",
-                    bottom: -5,
-                    right: -5,
-                    width: 10,
-                    height: 10,
-                    backgroundColor: "#4059F1",
-                    border: "1.5px solid #FFF",
-                    borderRadius: "2px",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
+                    bottom: 0,
+                    right: 0,
+                    width: 12,
+                    height: 12,
+                    transform: "translate(50%, 50%)",
+                    background: "transparent",
+                    borderBottom: "2.5px solid #4059F1",
+                    borderRight: "2.5px solid #4059F1",
+                    borderRadius: 0,
+                    boxShadow: "none",
                     boxSizing: "border-box",
                     cursor: "nwse-resize",
                     pointerEvents: "auto",
                   }}
                 />
-                {/* Bottom Left (sw) */}
                 <div
                   onPointerDown={(e) => handleTransformStart(e, "sw")}
                   style={{
                     position: "absolute",
-                    bottom: -5,
-                    left: -5,
-                    width: 10,
-                    height: 10,
-                    backgroundColor: "#4059F1",
-                    border: "1.5px solid #FFF",
-                    borderRadius: "2px",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
+                    bottom: 0,
+                    left: 0,
+                    width: 12,
+                    height: 12,
+                    transform: "translate(-50%, 50%)",
+                    background: "transparent",
+                    borderBottom: "2.5px solid #4059F1",
+                    borderLeft: "2.5px solid #4059F1",
+                    borderRadius: 0,
+                    boxShadow: "none",
                     boxSizing: "border-box",
                     cursor: "nesw-resize",
-                    pointerEvents: "auto",
-                  }}
-                />
-
-                {/* Side Handles */}
-                {/* Top (n) */}
-                <div
-                  onPointerDown={(e) => handleTransformStart(e, "n")}
-                  style={{
-                    position: "absolute",
-                    top: -4,
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                    width: 8,
-                    height: 8,
-                    backgroundColor: "#4059F1",
-                    border: "1.5px solid #FFF",
-                    borderRadius: "2px",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
-                    boxSizing: "border-box",
-                    cursor: "ns-resize",
-                    pointerEvents: "auto",
-                  }}
-                />
-                {/* Right (e) */}
-                <div
-                  onPointerDown={(e) => handleTransformStart(e, "e")}
-                  style={{
-                    position: "absolute",
-                    top: "50%",
-                    right: -4,
-                    transform: "translateY(-50%)",
-                    width: 8,
-                    height: 8,
-                    backgroundColor: "#4059F1",
-                    border: "1.5px solid #FFF",
-                    borderRadius: "2px",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
-                    boxSizing: "border-box",
-                    cursor: "ew-resize",
-                    pointerEvents: "auto",
-                  }}
-                />
-                {/* Bottom (s) */}
-                <div
-                  onPointerDown={(e) => handleTransformStart(e, "s")}
-                  style={{
-                    position: "absolute",
-                    bottom: -4,
-                    left: "50%",
-                    transform: "translateX(-50%)",
-                    width: 8,
-                    height: 8,
-                    backgroundColor: "#4059F1",
-                    border: "1.5px solid #FFF",
-                    borderRadius: "2px",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
-                    boxSizing: "border-box",
-                    cursor: "ns-resize",
-                    pointerEvents: "auto",
-                  }}
-                />
-                {/* Left (w) */}
-                <div
-                  onPointerDown={(e) => handleTransformStart(e, "w")}
-                  style={{
-                    position: "absolute",
-                    top: "50%",
-                    left: -4,
-                    transform: "translateY(-50%)",
-                    width: 8,
-                    height: 8,
-                    backgroundColor: "#4059F1",
-                    border: "1.5px solid #FFF",
-                    borderRadius: "2px",
-                    boxShadow: "0 1px 3px rgba(0,0,0,0.2)",
-                    boxSizing: "border-box",
-                    cursor: "ew-resize",
                     pointerEvents: "auto",
                   }}
                 />
