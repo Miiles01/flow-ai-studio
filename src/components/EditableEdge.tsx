@@ -46,7 +46,6 @@ export default function EditableEdge({
   const labelX = (offsetX !== 0 || offsetY !== 0) ? customLabelX : defaultLabelX;
   const labelY = (offsetX !== 0 || offsetY !== 0) ? customLabelY : defaultLabelY;
 
-  const [isHovered, setIsHovered] = useState(false);
   const [isDragging, setIsDragging] = useState(false);
   const dragStartRef = useRef<{ pointerX: number; pointerY: number; startOffsetX: number; startOffsetY: number } | null>(null);
 
@@ -176,52 +175,35 @@ export default function EditableEdge({
   };
 
   const hasLabel = labelText.trim().length > 0;
-  const showHandle = selected || isHovered || isDragging;
 
   return (
     <>
       <g
-        onMouseEnter={() => setIsHovered(true)}
-        onMouseLeave={() => setIsHovered(false)}
+        onPointerDown={handlePointerDown}
+        onDoubleClick={handleReset}
         className="cursor-pointer"
       >
-        {/* Invisible wider path to make hovering/clicking easier */}
+        {/* Invisible wider path for forgiving clicks and drags (20px width) */}
         <path
           d={edgePath}
           fill="none"
           stroke="transparent"
-          strokeWidth={15}
+          strokeWidth={20}
           className="cursor-pointer"
         />
-        <BaseEdge path={edgePath} markerEnd={markerEnd} style={style} />
+        <BaseEdge 
+          path={edgePath} 
+          markerEnd={markerEnd} 
+          style={{
+            ...style,
+            stroke: selected ? "#4059F1" : (style.stroke || (isDark ? "#555" : "#CCC")),
+            strokeWidth: selected ? 3 : (style.strokeWidth || 2),
+            transition: "stroke 0.15s, stroke-width 0.15s",
+          }} 
+        />
       </g>
       
       <EdgeLabelRenderer>
-        {/* Draggable control point handle */}
-        {showHandle && (
-          <div
-            style={{
-              position: "absolute",
-              transform: `translate(-50%, -50%) translate(${controlX}px,${controlY}px)`,
-              pointerEvents: "all",
-            }}
-            className="nodrag nopan select-none z-40"
-            onPointerDown={handlePointerDown}
-            onDoubleClick={handleReset}
-          >
-            <div
-              className={`w-[18px] h-[18px] rounded-full border-[1.5px] border-white cursor-grab active:cursor-grabbing shadow-[0_2px_8px_rgba(0,0,0,0.15)] flex items-center justify-center transition-transform hover:scale-125 ${
-                isDragging
-                  ? "bg-[#4059F1] scale-125 cursor-grabbing"
-                  : "bg-white border-[#4059F1] hover:bg-[#4059F1]/10"
-              }`}
-              title="Arrastrar para curvar la línea (Doble clic para restablecer)"
-            >
-              <div className={`w-1.5 h-1.5 rounded-full ${isDragging ? "bg-white" : "bg-[#4059F1]"}`} />
-            </div>
-          </div>
-        )}
-
         <div
           style={{
             position: "absolute",
