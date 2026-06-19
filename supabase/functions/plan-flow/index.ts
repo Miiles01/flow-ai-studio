@@ -96,6 +96,7 @@ Reglas:
 - Todo en español, profesional y detallado.
 - No incluyas markdown ni texto fuera del JSON.`;
 
+    const customInstructions = await loadInstructions(supabase, "plan");
     const response = await fetch(
       "https://ai.gateway.lovable.dev/v1/chat/completions",
       {
@@ -107,7 +108,7 @@ Reglas:
         body: JSON.stringify({
           model: "google/gemini-3-flash-preview",
           messages: [
-            { role: "system", content: systemPrompt },
+            { role: "system", content: systemPrompt + customInstructions },
             { role: "user", content: prompt },
           ],
         }),
