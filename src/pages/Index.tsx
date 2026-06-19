@@ -71,6 +71,51 @@ const RAINBOW_COLORS = [
   { name: "Negro", value: "#1F2937" },
 ];
 
+type Rect = { x: number; y: number; w: number; h: number };
+
+const DEFAULT_NODE_W = 160;
+const DEFAULT_NODE_H = 80;
+
+// Bounding rect of a node taking style/measured size into account.
+const getNodeRect = (n: Node): Rect => {
+  const w = (n.style?.width as number) || (n.width as number) || DEFAULT_NODE_W;
+  const h = (n.style?.height as number) || (n.height as number) || DEFAULT_NODE_H;
+  return { x: n.position.x, y: n.position.y, w, h };
+};
+
+const rectsOverlap = (a: Rect, b: Rect, pad = 0): boolean =>
+  a.x < b.x + b.w + pad &&
+  a.x + a.w + pad > b.x &&
+  a.y < b.y + b.h + pad &&
+  a.y + a.h + pad > b.y;
+
+// Find a free top-left position for a group of size (w,h), starting at `start`.
+// Scans outward (right, then down rows) until it stops colliding with `obstacles`.
+const findFreePosition = (
+  start: { x: number; y: number },
+  w: number,
+  h: number,
+  obstacles: Rect[],
+  pad = 80
+): { x: number; y: number } => {
+  if (obstacles.length === 0) return start;
+  const stepX = w + pad;
+  const stepY = h + pad;
+  const maxCols = 12;
+  const maxRows = 12;
+  for (let row = 0; row < maxRows; row++) {
+    for (let col = 0; col < maxCols; col++) {
+      const candidate: Rect = { x: start.x + col * stepX, y: start.y + row * stepY, w, h };
+      if (!obstacles.some((o) => rectsOverlap(candidate, o, pad))) {
+        return { x: candidate.x, y: candidate.y };
+      }
+    }
+  }
+  // Fallback: drop it below everything.
+  const maxBottom = Math.max(...obstacles.map((o) => o.y + o.h));
+  return { x: start.x, y: maxBottom + pad };
+};
+
 const isWhiteColor = (color: string | undefined): boolean => {
   if (!color) return false;
   const cleaned = color.trim().toLowerCase();
