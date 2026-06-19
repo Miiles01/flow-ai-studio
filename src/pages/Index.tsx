@@ -745,11 +745,13 @@ const IndexContent = () => {
         return;
       }
       setName(data.name || "Tablero");
-      const loadedNodes = ((data.nodes as unknown) as Node[]) || [];
-      const loadedEdges = ((data.edges as unknown) as Edge[]) || [];
+      const rawNodes = ((data.nodes as unknown) as Node[]) || [];
+      const rawEdges = ((data.edges as unknown) as Edge[]) || [];
+      const { nodes: loadedNodes, edges: loadedEdges } = dedupeFlow(rawNodes, rawEdges);
       setNodes(loadedNodes);
       setEdges(loadedEdges);
       setOwnerId((data as any).user_id);
+
 
       // If not owner, look up collaborator role
       if ((data as any).user_id !== user.id) {
