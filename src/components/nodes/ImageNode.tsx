@@ -78,22 +78,20 @@ const ImageNode = ({ id, data, selected }: NodeProps) => {
         lineStyle={{ border: "none" }}
       />
 
-      {/* Connection handles — only visible when selected */}
-      {isSingleSelected && (
-        <>
-          <Handle type="target" position={Position.Top}    id="top" className={HANDLE_CLASS} style={{ top: "0%",  left: "50%", transform: "translate(-50%, -50%)" }} />
-          <Handle type="source" position={Position.Top}    id="top" className={HANDLE_CLASS} style={{ top: "0%",  left: "50%", transform: "translate(-50%, -50%)" }} />
-          
-          <Handle type="target" position={Position.Bottom} id="bottom" className={HANDLE_CLASS} style={{ bottom: "0%", left: "50%", transform: "translate(-50%, 50%)" }} />
-          <Handle type="source" position={Position.Bottom} id="bottom" className={HANDLE_CLASS} style={{ bottom: "0%", left: "50%", transform: "translate(-50%, 50%)" }} />
-          
-          <Handle type="target" position={Position.Left}   id="left" className={HANDLE_CLASS} style={{ left: "0%",  top: "50%",  transform: "translate(-50%, -50%)" }} />
-          <Handle type="source" position={Position.Left}   id="left" className={HANDLE_CLASS} style={{ left: "0%",  top: "50%",  transform: "translate(-50%, -50%)" }} />
-          
-          <Handle type="target" position={Position.Right}  id="right" className={HANDLE_CLASS} style={{ right: "0%", top: "50%",  transform: "translate(50%, -50%)" }} />
-          <Handle type="source" position={Position.Right}  id="right" className={HANDLE_CLASS} style={{ right: "0%", top: "50%",  transform: "translate(50%, -50%)" }} />
-        </>
-      )}
+      {/* Connection handles — always in DOM to allow connections, visually hidden when not selected */}
+      <div className={isSingleSelected ? "opacity-100 transition-opacity duration-200" : "opacity-0 pointer-events-none transition-opacity duration-200"}>
+        <Handle type="target" position={Position.Top}    id="top" className={HANDLE_CLASS} style={{ top: "0%",  left: "50%", transform: "translate(-50%, -50%)" }} />
+        <Handle type="source" position={Position.Top}    id="top" className={HANDLE_CLASS} style={{ top: "0%",  left: "50%", transform: "translate(-50%, -50%)" }} />
+        
+        <Handle type="target" position={Position.Bottom} id="bottom" className={HANDLE_CLASS} style={{ bottom: "0%", left: "50%", transform: "translate(-50%, 50%)" }} />
+        <Handle type="source" position={Position.Bottom} id="bottom" className={HANDLE_CLASS} style={{ bottom: "0%", left: "50%", transform: "translate(-50%, 50%)" }} />
+        
+        <Handle type="target" position={Position.Left}   id="left" className={HANDLE_CLASS} style={{ left: "0%",  top: "50%",  transform: "translate(-50%, -50%)" }} />
+        <Handle type="source" position={Position.Left}   id="left" className={HANDLE_CLASS} style={{ left: "0%",  top: "50%",  transform: "translate(-50%, -50%)" }} />
+        
+        <Handle type="target" position={Position.Right}  id="right" className={HANDLE_CLASS} style={{ right: "0%", top: "50%",  transform: "translate(50%, -50%)" }} />
+        <Handle type="source" position={Position.Right}  id="right" className={HANDLE_CLASS} style={{ right: "0%", top: "50%",  transform: "translate(50%, -50%)" }} />
+      </div>
 
       {/* ── Floating Toolbar ── */}
       <AnimatePresence>
