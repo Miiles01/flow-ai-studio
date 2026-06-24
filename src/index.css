@@ -811,7 +811,7 @@
     height: 500vh;
 }
 .mwg_effect016 .container {
-    width: 25%; /* Slightly larger than 18% for better visibility, adjust if needed */
+    width: 15%; /* Reducido a petición para que las imágenes sean más pequeñas */
     aspect-ratio: 1;
     top: 50vh;
     left: 50%;
@@ -819,7 +819,7 @@
     position: absolute;
 }
 @media (max-width: 768px) {
-    .mwg_effect016 .container { width: 50%; }
+    .mwg_effect016 .container { width: 35%; }
 }
 .mwg_effect016 .media-wrapper {
     position: absolute;
