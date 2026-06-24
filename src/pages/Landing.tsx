@@ -428,28 +428,6 @@ const Landing = () => {
         stagger: 0.04, // Animation delay between each element
     }, '<'); // Means the animation starts at the start of the previous tween
 
-    // Animación de aparición y desaparición del texto "Un nuevo orden"
-    if (textElement) {
-        // Estado inicial oculto y pequeño
-        gsap.set(textElement, { autoAlpha: 0, scale: 0.8 });
-        
-        // Aparece a la mitad del remolino
-        tl.to(textElement, {
-            autoAlpha: 1,
-            scale: 1,
-            duration: 0.3,
-            ease: 'power2.out'
-        }, 0.3);
-
-        // Desaparece al final
-        tl.to(textElement, {
-            autoAlpha: 0,
-            scale: 1.1,
-            duration: 0.2,
-            ease: 'power2.in'
-        }, "-=0.2");
-    }
-
     return () => {
       // Cleanup for this section
       tl.kill();
