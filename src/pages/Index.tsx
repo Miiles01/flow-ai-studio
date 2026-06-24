@@ -17,7 +17,7 @@ import {
   type Edge,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { ArrowLeft, Loader2, Check, Cloud, CloudOff, Settings2, EyeOff, Eye, Trash2, Undo2, Redo2, Palette, Square, Type, Baseline, Sparkles, PanelRight, ListChecks, Plus, Share2, Sun, Moon, EyeIcon, Copy, Download } from "lucide-react";
+import { ArrowLeft, ArrowUp, ArrowDown, Loader2, Check, Cloud, CloudOff, Settings2, EyeOff, Eye, Trash2, Undo2, Redo2, Palette, Square, Type, Baseline, Sparkles, PanelRight, ListChecks, Plus, Share2, Sun, Moon, EyeIcon, Copy, Download } from "lucide-react";
 import { buildTasksInstructions, downloadTextFile, type TodoListLike } from "@/lib/todoInstructions";
 import ShareDialog from "@/components/ShareDialog";
 import PresenceStack from "@/components/PresenceStack";
@@ -2575,6 +2575,33 @@ const IndexContent = () => {
                         );
                       };
 
+                      const moveTask = (taskId: string, direction: "up" | "down") => {
+                        setNodes((nds) =>
+                          nds.map((n) => {
+                            if (n.id !== node.id) return n;
+                            const currentTasks = [...((n.data as any).tasks ?? [])];
+                            const idx = currentTasks.findIndex((t) => t.id === taskId);
+                            if (idx === -1) return n;
+                            if (direction === "up" && idx > 0) {
+                              [currentTasks[idx - 1], currentTasks[idx]] = [currentTasks[idx], currentTasks[idx - 1]];
+                            } else if (direction === "down" && idx < currentTasks.length - 1) {
+                              [currentTasks[idx], currentTasks[idx + 1]] = [currentTasks[idx + 1], currentTasks[idx]];
+                            }
+                            return { ...n, data: { ...n.data, tasks: currentTasks } };
+                          })
+                        );
+                      };
+
+                      const deleteTask = (taskId: string) => {
+                        setNodes((nds) =>
+                          nds.map((n) => {
+                            if (n.id !== node.id) return n;
+                            const currentTasks = ((n.data as any).tasks ?? []).filter((t: any) => t.id !== taskId);
+                            return { ...n, data: { ...n.data, tasks: currentTasks } };
+                          })
+                        );
+                      };
+
                       // Reacción dinámica en modo oscuro: si tiene fondo blanco, se pone oscuro.
                       const rawBg = d.backgroundColor ?? (isDark ? "#1F2937" : "#FFFFFF");
                       const isWhiteBg = isWhiteColor(rawBg);
@@ -2657,16 +2684,16 @@ const IndexContent = () => {
                               <p className="text-[12px] font-light py-1" style={{ color: isCardDark ? "#6B7280" : "#9CA3AF" }}>Sin tareas aún.</p>
                             )}
                             {tasks.map((task) => (
-                              <div key={task.id} className="flex items-center gap-3 py-1" onClick={(e) => e.stopPropagation()}>
+                              <div key={task.id} className="group/task flex items-center gap-3 py-1" onClick={(e) => e.stopPropagation()}>
                                 <button
                                   onClick={(e) => { e.stopPropagation(); toggleTask(task.id); }}
-                                  className="w-5 h-5 rounded-full border-[1.5px] flex items-center justify-center shrink-0 transition-all duration-200"
+                                  className="w-5 h-5 rounded-md border-[1.5px] flex items-center justify-center shrink-0 transition-all duration-200 mt-[2px]"
                                   style={{
                                     borderColor: task.completed ? effectiveTextColor : (isCardDark ? "#6B7280" : "#9CA3AF"),
                                     backgroundColor: task.completed ? effectiveTextColor : "transparent",
                                   }}
                                 >
-                                  {task.completed && <Check size={12} className={effectiveTextColor === "#FFFFFF" ? "text-gray-900" : "text-white"} strokeWidth={3} />}
+                                  {task.completed && <Check size={12} className={effectiveTextColor === "#FFFFFF" || effectiveTextColor === "#FACC15" ? "text-gray-900" : "text-white"} strokeWidth={3} />}
                                 </button>
                                 <AutoResizingTextarea
                                   value={task.text}
@@ -2685,23 +2712,50 @@ const IndexContent = () => {
                                     opacity: task.completed ? 0.7 : 1,
                                   }}
                                 />
+                                
+                                {/* Task Row Actions */}
+                                <div className="hidden group-hover/task:flex items-center gap-1 shrink-0">
+                                  <button
+                                    onClick={(e) => { e.stopPropagation(); moveTask(task.id, "up"); }}
+                                    className="p-1 rounded-md hover:bg-black/10 dark:hover:bg-white/10 text-gray-400 hover:text-gray-600 transition-colors"
+                                    title="Subir"
+                                  >
+                                    <ArrowUp size={11} />
+                                  </button>
+                                  <button
+                                    onClick={(e) => { e.stopPropagation(); moveTask(task.id, "down"); }}
+                                    className="p-1 rounded-md hover:bg-black/10 dark:hover:bg-white/10 text-gray-400 hover:text-gray-600 transition-colors"
+                                    title="Bajar"
+                                  >
+                                    <ArrowDown size={11} />
+                                  </button>
+                                  <button
+                                    onClick={(e) => { e.stopPropagation(); deleteTask(task.id); }}
+                                    className="p-1 rounded-md hover:bg-red-50 dark:hover:bg-red-500/10 text-gray-400 hover:text-red-600 transition-colors"
+                                    title="Eliminar"
+                                  >
+                                    <Trash2 size={11} />
+                                  </button>
+                                </div>
                               </div>
                             ))}
                           </div>
 
                           {/* Add task button */}
-                          <button
-                            onClick={(e) => { e.stopPropagation(); addTask(); }}
-                            className="flex items-center gap-2 py-2 px-3 rounded-xl border border-dashed transition-all text-left mt-2 shrink-0 w-full"
-                            style={{
-                              borderColor: isCardDark ? "rgba(255,255,255,0.1)" : "#D1D5DB",
-                              color: isCardDark ? "#9CA3AF" : "#9CA3AF",
-                              backgroundColor: isCardDark ? "rgba(255,255,255,0.02)" : "rgba(0,0,0,0.02)"
-                            }}
-                          >
-                            <Plus size={13} />
-                            <span className="text-[13px]">Nueva Tarea...</span>
-                          </button>
+                          {(panelCardHover === node.id || tasks.length === 0) && (
+                            <button
+                              onClick={(e) => { e.stopPropagation(); addTask(); }}
+                              className="flex items-center gap-2 py-2 px-3 rounded-xl border border-dashed transition-all text-left mt-2 shrink-0 w-full"
+                              style={{
+                                borderColor: isCardDark ? "rgba(255,255,255,0.1)" : "#D1D5DB",
+                                color: isCardDark ? "#9CA3AF" : "#9CA3AF",
+                                backgroundColor: isCardDark ? "rgba(255,255,255,0.02)" : "rgba(0,0,0,0.02)"
+                              }}
+                            >
+                              <Plus size={13} />
+                              <span className="text-[13px]">Nueva Tarea...</span>
+                            </button>
+                          )}
                         </div>
                       );
                     })}
