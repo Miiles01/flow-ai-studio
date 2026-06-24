@@ -2695,11 +2695,11 @@ const IndexContent = () => {
                                       : "bg-black/[0.03] border-black/15 hover:border-black/30 hover:bg-black/[0.05]"
                                   }`}
                                   style={{
-                                    borderColor: task.completed ? effectiveTextColor : undefined,
-                                    backgroundColor: task.completed ? effectiveTextColor : undefined,
+                                    borderColor: task.completed ? (d.accentColor && d.accentColor !== "transparent" ? d.accentColor : "#4059F1") : undefined,
+                                    backgroundColor: task.completed ? (d.accentColor && d.accentColor !== "transparent" ? d.accentColor : "#4059F1") : undefined,
                                   }}
                                 >
-                                  {task.completed && <Check size={12} className={effectiveTextColor === "#FFFFFF" || effectiveTextColor === "#FACC15" ? "text-gray-900" : "text-white"} strokeWidth={3} />}
+                                  {task.completed && <Check size={12} className={(d.accentColor === "#FFFFFF" || d.accentColor === "#FACC15") ? "text-gray-900" : "text-white"} strokeWidth={3} />}
                                 </button>
                                 <AutoResizingTextarea
                                   value={task.text}

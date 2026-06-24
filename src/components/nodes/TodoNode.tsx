@@ -527,10 +527,10 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                 }`}
                 style={{
                   borderColor: task.completed
-                    ? (accentColor && accentColor !== "transparent" ? accentColor : (isDarkMode ? "#FFFFFF" : "#111827"))
+                    ? (accentColor && accentColor !== "transparent" ? accentColor : "#4059F1")
                     : undefined,
                   backgroundColor: task.completed
-                    ? (accentColor && accentColor !== "transparent" ? accentColor : (isDarkMode ? "#FFFFFF" : "#111827"))
+                    ? (accentColor && accentColor !== "transparent" ? accentColor : "#4059F1")
                     : undefined,
                 }}
               >
@@ -538,7 +538,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                   <Check
                     size={12}
                     className={`${
-                      (accentColor && accentColor !== "transparent" ? (accentColor === "#FFFFFF" || accentColor === "#FACC15") : isDarkMode)
+                      (accentColor && accentColor !== "transparent" ? (accentColor === "#FFFFFF" || accentColor === "#FACC15") : false)
                         ? "text-gray-900"
                         : "text-white"
                     } stroke-[3.5]`}
