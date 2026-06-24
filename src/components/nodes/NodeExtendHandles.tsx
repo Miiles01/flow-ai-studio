@@ -58,8 +58,8 @@ const NodeExtendHandles = ({ nodeId }: { nodeId: string }) => {
                     isActive
                       ? "bg-[#4059F1] ring-2 ring-[#4059F1]/30"
                       : isDark
-                        ? "bg-[#1C1C1E] border border-white/10 hover:bg-white/10"
-                        : "bg-white border border-gray-200 hover:bg-gray-50"
+                        ? "bg-white border border-gray-200 hover:bg-gray-100"
+                        : "bg-black border border-black hover:bg-gray-900"
                   }`}
                   title="Ampliar con IA desde aquí"
                 >
@@ -67,7 +67,7 @@ const NodeExtendHandles = ({ nodeId }: { nodeId: string }) => {
                     src={estrellaIcon}
                     alt=""
                     className="w-3.5 h-3.5 transition-all"
-                    style={{ filter: isActive || isDark ? "invert(1)" : "none" }}
+                    style={{ filter: isActive || !isDark ? "invert(1)" : "none" }}
                   />
                 </motion.button>
               )}
