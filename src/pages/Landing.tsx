@@ -514,12 +514,11 @@ const Landing = () => {
 
           {/* SWIRLING IMAGES (mwg_effect016) */}
           <section ref={orbitSectionRef} className="mwg_effect016 relative z-10 w-full">
-            <h2 className="scroll-text text-black text-4xl md:text-7xl lg:text-[90px] font-normal tracking-tight">
-              Un nuevo orden
-            </h2>
-
             <div className="pin-height">
               <div className="container">
+                <h2 className="scroll-text text-black text-4xl md:text-7xl lg:text-[90px] font-normal tracking-tight">
+                  Un nuevo orden
+                </h2>
                 {swirlImages.slice(0, 8).map((src, idx) => (
                   <div key={idx} className="media-wrapper">
                     <img src={src} alt="" className="media" />
@@ -537,12 +536,12 @@ const Landing = () => {
                 <p className="paragraphs">
                   Unifica tus ideas<br />
                   en un solo lugar<br />
-                  y empieza a crear.
+                  y empieza a crear
                 </p>
                 <p className="paragraphs">
                   Un espacio para<br />
                   conectar y co-crear<br />
-                  sin límites.
+                  sin límites
                 </p>
               </div>
             </div>
