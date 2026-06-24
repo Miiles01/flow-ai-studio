@@ -188,17 +188,18 @@ export default function EditableEdge({
         onDoubleClick={handleReset}
         className="cursor-pointer"
       >
-        {/* Invisible wider path for forgiving clicks and drags (20px width) */}
+        {/* Invisible wider path for forgiving clicks and drags (60px width) */}
         <path
           d={edgePath}
           fill="none"
           stroke="transparent"
-          strokeWidth={20}
+          strokeWidth={60}
           className="cursor-pointer"
         />
         <BaseEdge 
           path={edgePath} 
           markerEnd={markerEnd} 
+          interactionWidth={60}
           style={{
             ...style,
             stroke: selected ? "#4059F1" : (style.stroke || (isDark ? "#555" : "#CCC")),
