@@ -373,70 +373,74 @@ const Landing = () => {
     };
   }, []);
 
-  // Swirling Images Animation (mwg_effect016 inspired)
+  // Swirling Images Animation (mwg_effect016 exact)
   useEffect(() => {
     const root = orbitSectionRef.current;
     if (!root) return;
 
-    const pinHeight = root.querySelector(".pin-height") as HTMLElement;
-    const container = root.querySelector(".mwg-swirl-container") as HTMLElement;
-    const wrappers = root.querySelectorAll(".media-wrapper");
-    const textCenter = root.querySelector(".swirl-text-center") as HTMLElement;
-
-    if (!pinHeight || !container || wrappers.length === 0 || !textCenter) return;
-
-    let tl = gsap.timeline({
-      scrollTrigger: {
-        trigger: pinHeight,
-        start: "top top",
-        end: "+=3000",
-        scrub: 1,
-        pin: container,
-      }
+    // Optional text fading in the center using '.scroll-text'
+    gsap.to(root.querySelector('.scroll-text'), {
+        autoAlpha: 0,
+        duration: 0.2,
+        scrollTrigger: {
+            trigger: root,
+            start: 'top top',
+            end: 'top top-=1',
+            toggleActions: "play none reverse none"
+        }
     });
 
-    // Set initial positions for images (scattered outwards)
-    wrappers.forEach((wrapper, i) => {
-      const angle = (i / wrappers.length) * Math.PI * 2;
-      const radius = 1500 + Math.random() * 500;
-      
-      gsap.set(wrapper, {
-        x: Math.cos(angle) * radius,
-        y: Math.sin(angle) * radius,
-        rotation: Math.random() * 360 - 180,
-        scale: 1.5 + Math.random(),
-        opacity: 0,
-      });
-
-      // Swirl inwards
-      tl.to(wrapper, {
-        x: 0,
-        y: 0,
-        rotation: 0,
-        scale: 0.2,
-        opacity: 1,
-        ease: "power2.inOut",
-      }, 0);
+    const pinHeight = root.querySelector('.pin-height') as HTMLElement;
+    const container = root.querySelector('.container') as HTMLElement;
+    
+    ScrollTrigger.create({
+        trigger: pinHeight, // Listens to pin-height
+        start: 'top top',
+        end: 'bottom bottom',
+        pin: container // The pinned section
     });
 
-    // Animate the center text: fade in as images swirl in, stay, then fade out
-    gsap.set(textCenter, { opacity: 0, scale: 0.8 });
-    tl.to(textCenter, {
-      opacity: 1,
-      scale: 1,
-      duration: 0.2,
-      ease: "power2.out"
-    }, 0.4); // Appears midway
-
-    tl.to(textCenter, {
-      opacity: 0,
-      scale: 1.1,
-      duration: 0.2,
-      ease: "power2.in"
-    }, 0.8); // Fades out before the end
+    const mediaWrappers = root.querySelectorAll('.media-wrapper');
+    const mediasLength = mediaWrappers.length;
+    const angle = 360 / mediasLength;
+    const medias = root.querySelectorAll('.media');
+    
+    mediaWrappers.forEach((wrapper, index) => {
+        // Assign the angle to each wrapper
+        gsap.set(wrapper, {rotation: -angle * index});
+        // Assign the opposite angle to the child of the wrapper
+        gsap.set(medias[index], {rotation: angle * index});
+    });
+    
+    const tl = gsap.timeline({
+        scrollTrigger: {
+            trigger: pinHeight, // Listens to pin-height
+            start: 'top top',
+            end: 'bottom bottom',
+            scrub: true // Progresses with the scroll
+        }
+    });
+    
+    tl.to(mediaWrappers, {
+        rotation: '+=180', // += adds 180 from the current angle
+        stagger: 0.04, // Animation delay between each element 
+        ease: 'power1.out', // Non-linear
+    });
+    tl.to(medias, { 
+        x: 0, // Re-centers the child
+        rotation: '-=180', // -= subtracts 180 from the current angle
+        ease: 'power1.out', 
+        stagger: 0.04, // Animation delay between each element
+    }, '<'); // Means the animation starts at the start of the previous tween
+    
+    tl.from(medias, { 
+        autoAlpha: 0, // The element is initially invisible and hidden
+        duration: 0.03, // Plays quickly
+        stagger: 0.04, // Animation delay between each element
+    }, '<'); // Means the animation starts at the start of the previous tween
 
     return () => {
-      if (tl.scrollTrigger) tl.scrollTrigger.kill();
+      // Cleanup for this section
       tl.kill();
     };
   }, []);
@@ -510,17 +514,16 @@ const Landing = () => {
           </section>
 
           {/* SWIRLING IMAGES (mwg_effect016) */}
-          <section ref={orbitSectionRef} className="bg-white relative z-10 w-full overflow-hidden">
-            <div className="pin-height" style={{ height: "400vh" }}>
-              <div className="mwg-swirl-container relative w-full h-screen overflow-hidden flex items-center justify-center bg-[#0a0a0a]">
-                
-                <h2 className="swirl-text-center text-white text-4xl md:text-7xl lg:text-[90px] font-normal tracking-tight z-20 absolute pointer-events-none text-center">
-                  Un nuevo orden
-                </h2>
+          <section ref={orbitSectionRef} className="mwg_effect016 relative z-10 w-full">
+            <h2 className="scroll-text text-black text-4xl md:text-7xl lg:text-[90px] font-normal tracking-tight">
+              Un nuevo orden
+            </h2>
 
-                {swirlImages.map((src, idx) => (
-                  <div key={idx} className="media-wrapper absolute z-10 w-[300px] h-[400px] rounded-xl overflow-hidden shadow-2xl opacity-0">
-                    <img src={src} alt="" className="w-full h-full object-cover" />
+            <div className="pin-height">
+              <div className="container">
+                {swirlImages.slice(0, 8).map((src, idx) => (
+                  <div key={idx} className="media-wrapper">
+                    <img src={src} alt="" className="media" />
                   </div>
                 ))}
               </div>
