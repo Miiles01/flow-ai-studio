@@ -507,7 +507,7 @@ const Landing = () => {
             <div className="pin-height">
               <div className="container">
                 <h2 className="scroll-text text-black text-4xl md:text-7xl lg:text-[90px] font-normal tracking-tight">
-                  Un nuevo orden
+                  Descubre conexiones.
                 </h2>
                 {swirlImages.slice(0, 8).map((src, idx) => (
                   <div key={idx} className="media-wrapper">
