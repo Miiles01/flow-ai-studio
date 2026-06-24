@@ -518,7 +518,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
               {/* Checkbox */}
               <button
                 onClick={() => handleToggleTask(task.id)}
-                className={`w-5 h-5 rounded-md flex items-center justify-center border-[1.5px] border-solid transition-all shrink-0 duration-200 mt-[3px] ${
+                className={`w-5 h-5 rounded-full flex items-center justify-center border-[1.5px] border-solid transition-all shrink-0 duration-200 mt-[3px] ${
                   task.completed
                     ? ""
                     : isDarkMode

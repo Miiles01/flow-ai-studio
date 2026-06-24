@@ -2687,10 +2687,16 @@ const IndexContent = () => {
                               <div key={task.id} className="group/task flex items-center gap-3 py-1" onClick={(e) => e.stopPropagation()}>
                                 <button
                                   onClick={(e) => { e.stopPropagation(); toggleTask(task.id); }}
-                                  className="w-5 h-5 rounded-md border-[1.5px] flex items-center justify-center shrink-0 transition-all duration-200 mt-[2px]"
+                                  className={`w-5 h-5 rounded-full flex items-center justify-center border-[1.5px] border-solid transition-all shrink-0 duration-200 mt-[2px] ${
+                                    task.completed
+                                      ? ""
+                                      : isCardDark
+                                      ? "bg-white/[0.05] border-white/15 hover:border-white/30 hover:bg-white/[0.08]"
+                                      : "bg-black/[0.03] border-black/15 hover:border-black/30 hover:bg-black/[0.05]"
+                                  }`}
                                   style={{
-                                    borderColor: task.completed ? effectiveTextColor : (isCardDark ? "#6B7280" : "#9CA3AF"),
-                                    backgroundColor: task.completed ? effectiveTextColor : "transparent",
+                                    borderColor: task.completed ? effectiveTextColor : undefined,
+                                    backgroundColor: task.completed ? effectiveTextColor : undefined,
                                   }}
                                 >
                                   {task.completed && <Check size={12} className={effectiveTextColor === "#FFFFFF" || effectiveTextColor === "#FACC15" ? "text-gray-900" : "text-white"} strokeWidth={3} />}
