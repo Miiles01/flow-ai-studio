@@ -308,8 +308,8 @@ Node Types and Data:
    - CRITICAL COLOR RULE: Checklist backgrounds MUST ALWAYS be "#FFFFFF" (pure white) and text/labels/title/subtitle MUST ALWAYS be "#000000" (pure black). NEVER use dark backgrounds or other colors for todoNode.
    - RESPONSIVE WRAPPING: Title, subtitle, and task items automatically wrap to new lines and auto-resize height if long or if container is small. Write complete, detailed task items without fear of text clipping.
 3. "textNode": {"html": "<b style='color:#000000'>Title</b>", "fontSize": 24, "textColor": "#000000"}
-   - Use for general headers, sections, or annotations. También para mostrar un enlace clicable de un prospecto: usa "<a href='URL_REAL' style='color:#4059F1'>Nombre del prospecto</a>".
-   - CRITICAL COLOR RULE: Titles and text nodes MUST ALWAYS use "#000000" (pure black) for "textColor" and inside HTML style attributes. NEVER use gray or any other colors for titles.
+   - DO NOT generate a global title or header textNode at the top of the canvas for the flow. Omit the general title entirely. Use textNodes ONLY for specific annotations or clickable prospect links: usa "<a href='URL_REAL' style='color:#4059F1'>Nombre del prospecto</a>".
+   - CRITICAL COLOR RULE: Text nodes MUST ALWAYS use "#000000" (pure black) for "textColor" and inside HTML style attributes.
 4. "imageNode": {"url": "string", "width": number, "height": number}
    - Use for visual placeholders or logos.
 5. "embedNode": {"url": "https://..."} con "style": {"width": 480, "height": 320}
@@ -322,9 +322,8 @@ Rules for Premium Visual Design:
   - Offset one branch (e.g. "Yes") downwards by exactly 200px (Y: +200) and keep that branch straight (Y constant).
   - Offset the other branch (e.g. "No") upwards by exactly 200px (Y: -200) and keep that branch straight (Y constant).
   - This forms clean, straight parallel lanes and avoids random angles or overlaps.
-- COLOR RULES: Checklists (todoNodes) MUST be "#FFFFFF" (pure white) with "#000000" (pure black) text. Titles (textNodes) MUST be "#000000" (pure black). Other shapeNodes can use vibrant palettes.
-- COLOR PALETTES: Choose a cohesive palette for shapeNodes. Avoid mixing random conflicting colors. Use sleek combinations:
-  - shapeNodes: vibrant accents (#4059F1, #10B981, #EC4899, #8B5CF6) with white text.
+- COLOR RULES: Checklists (todoNodes) MUST be "#FFFFFF" (pure white) with "#000000" (pure black) text. Titles (textNodes) MUST be "#000000" (pure black).
+- COLOR PALETTES: For shapeNodes, strictly prioritize using black (#000000) or brand blue (#4059F1) backgrounds with white text. Do not use random colors like orange, red, green, etc., unless strictly necessary for semantic meaning.
 - DEFAULT BRAND COLOR: The primary brand color is #4059F1. Use it as the default accentColor for todos and stroke color for edges.
 - EDGES: Connect nodes logically. Set edge "style": {"stroke": "hex", "strokeWidth": 2}. Do NOT animate the edges (always set "animated": false or omit it).
 - When the user asks about prospects or business ideas, prefer real prospects from the database below over invented ones.
@@ -333,7 +332,7 @@ Rules for Premium Visual Design:
 - Respond ONLY with valid JSON containing {"nodes": [...], "edges": [...]}, no markdown.
 
 Example output:
-{"nodes": [{"id":"1","type":"textNode","position":{"x":50,"y":50},"data":{"html":"<b style='color:#000000'>Inicio</b>","fontSize":24,"textColor":"#000000"}},{"id":"2","type":"shapeNode","position":{"x":50,"y":120},"style":{"width":140,"height":140},"data":{"shape":"circle","label":"Inicio del Flujo","fillColor":"#4059F1","textColor":"#FFFFFF"}},{"id":"3","type":"todoNode","position":{"x":350,"y":70},"style":{"width":280,"height":240},"data":{"title":"Fase de Planificación","subtitle":"Prerrequisitos obligatorios","tasks":[{"id":"t1","text":"Analizar requerimientos del cliente","completed":false},{"id":"t2","text":"Crear bocetos preliminares","completed":false}],"backgroundColor":"#FFFFFF","accentColor":"#4059F1","textColor":"#000000"}}], "edges": [{"id":"e2-3","source":"2","target":"3","animated":false,"style":{"stroke":"#4059F1","strokeWidth":2}}]}${apifyBlock}${prospectsBlock}${templatesBlock}`;
+{"nodes": [{"id":"1","type":"shapeNode","position":{"x":50,"y":120},"style":{"width":140,"height":140},"data":{"shape":"circle","label":"Inicio del Flujo","fillColor":"#000000","textColor":"#FFFFFF"}},{"id":"2","type":"todoNode","position":{"x":350,"y":70},"style":{"width":280,"height":240},"data":{"title":"Fase de Planificación","subtitle":"Prerrequisitos obligatorios","tasks":[{"id":"t1","text":"Analizar requerimientos","completed":false}],"backgroundColor":"#FFFFFF","accentColor":"#4059F1","textColor":"#000000"}}], "edges": [{"id":"e1-2","source":"1","target":"2","animated":false,"style":{"stroke":"#4059F1","strokeWidth":2}}]}${apifyBlock}${prospectsBlock}${templatesBlock}`;
 
     const customInstructions = await loadInstructions(supabase, "generate");
     const response = await fetch(
