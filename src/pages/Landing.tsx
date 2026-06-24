@@ -378,20 +378,9 @@ const Landing = () => {
     const root = orbitSectionRef.current;
     if (!root) return;
 
-    // Optional text fading in the center using '.scroll-text'
-    gsap.to(root.querySelector('.scroll-text'), {
-        autoAlpha: 0,
-        duration: 0.2,
-        scrollTrigger: {
-            trigger: root,
-            start: 'top top',
-            end: 'top top-=1',
-            toggleActions: "play none reverse none"
-        }
-    });
-
     const pinHeight = root.querySelector('.pin-height') as HTMLElement;
     const container = root.querySelector('.container') as HTMLElement;
+    const textElement = root.querySelector('.scroll-text') as HTMLElement;
     
     ScrollTrigger.create({
         trigger: pinHeight, // Listens to pin-height
@@ -438,6 +427,16 @@ const Landing = () => {
         duration: 0.03, // Plays quickly
         stagger: 0.04, // Animation delay between each element
     }, '<'); // Means the animation starts at the start of the previous tween
+
+    // Hacemos que el texto se desvanezca casi al final de la animación de las imágenes
+    if (textElement) {
+        tl.to(textElement, {
+            autoAlpha: 0,
+            scale: 0.9,
+            duration: 0.1,
+            ease: 'power1.inOut'
+        }, "-=0.2"); // Inicia un poco antes de que termine el remolino
+    }
 
     return () => {
       // Cleanup for this section
