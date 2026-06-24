@@ -40,7 +40,10 @@ const EmbedNode = ({ id, data, selected }: NodeProps) => {
 
   const handleConfirmUrl = useCallback(() => {
     const normalized = normalizeUrl(inputValue);
-    if (!normalized) return;
+    if (!normalized) {
+      setShowInput(false);
+      return;
+    }
     setUrl(normalized);
     setShowInput(false);
     updateNodeData({ url: normalized });
@@ -50,11 +53,15 @@ const EmbedNode = ({ id, data, selected }: NodeProps) => {
     setNodes((nds) => nds.filter((n) => n.id !== id));
   }, [id, setNodes]);
 
-  const handleOpenInput = useCallback(() => {
-    setInputValue(url);
-    setShowInput(true);
-    setTimeout(() => inputRef.current?.focus(), 60);
-  }, [url]);
+  const handleToggleInput = useCallback(() => {
+    if (showInput) {
+      setShowInput(false);
+    } else {
+      setInputValue(url);
+      setShowInput(true);
+      setTimeout(() => inputRef.current?.focus(), 60);
+    }
+  }, [showInput, url]);
 
   const hostname = (() => {
     try { return new URL(url).hostname.replace(/^www\./, ""); } catch { return url; }
@@ -108,7 +115,7 @@ const EmbedNode = ({ id, data, selected }: NodeProps) => {
               className={`flex items-center gap-1 px-2 py-1.5 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.03)] border ${isDark ? 'bg-[#1C1C1E] border-white/10' : 'bg-white border-[#F3F4F6]'}`}
             >
               <button
-                onClick={handleOpenInput}
+                onClick={handleToggleInput}
                 className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${
                   url
                     ? isDark ? "hover:bg-white/10 text-zinc-400" : "hover:bg-[#F3F4F6] text-[#6B7280]"
@@ -204,7 +211,7 @@ const EmbedNode = ({ id, data, selected }: NodeProps) => {
                 ? 'bg-white/5 border-white/10 hover:border-white/20 hover:bg-white/10'
                 : 'bg-[#F9FAFB] border-[#E5E7EB] hover:border-[#4059F1]/40 hover:bg-[#EEF2FF]/20'
             }`}
-            onClick={handleOpenInput}
+            onClick={handleToggleInput}
           >
             <div className={`w-10 h-10 rounded-xl shadow-sm flex items-center justify-center ${isDark ? 'bg-white/5' : 'bg-white'}`}>
               <Globe size={18} className="text-[#9CA3AF]" strokeWidth={1.5} />
