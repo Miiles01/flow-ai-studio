@@ -664,7 +664,7 @@ const Landing = () => {
 
           {/* DESKTOP CTA */}
           <section className="hidden md:flex pb-32 px-6 bg-white flex-col items-center justify-center pt-8">
-            <p className="text-gray-500 mb-6 font-light">crea tu cuenta hoy mismo</p>
+            <p className="text-gray-500 mb-6 font-light">Crea tu cuenta hoy mismo</p>
             <Link
               to="/register"
               className="inline-flex items-center gap-2 px-10 py-5 rounded-full bg-black text-white text-base font-light hover:-translate-y-2 transition-transform duration-300"
