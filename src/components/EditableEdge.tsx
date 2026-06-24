@@ -69,6 +69,11 @@ export default function EditableEdge({
   }, [isEditing]);
 
   const handlePointerDown = (e: React.PointerEvent) => {
+    if (!selected) {
+      // Let the event bubble up to React Flow so it can select the edge
+      return;
+    }
+
     e.preventDefault();
     e.stopPropagation();
 
