@@ -762,7 +762,6 @@ const Features = () => {
     return () => {
       smootherRef.current?.kill();
       ctx.revert();
-      ScrollTrigger.getAll().forEach((t) => t.kill());
     };
   }, []);
 

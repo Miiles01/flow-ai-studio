@@ -21,119 +21,19 @@ import LandingFooter from "@/components/LandingFooter";
 
 const brandLogos = [brand1, brand2, brand3, brand4, brand5, brand6];
 
-// Orbiting words (what an entrepreneur does) + notes
-const orbitWords = [
-  "Investigación",
-  "Pitch",
-  "Canvas",
-  "IA",
-  "Validación",
-  "Branding",
-  "Finanzas",
-  "Estrategia",
-  "Ventas",
-  "Prototipo",
-];
-
-const orbitNotes = [
-  {
-    tag: "Idea",
-    title: "Mapa de oportunidad",
-    bg: "#4059F1",
-    type: "text",
-    content: "Resolver fricción en B2B SaaS. Integrar APIs automatizadas.",
-  },
-  {
-    tag: "Mercado",
-    title: "Tamaño de mercado",
-    bg: "#FCB5B9",
-    type: "text",
-    content: "TAM: $15B global. SOM: $120M en LATAM año 1-3.",
-  },
-  {
-    tag: "Cliente",
-    title: "Perfil de usuario",
-    bg: "#FFFFFF",
-    type: "todo",
-    todos: [
-      { text: "Entrevistar founders", checked: true },
-      { text: "Definir Buyer Persona", checked: true },
-      { text: "Validar dolor principal", checked: false },
-    ],
-  },
-  {
-    tag: "Modelo",
-    title: "Fuentes de ingreso",
-    bg: "#000000",
-    type: "todo",
-    todos: [
-      { text: "Suscripción B2B", checked: true },
-      { text: "Fee transaccional 2%", checked: false },
-      { text: "Licencias Enterprise", checked: false },
-    ],
-  },
-  {
-    tag: "Roadmap",
-    title: "Plan a 90 días",
-    bg: "#4059F1",
-    type: "todo",
-    todos: [
-      { text: "Lanzar MVP beta", checked: true },
-      { text: "Primeros 100 usuarios", checked: true },
-      { text: "Validar retención", checked: false },
-    ],
-  },
-  {
-    tag: "Equipo",
-    title: "Roles clave",
-    bg: "#FCB5B9",
-    type: "todo",
-    todos: [
-      { text: "Contratar CTO técnico", checked: true },
-      { text: "Lead AI Engineer", checked: false },
-      { text: "Growth Marketer", checked: false },
-    ],
-  },
-  {
-    tag: "Métricas",
-    title: "KPIs de tracción",
-    bg: "#FFFFFF",
-    type: "text",
-    content: "LTV/CAC > 3x. Churn < 2%. MRR inicial target: $10k.",
-  },
-  {
-    tag: "Pitch",
-    title: "Deck inversión",
-    bg: "#000000",
-    type: "todo",
-    todos: [
-      { text: "Narrativa del dolor", checked: true },
-      { text: "Tamaño del mercado", checked: true },
-      { text: "Unidad económica", checked: false },
-    ],
-  },
-  {
-    tag: "Growth",
-    title: "Adquisición",
-    bg: "#4059F1",
-    type: "todo",
-    todos: [
-      { text: "SEO orgánico", checked: true },
-      { text: "Outbound AI automatizado", checked: true },
-      { text: "Pauta performance", checked: false },
-    ],
-  },
-  {
-    tag: "Producto",
-    title: "MVP listo",
-    bg: "#FCB5B9",
-    type: "todo",
-    todos: [
-      { text: "Editor de prompts", checked: true },
-      { text: "Integración LLM API", checked: true },
-      { text: "Exportar reportes", checked: false },
-    ],
-  },
+const swirlImages = [
+  "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=400&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=400&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?q=80&w=400&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=400&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=400&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1633477189729-9290b3261d02?q=80&w=400&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=400&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1620121692029-d088224ddc74?q=80&w=400&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=400&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=400&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?q=80&w=400&auto=format&fit=crop",
+  "https://images.unsplash.com/photo-1531297172867-11ba101901a1?q=80&w=400&auto=format&fit=crop",
 ];
 
 
@@ -240,7 +140,6 @@ const Landing = () => {
 
     return () => {
       smootherRef.current?.kill();
-      ScrollTrigger.getAll().forEach((t) => t.kill());
       splits.forEach((s) => s.revert());
       gsap.set(animated, { clearProps: "all" });
     };
@@ -474,66 +373,72 @@ const Landing = () => {
     };
   }, []);
 
-  // Orbiting words + notes animation (mwg_effect040)
+  // Swirling Images Animation (mwg_effect016 inspired)
   useEffect(() => {
     const root = orbitSectionRef.current;
     if (!root) return;
 
     const pinHeight = root.querySelector(".pin-height") as HTMLElement;
-    const container = root.querySelector(".container") as HTMLElement;
-    const leftCircle = root.querySelector(".parent-circle-left") as HTMLElement;
-    const rightCircle = root.querySelector(".parent-circle-right") as HTMLElement;
-    if (!pinHeight || !container || !leftCircle || !rightCircle) return;
+    const container = root.querySelector(".mwg-swirl-container") as HTMLElement;
+    const wrappers = root.querySelectorAll(".media-wrapper");
+    const textCenter = root.querySelector(".swirl-text-center") as HTMLElement;
 
-    const angle = 14;
-    const ctx = gsap.context(() => {
-      const leftItems = leftCircle.querySelectorAll(".circle");
-      const rightItems = rightCircle.querySelectorAll(".circle");
+    if (!pinHeight || !container || wrappers.length === 0 || !textCenter) return;
 
-      leftItems.forEach((el, index) => {
-        gsap.set(el, { rotation: index * angle });
-        gsap.set(el.querySelector("p"), { rotation: -index * angle });
-      });
-      rightItems.forEach((el, index) => {
-        gsap.set(el, { rotation: index * angle });
-        gsap.set(el.querySelector(".note"), { rotation: -index * angle });
-      });
-
-      const total = 180 + angle * leftItems.length;
-
-      gsap.to(".scroll", {
-        autoAlpha: 0,
-        duration: 0.2,
-        scrollTrigger: {
-          trigger: root,
-          start: "top top",
-          end: "top top-=1",
-          toggleActions: "play none reverse none",
-        },
-      });
-
-      const st = {
+    let tl = gsap.timeline({
+      scrollTrigger: {
         trigger: pinHeight,
         start: "top top",
-        end: "bottom bottom",
-        scrub: true,
-      } as const;
-
-      ScrollTrigger.create({
-        trigger: pinHeight,
+        end: "+=3000",
+        scrub: 1,
         pin: container,
-        pinType: "transform",
-        start: "top top",
-        end: "bottom bottom",
+      }
+    });
+
+    // Set initial positions for images (scattered outwards)
+    wrappers.forEach((wrapper, i) => {
+      const angle = (i / wrappers.length) * Math.PI * 2;
+      const radius = 1500 + Math.random() * 500;
+      
+      gsap.set(wrapper, {
+        x: Math.cos(angle) * radius,
+        y: Math.sin(angle) * radius,
+        rotation: Math.random() * 360 - 180,
+        scale: 1.5 + Math.random(),
+        opacity: 0,
       });
 
-      gsap.to(leftCircle, { rotation: -total, ease: "none", scrollTrigger: st });
-      gsap.to(leftCircle.querySelectorAll("p"), { rotation: "+=" + total, ease: "none", scrollTrigger: st });
-      gsap.to(rightCircle, { rotation: -total, ease: "none", scrollTrigger: st });
-      gsap.to(rightCircle.querySelectorAll(".note"), { rotation: "+=" + total, ease: "none", scrollTrigger: st });
-    }, root);
+      // Swirl inwards
+      tl.to(wrapper, {
+        x: 0,
+        y: 0,
+        rotation: 0,
+        scale: 0.2,
+        opacity: 1,
+        ease: "power2.inOut",
+      }, 0);
+    });
 
-    return () => ctx.revert();
+    // Animate the center text: fade in as images swirl in, stay, then fade out
+    gsap.set(textCenter, { opacity: 0, scale: 0.8 });
+    tl.to(textCenter, {
+      opacity: 1,
+      scale: 1,
+      duration: 0.2,
+      ease: "power2.out"
+    }, 0.4); // Appears midway
+
+    tl.to(textCenter, {
+      opacity: 0,
+      scale: 1.1,
+      duration: 0.2,
+      ease: "power2.in"
+    }, 0.8); // Fades out before the end
+
+    return () => {
+      if (tl.scrollTrigger) tl.scrollTrigger.kill();
+      tl.kill();
+    };
   }, []);
   return (
     <>
@@ -604,58 +509,20 @@ const Landing = () => {
             </div>
           </section>
 
-          {/* ORBITING WORDS + NOTES (mwg_effect040) */}
-          <section ref={orbitSectionRef} className="mwg_effect040">
-            <p className="scroll">Scroll</p>
-            <div className="pin-height">
-              <div className="container">
-                <div className="parent-circle parent-circle-left">
-                  {orbitWords.map((word) => (
-                    <div className="circle" key={word}>
-                      <p className="label">{word}</p>
-                    </div>
-                  ))}
-                </div>
-                <div className="parent-circle parent-circle-right">
-                  {orbitNotes.map((note) => {
-                    const isDarkBg = note.bg === "#4059F1" || note.bg === "#000000";
-                    const textColorClass = isDarkBg ? "text-white" : "text-neutral-800";
-                    const subColorClass = isDarkBg ? "text-white/60" : "text-neutral-500";
-                    const todoTextClass = isDarkBg ? "text-white" : "text-neutral-800";
-                    const checkColor = isDarkBg ? 'stroke-neutral-950' : 'stroke-white';
-                    const checkboxBorder = isDarkBg ? 'border-white/40' : 'border-neutral-400';
-                    return (
-                      <div className="circle" key={note.title}>
-                        <div className={`note ${textColorClass}`} style={{ background: note.bg }}>
-                          <span className={`note-tag ${subColorClass}`}>{note.tag}</span>
-                          <h4 className={`note-title ${textColorClass}`}>{note.title}</h4>
-                          {note.type === "todo" && note.todos ? (
-                            <div className="note-todos flex flex-col gap-1.5 overflow-hidden mt-1.5 w-full">
-                              {note.todos.map((todo, idx) => (
-                                <div key={idx} className="flex items-center gap-1.5 text-[0.8vw] leading-tight">
-                                  <span className={`w-[0.9vw] h-[0.9vw] min-w-[0.9vw] min-h-[0.9vw] border ${checkboxBorder} rounded-sm flex items-center justify-center shrink-0 ${todo.checked ? (isDarkBg ? 'bg-white border-white' : 'bg-neutral-800 border-neutral-800') : 'bg-transparent'}`}>
-                                    {todo.checked && (
-                                      <svg viewBox="0 0 24 24" fill="none" className={`w-[0.6vw] h-[0.6vw] ${checkColor} stroke-[3]`}>
-                                        <polyline points="20 6 9 17 4 12" />
-                                      </svg>
-                                    )}
-                                  </span>
-                                  <span className={`truncate ${todo.checked ? 'line-through opacity-45' : `${todoTextClass} font-normal`}`}>
-                                    {todo.text}
-                                  </span>
-                                </div>
-                              ))}
-                            </div>
-                          ) : (
-                            <p className={`note-content text-[0.85vw] font-light leading-relaxed mt-1.5 italic ${isDarkBg ? 'text-white/80' : 'text-neutral-700'}`}>
-                              "{note.content}"
-                            </p>
-                          )}
-                        </div>
-                      </div>
-                    );
-                  })}
-                </div>
+          {/* SWIRLING IMAGES (mwg_effect016) */}
+          <section ref={orbitSectionRef} className="bg-white relative z-10 w-full overflow-hidden">
+            <div className="pin-height" style={{ height: "400vh" }}>
+              <div className="mwg-swirl-container relative w-full h-screen overflow-hidden flex items-center justify-center bg-[#0a0a0a]">
+                
+                <h2 className="swirl-text-center text-white text-4xl md:text-7xl lg:text-[90px] font-normal tracking-tight z-20 absolute pointer-events-none text-center">
+                  Un nuevo orden
+                </h2>
+
+                {swirlImages.map((src, idx) => (
+                  <div key={idx} className="media-wrapper absolute z-10 w-[300px] h-[400px] rounded-xl overflow-hidden shadow-2xl opacity-0">
+                    <img src={src} alt="" className="w-full h-full object-cover" />
+                  </div>
+                ))}
               </div>
             </div>
           </section>
