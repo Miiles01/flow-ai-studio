@@ -441,7 +441,7 @@ const Landing = () => {
         <div id="smooth-content" className="bg-white text-black font-sans overflow-hidden">
 
           {/* HERO */}
-          <section className="min-h-screen bg-white text-black flex flex-col items-center justify-center text-center px-6 py-24 relative z-10">
+          <section className="min-h-[85vh] md:min-h-screen bg-white text-black flex flex-col items-center justify-center text-center px-6 pt-32 pb-16 md:pb-32 relative z-10">
             <img 
               data-anim-heading 
               src={logoImg} 
