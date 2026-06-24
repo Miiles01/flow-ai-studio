@@ -56,7 +56,7 @@ const NodeExtendHandles = ({ nodeId }: { nodeId: string }) => {
                   style={{ transform: `scale(${scale})`, transformOrigin }}
                   className={`flex items-center justify-center w-7 h-7 rounded-lg shadow-md transition-colors ${
                     isActive
-                      ? isDark ? "bg-white ring-2 ring-white/30" : "bg-black ring-2 ring-black/30"
+                      ? "bg-[#4059F1] ring-2 ring-[#4059F1]/30"
                       : isDark
                         ? "bg-[#1C1C1E] border border-white/10 hover:bg-white/10"
                         : "bg-white border border-gray-200 hover:bg-gray-50"
@@ -67,7 +67,7 @@ const NodeExtendHandles = ({ nodeId }: { nodeId: string }) => {
                     src={estrellaIcon}
                     alt=""
                     className="w-3.5 h-3.5 transition-all"
-                    style={{ filter: isDark ? (isActive ? "none" : "invert(1)") : (isActive ? "invert(1)" : "none") }}
+                    style={{ filter: isActive || isDark ? "invert(1)" : "none" }}
                   />
                 </motion.button>
               )}
