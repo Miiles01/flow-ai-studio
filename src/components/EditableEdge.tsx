@@ -1,4 +1,4 @@
-import { BaseEdge, EdgeLabelRenderer, type EdgeProps, getBezierPath, useReactFlow } from "@xyflow/react";
+import { BaseEdge, EdgeLabelRenderer, type EdgeProps, getBezierPath, useReactFlow, useStore } from "@xyflow/react";
 import { useState, useRef, useEffect } from "react";
 import { useTheme } from "@/contexts/ThemeContext";
 
@@ -18,6 +18,7 @@ export default function EditableEdge({
 }: EdgeProps) {
   const { setEdges, getViewport } = useReactFlow();
   const { isDark } = useTheme();
+  const userSelectionActive = useStore((s) => !!s.userSelectionRect);
 
   // Control points offsets for dragging the line
   const offsetX = (data?.offsetX as number) || 0;
@@ -179,27 +180,21 @@ export default function EditableEdge({
     }
   };
 
+  const handlePointerEnter = (e: React.PointerEvent) => {
+    if (userSelectionActive && !selected) {
+      setEdges((eds) => eds.map((edge) => edge.id === id ? { ...edge, selected: true } : edge));
+    }
+  };
+
   const hasLabel = labelText.trim().length > 0;
 
   return (
     <>
-      <g
-        onPointerDown={handlePointerDown}
-        onDoubleClick={handleReset}
-        className="cursor-pointer"
-      >
-        {/* Invisible wider path for forgiving clicks and drags (60px width) */}
-        <path
-          d={edgePath}
-          fill="none"
-          stroke="transparent"
-          strokeWidth={60}
-          className="cursor-pointer"
-        />
+      <g onDoubleClick={handleReset}>
         <BaseEdge 
           path={edgePath} 
           markerEnd={markerEnd} 
-          interactionWidth={60}
+          interactionWidth={80}
           style={{
             ...style,
             stroke: selected ? "#4059F1" : (style.stroke || (isDark ? "#555" : "#CCC")),
@@ -207,6 +202,31 @@ export default function EditableEdge({
             transition: "stroke 0.15s, stroke-width 0.15s",
           }} 
         />
+        
+        {/* Invisible path for dragging control points (active ONLY when selected) */}
+        {selected && (
+          <path
+            d={edgePath}
+            fill="none"
+            stroke="transparent"
+            strokeWidth={80}
+            className="cursor-pointer"
+            pointerEvents="stroke"
+            onPointerDown={handlePointerDown}
+          />
+        )}
+        
+        {/* Invisible path for sweep selection (active ONLY when marquee is active) */}
+        {userSelectionActive && !selected && (
+          <path
+            d={edgePath}
+            fill="none"
+            stroke="transparent"
+            strokeWidth={80}
+            pointerEvents="stroke"
+            onPointerEnter={handlePointerEnter}
+          />
+        )}
       </g>
       
       <EdgeLabelRenderer>
