@@ -145,10 +145,10 @@ const AIPromptBar = ({ onGenerate, isGenerating, forceOpen, extendLabel, onCance
                   <button
                     onClick={() => handleSubmit()}
                     disabled={!prompt.trim() || isGenerating}
-                    className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/70 transition-all duration-300 hover:bg-white/20 hover:text-white disabled:opacity-30 disabled:transform-none"
+                    className={`w-10 h-10 rounded-full bg-white/10 flex items-center justify-center transition-all duration-300 hover:bg-white/20 hover:text-white disabled:transform-none ${isGenerating ? 'text-white opacity-100' : 'text-white/70 disabled:opacity-30'}`}
                   >
                     {isGenerating ? (
-                      <Loader2 size={18} className="animate-spin" />
+                      <Loader2 size={18} className="animate-spin text-white" />
                     ) : (
                       <ArrowUp size={18} strokeWidth={1.5} />
                     )}
