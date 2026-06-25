@@ -290,7 +290,7 @@ const Landing = () => {
         const xTo = gsap.quickTo(position, "x", tweenOpts);
         const yTo = gsap.quickTo(position, "y", tweenOpts);
 
-        const str = tp.textContent?.trim() || "Es horaaaaaa de crearrrrrrrrr";
+        const str = tp.getAttribute('data-text')?.trim() || "Es horaaaaaa de crearrrrrrrrr";
         const chars = str.split('');
         const totalChars = chars.length;
 
@@ -481,7 +481,7 @@ const Landing = () => {
           {/* BRAND CAROUSEL (Relocated) */}
           <section className="pt-4 pb-6 overflow-hidden bg-white relative z-10">
             <h4 className="text-center text-xs font-light text-gray-400 mb-8 tracking-widest">
-              Elegido por
+              {t("landing.trusted_by")}
             </h4>
             <div className="px-[10%] md:px-[20%]">
               <div className="relative w-full" style={{ maskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)" }}>
@@ -564,9 +564,9 @@ const Landing = () => {
           <section className="py-32 px-6 scroll-mt-24">
             <div className="max-w-6xl mx-auto">
               <h2 className="text-5xl md:text-7xl font-normal leading-tight tracking-tight text-center mb-20">
-                <span className="block">Un sistema.</span>
+                <span className="block">{t("landing.system_title_1")}</span>
                 <span className="block">
-                  Más&nbsp;<span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>ganancias.</span>
+                  {t("landing.system_title_2")}&nbsp;<span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>{t("landing.system_title_3")}</span>
                 </span>
               </h2>
 
@@ -581,10 +581,10 @@ const Landing = () => {
                     />
                   </div>
                   <h3 className="text-3xl md:text-4xl font-normal text-center mb-4 leading-tight">
-                    Encuentra colaboraciones
+                    {t("landing.colab_title")}
                   </h3>
                   <p data-split className="text-sm font-light text-gray-500 text-center leading-relaxed max-w-sm mx-auto">
-                    En Miiles encontrarás oportunidades únicas para impulsar tu marca.
+                    {t("landing.colab_desc")}
                   </p>
                 </div>
 
@@ -598,10 +598,10 @@ const Landing = () => {
                     />
                   </div>
                   <h3 className="text-3xl md:text-4xl font-normal text-center mb-4 leading-tight">
-                    Haz que tu idea suene con fuerza de ventas
+                    {t("landing.sales_title")}
                   </h3>
                   <p data-split className="text-sm font-light text-gray-500 text-center leading-relaxed max-w-sm mx-auto">
-                    Si tu marca vende servicios o productos, haz que otros vendedores en todo el mundo también los ofrezcan.
+                    {t("landing.sales_desc")}
                   </p>
                 </div>
               </div>
@@ -612,7 +612,7 @@ const Landing = () => {
             <div className="max-w-4xl mx-auto text-center flex flex-col items-center">
               <span className="text-6xl md:text-8xl font-serif leading-none mb-4 text-black">“</span>
               <h2 className="text-4xl md:text-6xl font-normal leading-tight tracking-tight mb-12">
-                Luce realmente asombroso
+                {t("landing.testim_quote")}
               </h2>
               <img 
                 src="https://wearemiiles.com/wp-content/uploads/2025/03/Frame-2085662063.png" 
@@ -620,8 +620,8 @@ const Landing = () => {
                 className="h-14 w-auto object-contain mb-4"
               />
               <div className="flex flex-col items-center">
-                <span className="text-sm font-normal text-black">Karol Wegner</span>
-                <span className="text-[10px] text-gray-400 font-light mt-1">CEO de BeeSpeaker</span>
+                <span className="text-sm font-normal text-black">{t("landing.testim_name")}</span>
+                <span className="text-[10px] text-gray-400 font-light mt-1">{t("landing.testim_role")}</span>
               </div>
             </div>
           </section>
@@ -632,8 +632,8 @@ const Landing = () => {
                 <svg id="mysvg" fill="none" width="3898" height="891" viewBox="0 0 3898 891" xmlns="http://www.w3.org/2000/svg">
                   <path id="mypath" d="M0.398438 611.016C175.398 377.517 857.398 -285.484 1461.4 139.638C1911.53 456.46 2114.4 805.516 2679.4 611.016C3088.4 470.219 3704.54 -33.3124 4354.9 781.516C4700.9 1215.02 5305.6 1466.52 6108.4 328.516" />
                   <text id="text">
-                    <textPath id="textpath" href="#mypath" textAnchor="start" fontSize="260">
-                      Es horaaaaaa de crearrrrrrrrr
+                    <textPath id="textpath" href="#mypath" textAnchor="start" fontSize="260" data-text={t("landing.curve_text")}>
+                      {t("landing.curve_text")}
                     </textPath>
                   </text>
                 </svg>
@@ -644,7 +644,7 @@ const Landing = () => {
           {/* MOBILE CTA */}
           <section className="block md:hidden py-24 px-6 bg-white text-center">
             <h2 className="text-4xl sm:text-5xl font-normal leading-tight tracking-tight mb-8 text-black">
-              Es hora de crear
+              {t("landing.cta_title")}
             </h2>
             <Link
               to="/register"
@@ -653,13 +653,13 @@ const Landing = () => {
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 0C12.3 8.8 15.2 11.7 24 12C15.2 12.3 12.3 15.2 12 24C11.7 15.2 8.8 12.3 0 12C8.8 11.7 11.7 8.8 12 0Z" />
               </svg>
-              Prueba Miiles
+              {t("landing.cta_button")}
             </Link>
           </section>
 
           {/* DESKTOP CTA */}
           <section className="hidden md:flex pb-32 px-6 bg-white flex-col items-center justify-center pt-8">
-            <p className="text-gray-500 mb-6 font-light">Crea tu cuenta hoy mismo</p>
+            <p className="text-gray-500 mb-6 font-light">{t("landing.cta_subtitle")}</p>
             <Link
               to="/register"
               className="inline-flex items-center gap-2 px-10 py-5 rounded-full bg-black text-white text-base font-light hover:-translate-y-2 transition-transform duration-300"
@@ -667,7 +667,7 @@ const Landing = () => {
               <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                 <path d="M12 0C12.3 8.8 15.2 11.7 24 12C15.2 12.3 12.3 15.2 12 24C11.7 15.2 8.8 12.3 0 12C8.8 11.7 11.7 8.8 12 0Z" />
               </svg>
-              Prueba Miiles
+              {t("landing.cta_button")}
             </Link>
           </section>
 

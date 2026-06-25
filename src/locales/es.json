@@ -33,6 +33,29 @@
     "scroll_text_2_3": "sin límites",
     "mobile_title_1": "Unifica tus ideas",
     "mobile_title_2": "y empieza a",
-    "mobile_title_3": "crear"
+    "mobile_title_3": "crear",
+    "trusted_by": "Elegido por",
+    "system_title_1": "Un sistema.",
+    "system_title_2": "Más",
+    "system_title_3": "ganancias.",
+    "colab_title": "Encuentra colaboraciones",
+    "colab_desc": "En Miiles encontrarás oportunidades únicas para impulsar tu marca.",
+    "sales_title": "Haz que tu idea suene con fuerza de ventas",
+    "sales_desc": "Si tu marca vende servicios o productos, haz que otros vendedores en todo el mundo también los ofrezcan.",
+    "testim_quote": "Luce realmente asombroso",
+    "testim_name": "Karol Wegner",
+    "testim_role": "CEO de BeeSpeaker",
+    "curve_text": "Es horaaaaaa de crearrrrrrrrr",
+    "cta_title": "Es hora de crear",
+    "cta_subtitle": "Crea tu cuenta hoy mismo",
+    "cta_button": "Prueba Miiles"
+  },
+  "footer": {
+    "slogan": "Diseñado para mentes creativas",
+    "copyright": "© Miiles, todos los derechos reservados, 2026",
+    "company": "Compañía",
+    "terms": "Términos y condiciones",
+    "privacy": "Política de privacidad",
+    "social": "Redes Sociales"
   }
 }
