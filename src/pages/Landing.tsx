@@ -22,18 +22,14 @@ import LandingFooter from "@/components/LandingFooter";
 const brandLogos = [brand1, brand2, brand3, brand4, brand5, brand6];
 
 const swirlImages = [
-  "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=400&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=400&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1605810230434-7631ac76ec81?q=80&w=400&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=400&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1518770660439-4636190af475?q=80&w=400&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1633477189729-9290b3261d02?q=80&w=400&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1620641788421-7a1c342ea42e?q=80&w=400&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1620121692029-d088224ddc74?q=80&w=400&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1558494949-ef010cbdcc31?q=80&w=400&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1614850523459-c2f4c699c52e?q=80&w=400&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1526304640581-d334cdbbf45e?q=80&w=400&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1531297172867-11ba101901a1?q=80&w=400&auto=format&fit=crop",
+  "/bonito/1.png",
+  "/bonito/2.png",
+  "/bonito/3.png",
+  "/bonito/4.png",
+  "/bonito/5.png",
+  "/bonito/6.png",
+  "/bonito/7.png",
+  "/bonito/8.png",
 ];
 
 
