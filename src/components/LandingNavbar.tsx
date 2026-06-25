@@ -187,18 +187,17 @@ const LandingNavbar = ({ onMenuAction, cta }: LandingNavbarProps) => {
                         className="flex items-center gap-3 text-4xl md:text-5xl lg:text-[50px] font-medium text-white hover:opacity-50 transition-opacity duration-300 tracking-tight text-left"
                         style={{ fontFamily: "'Poppins', sans-serif" }}
                       >
-                        {t("navbar.language")} 
-                        <span className="text-2xl mt-2 opacity-50">{isLangMenuOpen ? "↑" : "↓"}</span>
+                        {t("navbar.language")}
                       </button>
                       
                       <AnimatePresence>
                         {isLangMenuOpen && (
                           <motion.div
-                            initial={{ opacity: 0, y: -10 }}
+                            initial={{ opacity: 0, y: 10 }}
                             animate={{ opacity: 1, y: 0 }}
-                            exit={{ opacity: 0, y: -10 }}
+                            exit={{ opacity: 0, y: 10 }}
                             transition={{ duration: 0.2 }}
-                            className="absolute top-full left-0 mt-4 bg-white rounded-3xl p-3 min-w-[220px] shadow-[0_20px_40px_rgba(0,0,0,0.2)] z-50 flex flex-col gap-2"
+                            className="absolute top-full left-0 mt-4 md:top-auto md:bottom-0 md:left-full md:mt-0 md:ml-6 bg-white rounded-3xl p-3 min-w-[220px] shadow-[0_20px_40px_rgba(0,0,0,0.2)] z-50 flex flex-col gap-2"
                           >
                             <button
                               onClick={() => changeLanguage('es')}
