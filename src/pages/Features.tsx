@@ -721,47 +721,60 @@ const Features = () => {
   const smootherRef = useRef<ScrollSmoother | null>(null);
 
   useEffect(() => {
-    smootherRef.current = ScrollSmoother.create({
-      wrapper: "#smooth-wrapper-features",
-      content: "#smooth-content-features",
-      smooth: 1.4,
-      effects: true,
-    });
-
     let mm = gsap.matchMedia();
+    
+    const runGsap = () => {
+      if (!document.getElementById("smooth-wrapper-features")) return;
+      
+      smootherRef.current = ScrollSmoother.create({
+        wrapper: "#smooth-wrapper-features",
+        content: "#smooth-content-features",
+        smooth: 1.4,
+        effects: true,
+      });
 
-    // 1. Reveal headers (applies to all screens)
-    mm.add("all", () => {
-      const headings = Array.from(document.querySelectorAll<HTMLElement>("#smooth-content-features h1, #smooth-content-features h2, #smooth-content-features h3"))
-        .filter(el => !el.closest('.horizontal-section-wrapper'));
+      // 1. Reveal headers (applies to all screens)
+      mm.add("all", () => {
+        const headings = Array.from(document.querySelectorAll<HTMLElement>("#smooth-content-features h1, #smooth-content-features h2, #smooth-content-features h3"))
+          .filter(el => !el.closest('.horizontal-section-wrapper'));
 
-      headings.forEach((el) => {
-        gsap.fromTo(el, { yPercent: 20, autoAlpha: 0 }, {
-          yPercent: 0, autoAlpha: 1, duration: 0.9, ease: "osmo-ease",
-          scrollTrigger: { trigger: el, start: "top 88%", once: true },
+        headings.forEach((el) => {
+          gsap.fromTo(el, { yPercent: 20, autoAlpha: 0 }, {
+            yPercent: 0, autoAlpha: 1, duration: 0.9, ease: "osmo-ease",
+            scrollTrigger: { trigger: el, start: "top 88%", once: true },
+          });
         });
       });
-    });
 
-    // 2. Responsive ScrollTrigger for horizontal scroll
-    mm.add("(min-width: 768px)", () => {
-      const track = document.querySelector(".horizontal-track") as HTMLElement;
-      const wrapper = document.querySelector(".horizontal-section-wrapper") as HTMLElement;
-      if (!track || !wrapper) return;
+      // 2. Responsive ScrollTrigger for horizontal scroll
+      mm.add("(min-width: 768px)", () => {
+        const track = document.querySelector(".horizontal-track") as HTMLElement;
+        const wrapper = document.querySelector(".horizontal-section-wrapper") as HTMLElement;
+        if (!track || !wrapper) return;
 
-      gsap.to(track, {
-        x: () => -(track.scrollWidth - window.innerWidth),
-        ease: "none",
-        scrollTrigger: {
-          trigger: wrapper,
-          pin: true,
-          scrub: 1,
-          start: "top top",
-          end: () => `+=${track.scrollWidth - window.innerWidth}`,
-          invalidateOnRefresh: true,
-        },
+        gsap.to(track, {
+          x: () => -(track.scrollWidth - window.innerWidth),
+          ease: "none",
+          scrollTrigger: {
+            trigger: wrapper,
+            pin: true,
+            scrub: 1,
+            start: "top top",
+            end: () => `+=${track.scrollWidth - window.innerWidth}`,
+            invalidateOnRefresh: true,
+          },
+        });
       });
-    });
+
+      // Force refresh after images load
+      setTimeout(() => ScrollTrigger.refresh(), 100);
+      setTimeout(() => ScrollTrigger.refresh(), 500);
+      setTimeout(() => ScrollTrigger.refresh(), 1500);
+    };
+
+    const fontsReady = (document as Document & { fonts?: { ready: Promise<unknown> } }).fonts?.ready;
+    if (fontsReady) fontsReady.then(runGsap);
+    else runGsap();
 
     return () => {
       smootherRef.current?.kill();
