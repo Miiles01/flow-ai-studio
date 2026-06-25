@@ -181,7 +181,7 @@ const LandingNavbar = ({ onMenuAction, cta }: LandingNavbarProps) => {
                     exit={{ opacity: 0, y: 20 }}
                     transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.05 + menuItems.length * 0.05 }}
                   >
-                    <div className="relative">
+                    <div className="relative inline-block w-max">
                       <button 
                         onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
                         className="flex items-center gap-3 text-4xl md:text-5xl lg:text-[50px] font-medium text-white hover:opacity-50 transition-opacity duration-300 tracking-tight text-left"
