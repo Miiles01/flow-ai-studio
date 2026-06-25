@@ -454,7 +454,7 @@ const Landing = () => {
                 {renderWord(t("landing.hero_title_un"))} {renderWord(t("landing.hero_title_buen"))} {renderWord(t("landing.hero_title_dia"))}{" "}
               </span>
               <span className="block">
-                {renderWord(t("landing.hero_title_para"))} {renderWord(t("landing.hero_title_crear"), true)}
+                {renderWord(t("landing.hero_title_para"))} {renderWord(t("landing.hero_title_crear"))}
               </span>
             </h1>
 

@@ -102,10 +102,10 @@ const LandingNavbar = ({ onMenuAction, cta }: LandingNavbarProps) => {
             }}
             className="fixed top-[92px] z-40 w-[90vw] md:w-[85vw] max-w-5xl rounded-[32px] md:rounded-[40px] shadow-[0_24px_70px_rgba(0,0,0,0.15)] border border-white/10 bg-[#7E7E7E] max-h-[80vh] overflow-y-auto"
           >
-            <div className="w-full flex flex-col md:flex-row py-12 px-10 md:py-16 md:px-20 gap-8 md:gap-0">
+            <div className="w-full flex flex-col md:flex-row pt-8 pb-24 px-10 md:py-16 md:px-20 gap-8 md:gap-0">
               
               {/* Left Column: Socials & Legal */}
-              <div className="flex flex-col justify-between w-full md:w-1/3 order-2 md:order-1 mt-6 md:mt-0">
+              <div className="flex flex-col justify-between w-full md:w-1/3 order-2 md:order-1 mt-6 md:mt-0 mb-8 md:mb-0">
                 <div className="flex flex-col gap-4">
                   {socialLinks.map((link, i) => (
                     <div 
