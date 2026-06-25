@@ -531,13 +531,13 @@ const Landing = () => {
           </section>
 
           {/* SIMPLE TITLE TEXT - MOBILE ONLY */}
-          <section className="bg-white text-black relative z-10 block md:hidden pt-20 pb-4 px-8 text-center max-w-md mx-auto">
-            <p className="text-2xl sm:text-3xl font-normal leading-snug tracking-tight mb-4 text-gray-800">
-              Unifica tus ideas en un solo lugar y empieza a crear.
-            </p>
-            <p className="text-2xl sm:text-3xl font-normal leading-snug tracking-tight text-gray-800">
-              Un espacio para conectar y co-crear sin límites.
-            </p>
+          <section className="bg-white text-black relative z-10 block md:hidden pt-20 pb-4 px-6 text-center">
+            <h2 className="text-5xl font-normal leading-tight tracking-tight text-black">
+              <span className="block">Unifica tus ideas</span>
+              <span className="block">
+                y empieza a <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>crear</span>
+              </span>
+            </h2>
           </section>
 
           {/* VIDEO */}
