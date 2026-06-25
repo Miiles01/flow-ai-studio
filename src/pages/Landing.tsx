@@ -173,19 +173,17 @@ const Landing = () => {
     const root = scrollTextSectionRef.current;
     if (!root) return;
 
-    const pinHeight = root.querySelector(".pin-height") as HTMLElement;
-    const container = root.querySelector(".container") as HTMLElement;
-    const paragraphs = root.querySelectorAll(".paragraphs");
+    let mm = gsap.matchMedia();
 
-    if (!pinHeight || !container || paragraphs.length === 0) return;
+    mm.add("(min-width: 768px)", () => {
+      const pinHeight = root.querySelector(".pin-height") as HTMLElement;
+      const container = root.querySelector(".container") as HTMLElement;
+      const paragraphs = root.querySelectorAll(".paragraphs");
 
-    let splits: SplitText[] = [];
-    let pinTrigger: ScrollTrigger | null = null;
-    let tl: gsap.core.Timeline | null = null;
+      if (!pinHeight || !container || paragraphs.length === 0) return;
 
-    const initAnimation = () => {
       // Create SplitText lines
-      splits = Array.from(paragraphs).map((p) => {
+      const splits = Array.from(paragraphs).map((p) => {
         const split = SplitText.create(p as HTMLElement, { type: "lines", linesClass: "line" });
         split.lines.forEach((line) => {
           line.innerHTML = `<div class="line-inner">${line.innerHTML}</div>`;
@@ -201,7 +199,7 @@ const Landing = () => {
       });
 
       // Pin the container
-      pinTrigger = ScrollTrigger.create({
+      ScrollTrigger.create({
         trigger: pinHeight,
         start: "top top",
         end: "bottom bottom",
@@ -210,7 +208,7 @@ const Landing = () => {
       });
 
       // Create rotation timeline
-      tl = gsap.timeline({
+      const tl = gsap.timeline({
         scrollTrigger: {
           trigger: pinHeight,
           start: "top top",
@@ -224,14 +222,14 @@ const Landing = () => {
           const currentLines = split.lines;
           const nextLines = splits[i + 1].lines;
 
-          tl!.to(currentLines, {
+          tl.to(currentLines, {
             rotationY: -90,
             stagger: 0.07,
             duration: 1,
             ease: "back.inOut(1.5)",
           });
 
-          tl!.to(
+          tl.to(
             nextLines,
             {
               rotationY: 0,
@@ -243,23 +241,10 @@ const Landing = () => {
           );
         }
       });
-    };
-
-    const fontsReady = (document as Document & { fonts?: { ready: Promise<unknown> } }).fonts?.ready;
-    if (fontsReady) {
-      fontsReady.then(initAnimation);
-    } else {
-      const timer = setTimeout(initAnimation, 100);
-      return () => clearTimeout(timer);
-    }
+    });
 
     return () => {
-      splits.forEach((s) => s.revert());
-      if (pinTrigger) pinTrigger.kill();
-      if (tl) {
-        if (tl.scrollTrigger) tl.scrollTrigger.kill();
-        tl.kill();
-      }
+      mm.revert();
     };
   }, []);
 
@@ -519,8 +504,8 @@ const Landing = () => {
           </section>
 
 
-          {/* 3D SCROLL TEXT PERSPECTIVE (mwg_effect053) */}
-          <section ref={scrollTextSectionRef} className="mwg_effect053 bg-white text-black relative z-10">
+          {/* 3D SCROLL TEXT PERSPECTIVE (mwg_effect053) - DESKTOP ONLY */}
+          <section ref={scrollTextSectionRef} className="mwg_effect053 bg-white text-black relative z-10 hidden md:block">
             <div className="pin-height">
               <div className="container">
                 <p className="paragraphs">
@@ -535,6 +520,20 @@ const Landing = () => {
                 </p>
               </div>
             </div>
+          </section>
+
+          {/* SIMPLE TITLE TEXT - MOBILE ONLY */}
+          <section className="bg-white text-black relative z-10 block md:hidden py-32 px-6 text-center">
+            <p className="text-4xl font-normal leading-tight tracking-tight mb-16">
+              Unifica tus ideas<br />
+              en un solo lugar<br />
+              y empieza a crear
+            </p>
+            <p className="text-4xl font-normal leading-tight tracking-tight">
+              Un espacio para<br />
+              conectar y co-crear<br />
+              sin límites
+            </p>
           </section>
 
           {/* VIDEO */}
