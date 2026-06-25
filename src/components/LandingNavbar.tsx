@@ -174,11 +174,11 @@ const LandingNavbar = ({ onMenuAction, cta }: LandingNavbarProps) => {
                 ))}
 
                 {/* LANGUAGE SELECTOR */}
-                <div className="overflow-hidden mt-4 md:mt-8" style={{ lineHeight: 1.15, paddingBottom: '0.05em' }}>
+                <div className="mt-4 md:mt-8 relative z-50">
                   <motion.div 
-                    initial={{ y: "110%" }} 
-                    animate={{ y: "0%" }} 
-                    exit={{ y: "110%" }}
+                    initial={{ opacity: 0, y: 20 }} 
+                    animate={{ opacity: 1, y: 0 }} 
+                    exit={{ opacity: 0, y: 20 }}
                     transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.05 + menuItems.length * 0.05 }}
                   >
                     <div className="relative">
