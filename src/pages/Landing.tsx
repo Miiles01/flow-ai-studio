@@ -531,16 +531,12 @@ const Landing = () => {
           </section>
 
           {/* SIMPLE TITLE TEXT - MOBILE ONLY */}
-          <section className="bg-white text-black relative z-10 block md:hidden pt-24 pb-4 px-6 text-center">
-            <p className="text-4xl font-normal leading-tight tracking-tight mb-16">
-              Unifica tus ideas<br />
-              en un solo lugar<br />
-              y empieza a crear
+          <section className="bg-white text-black relative z-10 block md:hidden pt-20 pb-4 px-8 text-center max-w-md mx-auto">
+            <p className="text-2xl sm:text-3xl font-normal leading-snug tracking-tight mb-4 text-gray-800">
+              Unifica tus ideas en un solo lugar y empieza a crear.
             </p>
-            <p className="text-4xl font-normal leading-tight tracking-tight">
-              Un espacio para<br />
-              conectar y co-crear<br />
-              sin límites
+            <p className="text-2xl sm:text-3xl font-normal leading-snug tracking-tight text-gray-800">
+              Un espacio para conectar y co-crear sin límites.
             </p>
           </section>
 
