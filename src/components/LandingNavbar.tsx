@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
+import { useTranslation } from "react-i18next";
 
 interface LandingNavbarProps {
   onMenuAction?: (id: string) => void;
@@ -10,6 +11,8 @@ interface LandingNavbarProps {
 const LandingNavbar = ({ onMenuAction, cta }: LandingNavbarProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [menuKey, setMenuKey] = useState(0);
+  const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
+  const { t, i18n } = useTranslation();
 
   const toggleMenu = () => {
     if (!isMenuOpen) {
@@ -18,11 +21,17 @@ const LandingNavbar = ({ onMenuAction, cta }: LandingNavbarProps) => {
     setIsMenuOpen(!isMenuOpen);
   };
 
+  const changeLanguage = (lng: string) => {
+    i18n.changeLanguage(lng);
+    setIsLangMenuOpen(false);
+    setIsMenuOpen(false);
+  };
+
   const menuItems = [
-    { label: "Inicio", href: "/" },
-    { label: "Acerca de", href: "/acerca-de" },
-    { label: "Funciones", href: "/funciones" },
-    { label: "Precios", href: "/precios" },
+    { label: t("navbar.home"), href: "/" },
+    { label: t("navbar.about"), href: "/acerca-de" },
+    { label: t("navbar.functions"), href: "/funciones" },
+    { label: t("navbar.pricing"), href: "/precios" },
   ];
 
   const socialLinks = [
@@ -65,14 +74,14 @@ const LandingNavbar = ({ onMenuAction, cta }: LandingNavbarProps) => {
               onClick={toggleMenu}
               className="text-sm font-normal hover:opacity-50 transition-colors duration-500 tracking-tight text-black"
             >
-              {isMenuOpen ? "Cerrar" : "Menú"}
+              {isMenuOpen ? t("navbar.close") : t("navbar.menu")}
             </button>
             {cta}
             <Link
               to="/login"
               className="text-xs font-normal px-5 py-2.5 rounded-full bg-black text-white transition-all duration-500 hover:scale-105"
             >
-              Unirse
+              {t("navbar.join")}
             </Link>
           </div>
         </nav>
@@ -131,15 +140,15 @@ const LandingNavbar = ({ onMenuAction, cta }: LandingNavbarProps) => {
                     transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
                     className="flex flex-col gap-1.5 text-xs font-light text-white/50"
                   >
-                    <Link to="/afiliados" onClick={() => setIsMenuOpen(false)} className="hover:text-white/80 transition-colors">Afiliados</Link>
-                    <Link to="/terminos" onClick={() => setIsMenuOpen(false)} className="hover:text-white/80 transition-colors">Términos y condiciones</Link>
-                    <Link to="/privacidad" onClick={() => setIsMenuOpen(false)} className="hover:text-white/80 transition-colors">Política de privacidad</Link>
+                    <Link to="/afiliados" onClick={() => setIsMenuOpen(false)} className="hover:text-white/80 transition-colors">{t("navbar.affiliates")}</Link>
+                    <Link to="/terminos" onClick={() => setIsMenuOpen(false)} className="hover:text-white/80 transition-colors">{t("navbar.terms")}</Link>
+                    <Link to="/privacidad" onClick={() => setIsMenuOpen(false)} className="hover:text-white/80 transition-colors">{t("navbar.privacy")}</Link>
                   </motion.div>
                 </div>
               </div>
 
               {/* Right Column: Main Navigation Links */}
-              <div className="flex flex-col justify-center w-full md:w-2/3 gap-4 md:gap-5 pl-0 md:pl-16 order-1 md:order-2 border-b md:border-b-0 md:border-l border-white/10 pb-6 md:pb-0">
+              <div className="flex flex-col justify-center w-full md:w-2/3 gap-4 md:gap-5 pl-0 md:pl-16 order-1 md:order-2 border-b md:border-b-0 md:border-l border-white/10 pb-6 md:pb-0 relative">
                 {menuItems.map((item, i) => (
                   <div 
                     key={item.label} 
@@ -163,6 +172,52 @@ const LandingNavbar = ({ onMenuAction, cta }: LandingNavbarProps) => {
                     </motion.div>
                   </div>
                 ))}
+
+                {/* LANGUAGE SELECTOR */}
+                <div className="overflow-hidden mt-4 md:mt-8" style={{ lineHeight: 1.15, paddingBottom: '0.05em' }}>
+                  <motion.div 
+                    initial={{ y: "110%" }} 
+                    animate={{ y: "0%" }} 
+                    exit={{ y: "110%" }}
+                    transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1], delay: 0.05 + menuItems.length * 0.05 }}
+                  >
+                    <div className="relative">
+                      <button 
+                        onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
+                        className="flex items-center gap-3 text-4xl md:text-5xl lg:text-[50px] font-medium text-white hover:opacity-50 transition-opacity duration-300 tracking-tight text-left"
+                        style={{ fontFamily: "'Poppins', sans-serif" }}
+                      >
+                        {t("navbar.language")} 
+                        <span className="text-2xl mt-2 opacity-50">{isLangMenuOpen ? "↑" : "↓"}</span>
+                      </button>
+                      
+                      <AnimatePresence>
+                        {isLangMenuOpen && (
+                          <motion.div
+                            initial={{ opacity: 0, y: -10 }}
+                            animate={{ opacity: 1, y: 0 }}
+                            exit={{ opacity: 0, y: -10 }}
+                            transition={{ duration: 0.2 }}
+                            className="absolute top-full left-0 mt-4 bg-white rounded-3xl p-3 min-w-[220px] shadow-[0_20px_40px_rgba(0,0,0,0.2)] z-50 flex flex-col gap-2"
+                          >
+                            <button
+                              onClick={() => changeLanguage('es')}
+                              className={`text-left px-5 py-4 rounded-2xl text-xl font-medium transition-colors ${i18n.language === 'es' ? 'bg-black text-white' : 'text-black hover:bg-gray-100'}`}
+                            >
+                              Español
+                            </button>
+                            <button
+                              onClick={() => changeLanguage('en')}
+                              className={`text-left px-5 py-4 rounded-2xl text-xl font-medium transition-colors ${i18n.language?.startsWith('en') ? 'bg-black text-white' : 'text-black hover:bg-gray-100'}`}
+                            >
+                              English
+                            </button>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  </motion.div>
+                </div>
               </div>
 
             </div>

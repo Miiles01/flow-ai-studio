@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { useTranslation } from "react-i18next";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
 import { SplitText } from "gsap/SplitText";
 import { CustomEase } from "gsap/CustomEase";
@@ -59,6 +60,7 @@ const renderWord = (word: string, isItalic = false) => {
 };
 
 const Landing = () => {
+  const { t } = useTranslation();
   const smootherRef = useRef<ScrollSmoother | null>(null);
   const videoWrapRef = useRef<HTMLDivElement>(null);
   const scrollTextSectionRef = useRef<HTMLDivElement>(null);
@@ -439,20 +441,20 @@ const Landing = () => {
               className="w-14 h-14 mx-auto mb-3 logo-spin" 
             />
             <span data-anim-heading className="text-[22px] font-normal mb-8 tracking-tight">
-              Miiles
+              {t("landing.hero_badge")}
             </span>
             
             <h1
               className="hero-title no-split text-[42px] sm:text-6xl md:text-8xl lg:text-[95px] font-normal leading-[1.1] tracking-tight mb-6"
             >
               <span className="block md:inline">
-                {renderWord("Hoy")} {renderWord("es")}{" "}
+                {renderWord(t("landing.hero_title_hoy"))} {renderWord(t("landing.hero_title_es"))}{" "}
               </span>
               <span className="block md:inline">
-                {renderWord("un")} {renderWord("buen")} {renderWord("día")}{" "}
+                {renderWord(t("landing.hero_title_un"))} {renderWord(t("landing.hero_title_buen"))} {renderWord(t("landing.hero_title_dia"))}{" "}
               </span>
               <span className="block">
-                {renderWord("para")} {renderWord("crear")}
+                {renderWord(t("landing.hero_title_para"))} {renderWord(t("landing.hero_title_crear"), true)}
               </span>
             </h1>
 
@@ -460,7 +462,7 @@ const Landing = () => {
               data-anim-heading 
               className="text-base sm:text-lg md:text-xl font-light text-gray-500 mb-10 tracking-wide"
             >
-              Imagina un proyecto. Hazlo realidad.
+              {t("landing.hero_subtitle")}
             </p>
 
             <div data-anim-heading className="flex items-center justify-center gap-4 flex-wrap">
@@ -471,7 +473,7 @@ const Landing = () => {
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                   <path d="M12 0C12.3 8.8 15.2 11.7 24 12C15.2 12.3 12.3 15.2 12 24C11.7 15.2 8.8 12.3 0 12C8.8 11.7 11.7 8.8 12 0Z" />
                 </svg>
-                Unirse ahora
+                {t("landing.hero_cta")}
               </Link>
             </div>
           </section>
@@ -497,7 +499,7 @@ const Landing = () => {
             <div className="pin-height">
               <div className="container">
                 <h2 className="scroll-text text-black text-4xl md:text-7xl lg:text-[90px] font-normal tracking-tight">
-                  Descubre<br />conexiones
+                  {t("landing.orbit_title_1")}<br />{t("landing.orbit_title_2")}
                 </h2>
                 {swirlImages.slice(0, 8).map((src, idx) => (
                   <div 
@@ -518,14 +520,14 @@ const Landing = () => {
             <div className="pin-height">
               <div className="container">
                 <p className="paragraphs">
-                  Unifica tus ideas<br />
-                  en un solo lugar<br />
-                  y empieza a crear
+                  {t("landing.scroll_text_1_1")}<br />
+                  {t("landing.scroll_text_1_2")}<br />
+                  {t("landing.scroll_text_1_3")}
                 </p>
                 <p className="paragraphs">
-                  Un espacio para<br />
-                  conectar y co-crear<br />
-                  sin límites
+                  {t("landing.scroll_text_2_1")}<br />
+                  {t("landing.scroll_text_2_2")}<br />
+                  {t("landing.scroll_text_2_3")}
                 </p>
               </div>
             </div>
@@ -534,9 +536,9 @@ const Landing = () => {
           {/* SIMPLE TITLE TEXT - MOBILE ONLY */}
           <section className="bg-white text-black relative z-10 block md:hidden pt-20 pb-4 px-6 text-center">
             <h2 className="text-5xl font-normal leading-tight tracking-tight text-black">
-              <span className="block">Unifica tus ideas</span>
+              <span className="block">{t("landing.mobile_title_1")}</span>
               <span className="block">
-                y empieza a <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>crear</span>
+                {t("landing.mobile_title_2")} <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>{t("landing.mobile_title_3")}</span>
               </span>
             </h2>
           </section>

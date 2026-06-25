@@ -1,0 +1,38 @@
+{
+  "navbar": {
+    "home": "Inicio",
+    "about": "Acerca de",
+    "functions": "Funciones",
+    "pricing": "Precios",
+    "join": "Unirse",
+    "language": "Idioma",
+    "close": "Cerrar",
+    "menu": "Menú",
+    "affiliates": "Afiliados",
+    "terms": "Términos y condiciones",
+    "privacy": "Política de privacidad"
+  },
+  "landing": {
+    "hero_badge": "Miiles",
+    "hero_title_hoy": "Hoy",
+    "hero_title_es": "es",
+    "hero_title_un": "un",
+    "hero_title_buen": "buen",
+    "hero_title_dia": "día",
+    "hero_title_para": "para",
+    "hero_title_crear": "crear",
+    "hero_subtitle": "Imagina un proyecto. Hazlo realidad.",
+    "hero_cta": "Unirse ahora",
+    "orbit_title_1": "Descubre",
+    "orbit_title_2": "conexiones",
+    "scroll_text_1_1": "Unifica tus ideas",
+    "scroll_text_1_2": "en un solo lugar",
+    "scroll_text_1_3": "y empieza a crear",
+    "scroll_text_2_1": "Un espacio para",
+    "scroll_text_2_2": "conectar y co-crear",
+    "scroll_text_2_3": "sin límites",
+    "mobile_title_1": "Unifica tus ideas",
+    "mobile_title_2": "y empieza a",
+    "mobile_title_3": "crear"
+  }
+}
