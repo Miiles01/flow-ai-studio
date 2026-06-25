@@ -732,7 +732,10 @@ const Features = () => {
 
     // 1. Reveal headers (applies to all screens)
     mm.add("all", () => {
-      document.querySelectorAll<HTMLElement>("#smooth-content-features h1, #smooth-content-features h2, #smooth-content-features h3").forEach((el) => {
+      const headings = Array.from(document.querySelectorAll<HTMLElement>("#smooth-content-features h1, #smooth-content-features h2, #smooth-content-features h3"))
+        .filter(el => !el.closest('.horizontal-section-wrapper'));
+
+      headings.forEach((el) => {
         gsap.fromTo(el, { yPercent: 20, autoAlpha: 0 }, {
           yPercent: 0, autoAlpha: 1, duration: 0.9, ease: "osmo-ease",
           scrollTrigger: { trigger: el, start: "top 88%", once: true },
@@ -743,13 +746,14 @@ const Features = () => {
     // 2. Responsive ScrollTrigger for horizontal scroll
     mm.add("(min-width: 768px)", () => {
       const track = document.querySelector(".horizontal-track") as HTMLElement;
-      if (!track) return;
+      const wrapper = document.querySelector(".horizontal-section-wrapper") as HTMLElement;
+      if (!track || !wrapper) return;
 
-      gsap.to(".horizontal-track", {
+      gsap.to(track, {
         x: () => -(track.scrollWidth - window.innerWidth),
         ease: "none",
         scrollTrigger: {
-          trigger: ".horizontal-section-wrapper",
+          trigger: wrapper,
           pin: true,
           scrub: 1,
           start: "top top",
