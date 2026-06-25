@@ -22,7 +22,6 @@ import LandingFooter from "@/components/LandingFooter";
 const brandLogos = [brand1, brand2, brand3, brand4, brand5, brand6];
 
 const swirlImages = [
-  "/bonito/1.png",
   "/bonito/2.png",
   "/bonito/3.png",
   "/bonito/4.png",
@@ -30,6 +29,7 @@ const swirlImages = [
   "/bonito/6.png",
   "/bonito/7.png",
   "/bonito/8.png",
+  "/bonito/1.png",
 ];
 
 
