@@ -367,7 +367,8 @@ const Landing = () => {
     const root = orbitSectionRef.current;
     if (!root) return;
 
-    let ctx = gsap.context(() => {
+    let mm = gsap.matchMedia();
+    mm.add("(min-width: 768px)", () => {
       const pinHeight = root.querySelector('.pin-height') as HTMLElement;
       const container = root.querySelector('.container') as HTMLElement;
       
@@ -416,10 +417,10 @@ const Landing = () => {
           duration: 0.03, // Plays quickly
           stagger: 0.04, // Animation delay between each element
       }, '<'); // Means the animation starts at the start of the previous tween
-    }, root);
+    });
 
     return () => {
-      ctx.revert();
+      mm.revert();
     };
   }, []);
   return (
@@ -492,7 +493,7 @@ const Landing = () => {
           </section>
 
           {/* SWIRLING IMAGES (mwg_effect016) */}
-          <section ref={orbitSectionRef} className="mwg_effect016 relative z-10 w-full">
+          <section ref={orbitSectionRef} className="mwg_effect016 relative z-10 w-full hidden md:block">
             <div className="pin-height">
               <div className="container">
                 <h2 className="scroll-text text-black text-4xl md:text-7xl lg:text-[90px] font-normal tracking-tight">
