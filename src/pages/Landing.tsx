@@ -460,7 +460,7 @@ const Landing = () => {
               data-anim-heading 
               className="text-base sm:text-lg md:text-xl font-light text-gray-500 mb-10 tracking-wide"
             >
-              Imagina, escribe, créalo.
+              Imagina un proyecto. Hazlo realidad.
             </p>
 
             <div data-anim-heading className="flex items-center justify-center gap-4 flex-wrap">
