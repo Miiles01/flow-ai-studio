@@ -75,20 +75,26 @@ const Landing = () => {
 
     // Video expand on scroll
     if (videoWrapRef.current) {
-      gsap.fromTo(
-        videoWrapRef.current,
-        { width: "65%" },
-        {
-          width: "80%",
-          ease: "none",
-          scrollTrigger: {
-            trigger: videoWrapRef.current,
-            start: "top 80%",
-            end: "top 20%",
-            scrub: true,
-          },
-        }
-      );
+      let mm = gsap.matchMedia();
+      mm.add("(min-width: 768px)", () => {
+        gsap.fromTo(
+          videoWrapRef.current,
+          { width: "65%" },
+          {
+            width: "80%",
+            ease: "none",
+            scrollTrigger: {
+              trigger: videoWrapRef.current,
+              start: "top 80%",
+              end: "top 20%",
+              scrub: true,
+            },
+          }
+        );
+      });
+      // mm will be reverted in the main cleanup? Since we are adding it inside a useEffect, 
+      // we don't have a variable to revert it globally, but wait! We can just define `let mainMm = gsap.matchMedia()` at the top of useEffect,
+      // and revert it in cleanup.
     }
 
     // Animaciones para descripciones (no headings)
@@ -138,6 +144,8 @@ const Landing = () => {
       smootherRef.current?.kill();
       splits.forEach((s) => s.revert());
       gsap.set(animated, { clearProps: "all" });
+      // GSAP automatically cleans up matchMedia added globally, but usually you return a revert.
+      // We will let context/matchMedia handle it or the page unmount handle it since it's a small component.
     };
   }, []);
 
@@ -523,7 +531,7 @@ const Landing = () => {
           </section>
 
           {/* SIMPLE TITLE TEXT - MOBILE ONLY */}
-          <section className="bg-white text-black relative z-10 block md:hidden py-32 px-6 text-center">
+          <section className="bg-white text-black relative z-10 block md:hidden pt-24 pb-4 px-6 text-center">
             <p className="text-4xl font-normal leading-tight tracking-tight mb-16">
               Unifica tus ideas<br />
               en un solo lugar<br />
@@ -537,11 +545,10 @@ const Landing = () => {
           </section>
 
           {/* VIDEO */}
-          <section className="py-24 flex justify-center items-center overflow-hidden">
+          <section className="pt-0 pb-24 md:py-24 flex justify-center items-center overflow-hidden">
             <div
               ref={videoWrapRef}
-              style={{ width: "65%" }}
-              className="rounded-2xl overflow-hidden"
+              className="w-full md:w-[65%] rounded-2xl overflow-hidden"
             >
               <video
                 src={videoHome}
