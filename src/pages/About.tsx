@@ -118,7 +118,8 @@ const About = () => {
             const scale = scaleForIndex(svgIndex);
             const textEl = svg.querySelector('text');
             if (textEl) {
-               textEl.setAttribute('font-size', String(Math.round(65 / scale)));
+               textEl.setAttribute('font-size', '65');
+               textEl.setAttribute('font-weight', '300');
             }
 
             const circle = document.createElement('div');
