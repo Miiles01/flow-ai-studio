@@ -88,7 +88,7 @@ const About = () => {
           <section className="py-20 px-6">
             <div className="max-w-4xl mx-auto text-center">
               <h2 className="text-4xl md:text-7xl font-normal tracking-tighter mb-12">Qué hacemos</h2>
-              <div className="reveal-text space-y-6 text-xl md:text-2xl font-light text-gray-500">
+              <div className="fade-up space-y-4 text-xl md:text-2xl font-light text-gray-500">
                 <p>Creamos las herramientas que hacen más simple arrancar y operar un negocio.</p>
               </div>
             </div>
@@ -105,8 +105,7 @@ const About = () => {
                 />
               </div>
               <div className="flex flex-col gap-8">
-                <h2 className="text-4xl md:text-6xl font-normal tracking-tight">Historia</h2>
-                <div className="reveal-text space-y-6 text-lg font-light text-gray-600 leading-relaxed">
+                <div className="fade-up space-y-4 text-lg font-light text-gray-600 leading-normal">
                   <p>
                     <span className="text-black font-normal">Miiles nació en 2019 como Miiles Creative Studio</span>, un pequeño estudio en la Ciudad de México fundado por Miiles Horton con una idea clara: ayudar a negocios locales a construir marcas que compitieran en serio. Imagen, diseño, posicionamiento. Nada más, nada menos.
                   </p>
