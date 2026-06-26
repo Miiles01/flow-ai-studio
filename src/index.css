@@ -833,3 +833,14 @@
     border-radius: 2%;
     transform: translate(60vw, 0);
 }
+
+
+/* MWG Effect 098 Arc Animation */
+.mwg_effect098 .pin-height { height: 500vh; }
+.mwg_effect098 .container { height: 100vh; display: flex; justify-content: center; padding: 50vh 0 0; overflow: hidden; }
+.mwg_effect098 .placeholder { position: absolute; top: 0; left: 0; visibility: hidden; pointer-events: none; }
+.mwg_effect098 .paths { width: 70vw; height: 70vw; text-align: center; }
+.mwg_effect098 .circle { aspect-ratio: 1; transform: rotate(20deg); }
+.mwg_effect098 .circle + .circle { margin-top: -93%; }
+.mwg_effect098 svg { width: 100%; height: auto; overflow: visible; }
+.mwg_effect098 textPath { fill: currentColor; }
