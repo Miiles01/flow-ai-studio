@@ -72,8 +72,8 @@ const About = () => {
           
           {/* HERO SECTION */}
           <section className="min-h-[85vh] md:min-h-screen flex flex-col items-center justify-center text-center px-6 pt-32 pb-20">
-            <div className="max-w-4xl mx-auto flex flex-col items-center w-full">
-              <div className="fade-up w-full max-w-5xl rounded-[2rem] overflow-hidden mb-12">
+            <div className="max-w-7xl mx-auto flex flex-col items-center w-full">
+              <div className="fade-up w-full rounded-[2rem] md:rounded-[3rem] overflow-hidden mb-12">
                 <video 
                   src="https://wearemiiles.com/wp-content/uploads/2026/01/11-4.mp4" 
                   autoPlay 
