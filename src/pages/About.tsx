@@ -73,11 +73,7 @@ const About = () => {
           {/* HERO SECTION */}
           <section className="min-h-[85vh] md:min-h-screen flex flex-col items-center justify-center text-center px-6 pt-32 pb-20">
             <div className="max-w-4xl mx-auto flex flex-col items-center w-full">
-              <span className="fade-up text-lg md:text-xl font-normal text-gray-400 mb-12">
-                Sobre nosotros
-              </span>
-              
-              <div className="fade-up w-full max-w-5xl rounded-[2rem] overflow-hidden mb-16 shadow-2xl">
+              <div className="fade-up w-full max-w-5xl rounded-[2rem] overflow-hidden mb-12">
                 <video 
                   src="https://wearemiiles.com/wp-content/uploads/2026/01/11-4.mp4" 
                   autoPlay 
@@ -87,6 +83,10 @@ const About = () => {
                   className="w-full h-auto object-cover"
                 />
               </div>
+              
+              <span className="fade-up text-lg md:text-xl font-normal text-gray-400 mb-6">
+                Sobre nosotros
+              </span>
               
               <p className="fade-up text-lg md:text-xl font-light text-gray-500 max-w-2xl mx-auto leading-relaxed">
                 Somos una empresa dedicada al desarrollo de procesos creativos con inteligencia artificial.
