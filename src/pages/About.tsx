@@ -75,7 +75,7 @@ const About = () => {
             <div className="max-w-5xl mx-auto">
               <h1 className="text-5xl md:text-8xl font-normal leading-[0.9] tracking-tighter mb-12">
                 <span className="block">Recupera el control</span>
-                <span className="block" style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>de tu tiempo.</span>
+                <span className="block">de tu <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>tiempo</span></span>
               </h1>
               <p className="reveal-text text-xl md:text-2xl font-light text-gray-500 max-w-3xl mx-auto leading-relaxed">
                 <span className="text-black font-normal">Misión: </span>
