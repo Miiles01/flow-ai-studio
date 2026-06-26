@@ -119,7 +119,7 @@ const About = () => {
             <div className="max-w-5xl mx-auto flex flex-col gap-16 items-center">
               <div className="w-full aspect-video rounded-[2rem] overflow-hidden fade-up shadow-2xl">
                 <img 
-                  src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=1200" 
+                  src="/miiles-jacket.jpg" 
                   alt="Equipo Miiles" 
                   className="w-full h-full object-cover"
                 />
