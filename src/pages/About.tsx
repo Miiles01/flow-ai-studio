@@ -308,7 +308,7 @@ const About = () => {
           </section>
 
           {/* NUESTRA MISIÓN (DESKTOP/TABLET - ARC ANIMATION) */}
-          <section className="mwg_effect098 relative w-full bg-black text-white rounded-[4rem] hidden md:block">
+          <section className="mwg_effect098 relative w-full text-black hidden md:block">
             <div className="pin-height">
               <div className="container">
                 <p className="placeholder">Nuestra misión es construir sistemas de productividad con inteligencia artificial para que recuperes el control de tu tiempo.</p>
