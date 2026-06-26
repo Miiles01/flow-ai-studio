@@ -72,15 +72,15 @@ const About = () => {
           
           {/* HERO SECTION */}
           <section className="min-h-[85vh] md:min-h-screen flex flex-col items-center justify-center text-center px-6 pt-32 pb-20">
-            <div className="max-w-3xl mx-auto flex flex-col items-center">
-              <span className="fade-up text-xs md:text-sm font-light text-gray-400 tracking-widest uppercase mb-12">
+            <div className="max-w-4xl mx-auto flex flex-col items-center w-full">
+              <span className="fade-up text-lg md:text-xl font-normal text-gray-400 mb-12">
                 Sobre nosotros
               </span>
               
               <img 
                 src="/logotipo.svg" 
                 alt="Miiles" 
-                className="fade-up w-full max-w-[280px] md:max-w-[500px] h-auto object-contain mb-12"
+                className="fade-up w-full max-w-[400px] md:max-w-[800px] h-auto object-contain mb-16"
               />
               
               <p className="fade-up text-lg md:text-xl font-light text-gray-500 max-w-2xl mx-auto leading-relaxed">
