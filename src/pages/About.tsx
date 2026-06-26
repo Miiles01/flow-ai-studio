@@ -89,6 +89,16 @@ const About = () => {
             </div>
           </section>
 
+          {/* NUESTRA MISIÓN */}
+          <section className="pt-32 pb-20 px-6">
+            <div className="max-w-4xl mx-auto text-center">
+              <h2 className="text-4xl md:text-7xl font-normal tracking-tighter mb-12">Nuestra misión</h2>
+              <div className="fade-up space-y-4 text-xl md:text-2xl font-light text-gray-500">
+                <p>Miiles construye sistemas de productividad con IA para que recuperes el control de tu tiempo.</p>
+              </div>
+            </div>
+          </section>
+
           {/* QUÉ HACEMOS */}
           <section className="py-20 px-6">
             <div className="max-w-4xl mx-auto text-center">
