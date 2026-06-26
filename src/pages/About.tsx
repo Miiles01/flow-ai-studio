@@ -41,195 +41,198 @@ const About = () => {
     };
 
     const runMwgEffect = () => {
-      const root = document.querySelector('.mwg_effect098');
-      if (!root) return;
-      const pinHeight = root.querySelector('.pin-height');
-      const container = root.querySelector('.container');
-      const placeholderEl = root.querySelector('.placeholder');
-      const pathsContainer = root.querySelector('.paths');
-      
-      if (!pathsContainer || !placeholderEl) return;
-      
-      pathsContainer.querySelectorAll('.circle').forEach(c => c.remove());
-      let svgTemplate = pathsContainer.querySelector('svg.template') as SVGSVGElement;
-      if (!svgTemplate) {
-         svgTemplate = pathsContainer.querySelector('svg') as SVGSVGElement;
-         if (svgTemplate) svgTemplate.classList.add('template');
-      }
-      if (!svgTemplate) return;
-      
-      svgTemplate.style.display = 'none';
-      
-      const fullText = placeholderEl.textContent?.trim() || "";
-      let svgIndex = 0;
+      let mm = gsap.matchMedia();
+      mm.add("(min-width: 768px)", () => {
+        const root = document.querySelector('.mwg_effect098');
+        if (!root) return;
+        const pinHeight = root.querySelector('.pin-height');
+        const container = root.querySelector('.container');
+        const placeholderEl = root.querySelector('.placeholder');
+        const pathsContainer = root.querySelector('.paths');
+        
+        if (!pathsContainer || !placeholderEl) return;
+        
+        pathsContainer.querySelectorAll('.circle').forEach(c => c.remove());
+        let svgTemplate = pathsContainer.querySelector('svg.template') as SVGSVGElement;
+        if (!svgTemplate) {
+           svgTemplate = pathsContainer.querySelector('svg') as SVGSVGElement;
+           if (svgTemplate) svgTemplate.classList.add('template');
+        }
+        if (!svgTemplate) return;
+        
+        svgTemplate.style.display = 'none';
+        
+        const fullText = placeholderEl.textContent?.trim() || "";
+        let svgIndex = 0;
 
-      function scaleForIndex(index: number) {
-          return Math.max(0.1, 1 - 0.1 * (index - 1));
-      }
+        function scaleForIndex(index: number) {
+            return Math.max(0.1, 1 - 0.1 * (index - 1));
+        }
 
-      function getArcCenter(path: SVGPathElement) {
-          const len = path.getTotalLength();
-          const p1 = path.getPointAtLength(0);
-          const p2 = path.getPointAtLength(len / 2);
-          const p3 = path.getPointAtLength(len);
-          const [{ x: ax, y: ay }, { x: bx, y: by }, { x: cx, y: cy }] = [p1, p2, p3];
-          const a2 = ax * ax + ay * ay;
-          const b2 = bx * bx + by * by;
-          const c2 = cx * cx + cy * cy;
-          const d = 2 * (ax * (by - cy) + bx * (cy - ay) + cx * (ay - by));
-          if (d === 0) return {x: 0, y: 0};
-          return {
-              x: (a2 * (by - cy) + b2 * (cy - ay) + c2 * (ay - by)) / d,
-              y: (a2 * (cx - bx) + b2 * (ax - cx) + c2 * (bx - ax)) / d,
-          }
-      }
+        function getArcCenter(path: SVGPathElement) {
+            const len = path.getTotalLength();
+            const p1 = path.getPointAtLength(0);
+            const p2 = path.getPointAtLength(len / 2);
+            const p3 = path.getPointAtLength(len);
+            const [{ x: ax, y: ay }, { x: bx, y: by }, { x: cx, y: cy }] = [p1, p2, p3];
+            const a2 = ax * ax + ay * ay;
+            const b2 = bx * bx + by * by;
+            const c2 = cx * cx + cy * cy;
+            const d = 2 * (ax * (by - cy) + bx * (cy - ay) + cx * (ay - by));
+            if (d === 0) return {x: 0, y: 0};
+            return {
+                x: (a2 * (by - cy) + b2 * (cy - ay) + c2 * (ay - by)) / d,
+                y: (a2 * (cx - bx) + b2 * (ax - cx) + c2 * (bx - ax)) / d,
+            }
+        }
 
-      function applyArcTransformOrigin(circle: HTMLElement, path: SVGPathElement, scale: number) {
-          const svg = circle.querySelector('svg');
-          if (!svg) return;
-          const vb = svg.viewBox.baseVal;
-          const center = getArcCenter(path);
-          const cxNorm = (center.x - vb.x) / vb.width;
-          const cyNorm = (center.y - vb.y) / vb.width;
-          const cxPct = (1 - scale) * 50 + cxNorm * scale * 100;
-          const cyPct = cyNorm * scale * 100;
-          circle.style.transformOrigin = `${cxPct}% ${cyPct}%`;
-      }
+        function applyArcTransformOrigin(circle: HTMLElement, path: SVGPathElement, scale: number) {
+            const svg = circle.querySelector('svg');
+            if (!svg) return;
+            const vb = svg.viewBox.baseVal;
+            const center = getArcCenter(path);
+            const cxNorm = (center.x - vb.x) / vb.width;
+            const cyNorm = (center.y - vb.y) / vb.width;
+            const cxPct = (1 - scale) * 50 + cxNorm * scale * 100;
+            const cyPct = cyNorm * scale * 100;
+            circle.style.transformOrigin = `${cxPct}% ${cyPct}%`;
+        }
 
-      function createArc() {
-          svgIndex += 1;
-          const svg = svgTemplate!.cloneNode(true) as SVGSVGElement;
-          svg.style.display = 'block';
-          svg.classList.remove('template');
-          const path = svg.querySelector('path');
-          if (!path) return { path: null, textPath: null };
-          
-          const pathId = `path_mwg_${svgIndex}`;
-          path.id = pathId;
+        function createArc() {
+            svgIndex += 1;
+            const svg = svgTemplate!.cloneNode(true) as SVGSVGElement;
+            svg.style.display = 'block';
+            svg.classList.remove('template');
+            const path = svg.querySelector('path');
+            if (!path) return { path: null, textPath: null };
+            
+            const pathId = `path_mwg_${svgIndex}`;
+            path.id = pathId;
 
-          const textPath = svg.querySelector('textPath');
-          if (textPath) {
-             textPath.setAttribute('href', `#${pathId}`);
-             textPath.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', `#${pathId}`);
-          }
+            const textPath = svg.querySelector('textPath');
+            if (textPath) {
+               textPath.setAttribute('href', `#${pathId}`);
+               textPath.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', `#${pathId}`);
+            }
 
-          const scale = scaleForIndex(svgIndex);
-          const textEl = svg.querySelector('text');
-          if (textEl) {
-             textEl.setAttribute('font-size', String(Math.round(65 / scale)));
-          }
+            const scale = scaleForIndex(svgIndex);
+            const textEl = svg.querySelector('text');
+            if (textEl) {
+               textEl.setAttribute('font-size', String(Math.round(65 / scale)));
+            }
 
-          const circle = document.createElement('div');
-          circle.className = 'circle';
-          circle.appendChild(svg);
-          pathsContainer!.appendChild(circle);
+            const circle = document.createElement('div');
+            circle.className = 'circle';
+            circle.appendChild(svg);
+            pathsContainer!.appendChild(circle);
 
-          applyArcTransformOrigin(circle, path, scale);
+            applyArcTransformOrigin(circle, path, scale);
 
-          return { path, textPath };
-      }
+            return { path, textPath };
+        }
 
-      function measureTextLength(textPath: SVGTextPathElement, content: string) {
-          textPath.textContent = content;
-          let length = 0;
-          if (typeof textPath.getComputedTextLength === 'function') {
-              length = textPath.getComputedTextLength();
-          }
-          if (!length) {
-              try {
-                  const bbox = textPath.getBBox();
-                  length = bbox ? bbox.width : 0;
-              } catch (e) {
-                  length = 0;
-              }
-          }
-          return length;
-      }
+        function measureTextLength(textPath: SVGTextPathElement, content: string) {
+            textPath.textContent = content;
+            let length = 0;
+            if (typeof textPath.getComputedTextLength === 'function') {
+                length = textPath.getComputedTextLength();
+            }
+            if (!length) {
+                try {
+                    const bbox = textPath.getBBox();
+                    length = bbox ? bbox.width : 0;
+                } catch (e) {
+                    length = 0;
+                }
+            }
+            return length;
+        }
 
-      function splitTextAcrossSvgs(text: string) {
-          const words = text.split(/\s+/).filter(Boolean);
-          let wordIndex = 0;
+        function splitTextAcrossSvgs(text: string) {
+            const words = text.split(/\s+/).filter(Boolean);
+            let wordIndex = 0;
 
-          while (wordIndex < words.length) {
-              const { path, textPath } = createArc();
-              if (!path || !textPath) break;
-              
-              const pathLength = path.getTotalLength() * 0.98;
+            while (wordIndex < words.length) {
+                const { path, textPath } = createArc();
+                if (!path || !textPath) break;
+                
+                const pathLength = path.getTotalLength() * 0.98;
 
-              let current = '';
-              let lastGood = '';
+                let current = '';
+                let lastGood = '';
 
-              while (wordIndex < words.length) {
-                  const nextWord = words[wordIndex];
-                  const candidate = current ? current + ' ' + nextWord : nextWord;
-                  const textLength = measureTextLength(textPath as SVGTextPathElement, candidate);
+                while (wordIndex < words.length) {
+                    const nextWord = words[wordIndex];
+                    const candidate = current ? current + ' ' + nextWord : nextWord;
+                    const textLength = measureTextLength(textPath as SVGTextPathElement, candidate);
 
-                  if (textLength <= pathLength) {
-                      current = candidate;
-                      lastGood = candidate;
-                      wordIndex += 1;
-                  } else {
-                      if (!current) {
-                          let fit = '';
-                          let charIdx = 0;
-                          while (charIdx < nextWord.length) {
-                              const tryFit = fit + nextWord[charIdx];
-                              if (measureTextLength(textPath as SVGTextPathElement, tryFit) <= pathLength) {
-                                  fit = tryFit;
-                                  charIdx += 1;
-                              } else break;
-                          }
-                          if (fit) {
-                              current = fit;
-                              const remaining = nextWord.slice(fit.length);
-                              if (remaining) words[wordIndex] = remaining;
-                              else wordIndex += 1;
-                          }
-                      }
-                      break;
-                  }
-              }
+                    if (textLength <= pathLength) {
+                        current = candidate;
+                        lastGood = candidate;
+                        wordIndex += 1;
+                    } else {
+                        if (!current) {
+                            let fit = '';
+                            let charIdx = 0;
+                            while (charIdx < nextWord.length) {
+                                const tryFit = fit + nextWord[charIdx];
+                                if (measureTextLength(textPath as SVGTextPathElement, tryFit) <= pathLength) {
+                                    fit = tryFit;
+                                    charIdx += 1;
+                                } else break;
+                            }
+                            if (fit) {
+                                current = fit;
+                                const remaining = nextWord.slice(fit.length);
+                                if (remaining) words[wordIndex] = remaining;
+                                else wordIndex += 1;
+                            }
+                        }
+                        break;
+                    }
+                }
 
-              textPath.textContent = current || lastGood;
-          }
-      }
-      
-      splitTextAcrossSvgs(fullText);
+                textPath.textContent = current || lastGood;
+            }
+        }
+        
+        splitTextAcrossSvgs(fullText);
 
-      const master = gsap.timeline({
-          scrollTrigger: {
-              trigger: pinHeight,
-              start: 'top top',
-              end: 'bottom bottom',
-              pin: container,
-              scrub: 1
-          }
-      });
+        const master = gsap.timeline({
+            scrollTrigger: {
+                trigger: pinHeight,
+                start: 'top top',
+                end: 'bottom bottom',
+                pin: container,
+                scrub: 1
+            }
+        });
 
-      const circles = root.querySelectorAll('.circle');
-      const texts: string[] = [];
+        const circles = root.querySelectorAll('.circle');
+        const texts: string[] = [];
 
-      circles.forEach(circle => {
-          const textPath = circle.querySelector('textPath');
-          if (textPath) {
-             texts.push(textPath.textContent || "");
-             textPath.textContent = '';
-          }
-      });
+        circles.forEach(circle => {
+            const textPath = circle.querySelector('textPath');
+            if (textPath) {
+               texts.push(textPath.textContent || "");
+               textPath.textContent = '';
+            }
+        });
 
-      circles.forEach((circle, i) => {
-          const textPath = circle.querySelector('textPath');
-          const text = texts[i];
+        circles.forEach((circle, i) => {
+            const textPath = circle.querySelector('textPath');
+            const text = texts[i];
 
-          master.add(gsap.to(circle, {
-              rotate: 0,
-              ease: 'power2.inOut',
-              duration: 2,
-              onUpdate() {
-                  const count = Math.floor(this.progress() * text.length);
-                  if (textPath) textPath.textContent = text.substring(0, count);
-              }
-          }), i * (1 / circles.length));
+            master.add(gsap.to(circle, {
+                rotate: 0,
+                ease: 'power2.inOut',
+                duration: 2,
+                onUpdate() {
+                    const count = Math.floor(this.progress() * text.length);
+                    if (textPath) textPath.textContent = text.substring(0, count);
+                }
+            }), i * (1 / circles.length));
+        });
       });
     };
 
@@ -294,8 +297,18 @@ const About = () => {
             </div>
           </section>
 
-          {/* NUESTRA MISIÓN */}
-          <section className="mwg_effect098 relative w-full bg-black text-white rounded-[4rem]">
+          {/* NUESTRA MISIÓN (MOBILE - TEXTO NORMAL) */}
+          <section className="pt-32 pb-20 px-6 block md:hidden">
+            <div className="max-w-4xl mx-auto text-center">
+              <h2 className="text-4xl font-normal tracking-tighter mb-12">Nuestra misión</h2>
+              <div className="fade-up space-y-4 text-xl font-light text-gray-500">
+                <p>Nuestra misión es construir sistemas de productividad con inteligencia artificial para que recuperes el control de tu tiempo.</p>
+              </div>
+            </div>
+          </section>
+
+          {/* NUESTRA MISIÓN (DESKTOP/TABLET - ARC ANIMATION) */}
+          <section className="mwg_effect098 relative w-full bg-black text-white rounded-[4rem] hidden md:block">
             <div className="pin-height">
               <div className="container">
                 <p className="placeholder">Nuestra misión es construir sistemas de productividad con inteligencia artificial para que recuperes el control de tu tiempo.</p>
