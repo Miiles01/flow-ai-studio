@@ -77,11 +77,16 @@ const About = () => {
                 Sobre nosotros
               </span>
               
-              <img 
-                src="/logotipo.svg" 
-                alt="Miiles" 
-                className="fade-up w-full max-w-[400px] md:max-w-[800px] h-auto object-contain mb-16"
-              />
+              <div className="fade-up w-full max-w-5xl rounded-[2rem] overflow-hidden mb-16 shadow-2xl">
+                <video 
+                  src="https://wearemiiles.com/wp-content/uploads/2026/01/11-4.mp4" 
+                  autoPlay 
+                  muted 
+                  loop 
+                  playsInline 
+                  className="w-full h-auto object-cover"
+                />
+              </div>
               
               <p className="fade-up text-lg md:text-xl font-light text-gray-500 max-w-2xl mx-auto leading-relaxed">
                 Somos una empresa dedicada al desarrollo de procesos creativos con inteligencia artificial.
