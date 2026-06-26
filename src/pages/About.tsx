@@ -143,7 +143,7 @@ const About = () => {
           {/* FINAL CTA */}
           <section className="py-40 px-6">
             <div className="max-w-4xl mx-auto text-center flex flex-col items-center">
-              <h2 className="pt-4 text-5xl md:text-8xl font-normal tracking-tighter mb-12">
+              <h2 className="pt-2 text-5xl md:text-8xl font-normal tracking-tighter mb-12 leading-[1.2] md:leading-[1.2]">
                 Únete al <span className="pr-2 md:pr-4" style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>cambio</span>
               </h2>
               <Link
