@@ -71,15 +71,20 @@ const About = () => {
         <div id="smooth-content-about" className="bg-white text-black font-sans pb-0">
           
           {/* HERO SECTION */}
-          <section className="min-h-screen flex flex-col items-center justify-center text-center px-6 pt-32 pb-20">
-            <div className="max-w-5xl mx-auto">
-              <h1 className="text-5xl md:text-8xl font-normal leading-[0.9] tracking-tighter mb-12">
-                <span className="block">Recupera el control</span>
-                <span className="block">de tu <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>tiempo</span></span>
-              </h1>
-              <p className="reveal-text text-xl md:text-2xl font-light text-gray-500 max-w-3xl mx-auto leading-relaxed">
-                <span className="text-black font-normal">Misión: </span>
-                Miiles construye sistemas de productividad con IA para que recuperes el control de tu tiempo.
+          <section className="min-h-[85vh] md:min-h-screen flex flex-col items-center justify-center text-center px-6 pt-32 pb-20">
+            <div className="max-w-3xl mx-auto flex flex-col items-center">
+              <span className="fade-up text-xs md:text-sm font-light text-gray-400 tracking-widest uppercase mb-12">
+                Sobre nosotros
+              </span>
+              
+              <img 
+                src="/logotipo.svg" 
+                alt="Miiles" 
+                className="fade-up w-full max-w-[280px] md:max-w-[500px] h-auto object-contain mb-12"
+              />
+              
+              <p className="fade-up text-lg md:text-xl font-light text-gray-500 max-w-2xl mx-auto leading-relaxed">
+                Somos una empresa dedicada al desarrollo de procesos creativos con inteligencia artificial.
               </p>
             </div>
           </section>
