@@ -11,7 +11,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import TutorialModal from "@/components/TutorialModal";
-import { TrendsPreview } from "@/components/TrendsPreview";
 import tutorialBanner from "@/assets/tablero-banner.webp.asset.json";
 
 type Program = {
@@ -281,9 +280,17 @@ export default function Dashboard() {
         </motion.div>
       </motion.div>
 
-      {/* Descubrimientos preview — visible para todos los usuarios */}
+      {/* Descubrimientos preview */}
       <motion.div variants={sectionVariants}>
-        <TrendsPreview />
+        <div 
+          className="relative w-full overflow-hidden rounded-[20px] md:rounded-[24px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-black/5"
+          style={{ 
+            height: "443px",
+            background: "linear-gradient(180deg, #FDFDFD 0%, #F8F9FD 100%)"
+          }}
+        >
+          {/* Contenido de descubrimientos irá aquí */}
+        </div>
       </motion.div>
 
       {/* Admin: send notification button */}
