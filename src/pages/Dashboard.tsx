@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
-import { Bell, Heart, ArrowRight, Loader2, Send, X, Trash2, LayoutDashboard } from "lucide-react";
+import { Bell, Heart, ArrowRight, Loader2, Send, X, Trash2, LayoutDashboard, Instagram, Youtube } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -282,6 +282,11 @@ export default function Dashboard() {
 
       {/* Descubrimientos preview */}
       <motion.div variants={sectionVariants}>
+        <div className="mb-6">
+          <h2 className="text-xl md:text-2xl font-medium text-foreground">Descubrimientos</h2>
+          <p className="text-sm font-light text-miiles-gray-400 mt-1">Nuevas actualizaciones estratégicas</p>
+        </div>
+
         <div 
           className="relative w-full overflow-hidden rounded-[20px] md:rounded-[24px]"
           style={{ 
@@ -304,21 +309,40 @@ export default function Dashboard() {
           {/* Contenido de descubrimientos irá aquí */}
           <div className="relative z-10 w-full h-full flex items-center overflow-x-auto snap-x snap-mandatory scrollbar-hide px-8 md:px-12 gap-6">
             {[
-              { id: 1, title: "Iced Coffee", image: "/discoveries/card1.jpg" },
-              { id: 2, title: "Descubriendo tendencias", image: "/discoveries/card2.jpg" },
-              { id: 3, title: "Lifestyle", image: "/discoveries/card3.jpg" },
+              { 
+                id: 1, 
+                title: "Instagram", 
+                image: "/discoveries/card1.jpg",
+                icon: <Instagram className="w-5 h-5" /> 
+              },
+              { 
+                id: 2, 
+                title: "YouTube", 
+                image: "/discoveries/card2.jpg",
+                icon: <Youtube className="w-5 h-5" />
+              },
+              { 
+                id: 3, 
+                title: "TikTok", 
+                image: "/discoveries/card3.jpg",
+                icon: (
+                  <svg width="18" height="18" viewBox="0 0 448 512" fill="currentColor">
+                    <path d="M448 209.91a210.06 210.06 0 0 1-122.77-39.25V349.38A162.55 162.55 0 1 1 185 188.31V278.2a74.62 74.62 0 1 0 52.23 71.18V0l88 0a121.18 121.18 0 0 0 1.86 22.17h0A122.18 122.18 0 0 0 381 102.39a121.43 121.43 0 0 0 67 20.14Z"/>
+                  </svg>
+                )
+              },
             ].map((item) => (
               <div 
                 key={item.id}
                 className="w-[368px] h-[299px] shrink-0 bg-white rounded-[24px] shadow-sm flex flex-col overflow-hidden snap-center border border-black/5"
               >
                 <div className="p-6 pb-2">
-                  <h3 className="text-lg font-medium text-foreground">
-                    {item.title}
-                  </h3>
-                  <p className="text-sm font-light text-miiles-gray-400 mt-1">
-                    Conoce más sobre esta novedad.
-                  </p>
+                  <div className="flex items-center gap-3">
+                    {item.icon}
+                    <h3 className="text-lg font-normal text-foreground">
+                      {item.title}
+                    </h3>
+                  </div>
                 </div>
                 <div className="flex-1 w-full mt-2 relative flex items-end justify-center">
                   <img 
