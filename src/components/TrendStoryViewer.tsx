@@ -53,8 +53,9 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
         {/* Floating Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-8 right-8 px-6 py-2.5 rounded-full transition-all hover:bg-gray-50 hover:shadow-md text-black z-50 bg-white shadow-sm border border-black/5 font-medium text-sm cursor-pointer"
+          className="absolute top-8 right-8 px-5 py-2.5 rounded-full transition-all hover:bg-gray-50 hover:shadow-md text-black z-50 bg-white shadow-sm border border-black/5 font-medium text-sm cursor-pointer flex items-center gap-2"
         >
+          <X size={16} strokeWidth={2.5} />
           Cerrar
         </button>
 
