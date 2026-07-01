@@ -337,9 +337,9 @@ export default function Dashboard() {
               <div 
                 key={item.id}
                 onClick={() => setOpenIndex(index)}
-                className="w-[368px] h-[299px] shrink-0 bg-white rounded-[24px] flex flex-col overflow-hidden snap-center border border-black/5 cursor-pointer hover:shadow-md transition-shadow"
+                className="w-[368px] h-[299px] shrink-0 bg-white rounded-[24px] flex flex-col overflow-hidden snap-center border border-black/5 cursor-pointer hover:shadow-md transition-shadow relative"
               >
-                <div className="p-6 pb-2">
+                <div className="p-6 pb-2 z-10">
                   <div className="flex items-center gap-3">
                     {item.icon}
                     <h3 className="text-lg font-normal text-foreground">
@@ -347,13 +347,15 @@ export default function Dashboard() {
                     </h3>
                   </div>
                 </div>
-                <div className="flex-1 w-full mt-2 relative flex items-end justify-center">
+                <div className="flex-1 w-full mt-2 relative flex items-end justify-center z-0">
                   <img 
                     src={item.image}
                     alt={item.title} 
                     className="w-full h-full object-contain object-bottom"
                   />
                 </div>
+                {/* Gradient Overlay */}
+                <div className="absolute bottom-0 left-0 w-full h-[48px] bg-gradient-to-b from-white/0 to-white z-20 pointer-events-none" />
               </div>
             ))}
           </div>
