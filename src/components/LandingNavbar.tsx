@@ -6,13 +6,26 @@ import { useTranslation } from "react-i18next";
 interface LandingNavbarProps {
   onMenuAction?: (id: string) => void;
   cta?: React.ReactNode;
+  isLanding?: boolean;
 }
 
-const LandingNavbar = ({ onMenuAction, cta }: LandingNavbarProps) => {
+const LandingNavbar = ({ onMenuAction, cta, isLanding }: LandingNavbarProps) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [menuKey, setMenuKey] = useState(0);
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
   const { t, i18n } = useTranslation();
+  
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    if (!isLanding) return;
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 50);
+    };
+    window.addEventListener("scroll", handleScroll);
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, [isLanding]);
 
   const toggleMenu = () => {
     if (!isMenuOpen) {
@@ -55,31 +68,43 @@ const LandingNavbar = ({ onMenuAction, cta }: LandingNavbarProps) => {
     }
   };
 
+  const isHeroTransparent = isLanding && !scrolled;
+
   return (
     <>
       {/* WRAPPER PARA NAV Y MENÚ */}
       <div className="fixed top-6 left-1/2 -translate-x-1/2 w-[95vw] md:w-max z-50 flex flex-col gap-2">
         {/* NAV — flotante estilo glass */}
-        <nav className="w-full flex items-center justify-between gap-4 md:gap-16 px-6 md:px-8 py-2.5 rounded-full bg-white/80 backdrop-blur-md border border-neutral-200/50 shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
+        <nav className={`w-full flex items-center justify-between gap-4 md:gap-16 px-6 md:px-8 py-2.5 rounded-full backdrop-blur-md shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all duration-300 ${
+          isHeroTransparent
+            ? "bg-white/80 md:bg-black/20 border border-neutral-200/50 md:border-white/10"
+            : "bg-white/80 border border-neutral-200/50"
+        }`}>
           <Link to="/" className="flex items-center shrink-0">
             <img 
               src="/logotipo.svg" 
               alt="Miiles" 
-              className="h-5 w-auto" 
+              className={`h-5 w-auto transition-all duration-300 ${isHeroTransparent ? 'md:brightness-0 md:invert' : ''}`} 
             />
           </Link>
 
           <div className="flex items-center gap-4 md:gap-6 shrink-0">
             <button
               onClick={toggleMenu}
-              className="text-sm font-normal hover:opacity-50 transition-colors duration-500 tracking-tight text-black"
+              className={`text-sm font-normal hover:opacity-50 transition-colors duration-300 tracking-tight ${
+                isHeroTransparent ? "text-black md:text-white" : "text-black"
+              }`}
             >
               {isMenuOpen ? t("navbar.close") : t("navbar.menu")}
             </button>
             {cta}
             <Link
               to="/login"
-              className="text-xs font-normal px-5 py-2.5 rounded-full bg-black text-white transition-all duration-500 hover:scale-105"
+              className={`text-xs font-normal px-5 py-2.5 rounded-full transition-all duration-300 hover:scale-105 ${
+                isHeroTransparent
+                  ? "bg-black text-white md:bg-white md:text-black"
+                  : "bg-black text-white"
+              }`}
             >
               {t("navbar.join")}
             </Link>

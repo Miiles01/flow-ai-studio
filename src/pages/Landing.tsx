@@ -151,30 +151,7 @@ const Landing = () => {
     };
   }, []);
 
-  // Hero Title Entrance Animation (mwg_effect046 style)
-  useEffect(() => {
-    const letters = document.querySelectorAll('.hero-title .letter > span');
-    if (letters.length === 0) return;
-
-    const shuffleArray = (array: Element[]) => {
-      const arr = [...array];
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
-      return arr;
-    };
-
-    const shuffled = shuffleArray(Array.from(letters));
-
-    gsap.from(shuffled, {
-      y: '130%',
-      ease: 'power4.out',
-      duration: 1.0,
-      stagger: 0.03,
-      delay: 0.3
-    });
-  }, []);
+  // Removed Hero Title Entrance Animation (mwg_effect046 style) since we are using a simple fade now
 
   // Removed Drifting Notes Hero Animation logic
 
@@ -427,7 +404,7 @@ const Landing = () => {
   }, []);
   return (
     <>
-          <LandingNavbar />
+          <LandingNavbar isLanding={true} />
 
       <div id="smooth-wrapper" style={{ overflow: "hidden", position: "fixed", width: "100%", height: "100%", top: 0, left: 0 }}>
         <div id="smooth-content" className="bg-white text-black font-sans overflow-hidden">
@@ -452,16 +429,20 @@ const Landing = () => {
               </span>
               
               <h1
-                className="hero-title no-split text-[42px] sm:text-6xl md:text-8xl lg:text-[95px] font-normal leading-[1.1] tracking-tight mb-6 text-black md:text-white"
+                data-anim-heading
+                className="text-[42px] sm:text-6xl md:text-8xl lg:text-[95px] font-normal leading-[1.1] tracking-tight mb-6 text-black md:text-white"
               >
                 <span className="block md:inline">
-                  {renderWord(t("landing.hero_title_hoy"))} {renderWord(t("landing.hero_title_es"))}{" "}
+                  {t("landing.hero_title_hoy")} {t("landing.hero_title_es")}{" "}
                 </span>
                 <span className="block md:inline">
-                  {renderWord(t("landing.hero_title_un"))} {renderWord(t("landing.hero_title_buen"))} {renderWord(t("landing.hero_title_dia"))}{" "}
+                  {t("landing.hero_title_un")} {t("landing.hero_title_buen")} {t("landing.hero_title_dia")}{" "}
                 </span>
                 <span className="block">
-                  {renderWord(t("landing.hero_title_para"))} {renderWord(t("landing.hero_title_crear"))}
+                  {t("landing.hero_title_para")}{" "}
+                  <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic", textTransform: "none" }}>
+                    {t("landing.hero_title_crear")}
+                  </span>
                 </span>
               </h1>
 
