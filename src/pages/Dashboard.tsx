@@ -283,7 +283,7 @@ export default function Dashboard() {
       {/* Descubrimientos preview */}
       <motion.div variants={sectionVariants}>
         <div 
-          className="relative w-full overflow-hidden rounded-[20px] md:rounded-[24px] shadow-[0_8px_30px_rgb(0,0,0,0.04)] ring-1 ring-black/5"
+          className="relative w-full overflow-hidden rounded-[20px] md:rounded-[24px]"
           style={{ 
             height: "443px",
             background: "linear-gradient(180deg, #FDFDFD 0%, #F8F9FD 100%)"
