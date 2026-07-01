@@ -332,7 +332,7 @@ export default function Dashboard() {
             ].map((item) => (
               <div 
                 key={item.id}
-                className="w-[368px] h-[299px] shrink-0 bg-white rounded-[24px] shadow-sm flex flex-col overflow-hidden snap-center border border-black/5"
+                className="w-[368px] h-[299px] shrink-0 bg-white rounded-[24px] flex flex-col overflow-hidden snap-center border border-black/5"
               >
                 <div className="p-6 pb-2">
                   <div className="flex items-center gap-3">
