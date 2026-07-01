@@ -240,23 +240,14 @@ export default function Dashboard() {
       animate="visible"
     >
       {/* Greeting */}
-      <motion.div 
-        variants={sectionVariants}
-        className="relative overflow-hidden md:rounded-[32px] md:p-10 lg:p-14 md:min-h-[280px] flex flex-col justify-end"
-      >
-        <div className="hidden md:block absolute inset-0 z-0">
-          <img src="/banner-miiles.png" alt="Banner" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-black/40" />
-        </div>
-        <div className="relative z-10">
-          <h1 className={`text-2xl md:text-4xl lg:text-5xl font-normal leading-tight ${isDark ? 'text-white' : 'text-black'} md:!text-white`}>
-            {getGreeting()},<br />
-            <span className={`font-medium ${isDark ? 'text-white' : 'text-black'} md:!text-white`}>{displayName}</span>
-          </h1>
-          <p className="text-miiles-gray-400 md:!text-white/80 mt-3 text-sm md:text-base font-light">
-            ¿Qué vamos hacer hoy?
-          </p>
-        </div>
+      <motion.div variants={sectionVariants}>
+        <h1 className={`text-2xl md:text-3xl font-normal leading-tight ${isDark ? 'text-white' : 'text-black'}`}>
+          {getGreeting()},<br />
+          <span className={`font-medium ${isDark ? 'text-white' : 'text-black'}`}>{displayName}</span>
+        </h1>
+        <p className="text-miiles-gray-400 mt-2 text-sm font-light">
+          ¿Qué vamos hacer hoy?
+        </p>
       </motion.div>
       {/* Stats */}
       <motion.div variants={sectionVariants} className="grid grid-cols-2 gap-5">

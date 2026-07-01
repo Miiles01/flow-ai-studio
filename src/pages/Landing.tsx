@@ -433,48 +433,56 @@ const Landing = () => {
         <div id="smooth-content" className="bg-white text-black font-sans overflow-hidden">
 
           {/* HERO */}
-          <section className="min-h-[85vh] md:min-h-screen bg-white text-black flex flex-col items-center justify-center text-center px-6 pt-32 pb-16 md:pb-32 relative z-10">
-            <img 
-              data-anim-heading 
-              src={logoImg} 
-              alt="Miiles Logo" 
-              className="w-14 h-14 mx-auto mb-3 logo-spin" 
-            />
-            <span data-anim-heading className="text-[22px] font-normal mb-8 tracking-tight">
-              {t("landing.hero_badge")}
-            </span>
-            
-            <h1
-              className="hero-title no-split text-[42px] sm:text-6xl md:text-8xl lg:text-[95px] font-normal leading-[1.1] tracking-tight mb-6"
-            >
-              <span className="block md:inline">
-                {renderWord(t("landing.hero_title_hoy"))} {renderWord(t("landing.hero_title_es"))}{" "}
-              </span>
-              <span className="block md:inline">
-                {renderWord(t("landing.hero_title_un"))} {renderWord(t("landing.hero_title_buen"))} {renderWord(t("landing.hero_title_dia"))}{" "}
-              </span>
-              <span className="block">
-                {renderWord(t("landing.hero_title_para"))} {renderWord(t("landing.hero_title_crear"))}
-              </span>
-            </h1>
+          <section className="min-h-[85vh] md:min-h-screen bg-white md:bg-transparent flex flex-col items-center justify-center text-center px-6 pt-32 pb-16 md:pb-32 relative z-10 overflow-hidden">
+            {/* Desktop Banner Background */}
+            <div className="hidden md:block absolute inset-0 z-0">
+              <img src="/banner-miiles.png" alt="Hero Banner" className="w-full h-full object-cover" />
+              <div className="absolute inset-0 bg-black/40" />
+            </div>
 
-            <p 
-              data-anim-heading 
-              className="text-base sm:text-lg md:text-xl font-light text-gray-500 mb-10 tracking-wide"
-            >
-              {t("landing.hero_subtitle")}
-            </p>
-
-            <div data-anim-heading className="flex items-center justify-center gap-4 flex-wrap">
-              <Link
-                to="/login"
-                className="px-8 py-4 rounded-full bg-black text-white text-[15px] font-normal hover:-translate-y-2 transition-transform duration-300 flex items-center gap-2"
+            <div className="relative z-10 w-full flex flex-col items-center justify-center">
+              <img 
+                data-anim-heading 
+                src={logoImg} 
+                alt="Miiles Logo" 
+                className="w-14 h-14 mx-auto mb-3 logo-spin" 
+              />
+              <span data-anim-heading className="text-[22px] font-normal mb-8 tracking-tight text-black md:text-white">
+                {t("landing.hero_badge")}
+              </span>
+              
+              <h1
+                className="hero-title no-split text-[42px] sm:text-6xl md:text-8xl lg:text-[95px] font-normal leading-[1.1] tracking-tight mb-6 text-black md:text-white"
               >
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M12 0C12.3 8.8 15.2 11.7 24 12C15.2 12.3 12.3 15.2 12 24C11.7 15.2 8.8 12.3 0 12C8.8 11.7 11.7 8.8 12 0Z" />
-                </svg>
-                {t("landing.hero_cta")}
-              </Link>
+                <span className="block md:inline">
+                  {renderWord(t("landing.hero_title_hoy"))} {renderWord(t("landing.hero_title_es"))}{" "}
+                </span>
+                <span className="block md:inline">
+                  {renderWord(t("landing.hero_title_un"))} {renderWord(t("landing.hero_title_buen"))} {renderWord(t("landing.hero_title_dia"))}{" "}
+                </span>
+                <span className="block">
+                  {renderWord(t("landing.hero_title_para"))} {renderWord(t("landing.hero_title_crear"))}
+                </span>
+              </h1>
+
+              <p 
+                data-anim-heading 
+                className="text-base sm:text-lg md:text-xl font-light text-gray-500 md:text-white/80 mb-10 tracking-wide"
+              >
+                {t("landing.hero_subtitle")}
+              </p>
+
+              <div data-anim-heading className="flex items-center justify-center gap-4 flex-wrap">
+                <Link
+                  to="/login"
+                  className="px-8 py-4 rounded-full bg-black md:bg-white text-white md:text-black text-[15px] font-normal hover:-translate-y-2 transition-transform duration-300 flex items-center gap-2 shadow-sm"
+                >
+                  <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 0C12.3 8.8 15.2 11.7 24 12C15.2 12.3 12.3 15.2 12 24C11.7 15.2 8.8 12.3 0 12C8.8 11.7 11.7 8.8 12 0Z" />
+                  </svg>
+                  {t("landing.hero_cta")}
+                </Link>
+              </div>
             </div>
           </section>
 
