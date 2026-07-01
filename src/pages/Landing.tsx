@@ -412,10 +412,15 @@ const Landing = () => {
           {/* HERO */}
           <section className="min-h-[85vh] md:min-h-screen bg-white md:bg-transparent flex flex-col items-center justify-center text-center px-6 pt-32 pb-16 md:pb-32 relative z-10 overflow-hidden">
             {/* Desktop Banner Background */}
-            <div className="hidden md:block absolute inset-0 z-0">
+            <motion.div 
+              className="hidden md:block absolute inset-0 z-0"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              transition={{ duration: 1.5, ease: "easeOut" }}
+            >
               <img src="/banner-miiles.png" alt="Hero Banner" className="w-full h-full object-cover" />
               <div className="absolute inset-0 bg-black/40" />
-            </div>
+            </motion.div>
 
             <div className="relative z-10 w-full flex flex-col items-center justify-center">
               <img 
