@@ -289,6 +289,18 @@ export default function Dashboard() {
             background: "linear-gradient(180deg, #FDFDFD 0%, #F8F9FD 100%)"
           }}
         >
+          {/* Fondo de puntos con gradiente radial (recreando efecto Figma) */}
+          <div 
+            className="absolute inset-0 pointer-events-none"
+            style={{
+              background: "radial-gradient(circle at center, #FFFFFF 0%, rgba(140, 134, 162, 0.15) 59%, #FFFFFF 100%)",
+              maskImage: "radial-gradient(circle, black 1px, transparent 1.5px)",
+              maskSize: "20px 20px",
+              WebkitMaskImage: "radial-gradient(circle, black 1px, transparent 1.5px)",
+              WebkitMaskSize: "20px 20px"
+            }}
+          />
+          
           {/* Contenido de descubrimientos irá aquí */}
         </div>
       </motion.div>
