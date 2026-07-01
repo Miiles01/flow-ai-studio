@@ -302,6 +302,31 @@ export default function Dashboard() {
           />
           
           {/* Contenido de descubrimientos irá aquí */}
+          <div className="relative z-10 w-full h-full flex items-center overflow-x-auto snap-x snap-mandatory scrollbar-hide px-8 md:px-12 gap-6">
+            {[1, 2, 3].map((item) => (
+              <div 
+                key={item}
+                className="w-[368px] h-[299px] shrink-0 bg-white rounded-[24px] shadow-sm flex flex-col overflow-hidden snap-center border border-black/5"
+              >
+                <div className="p-6 pb-2">
+                  <h3 className="text-lg font-medium text-foreground">
+                    Descubrimiento {item}
+                  </h3>
+                  <p className="text-sm font-light text-miiles-gray-400 mt-1">
+                    Conoce más sobre esta novedad.
+                  </p>
+                </div>
+                <div className="flex-1 w-full mt-2 relative flex items-end justify-center">
+                  {/* Placeholder image aligned to bottom */}
+                  <img 
+                    src={`https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=368&h=200&auto=format&fit=crop`}
+                    alt={`Descubrimiento ${item}`} 
+                    className="w-full h-full object-cover object-bottom"
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       </motion.div>
 
