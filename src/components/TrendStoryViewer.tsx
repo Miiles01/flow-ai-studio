@@ -1,29 +1,8 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { useTheme } from "@/contexts/ThemeContext";
-import { ChevronLeft, ChevronRight, ExternalLink, X } from "lucide-react";
-import { motion, AnimatePresence } from "framer-motion";
-import type { Trend, TrendLink } from "@/hooks/useTrends";
-import storyReelPlaceholder from "@/assets/story-reel-placeholder.webp";
-
-const getSummaryParagraph = (summary: string | null, idx: number, totalSlides: number) => {
-  if (!summary) return "";
-  const paragraphs = summary.split(/\n\s*\n+/).map(p => p.trim()).filter(Boolean);
-  if (paragraphs.length === 0) return "";
-  if (paragraphs.length === 1) {
-    return paragraphs[0];
-  }
-  return paragraphs[idx] || "";
-};
-
-const getSlideLinks = (links: TrendLink[], idx: number) => {
-  if (!links || links.length === 0) return [];
-  if (links.length === 1) {
-    return links;
-  }
-  const link = links[idx];
-  return link ? [link] : [];
-};
+import { X } from "lucide-react";
+import { motion } from "framer-motion";
+import type { Trend } from "@/hooks/useTrends";
 
 type Props = {
   trends: Trend[];
@@ -33,291 +12,78 @@ type Props = {
 };
 
 export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props) {
-  const { isDark } = useTheme();
-  const [index, setIndex] = useState(0);
-  const [slideIndex, setSlideIndex] = useState(0);
-  const [progress, setProgress] = useState(0);
-  const [isPaused, setIsPaused] = useState(false);
-  const [pointerDownTime, setPointerDownTime] = useState<number>(0);
-
-  const STORY_DURATION = 5000; // 5 seconds per story
-
   const open = startIndex !== null && trends.length > 0;
-  const trend = open ? trends[Math.min(index, trends.length - 1)] : null;
-
-  const slides = trend
-    ? trend.bullets.slice(0, 3).length > 0
-      ? trend.bullets.slice(0, 3)
-      : [trend.summary || ""]
-    : [];
+  const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    if (startIndex !== null) {
-      setIndex(startIndex);
-      setSlideIndex(0);
-      setProgress(0);
-      setIsPaused(false);
-    }
-  }, [startIndex]);
-
-  useEffect(() => {
-    if (open && trend) onView?.(trend.id);
-  }, [open, trend?.id]);
-
-  const goPrev = () => {
-    setProgress(0);
-    if (slideIndex > 0) {
-      setSlideIndex((s) => s - 1);
-    } else {
-      if (index > 0) {
-        const prevIndex = index - 1;
-        const prevTrend = trends[prevIndex];
-        const prevBullets = prevTrend.bullets.slice(0, 3);
-        const prevSlidesCount = prevBullets.length > 0 ? prevBullets.length : 1;
-        setIndex(prevIndex);
-        setSlideIndex(prevSlidesCount - 1);
-      }
-    }
-  };
-  
-  const goNext = () => {
-    setProgress(0);
-    if (slideIndex < slides.length - 1) {
-      setSlideIndex((s) => s + 1);
-    } else {
-      if (index < trends.length - 1) {
-        setIndex((i) => i + 1);
-        setSlideIndex(0);
-      } else {
-        onClose();
-      }
-    }
-  };
-
-  // Auto-advance interval
-  useEffect(() => {
-    if (!open || isPaused) return;
-
-    const interval = setInterval(() => {
-      setProgress((p) => {
-        if (p >= 100) {
-          clearInterval(interval);
-          if (slideIndex < slides.length - 1) {
-            setSlideIndex((s) => s + 1);
-            setProgress(0);
-          } else {
-            if (index < trends.length - 1) {
-              setIndex((i) => i + 1);
-              setSlideIndex(0);
-              setProgress(0);
-            } else {
-              onClose();
-            }
-          }
-          return 0;
+    if (open && startIndex !== null && containerRef.current) {
+      // Small delay to allow render before scrolling
+      setTimeout(() => {
+        const el = containerRef.current;
+        if (!el) return;
+        const items = el.querySelectorAll('.carousel-item');
+        const target = items[startIndex] as HTMLElement;
+        if (target) {
+          el.scrollTo({
+            top: target.offsetTop - el.clientHeight / 2 + target.clientHeight / 2,
+            behavior: 'instant'
+          });
         }
-        return p + (50 / STORY_DURATION) * 100;
-      });
-    }, 50);
-
-    return () => clearInterval(interval);
-  }, [open, index, slideIndex, isPaused, trends.length, slides.length, onClose]);
-
-  // Keyboard navigation
-  useEffect(() => {
-    if (!open) return;
-    const onKey = (e: KeyboardEvent) => {
-      if (e.key === "ArrowLeft") goPrev();
-      if (e.key === "ArrowRight") goNext();
-    };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [open, trends.length, slideIndex, index]);
-
-  const activeImage = trend
-    ? [
-        trend.media_url || trend.thumbnail_url || storyReelPlaceholder,
-        "https://images.unsplash.com/photo-1460925895917-afdab827c52f?auto=format&fit=crop&q=80&w=500",
-        "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&q=80&w=500"
-      ][slideIndex % 3]
-    : storyReelPlaceholder;
+      }, 50);
+    }
+  }, [open, startIndex]);
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent
-        className="p-0 overflow-visible border-none max-w-[95vw] w-[95vw] h-[95vh] rounded-[32px] shadow-2xl flex flex-col md:grid md:grid-cols-[40%_60%] gap-0 [&>button.right-4]:hidden transition-colors duration-300 bg-white"
+        className="p-0 overflow-hidden border-none max-w-[95vw] w-[95vw] h-[95vh] rounded-[32px] shadow-2xl flex flex-col md:grid md:grid-cols-[40%_60%] gap-0 bg-white"
       >
-        {trend && (
-          <>
-            {/* Left Navigation Arrow (Outside) */}
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                goPrev();
-              }}
-              disabled={trends.length <= 1}
-              className="absolute left-[-20px] md:left-[-70px] lg:left-[-90px] top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white shadow-lg hover:bg-gray-50 text-black border border-black/5 flex items-center justify-center transition-all hover:scale-105 active:scale-95 disabled:opacity-30 z-50 pointer-events-auto cursor-pointer"
-              aria-label="Anterior"
+        {/* Left Side: Vertical Carousel */}
+        <div 
+          ref={containerRef}
+          className="relative w-full h-full bg-[#FAFAFA] flex flex-col items-center overflow-y-auto snap-y snap-mandatory scrollbar-hide py-[calc(47.5vh-250px)] border-r border-black/5"
+        >
+          {trends.map((trend, i) => (
+            <motion.div
+              key={trend.id}
+              className="carousel-item w-[85%] max-w-[340px] aspect-[9/16] shrink-0 bg-miiles-gray-200 rounded-[24px] snap-center flex items-center justify-center my-6 overflow-hidden shadow-sm relative transition-opacity duration-300"
+              initial={{ opacity: 0.6 }}
+              whileInView={{ opacity: 1 }}
+              viewport={{ amount: 0.7 }}
             >
-              <ChevronLeft size={24} strokeWidth={2} />
-            </button>
-
-            {/* Media — vertical phone/reel format with hold-to-pause and tap-to-navigate */}
-            <div
-              className="relative w-full h-[300px] md:h-full flex-shrink-0 bg-black flex items-center justify-center overflow-hidden select-none cursor-pointer rounded-t-[32px] md:rounded-t-none md:rounded-l-[32px]"
-              onPointerDown={(e) => {
-                setPointerDownTime(Date.now());
-                setIsPaused(true);
-              }}
-              onPointerUp={(e) => {
-                setIsPaused(false);
-                const duration = Date.now() - pointerDownTime;
-                if (duration < 250) {
-                  const rect = e.currentTarget.getBoundingClientRect();
-                  const clickX = e.clientX - rect.left;
-                  const width = rect.width;
-                  if (clickX < width * 0.3) {
-                    goPrev();
-                  } else {
-                    goNext();
-                  }
-                }
-              }}
-              onPointerLeave={() => setIsPaused(false)}
-            >
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={`${trend.id}-${slideIndex}`}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.25 }}
-                  className="absolute inset-0 flex items-center justify-center"
-                >
-                  <img
-                    src={activeImage}
-                    alt={trend.title}
-                    className="w-full h-full object-cover"
-                  />
-                </motion.div>
-              </AnimatePresence>
-
-              {/* Story progress bars */}
-              <div className="absolute top-4 left-4 right-4 flex gap-1.5 z-10">
-                {slides.map((_, i) => {
-                  let w = "0%";
-                  if (i < slideIndex) w = "100%";
-                  else if (i === slideIndex) w = `${progress}%`;
-
-                  return (
-                    <div key={i} className="h-1 flex-1 rounded-full bg-white/40 overflow-hidden shadow-sm">
-                      <div
-                        className="h-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]"
-                        style={{
-                          width: w,
-                          transition: i === slideIndex ? "none" : "width 0.1s linear",
-                        }}
-                      />
-                    </div>
-                  );
-                })}
+              {/* Placeholder for video */}
+              <div className="absolute inset-0 flex flex-col items-center justify-center text-miiles-gray-500 gap-3">
+                <div className="w-12 h-12 rounded-full bg-white/50 flex items-center justify-center">
+                  <div className="w-0 h-0 border-t-8 border-t-transparent border-l-[12px] border-l-black/40 border-b-8 border-b-transparent ml-1" />
+                </div>
+                <span className="font-medium text-sm">Video Area</span>
               </div>
-            </div>
+            </motion.div>
+          ))}
+        </div>
 
-            {/* Text content panel */}
-            <div
-              className="flex-grow flex flex-col min-h-0 md:h-[95vh] overflow-hidden rounded-b-[32px] md:rounded-b-none md:rounded-r-[32px] bg-white"
-            >
-              <div className="flex items-center justify-between px-8 pt-8 pb-4 border-b border-black/5">
-                <span className="text-xs uppercase tracking-wider text-miiles-blue font-semibold">
-                  {trend.category}
-                </span>
-                <button
-                  onClick={onClose}
-                  className="p-2 rounded-full transition-colors hover:bg-black/5 text-black"
-                  aria-label="Cerrar"
-                >
-                  <X size={20} />
-                </button>
-              </div>
-
-              <div className="flex-1 overflow-y-auto px-8 py-8 scrollbar-hide">
-                <h2 className="text-3xl md:text-4xl font-normal text-black leading-tight">{trend.title}</h2>
-                <p className="text-sm text-miiles-gray-400 font-light mt-2">
-                  {new Date(trend.published_at).toLocaleDateString("es-ES", {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric",
-                  })}
-                </p>
-
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={`${trend.id}-${slideIndex}`}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.2 }}
-                    className="mt-6 space-y-4"
-                  >
-                    {trend.bullets.length > 0 && (
-                      <div className="p-5 rounded-2xl bg-black/5 border border-black/5">
-                        <span className="text-[10px] text-miiles-gray-400 uppercase tracking-widest block mb-2 font-medium">
-                          Tema {slideIndex + 1} de {slides.length}
-                        </span>
-                        <p className="text-base font-medium text-black leading-relaxed">
-                          {slides[slideIndex]}
-                        </p>
-                      </div>
-                    )}
-
-                    {(() => {
-                      const paragraph = getSummaryParagraph(trend.summary, slideIndex, slides.length);
-                      return paragraph ? (
-                        <p className="text-sm font-light text-miiles-gray-600 leading-relaxed whitespace-pre-wrap">
-                          {paragraph}
-                        </p>
-                      ) : null;
-                    })()}
-
-                    {(() => {
-                      const slideLinks = getSlideLinks(trend.links, slideIndex);
-                      return slideLinks.length > 0 ? (
-                        <div className="flex flex-col gap-2 pt-2">
-                          {slideLinks.map((l, i) => (
-                            <a
-                              key={i}
-                              href={l.url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                              className="flex items-center justify-between gap-2 px-4 py-3 rounded-full text-sm font-light transition-all hover:scale-[1.01] bg-black/5 text-black border border-black/5 hover:bg-black/10"
-                            >
-                              <span className="truncate">{l.label || l.url}</span>
-                              <ExternalLink size={14} className="flex-shrink-0" />
-                            </a>
-                          ))}
-                        </div>
-                      ) : null;
-                    })()}
-                  </motion.div>
-                </AnimatePresence>
-              </div>
-            </div>
-
-            {/* Right Navigation Arrow (Outside) */}
-            <button
-              onClick={(e) => {
-                e.stopPropagation();
-                goNext();
-              }}
-              disabled={trends.length <= 1}
-              className="absolute right-[-20px] md:right-[-70px] lg:right-[-90px] top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white shadow-lg hover:bg-gray-50 text-black border border-black/5 flex items-center justify-center transition-all hover:scale-105 active:scale-95 disabled:opacity-30 z-50 pointer-events-auto cursor-pointer"
-              aria-label="Siguiente"
-            >
-              <ChevronRight size={24} strokeWidth={2} />
-            </button>
-          </>
-        )}
+        {/* Right Side: Dotted Canvas */}
+        <div className="relative w-full h-full bg-white flex flex-col">
+          <button
+            onClick={onClose}
+            className="absolute top-6 right-6 p-2 rounded-full transition-colors hover:bg-black/5 text-black z-50"
+            aria-label="Cerrar"
+          >
+            <X size={24} strokeWidth={1.5} />
+          </button>
+          
+          {/* Dotted pattern */}
+          <div 
+            className="absolute inset-0 pointer-events-none opacity-40"
+            style={{
+              background: "radial-gradient(circle at center, #FFFFFF 0%, rgba(140, 134, 162, 0.15) 59%, #FFFFFF 100%)",
+              maskImage: "radial-gradient(circle, black 1px, transparent 1.5px)",
+              maskSize: "24px 24px",
+              WebkitMaskImage: "radial-gradient(circle, black 1px, transparent 1.5px)",
+              WebkitMaskSize: "24px 24px"
+            }}
+          />
+        </div>
       </DialogContent>
     </Dialog>
   );
