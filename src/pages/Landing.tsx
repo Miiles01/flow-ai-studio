@@ -466,7 +466,7 @@ const Landing = () => {
               </div>
 
               {/* BRAND CAROUSEL (Moved into Hero) */}
-              <div className="w-full pt-16 md:pt-24 pb-6 mt-4 md:mt-8">
+              <div className="w-full pt-8 md:pt-10 pb-6 mt-2 md:mt-4">
                 <h4 className="text-center text-xs font-light text-gray-400 md:text-white/80 mb-8 tracking-widest transition-colors duration-300">
                   {t("landing.trusted_by")}
                 </h4>
