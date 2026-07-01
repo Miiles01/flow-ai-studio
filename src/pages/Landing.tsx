@@ -483,22 +483,23 @@ const Landing = () => {
                   {t("landing.hero_cta")}
                 </Link>
               </div>
-            </div>
-          </section>
 
-          {/* BRAND CAROUSEL (Relocated) */}
-          <section className="pt-4 pb-6 overflow-hidden bg-white relative z-10">
-            <h4 className="text-center text-xs font-light text-gray-400 mb-8 tracking-widest">
-              {t("landing.trusted_by")}
-            </h4>
-            <div className="px-[10%] md:px-[20%]">
-              <div className="relative w-full" style={{ maskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)" }}>
-                <div className="flex w-max animate-marquee gap-20 items-center">
-                  {[...brandLogos, ...brandLogos].map((logo, i) => (
-                    <img key={i} src={logo} alt="" className="h-6 md:h-7 w-auto opacity-70 shrink-0" />
-                  ))}
+              {/* BRAND CAROUSEL (Moved into Hero) */}
+              <div className="w-full pt-16 md:pt-24 pb-6 mt-4 md:mt-8">
+                <h4 className="text-center text-xs font-light text-gray-400 md:text-white/80 mb-8 tracking-widest transition-colors duration-300">
+                  {t("landing.trusted_by")}
+                </h4>
+                <div className="px-[10%] md:px-[20%]">
+                  <div className="relative w-full" style={{ maskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)" }}>
+                    <div className="flex w-max animate-marquee gap-20 items-center">
+                      {[...brandLogos, ...brandLogos].map((logo, i) => (
+                        <img key={i} src={logo} alt="" className="h-6 md:h-7 w-auto opacity-70 md:opacity-100 md:brightness-0 md:invert shrink-0 transition-all duration-300" />
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
+
             </div>
           </section>
 
