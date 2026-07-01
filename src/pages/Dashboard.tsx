@@ -12,6 +12,8 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import TutorialModal from "@/components/TutorialModal";
 import tutorialBanner from "@/assets/tablero-banner.webp.asset.json";
+import { useTrends } from "@/hooks/useTrends";
+import { TrendStoryViewer } from "@/components/TrendStoryViewer";
 
 type Program = {
   id: string;
@@ -58,6 +60,8 @@ export default function Dashboard() {
   const { user } = useAuth();
   const { isDark } = useTheme();
   const [displayName, setDisplayName] = useState("");
+  const { trends } = useTrends();
+  const [openIndex, setOpenIndex] = useState<number | null>(null);
   const [flows, setFlows] = useState<any[]>([]);
   const [savedCount, setSavedCount] = useState(0);
   const [applications, setApplications] = useState<UserApplication[]>([]);
@@ -329,10 +333,11 @@ export default function Dashboard() {
                   </svg>
                 )
               },
-            ].map((item) => (
+            ].map((item, index) => (
               <div 
                 key={item.id}
-                className="w-[368px] h-[299px] shrink-0 bg-white rounded-[24px] flex flex-col overflow-hidden snap-center border border-black/5"
+                onClick={() => setOpenIndex(index)}
+                className="w-[368px] h-[299px] shrink-0 bg-white rounded-[24px] flex flex-col overflow-hidden snap-center border border-black/5 cursor-pointer hover:shadow-md transition-shadow"
               >
                 <div className="p-6 pb-2">
                   <div className="flex items-center gap-3">
@@ -355,7 +360,11 @@ export default function Dashboard() {
         </div>
       </motion.div>
 
-
+      <TrendStoryViewer
+        trends={trends}
+        startIndex={openIndex}
+        onClose={() => setOpenIndex(null)}
+      />
 
       {/* Admin: send notification button */}
       {isAdmin && (

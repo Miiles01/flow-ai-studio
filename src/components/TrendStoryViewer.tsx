@@ -145,8 +145,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent
-        className="p-0 overflow-visible border-none max-w-4xl w-[95vw] md:h-[580px] rounded-[28px] shadow-2xl flex flex-col md:grid md:grid-cols-[40%_60%] gap-0 [&>button.right-4]:hidden transition-colors duration-300"
-        style={{ background: isDark ? "#000000" : "#7E7E7E" }}
+        className="p-0 overflow-visible border-none max-w-[95vw] w-[95vw] h-[95vh] rounded-[32px] shadow-2xl flex flex-col md:grid md:grid-cols-[40%_60%] gap-0 [&>button.right-4]:hidden transition-colors duration-300 bg-white"
       >
         {trend && (
           <>
@@ -157,7 +156,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
                 goPrev();
               }}
               disabled={trends.length <= 1}
-              className="absolute left-[-70px] lg:left-[-90px] top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/40 hover:bg-black/60 backdrop-blur-md text-white border border-white/10 hidden md:flex items-center justify-center transition-all hover:scale-105 active:scale-95 disabled:opacity-30 z-50 pointer-events-auto cursor-pointer"
+              className="absolute left-[-20px] md:left-[-70px] lg:left-[-90px] top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white shadow-lg hover:bg-gray-50 text-black border border-black/5 flex items-center justify-center transition-all hover:scale-105 active:scale-95 disabled:opacity-30 z-50 pointer-events-auto cursor-pointer"
               aria-label="Anterior"
             >
               <ChevronLeft size={24} strokeWidth={2} />
@@ -165,7 +164,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
 
             {/* Media — vertical phone/reel format with hold-to-pause and tap-to-navigate */}
             <div
-              className="relative w-full h-[220px] md:h-full flex-shrink-0 bg-black flex items-center justify-center overflow-hidden select-none cursor-pointer rounded-t-[28px] md:rounded-t-none md:rounded-l-[28px]"
+              className="relative w-full h-[300px] md:h-full flex-shrink-0 bg-black flex items-center justify-center overflow-hidden select-none cursor-pointer rounded-t-[32px] md:rounded-t-none md:rounded-l-[32px]"
               onPointerDown={(e) => {
                 setPointerDownTime(Date.now());
                 setIsPaused(true);
@@ -204,16 +203,16 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
               </AnimatePresence>
 
               {/* Story progress bars */}
-              <div className="absolute top-3 left-3 right-3 flex gap-1 z-10">
+              <div className="absolute top-4 left-4 right-4 flex gap-1.5 z-10">
                 {slides.map((_, i) => {
                   let w = "0%";
                   if (i < slideIndex) w = "100%";
                   else if (i === slideIndex) w = `${progress}%`;
 
                   return (
-                    <div key={i} className="h-0.5 flex-1 rounded-full bg-white/30 overflow-hidden">
+                    <div key={i} className="h-1 flex-1 rounded-full bg-white/40 overflow-hidden shadow-sm">
                       <div
-                        className="h-full bg-white"
+                        className="h-full bg-white shadow-[0_0_8px_rgba(255,255,255,0.8)]"
                         style={{
                           width: w,
                           transition: i === slideIndex ? "none" : "width 0.1s linear",
@@ -227,25 +226,24 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
 
             {/* Text content panel */}
             <div
-              className="flex-grow flex flex-col min-h-0 md:h-[580px] overflow-hidden rounded-b-[28px] md:rounded-b-none md:rounded-r-[28px]"
-              style={{ background: isDark ? "#000000" : "#7E7E7E" }}
+              className="flex-grow flex flex-col min-h-0 md:h-[95vh] overflow-hidden rounded-b-[32px] md:rounded-b-none md:rounded-r-[32px] bg-white"
             >
-              <div className="flex items-center justify-between px-6 pt-5 pb-2">
-                <span className="text-[11px] uppercase tracking-wide text-white/60 font-medium">
+              <div className="flex items-center justify-between px-8 pt-8 pb-4 border-b border-black/5">
+                <span className="text-xs uppercase tracking-wider text-miiles-blue font-semibold">
                   {trend.category}
                 </span>
                 <button
                   onClick={onClose}
-                  className="p-1.5 rounded-full transition-colors hover:bg-white/10 text-white"
+                  className="p-2 rounded-full transition-colors hover:bg-black/5 text-black"
                   aria-label="Cerrar"
                 >
-                  <X size={16} />
+                  <X size={20} />
                 </button>
               </div>
 
-              <div className="flex-1 overflow-y-auto px-6 pb-8 scrollbar-hide">
-                <h2 className="text-xl font-normal text-white leading-snug">{trend.title}</h2>
-                <p className="text-[11px] text-white/50 font-light mt-1">
+              <div className="flex-1 overflow-y-auto px-8 py-8 scrollbar-hide">
+                <h2 className="text-3xl md:text-4xl font-normal text-black leading-tight">{trend.title}</h2>
+                <p className="text-sm text-miiles-gray-400 font-light mt-2">
                   {new Date(trend.published_at).toLocaleDateString("es-ES", {
                     day: "numeric",
                     month: "long",
@@ -263,11 +261,11 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
                     className="mt-6 space-y-4"
                   >
                     {trend.bullets.length > 0 && (
-                      <div className="p-5 rounded-2xl bg-white/5 border border-white/10">
-                        <span className="text-[10px] text-white/40 uppercase tracking-widest block mb-2 font-medium">
+                      <div className="p-5 rounded-2xl bg-black/5 border border-black/5">
+                        <span className="text-[10px] text-miiles-gray-400 uppercase tracking-widest block mb-2 font-medium">
                           Tema {slideIndex + 1} de {slides.length}
                         </span>
-                        <p className="text-base font-medium text-white leading-relaxed">
+                        <p className="text-base font-medium text-black leading-relaxed">
                           {slides[slideIndex]}
                         </p>
                       </div>
@@ -276,7 +274,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
                     {(() => {
                       const paragraph = getSummaryParagraph(trend.summary, slideIndex, slides.length);
                       return paragraph ? (
-                        <p className="text-sm font-light text-white/80 leading-relaxed whitespace-pre-wrap">
+                        <p className="text-sm font-light text-miiles-gray-600 leading-relaxed whitespace-pre-wrap">
                           {paragraph}
                         </p>
                       ) : null;
@@ -292,7 +290,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
                               href={l.url}
                               target="_blank"
                               rel="noopener noreferrer"
-                              className="flex items-center justify-between gap-2 px-4 py-3 rounded-full text-sm font-light transition-all hover:scale-[1.01] bg-white/10 text-white border border-white/10 hover:bg-white/15"
+                              className="flex items-center justify-between gap-2 px-4 py-3 rounded-full text-sm font-light transition-all hover:scale-[1.01] bg-black/5 text-black border border-black/5 hover:bg-black/10"
                             >
                               <span className="truncate">{l.label || l.url}</span>
                               <ExternalLink size={14} className="flex-shrink-0" />
@@ -313,7 +311,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
                 goNext();
               }}
               disabled={trends.length <= 1}
-              className="absolute right-[-70px] lg:right-[-90px] top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-black/40 hover:bg-black/60 backdrop-blur-md text-white border border-white/10 hidden md:flex items-center justify-center transition-all hover:scale-105 active:scale-95 disabled:opacity-30 z-50 pointer-events-auto cursor-pointer"
+              className="absolute right-[-20px] md:right-[-70px] lg:right-[-90px] top-1/2 -translate-y-1/2 w-12 h-12 rounded-full bg-white shadow-lg hover:bg-gray-50 text-black border border-black/5 flex items-center justify-center transition-all hover:scale-105 active:scale-95 disabled:opacity-30 z-50 pointer-events-auto cursor-pointer"
               aria-label="Siguiente"
             >
               <ChevronRight size={24} strokeWidth={2} />
