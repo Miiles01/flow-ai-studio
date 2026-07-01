@@ -247,38 +247,7 @@ export default function Dashboard() {
       </motion.div>
 
 
-      {/* Stats */}
-      <motion.div variants={sectionVariants} className="grid grid-cols-2 gap-5">
-        {/* Notifications card */}
-        <motion.div
-          whileHover={{ y: -4, transition: { duration: 0.2 } }}
-          className={`p-5 rounded-lg shadow-md cursor-pointer ${isDark ? 'bg-white/5' : 'bg-white'}`}
-          onClick={() => setNotifOpen(true)}
-        >
-          <div className="w-8 h-8 rounded-sm bg-background shadow-sm flex items-center justify-center mb-3 relative">
-            <Bell size={16} className={isDark ? "text-white" : "text-black"} />
-            {unreadCount > 0 && (
-              <span className={`absolute -top-1 -right-1 w-4 h-4 rounded-full text-[9px] flex items-center justify-center ${isDark ? "bg-white text-black" : "bg-black text-white"}`}>
-                {unreadCount}
-              </span>
-            )}
-          </div>
-          <p className="text-2xl font-normal text-foreground">{unreadCount}</p>
-          <p className="text-xs text-miiles-gray-400 font-light mt-1">Notificaciones</p>
-        </motion.div>
 
-        <motion.div
-          whileHover={{ y: -4, transition: { duration: 0.2 } }}
-          className={`p-5 rounded-lg shadow-md cursor-pointer ${isDark ? 'bg-white/5' : 'bg-white'}`}
-          onClick={() => setAppsOpen(true)}
-        >
-          <div className="w-8 h-8 rounded-sm bg-background shadow-sm flex items-center justify-center mb-3">
-            <Heart size={16} className={isDark ? "text-white" : "text-black"} />
-          </div>
-          <p className="text-2xl font-normal text-foreground">{savedCount}</p>
-          <p className="text-xs text-miiles-gray-400 font-light mt-1">Proyectos</p>
-        </motion.div>
-      </motion.div>
 
       {/* Descubrimientos preview */}
       <motion.div variants={sectionVariants}>
@@ -355,6 +324,39 @@ export default function Dashboard() {
             ))}
           </div>
         </div>
+      </motion.div>
+
+      {/* Stats */}
+      <motion.div variants={sectionVariants} className="grid grid-cols-2 gap-5">
+        {/* Notifications card */}
+        <motion.div
+          whileHover={{ y: -4, transition: { duration: 0.2 } }}
+          className={`p-5 rounded-lg shadow-md cursor-pointer ${isDark ? 'bg-white/5' : 'bg-white'}`}
+          onClick={() => setNotifOpen(true)}
+        >
+          <div className="w-8 h-8 rounded-sm bg-background shadow-sm flex items-center justify-center mb-3 relative">
+            <Bell size={16} className={isDark ? "text-white" : "text-black"} />
+            {unreadCount > 0 && (
+              <span className={`absolute -top-1 -right-1 w-4 h-4 rounded-full text-[9px] flex items-center justify-center ${isDark ? "bg-white text-black" : "bg-black text-white"}`}>
+                {unreadCount}
+              </span>
+            )}
+          </div>
+          <p className="text-2xl font-normal text-foreground">{unreadCount}</p>
+          <p className="text-xs text-miiles-gray-400 font-light mt-1">Notificaciones</p>
+        </motion.div>
+
+        <motion.div
+          whileHover={{ y: -4, transition: { duration: 0.2 } }}
+          className={`p-5 rounded-lg shadow-md cursor-pointer ${isDark ? 'bg-white/5' : 'bg-white'}`}
+          onClick={() => setAppsOpen(true)}
+        >
+          <div className="w-8 h-8 rounded-sm bg-background shadow-sm flex items-center justify-center mb-3">
+            <Heart size={16} className={isDark ? "text-white" : "text-black"} />
+          </div>
+          <p className="text-2xl font-normal text-foreground">{savedCount}</p>
+          <p className="text-xs text-miiles-gray-400 font-light mt-1">Proyectos</p>
+        </motion.div>
       </motion.div>
 
       {/* Admin: send notification button */}
