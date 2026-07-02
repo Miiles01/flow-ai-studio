@@ -361,7 +361,7 @@ export default function Dashboard() {
                   <img 
                     src={item.image}
                     alt={item.title} 
-                    className={`w-full h-full ${item.title === 'Facebook' ? 'object-cover object-top scale-[1.05]' : 'object-contain object-bottom'}`}
+                    className="w-full h-full object-contain object-bottom"
                   />
                 </div>
                 {/* Gradient Overlay */}
