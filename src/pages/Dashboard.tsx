@@ -357,11 +357,11 @@ export default function Dashboard() {
                     </h3>
                   </div>
                 </div>
-                <div className="flex-1 w-full mt-2 relative flex items-end justify-center z-0">
+                <div className="flex-1 w-full mt-2 relative flex items-end justify-center z-0 overflow-hidden">
                   <img 
                     src={item.image}
                     alt={item.title} 
-                    className="w-full h-full object-cover object-top"
+                    className={`w-full h-full ${item.title === 'Facebook' ? 'object-cover object-top scale-[1.05]' : 'object-contain object-bottom'}`}
                   />
                 </div>
                 {/* Gradient Overlay */}
