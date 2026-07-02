@@ -357,7 +357,7 @@ export default function Dashboard() {
                   <img 
                     src={item.image}
                     alt={item.title} 
-                    className="w-full h-full object-contain object-bottom"
+                    className="w-full h-full object-cover object-top"
                   />
                 </div>
                 {/* Gradient Overlay */}
