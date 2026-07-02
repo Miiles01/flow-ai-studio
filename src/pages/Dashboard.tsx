@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
-import { Bell, Heart, ArrowRight, Loader2, Send, X, Trash2, LayoutDashboard, Instagram, Youtube, Facebook } from "lucide-react";
+import { Bell, Heart, ArrowRight, Loader2, Send, X, Trash2, LayoutDashboard, Instagram, Youtube } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -337,7 +337,11 @@ export default function Dashboard() {
                 id: 4, 
                 title: "Facebook", 
                 image: "/discoveries/card4.png",
-                icon: <Facebook className="w-5 h-5" />
+                icon: (
+                  <svg className="w-5 h-5" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M22.5 2.5H18.75C17.0924 2.5 15.5027 3.15848 14.3306 4.33058C13.1585 5.50269 12.5 7.0924 12.5 8.75V12.5H8.75V17.5H12.5V27.5H17.5V17.5H21.25L22.5 12.5H17.5V8.75C17.5 8.41848 17.6317 8.10054 17.8661 7.86612C18.1005 7.6317 18.4185 7.5 18.75 7.5H22.5V2.5Z" fill="currentColor"/>
+                  </svg>
+                )
               },
             ].map((item, index) => (
               <div 
