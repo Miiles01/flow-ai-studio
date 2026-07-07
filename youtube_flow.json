@@ -1,0 +1,73 @@
+{
+  "network": "youtube",
+  "title": "Estrategia: Nueva Era de la Marca Personal",
+  "nodes": [
+    {
+      "id": "1",
+      "type": "custom",
+      "position": { "x": 100, "y": 100 },
+      "data": { "label": "1. Definir la Oferta Primero" }
+    },
+    {
+      "id": "2",
+      "type": "custom",
+      "position": { "x": 100, "y": 250 },
+      "data": { "label": "2. Definir el Seguidor Ideal" }
+    },
+    {
+      "id": "3",
+      "type": "custom",
+      "position": { "x": 400, "y": 100 },
+      "data": { "label": "3. Creación de Contenido (Autenticidad > Info)" }
+    },
+    {
+      "id": "4",
+      "type": "custom",
+      "position": { "x": 400, "y": 250 },
+      "data": { "label": "4. Posicionamiento por Asociación" }
+    },
+    {
+      "id": "5",
+      "type": "custom",
+      "position": { "x": 700, "y": 100 },
+      "data": { "label": "5. Embudo de 3 Niveles" }
+    },
+    {
+      "id": "6",
+      "type": "custom",
+      "position": { "x": 700, "y": 250 },
+      "data": { "label": "6. Optimizar el User Watch Time" }
+    }
+  ],
+  "edges": [
+    {
+      "id": "e1-2",
+      "source": "1",
+      "target": "2",
+      "animated": true
+    },
+    {
+      "id": "e2-3",
+      "source": "2",
+      "target": "3",
+      "animated": true
+    },
+    {
+      "id": "e3-4",
+      "source": "3",
+      "target": "4"
+    },
+    {
+      "id": "e4-5",
+      "source": "4",
+      "target": "5",
+      "animated": true
+    },
+    {
+      "id": "e5-6",
+      "source": "5",
+      "target": "6",
+      "animated": true
+    }
+  ]
+}

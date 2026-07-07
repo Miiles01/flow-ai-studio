@@ -293,14 +293,18 @@ export default function Dashboard() {
           className="relative w-full overflow-hidden rounded-[20px] md:rounded-[24px]"
           style={{ 
             height: "443px",
-            background: "linear-gradient(180deg, #FDFDFD 0%, #F8F9FD 100%)"
+            background: isDark 
+              ? "linear-gradient(180deg, #121212 0%, #0A0A0A 100%)" 
+              : "linear-gradient(180deg, #FDFDFD 0%, #F8F9FD 100%)"
           }}
         >
           {/* Fondo de puntos con gradiente radial (recreando efecto Figma) */}
           <div 
             className="absolute inset-0 pointer-events-none"
             style={{
-              background: "radial-gradient(circle at center, #FFFFFF 0%, rgba(140, 134, 162, 0.15) 59%, #FFFFFF 100%)",
+              background: isDark
+                ? "radial-gradient(circle at center, #2A2A2A 0%, rgba(140, 134, 162, 0.15) 59%, #121212 100%)"
+                : "radial-gradient(circle at center, #FFFFFF 0%, rgba(140, 134, 162, 0.15) 59%, #FFFFFF 100%)",
               maskImage: "radial-gradient(circle, black 1px, transparent 1.5px)",
               maskSize: "20px 20px",
               WebkitMaskImage: "radial-gradient(circle, black 1px, transparent 1.5px)",
@@ -347,7 +351,9 @@ export default function Dashboard() {
               <div 
                 key={item.id}
                 onClick={() => setOpenIndex(index)}
-                className="w-[368px] h-[299px] shrink-0 bg-white rounded-[24px] flex flex-col overflow-hidden snap-center border border-black/5 cursor-pointer hover:shadow-md transition-shadow relative"
+                className={`w-[368px] h-[299px] shrink-0 rounded-[24px] flex flex-col overflow-hidden snap-center border cursor-pointer hover:shadow-md transition-shadow relative ${
+                  isDark ? "bg-[#1A1A1A] border-white/5" : "bg-white border-black/5"
+                }`}
               >
                 <div className="p-6 pb-2 z-10">
                   <div className="flex items-center gap-3">
@@ -365,7 +371,14 @@ export default function Dashboard() {
                   />
                 </div>
                 {/* Gradient Overlay */}
-                <div className="absolute bottom-0 left-0 w-full h-[48px] bg-gradient-to-b from-white/0 to-white z-20 pointer-events-none" />
+                <div 
+                  className="absolute bottom-0 left-0 w-full h-[48px] z-20 pointer-events-none" 
+                  style={{
+                    background: isDark
+                      ? "linear-gradient(to bottom, rgba(26,26,26,0) 0%, rgba(26,26,26,1) 100%)"
+                      : "linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%)"
+                  }}
+                />
               </div>
             ))}
           </div>
