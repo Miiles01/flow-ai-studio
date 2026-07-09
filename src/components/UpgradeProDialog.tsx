@@ -37,13 +37,13 @@ export function UpgradeProDialog({ open, onOpenChange }: UpgradeProDialogProps) 
                 onClick={() => setCycle("monthly")}
                 className={`relative z-10 flex-1 py-2.5 text-xs rounded-full transition-colors ${cycle === "monthly" ? "bg-foreground text-background" : "text-muted-foreground"}`}
               >
-                Mensual · $386 MXN
+                Mensual · $179 MXN
               </button>
               <button
                 onClick={() => setCycle("yearly")}
                 className={`relative z-10 flex-1 py-2.5 text-xs rounded-full transition-colors ${cycle === "yearly" ? "bg-foreground text-background" : "text-muted-foreground"}`}
               >
-                Anual · $3,712 MXN · Ahorra 20%
+                Anual · $1,800 MXN · Ahorra 16%
               </button>
             </div>
 
