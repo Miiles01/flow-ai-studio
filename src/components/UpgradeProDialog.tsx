@@ -37,7 +37,7 @@ export function UpgradeProDialog({ open, onOpenChange }: UpgradeProDialogProps) 
                 onClick={() => setCycle("monthly")}
                 className={`relative z-10 flex-1 py-2.5 text-xs rounded-full transition-colors ${cycle === "monthly" ? "bg-foreground text-background" : "text-muted-foreground"}`}
               >
-                Mensual · $179 MXN
+                Mensual · $386 MXN
               </button>
               <button
                 onClick={() => setCycle("yearly")}
