@@ -197,6 +197,22 @@ const AIPromptBar = ({ onGenerate, isGenerating, forceOpen, extendLabel, onCance
                 </div>
 
                 <div className="flex items-center gap-3">
+                  {speechSupported && (
+                    <button
+                      type="button"
+                      onClick={toggleRecording}
+                      disabled={isGenerating}
+                      aria-label={isRecording ? "Detener dictado" : "Dictar por voz"}
+                      title={isRecording ? "Detener dictado" : "Dictar por voz"}
+                      className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 disabled:opacity-30 ${
+                        isRecording
+                          ? "bg-red-500 text-white animate-pulse hover:bg-red-600"
+                          : "bg-white/10 text-white/70 hover:bg-white/20 hover:text-white"
+                      }`}
+                    >
+                      <Mic size={18} strokeWidth={1.5} />
+                    </button>
+                  )}
                   <button
                     onClick={() => handleSubmit()}
                     disabled={!prompt.trim() || isGenerating}
