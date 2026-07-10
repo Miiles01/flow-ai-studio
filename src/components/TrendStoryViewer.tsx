@@ -1,12 +1,22 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { X } from "lucide-react";
 import { motion } from "framer-motion";
 import type { Trend } from "@/hooks/useTrends";
-import { ReactFlow } from "@xyflow/react";
+import { ReactFlow, type Node, type Edge, type ReactFlowInstance } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { MOCK_FLOWS } from "@/data/mockTrends";
+import TrendFlowNode from "@/components/TrendFlowNode";
+import { TREND_FLOWS } from "@/data/trendFlows";
 import { useTheme } from "@/contexts/ThemeContext";
+
+const trendNodeTypes = { trendNode: TrendFlowNode };
+
+// Handles según el lado en que se despliegan las tarjetas de detalle
+const DETAIL_HANDLES: Record<string, { source: string; target: string }> = {
+  left: { source: "l-s", target: "r-t" },
+  right: { source: "r-s", target: "l-t" },
+  bottom: { source: "b", target: "t" },
+};
 
 type Props = {
   trends: Trend[];
@@ -96,7 +106,106 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
     }
   };
 
-  const activeFlow = targetNetwork ? MOCK_FLOWS[targetNetwork as string] : null;
+  const activeFlow = targetNetwork ? TREND_FLOWS[targetNetwork as string] : null;
+
+  // ── Expansión de nodos (las "raíces" del diagrama) ──
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
+  const rfInstanceRef = useRef<ReactFlowInstance | null>(null);
+
+  // Al cambiar de red, el diagrama vuelve a su vista genérica
+  useEffect(() => {
+    setExpandedIds(new Set());
+  }, [targetNetwork]);
+
+  const toggleNodeDetails = useCallback(
+    (nodeId: string) => {
+      setExpandedIds((prev) => {
+        const next = new Set(prev);
+        const isExpanding = !next.has(nodeId);
+        if (isExpanding) next.add(nodeId);
+        else next.delete(nodeId);
+
+        // Al expandir, encuadra el nodo + sus detalles
+        if (isExpanding && activeFlow) {
+          const parent = activeFlow.nodes.find((n) => n.id === nodeId);
+          const detailIds = (parent?.data.details ?? []).map((det) => `${nodeId}-det-${det.id}`);
+          setTimeout(() => {
+            rfInstanceRef.current?.fitView({
+              nodes: [{ id: nodeId }, ...detailIds.map((id) => ({ id }))],
+              padding: 0.35,
+              duration: 500,
+            });
+          }, 80);
+        }
+        return next;
+      });
+    },
+    [activeFlow]
+  );
+
+  const { visibleNodes, visibleEdges } = useMemo(() => {
+    if (!activeFlow) return { visibleNodes: [] as Node[], visibleEdges: [] as Edge[] };
+
+    const nodes: Node[] = activeFlow.nodes.map((n) => ({
+      id: n.id,
+      type: "trendNode",
+      position: n.position,
+      draggable: false,
+      data: {
+        label: n.data.label,
+        sublabel: n.data.sublabel,
+        tag: n.data.tag,
+        kind: n.data.kind,
+        hasDetails: (n.data.details?.length ?? 0) > 0,
+        expanded: expandedIds.has(n.id),
+        onToggle: toggleNodeDetails,
+      },
+    }));
+
+    const edges: Edge[] = activeFlow.edges.map((e) => ({
+      id: e.id,
+      source: e.source,
+      target: e.target,
+      sourceHandle: e.sourceHandle ?? "b",
+      targetHandle: e.targetHandle ?? "t",
+      type: "smoothstep",
+      animated: false,
+      label: e.label,
+      className: e.dashed ? "trend-edge-dashed" : "trend-edge",
+      labelStyle: { fill: isDark ? "#E2E8F0" : "#4B4F63", fontWeight: 500, fontSize: 11 },
+      labelBgStyle: { fill: isDark ? "#0f0f11" : "#ffffff", fillOpacity: 0.9 },
+      labelBgPadding: [6, 4] as [number, number],
+      labelBgBorderRadius: 6,
+    }));
+
+    // Nodos y aristas de detalle (solo de nodos expandidos)
+    for (const n of activeFlow.nodes) {
+      if (!n.data.details || !expandedIds.has(n.id)) continue;
+      for (const det of n.data.details) {
+        const detId = `${n.id}-det-${det.id}`;
+        nodes.push({
+          id: detId,
+          type: "trendNode",
+          position: { x: n.position.x + det.dx, y: n.position.y + det.dy },
+          draggable: false,
+          data: { label: det.label, sublabel: det.sublabel, tag: det.tag, kind: "detail" },
+        });
+        const handles = DETAIL_HANDLES[det.side ?? "bottom"];
+        edges.push({
+          id: `e-${detId}`,
+          source: n.id,
+          target: detId,
+          sourceHandle: handles.source,
+          targetHandle: handles.target,
+          type: "smoothstep",
+          animated: false,
+          className: "trend-edge-detail",
+        });
+      }
+    }
+
+    return { visibleNodes: nodes, visibleEdges: edges };
+  }, [activeFlow, expandedIds, toggleNodeDetails, isDark]);
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
@@ -124,60 +233,55 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
           Cerrar
         </button>
 
-        {/* Read-only ReactFlow Diagram (Full Width Background) */}
-        <div className="absolute inset-0 z-10">
+        {/* Read-only ReactFlow Diagram — deja libre la franja del carrusel en desktop */}
+        <div className="absolute inset-y-0 right-0 left-0 md:left-[33%] z-10">
           {activeFlow ? (
             <div className="w-full h-full relative">
-              <div className="absolute top-8 left-[38%] z-20 pointer-events-none">
-                <h2 className="text-2xl font-normal text-gray-900 dark:text-white">Arquitectura Algorítmica</h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 capitalize">{filteredTrends[activeIndex]?.network || targetNetwork || ""}</p>
+              <div className="absolute top-8 left-8 z-20 pointer-events-none">
+                <h2 className="text-2xl font-normal text-gray-900 dark:text-white">{activeFlow.title}</h2>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                  Así decide el algoritmo — toca el ojo para ver el detalle
+                </p>
               </div>
-              <ReactFlow 
+              <ReactFlow
                 colorMode={isDark ? "dark" : "light"}
-                nodes={(activeFlow.nodes || []).map((n: any) => ({
-                  ...n,
-                  draggable: false,
-                  selectable: true,
-                  style: {
-                    background: n.data?.expandable ? (isDark ? '#064e3b' : '#f0fdf4') : (isDark ? '#1a1a1a' : '#ffffff'),
-                    border: isDark ? '1px solid #333' : '1px solid #e2e8f0',
-                    borderRadius: '12px',
-                    padding: '12px 18px',
-                    fontSize: '13px',
-                    color: isDark ? '#f8fafc' : '#0f172a',
-                    boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)'
-                  }
-                }))} 
-                edges={(activeFlow.edges || []).map((e: any) => ({
-                  ...e,
-                  type: 'smoothstep',
-                  animated: e.animated !== false,
-                  style: { stroke: isDark ? '#475569' : '#94a3b8', strokeWidth: 2 },
-                  labelStyle: { fill: isDark ? '#e2e8f0' : '#475569', fontWeight: 600, fontSize: 12 },
-                  labelBgStyle: { fill: isDark ? '#0f0f11' : '#ffffff', fillOpacity: 0.9, color: isDark ? '#0f0f11' : '#ffffff' },
-                  labelBgPadding: [6, 4],
-                  labelBgBorderRadius: 6
-                }))} 
-                fitView 
-                fitViewOptions={{ padding: 0.2 }}
+                nodes={visibleNodes}
+                edges={visibleEdges}
+                nodeTypes={trendNodeTypes}
+                onInit={(instance) => { rfInstanceRef.current = instance; }}
+                fitView
+                fitViewOptions={{ padding: 0.15 }}
                 nodesDraggable={false}
                 nodesConnectable={false}
-                elementsSelectable={true}
-                minZoom={0.2}
+                elementsSelectable={false}
+                minZoom={0.15}
                 maxZoom={2}
                 proOptions={{ hideAttribution: true }}
+                className="trends-flow"
               >
                 <style>{`
-                  .react-flow__handle {
-                    display: none !important;
+                  .trends-flow .react-flow__handle { opacity: 0 !important; pointer-events: none !important; }
+                  .trends-flow .react-flow__edge.trend-edge path.react-flow__edge-path {
+                    stroke: ${isDark ? "#3F4553" : "#C9CEDC"} !important;
+                    stroke-width: 1.5 !important;
+                  }
+                  .trends-flow .react-flow__edge.trend-edge-dashed path.react-flow__edge-path {
+                    stroke: ${isDark ? "#5B4448" : "#F3C6C9"} !important;
+                    stroke-width: 1.5 !important;
+                    stroke-dasharray: 5 5 !important;
+                  }
+                  .trends-flow .react-flow__edge.trend-edge-detail path.react-flow__edge-path {
+                    stroke: ${isDark ? "#3D477F" : "#B9C3F9"} !important;
+                    stroke-width: 1.5 !important;
+                    stroke-dasharray: 4 4 !important;
                   }
                 `}</style>
               </ReactFlow>
             </div>
           ) : (
             <div className="w-full h-full flex items-center justify-center">
-              <div className="bg-white/60 backdrop-blur-md px-6 py-4 rounded-2xl border border-black/5 shadow-sm">
-                <p className="text-gray-500 font-light text-sm">El diagrama de arquitectura no está disponible para esta red</p>
+              <div className="bg-white/60 dark:bg-white/5 backdrop-blur-md px-6 py-4 rounded-2xl border border-black/5 dark:border-white/10 shadow-sm">
+                <p className="text-gray-500 dark:text-gray-400 font-light text-sm">El diagrama de arquitectura no está disponible para esta red</p>
               </div>
             </div>
           )}
