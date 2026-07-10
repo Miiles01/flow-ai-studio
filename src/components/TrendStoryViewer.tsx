@@ -99,7 +99,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent
-        className="p-0 overflow-hidden border-none max-w-[95vw] w-[95vw] h-[95vh] rounded-[32px] shadow-2xl relative bg-white [&>button.absolute.right-4]:hidden"
+        className="p-0 overflow-hidden border-none max-w-[95vw] w-[95vw] h-[95vh] rounded-[32px] shadow-2xl bg-white [&>button.absolute.right-4]:hidden"
       >
         {/* Full Dotted pattern Background across the ENTIRE modal */}
         <div 
