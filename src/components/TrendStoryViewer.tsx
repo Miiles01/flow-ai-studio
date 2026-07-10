@@ -189,10 +189,10 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
                   src={getEmbedUrl(trend.media_url, trend.network, activeIndex === i)} 
                   className="absolute border-0"
                   style={{
-                    top: trend.network === 'instagram' ? '-12%' : '0',
-                    left: trend.network === 'instagram' ? '-5%' : '0',
-                    width: trend.network === 'instagram' ? '110%' : '100%',
-                    height: trend.network === 'instagram' ? '124%' : '100%',
+                    top: '0',
+                    left: '0',
+                    width: '100%',
+                    height: trend.network === 'instagram' ? 'calc(100% + 160px)' : '100%',
                     pointerEvents: 'auto'
                   }}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
