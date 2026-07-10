@@ -23,7 +23,7 @@ function getEmbedUrl(url: string | null, network: string | null, isActive: boole
       if (v) return `https://www.youtube.com/embed/${v}?autoplay=${autoPlayParam}&mute=1&controls=0&modestbranding=1`;
     }
     if (network === "instagram") {
-      return url.replace(/\/$/, "") + "/embed/?hidecaption=true" + (isActive ? "&autoplay=1" : "");
+      return url.replace(/\/$/, "") + "/embed/?hidecaption=true";
     }
     if (network === "tiktok") {
       const match = url.match(/\/video\/(\d+)/);
@@ -189,10 +189,10 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
                   src={getEmbedUrl(trend.media_url, trend.network, activeIndex === i)} 
                   className="absolute border-0"
                   style={{
-                    top: '0',
+                    top: trend.network === 'instagram' ? '-64px' : '0',
                     left: '0',
                     width: '100%',
-                    height: trend.network === 'instagram' ? 'calc(100% + 160px)' : '100%',
+                    height: trend.network === 'instagram' ? 'calc(100% + 230px)' : '100%',
                     pointerEvents: 'auto'
                   }}
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
