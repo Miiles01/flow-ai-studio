@@ -1,0 +1,23 @@
+{
+  "trends": [
+    {
+      "network": "youtube",
+      "media_url": "https://www.youtube.com/watch?v=unoSIeuPivw",
+      "title": "La Marca Personal Está Apunto de Cambiar para Siempre",
+      "summary": "Descubre los cambios estructurales que están transformando la creación de marca personal y por qué el contenido de valor tradicional ha muerto frente a la era de la IA.",
+      "bullets": [
+        "La información ya no tiene valor por sí sola; tu experiencia y aprendizajes te diferencian de la IA.",
+        "Mide tu éxito por la audiencia activa real (User Watch Time), no por la cantidad de seguidores.",
+        "Ten clara tu oferta antes de empezar a crear contenido para no atraer a la audiencia equivocada.",
+        "Crea posicionamiento por asociación: que el mercado relacione tu rostro con un problema o solución.",
+        "Diseña tu marca como un embudo de 3 niveles para cualificar a tu seguidor ideal hasta convertirlo en cliente."
+      ],
+      "links": [
+        {
+          "title": "Ver video completo en YouTube",
+          "url": "https://www.youtube.com/watch?v=unoSIeuPivw"
+        }
+      ]
+    }
+  ]
+}

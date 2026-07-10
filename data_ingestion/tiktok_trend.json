@@ -1,0 +1,21 @@
+{
+  "trends": [
+    {
+      "network": "tiktok",
+      "media_url": "https://vt.tiktok.com/ZSCQXU66m/",
+      "title": "Arquitectura Algorítmica FYP y SEO",
+      "summary": "Mecánica del FYP de TikTok, Test de 200 vistas y optimización SEO para escalar cuentas en 2026.",
+      "bullets": [
+        "El 70% del tráfico es FYP. El filtro más agresivo es la retención en los primeros 3 segundos.",
+        "Test de las 200 vistas: cada video debe superar este lote inicial con alto completion rate para no estancarse.",
+        "TikTok SEO es vital: el algoritmo etiqueta audio, OCR de texto y subtítulos. Los hashtags ya no son mágicos.",
+        "Estrategia de crecimiento: Nichar en 3-4 pilares, modelar videos ganadores de la competencia y publicar consistentemente.",
+        "El conteo de seguidores es irrelevante; TikTok distribuye el contenido basándose en el historial de consumo del usuario."
+      ],
+      "links": [
+        { "title": "Modelado de contenido", "url": "https://vt.tiktok.com/ZSCQXACjx/" },
+        { "title": "Algoritmo y SEO", "url": "https://vt.tiktok.com/ZSCQXga4x/" }
+      ]
+    }
+  ]
+}
