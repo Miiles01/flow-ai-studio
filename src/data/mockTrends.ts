@@ -236,671 +236,498 @@ export const MOCK_TRENDS: Trend[] = [
 ] as unknown as Trend[];
 
 export const MOCK_FLOWS: Record<string, any> = {
-  "youtube": {
-    "network": "youtube",
-    "title": "Estrategia: Nueva Era de la Marca Personal",
-    "nodes": [
-      {
-        "id": "1",
-        "type": "custom",
-        "position": {
-          "x": 100,
-          "y": 100
-        },
-        "data": {
-          "label": "1. Definir la Oferta Primero"
-        }
-      },
-      {
-        "id": "2",
-        "type": "custom",
-        "position": {
-          "x": 100,
-          "y": 250
-        },
-        "data": {
-          "label": "2. Definir el Seguidor Ideal"
-        }
-      },
-      {
-        "id": "3",
-        "type": "custom",
-        "position": {
-          "x": 400,
-          "y": 100
-        },
-        "data": {
-          "label": "3. Creaci\u00f3n de Contenido (Autenticidad > Info)"
-        }
-      },
-      {
-        "id": "4",
-        "type": "custom",
-        "position": {
-          "x": 400,
-          "y": 250
-        },
-        "data": {
-          "label": "4. Posicionamiento por Asociaci\u00f3n"
-        }
-      },
-      {
-        "id": "5",
-        "type": "custom",
-        "position": {
-          "x": 700,
-          "y": 100
-        },
-        "data": {
-          "label": "5. Embudo de 3 Niveles"
-        }
-      },
-      {
-        "id": "6",
-        "type": "custom",
-        "position": {
-          "x": 700,
-          "y": 250
-        },
-        "data": {
-          "label": "6. Optimizar el User Watch Time"
-        }
-      }
-    ],
-    "edges": [
-      {
-        "id": "e1-2",
-        "source": "1",
-        "target": "2",
-        "animated": true
-      },
-      {
-        "id": "e2-3",
-        "source": "2",
-        "target": "3",
-        "animated": true
-      },
-      {
-        "id": "e3-4",
-        "source": "3",
-        "target": "4"
-      },
-      {
-        "id": "e4-5",
-        "source": "4",
-        "target": "5",
-        "animated": true
-      },
-      {
-        "id": "e5-6",
-        "source": "5",
-        "target": "6",
-        "animated": true
-      }
-    ]
-  },
   "instagram": {
     "network": "instagram",
-    "title": "Ecosistema Instagram 2026",
+    "title": "Trial Reels (Instagram)",
     "nodes": [
       {
-        "id": "1",
+        "id": "A",
         "type": "custom",
         "position": {
-          "x": 100,
+          "x": 400,
           "y": 50
         },
         "data": {
-          "label": "1. Algoritmo por Intereses"
+          "label": "Publicaci\u00f3n de Trial Reel"
         }
       },
       {
-        "id": "2",
+        "id": "B",
         "type": "custom",
         "position": {
-          "x": 100,
+          "x": 400,
           "y": 150
         },
         "data": {
-          "label": "2. Multihooks (Visual, Verbal, Auditivo)"
+          "label": "Fase 1: Audici\u00f3n\n(expuesto a NO seguidores afines)"
         }
       },
       {
-        "id": "3",
+        "id": "C",
         "type": "custom",
         "position": {
-          "x": 100,
+          "x": 400,
           "y": 250
         },
         "data": {
-          "label": "3. Integraci\u00f3n Estrat\u00e9gica de IA"
+          "label": "Fase 2: Ventana cr\u00edtica de 90 minutos"
         }
       },
       {
-        "id": "4",
+        "id": "D",
         "type": "custom",
         "position": {
           "x": 400,
-          "y": 150
+          "y": 350
         },
         "data": {
-          "label": "4. Gamificaci\u00f3n y Din\u00e1micas"
-        }
-      },
-      {
-        "id": "5",
-        "type": "custom",
-        "position": {
-          "x": 700,
-          "y": 50
-        },
-        "data": {
-          "label": "Reels (50% - Adquisici\u00f3n)"
-        }
-      },
-      {
-        "id": "6",
-        "type": "custom",
-        "position": {
-          "x": 700,
-          "y": 150
-        },
-        "data": {
-          "label": "Carruseles (Interacci\u00f3n)"
-        }
-      },
-      {
-        "id": "7",
-        "type": "custom",
-        "position": {
-          "x": 700,
-          "y": 250
-        },
-        "data": {
-          "label": "Historias (Conexi\u00f3n/Ventas)"
-        }
-      }
-    ],
-    "edges": [
-      {
-        "id": "e1-2",
-        "source": "1",
-        "target": "2",
-        "animated": true
-      },
-      {
-        "id": "e2-3",
-        "source": "2",
-        "target": "3",
-        "animated": true
-      },
-      {
-        "id": "e3-4",
-        "source": "3",
-        "target": "4"
-      },
-      {
-        "id": "e4-5",
-        "source": "4",
-        "target": "5",
-        "animated": true
-      },
-      {
-        "id": "e4-6",
-        "source": "4",
-        "target": "6",
-        "animated": true
-      },
-      {
-        "id": "e4-7",
-        "source": "4",
-        "target": "7",
-        "animated": true
-      }
-    ]
-  },
-  "facebook": {
-    "network": "facebook",
-    "title": "Arquitectura Algor\u00edtmica (EdgeRank)",
-    "nodes": [
-      {
-        "id": "1",
-        "type": "custom",
-        "position": {
-          "x": 400,
-          "y": 50
-        },
-        "data": {
-          "label": "EdgeRank (Facebook 2026)",
-          "expandable": true,
-          "icon": "eye"
-        }
-      },
-      {
-        "id": "2",
-        "type": "custom",
-        "position": {
-          "x": 100,
-          "y": 200
-        },
-        "data": {
-          "label": "1. Ensamblaje de Inventario",
+          "label": "\u00bfRetiene 60%+ en primeros 3s?",
           "expandable": true
         }
       },
       {
-        "id": "2a",
+        "id": "E",
         "type": "custom",
         "position": {
-          "x": 50,
-          "y": 300
-        },
-        "data": {
-          "label": "P\u00e1ginas, Grupos y Amigos"
-        }
-      },
-      {
-        "id": "2b",
-        "type": "custom",
-        "position": {
-          "x": 200,
-          "y": 300
-        },
-        "data": {
-          "label": "Ads Segmentados"
-        }
-      },
-      {
-        "id": "3",
-        "type": "custom",
-        "position": {
-          "x": 400,
-          "y": 200
-        },
-        "data": {
-          "label": "2. Se\u00f1ales (Activas y Pasivas)",
-          "expandable": true
-        }
-      },
-      {
-        "id": "3a",
-        "type": "custom",
-        "position": {
-          "x": 350,
-          "y": 300
-        },
-        "data": {
-          "label": "Pasivas: Tiempo de vista"
-        }
-      },
-      {
-        "id": "3b",
-        "type": "custom",
-        "position": {
-          "x": 500,
-          "y": 300
-        },
-        "data": {
-          "label": "Activas: Comentarios profundos"
-        }
-      },
-      {
-        "id": "4",
-        "type": "custom",
-        "position": {
-          "x": 700,
-          "y": 200
-        },
-        "data": {
-          "label": "3. Relevancy Score (Modelo Bayesiano)",
-          "expandable": true
-        }
-      },
-      {
-        "id": "4a",
-        "type": "custom",
-        "position": {
-          "x": 650,
-          "y": 300
-        },
-        "data": {
-          "label": "Filtro Engagement Bait"
-        }
-      },
-      {
-        "id": "4b",
-        "type": "custom",
-        "position": {
-          "x": 800,
-          "y": 300
-        },
-        "data": {
-          "label": "Orden descendente en Feed"
-        }
-      },
-      {
-        "id": "5",
-        "type": "custom",
-        "position": {
-          "x": 400,
+          "x": 150,
           "y": 450
         },
         "data": {
-          "label": "T\u00e1cticas de Crecimiento",
-          "expandable": true,
-          "icon": "eye"
+          "label": "Estrangulamiento:\nno sale del grupo de prueba"
         }
       },
       {
-        "id": "5a",
+        "id": "F",
         "type": "custom",
         "position": {
-          "x": 250,
-          "y": 550
+          "x": 650,
+          "y": 450
         },
         "data": {
-          "label": "Reels (Doble Retenci\u00f3n 6-10s)"
+          "label": "\u00bfGenera DMs / shares (dark social)?",
+          "expandable": true
         }
       },
       {
-        "id": "5b",
+        "id": "G",
         "type": "custom",
         "position": {
-          "x": 550,
+          "x": 650,
           "y": 550
         },
         "data": {
-          "label": "T\u00e1ctica Hidden Gem (Grupos)"
+          "label": "Graduaci\u00f3n:\nExplore + scroll Reels + seguidores"
         }
       }
     ],
     "edges": [
       {
-        "id": "e1-2",
-        "source": "1",
-        "target": "2",
-        "animated": true
+        "id": "eA-B",
+        "source": "A",
+        "target": "B"
       },
       {
-        "id": "e1-3",
-        "source": "1",
-        "target": "3",
-        "animated": true
+        "id": "eB-C",
+        "source": "B",
+        "target": "C"
       },
       {
-        "id": "e1-4",
-        "source": "1",
-        "target": "4",
-        "animated": true
+        "id": "eC-D",
+        "source": "C",
+        "target": "D"
       },
       {
-        "id": "e2-2a",
-        "source": "2",
-        "target": "2a"
+        "id": "eD-E",
+        "source": "D",
+        "target": "E",
+        "label": "No",
+        "animated": false
       },
       {
-        "id": "e2-2b",
-        "source": "2",
-        "target": "2b"
+        "id": "eD-F",
+        "source": "D",
+        "target": "F",
+        "label": "S\u00ed"
       },
       {
-        "id": "e3-3a",
-        "source": "3",
-        "target": "3a"
+        "id": "eF-E",
+        "source": "F",
+        "target": "E",
+        "label": "D\u00e9bil",
+        "animated": false
       },
       {
-        "id": "e3-3b",
-        "source": "3",
-        "target": "3b"
-      },
-      {
-        "id": "e4-4a",
-        "source": "4",
-        "target": "4a"
-      },
-      {
-        "id": "e4-4b",
-        "source": "4",
-        "target": "4b"
-      },
-      {
-        "id": "e1-5",
-        "source": "1",
-        "target": "5",
-        "animated": true
-      },
-      {
-        "id": "e5-5a",
-        "source": "5",
-        "target": "5a"
-      },
-      {
-        "id": "e5-5b",
-        "source": "5",
-        "target": "5b"
+        "id": "eF-G",
+        "source": "F",
+        "target": "G",
+        "label": "Fuerte"
       }
     ]
   },
   "tiktok": {
     "network": "tiktok",
-    "title": "Arquitectura Algor\u00edtmica (FYP)",
+    "title": "Algoritmo TikTok (FYP)",
     "nodes": [
       {
-        "id": "1",
+        "id": "A",
         "type": "custom",
         "position": {
           "x": 400,
           "y": 50
         },
         "data": {
-          "label": "Algoritmo TikTok (FYP)",
-          "expandable": true,
-          "icon": "eye"
+          "label": "Publicaci\u00f3n"
         }
       },
       {
-        "id": "2",
-        "type": "custom",
-        "position": {
-          "x": 100,
-          "y": 200
-        },
-        "data": {
-          "label": "1. Ingesta y Etiquetado",
-          "expandable": true
-        }
-      },
-      {
-        "id": "2a",
-        "type": "custom",
-        "position": {
-          "x": 50,
-          "y": 300
-        },
-        "data": {
-          "label": "OCR (Texto en pantalla)"
-        }
-      },
-      {
-        "id": "2b",
-        "type": "custom",
-        "position": {
-          "x": 200,
-          "y": 300
-        },
-        "data": {
-          "label": "Procesamiento de Audio (NLP)"
-        }
-      },
-      {
-        "id": "3",
+        "id": "B",
         "type": "custom",
         "position": {
           "x": 400,
-          "y": 200
+          "y": 150
         },
         "data": {
-          "label": "2. C\u00edrculo Primario",
+          "label": "Fase 1: Ingesta y etiquetado\n(audio, OCR, hashtags, geo)"
+        }
+      },
+      {
+        "id": "C",
+        "type": "custom",
+        "position": {
+          "x": 400,
+          "y": 250
+        },
+        "data": {
+          "label": "Fase 2: C\u00edrculo primario\n(audiencia semilla ~1.000)"
+        }
+      },
+      {
+        "id": "D",
+        "type": "custom",
+        "position": {
+          "x": 400,
+          "y": 350
+        },
+        "data": {
+          "label": "Retenci\u00f3n 3s: \u00bfscroll inmediato?",
           "expandable": true
         }
       },
       {
-        "id": "3a",
+        "id": "E",
         "type": "custom",
         "position": {
-          "x": 350,
-          "y": 300
+          "x": 150,
+          "y": 450
         },
         "data": {
-          "label": "Test 200 Vistas"
+          "label": "Video muere: RI bajo"
         }
       },
       {
-        "id": "3b",
-        "type": "custom",
-        "position": {
-          "x": 500,
-          "y": 300
-        },
-        "data": {
-          "label": "Superposici\u00f3n Sem\u00e1ntica"
-        }
-      },
-      {
-        "id": "4",
-        "type": "custom",
-        "position": {
-          "x": 700,
-          "y": 200
-        },
-        "data": {
-          "label": "3. Matriz de Se\u00f1ales",
-          "expandable": true
-        }
-      },
-      {
-        "id": "4a",
+        "id": "F",
         "type": "custom",
         "position": {
           "x": 650,
-          "y": 300
+          "y": 450
         },
         "data": {
-          "label": "Filtro Severo: Retenci\u00f3n a los 3s"
+          "label": "Completion rate + saves/shares"
         }
       },
       {
-        "id": "4b",
+        "id": "G",
         "type": "custom",
         "position": {
-          "x": 800,
-          "y": 300
+          "x": 650,
+          "y": 550
         },
         "data": {
-          "label": "% de Visionado y Shares"
+          "label": "\u00bfRI > RI medio?",
+          "expandable": true
         }
       },
       {
-        "id": "5",
+        "id": "H",
+        "type": "custom",
+        "position": {
+          "x": 650,
+          "y": 650
+        },
+        "data": {
+          "label": "Escala de c\u00edrculo\n(10K \u2192 100K \u2192 500K...)"
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "eA-B",
+        "source": "A",
+        "target": "B"
+      },
+      {
+        "id": "eB-C",
+        "source": "B",
+        "target": "C"
+      },
+      {
+        "id": "eC-D",
+        "source": "C",
+        "target": "D"
+      },
+      {
+        "id": "eD-E",
+        "source": "D",
+        "target": "E",
+        "label": "Alto scroll",
+        "animated": false
+      },
+      {
+        "id": "eD-F",
+        "source": "D",
+        "target": "F",
+        "label": "Retiene"
+      },
+      {
+        "id": "eF-G",
+        "source": "F",
+        "target": "G"
+      },
+      {
+        "id": "eG-E",
+        "source": "G",
+        "target": "E",
+        "label": "No",
+        "animated": false
+      },
+      {
+        "id": "eG-H",
+        "source": "G",
+        "target": "H",
+        "label": "S\u00ed"
+      },
+      {
+        "id": "eH-G",
+        "source": "H",
+        "target": "G",
+        "label": "Bucle",
+        "animated": true,
+        "style": {
+          "strokeDasharray": "5,5"
+        }
+      }
+    ]
+  },
+  "facebook": {
+    "network": "facebook",
+    "title": "Facebook EdgeRank",
+    "nodes": [
+      {
+        "id": "A",
+        "type": "custom",
+        "position": {
+          "x": 400,
+          "y": 50
+        },
+        "data": {
+          "label": "Fase 1: Ensamblaje de inventario\n(amigos, p\u00e1ginas, ads)"
+        }
+      },
+      {
+        "id": "B",
+        "type": "custom",
+        "position": {
+          "x": 400,
+          "y": 150
+        },
+        "data": {
+          "label": "Fase 2: Se\u00f1ales pasivas + activas\n(tiempo, reacciones, shares)"
+        }
+      },
+      {
+        "id": "C",
+        "type": "custom",
+        "position": {
+          "x": 400,
+          "y": 250
+        },
+        "data": {
+          "label": "Fase 3: Modelado predictivo\n(probabilidad de interacci\u00f3n)"
+        }
+      },
+      {
+        "id": "D",
+        "type": "custom",
+        "position": {
+          "x": 400,
+          "y": 350
+        },
+        "data": {
+          "label": "Fase 4: Relevancy Score"
+        }
+      },
+      {
+        "id": "E",
         "type": "custom",
         "position": {
           "x": 400,
           "y": 450
         },
         "data": {
-          "label": "4. Estrategia de TikTok SEO",
-          "expandable": true,
-          "icon": "eye"
-        }
-      },
-      {
-        "id": "5a",
-        "type": "custom",
-        "position": {
-          "x": 250,
-          "y": 550
-        },
-        "data": {
-          "label": "Palabras clave naturales"
-        }
-      },
-      {
-        "id": "5b",
-        "type": "custom",
-        "position": {
-          "x": 550,
-          "y": 550
-        },
-        "data": {
-          "label": "Nichar (3-4 pilares base)"
+          "label": "Feed ordenado (mayor a menor score)"
         }
       }
     ],
     "edges": [
       {
-        "id": "e1-2",
-        "source": "1",
-        "target": "2",
-        "animated": true
+        "id": "eA-B",
+        "source": "A",
+        "target": "B"
       },
       {
-        "id": "e1-3",
-        "source": "1",
-        "target": "3",
-        "animated": true
+        "id": "eB-C",
+        "source": "B",
+        "target": "C"
       },
       {
-        "id": "e1-4",
-        "source": "1",
-        "target": "4",
-        "animated": true
+        "id": "eC-D",
+        "source": "C",
+        "target": "D"
       },
       {
-        "id": "e2-2a",
-        "source": "2",
-        "target": "2a"
+        "id": "eD-E",
+        "source": "D",
+        "target": "E"
+      }
+    ]
+  },
+  "youtube": {
+    "network": "youtube",
+    "title": "YouTube Shorts",
+    "nodes": [
+      {
+        "id": "A",
+        "type": "custom",
+        "position": {
+          "x": 400,
+          "y": 50
+        },
+        "data": {
+          "label": "Publicaci\u00f3n"
+        }
       },
       {
-        "id": "e2-2b",
-        "source": "2",
-        "target": "2b"
+        "id": "B",
+        "type": "custom",
+        "position": {
+          "x": 400,
+          "y": 150
+        },
+        "data": {
+          "label": "Fase 1: Seed audience\n(sin l\u00edmite de tiempo)"
+        }
       },
       {
-        "id": "e3-3a",
-        "source": "3",
-        "target": "3a"
+        "id": "C",
+        "type": "custom",
+        "position": {
+          "x": 400,
+          "y": 250
+        },
+        "data": {
+          "label": "\u00bfVisto o deslizado en 1er fotograma?",
+          "expandable": true
+        }
       },
       {
-        "id": "e3-3b",
-        "source": "3",
-        "target": "3b"
+        "id": "D",
+        "type": "custom",
+        "position": {
+          "x": 150,
+          "y": 350
+        },
+        "data": {
+          "label": "Video frenado"
+        }
       },
       {
-        "id": "e4-4a",
-        "source": "4",
-        "target": "4a"
+        "id": "E",
+        "type": "custom",
+        "position": {
+          "x": 650,
+          "y": 350
+        },
+        "data": {
+          "label": "Fase 3: AVD\n(% duraci\u00f3n consumida ideal 50-60s)"
+        }
       },
       {
-        "id": "e4-4b",
-        "source": "4",
-        "target": "4b"
+        "id": "F",
+        "type": "custom",
+        "position": {
+          "x": 650,
+          "y": 450
+        },
+        "data": {
+          "label": "\u00bfAlta satisfacci\u00f3n por deslizamiento?",
+          "expandable": true
+        }
       },
       {
-        "id": "e1-5",
-        "source": "1",
-        "target": "5",
-        "animated": true
+        "id": "G",
+        "type": "custom",
+        "position": {
+          "x": 650,
+          "y": 550
+        },
+        "data": {
+          "label": "Fase 4: Acervo evergreen\n(resurge en picos de estacionalidad)"
+        }
+      }
+    ],
+    "edges": [
+      {
+        "id": "eA-B",
+        "source": "A",
+        "target": "B"
       },
       {
-        "id": "e5-5a",
-        "source": "5",
-        "target": "5a"
+        "id": "eB-C",
+        "source": "B",
+        "target": "C"
       },
       {
-        "id": "e5-5b",
-        "source": "5",
-        "target": "5b"
+        "id": "eC-D",
+        "source": "C",
+        "target": "D",
+        "label": "\u226570% swipe",
+        "animated": false
+      },
+      {
+        "id": "eC-E",
+        "source": "C",
+        "target": "E",
+        "label": "Retiene"
+      },
+      {
+        "id": "eE-F",
+        "source": "E",
+        "target": "F"
+      },
+      {
+        "id": "eF-D",
+        "source": "F",
+        "target": "D",
+        "label": "No",
+        "animated": false
+      },
+      {
+        "id": "eF-G",
+        "source": "F",
+        "target": "G",
+        "label": "S\u00ed"
       }
     ]
   }
-};
+}
+;

@@ -149,7 +149,11 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
                   ...e,
                   type: 'smoothstep',
                   animated: e.animated !== false,
-                  style: { stroke: '#94a3b8', strokeWidth: 2 }
+                  style: { stroke: '#94a3b8', strokeWidth: 2 },
+                  labelStyle: { fill: '#475569', fontWeight: 600, fontSize: 12 },
+                  labelBgStyle: { fill: '#ffffff', fillOpacity: 0.9, color: '#ffffff' },
+                  labelBgPadding: [6, 4],
+                  labelBgBorderRadius: 6
                 }))} 
                 fitView 
                 fitViewOptions={{ padding: 0.2 }}
