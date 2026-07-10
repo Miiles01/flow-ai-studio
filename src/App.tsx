@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import DashboardLayout from "@/components/DashboardLayout";
 import Landing from "./pages/Landing";
+import LandingDev from "./pages/LandingDev";
 import Afiliados from "./pages/Afiliados";
 import About from "./pages/About";
 import Pricing from "./pages/Pricing";
@@ -106,6 +107,7 @@ const App = () => (
             <ReferralTracker />
             <Routes>
               <Route path="/" element={<Landing />} />
+              <Route path="/home-dev" element={<LandingDev />} />
               <Route path="/acerca-de" element={<About />} />
               <Route path="/afiliados" element={<Afiliados />} />
               <Route path="/precios" element={<Pricing />} />

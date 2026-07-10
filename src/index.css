@@ -149,6 +149,19 @@
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
 }
 
+/* TodoNode scrollbar — solo línea azul delgada */
+.todo-scrollbar::-webkit-scrollbar {
+  width: 3px;
+}
+.todo-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.todo-scrollbar::-webkit-scrollbar-thumb {
+  background: #4059F1;
+  border-radius: 999px;
+}
+.todo-scrollbar { scrollbar-width: thin; scrollbar-color: #4059F1 transparent; }
+
 .react-flow__controls-button {
   background: transparent !important;
   border: none !important;

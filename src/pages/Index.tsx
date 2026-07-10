@@ -17,7 +17,7 @@ import {
   type Edge,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { ArrowLeft, Loader2, Check, Cloud, CloudOff, Settings2, EyeOff, Eye, Trash2, Undo2, Redo2, Palette, Square, Type, Baseline, Sparkles, PanelRight, ListChecks, Plus, Share2, Sun, Moon, EyeIcon, Copy, Download } from "lucide-react";
+import { ArrowLeft, Loader2, Check, Cloud, CloudOff, Settings2, EyeOff, Eye, Trash2, Undo2, Redo2, Palette, Square, Type, Baseline, Sparkles, PanelRight, ListChecks, Plus, Share2, Sun, Moon, EyeIcon, Copy, Download, ArrowUp, ArrowDown } from "lucide-react";
 import { buildTasksInstructions, downloadTextFile, type TodoListLike } from "@/lib/todoInstructions";
 import ShareDialog from "@/components/ShareDialog";
 import PresenceStack from "@/components/PresenceStack";
@@ -309,6 +309,7 @@ const IndexContent = () => {
   const isDraggingPanel = useRef(false);
   const [panelCardPicker, setPanelCardPicker] = useState<{ nodeId: string; type: "bg" | "text" } | null>(null);
   const [panelCardHover, setPanelCardHover] = useState<string | null>(null);
+  const [activeCardId, setActiveCardId] = useState<string | null>(null);
   const [copiedCardId, setCopiedCardId] = useState<string | null>(null);
   const [copiedAll, setCopiedAll] = useState(false);
   const [downloadedAll, setDownloadedAll] = useState(false);
@@ -2575,6 +2576,31 @@ const IndexContent = () => {
                         );
                       };
 
+                      const deleteTask = (taskId: string) => {
+                        setNodes((nds) =>
+                          nds.map((n) => {
+                            if (n.id !== node.id) return n;
+                            return { ...n, data: { ...n.data, tasks: ((n.data as any).tasks ?? []).filter((t: any) => t.id !== taskId) } };
+                          })
+                        );
+                      };
+
+                      const moveTask = (taskId: string, direction: "up" | "down") => {
+                        setNodes((nds) =>
+                          nds.map((n) => {
+                            if (n.id !== node.id) return n;
+                            const t = [...((n.data as any).tasks ?? [])];
+                            const idx = t.findIndex((tk: any) => tk.id === taskId);
+                            if (direction === "up" && idx === 0) return n;
+                            if (direction === "down" && idx === t.length - 1) return n;
+                            const target = direction === "up" ? idx - 1 : idx + 1;
+                            const [moved] = t.splice(idx, 1);
+                            t.splice(target, 0, moved);
+                            return { ...n, data: { ...n.data, tasks: t } };
+                          })
+                        );
+                      };
+
                       // Reacción dinámica en modo oscuro: si tiene fondo blanco, se pone oscuro.
                       const rawBg = d.backgroundColor ?? (isDark ? "#1F2937" : "#FFFFFF");
                       const isWhiteBg = isWhiteColor(rawBg);
@@ -2592,7 +2618,9 @@ const IndexContent = () => {
                       return (
                         <div
                           key={node.id}
-                          className="rounded-2xl border p-5 space-y-3 relative group/card transition-all duration-300 cursor-pointer"
+                          tabIndex={-1}
+                          className="rounded-2xl border p-5 space-y-3 relative group/card transition-all duration-300 cursor-pointer outline-none"
+                          onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setActiveCardId(null); }}
                           style={{
                             backgroundColor: backgroundColor || (isDark ? "#1C1C1E" : "#FAFAFA"),
                             borderColor: isCardDark ? "rgba(255,255,255,0.1)" : "#E5E7EB",
@@ -2657,7 +2685,7 @@ const IndexContent = () => {
                               <p className="text-[12px] font-light py-1" style={{ color: isCardDark ? "#6B7280" : "#9CA3AF" }}>Sin tareas aún.</p>
                             )}
                             {tasks.map((task) => (
-                              <div key={task.id} className="flex items-center gap-3 py-1" onClick={(e) => e.stopPropagation()}>
+                              <div key={task.id} className="group/ptask flex items-center gap-3 py-1" onClick={(e) => e.stopPropagation()}>
                                 <button
                                   onClick={(e) => { e.stopPropagation(); toggleTask(task.id); }}
                                   className="w-5 h-5 rounded-full border-[1.5px] flex items-center justify-center shrink-0 transition-all duration-200"
@@ -2671,6 +2699,7 @@ const IndexContent = () => {
                                 <AutoResizingTextarea
                                   value={task.text}
                                   onChange={(e) => updateTaskText(task.id, e.target.value)}
+                                  onFocus={() => setActiveCardId(node.id)}
                                   onKeyDown={(e) => {
                                     if (e.key === "Enter") {
                                       e.preventDefault();
@@ -2685,23 +2714,48 @@ const IndexContent = () => {
                                     opacity: task.completed ? 0.7 : 1,
                                   }}
                                 />
+                                <div className="flex items-center gap-0.5 shrink-0 opacity-0 pointer-events-none group-hover/ptask:opacity-100 group-hover/ptask:pointer-events-auto transition-opacity duration-100">
+                                  <button
+                                    onClick={(e) => { e.stopPropagation(); moveTask(task.id, "up"); }}
+                                    className="p-1 rounded-md hover:bg-black/10 text-gray-400 hover:text-gray-600 transition-colors"
+                                    title="Subir"
+                                  >
+                                    <ArrowUp size={11} />
+                                  </button>
+                                  <button
+                                    onClick={(e) => { e.stopPropagation(); moveTask(task.id, "down"); }}
+                                    className="p-1 rounded-md hover:bg-black/10 text-gray-400 hover:text-gray-600 transition-colors"
+                                    title="Bajar"
+                                  >
+                                    <ArrowDown size={11} />
+                                  </button>
+                                  <button
+                                    onClick={(e) => { e.stopPropagation(); deleteTask(task.id); }}
+                                    className="p-1 rounded-md hover:bg-red-50 text-gray-400 hover:text-red-600 transition-colors"
+                                    title="Eliminar"
+                                  >
+                                    <Trash2 size={11} />
+                                  </button>
+                                </div>
                               </div>
                             ))}
                           </div>
 
-                          {/* Add task button */}
-                          <button
-                            onClick={(e) => { e.stopPropagation(); addTask(); }}
-                            className="flex items-center gap-2 py-2 px-3 rounded-xl border border-dashed transition-all text-left mt-2 shrink-0 w-full"
-                            style={{
-                              borderColor: isCardDark ? "rgba(255,255,255,0.1)" : "#D1D5DB",
-                              color: isCardDark ? "#9CA3AF" : "#9CA3AF",
-                              backgroundColor: isCardDark ? "rgba(255,255,255,0.02)" : "rgba(0,0,0,0.02)"
-                            }}
-                          >
-                            <Plus size={13} />
-                            <span className="text-[13px]">Nueva Tarea...</span>
-                          </button>
+                          {/* Add task button — solo visible cuando la card está activa */}
+                          {activeCardId === node.id && (
+                            <button
+                              onClick={(e) => { e.stopPropagation(); addTask(); }}
+                              className="flex items-center gap-2 py-2 px-3 rounded-xl border border-dashed transition-all text-left mt-2 shrink-0 w-full"
+                              style={{
+                                borderColor: isCardDark ? "rgba(255,255,255,0.1)" : "#D1D5DB",
+                                color: isCardDark ? "#9CA3AF" : "#9CA3AF",
+                                backgroundColor: isCardDark ? "rgba(255,255,255,0.02)" : "rgba(0,0,0,0.02)"
+                              }}
+                            >
+                              <Plus size={13} />
+                              <span className="text-[13px]">+ Nueva Tarea</span>
+                            </button>
+                          )}
                         </div>
                       );
                     })}
