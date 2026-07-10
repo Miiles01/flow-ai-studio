@@ -39,7 +39,13 @@ export async function uploadAvatar(userId: string, file: File): Promise<string> 
 
   if (error) throw error;
 
-  const { data } = supabase.storage.from("avatars").getPublicUrl(path);
+  // Bucket is private: generate a long-lived signed URL (1 year).
+  const { data, error: signErr } = await supabase.storage
+    .from("avatars")
+    .createSignedUrl(path, 60 * 60 * 24 * 365);
+
+  if (signErr || !data) throw signErr ?? new Error("Failed to sign avatar URL");
+
   // Add cache buster
-  return `${data.publicUrl}?t=${Date.now()}`;
+  return `${data.signedUrl}&t=${Date.now()}`;
 }
