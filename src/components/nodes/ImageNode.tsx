@@ -38,7 +38,10 @@ const ImageNode = ({ id, data, selected }: NodeProps) => {
 
   const handleConfirmUrl = useCallback(() => {
     const trimmed = inputValue.trim();
-    if (!trimmed) return;
+    if (!trimmed) {
+      setShowInput(false);
+      return;
+    }
     setImageUrl(trimmed);
     setIsLoading(true);
     setIsError(false);
@@ -56,11 +59,15 @@ const ImageNode = ({ id, data, selected }: NodeProps) => {
     setNodes((nds) => nds.filter((n) => n.id !== id));
   }, [id, setNodes]);
 
-  const handleOpenInput = useCallback(() => {
-    setInputValue(imageUrl);
-    setShowInput(true);
-    setTimeout(() => inputRef.current?.focus(), 60);
-  }, [imageUrl]);
+  const handleToggleInput = useCallback(() => {
+    if (showInput) {
+      setShowInput(false);
+    } else {
+      setInputValue(imageUrl);
+      setShowInput(true);
+      setTimeout(() => inputRef.current?.focus(), 60);
+    }
+  }, [showInput, imageUrl]);
 
   return (
     <motion.div
@@ -78,22 +85,20 @@ const ImageNode = ({ id, data, selected }: NodeProps) => {
         lineStyle={{ border: "none" }}
       />
 
-      {/* Connection handles — only visible when selected */}
-      {isSingleSelected && (
-        <>
-          <Handle type="target" position={Position.Top}    id="top" className={HANDLE_CLASS} style={{ top: "0%",  left: "50%", transform: "translate(-50%, -50%)" }} />
-          <Handle type="source" position={Position.Top}    id="top" className={HANDLE_CLASS} style={{ top: "0%",  left: "50%", transform: "translate(-50%, -50%)" }} />
-          
-          <Handle type="target" position={Position.Bottom} id="bottom" className={HANDLE_CLASS} style={{ bottom: "0%", left: "50%", transform: "translate(-50%, 50%)" }} />
-          <Handle type="source" position={Position.Bottom} id="bottom" className={HANDLE_CLASS} style={{ bottom: "0%", left: "50%", transform: "translate(-50%, 50%)" }} />
-          
-          <Handle type="target" position={Position.Left}   id="left" className={HANDLE_CLASS} style={{ left: "0%",  top: "50%",  transform: "translate(-50%, -50%)" }} />
-          <Handle type="source" position={Position.Left}   id="left" className={HANDLE_CLASS} style={{ left: "0%",  top: "50%",  transform: "translate(-50%, -50%)" }} />
-          
-          <Handle type="target" position={Position.Right}  id="right" className={HANDLE_CLASS} style={{ right: "0%", top: "50%",  transform: "translate(50%, -50%)" }} />
-          <Handle type="source" position={Position.Right}  id="right" className={HANDLE_CLASS} style={{ right: "0%", top: "50%",  transform: "translate(50%, -50%)" }} />
-        </>
-      )}
+      {/* Connection handles — always in DOM to allow connections, visually hidden when not selected */}
+      <div className={isSingleSelected ? "opacity-100 transition-opacity duration-200" : "opacity-0 pointer-events-none transition-opacity duration-200"}>
+        <Handle type="target" position={Position.Top}    id="top" className={HANDLE_CLASS} style={{ top: "0%",  left: "50%", transform: "translate(-50%, -50%)" }} />
+        <Handle type="source" position={Position.Top}    id="top" className={HANDLE_CLASS} style={{ top: "0%",  left: "50%", transform: "translate(-50%, -50%)" }} />
+        
+        <Handle type="target" position={Position.Bottom} id="bottom" className={HANDLE_CLASS} style={{ bottom: "0%", left: "50%", transform: "translate(-50%, 50%)" }} />
+        <Handle type="source" position={Position.Bottom} id="bottom" className={HANDLE_CLASS} style={{ bottom: "0%", left: "50%", transform: "translate(-50%, 50%)" }} />
+        
+        <Handle type="target" position={Position.Left}   id="left" className={HANDLE_CLASS} style={{ left: "0%",  top: "50%",  transform: "translate(-50%, -50%)" }} />
+        <Handle type="source" position={Position.Left}   id="left" className={HANDLE_CLASS} style={{ left: "0%",  top: "50%",  transform: "translate(-50%, -50%)" }} />
+        
+        <Handle type="target" position={Position.Right}  id="right" className={HANDLE_CLASS} style={{ right: "0%", top: "50%",  transform: "translate(50%, -50%)" }} />
+        <Handle type="source" position={Position.Right}  id="right" className={HANDLE_CLASS} style={{ right: "0%", top: "50%",  transform: "translate(50%, -50%)" }} />
+      </div>
 
       {/* ── Floating Toolbar ── */}
       <AnimatePresence>
@@ -117,7 +122,7 @@ const ImageNode = ({ id, data, selected }: NodeProps) => {
             >
               {/* URL button */}
               <button
-                onClick={handleOpenInput}
+                onClick={handleToggleInput}
                 className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${
                   imageUrl
                     ? isDark ? "hover:bg-white/10 text-zinc-400" : "hover:bg-[#F3F4F6] text-[#6B7280]"
@@ -168,11 +173,11 @@ const ImageNode = ({ id, data, selected }: NodeProps) => {
         {showInput && (
           <motion.div
             key="url-input"
-            initial={{ opacity: 0, y: -4 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -4 }}
+            initial={{ opacity: 0, y: -4, x: "-50%" }}
+            animate={{ opacity: 1, y: 0, x: "-50%" }}
+            exit={{ opacity: 0, y: -4, x: "-50%" }}
             transition={{ duration: 0.12 }}
-            className={`absolute top-[calc(100%+10px)] left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.03)] px-3 py-2.5 border ${isDark ? 'bg-[#1C1C1E] border-white/10' : 'bg-white border-[#F3F4F6]'}`}
+            className={`absolute top-[calc(100%+10px)] left-1/2 z-50 flex items-center gap-2 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.03)] px-3 py-2.5 border ${isDark ? 'bg-[#1C1C1E] border-white/10' : 'bg-white border-[#F3F4F6]'}`}
             style={{ minWidth: 300 }}
             onMouseDown={(e) => e.stopPropagation()}
           >
@@ -219,7 +224,7 @@ const ImageNode = ({ id, data, selected }: NodeProps) => {
                 ? 'bg-white/5 border-white/10 hover:border-white/20 hover:bg-white/10'
                 : 'bg-[#F9FAFB] border-[#E5E7EB] hover:border-[#4059F1]/40 hover:bg-[#EEF2FF]/20'
             }`}
-            onClick={handleOpenInput}
+            onClick={handleToggleInput}
           >
             <div className={`w-10 h-10 rounded-xl shadow-sm flex items-center justify-center ${isDark ? 'bg-white/5' : 'bg-white'}`}>
               <ImageIcon size={18} className="text-[#9CA3AF]" strokeWidth={1.5} />
@@ -260,7 +265,7 @@ const ImageNode = ({ id, data, selected }: NodeProps) => {
                 ? 'bg-red-950/20 border border-red-900/35'
                 : 'bg-[#FEF2F2] border border-[#FECACA]'
             }`}
-            onClick={handleOpenInput}
+            onClick={handleToggleInput}
           >
             <div className={`w-10 h-10 rounded-xl shadow-sm flex items-center justify-center ${isDark ? 'bg-white/5' : 'bg-white'}`}>
               <AlertTriangle size={18} className="text-[#EF4444]" strokeWidth={1.5} />

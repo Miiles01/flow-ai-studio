@@ -1,0 +1,98 @@
+{
+  "network": "tiktok",
+  "title": "Arquitectura Algorítmica (FYP)",
+  "nodes": [
+    {
+      "id": "1",
+      "type": "custom",
+      "position": { "x": 400, "y": 50 },
+      "data": { "label": "Algoritmo TikTok (FYP)", "expandable": true, "icon": "eye" }
+    },
+    {
+      "id": "2",
+      "type": "custom",
+      "position": { "x": 100, "y": 200 },
+      "data": { "label": "1. Ingesta y Etiquetado", "expandable": true }
+    },
+    {
+      "id": "2a",
+      "type": "custom",
+      "position": { "x": 50, "y": 300 },
+      "data": { "label": "OCR (Texto en pantalla)" }
+    },
+    {
+      "id": "2b",
+      "type": "custom",
+      "position": { "x": 200, "y": 300 },
+      "data": { "label": "Procesamiento de Audio (NLP)" }
+    },
+    {
+      "id": "3",
+      "type": "custom",
+      "position": { "x": 400, "y": 200 },
+      "data": { "label": "2. Círculo Primario", "expandable": true }
+    },
+    {
+      "id": "3a",
+      "type": "custom",
+      "position": { "x": 350, "y": 300 },
+      "data": { "label": "Test 200 Vistas" }
+    },
+    {
+      "id": "3b",
+      "type": "custom",
+      "position": { "x": 500, "y": 300 },
+      "data": { "label": "Superposición Semántica" }
+    },
+    {
+      "id": "4",
+      "type": "custom",
+      "position": { "x": 700, "y": 200 },
+      "data": { "label": "3. Matriz de Señales", "expandable": true }
+    },
+    {
+      "id": "4a",
+      "type": "custom",
+      "position": { "x": 650, "y": 300 },
+      "data": { "label": "Filtro Severo: Retención a los 3s" }
+    },
+    {
+      "id": "4b",
+      "type": "custom",
+      "position": { "x": 800, "y": 300 },
+      "data": { "label": "% de Visionado y Shares" }
+    },
+    {
+      "id": "5",
+      "type": "custom",
+      "position": { "x": 400, "y": 450 },
+      "data": { "label": "4. Estrategia de TikTok SEO", "expandable": true, "icon": "eye" }
+    },
+    {
+      "id": "5a",
+      "type": "custom",
+      "position": { "x": 250, "y": 550 },
+      "data": { "label": "Palabras clave naturales" }
+    },
+    {
+      "id": "5b",
+      "type": "custom",
+      "position": { "x": 550, "y": 550 },
+      "data": { "label": "Nichar (3-4 pilares base)" }
+    }
+  ],
+  "edges": [
+    { "id": "e1-2", "source": "1", "target": "2", "animated": true },
+    { "id": "e1-3", "source": "1", "target": "3", "animated": true },
+    { "id": "e1-4", "source": "1", "target": "4", "animated": true },
+    { "id": "e2-2a", "source": "2", "target": "2a" },
+    { "id": "e2-2b", "source": "2", "target": "2b" },
+    { "id": "e3-3a", "source": "3", "target": "3a" },
+    { "id": "e3-3b", "source": "3", "target": "3b" },
+    { "id": "e4-4a", "source": "4", "target": "4a" },
+    { "id": "e4-4b", "source": "4", "target": "4b" },
+    { "id": "e1-5", "source": "1", "target": "5", "animated": true },
+    { "id": "e5-5a", "source": "5", "target": "5a" },
+    { "id": "e5-5b", "source": "5", "target": "5b" }
+  ]
+}

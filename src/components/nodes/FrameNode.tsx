@@ -17,9 +17,9 @@ const RAINBOW_COLORS = [
   { name: "Naranja", value: "#F97316" },
   { name: "Amarillo", value: "#FACC15" },
   { name: "Verde", value: "#22C55E" },
-  { name: "Azul", value: "#3B82F6" },
+  { name: "Azul", value: "#4059F1" },
   { name: "Morado", value: "#A855F7" },
-  { name: "Rosa", value: "#EC4899" },
+  { name: "Rosa", value: "#FCB5B9" },
   { name: "Blanco", value: "#FFFFFF" },
   { name: "Negro", value: "#1F2937" },
 ];

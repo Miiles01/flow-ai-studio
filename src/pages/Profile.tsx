@@ -489,7 +489,7 @@ const Profile = () => {
                   <div className="text-right">
                     <span className="text-2xl font-semibold block">
                       {plan === "pro"
-                        ? (subscription?.price_id === "pro_yearly" ? "$1,800" : "$179")
+                        ? (subscription?.price_id === "pro_yearly" ? "$3,712" : "$386")
                         : plan === "business" || plan === "negocios" ? "Custom" : "$0"}
                     </span>
                     <span className="text-[10px] font-light text-muted-foreground block">

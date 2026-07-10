@@ -40,9 +40,213 @@ const About = () => {
       });
     };
 
+    const runMwgEffect = () => {
+      let mm = gsap.matchMedia();
+      mm.add("(min-width: 768px)", () => {
+        const root = document.querySelector('.mwg_effect098');
+        if (!root) return;
+        const pinHeight = root.querySelector('.pin-height');
+        const container = root.querySelector('.container');
+        const placeholderEl = root.querySelector('.placeholder');
+        const pathsContainer = root.querySelector('.paths');
+        
+        if (!pathsContainer || !placeholderEl) return;
+        
+        pathsContainer.querySelectorAll('.circle').forEach(c => c.remove());
+        let svgTemplate = pathsContainer.querySelector('svg.template') as SVGSVGElement;
+        if (!svgTemplate) {
+           svgTemplate = pathsContainer.querySelector('svg') as SVGSVGElement;
+           if (svgTemplate) svgTemplate.classList.add('template');
+        }
+        if (!svgTemplate) return;
+        
+        svgTemplate.style.display = 'none';
+        
+        const fullText = placeholderEl.textContent?.trim() || "";
+        let svgIndex = 0;
+
+        function scaleForIndex(index: number) {
+            return Math.max(0.1, 1 - 0.1 * (index - 1));
+        }
+
+        function getArcCenter(path: SVGPathElement) {
+            const len = path.getTotalLength();
+            const p1 = path.getPointAtLength(0);
+            const p2 = path.getPointAtLength(len / 2);
+            const p3 = path.getPointAtLength(len);
+            const [{ x: ax, y: ay }, { x: bx, y: by }, { x: cx, y: cy }] = [p1, p2, p3];
+            const a2 = ax * ax + ay * ay;
+            const b2 = bx * bx + by * by;
+            const c2 = cx * cx + cy * cy;
+            const d = 2 * (ax * (by - cy) + bx * (cy - ay) + cx * (ay - by));
+            if (d === 0) return {x: 0, y: 0};
+            return {
+                x: (a2 * (by - cy) + b2 * (cy - ay) + c2 * (ay - by)) / d,
+                y: (a2 * (cx - bx) + b2 * (ax - cx) + c2 * (bx - ax)) / d,
+            }
+        }
+
+        function applyArcTransformOrigin(circle: HTMLElement, path: SVGPathElement, scale: number) {
+            const svg = circle.querySelector('svg');
+            if (!svg) return;
+            const vb = svg.viewBox.baseVal;
+            const center = getArcCenter(path);
+            const cxNorm = (center.x - vb.x) / vb.width;
+            const cyNorm = (center.y - vb.y) / vb.width;
+            const cxPct = (1 - scale) * 50 + cxNorm * scale * 100;
+            const cyPct = cyNorm * scale * 100;
+            circle.style.transformOrigin = `${cxPct}% ${cyPct}%`;
+        }
+
+        function createArc() {
+            svgIndex += 1;
+            const svg = svgTemplate!.cloneNode(true) as SVGSVGElement;
+            svg.style.display = 'block';
+            svg.classList.remove('template');
+            const path = svg.querySelector('path');
+            if (!path) return { path: null, textPath: null };
+            
+            const pathId = `path_mwg_${svgIndex}`;
+            path.id = pathId;
+
+            const textPath = svg.querySelector('textPath');
+            if (textPath) {
+               textPath.setAttribute('href', `#${pathId}`);
+               textPath.setAttributeNS('http://www.w3.org/1999/xlink', 'xlink:href', `#${pathId}`);
+            }
+
+            const scale = scaleForIndex(svgIndex);
+            const textEl = svg.querySelector('text');
+            if (textEl) {
+               textEl.setAttribute('font-size', '65');
+               textEl.setAttribute('font-weight', '300');
+            }
+
+            const circle = document.createElement('div');
+            circle.className = 'circle';
+            circle.appendChild(svg);
+            pathsContainer!.appendChild(circle);
+
+            applyArcTransformOrigin(circle, path, scale);
+
+            return { path, textPath };
+        }
+
+        function measureTextLength(textPath: SVGTextPathElement, content: string) {
+            textPath.textContent = content;
+            let length = 0;
+            if (typeof textPath.getComputedTextLength === 'function') {
+                length = textPath.getComputedTextLength();
+            }
+            if (!length) {
+                try {
+                    const bbox = textPath.getBBox();
+                    length = bbox ? bbox.width : 0;
+                } catch (e) {
+                    length = 0;
+                }
+            }
+            return length;
+        }
+
+        function splitTextAcrossSvgs(text: string) {
+            const words = text.split(/\s+/).filter(Boolean);
+            let wordIndex = 0;
+
+            while (wordIndex < words.length) {
+                const { path, textPath } = createArc();
+                if (!path || !textPath) break;
+                
+                const pathLength = path.getTotalLength() * 0.98;
+
+                let current = '';
+                let lastGood = '';
+
+                while (wordIndex < words.length) {
+                    const nextWord = words[wordIndex];
+                    const candidate = current ? current + ' ' + nextWord : nextWord;
+                    const textLength = measureTextLength(textPath as SVGTextPathElement, candidate);
+
+                    if (textLength <= pathLength) {
+                        current = candidate;
+                        lastGood = candidate;
+                        wordIndex += 1;
+                    } else {
+                        if (!current) {
+                            let fit = '';
+                            let charIdx = 0;
+                            while (charIdx < nextWord.length) {
+                                const tryFit = fit + nextWord[charIdx];
+                                if (measureTextLength(textPath as SVGTextPathElement, tryFit) <= pathLength) {
+                                    fit = tryFit;
+                                    charIdx += 1;
+                                } else break;
+                            }
+                            if (fit) {
+                                current = fit;
+                                const remaining = nextWord.slice(fit.length);
+                                if (remaining) words[wordIndex] = remaining;
+                                else wordIndex += 1;
+                            }
+                        }
+                        break;
+                    }
+                }
+
+                textPath.textContent = current || lastGood;
+            }
+        }
+        
+        splitTextAcrossSvgs(fullText);
+
+        const master = gsap.timeline({
+            scrollTrigger: {
+                trigger: pinHeight,
+                start: 'top top',
+                end: 'bottom bottom',
+                pin: container,
+                scrub: 1
+            }
+        });
+
+        const circles = root.querySelectorAll('.circle');
+        const texts: string[] = [];
+
+        circles.forEach(circle => {
+            const textPath = circle.querySelector('textPath');
+            if (textPath) {
+               texts.push(textPath.textContent || "");
+               textPath.textContent = '';
+            }
+        });
+
+        circles.forEach((circle, i) => {
+            const textPath = circle.querySelector('textPath');
+            const text = texts[i];
+
+            master.add(gsap.to(circle, {
+                rotate: 0,
+                ease: 'power2.inOut',
+                duration: 2,
+                onUpdate() {
+                    const count = Math.floor(this.progress() * text.length);
+                    if (textPath) textPath.textContent = text.substring(0, count);
+                }
+            }), i * (1 / circles.length));
+        });
+      });
+    };
+
     const fontsReady = (document as Document & { fonts?: { ready: Promise<unknown> } }).fonts?.ready;
-    if (fontsReady) fontsReady.then(runSplit);
-    else runSplit();
+    if (fontsReady) {
+      fontsReady.then(() => {
+        runSplit();
+        runMwgEffect();
+      });
+    } else {
+      runSplit();
+      runMwgEffect();
+    }
 
     // Animación de bloques de imagen/tarjetas
     gsap.fromTo(".fade-up", 
@@ -71,118 +275,88 @@ const About = () => {
         <div id="smooth-content-about" className="bg-white text-black font-sans pb-0">
           
           {/* HERO SECTION */}
-          <section className="min-h-screen flex flex-col items-center justify-center text-center px-6 pt-32 pb-20">
-            <div className="max-w-5xl mx-auto">
-              <h1 className="text-5xl md:text-8xl font-normal leading-[0.9] tracking-tighter mb-12">
-                <span className="block">El networking no es</span>
-                <span className="block" style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>club privado.</span>
-              </h1>
-              <p className="reveal-text text-xl md:text-2xl font-light text-gray-500 max-w-3xl mx-auto leading-relaxed">
-                Miiles es el espacio donde los emprendedores encuentran a las personas con quienes construir algo real.
+          <section className="min-h-[85vh] md:min-h-screen flex flex-col items-center justify-center text-center px-6 pt-32 pb-20">
+            <div className="max-w-7xl mx-auto flex flex-col items-center w-full">
+              <div className="fade-up w-full rounded-[2rem] md:rounded-[3rem] overflow-hidden mb-12">
+                <video 
+                  src="https://wearemiiles.com/wp-content/uploads/2026/01/11-4.mp4" 
+                  autoPlay 
+                  muted 
+                  loop 
+                  playsInline 
+                  className="w-full h-auto object-cover"
+                />
+              </div>
+              
+              <span className="fade-up text-lg md:text-xl font-normal text-gray-400 mb-6">
+                Sobre nosotros
+              </span>
+              
+              <p className="fade-up text-lg md:text-xl font-light text-gray-500 max-w-2xl mx-auto leading-relaxed">
+                Somos una empresa dedicada al desarrollo de procesos creativos con inteligencia artificial.
               </p>
             </div>
           </section>
 
-          {/* CÓMO EMPEZÓ (STORY) */}
+          {/* NUESTRA MISIÓN (MOBILE - TEXTO NORMAL) */}
+          <section className="pt-32 pb-20 px-6 block md:hidden">
+            <div className="max-w-4xl mx-auto text-center">
+              <h2 className="text-4xl font-normal tracking-tighter mb-12">Nuestra misión</h2>
+              <div className="fade-up space-y-4 text-xl font-light text-gray-500">
+                <p>Nuestra misión es construir sistemas de productividad con inteligencia artificial para que recuperes el control de tu tiempo.</p>
+              </div>
+            </div>
+          </section>
+
+          {/* NUESTRA MISIÓN (DESKTOP/TABLET - ARC ANIMATION) */}
+          <section className="mwg_effect098 relative w-full text-black hidden md:block">
+            <div className="pin-height">
+              <div className="container">
+                <p className="placeholder">Nuestra misión es construir sistemas de productividad con inteligencia artificial para que recuperes el control de tu tiempo.</p>
+                <div className="paths" aria-hidden="true">
+                  <svg viewBox="0 0 845 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M0 74.5322C135.056 25.4113 278.148 0 422.938 0C567.414 0 710.2 25.3004 845 74.2129"/>
+                    <text xmlSpace="preserve" textAnchor="middle" fontSize="60">
+                      <textPath startOffset="50%"></textPath>
+                    </text>
+                  </svg>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {/* QUÉ HACEMOS */}
+          <section className="py-20 px-6">
+            <div className="max-w-4xl mx-auto text-center">
+              <h2 className="text-4xl md:text-7xl font-normal tracking-tighter mb-12">Qué hacemos</h2>
+              <div className="fade-up space-y-4 text-xl md:text-2xl font-light text-gray-500">
+                <p>Creamos las herramientas que hacen más simple arrancar y operar un negocio.</p>
+              </div>
+            </div>
+          </section>
+
+          {/* HISTORIA (STORY) */}
           <section className="py-32 px-6 bg-white">
-            <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-20 items-center">
-              <div className="rounded-[3rem] overflow-hidden aspect-[4/5] fade-up shadow-2xl">
+            <div className="max-w-5xl mx-auto flex flex-col gap-16 items-center">
+              <div className="w-full aspect-video rounded-[2rem] overflow-hidden fade-up shadow-2xl">
                 <img 
-                  src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=800" 
+                  src="/miiles-jacket.jpg" 
                   alt="Equipo Miiles" 
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="flex flex-col gap-8">
-                <h2 className="text-4xl md:text-6xl font-normal tracking-tight">Cómo empezó</h2>
-                <div className="reveal-text space-y-6 text-lg font-light text-gray-600 leading-relaxed">
+              <div className="flex flex-col max-w-3xl">
+                <div className="fade-up space-y-6 text-lg font-light text-gray-600 leading-normal text-center md:text-left">
                   <p>
-                    En 2019, <span className="text-black font-normal">Miiles Horton</span> fundó Miiles como un estudio creativo. Construyó marcas, trabajó con emprendedores y descubrió el mismo problema en todos: no les faltaba talento ni visión.
+                    <span className="text-black font-normal">Miiles nació en 2019 como Miiles Creative Studio</span>, un pequeño estudio en la Ciudad de México fundado por Miiles Horton con una idea clara: ayudar a negocios locales a construir marcas que compitieran en serio. Imagen, diseño, posicionamiento. Nada más, nada menos.
                   </p>
-                  <p className="text-2xl md:text-3xl text-black font-semibold leading-tight" style={{ fontFamily: "'Poppins', sans-serif" }}>
-                    "Les faltaba el equipo correcto. Eso lo cambió todo."
+                  <p>
+                    El portafolio fue creciendo. ERPxtender, TikTok, BeeSpeaker, Naabi Kanabi. Cada cliente sumó perspectiva sobre cómo los negocios realmente operan y dónde se atascan.
                   </p>
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* QUÉ CONSTRUIMOS */}
-          <section className="py-40 px-6">
-            <div className="max-w-6xl mx-auto">
-              <div className="flex flex-col md:flex-row gap-12 md:gap-24 mb-32 items-start">
-                <h2 className="text-4xl md:text-7xl font-normal tracking-tighter flex-1">Qué construimos</h2>
-                <p className="reveal-text text-xl md:text-2xl font-light text-gray-500 flex-1 leading-relaxed">
-                  Herramientas con IA para que el networking deje de ser un juego de suerte. Encuentras socios, colaboradores y talento en un solo lugar.
-                </p>
-              </div>
-
-              <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-                {[
-                  { title: "Sociedad", desc: "Encuentra al co-founder que complementa tu visión." },
-                  { title: "Rol Fijo", desc: "Talento comprometido para escalar tus operaciones." },
-                  { title: "Comisión", desc: "Fuerza de ventas motivada por resultados reales." }
-                ].map((item, i) => (
-                  <div key={i} className="fade-up p-10 bg-[#F5F5F8] rounded-[2.5rem] hover:-translate-y-2 transition-transform duration-500">
-                    <h3 className="text-2xl font-normal mb-4">{item.title}</h3>
-                    <p className="text-sm font-light text-gray-500 leading-relaxed">{item.desc}</p>
-                  </div>
-                ))}
-              </div>
-
-              <div className="mt-20 text-center reveal-text">
-                <p className="text-lg md:text-xl font-light text-gray-400">
-                  Sin eventos aburridos. Sin mensajes en frío. Sin esperar a que alguien te presente.
-                </p>
-              </div>
-            </div>
-          </section>
-
-          {/* MISIÓN, VISIÓN, VALORES */}
-          <section className="py-40 px-6 bg-black text-white rounded-[4rem] mx-4 mb-32">
-            <div className="max-w-6xl mx-auto">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-32 mb-40">
-                <div className="space-y-8">
-                  <h2 className="text-sm tracking-widest text-gray-500">Misión</h2>
-                  <p className="text-4xl md:text-5xl font-normal leading-tight">
-                    Convertir cada conversación en una <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>colaboración real.</span>
+                  <p>
+                    En 2024 Miiles lanzó Auto-flex, una apuesta por negocios automatizados y flexibles, y con eso pisó por primera vez el territorio de la IA. No fue un pivot de marketing. Fue el inicio de una transformación que meses después daría forma a Miiles AI.
                   </p>
                 </div>
-                <div className="space-y-8">
-                  <h2 className="text-sm tracking-widest text-gray-500">Visión</h2>
-                  <p className="text-4xl md:text-5xl font-normal leading-tight">
-                    Ser el espacio global donde los negocios nacen de las <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>conexiones correctas.</span>
-                  </p>
-                </div>
-              </div>
-
-              <div className="border-t border-white/10 pt-20">
-                <h2 className="text-sm tracking-widest text-gray-500 mb-20 text-center">Nuestros Valores</h2>
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
-                  {[
-                    { t: "Colaboración", d: "Cada conexión existe para producir algo concreto." },
-                    { t: "Accesibilidad", d: "El networking no debería depender de a quién ya conoces." },
-                    { t: "Comunidad", d: "Su éxito es el nuestro." },
-                    { t: "Innovación", d: "La IA debe ser para todos." }
-                  ].map((v, i) => (
-                    <div key={i} className="fade-up space-y-4">
-                      <h4 className="text-xl font-normal">{v.t}</h4>
-                      <p className="text-sm font-light text-gray-400 leading-relaxed">{v.d}</p>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </section>
-
-          {/* PARA QUIÉN */}
-          <section className="py-32 px-6">
-            <div className="max-w-4xl mx-auto text-center">
-              <h2 className="text-4xl md:text-7xl font-normal tracking-tighter mb-12">Para quién es Miiles</h2>
-              <div className="reveal-text space-y-6 text-xl md:text-2xl font-light text-gray-500">
-                <p>Para el que tiene un proyecto y necesita a alguien con quien ejecutarlo.</p>
-                <p>Para el que quiere construir sin esperar permiso.</p>
-                <p className="text-black font-normal">Para los networkers listos para crear.</p>
               </div>
             </div>
           </section>
@@ -190,17 +364,17 @@ const About = () => {
           {/* FINAL CTA */}
           <section className="py-40 px-6">
             <div className="max-w-4xl mx-auto text-center flex flex-col items-center">
-              <h2 className="text-5xl md:text-8xl font-normal tracking-tighter mb-12">
-                Únete al <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>cambio.</span>
+              <h2 className="pt-2 text-5xl md:text-8xl font-normal tracking-tighter mb-12 leading-[1.2] md:leading-[1.2]">
+                Únete al <span className="pr-2 md:pr-4" style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>cambio</span>
               </h2>
               <Link
                 to="/register"
-                className="inline-flex items-center gap-2 px-12 py-6 rounded-full bg-black text-white text-lg font-light hover:-translate-y-2 transition-transform duration-300 shadow-2xl"
+                className="inline-flex items-center gap-2 px-10 py-5 rounded-full bg-black text-white text-base font-light hover:-translate-y-2 transition-transform duration-300"
               >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                   <path d="M12 0C12.3 8.8 15.2 11.7 24 12C15.2 12.3 12.3 15.2 12 24C11.7 15.2 8.8 12.3 0 12C8.8 11.7 11.7 8.8 12 0Z" />
                 </svg>
-                Únete en miiles.app
+                Prueba Miiles
               </Link>
             </div>
           </section>

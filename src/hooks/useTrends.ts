@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { MOCK_TRENDS } from "@/data/mockTrends";
 
 export type TrendLink = { label: string; url: string };
 
@@ -15,6 +16,7 @@ export type Trend = {
   category: string;
   source: string | null;
   published_at: string;
+  network?: string;
 };
 
 export function useTrends() {
@@ -23,22 +25,13 @@ export function useTrends() {
 
   useEffect(() => {
     let mounted = true;
-    supabase
-      .from("trends")
-      .select("*")
-      .eq("is_active", true)
-      .gt("expires_at", new Date().toISOString())
-      .order("published_at", { ascending: false })
-      .then(({ data }) => {
-        if (!mounted) return;
-        const rows = (data || []).map((t: any) => ({
-          ...t,
-          links: Array.isArray(t.links) ? t.links : [],
-          bullets: Array.isArray(t.bullets) ? t.bullets : [],
-        })) as Trend[];
-        setTrends(rows);
-        setLoading(false);
-      });
+    // Fallback to mock data since endpoints are down
+    setTimeout(() => {
+      if (!mounted) return;
+      setTrends(MOCK_TRENDS);
+      setLoading(false);
+    }, 500);
+
     return () => {
       mounted = false;
     };

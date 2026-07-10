@@ -803,3 +803,57 @@
 .logo-spin {
   animation: logo-spin-loop 8s cubic-bezier(0.25, 1, 0.5, 1) infinite;
 }
+
+/* ------------------------------------- */
+/* mwg_effect016 - Swirling Images       */
+/* ------------------------------------- */
+.mwg_effect016 {
+    overflow: hidden;
+    background: #FFFFFF;
+}
+.mwg_effect016 .scroll-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    z-index: 0;
+    pointer-events: none;
+    text-align: center;
+    width: max-content;
+}
+.mwg_effect016 .pin-height {
+    height: 500vh;
+}
+.mwg_effect016 .container {
+    width: 15%; /* Reducido a petición para que las imágenes sean más pequeñas */
+    aspect-ratio: 1;
+    top: 50vh;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: absolute;
+}
+@media (max-width: 768px) {
+    .mwg_effect016 .container { width: 35%; }
+}
+.mwg_effect016 .media-wrapper {
+    position: absolute;
+    inset: 0;
+}
+.mwg_effect016 .media {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    border-radius: 2%;
+    transform: translate(60vw, 0);
+}
+
+
+/* MWG Effect 098 Arc Animation */
+.mwg_effect098 .pin-height { height: 500vh; }
+.mwg_effect098 .container { height: 100vh; display: flex; justify-content: center; padding: 50vh 0 0; overflow: hidden; }
+.mwg_effect098 .placeholder { position: absolute; top: 0; left: 0; visibility: hidden; pointer-events: none; }
+.mwg_effect098 .paths { width: 70vw; height: 70vw; text-align: center; }
+.mwg_effect098 .circle { aspect-ratio: 1; transform: rotate(20deg); }
+.mwg_effect098 .circle + .circle { margin-top: -93%; }
+.mwg_effect098 svg { width: 100%; height: auto; overflow: visible; }
+.mwg_effect098 textPath { fill: currentColor; }

@@ -103,7 +103,7 @@ Each node MUST have:
 🎨 NODE TYPES & DATA:
 1. "shapeNode" (for steps, decisions, start/end):
    - "data": {"shape": "square"|"circle"|"diamond"|"hexagon"|"document", "label": "Text here", "fillColor": "#Hex", "textColor": "#Hex", "fontSize": 14}
-   - Palettes: Use vibrant, modern colors like #4059F1 (Royal Blue), #F36F56 (Coral), #45B382 (Emerald), #F5A623 (Amber), #8B5CF6 (Purple). NEVER use plain white backgrounds. Always use white text (#FFFFFF) on dark/colored backgrounds for high contrast.
+   - Palettes: For shapeNodes, strictly prioritize using black (#000000) or brand blue (#4059F1) backgrounds with white text. Do not use random colors like orange, red, green, or purple unless strictly necessary for semantic meaning.
    - LINE BREAKS FOR BALANCED TEXT: The UI renders newlines perfectly and wraps words cleanly. You MUST insert explicit '\n' in the "label" string to split long lines into balanced rows (e.g. use "Creación de\nContenido" or "Enviar\nEmail Frío" or "¿Presupuesto\npara Ads?" instead of single long lines) so words do not break awkwardly.
 
 2. "todoNode" (for checklists or complex grouped tasks):
@@ -111,9 +111,10 @@ Each node MUST have:
    - CRITICAL COLOR RULE: Checklist backgrounds MUST ALWAYS be "#FFFFFF" (pure white) and text/labels MUST ALWAYS be "#000000" (pure black). NEVER use dark backgrounds or other colors for todoNode.
    - RESPONSIVE WRAPPING: Title, subtitle, and task items automatically wrap to new lines and auto-resize height if long or if container is small. Write complete, detailed task items without fear of text clipping.
 
-3. "textNode" (for large contextual titles or section headers):
-   - "data": {"html": "<b style='color:#000000'>SECTION TITLE</b><br><span style='font-size:14px;color:#000000'>Description</span>", "fontSize": 24, "textColor": "#000000"}
-   - CRITICAL COLOR RULE: Titles and text nodes MUST ALWAYS use "#000000" (pure black) for "textColor" and inside style attributes. NEVER use gray or any other colors for titles.
+3. "textNode" (for specific annotations or prospect links):
+   - "data": {"html": "<b style='color:#000000'>Texto</b>", "fontSize": 24, "textColor": "#000000"}
+   - DO NOT generate a global title or header textNode at the top of the canvas for the flow. Omit the general title entirely. Use textNodes ONLY for specific annotations or clickable prospect links.
+   - CRITICAL COLOR RULE: Text nodes MUST ALWAYS use "#000000" (pure black) for "textColor" and inside HTML style attributes.
 
 4. "imageNode" (for visual placeholders or logos):
    - "data": {"url": "https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?q=80&w=200&auto=format&fit=crop", "width": 200, "height": 150}

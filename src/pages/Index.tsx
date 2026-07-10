@@ -17,7 +17,7 @@ import {
   type Edge,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { ArrowLeft, Loader2, Check, Cloud, CloudOff, Settings2, EyeOff, Eye, Trash2, Undo2, Redo2, Palette, Square, Type, Baseline, Sparkles, PanelRight, ListChecks, Plus, Share2, Sun, Moon, EyeIcon, Copy, Download, ArrowUp, ArrowDown } from "lucide-react";
+import { ArrowLeft, ArrowUp, ArrowDown, Loader2, Check, Cloud, CloudOff, Settings2, EyeOff, Eye, Trash2, Undo2, Redo2, Palette, Square, Type, Baseline, Sparkles, PanelRight, ListChecks, Plus, Share2, Sun, Moon, EyeIcon, Copy, Download } from "lucide-react";
 import { buildTasksInstructions, downloadTextFile, type TodoListLike } from "@/lib/todoInstructions";
 import ShareDialog from "@/components/ShareDialog";
 import PresenceStack from "@/components/PresenceStack";
@@ -64,9 +64,9 @@ const RAINBOW_COLORS = [
   { name: "Naranja", value: "#F97316" },
   { name: "Amarillo", value: "#FACC15" },
   { name: "Verde", value: "#22C55E" },
-  { name: "Azul", value: "#3B82F6" },
+  { name: "Azul", value: "#4059F1" },
   { name: "Morado", value: "#A855F7" },
-  { name: "Rosa", value: "#EC4899" },
+  { name: "Rosa", value: "#FCB5B9" },
   { name: "Blanco", value: "#FFFFFF" },
   { name: "Negro", value: "#1F2937" },
 ];
@@ -2576,27 +2576,29 @@ const IndexContent = () => {
                         );
                       };
 
-                      const deleteTask = (taskId: string) => {
-                        setNodes((nds) =>
-                          nds.map((n) => {
-                            if (n.id !== node.id) return n;
-                            return { ...n, data: { ...n.data, tasks: ((n.data as any).tasks ?? []).filter((t: any) => t.id !== taskId) } };
-                          })
-                        );
-                      };
-
                       const moveTask = (taskId: string, direction: "up" | "down") => {
                         setNodes((nds) =>
                           nds.map((n) => {
                             if (n.id !== node.id) return n;
-                            const t = [...((n.data as any).tasks ?? [])];
-                            const idx = t.findIndex((tk: any) => tk.id === taskId);
-                            if (direction === "up" && idx === 0) return n;
-                            if (direction === "down" && idx === t.length - 1) return n;
-                            const target = direction === "up" ? idx - 1 : idx + 1;
-                            const [moved] = t.splice(idx, 1);
-                            t.splice(target, 0, moved);
-                            return { ...n, data: { ...n.data, tasks: t } };
+                            const currentTasks = [...((n.data as any).tasks ?? [])];
+                            const idx = currentTasks.findIndex((t) => t.id === taskId);
+                            if (idx === -1) return n;
+                            if (direction === "up" && idx > 0) {
+                              [currentTasks[idx - 1], currentTasks[idx]] = [currentTasks[idx], currentTasks[idx - 1]];
+                            } else if (direction === "down" && idx < currentTasks.length - 1) {
+                              [currentTasks[idx], currentTasks[idx + 1]] = [currentTasks[idx + 1], currentTasks[idx]];
+                            }
+                            return { ...n, data: { ...n.data, tasks: currentTasks } };
+                          })
+                        );
+                      };
+
+                      const deleteTask = (taskId: string) => {
+                        setNodes((nds) =>
+                          nds.map((n) => {
+                            if (n.id !== node.id) return n;
+                            const currentTasks = ((n.data as any).tasks ?? []).filter((t: any) => t.id !== taskId);
+                            return { ...n, data: { ...n.data, tasks: currentTasks } };
                           })
                         );
                       };
@@ -2685,16 +2687,22 @@ const IndexContent = () => {
                               <p className="text-[12px] font-light py-1" style={{ color: isCardDark ? "#6B7280" : "#9CA3AF" }}>Sin tareas aún.</p>
                             )}
                             {tasks.map((task) => (
-                              <div key={task.id} className="group/ptask flex items-center gap-3 py-1" onClick={(e) => e.stopPropagation()}>
+                              <div key={task.id} className="group/task flex items-center gap-3 py-1" onClick={(e) => e.stopPropagation()}>
                                 <button
                                   onClick={(e) => { e.stopPropagation(); toggleTask(task.id); }}
-                                  className="w-5 h-5 rounded-full border-[1.5px] flex items-center justify-center shrink-0 transition-all duration-200"
+                                  className={`w-5 h-5 rounded-full flex items-center justify-center border-[1.5px] border-solid transition-all shrink-0 duration-200 mt-[2px] ${
+                                    task.completed
+                                      ? ""
+                                      : isCardDark
+                                      ? "bg-white/[0.05] border-white/15 hover:border-white/30 hover:bg-white/[0.08]"
+                                      : "bg-black/[0.03] border-black/15 hover:border-black/30 hover:bg-black/[0.05]"
+                                  }`}
                                   style={{
-                                    borderColor: task.completed ? effectiveTextColor : (isCardDark ? "#6B7280" : "#9CA3AF"),
-                                    backgroundColor: task.completed ? effectiveTextColor : "transparent",
+                                    borderColor: task.completed ? (d.accentColor && d.accentColor !== "transparent" ? d.accentColor : "#4059F1") : undefined,
+                                    backgroundColor: task.completed ? (d.accentColor && d.accentColor !== "transparent" ? d.accentColor : "#4059F1") : undefined,
                                   }}
                                 >
-                                  {task.completed && <Check size={12} className={effectiveTextColor === "#FFFFFF" ? "text-gray-900" : "text-white"} strokeWidth={3} />}
+                                  {task.completed && <Check size={12} className={(d.accentColor === "#FFFFFF" || d.accentColor === "#FACC15") ? "text-gray-900" : "text-white"} strokeWidth={3} />}
                                 </button>
                                 <AutoResizingTextarea
                                   value={task.text}
@@ -2714,24 +2722,26 @@ const IndexContent = () => {
                                     opacity: task.completed ? 0.7 : 1,
                                   }}
                                 />
-                                <div className="flex items-center gap-0.5 shrink-0 opacity-0 pointer-events-none group-hover/ptask:opacity-100 group-hover/ptask:pointer-events-auto transition-opacity duration-100">
+
+                                {/* Task Row Actions — opacity en vez de hidden para que el clic siempre registre */}
+                                <div className="flex items-center gap-1 shrink-0 opacity-0 pointer-events-none group-hover/task:opacity-100 group-hover/task:pointer-events-auto transition-opacity duration-100">
                                   <button
                                     onClick={(e) => { e.stopPropagation(); moveTask(task.id, "up"); }}
-                                    className="p-1 rounded-md hover:bg-black/10 text-gray-400 hover:text-gray-600 transition-colors"
+                                    className="p-1 rounded-md hover:bg-black/10 dark:hover:bg-white/10 text-gray-400 hover:text-gray-600 transition-colors"
                                     title="Subir"
                                   >
                                     <ArrowUp size={11} />
                                   </button>
                                   <button
                                     onClick={(e) => { e.stopPropagation(); moveTask(task.id, "down"); }}
-                                    className="p-1 rounded-md hover:bg-black/10 text-gray-400 hover:text-gray-600 transition-colors"
+                                    className="p-1 rounded-md hover:bg-black/10 dark:hover:bg-white/10 text-gray-400 hover:text-gray-600 transition-colors"
                                     title="Bajar"
                                   >
                                     <ArrowDown size={11} />
                                   </button>
                                   <button
                                     onClick={(e) => { e.stopPropagation(); deleteTask(task.id); }}
-                                    className="p-1 rounded-md hover:bg-red-50 text-gray-400 hover:text-red-600 transition-colors"
+                                    className="p-1 rounded-md hover:bg-red-50 dark:hover:bg-red-500/10 text-gray-400 hover:text-red-600 transition-colors"
                                     title="Eliminar"
                                   >
                                     <Trash2 size={11} />
@@ -2741,8 +2751,8 @@ const IndexContent = () => {
                             ))}
                           </div>
 
-                          {/* Add task button — solo visible cuando la card está activa */}
-                          {activeCardId === node.id && (
+                          {/* Add task button — visible al hacer clic en una tarea de la card, o si está vacía */}
+                          {(activeCardId === node.id || tasks.length === 0) && (
                             <button
                               onClick={(e) => { e.stopPropagation(); addTask(); }}
                               className="flex items-center gap-2 py-2 px-3 rounded-xl border border-dashed transition-all text-left mt-2 shrink-0 w-full"

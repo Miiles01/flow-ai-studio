@@ -1,0 +1,21 @@
+{
+  "trends": [
+    {
+      "network": "facebook",
+      "media_url": "https://www.instagram.com/reel/DZprwZRlV9R/",
+      "title": "Arquitectura Algorítmica (EdgeRank)",
+      "summary": "Mecánica del algoritmo de Facebook (EdgeRank) para 2026, enfocado en Relevancy Score y retención.",
+      "bullets": [
+        "Ensamblaje e inventario evalúa las señales activas y pasivas: la retención supera al like genérico.",
+        "Modelado predictivo bayesiano para ordenar el feed (Relevancy Score); se penaliza el engagement bait.",
+        "Doble retención: los reels de 6-10 segundos se benefician del rewatch automático.",
+        "El 50% del watch time en Reels viene de videos mayores a 1 minuto; usa tácticas híbridas y retargeting.",
+        "Táctica Hidden Gem: comentarios rápidos y sustanciales en grupos y páginas grandes aumentan seguidores."
+      ],
+      "links": [
+        { "title": "Actualización Meta Ads", "url": "https://www.instagram.com/reel/DXxX6cRiWiF/" },
+        { "title": "Hook de referencia", "url": "https://www.instagram.com/reel/DXw-Kjuua76/" }
+      ]
+    }
+  ]
+}

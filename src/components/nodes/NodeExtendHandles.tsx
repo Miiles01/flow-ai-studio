@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useViewport } from "@xyflow/react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useFlowExtend, type ExtendSide } from "@/contexts/FlowExtendContext";
+import { AnimatePresence, motion } from "framer-motion";
 import estrellaIcon from "@/assets/miiles/Estrella.svg";
 
 const SIDES: ExtendSide[] = ["top", "bottom", "left", "right"];
@@ -41,30 +42,36 @@ const NodeExtendHandles = ({ nodeId }: { nodeId: string }) => {
             onMouseLeave={() => setHovered((h) => (h === side ? null : h))}
             onPointerDown={(e) => e.stopPropagation()}
           >
-            {show && (
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  requestExtend(nodeId, side);
-                }}
-                style={{ transform: `scale(${scale})`, transformOrigin }}
-                className={`flex items-center justify-center w-7 h-7 rounded-lg shadow-md transition-colors ${
-                  isActive
-                    ? "bg-[#4059F1] ring-2 ring-[#4059F1]/30"
-                    : isDark
-                      ? "bg-[#1C1C1E] border border-white/10 hover:bg-white/10"
-                      : "bg-white border border-gray-200 hover:bg-gray-50"
-                }`}
-                title="Ampliar con IA desde aquí"
-              >
-                <img
-                  src={estrellaIcon}
-                  alt=""
-                  className="w-3.5 h-3.5"
-                  style={{ filter: isActive || isDark ? "invert(1)" : "none" }}
-                />
-              </button>
-            )}
+            <AnimatePresence>
+              {show && (
+                <motion.button
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.15 }}
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    requestExtend(nodeId, side);
+                  }}
+                  style={{ transform: `scale(${scale})`, transformOrigin }}
+                  className={`flex items-center justify-center w-7 h-7 rounded-lg shadow-md transition-colors ${
+                    isActive
+                      ? "bg-[#4059F1] ring-2 ring-[#4059F1]/30"
+                      : isDark
+                        ? "bg-white border border-gray-200 hover:bg-gray-100"
+                        : "bg-black border border-black hover:bg-gray-900"
+                  }`}
+                  title="Ampliar con IA desde aquí"
+                >
+                  <img
+                    src={estrellaIcon}
+                    alt=""
+                    className="w-3.5 h-3.5 transition-all"
+                    style={{ filter: isActive || !isDark ? "invert(1)" : "none" }}
+                  />
+                </motion.button>
+              )}
+            </AnimatePresence>
           </div>
         );
       })}

@@ -36,9 +36,9 @@ const RAINBOW_COLORS = [
   { name: "Naranja", value: "#F97316" },
   { name: "Amarillo", value: "#FACC15" },
   { name: "Verde", value: "#22C55E" },
-  { name: "Azul", value: "#3B82F6" },
+  { name: "Azul", value: "#4059F1" },
   { name: "Morado", value: "#A855F7" },
-  { name: "Rosa", value: "#EC4899" },
+  { name: "Rosa", value: "#FCB5B9" },
   { name: "Blanco", value: "#FFFFFF" },
   { name: "Negro", value: "#1F2937" },
 ];
@@ -518,7 +518,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
               {/* Checkbox */}
               <button
                 onClick={() => handleToggleTask(task.id)}
-                className={`w-5 h-5 rounded-md flex items-center justify-center border-[1.5px] border-solid transition-all shrink-0 duration-200 mt-[3px] ${
+                className={`w-5 h-5 rounded-full flex items-center justify-center border-[1.5px] border-solid transition-all shrink-0 duration-200 mt-[3px] ${
                   task.completed
                     ? ""
                     : isDarkMode
@@ -527,10 +527,10 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                 }`}
                 style={{
                   borderColor: task.completed
-                    ? (accentColor && accentColor !== "transparent" ? accentColor : (isDarkMode ? "#FFFFFF" : "#111827"))
+                    ? (accentColor && accentColor !== "transparent" ? accentColor : "#4059F1")
                     : undefined,
                   backgroundColor: task.completed
-                    ? (accentColor && accentColor !== "transparent" ? accentColor : (isDarkMode ? "#FFFFFF" : "#111827"))
+                    ? (accentColor && accentColor !== "transparent" ? accentColor : "#4059F1")
                     : undefined,
                 }}
               >
@@ -538,7 +538,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                   <Check
                     size={12}
                     className={`${
-                      (accentColor && accentColor !== "transparent" ? (accentColor === "#FFFFFF" || accentColor === "#FACC15") : isDarkMode)
+                      (accentColor && accentColor !== "transparent" ? (accentColor === "#FFFFFF" || accentColor === "#FACC15") : false)
                         ? "text-gray-900"
                         : "text-white"
                     } stroke-[3.5]`}

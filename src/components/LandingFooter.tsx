@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 
 const LandingFooter = () => {
+  const { t } = useTranslation();
   return (
     <footer className="pt-24 pb-16 bg-white border-t border-gray-50">
       <div className="max-w-7xl mx-auto px-10">
@@ -8,24 +10,24 @@ const LandingFooter = () => {
           {/* Left side */}
           <div className="flex flex-col justify-between h-full min-h-[200px]">
             <h2 className="text-3xl font-normal leading-tight max-w-xs text-black">
-              Diseñado para mentes creativas
+              {t("footer.slogan")}
             </h2>
             <p className="text-[10px] md:text-xs font-light text-gray-400 mt-10 md:mt-0">
-              © Miiles, todos los derechos reservados, 2026
+              {t("footer.copyright")}
             </p>
           </div>
 
           {/* Right side */}
           <div className="flex gap-20 md:gap-40">
             <div className="space-y-6">
-              <h4 className="text-[10px] font-normal text-gray-400 tracking-widest">Compañía</h4>
+              <h4 className="text-[10px] font-normal text-gray-400 tracking-widest">{t("footer.company")}</h4>
               <div className="flex flex-col gap-4 text-sm font-light text-black">
-                <Link to="/terminos" className="hover:opacity-50 transition-opacity">Términos y condiciones</Link>
-                <Link to="/privacidad" className="hover:opacity-50 transition-opacity">Política de privacidad</Link>
+                <Link to="/terminos" className="hover:opacity-50 transition-opacity">{t("footer.terms")}</Link>
+                <Link to="/privacidad" className="hover:opacity-50 transition-opacity">{t("footer.privacy")}</Link>
               </div>
             </div>
             <div className="space-y-6">
-              <h4 className="text-[10px] font-normal text-gray-400 tracking-widest">Redes Sociales</h4>
+              <h4 className="text-[10px] font-normal text-gray-400 tracking-widest">{t("footer.social")}</h4>
               <div className="flex flex-col gap-4 text-sm font-light text-black">
                 <a href="https://instagram.com/wearemiiles" target="_blank" rel="noopener noreferrer" className="hover:opacity-50 transition-opacity">Instagram</a>
                 <a href="https://tiktok.com/@wearemiiles" target="_blank" rel="noopener noreferrer" className="hover:opacity-50 transition-opacity">Tiktok</a>

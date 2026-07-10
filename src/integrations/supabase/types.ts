@@ -199,6 +199,39 @@ export type Database = {
         }
         Relationships: []
       }
+      discovery_flows: {
+        Row: {
+          created_at: string
+          edges: Json
+          id: string
+          is_active: boolean
+          network: string
+          nodes: Json
+          title: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          edges?: Json
+          id?: string
+          is_active?: boolean
+          network: string
+          nodes?: Json
+          title?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          edges?: Json
+          id?: string
+          is_active?: boolean
+          network?: string
+          nodes?: Json
+          title?: string | null
+          updated_at?: string
+        }
+        Relationships: []
+      }
       flow_collaborators: {
         Row: {
           added_at: string
@@ -557,6 +590,7 @@ export type Database = {
           links: Json
           media_type: string
           media_url: string | null
+          network: string
           published_at: string
           source: string | null
           summary: string | null
@@ -574,6 +608,7 @@ export type Database = {
           links?: Json
           media_type?: string
           media_url?: string | null
+          network?: string
           published_at?: string
           source?: string | null
           summary?: string | null
@@ -591,6 +626,7 @@ export type Database = {
           links?: Json
           media_type?: string
           media_url?: string | null
+          network?: string
           published_at?: string
           source?: string | null
           summary?: string | null
