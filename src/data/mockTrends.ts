@@ -1,4 +1,4 @@
-import type { Trend } from '@/hooks/useTrends';
+import type { Trend } from "@/hooks/useTrends";
 
 export const MOCK_TRENDS: Trend[] = [
   {
@@ -28,7 +28,7 @@ export const MOCK_TRENDS: Trend[] = [
   {
     "id": "instagram_3",
     "network": "instagram",
-    "media_url": "https://www.instagram.com/reel/DXepXhRCO7Z/",
+    "media_url": "https://www.instagram.com/reel/DZLTIIjB-5O/",
     "title": "Video 4",
     "summary": "",
     "bullets": []
@@ -36,7 +36,7 @@ export const MOCK_TRENDS: Trend[] = [
   {
     "id": "instagram_4",
     "network": "instagram",
-    "media_url": "https://www.instagram.com/reel/DZciMG6xjdM/",
+    "media_url": "https://www.instagram.com/reel/DXepXhRCO7Z/",
     "title": "Video 5",
     "summary": "",
     "bullets": []
@@ -44,8 +44,16 @@ export const MOCK_TRENDS: Trend[] = [
   {
     "id": "instagram_5",
     "network": "instagram",
-    "media_url": "https://www.instagram.com/reel/DaBDvEVFXWY/",
+    "media_url": "https://www.instagram.com/reel/DZciMG6xjdM/",
     "title": "Video 6",
+    "summary": "",
+    "bullets": []
+  },
+  {
+    "id": "instagram_6",
+    "network": "instagram",
+    "media_url": "https://www.instagram.com/reel/DaBDvEVFXWY/",
+    "title": "Video 7",
     "summary": "",
     "bullets": []
   },
@@ -60,15 +68,111 @@ export const MOCK_TRENDS: Trend[] = [
   {
     "id": "tiktok_1",
     "network": "tiktok",
-    "media_url": "https://www.tiktok.com/@carlosrmind/video/7403487056637381894",
+    "media_url": "https://www.tiktok.com/@annasvugc/video/7645031173567073558",
     "title": "Video 2",
+    "summary": "",
+    "bullets": []
+  },
+  {
+    "id": "tiktok_2",
+    "network": "tiktok",
+    "media_url": "https://www.tiktok.com/@meycuanc/video/7629606758742330632",
+    "title": "Video 3",
+    "summary": "",
+    "bullets": []
+  },
+  {
+    "id": "tiktok_3",
+    "network": "tiktok",
+    "media_url": "https://www.tiktok.com/@cdmaximy/video/7656819763146132756",
+    "title": "Video 4",
+    "summary": "",
+    "bullets": []
+  },
+  {
+    "id": "tiktok_4",
+    "network": "tiktok",
+    "media_url": "https://www.tiktok.com/@marketing.conisaoficial/video/7457735665976134958",
+    "title": "Video 5",
+    "summary": "",
+    "bullets": []
+  },
+  {
+    "id": "tiktok_5",
+    "network": "tiktok",
+    "media_url": "https://www.tiktok.com/@resueltaestudio/video/7657169146110610710",
+    "title": "Video 6",
+    "summary": "",
+    "bullets": []
+  },
+  {
+    "id": "tiktok_6",
+    "network": "tiktok",
+    "media_url": "https://www.tiktok.com/@creadorestv/video/7612818041709055253",
+    "title": "Video 7",
+    "summary": "",
+    "bullets": []
+  },
+  {
+    "id": "tiktok_7",
+    "network": "tiktok",
+    "media_url": "https://www.instagram.com/reel/DadTzzZOths/",
+    "title": "Video 8",
+    "summary": "",
+    "bullets": []
+  },
+  {
+    "id": "tiktok_8",
+    "network": "tiktok",
+    "media_url": "https://www.tiktok.com/@dime_malu/video/7658160458418933012",
+    "title": "Video 9",
+    "summary": "",
+    "bullets": []
+  },
+  {
+    "id": "tiktok_9",
+    "network": "tiktok",
+    "media_url": "https://www.tiktok.com/@mila_posada/video/7618008302479248658",
+    "title": "Video 10",
+    "summary": "",
+    "bullets": []
+  },
+  {
+    "id": "tiktok_10",
+    "network": "tiktok",
+    "media_url": "https://www.tiktok.com/@alejandrovalledor/video/7648627944478264598",
+    "title": "Video 11",
+    "summary": "",
+    "bullets": []
+  },
+  {
+    "id": "tiktok_11",
+    "network": "tiktok",
+    "media_url": "https://www.tiktok.com/@ilkadigital/video/7652941854505209095",
+    "title": "Video 12",
+    "summary": "",
+    "bullets": []
+  },
+  {
+    "id": "tiktok_12",
+    "network": "tiktok",
+    "media_url": "https://www.tiktok.com/@wings_2001/video/7651717220376005895",
+    "title": "Video 13",
+    "summary": "",
+    "bullets": []
+  },
+  {
+    "id": "tiktok_13",
+    "network": "tiktok",
+    "media_url": "https://www.tiktok.com/@meycuanc/video/7618722053189061909",
+    "title": "Video 14",
     "summary": "",
     "bullets": []
   },
   {
     "id": "facebook_0",
     "network": "facebook",
-    "media_url": "https://www.instagram.com/reel/DZprwZRlV9R/",
+    "media_url": "https://www.instagram.com/reel/DaBPjX3FdK2/",
     "title": "Video 1",
     "summary": "",
     "bullets": []
@@ -76,7 +180,7 @@ export const MOCK_TRENDS: Trend[] = [
   {
     "id": "facebook_1",
     "network": "facebook",
-    "media_url": "https://www.instagram.com/reel/DXxX6cRiWiF/",
+    "media_url": "https://www.instagram.com/reel/DZprwZRlV9R/",
     "title": "Video 2",
     "summary": "",
     "bullets": []
@@ -84,16 +188,48 @@ export const MOCK_TRENDS: Trend[] = [
   {
     "id": "facebook_2",
     "network": "facebook",
-    "media_url": "https://www.instagram.com/reel/DXw-Kjuua76/",
+    "media_url": "https://www.instagram.com/reel/DXxX6cRiWiF/",
     "title": "Video 3",
+    "summary": "",
+    "bullets": []
+  },
+  {
+    "id": "facebook_3",
+    "network": "facebook",
+    "media_url": "https://www.instagram.com/reel/DXw-Kjuua76/",
+    "title": "Video 4",
+    "summary": "",
+    "bullets": []
+  },
+  {
+    "id": "facebook_4",
+    "network": "facebook",
+    "media_url": "https://www.instagram.com/reel/DVEoiHhkv7R/",
+    "title": "Video 5",
     "summary": "",
     "bullets": []
   },
   {
     "id": "youtube_0",
     "network": "youtube",
-    "media_url": "https://www.youtube.com/watch?v=unoSIeuPivw",
+    "media_url": "https://www.tiktok.com/@romualdfonsoficial/video/7652426143856905504",
     "title": "Video 1",
+    "summary": "",
+    "bullets": []
+  },
+  {
+    "id": "youtube_1",
+    "network": "youtube",
+    "media_url": "https://www.tiktok.com/@nayoescobar/video/7648386915724496136",
+    "title": "Video 2",
+    "summary": "",
+    "bullets": []
+  },
+  {
+    "id": "youtube_2",
+    "network": "youtube",
+    "media_url": "https://www.tiktok.com/@mari.rfuentes/video/7644646855573261590",
+    "title": "Video 3",
     "summary": "",
     "bullets": []
   }

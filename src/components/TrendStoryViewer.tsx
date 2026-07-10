@@ -14,22 +14,22 @@ type Props = {
   onView?: (id: string) => void;
 };
 
-function getEmbedUrl(url: string | null, network: string | null, isActive: boolean) {
+function getEmbedUrl(url: string | null, isActive: boolean) {
   if (!url) return "";
   try {
     const autoPlayParam = isActive ? "1" : "0";
-    if (network === "youtube") {
-      const v = new URL(url).searchParams.get("v");
+    if (url.includes("youtube.com") || url.includes("youtu.be")) {
+      const v = new URL(url).searchParams.get("v") || url.split('/').pop();
       if (v) return `https://www.youtube.com/embed/${v}?autoplay=${autoPlayParam}&mute=1&controls=0&modestbranding=1&rel=0&loop=1&playlist=${v}&playsinline=1`;
     }
-    if (network === "instagram") {
+    if (url.includes("instagram.com")) {
       return url.replace(/\/$/, "") + "/embed/?hidecaption=true";
     }
-    if (network === "tiktok") {
+    if (url.includes("tiktok.com")) {
       const match = url.match(/\/video\/(\d+)/);
       if (match) return `https://www.tiktok.com/embed/v2/${match[1]}?autoplay=${autoPlayParam}&hide_ui=1`;
     }
-    if (network === "facebook") {
+    if (url.includes("facebook.com")) {
       return `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false&autoplay=${isActive ? "true" : "false"}`;
     }
   } catch (e) {
@@ -186,14 +186,14 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
               {/* Actual Embedded Video with CSS Crop for UI */}
               <div className="w-full aspect-[9/16] bg-black rounded-[24px] overflow-hidden relative border-none">
                 <iframe 
-                  src={getEmbedUrl(trend.media_url, trend.network, activeIndex === i)} 
+                  src={getEmbedUrl(trend.media_url, activeIndex === i)} 
                   className="absolute border-0"
                   style={{
                     top: '0',
                     left: '0',
                     width: '100%',
                     height: '100%',
-                    transform: trend.network === 'instagram' ? 'scale(1.34) translateY(4.5%)' : 'none',
+                    transform: (trend.media_url || '').includes('instagram.com') ? 'scale(1.34) translateY(4.5%)' : 'none',
                     transformOrigin: 'center',
                     pointerEvents: 'auto'
                   }}
