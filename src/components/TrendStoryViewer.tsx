@@ -147,6 +147,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
                 }))} 
                 edges={(activeFlow.edges || []).map((e: any) => ({
                   ...e,
+                  type: 'smoothstep',
                   animated: e.animated !== false,
                   style: { stroke: '#94a3b8', strokeWidth: 2 }
                 }))} 
@@ -158,7 +159,13 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
                 minZoom={0.2}
                 maxZoom={2}
                 proOptions={{ hideAttribution: true }}
-              />
+              >
+                <style>{`
+                  .react-flow__handle {
+                    display: none !important;
+                  }
+                `}</style>
+              </ReactFlow>
             </div>
           ) : (
             <div className="w-full h-full flex items-center justify-center">
