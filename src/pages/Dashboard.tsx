@@ -347,10 +347,14 @@ export default function Dashboard() {
                   </svg>
                 )
               },
-            ].map((item, index) => (
+            ].map((item) => (
               <div 
                 key={item.id}
-                onClick={() => setOpenIndex(index)}
+                onClick={() => {
+                  const targetNetwork = item.title.toLowerCase();
+                  const idx = trends.findIndex(t => t.network === targetNetwork);
+                  if (idx !== -1) setOpenIndex(idx);
+                }}
                 className={`w-[368px] h-[299px] shrink-0 rounded-[24px] flex flex-col overflow-hidden snap-center border cursor-pointer hover:shadow-md transition-shadow relative ${
                   isDark ? "bg-[#1A1A1A] border-white/5" : "bg-white border-black/5"
                 }`}
