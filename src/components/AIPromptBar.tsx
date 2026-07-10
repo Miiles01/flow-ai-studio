@@ -94,6 +94,7 @@ const AIPromptBar = ({ onGenerate, isGenerating, forceOpen, extendLabel, onCance
   const handleSubmit = (e?: React.FormEvent) => {
     e?.preventDefault();
     if (!prompt.trim() || isGenerating) return;
+    stopRecording();
     onGenerate(prompt.trim());
     setPrompt("");
   };
