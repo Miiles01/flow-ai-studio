@@ -6,6 +6,7 @@ import type { Trend } from "@/hooks/useTrends";
 import { ReactFlow } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { MOCK_FLOWS } from "@/data/mockTrends";
+import { useTheme } from "@/contexts/ThemeContext";
 
 type Props = {
   trends: Trend[];
@@ -39,6 +40,7 @@ function getEmbedUrl(url: string | null, isActive: boolean) {
 }
 
 export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props) {
+  const { isDark } = useTheme();
   const open = startIndex !== null && trends.length > 0;
   const containerRef = useRef<HTMLDivElement>(null);
   
@@ -99,13 +101,13 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent
-        className="p-0 overflow-hidden border-none max-w-[95vw] w-[95vw] h-[95vh] rounded-[32px] shadow-2xl bg-white [&>button.absolute.right-4]:hidden"
+        className="p-0 overflow-hidden border-none max-w-[95vw] w-[95vw] h-[95vh] rounded-[32px] shadow-2xl bg-white dark:bg-[#0f0f11] [&>button.absolute.right-4]:hidden"
       >
         {/* Full Dotted pattern Background across the ENTIRE modal */}
         <div 
           className="absolute inset-0 pointer-events-none opacity-40 z-0"
           style={{
-            background: "radial-gradient(circle at center, #FFFFFF 0%, rgba(140, 134, 162, 0.15) 59%, #FFFFFF 100%)",
+            background: isDark ? "radial-gradient(circle at center, #0f0f11 0%, rgba(255, 255, 255, 0.05) 59%, #0f0f11 100%)" : "radial-gradient(circle at center, #FFFFFF 0%, rgba(140, 134, 162, 0.15) 59%, #FFFFFF 100%)",
             maskImage: "radial-gradient(circle, black 1px, transparent 1.5px)",
             maskSize: "24px 24px",
             WebkitMaskImage: "radial-gradient(circle, black 1px, transparent 1.5px)",
@@ -116,7 +118,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
         {/* Floating Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-8 right-8 px-5 py-2.5 rounded-full transition-all hover:bg-gray-50 hover:shadow-md text-black z-50 bg-white shadow-sm border border-black/5 font-medium text-sm cursor-pointer flex items-center gap-2"
+          className="absolute top-8 right-8 px-5 py-2.5 rounded-full transition-all hover:bg-gray-50 dark:hover:bg-white/10 text-black dark:text-white z-50 bg-white dark:bg-white/5 shadow-sm border border-black/5 dark:border-white/10 font-medium text-sm cursor-pointer flex items-center gap-2"
         >
           <X size={16} strokeWidth={2.5} />
           Cerrar
@@ -127,21 +129,22 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
           {activeFlow ? (
             <div className="w-full h-full relative">
               <div className="absolute top-8 left-[38%] z-20 pointer-events-none">
-                <h2 className="text-2xl font-normal text-gray-900">Arquitectura Algorítmica</h2>
-                <p className="text-sm text-gray-500 mt-1 capitalize">{filteredTrends[activeIndex]?.network || targetNetwork || ""}</p>
+                <h2 className="text-2xl font-normal text-gray-900 dark:text-white">Arquitectura Algorítmica</h2>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 capitalize">{filteredTrends[activeIndex]?.network || targetNetwork || ""}</p>
               </div>
               <ReactFlow 
+                colorMode={isDark ? "dark" : "light"}
                 nodes={(activeFlow.nodes || []).map((n: any) => ({
                   ...n,
                   draggable: false,
                   selectable: true,
                   style: {
-                    background: n.data?.expandable ? '#f0fdf4' : '#ffffff',
-                    border: '1px solid #e2e8f0',
+                    background: n.data?.expandable ? (isDark ? '#064e3b' : '#f0fdf4') : (isDark ? '#1a1a1a' : '#ffffff'),
+                    border: isDark ? '1px solid #333' : '1px solid #e2e8f0',
                     borderRadius: '12px',
                     padding: '12px 18px',
                     fontSize: '13px',
-                    color: '#0f172a',
+                    color: isDark ? '#f8fafc' : '#0f172a',
                     boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1)'
                   }
                 }))} 
@@ -149,9 +152,9 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
                   ...e,
                   type: 'smoothstep',
                   animated: e.animated !== false,
-                  style: { stroke: '#94a3b8', strokeWidth: 2 },
-                  labelStyle: { fill: '#475569', fontWeight: 600, fontSize: 12 },
-                  labelBgStyle: { fill: '#ffffff', fillOpacity: 0.9, color: '#ffffff' },
+                  style: { stroke: isDark ? '#475569' : '#94a3b8', strokeWidth: 2 },
+                  labelStyle: { fill: isDark ? '#e2e8f0' : '#475569', fontWeight: 600, fontSize: 12 },
+                  labelBgStyle: { fill: isDark ? '#0f0f11' : '#ffffff', fillOpacity: 0.9, color: isDark ? '#0f0f11' : '#ffffff' },
                   labelBgPadding: [6, 4],
                   labelBgBorderRadius: 6
                 }))} 
