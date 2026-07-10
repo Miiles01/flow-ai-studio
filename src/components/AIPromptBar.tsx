@@ -1,6 +1,6 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowUp, Loader2, EyeOff, X } from "lucide-react";
+import { ArrowUp, Loader2, EyeOff, X, Mic } from "lucide-react";
 import logoImg from "@/assets/logo.webp";
 import { useTheme } from "@/contexts/ThemeContext";
 import AppsMenu from "@/components/AppsMenu";
@@ -19,8 +19,62 @@ const AIPromptBar = ({ onGenerate, isGenerating, forceOpen, extendLabel, onCance
   const [isHovered, setIsHovered] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const { isDark } = useTheme();
-  
+  const [isRecording, setIsRecording] = useState(false);
+
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const recognitionRef = useRef<any>(null);
+  const baseTextRef = useRef("");
+  const speechSupported =
+    typeof window !== "undefined" &&
+    ("SpeechRecognition" in window || "webkitSpeechRecognition" in window);
+
+  const stopRecording = () => {
+    try {
+      recognitionRef.current?.stop();
+    } catch {
+      /* noop */
+    }
+    setIsRecording(false);
+  };
+
+  const toggleRecording = () => {
+    if (!speechSupported) return;
+    if (isRecording) {
+      stopRecording();
+      return;
+    }
+    const SR: any =
+      (window as any).SpeechRecognition || (window as any).webkitSpeechRecognition;
+    const recognition = new SR();
+    recognition.lang = "es-ES";
+    recognition.continuous = true;
+    recognition.interimResults = true;
+    baseTextRef.current = prompt ? prompt.trim() + " " : "";
+
+    recognition.onresult = (event: any) => {
+      let transcript = "";
+      for (let i = event.resultIndex; i < event.results.length; i++) {
+        transcript += event.results[i][0].transcript;
+      }
+      setPrompt(baseTextRef.current + transcript);
+    };
+    recognition.onend = () => setIsRecording(false);
+    recognition.onerror = () => setIsRecording(false);
+
+    recognitionRef.current = recognition;
+    recognition.start();
+    setIsRecording(true);
+  };
+
+  useEffect(() => {
+    return () => {
+      try {
+        recognitionRef.current?.stop();
+      } catch {
+        /* noop */
+      }
+    };
+  }, []);
 
   useEffect(() => {
     if (forceOpen) {
@@ -40,6 +94,7 @@ const AIPromptBar = ({ onGenerate, isGenerating, forceOpen, extendLabel, onCance
   const handleSubmit = (e?: React.FormEvent) => {
     e?.preventDefault();
     if (!prompt.trim() || isGenerating) return;
+    stopRecording();
     onGenerate(prompt.trim());
     setPrompt("");
   };
@@ -142,6 +197,22 @@ const AIPromptBar = ({ onGenerate, isGenerating, forceOpen, extendLabel, onCance
                 </div>
 
                 <div className="flex items-center gap-3">
+                  {speechSupported && (
+                    <button
+                      type="button"
+                      onClick={toggleRecording}
+                      disabled={isGenerating}
+                      aria-label={isRecording ? "Detener dictado" : "Dictar por voz"}
+                      title={isRecording ? "Detener dictado" : "Dictar por voz"}
+                      className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 disabled:opacity-30 ${
+                        isRecording
+                          ? "bg-red-500 text-white animate-pulse hover:bg-red-600"
+                          : "bg-white/10 text-white/70 hover:bg-white/20 hover:text-white"
+                      }`}
+                    >
+                      <Mic size={18} strokeWidth={1.5} />
+                    </button>
+                  )}
                   <button
                     onClick={() => handleSubmit()}
                     disabled={!prompt.trim() || isGenerating}

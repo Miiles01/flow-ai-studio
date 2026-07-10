@@ -3,8 +3,8 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { X } from "lucide-react";
 import { motion } from "framer-motion";
 import type { Trend } from "@/hooks/useTrends";
-import ReactFlow from "reactflow";
-import "reactflow/dist/style.css";
+import { ReactFlow } from "@xyflow/react";
+import "@xyflow/react/dist/style.css";
 import { MOCK_FLOWS } from "@/data/mockTrends";
 
 type Props = {
@@ -128,7 +128,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
             <div className="w-full h-full relative">
               <div className="absolute top-8 left-[38%] z-20 pointer-events-none">
                 <h2 className="text-2xl font-normal text-gray-900">Arquitectura Algorítmica</h2>
-                <p className="text-sm text-gray-500 mt-1 capitalize">{activeTrend?.network || targetNetwork || ""}</p>
+                <p className="text-sm text-gray-500 mt-1 capitalize">{filteredTrends[activeIndex]?.network || targetNetwork || ""}</p>
               </div>
               <ReactFlow 
                 nodes={(activeFlow.nodes || []).map((n: any) => ({

@@ -16,6 +16,7 @@ export type Trend = {
   category: string;
   source: string | null;
   published_at: string;
+  network?: string;
 };
 
 export function useTrends() {
