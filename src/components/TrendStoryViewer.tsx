@@ -20,7 +20,7 @@ function getEmbedUrl(url: string | null, network: string | null, isActive: boole
     const autoPlayParam = isActive ? "1" : "0";
     if (network === "youtube") {
       const v = new URL(url).searchParams.get("v");
-      if (v) return `https://www.youtube.com/embed/${v}?autoplay=${autoPlayParam}&mute=1&controls=0&modestbranding=1`;
+      if (v) return `https://www.youtube.com/embed/${v}?autoplay=${autoPlayParam}&mute=1&controls=0&modestbranding=1&rel=0&loop=1&playlist=${v}&playsinline=1`;
     }
     if (network === "instagram") {
       return url.replace(/\/$/, "") + "/embed/?hidecaption=true";
