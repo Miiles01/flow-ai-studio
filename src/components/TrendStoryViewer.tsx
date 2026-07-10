@@ -3,8 +3,8 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { X } from "lucide-react";
 import { motion } from "framer-motion";
 import type { Trend } from "@/hooks/useTrends";
-import ReactFlow from "reactflow";
-import "reactflow/dist/style.css";
+import { ReactFlow } from "@xyflow/react";
+import "@xyflow/react/dist/style.css";
 import { MOCK_FLOWS } from "@/data/mockTrends";
 
 type Props = {
