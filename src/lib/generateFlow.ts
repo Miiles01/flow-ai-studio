@@ -183,8 +183,13 @@ Respond ONLY with valid JSON: {"nodes": [...], "edges": [...]}`;
   const steps = data.steps;
 
   if (!Array.isArray(steps) || steps.length === 0) {
-    throw new Error("La IA no generó pasos válidos");
+    // Distinguir "no llegaron nodos" de un formato inesperado para un error más claro.
+    if (data.nodes && Array.isArray(data.nodes) && data.nodes.length === 0) {
+      throw new Error("La IA no devolvió ningún nodo. Intenta reformular tu descripción.");
+    }
+    throw new Error("La IA devolvió un formato de flujo no reconocido");
   }
+
 
   const nodes: Node[] = [];
   const edges: Edge[] = [];
