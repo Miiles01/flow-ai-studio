@@ -56,14 +56,15 @@ function getEmbedUrl(url: string | null, isActive: boolean) {
     const autoPlayParam = isActive ? "1" : "0";
     if (url.includes("youtube.com") || url.includes("youtu.be")) {
       const v = new URL(url).searchParams.get("v") || url.split('/').pop();
-      if (v) return `https://www.youtube.com/embed/${v}?autoplay=${autoPlayParam}&mute=1&controls=0&modestbranding=1&rel=0&loop=1&playlist=${v}&playsinline=1`;
+      if (v) return `https://www.youtube.com/embed/${v}?autoplay=${autoPlayParam}&mute=1&controls=0&modestbranding=1&rel=0&loop=1&playlist=${v}&playsinline=1&iv_load_policy=3&fs=0&disablekb=1&cc_load_policy=0`;
     }
     if (url.includes("instagram.com")) {
       return url.replace(/\/$/, "") + "/embed/?hidecaption=true";
     }
     if (url.includes("tiktok.com")) {
       const match = url.match(/\/video\/(\d+)/);
-      if (match) return `https://www.tiktok.com/embed/v2/${match[1]}?autoplay=${autoPlayParam}&hide_ui=1`;
+      // Player oficial v1: permite apagar toda la UI (controles, música, descripción, botones)
+      if (match) return `https://www.tiktok.com/player/v1/${match[1]}?autoplay=${autoPlayParam}&loop=1&controls=0&progress_bar=0&play_button=0&volume_control=0&fullscreen_button=0&timestamp=0&music_info=0&description=0&rel=0&native_context_menu=0&closed_caption=0`;
     }
     if (url.includes("facebook.com")) {
       return `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false&autoplay=${isActive ? "true" : "false"}`;
@@ -336,20 +337,30 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
             >
               {/* Actual Embedded Video with CSS Crop for UI */}
               <div className="w-full aspect-[9/16] bg-black rounded-[24px] overflow-hidden relative border-none">
-                <iframe 
-                  src={getEmbedUrl(trend.media_url, activeIndex === i)} 
+                <iframe
+                  src={getEmbedUrl(trend.media_url, activeIndex === i)}
                   className="absolute border-0"
-                  style={{
-                    top: '0',
-                    left: '0',
-                    width: '100%',
-                    height: '100%',
-                    transform: (trend.media_url || '').includes('instagram.com') ? 'scale(1.34) translateY(4.5%)' : 'none',
-                    transformOrigin: 'center',
-                    pointerEvents: 'auto'
-                  }}
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                  allowFullScreen 
+                  style={
+                    (trend.media_url || '').includes('instagram.com')
+                      ? {
+                          // Recorte sin zoom: el iframe es más alto que el contenedor y se desplaza
+                          // hacia arriba para ocultar el header (~54px) y el footer (~48px) del embed.
+                          top: '-54px',
+                          left: '-1px',
+                          width: 'calc(100% + 2px)',
+                          height: 'calc(100% + 102px)',
+                          pointerEvents: 'auto',
+                        }
+                      : {
+                          top: '0',
+                          left: '0',
+                          width: '100%',
+                          height: '100%',
+                          pointerEvents: 'auto',
+                        }
+                  }
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                  allowFullScreen
                 />
               </div>
             </motion.div>
