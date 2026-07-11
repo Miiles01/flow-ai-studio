@@ -158,15 +158,26 @@ Respond ONLY with valid JSON: {"nodes": [...], "edges": [...]}`;
     throw new Error(data.error);
   }
 
-  // 1. Si la nueva función Edge está desplegada, vendrá en data.nodes
-  if (data.nodes && Array.isArray(data.nodes) && data.nodes.length > 0 && data.nodes[0].position) {
-    return { nodes: data.nodes, edges: assignOptimalHandles(data.nodes, data.edges || []) };
+  // 1. Nueva función Edge desplegada: los nodos vienen en data.nodes
+  if (data.nodes && Array.isArray(data.nodes) && data.nodes.length > 0) {
+    // Aceptar los nodos aunque alguno no traiga "position": asignar una por defecto
+    // en vez de descartar toda la respuesta y mostrar un error engañoso.
+    let fallbackY = 0;
+    const nodes = data.nodes.map((n: Node, i: number) => {
+      if (n && typeof n === "object" && !n.position) {
+        fallbackY = i * 160;
+        return { ...n, position: { x: 400, y: fallbackY } };
+      }
+      return n;
+    });
+    return { nodes, edges: assignOptimalHandles(nodes, data.edges || []) };
   }
 
-  // 2. Si la función Edge vieja está desplegada, pero la IA obedeció el nuevo prompt, vendrá dentro de data.steps.nodes
-  if (data.steps && data.steps.nodes && Array.isArray(data.steps.nodes)) {
+  // 2. Función Edge vieja pero con el nuevo formato dentro de data.steps.nodes
+  if (data.steps && data.steps.nodes && Array.isArray(data.steps.nodes) && data.steps.nodes.length > 0) {
     return { nodes: data.steps.nodes, edges: assignOptimalHandles(data.steps.nodes, data.steps.edges || []) };
   }
+
 
   // 3. Fallback absoluto si la IA insistió en devolver el array simple antiguo
   const steps = data.steps;
