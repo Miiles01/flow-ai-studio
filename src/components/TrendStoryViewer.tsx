@@ -280,7 +280,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
                 fitViewOptions={{ padding: 0.15 }}
                 nodesDraggable={false}
                 nodesConnectable={false}
-                elementsSelectable={false}
+                elementsSelectable={true}
                 minZoom={0.15}
                 maxZoom={2}
                 proOptions={{ hideAttribution: true }}
@@ -288,6 +288,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
               >
                 <style>{`
                   .trends-flow .react-flow__handle { opacity: 0 !important; pointer-events: none !important; }
+                  .trends-flow .react-flow__node { pointer-events: all !important; cursor: default !important; }
                   .trends-flow .react-flow__edge.trend-edge path.react-flow__edge-path {
                     stroke: ${isDark ? "#3F4553" : "#C9CEDC"} !important;
                     stroke-width: 1.5 !important;
