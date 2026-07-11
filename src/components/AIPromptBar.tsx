@@ -206,7 +206,7 @@ const AIPromptBar = ({ onGenerate, isGenerating, forceOpen, extendLabel, onCance
                       title={isRecording ? "Detener dictado" : "Dictar por voz"}
                       className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 disabled:opacity-30 ${
                         isRecording
-                          ? "bg-red-500 text-white animate-pulse hover:bg-red-600"
+                          ? "bg-red-500 text-white hover:bg-red-600 ring-2 ring-red-400/50"
                           : "bg-white/10 text-white/70 hover:bg-white/20 hover:text-white"
                       }`}
                     >
