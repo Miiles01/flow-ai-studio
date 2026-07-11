@@ -119,28 +119,32 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
 
   const toggleNodeDetails = useCallback(
     (nodeId: string) => {
+      const isExpanding = !expandedIds.has(nodeId);
       setExpandedIds((prev) => {
         const next = new Set(prev);
-        const isExpanding = !next.has(nodeId);
         if (isExpanding) next.add(nodeId);
         else next.delete(nodeId);
-
-        // Al expandir, encuadra el nodo + sus detalles
-        if (isExpanding && activeFlow) {
-          const parent = activeFlow.nodes.find((n) => n.id === nodeId);
-          const detailIds = (parent?.data.details ?? []).map((det) => `${nodeId}-det-${det.id}`);
-          setTimeout(() => {
-            rfInstanceRef.current?.fitView({
-              nodes: [{ id: nodeId }, ...detailIds.map((id) => ({ id }))],
-              padding: 0.35,
-              duration: 500,
-            });
-          }, 80);
-        }
         return next;
       });
+
+      // Re-encuadre: al expandir enfoca el nodo + sus detalles; al colapsar vuelve a la vista general
+      setTimeout(() => {
+        const instance = rfInstanceRef.current;
+        if (!instance || !activeFlow) return;
+        if (isExpanding) {
+          const parent = activeFlow.nodes.find((n) => n.id === nodeId);
+          const detailIds = (parent?.data.details ?? []).map((det) => `${nodeId}-det-${det.id}`);
+          instance.fitView({
+            nodes: [{ id: nodeId }, ...detailIds.map((id) => ({ id }))],
+            padding: 0.35,
+            duration: 500,
+          });
+        } else {
+          instance.fitView({ padding: 0.15, duration: 500 });
+        }
+      }, 80);
     },
-    [activeFlow]
+    [activeFlow, expandedIds]
   );
 
   const { visibleNodes, visibleEdges } = useMemo(() => {
@@ -238,9 +242,10 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
           {activeFlow ? (
             <div className="w-full h-full relative">
               <div className="absolute top-8 left-8 z-20 pointer-events-none">
-                <h2 className="text-2xl font-normal text-gray-900 dark:text-white">{activeFlow.title}</h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
-                  Así decide el algoritmo — toca el ojo para ver el detalle
+                <h2 className="text-2xl font-normal text-gray-900 dark:text-white">Arquitectura Algorítmica</h2>
+                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 capitalize">{targetNetwork || ""}</p>
+                <p className="text-[11px] font-light text-gray-400 dark:text-gray-500 mt-2">
+                  Toca el ojo en los nodos para ver el detalle
                 </p>
               </div>
               <ReactFlow

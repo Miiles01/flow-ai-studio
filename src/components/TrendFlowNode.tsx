@@ -1,6 +1,7 @@
 import { memo } from "react";
 import { Handle, Position, type NodeProps } from "@xyflow/react";
 import { Eye, EyeOff } from "lucide-react";
+import { motion } from "framer-motion";
 
 export type TrendNodeKind = "start" | "phase" | "decision" | "fail" | "success" | "strategy" | "detail";
 
@@ -54,7 +55,10 @@ const TrendFlowNode = ({ id, data }: NodeProps) => {
   const isDetail = kind === "detail";
 
   return (
-    <div
+    <motion.div
+      initial={isDetail ? { opacity: 0, y: 8, scale: 0.94 } : false}
+      animate={{ opacity: 1, y: 0, scale: 1 }}
+      transition={{ type: "spring", damping: 22, stiffness: 320 }}
       className={`relative rounded-2xl border shadow-[0_4px_14px_rgba(0,0,0,0.05)] px-4 font-sans select-none ${
         isDetail ? "py-2.5 w-[210px]" : "py-3.5 w-[240px]"
       } ${s.card}`}
@@ -81,7 +85,7 @@ const TrendFlowNode = ({ id, data }: NodeProps) => {
             d.onToggle?.(id);
           }}
           title={d.expanded ? "Ocultar detalle" : "Ver más detalle"}
-          className={`absolute -bottom-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full flex items-center justify-center border shadow-md transition-all cursor-pointer z-10 ${
+          className={`nodrag nopan absolute -bottom-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full flex items-center justify-center border shadow-md transition-all cursor-pointer z-10 before:absolute before:-inset-2.5 before:content-[''] before:rounded-full ${
             d.expanded
               ? "bg-[#4059F1] text-white border-[#4059F1]"
               : "bg-white dark:bg-[#1C1C1E] text-[#4059F1] dark:text-[#9DA9F9] border-[#E5E7EB] dark:border-white/15 hover:scale-110"
@@ -97,7 +101,7 @@ const TrendFlowNode = ({ id, data }: NodeProps) => {
       <Handle id="l-s" type="source" position={Position.Left} className={HIDDEN_HANDLE} />
       <Handle id="r-t" type="target" position={Position.Right} className={HIDDEN_HANDLE} />
       <Handle id="r-s" type="source" position={Position.Right} className={HIDDEN_HANDLE} />
-    </div>
+    </motion.div>
   );
 };
 
