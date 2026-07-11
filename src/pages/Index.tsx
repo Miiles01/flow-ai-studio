@@ -2622,7 +2622,7 @@ const IndexContent = () => {
                           key={node.id}
                           tabIndex={-1}
                           className="rounded-2xl border p-5 space-y-3 relative group/card transition-all duration-300 cursor-pointer outline-none"
-                          onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget as Node)) setActiveCardId(null); }}
+                          onBlur={(e) => { if (!e.currentTarget.contains(e.relatedTarget as unknown as globalThis.Node)) setActiveCardId(null); }}
                           style={{
                             backgroundColor: backgroundColor || (isDark ? "#1C1C1E" : "#FAFAFA"),
                             borderColor: isCardDark ? "rgba(255,255,255,0.1)" : "#E5E7EB",
