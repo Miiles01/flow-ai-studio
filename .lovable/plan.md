@@ -1,78 +1,51 @@
-# Plan: Tendencias (Noticias de negocios)
+# Revisión de la generación de flujos
 
-Una nueva sección de noticias/tendencias de negocios, visible para **todos los usuarios** (gratis, pro, negocios). Tendrá su propio "cerebro" interno (base de datos que se autolimpia) alimentado por **Claude** mediante una automatización externa que llama a un endpoint seguro.
+## Diagnóstico
 
-## 1. Base de datos — nuevo cerebro de tendencias
-
-Nueva tabla `trends` (separada del cerebro de prospectos):
+La generación de flujos usa 3 funciones de backend en cadena, disparadas desde la barra de IA (`AIPromptBar` → `handleAIGenerate` en `src/pages/Index.tsx`):
 
 ```text
-trends
-├─ id            uuid
-├─ title         text        (título de la noticia)
-├─ summary       text        (descripción larga, scrolleable)
-├─ media_url     text        (imagen/video vertical tipo teléfono)
-├─ media_type    text        ('image' | 'video')
-├─ thumbnail_url text        (miniatura para el story del carrusel)
-├─ links         jsonb       (lista de { label, url } para botones/links externos)
-├─ bullets       jsonb       (lista de strings para viñetas)
-├─ category      text        (ej. "negocios")
-├─ source        text        (fuente / "claude-agent")
-├─ published_at  timestamptz
-├─ expires_at    timestamptz (se autolimpia tras ~unas semanas)
-├─ is_active     boolean
-├─ created_at / updated_at
+Prompt del usuario
+   → clarify-flow   (¿hace falta aclarar? preguntas)
+   → plan-flow      (plan estratégico para aprobar)
+   → generate-flow  (nodos + edges finales para el canvas)
 ```
 
-- **Lectura pública**: política RLS que permite a cualquier usuario autenticado leer tendencias activas y no expiradas (`is_active = true AND expires_at > now()`).
-- **Escritura**: solo `service_role` (vía el endpoint de automatización). Ningún usuario puede insertar/editar desde el cliente.
-- GRANTs: `SELECT` a `authenticated`; `ALL` a `service_role`.
-- Autolimpieza: las consultas filtran por `expires_at > now()`, y un cron diario opcional borra las expiradas para mantener la tabla limpia.
+**Problema principal encontrado:** las funciones de backend **no están respondiendo**. Al probar los endpoints desplegados directamente, TODAS devuelven `404 NOT_FOUND_FUNCTION_BLOB`:
 
-## 2. Endpoint para Claude — `ingest-trends` (edge function)
+```text
+generate-flow  → 404
+plan-flow      → 404
+clarify-flow   → 404
+chat           → 404   (también afectada)
+```
 
-Mismo patrón que `auto-ingest` (autenticado con `x-automation-key` = `AUTOMATION_SECRET`, que ya existe):
+Esto significa que el código de las funciones existe en el repositorio, pero **no está desplegado/activo** en el backend. Con esto, la generación de flujos falla siempre: `clarify-flow` y `plan-flow` "fallan en silencio" (siguen de largo), pero `generate-flow` lanza error y solo se ve un toast de "Error al generar el flujo". Los tableros que ya existen en la cuenta son flujos guardados previamente, no generados ahora.
 
-- Recibe `{ trends: [...] }` con título, resumen, media_url, links, bullets, etc.
-- Deduplica por título.
-- Asigna `expires_at` (por defecto +21 días) si no viene en el payload.
-- Inserta con `service_role`.
+## Objetivo
 
-Claude (vía tu automatización externa: Make/n8n/script con cron) llamará a este endpoint periódicamente para alimentar el cerebro. **Te entregaré la URL del endpoint y el formato JSON exacto** para que conectes a Claude. La `AUTOMATION_SECRET` ya está configurada.
+Dejar la generación de flujos funcionando de punta a punta y hacerla más robusta ante respuestas imperfectas de la IA.
 
-## 3. Vista previa en Inicio — Stories de Instagram
+## Cambios propuestos
 
-En `Dashboard.tsx`, debajo de las tarjetas de Notificaciones/Proyectos:
+1. **Redesplegar las funciones Edge de flujos** (`generate-flow`, `plan-flow`, `clarify-flow`) junto con su código compartido en `_shared/` (`flow-instructions.ts`). Redesplegar también `chat` ya que muestra el mismo síntoma.
 
-- Título **"Tendencias"**.
-- Carrusel horizontal scrolleable (mismo patrón de carrusel del proyecto: `overflow-x-auto snap-x scrollbar-hide` con bleed en mobile).
-- Cada "story" = círculo/tarjeta vertical con anillo tipo Instagram + miniatura + título corto.
-- Al hacer clic → abre el **popup de detalle** (componente compartido).
-- Si no hay datos: muestra placeholders vacíos (skeletons tipo story) como pediste.
+2. **Verificación end-to-end (obligatoria antes de dar por cerrado):**
+   - Probar cada función desplegada y confirmar respuesta `200`.
+   - Ejecutar una generación real en la vista previa (prompt de prueba) y confirmar que aparecen nodos en el canvas, sin errores en consola/red.
 
-## 4. Popup de detalle (componente `TrendStoryViewer`)
+3. **Endurecer el manejo de errores en el cliente** (`src/lib/generateFlow.ts`), para que fallos futuros no dejen al usuario sin contexto:
+   - Corregir el mensaje engañoso "La IA no generó pasos válidos": distinguir entre "no llegaron nodos" y "llegaron nodos sin `position`" (hoy cae al fallback antiguo y confunde).
+   - Aceptar nodos aunque el primero no traiga `position` (asignar posición por defecto en vez de descartar toda la respuesta).
 
-Dialog grande con dos columnas:
+## Notas técnicas (para referencia)
 
-- **Derecha**: media vertical tipo teléfono (video vertical autoplay o imagen vertical), formato 9:16.
-- **Izquierda**: título + descripción scrolleable, con soporte de viñetas (bullets) y botones/links que abren enlaces externos en nueva pestaña.
-- **Botones de navegación** (anterior / siguiente) para deslizar entre stories sin cerrar el popup, estilo visor de stories.
-- En mobile se apila (media arriba, texto abajo).
-- Sigue el sistema de diseño Miiles (dark/light, `rounded`, Poppins, botones `rounded-full`).
+- Cliente: `src/lib/generateFlow.ts` (`supabase.functions.invoke("generate-flow")`), `src/lib/planFlow.ts`, `src/lib/clarifyFlow.ts`.
+- Orquestación en `src/pages/Index.tsx`: `handleAIGenerate`, `proceedToPlanning`, `runGenerate`, `runExtendGenerate`.
+- Funciones: `supabase/functions/generate-flow|plan-flow|clarify-flow/index.ts`, modelo `google/gemini-3-flash-preview` vía Lovable AI Gateway.
+- Observación menor (no bloqueante): el prompt grande de instrucciones está duplicado en cliente y en `generate-flow`, lo que puede generar reglas contradictorias. Se puede simplificar en una iteración posterior si quieres.
 
-## 5. Página completa del dashboard — `/trends`
+## Fuera de alcance
 
-- Nueva ruta `/trends` en `App.tsx` (dentro de `DashboardRoute`).
-- Nuevo ítem **"Tendencias"** en `mainNav` de `DashboardLayout.tsx`, **debajo de "Tableros"** (icono tipo `Newspaper`/`Sparkles`).
-- La página muestra todas las tendencias activas en una grilla de cards; al hacer clic abre el mismo `TrendStoryViewer`.
-
-## Detalles técnicos
-- Hook `useTrends()` que consulta `trends` activas ordenadas por `published_at desc`.
-- `TrendStoryViewer` reutilizado en Inicio y en `/trends`.
-- Datos de media: Claude envía URLs externas (imagen/video). No requiere subir archivos a storage en esta fase.
-- Sin lógica de pago/plan: acceso universal.
-
-## Lo que necesito de ti (después de implementar)
-- Confirmar la herramienta de automatización donde correrás a Claude (Make, n8n, script con cron, etc.) para darte la URL + JSON del endpoint `ingest-trends`.
-
-¿Procedo a construirlo así?
+- No se tocan landing/auth ni el sistema de diseño.
+- No se cambia el modelo de IA ni el esquema de base de datos.
