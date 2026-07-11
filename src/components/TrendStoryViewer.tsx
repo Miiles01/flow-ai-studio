@@ -3,13 +3,38 @@ import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { X } from "lucide-react";
 import { motion } from "framer-motion";
 import type { Trend } from "@/hooks/useTrends";
-import { ReactFlow, type Node, type Edge, type ReactFlowInstance } from "@xyflow/react";
+import { ReactFlow, BaseEdge, EdgeLabelRenderer, getSmoothStepPath, type Node, type Edge, type EdgeProps, type ReactFlowInstance } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import TrendFlowNode from "@/components/TrendFlowNode";
 import { TREND_FLOWS } from "@/data/trendFlows";
 import { useTheme } from "@/contexts/ThemeContext";
 
 const trendNodeTypes = { trendNode: TrendFlowNode };
+
+// Edge con etiqueta tipo pill (contenedor súper redondo en medio de la línea)
+const TrendEdge = ({ id, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, label }: EdgeProps) => {
+  const [path, labelX, labelY] = getSmoothStepPath({
+    sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition,
+    borderRadius: 14,
+  });
+  return (
+    <>
+      <BaseEdge id={id} path={path} />
+      {label && (
+        <EdgeLabelRenderer>
+          <div
+            style={{ transform: `translate(-50%, -50%) translate(${labelX}px, ${labelY}px)` }}
+            className="absolute pointer-events-none nodrag nopan px-3 py-1 rounded-full text-[10px] font-normal tracking-wide bg-white text-[#4B4F63] border border-[#E5E7EB] shadow-[0_2px_8px_rgba(0,0,0,0.06)] dark:bg-[#1C1C1E] dark:text-white/80 dark:border-white/10"
+          >
+            {label}
+          </div>
+        </EdgeLabelRenderer>
+      )}
+    </>
+  );
+};
+
+const trendEdgeTypes = { trendEdge: TrendEdge };
 
 // Handles según el lado en que se despliegan las tarjetas de detalle
 const DETAIL_HANDLES: Record<string, { source: string; target: string }> = {
@@ -172,14 +197,10 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
       target: e.target,
       sourceHandle: e.sourceHandle ?? "b",
       targetHandle: e.targetHandle ?? "t",
-      type: "smoothstep",
+      type: "trendEdge",
       animated: false,
       label: e.label,
       className: e.dashed ? "trend-edge-dashed" : "trend-edge",
-      labelStyle: { fill: isDark ? "#E2E8F0" : "#4B4F63", fontWeight: 500, fontSize: 11 },
-      labelBgStyle: { fill: isDark ? "#0f0f11" : "#ffffff", fillOpacity: 0.9 },
-      labelBgPadding: [6, 4] as [number, number],
-      labelBgBorderRadius: 6,
     }));
 
     // Nodos y aristas de detalle (solo de nodos expandidos)
@@ -201,7 +222,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
           target: detId,
           sourceHandle: handles.source,
           targetHandle: handles.target,
-          type: "smoothstep",
+          type: "trendEdge",
           animated: false,
           className: "trend-edge-detail",
         });
@@ -253,6 +274,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
                 nodes={visibleNodes}
                 edges={visibleEdges}
                 nodeTypes={trendNodeTypes}
+                edgeTypes={trendEdgeTypes}
                 onInit={(instance) => { rfInstanceRef.current = instance; }}
                 fitView
                 fitViewOptions={{ padding: 0.15 }}
@@ -274,11 +296,16 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
                     stroke: ${isDark ? "#5B4448" : "#F3C6C9"} !important;
                     stroke-width: 1.5 !important;
                     stroke-dasharray: 5 5 !important;
+                    animation: trendDashMove 0.8s linear infinite !important;
                   }
                   .trends-flow .react-flow__edge.trend-edge-detail path.react-flow__edge-path {
                     stroke: ${isDark ? "#3D477F" : "#B9C3F9"} !important;
                     stroke-width: 1.5 !important;
                     stroke-dasharray: 4 4 !important;
+                    animation: trendDashMove 0.8s linear infinite !important;
+                  }
+                  @keyframes trendDashMove {
+                    to { stroke-dashoffset: -20; }
                   }
                 `}</style>
               </ReactFlow>
