@@ -263,7 +263,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
         <div className="absolute inset-0 z-10">
           {activeFlow ? (
             <div className="w-full h-full relative">
-              <div className="absolute top-8 left-8 z-20 pointer-events-none">
+              <div className="absolute top-8 left-8 md:left-[38%] z-20 pointer-events-none">
                 <h2 className="text-2xl font-normal text-gray-900 dark:text-white">Arquitectura Algorítmica</h2>
                 <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 capitalize">{targetNetwork || ""}</p>
                 <p className="text-[11px] font-light text-gray-400 dark:text-gray-500 mt-2">
