@@ -370,6 +370,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
                   }
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
+                  loading="lazy"
                 />
               </div>
             </motion.div>
