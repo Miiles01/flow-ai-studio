@@ -259,8 +259,8 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
           Cerrar
         </button>
 
-        {/* Read-only ReactFlow Diagram — deja libre la franja del carrusel en desktop */}
-        <div className="absolute inset-y-0 right-0 left-0 md:left-[33%] z-10">
+        {/* Read-only ReactFlow Diagram — Ocupa todo el fondo para que los videos floten por encima */}
+        <div className="absolute inset-0 z-10">
           {activeFlow ? (
             <div className="w-full h-full relative">
               <div className="absolute top-8 left-8 z-20 pointer-events-none">
