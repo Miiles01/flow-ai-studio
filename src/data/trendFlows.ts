@@ -3,6 +3,12 @@ import videoLight from "@/assets/trends/video-light.svg";
 import videoDark from "@/assets/trends/video-dark.svg";
 import videoHorizontalLight from "@/assets/trends/video-horizontal-light.svg";
 import videoHorizontalDark from "@/assets/trends/video-horizontal-dark.svg";
+import vistasLight from "@/assets/trends/vistas-light.svg";
+import vistasDark from "@/assets/trends/vistas-dark.svg";
+import feedLight from "@/assets/trends/feed-light.svg";
+import feedDark from "@/assets/trends/feed-dark.svg";
+import feedCuentaLight from "@/assets/trends/feed-cuenta-light.svg";
+import feedCuentaDark from "@/assets/trends/feed-cuenta-dark.svg";
 import iconPlay from "@/assets/trends/play.svg";
 import iconHeart from "@/assets/trends/heart.svg";
 import iconShare from "@/assets/trends/share.svg";
@@ -113,6 +119,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
         position: { x: 0, y: 560 },
         data: {
           kind: "phase", tag: "Fase 2 · Ronda 1", confidence: "likely",
+          image: vistasLight, imageDark: vistasDark,
           label: "Se muestra a ~100-500 personas",
           sublabel: "Una muestra pequeña de usuarios afines lo ve en su FYP. Aquí se mide todo.",
           details: [
@@ -124,7 +131,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "D",
-        position: { x: 0, y: 750 },
+        position: { x: 0, y: 880 },
         data: {
           kind: "decision", tag: "Decisión", confidence: "likely",
           label: "¿La muestra reaccionó mejor que videos similares?",
@@ -132,7 +139,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "E",
-        position: { x: -480, y: 1160 },
+        position: { x: -480, y: 1290 },
         data: {
           kind: "fail", tag: "Resultado", confidence: "likely",
           label: "Se detiene la distribución",
@@ -141,7 +148,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "F",
-        position: { x: 480, y: 970 },
+        position: { x: 480, y: 1100 },
         data: {
           kind: "phase", tag: "Fase 3 · Ronda 2", confidence: "likely",
           label: "Escala a ~1.000-5.000 personas",
@@ -150,7 +157,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "G",
-        position: { x: 480, y: 1160 },
+        position: { x: 480, y: 1290 },
         data: {
           kind: "decision", tag: "Decisión", confidence: "likely",
           label: "¿Mantiene las señales al crecer?",
@@ -162,9 +169,10 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "H",
-        position: { x: 480, y: 1380 },
+        position: { x: 480, y: 1510 },
         data: {
           kind: "success", tag: "Resultado", confidence: "likely",
+          image: feedLight, imageDark: feedDark,
           label: "Rondas crecientes: 10K → 100K → 1M",
           sublabel: "Cada ronda repite la prueba. Mientras siga ganando, sigue escalando.",
         },
@@ -228,13 +236,14 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
         position: { x: 0, y: 370 },
         data: {
           kind: "phase", tag: "Fase 1 · Ronda 1", confidence: "confirmed",
+          image: vistasLight, imageDark: vistasDark,
           label: "Audición: ~100-1.000 no seguidores",
           sublabel: "Instagram lo muestra a personas afines que NO te siguen",
         },
       },
       {
         id: "C",
-        position: { x: 0, y: 560 },
+        position: { x: 0, y: 690 },
         data: {
           kind: "phase", tag: "Fase 2", confidence: "hypothesis",
           label: "Ventana crítica: ~90 minutos",
@@ -243,7 +252,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "D",
-        position: { x: 0, y: 750 },
+        position: { x: 0, y: 880 },
         data: {
           kind: "decision", tag: "Decisión", confidence: "likely",
           label: "¿Retiene y genera interacción en la audición?",
@@ -256,7 +265,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "E",
-        position: { x: -480, y: 1160 },
+        position: { x: -480, y: 1290 },
         data: {
           kind: "fail", tag: "Resultado", confidence: "likely",
           label: "Estrangulamiento",
@@ -265,7 +274,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "F",
-        position: { x: 480, y: 970 },
+        position: { x: 480, y: 1100 },
         data: {
           kind: "decision", tag: "Decisión · Ronda 2", confidence: "likely",
           label: "¿Genera DMs y compartidos? (dark social)",
@@ -278,9 +287,10 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "G",
-        position: { x: 480, y: 1190 },
+        position: { x: 480, y: 1320 },
         data: {
           kind: "success", tag: "Resultado", confidence: "confirmed",
+          image: feedCuentaLight, imageDark: feedCuentaDark,
           label: "Graduación",
           sublabel: "Explore, feed de Reels y ahora sí: tus seguidores",
         },
@@ -381,6 +391,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
         position: { x: 0, y: 1130 },
         data: {
           kind: "success", tag: "Resultado", confidence: "confirmed",
+          image: feedLight, imageDark: feedDark,
           label: "Feed ordenado",
           sublabel: "De mayor a menor puntaje, mezclado con ads",
         },
@@ -439,13 +450,14 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
         position: { x: 0, y: 370 },
         data: {
           kind: "phase", tag: "Fase 1 · Ronda 1", confidence: "likely",
+          image: vistasLight, imageDark: vistasDark,
           label: "Muestra semilla en el feed de Shorts",
           sublabel: "Se enseña a un grupo de usuarios afines y se mide la reacción",
         },
       },
       {
         id: "C",
-        position: { x: 0, y: 560 },
+        position: { x: 0, y: 690 },
         data: {
           kind: "decision", tag: "Decisión", confidence: "confirmed",
           label: "¿Visto o deslizado?",
@@ -457,7 +469,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "D",
-        position: { x: -480, y: 970 },
+        position: { x: -480, y: 1100 },
         data: {
           kind: "fail", tag: "Resultado", confidence: "likely",
           label: "Short frenado",
@@ -466,7 +478,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "E",
-        position: { x: 480, y: 780 },
+        position: { x: 480, y: 910 },
         data: {
           kind: "phase", tag: "Fase 2 · Ronda 2", confidence: "likely",
           label: "Escala a más feeds y regiones",
@@ -475,7 +487,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "F",
-        position: { x: 480, y: 970 },
+        position: { x: 480, y: 1100 },
         data: {
           kind: "decision", tag: "Decisión", confidence: "confirmed",
           label: "¿Alta satisfacción del espectador?",
@@ -487,7 +499,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "G",
-        position: { x: 480, y: 1190 },
+        position: { x: 480, y: 1320 },
         data: {
           kind: "success", tag: "Resultado", confidence: "likely",
           label: "Acervo evergreen",
