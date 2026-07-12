@@ -186,6 +186,10 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
         sublabel: n.data.sublabel,
         tag: n.data.tag,
         kind: n.data.kind,
+        image: n.data.image,
+        imageDark: n.data.imageDark,
+        icon: n.data.icon,
+        confidence: n.data.confidence,
         hasDetails: (n.data.details?.length ?? 0) > 0,
         expanded: expandedIds.has(n.id),
         onToggle: toggleNodeDetails,
@@ -214,7 +218,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
           type: "trendNode",
           position: { x: n.position.x + det.dx, y: n.position.y + det.dy },
           draggable: false,
-          data: { label: det.label, sublabel: det.sublabel, tag: det.tag, kind: "detail" },
+          data: { label: det.label, sublabel: det.sublabel, tag: det.tag, kind: "detail", icon: det.icon, confidence: det.confidence },
         });
         const handles = DETAIL_HANDLES[det.side ?? "bottom"];
         edges.push({
@@ -269,6 +273,18 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
                 <p className="text-[11px] font-light text-gray-400 dark:text-gray-500 mt-2">
                   Toca el ojo en los nodos para ver el detalle
                 </p>
+                {/* Leyenda de niveles de confianza */}
+                <div className="flex items-center gap-3 mt-3">
+                  <span className="flex items-center gap-1.5 text-[10px] font-light text-gray-500 dark:text-gray-400">
+                    <span className="w-2 h-2 rounded-full bg-[#22C55E]" /> Confirmado
+                  </span>
+                  <span className="flex items-center gap-1.5 text-[10px] font-light text-gray-500 dark:text-gray-400">
+                    <span className="w-2 h-2 rounded-full bg-[#F59E0B]" /> Muy probable
+                  </span>
+                  <span className="flex items-center gap-1.5 text-[10px] font-light text-gray-500 dark:text-gray-400">
+                    <span className="w-2 h-2 rounded-full bg-[#EF4444]" /> Hipótesis
+                  </span>
+                </div>
               </div>
               <ReactFlow
                 colorMode={isDark ? "dark" : "light"}

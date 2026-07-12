@@ -1,8 +1,16 @@
-import type { TrendNodeKind } from "@/components/TrendFlowNode";
+import type { TrendNodeKind, TrendConfidence } from "@/components/TrendFlowNode";
+import videoLight from "@/assets/trends/video-light.svg";
+import videoDark from "@/assets/trends/video-dark.svg";
+import iconPlay from "@/assets/trends/play.svg";
+import iconHeart from "@/assets/trends/heart.svg";
+import iconShare from "@/assets/trends/share.svg";
+import iconLike from "@/assets/trends/like.svg";
+import iconDislike from "@/assets/trends/dislike.svg";
 
 // ── Diagramas de arquitectura algorítmica por red social ──
-// Cada nodo puede llevar `details` (las "raíces"): se muestran al tocar el ojo.
-// `side` controla de qué lado del nodo padre salen las tarjetas de detalle.
+// Lógica: objetivo del algoritmo → qué mide (señales) → rondas de prueba → bucle.
+// Cada nodo lleva un nivel de confianza (confirmado / muy probable / hipótesis)
+// y puede llevar `details` (las "raíces"): se muestran al tocar el ojo.
 
 export type TrendFlowDetail = {
   id: string;
@@ -12,6 +20,8 @@ export type TrendFlowDetail = {
   tag?: string;
   label: string;
   sublabel?: string;
+  icon?: string;
+  confidence?: TrendConfidence;
 };
 
 export type TrendFlowNodeDef = {
@@ -22,6 +32,10 @@ export type TrendFlowNodeDef = {
     sublabel?: string;
     tag?: string;
     kind?: TrendNodeKind;
+    image?: string;
+    imageDark?: string;
+    icon?: string;
+    confidence?: TrendConfidence;
     details?: TrendFlowDetail[];
   };
 };
@@ -45,107 +59,34 @@ export type TrendFlow = {
 };
 
 export const TREND_FLOWS: Record<string, TrendFlow> = {
-  instagram: {
-    network: "instagram",
-    title: "Trial Reels (Instagram)",
-    nodes: [
-      {
-        id: "A",
-        position: { x: 0, y: 0 },
-        data: { kind: "start", tag: "Inicio", label: "Publicas un Trial Reel", sublabel: "El reel entra en fase de prueba automática" },
-      },
-      {
-        id: "S",
-        position: { x: 560, y: 0 },
-        data: {
-          kind: "strategy",
-          tag: "Jugadas",
-          label: "Qué está funcionando ahora",
-          sublabel: "Toca el ojo para ver las estrategias vigentes",
-          details: [
-            { id: "s1", dx: 340, dy: -40, side: "right", tag: "Estrategia", label: "Publica 3-5 trials por semana", sublabel: "Los trials no queman a tu audiencia: prueba variaciones sin miedo." },
-            { id: "s2", dx: 340, dy: 115, side: "right", tag: "Estrategia", label: "Remix de ganadores", sublabel: "Cuando un trial gradúa, produce 2-3 variaciones del mismo ángulo." },
-            { id: "s3", dx: 340, dy: 270, side: "right", tag: "Estrategia", label: "Texto grande + b-roll", sublabel: "El formato que más está graduando: frase potente sobre video en movimiento." },
-            { id: "s4", dx: 340, dy: 425, side: "right", tag: "Estrategia", label: "Audio en tendencia", sublabel: "Úsalo en las primeras 24h de la tendencia; después pierde empuje." },
-          ],
-        },
-      },
-      {
-        id: "B",
-        position: { x: 0, y: 190 },
-        data: { kind: "phase", tag: "Fase 1", label: "Audición con NO seguidores", sublabel: "Instagram lo muestra primero a personas afines que no te siguen" },
-      },
-      {
-        id: "C",
-        position: { x: 0, y: 380 },
-        data: { kind: "phase", tag: "Fase 2", label: "Ventana crítica: 90 minutos", sublabel: "El rendimiento inicial decide si el reel escala o muere" },
-      },
-      {
-        id: "D",
-        position: { x: 0, y: 570 },
-        data: {
-          kind: "decision",
-          tag: "Decisión",
-          label: "¿Retiene 60%+ en los primeros 3 segundos?",
-          details: [
-            { id: "d1", dx: -580, dy: -280, side: "left", tag: "Métrica", label: "Retención de 3 segundos", sublabel: "% de gente que pasa del tercer segundo. Benchmark sano: 60% o más." },
-            { id: "d2", dx: -580, dy: -120, side: "left", tag: "Métrica", label: "Tiempo medio de visualización", sublabel: "Instagram compara tu promedio contra reels similares. Los loops lo elevan." },
-            { id: "d3", dx: -580, dy: 40, side: "left", tag: "Tip", label: "Cómo mejorar el hook", sublabel: "Movimiento + texto grande en el primer frame. Sin intros: directo al valor." },
-          ],
-        },
-      },
-      {
-        id: "E",
-        position: { x: -480, y: 840 },
-        data: { kind: "fail", tag: "Resultado", label: "Estrangulamiento", sublabel: "El reel no sale del grupo de prueba. Ajusta el hook y vuelve a intentar." },
-      },
-      {
-        id: "F",
-        position: { x: 480, y: 780 },
-        data: {
-          kind: "decision",
-          tag: "Decisión",
-          label: "¿Genera DMs y compartidos? (dark social)",
-          details: [
-            { id: "f1", dx: 340, dy: -180, side: "right", tag: "Métrica", label: "Dark social", sublabel: "DMs y compartidos pesan más que likes: señal de valor real entre amigos." },
-            { id: "f2", dx: 340, dy: -20, side: "right", tag: "Métrica", label: "Ratio shares / alcance", sublabel: "1 compartido por cada 100 vistas ya es señal fuerte para graduar." },
-            { id: "f3", dx: 340, dy: 140, side: "right", tag: "Tip", label: "CTA que funciona", sublabel: "\"Mándaselo a alguien que…\" — pedir el share directo multiplica el dark social." },
-          ],
-        },
-      },
-      {
-        id: "G",
-        position: { x: 480, y: 1000 },
-        data: { kind: "success", tag: "Resultado", label: "Graduación", sublabel: "Salta a Explore, al feed de Reels y a tus seguidores" },
-      },
-    ],
-    edges: [
-      { id: "eA-B", source: "A", target: "B" },
-      { id: "eA-S", source: "A", target: "S", sourceHandle: "r-s", targetHandle: "l-t", dashed: true },
-      { id: "eB-C", source: "B", target: "C" },
-      { id: "eC-D", source: "C", target: "D" },
-      { id: "eD-E", source: "D", target: "E", label: "No", animated: false },
-      { id: "eD-F", source: "D", target: "F", label: "Sí" },
-      { id: "eF-E", source: "F", target: "E", label: "Débil", animated: false },
-      { id: "eF-G", source: "F", target: "G", label: "Fuerte" },
-    ],
-  },
-
   tiktok: {
     network: "tiktok",
     title: "Algoritmo TikTok (FYP)",
     nodes: [
       {
+        id: "OBJ",
+        position: { x: -560, y: 40 },
+        data: {
+          kind: "phase", tag: "Objetivo", confidence: "confirmed",
+          label: "¿Qué maximiza TikTok?",
+          sublabel: "Tiempo de sesión y que vuelvas mañana. Cada decisión del algoritmo apunta ahí.",
+        },
+      },
+      {
         id: "A",
         position: { x: 0, y: 0 },
-        data: { kind: "start", tag: "Inicio", label: "Publicas un video", sublabel: "Entra al sistema de distribución por círculos" },
+        data: {
+          kind: "start", tag: "Inicio",
+          image: videoLight, imageDark: videoDark,
+          label: "Subes un video",
+          sublabel: "Empieza el recorrido por el sistema de distribución",
+        },
       },
       {
         id: "S",
-        position: { x: 560, y: 0 },
+        position: { x: 560, y: 40 },
         data: {
-          kind: "strategy",
-          tag: "Jugadas",
+          kind: "strategy", tag: "Jugadas",
           label: "Qué está funcionando ahora",
           sublabel: "Toca el ojo para ver las estrategias vigentes",
           details: [
@@ -158,68 +99,201 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "B",
-        position: { x: 0, y: 190 },
-        data: { kind: "phase", tag: "Fase 1", label: "Ingesta y etiquetado", sublabel: "Clasifica audio, texto en pantalla, hashtags y ubicación" },
+        position: { x: 0, y: 370 },
+        data: {
+          kind: "phase", tag: "Fase 1", confidence: "confirmed",
+          label: "El algoritmo lo etiqueta",
+          sublabel: "Audio, texto en pantalla, hashtags y tema: así decide a quién mostrárselo",
+        },
       },
       {
         id: "C",
-        position: { x: 0, y: 380 },
-        data: { kind: "phase", tag: "Fase 2", label: "Círculo semilla (~1.000 vistas)", sublabel: "Prueba con una audiencia pequeña y mide la reacción" },
-      },
-      {
-        id: "D",
-        position: { x: 0, y: 570 },
+        position: { x: 0, y: 560 },
         data: {
-          kind: "decision",
-          tag: "Decisión",
-          label: "¿Supera la prueba de los 3 segundos?",
+          kind: "phase", tag: "Fase 2 · Ronda 1", confidence: "likely",
+          label: "Se muestra a ~100-500 personas",
+          sublabel: "Una muestra pequeña de usuarios afines lo ve en su FYP. Aquí se mide todo.",
           details: [
-            { id: "d1", dx: -580, dy: -280, side: "left", tag: "Métrica", label: "Tasa de scroll", sublabel: "Si la mayoría desliza antes del segundo 3, el video muere en el círculo semilla." },
-            { id: "d2", dx: -580, dy: -120, side: "left", tag: "Métrica", label: "Completion rate", sublabel: "% que ve el video completo. En videos de 7-15s es la métrica reina." },
-            { id: "d3", dx: -580, dy: 40, side: "left", tag: "Métrica", label: "Saves y shares", sublabel: "Guardados y compartidos valen más que likes para escalar de círculo." },
+            { id: "c1", dx: -580, dy: -280, side: "left", tag: "Señal", icon: iconPlay, confidence: "likely", label: "Retención de 3 segundos", sublabel: "¿Deslizan o se quedan? Si la mayoría hace scroll antes del segundo 3, no hay ronda 2." },
+            { id: "c2", dx: -580, dy: -120, side: "left", tag: "Señal", icon: iconHeart, confidence: "likely", label: "Likes y comentarios tempranos", sublabel: "La reacción de la muestra pesa más por ser pocos: cada like cuenta mucho." },
+            { id: "c3", dx: -580, dy: 40, side: "left", tag: "Señal", icon: iconShare, confidence: "likely", label: "Compartidos y guardados", sublabel: "Las señales más caras de conseguir: valen más que cualquier like." },
           ],
         },
       },
       {
+        id: "D",
+        position: { x: 0, y: 750 },
+        data: {
+          kind: "decision", tag: "Decisión", confidence: "likely",
+          label: "¿La muestra reaccionó mejor que videos similares?",
+        },
+      },
+      {
         id: "E",
-        position: { x: -480, y: 840 },
-        data: { kind: "fail", tag: "Resultado", label: "El video muere", sublabel: "Ratio de interacción bajo: no pasa al siguiente círculo" },
+        position: { x: -480, y: 1160 },
+        data: {
+          kind: "fail", tag: "Resultado", confidence: "likely",
+          label: "Se detiene la distribución",
+          sublabel: "No castiga tu cuenta: el siguiente video vuelve a empezar de cero",
+        },
       },
       {
         id: "F",
-        position: { x: 480, y: 780 },
-        data: { kind: "phase", tag: "Fase 3", label: "Ratio de interacción (RI)", sublabel: "(likes + comentarios + shares + saves) ÷ vistas" },
+        position: { x: 480, y: 970 },
+        data: {
+          kind: "phase", tag: "Fase 3 · Ronda 2", confidence: "likely",
+          label: "Escala a ~1.000-5.000 personas",
+          sublabel: "Audiencia más amplia y diversa; se repite la misma medición",
+        },
       },
       {
         id: "G",
-        position: { x: 480, y: 970 },
+        position: { x: 480, y: 1160 },
         data: {
-          kind: "decision",
-          tag: "Decisión",
-          label: "¿RI mayor que la media de tu nicho?",
+          kind: "decision", tag: "Decisión", confidence: "likely",
+          label: "¿Mantiene las señales al crecer?",
           details: [
-            { id: "g1", dx: 360, dy: -140, side: "right", tag: "Métrica", label: "Benchmark de RI", sublabel: "Arriba de 6-8% en el círculo semilla suele escalar. Debajo de 3%, difícil." },
+            { id: "g1", dx: 360, dy: -140, side: "right", tag: "Métrica", confidence: "hypothesis", label: "Benchmark de interacción", sublabel: "Arriba de 6-8% de interacción en la ronda semilla suele escalar. Debajo de 3%, difícil." },
             { id: "g2", dx: 360, dy: 20, side: "right", tag: "Tip", label: "Responde comentarios con video", sublabel: "Cada respuesta reinicia el ciclo de distribución del video original." },
           ],
         },
       },
       {
         id: "H",
-        position: { x: 480, y: 1190 },
-        data: { kind: "success", tag: "Resultado", label: "Escala de círculos", sublabel: "10K → 100K → 500K… cada círculo repite la prueba" },
+        position: { x: 480, y: 1380 },
+        data: {
+          kind: "success", tag: "Resultado", confidence: "likely",
+          label: "Rondas crecientes: 10K → 100K → 1M",
+          sublabel: "Cada ronda repite la prueba. Mientras siga ganando, sigue escalando.",
+        },
       },
     ],
     edges: [
-      { id: "eA-B", source: "A", target: "B" },
+      { id: "eA-OBJ", source: "A", target: "OBJ", sourceHandle: "l-s", targetHandle: "r-t", dashed: true },
       { id: "eA-S", source: "A", target: "S", sourceHandle: "r-s", targetHandle: "l-t", dashed: true },
+      { id: "eA-B", source: "A", target: "B" },
       { id: "eB-C", source: "B", target: "C" },
       { id: "eC-D", source: "C", target: "D" },
-      { id: "eD-E", source: "D", target: "E", label: "Alto scroll", animated: false },
-      { id: "eD-F", source: "D", target: "F", label: "Retiene" },
+      { id: "eD-E", source: "D", target: "E", label: "No" },
+      { id: "eD-F", source: "D", target: "F", label: "Sí" },
       { id: "eF-G", source: "F", target: "G" },
-      { id: "eG-E", source: "G", target: "E", label: "No", animated: false },
+      { id: "eG-E", source: "G", target: "E", sourceHandle: "l-s", targetHandle: "r-t", label: "No" },
       { id: "eG-H", source: "G", target: "H", label: "Sí" },
       { id: "eH-G", source: "H", target: "G", sourceHandle: "r-s", targetHandle: "r-t", label: "Bucle", dashed: true },
+    ],
+  },
+
+  instagram: {
+    network: "instagram",
+    title: "Trial Reels (Instagram)",
+    nodes: [
+      {
+        id: "OBJ",
+        position: { x: -560, y: 40 },
+        data: {
+          kind: "phase", tag: "Objetivo", confidence: "likely",
+          label: "¿Qué maximiza Instagram?",
+          sublabel: "Tiempo en la app y conexión entre personas: por eso los DMs pesan tanto.",
+        },
+      },
+      {
+        id: "A",
+        position: { x: 0, y: 0 },
+        data: {
+          kind: "start", tag: "Inicio",
+          image: videoLight, imageDark: videoDark,
+          label: "Subes un Trial Reel",
+          sublabel: "Se prueba sin afectar a tus seguidores",
+        },
+      },
+      {
+        id: "S",
+        position: { x: 560, y: 40 },
+        data: {
+          kind: "strategy", tag: "Jugadas",
+          label: "Qué está funcionando ahora",
+          sublabel: "Toca el ojo para ver las estrategias vigentes",
+          details: [
+            { id: "s1", dx: 340, dy: -40, side: "right", tag: "Estrategia", label: "Publica 3-5 trials por semana", sublabel: "Los trials no queman a tu audiencia: prueba variaciones sin miedo." },
+            { id: "s2", dx: 340, dy: 115, side: "right", tag: "Estrategia", label: "Remix de ganadores", sublabel: "Cuando un trial gradúa, produce 2-3 variaciones del mismo ángulo." },
+            { id: "s3", dx: 340, dy: 270, side: "right", tag: "Estrategia", label: "Texto grande + b-roll", sublabel: "El formato que más está graduando: frase potente sobre video en movimiento." },
+            { id: "s4", dx: 340, dy: 425, side: "right", tag: "Estrategia", label: "Audio en tendencia", sublabel: "Úsalo en las primeras 24h de la tendencia; después pierde empuje." },
+          ],
+        },
+      },
+      {
+        id: "B",
+        position: { x: 0, y: 370 },
+        data: {
+          kind: "phase", tag: "Fase 1 · Ronda 1", confidence: "confirmed",
+          label: "Audición: ~100-1.000 no seguidores",
+          sublabel: "Instagram lo muestra a personas afines que NO te siguen",
+        },
+      },
+      {
+        id: "C",
+        position: { x: 0, y: 560 },
+        data: {
+          kind: "phase", tag: "Fase 2", confidence: "hypothesis",
+          label: "Ventana crítica: ~90 minutos",
+          sublabel: "El rendimiento inicial define si el reel escala o muere",
+        },
+      },
+      {
+        id: "D",
+        position: { x: 0, y: 750 },
+        data: {
+          kind: "decision", tag: "Decisión", confidence: "likely",
+          label: "¿Retiene y genera interacción en la audición?",
+          details: [
+            { id: "d1", dx: -580, dy: -280, side: "left", tag: "Señal", icon: iconPlay, confidence: "likely", label: "Retención de 3 segundos", sublabel: "% de gente que pasa del tercer segundo. Benchmark sano: 60% o más." },
+            { id: "d2", dx: -580, dy: -120, side: "left", tag: "Señal", icon: iconHeart, confidence: "likely", label: "Interacción temprana", sublabel: "Likes y comentarios de la muestra; Instagram compara contra reels similares." },
+            { id: "d3", dx: -580, dy: 40, side: "left", tag: "Tip", label: "Cómo mejorar el hook", sublabel: "Movimiento + texto grande en el primer frame. Sin intros: directo al valor." },
+          ],
+        },
+      },
+      {
+        id: "E",
+        position: { x: -480, y: 1160 },
+        data: {
+          kind: "fail", tag: "Resultado", confidence: "likely",
+          label: "Estrangulamiento",
+          sublabel: "El reel no sale del grupo de prueba. Ajusta el hook y vuelve a intentar.",
+        },
+      },
+      {
+        id: "F",
+        position: { x: 480, y: 970 },
+        data: {
+          kind: "decision", tag: "Decisión · Ronda 2", confidence: "likely",
+          label: "¿Genera DMs y compartidos? (dark social)",
+          details: [
+            { id: "f1", dx: 340, dy: -180, side: "right", tag: "Señal", icon: iconShare, confidence: "likely", label: "Dark social", sublabel: "DMs y compartidos pesan más que likes: señal de valor real entre amigos." },
+            { id: "f2", dx: 340, dy: -20, side: "right", tag: "Métrica", confidence: "hypothesis", label: "Ratio shares / alcance", sublabel: "1 compartido por cada 100 vistas ya es señal fuerte para graduar." },
+            { id: "f3", dx: 340, dy: 140, side: "right", tag: "Tip", label: "CTA que funciona", sublabel: "\"Mándaselo a alguien que…\" — pedir el share directo multiplica el dark social." },
+          ],
+        },
+      },
+      {
+        id: "G",
+        position: { x: 480, y: 1190 },
+        data: {
+          kind: "success", tag: "Resultado", confidence: "confirmed",
+          label: "Graduación",
+          sublabel: "Explore, feed de Reels y ahora sí: tus seguidores",
+        },
+      },
+    ],
+    edges: [
+      { id: "eA-OBJ", source: "A", target: "OBJ", sourceHandle: "l-s", targetHandle: "r-t", dashed: true },
+      { id: "eA-S", source: "A", target: "S", sourceHandle: "r-s", targetHandle: "l-t", dashed: true },
+      { id: "eA-B", source: "A", target: "B" },
+      { id: "eB-C", source: "B", target: "C" },
+      { id: "eC-D", source: "C", target: "D" },
+      { id: "eD-E", source: "D", target: "E", label: "No" },
+      { id: "eD-F", source: "D", target: "F", label: "Sí" },
+      { id: "eF-E", source: "F", target: "E", sourceHandle: "l-s", targetHandle: "r-t", label: "Débil" },
+      { id: "eF-G", source: "F", target: "G", label: "Fuerte" },
     ],
   },
 
@@ -228,16 +302,29 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
     title: "Facebook EdgeRank",
     nodes: [
       {
+        id: "OBJ",
+        position: { x: -560, y: 40 },
+        data: {
+          kind: "phase", tag: "Objetivo", confidence: "confirmed",
+          label: "¿Qué maximiza Facebook?",
+          sublabel: "Interacciones significativas: conversaciones reales entre personas.",
+        },
+      },
+      {
         id: "A",
         position: { x: 0, y: 0 },
-        data: { kind: "phase", tag: "Fase 1", label: "Inventario", sublabel: "Todo lo disponible para ti: amigos, páginas, grupos y ads" },
+        data: {
+          kind: "start", tag: "Inicio",
+          image: videoLight, imageDark: videoDark,
+          label: "Publicas contenido",
+          sublabel: "Entra al inventario disponible para tu comunidad",
+        },
       },
       {
         id: "S",
-        position: { x: 560, y: 0 },
+        position: { x: 560, y: 40 },
         data: {
-          kind: "strategy",
-          tag: "Jugadas",
+          kind: "strategy", tag: "Jugadas",
           label: "Qué está funcionando ahora",
           sublabel: "Toca el ojo para ver las estrategias vigentes",
           details: [
@@ -249,40 +336,62 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "B",
-        position: { x: 0, y: 190 },
+        position: { x: 0, y: 370 },
         data: {
-          kind: "phase",
-          tag: "Fase 2",
-          label: "Señales",
-          sublabel: "Quién publicó, tipo de contenido, hora y tus interacciones previas",
-          details: [
-            { id: "b1", dx: -580, dy: -120, side: "left", tag: "Señal", label: "Señales activas", sublabel: "Comentarios, compartidos y reacciones: las que más pesan." },
-            { id: "b2", dx: -580, dy: 40, side: "left", tag: "Señal", label: "Señales pasivas", sublabel: "Tiempo de visualización y clics: pesan menos, pero suman." },
-          ],
+          kind: "phase", tag: "Fase 1", confidence: "confirmed",
+          label: "Inventario",
+          sublabel: "Todo lo disponible para cada usuario: amigos, páginas, grupos y ads",
         },
       },
       {
         id: "C",
-        position: { x: 0, y: 380 },
-        data: { kind: "phase", tag: "Fase 3", label: "Predicciones", sublabel: "Probabilidad de que comentes, compartas o reacciones" },
+        position: { x: 0, y: 560 },
+        data: {
+          kind: "phase", tag: "Fase 2", confidence: "confirmed",
+          label: "Señales",
+          sublabel: "Quién publicó, tipo de contenido, hora y las interacciones previas de cada usuario",
+          details: [
+            { id: "c1", dx: -580, dy: -120, side: "left", tag: "Señal", icon: iconLike, confidence: "confirmed", label: "Señales activas", sublabel: "Comentarios, compartidos y reacciones: las que más pesan." },
+            { id: "c2", dx: -580, dy: 40, side: "left", tag: "Señal", icon: iconPlay, confidence: "confirmed", label: "Señales pasivas", sublabel: "Tiempo de visualización y clics: pesan menos, pero suman." },
+          ],
+        },
       },
       {
         id: "D",
-        position: { x: 0, y: 570 },
-        data: { kind: "phase", tag: "Fase 4", label: "Relevancy Score", sublabel: "Cada publicación recibe un puntaje personalizado para ti" },
+        position: { x: 0, y: 750 },
+        data: {
+          kind: "phase", tag: "Fase 3", confidence: "confirmed",
+          label: "Predicciones",
+          sublabel: "Probabilidad de que cada usuario comente, comparta o reaccione",
+        },
       },
       {
         id: "E",
-        position: { x: 0, y: 760 },
-        data: { kind: "success", tag: "Resultado", label: "Feed ordenado", sublabel: "De mayor a menor puntaje, mezclado con ads" },
+        position: { x: 0, y: 940 },
+        data: {
+          kind: "phase", tag: "Fase 4", confidence: "confirmed",
+          label: "Relevancy Score",
+          sublabel: "Cada publicación recibe un puntaje personalizado por usuario",
+        },
+      },
+      {
+        id: "F",
+        position: { x: 0, y: 1130 },
+        data: {
+          kind: "success", tag: "Resultado", confidence: "confirmed",
+          label: "Feed ordenado",
+          sublabel: "De mayor a menor puntaje, mezclado con ads",
+        },
       },
     ],
     edges: [
-      { id: "eA-B", source: "A", target: "B" },
+      { id: "eA-OBJ", source: "A", target: "OBJ", sourceHandle: "l-s", targetHandle: "r-t", dashed: true },
       { id: "eA-S", source: "A", target: "S", sourceHandle: "r-s", targetHandle: "l-t", dashed: true },
+      { id: "eA-B", source: "A", target: "B" },
       { id: "eB-C", source: "B", target: "C" },
       { id: "eC-D", source: "C", target: "D" },
       { id: "eD-E", source: "D", target: "E" },
+      { id: "eE-F", source: "E", target: "F" },
     ],
   },
 
@@ -291,16 +400,29 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
     title: "YouTube Shorts",
     nodes: [
       {
+        id: "OBJ",
+        position: { x: -560, y: 40 },
+        data: {
+          kind: "phase", tag: "Objetivo", confidence: "confirmed",
+          label: "¿Qué maximiza YouTube?",
+          sublabel: "Satisfacción del espectador: lo mide directamente con encuestas.",
+        },
+      },
+      {
         id: "A",
         position: { x: 0, y: 0 },
-        data: { kind: "start", tag: "Inicio", label: "Publicas un Short", sublabel: "Sin ventana de tiempo: puede escalar semanas después" },
+        data: {
+          kind: "start", tag: "Inicio",
+          image: videoLight, imageDark: videoDark,
+          label: "Subes un Short",
+          sublabel: "Sin ventana de tiempo: puede escalar semanas después",
+        },
       },
       {
         id: "S",
-        position: { x: 560, y: 0 },
+        position: { x: 560, y: 40 },
         data: {
-          kind: "strategy",
-          tag: "Jugadas",
+          kind: "strategy", tag: "Jugadas",
           label: "Qué está funcionando ahora",
           sublabel: "Toca el ojo para ver las estrategias vigentes",
           details: [
@@ -312,59 +434,74 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "B",
-        position: { x: 0, y: 190 },
-        data: { kind: "phase", tag: "Fase 1", label: "Audiencia semilla", sublabel: "Se muestra en el feed de Shorts a usuarios afines" },
+        position: { x: 0, y: 370 },
+        data: {
+          kind: "phase", tag: "Fase 1 · Ronda 1", confidence: "likely",
+          label: "Muestra semilla en el feed de Shorts",
+          sublabel: "Se enseña a un grupo de usuarios afines y se mide la reacción",
+        },
       },
       {
         id: "C",
-        position: { x: 0, y: 380 },
+        position: { x: 0, y: 560 },
         data: {
-          kind: "decision",
-          tag: "Decisión",
-          label: "¿Visto o deslizado en el primer fotograma?",
+          kind: "decision", tag: "Decisión", confidence: "confirmed",
+          label: "¿Visto o deslizado?",
           details: [
-            { id: "c1", dx: -580, dy: -120, side: "left", tag: "Métrica", label: "Viewed vs. Swiped", sublabel: "La métrica clave de Shorts: % que decide quedarse al ver el primer frame." },
+            { id: "c1", dx: -580, dy: -120, side: "left", tag: "Métrica", icon: iconPlay, confidence: "confirmed", label: "Viewed vs. Swiped", sublabel: "La métrica clave de Shorts: % que decide quedarse al ver el primer frame." },
             { id: "c2", dx: -580, dy: 40, side: "left", tag: "Tip", label: "El primer fotograma", sublabel: "Trátalo como una miniatura: composición clara y texto legible." },
           ],
         },
       },
       {
         id: "D",
-        position: { x: -480, y: 620 },
-        data: { kind: "fail", tag: "Resultado", label: "Short frenado", sublabel: "Alto swipe-away: el feed deja de mostrarlo" },
+        position: { x: -480, y: 970 },
+        data: {
+          kind: "fail", tag: "Resultado", confidence: "likely",
+          label: "Short frenado",
+          sublabel: "Alto swipe-away: el feed deja de mostrarlo",
+        },
       },
       {
         id: "E",
-        position: { x: 480, y: 590 },
-        data: { kind: "phase", tag: "Fase 2", label: "Duración vista (AVD)", sublabel: "% del video consumido; el punto dulce está en 50-60 segundos" },
+        position: { x: 480, y: 780 },
+        data: {
+          kind: "phase", tag: "Fase 2 · Ronda 2", confidence: "likely",
+          label: "Escala a más feeds y regiones",
+          sublabel: "Se mide el AVD: % del video consumido. Punto dulce: 50-60 segundos.",
+        },
       },
       {
         id: "F",
-        position: { x: 480, y: 780 },
+        position: { x: 480, y: 970 },
         data: {
-          kind: "decision",
-          tag: "Decisión",
+          kind: "decision", tag: "Decisión", confidence: "confirmed",
           label: "¿Alta satisfacción del espectador?",
           details: [
-            { id: "f1", dx: 340, dy: -120, side: "right", tag: "Métrica", label: "Encuestas de satisfacción", sublabel: "YouTube pregunta directamente y ajusta la distribución con las respuestas." },
-            { id: "f2", dx: 340, dy: 40, side: "right", tag: "Métrica", label: "Sesión que continúa", sublabel: "Si después de tu Short siguen viendo más, el sistema te premia." },
+            { id: "f1", dx: 340, dy: -120, side: "right", tag: "Métrica", icon: iconLike, confidence: "confirmed", label: "Encuestas de satisfacción", sublabel: "YouTube pregunta directamente y ajusta la distribución con las respuestas." },
+            { id: "f2", dx: 340, dy: 40, side: "right", tag: "Métrica", confidence: "likely", label: "Sesión que continúa", sublabel: "Si después de tu Short siguen viendo más, el sistema te premia." },
           ],
         },
       },
       {
         id: "G",
-        position: { x: 480, y: 1000 },
-        data: { kind: "success", tag: "Resultado", label: "Acervo evergreen", sublabel: "Resurge en picos estacionales y búsquedas durante meses" },
+        position: { x: 480, y: 1190 },
+        data: {
+          kind: "success", tag: "Resultado", confidence: "likely",
+          label: "Acervo evergreen",
+          sublabel: "Resurge en picos estacionales y búsquedas durante meses",
+        },
       },
     ],
     edges: [
-      { id: "eA-B", source: "A", target: "B" },
+      { id: "eA-OBJ", source: "A", target: "OBJ", sourceHandle: "l-s", targetHandle: "r-t", dashed: true },
       { id: "eA-S", source: "A", target: "S", sourceHandle: "r-s", targetHandle: "l-t", dashed: true },
+      { id: "eA-B", source: "A", target: "B" },
       { id: "eB-C", source: "B", target: "C" },
-      { id: "eC-D", source: "C", target: "D", label: "≥70% desliza", animated: false },
+      { id: "eC-D", source: "C", target: "D", label: "≥70% desliza" },
       { id: "eC-E", source: "C", target: "E", label: "Retiene" },
       { id: "eE-F", source: "E", target: "F" },
-      { id: "eF-D", source: "F", target: "D", label: "No", animated: false },
+      { id: "eF-D", source: "F", target: "D", sourceHandle: "l-s", targetHandle: "r-t", label: "No" },
       { id: "eF-G", source: "F", target: "G", label: "Sí" },
     ],
   },
