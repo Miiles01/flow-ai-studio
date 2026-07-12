@@ -82,31 +82,38 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
   
   // Get all trends for the clicked network
   const targetNetwork = startIndex !== null && trends[startIndex] ? trends[startIndex].network : null;
-  const filteredTrends = trends.filter(t => t.network === targetNetwork);
   
+  const [shuffledTrends, setShuffledTrends] = useState<Trend[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
     if (open && startIndex !== null) {
-      // Find the index of the clicked item within the filtered array
-      const clickedTrendId = trends[startIndex].id;
-      const filteredIndex = filteredTrends.findIndex(t => t.id === clickedTrendId);
-      setActiveIndex(filteredIndex >= 0 ? filteredIndex : 0);
+      const clickedTrend = trends[startIndex];
+      if (!clickedTrend) return;
+
+      // Filtrar todos los de la misma red excepto el que se clickeó
+      const sameNetwork = trends.filter(t => t.network === targetNetwork && t.id !== clickedTrend.id);
+      
+      // Mezclar aleatoriamente el resto de los videos
+      const shuffled = [...sameNetwork];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      
+      // El video clickeado siempre va primero
+      setShuffledTrends([clickedTrend, ...shuffled]);
+      setActiveIndex(0);
       
       setTimeout(() => {
         const el = containerRef.current;
         if (!el) return;
-        const items = el.querySelectorAll('.carousel-item');
-        const target = items[filteredIndex >= 0 ? filteredIndex : 0] as HTMLElement;
-        if (target) {
-          el.scrollTo({
-            top: target.offsetTop - el.clientHeight / 2 + target.clientHeight / 2,
-            behavior: 'instant'
-          });
-        }
+        el.scrollTop = 0;
       }, 50);
+    } else {
+      setShuffledTrends([]);
     }
-  }, [open, startIndex]);
+  }, [open, startIndex, targetNetwork, trends]);
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const el = e.currentTarget;
@@ -127,7 +134,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
 
     if (closestIdx !== activeIndex) {
       setActiveIndex(closestIdx);
-      const trend = filteredTrends[closestIdx];
+      const trend = shuffledTrends[closestIdx];
       if (trend && onView) onView(trend.id);
     }
   };
@@ -263,27 +270,29 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
           Cerrar
         </button>
 
-        {/* Read-only ReactFlow Diagram — deja libre la franja del carrusel en desktop */}
-        <div className="absolute inset-y-0 right-0 left-0 md:left-[33%] z-10">
+        {/* Read-only ReactFlow Diagram — Ocupa todo el fondo para que los videos floten por encima */}
+        <div className="absolute inset-0 z-10">
           {activeFlow ? (
             <div className="w-full h-full relative">
-              <div className="absolute top-8 left-8 z-20 pointer-events-none">
-                <h2 className="text-2xl font-normal text-gray-900 dark:text-white">Arquitectura Algorítmica</h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 capitalize">{targetNetwork || ""}</p>
-                <p className="text-[11px] font-light text-gray-400 dark:text-gray-500 mt-2">
-                  Toca el ojo en los nodos para ver el detalle
-                </p>
-                {/* Leyenda de niveles de confianza */}
-                <div className="flex items-center gap-3 mt-3">
-                  <span className="flex items-center gap-1.5 text-[10px] font-light text-gray-500 dark:text-gray-400">
-                    <span className="w-2 h-2 rounded-full bg-[#22C55E]" /> Confirmado
-                  </span>
-                  <span className="flex items-center gap-1.5 text-[10px] font-light text-gray-500 dark:text-gray-400">
-                    <span className="w-2 h-2 rounded-full bg-[#F59E0B]" /> Muy probable
-                  </span>
-                  <span className="flex items-center gap-1.5 text-[10px] font-light text-gray-500 dark:text-gray-400">
-                    <span className="w-2 h-2 rounded-full bg-[#EF4444]" /> Hipótesis
-                  </span>
+              <div className="absolute top-8 left-8 md:left-[38%] z-20 pointer-events-none">
+                <div className="bg-white dark:bg-[#1a1a1a] border border-slate-200 dark:border-[#333] rounded-2xl px-5 py-4">
+                  <h2 className="text-2xl font-normal text-gray-900 dark:text-white">Arquitectura Algorítmica</h2>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 capitalize">{targetNetwork || ""}</p>
+                  <p className="text-[11px] font-light text-gray-400 dark:text-gray-500 mt-2">
+                    Toca el ojo en los nodos para ver el detalle
+                  </p>
+                  {/* Leyenda de niveles de confianza */}
+                  <div className="flex items-center gap-3 mt-3">
+                    <span className="flex items-center gap-1.5 text-[10px] font-light text-gray-500 dark:text-gray-400">
+                      <span className="w-2 h-2 rounded-full bg-[#22C55E]" /> Confirmado
+                    </span>
+                    <span className="flex items-center gap-1.5 text-[10px] font-light text-gray-500 dark:text-gray-400">
+                      <span className="w-2 h-2 rounded-full bg-[#F59E0B]" /> Muy probable
+                    </span>
+                    <span className="flex items-center gap-1.5 text-[10px] font-light text-gray-500 dark:text-gray-400">
+                      <span className="w-2 h-2 rounded-full bg-[#EF4444]" /> Hipótesis
+                    </span>
+                  </div>
                 </div>
               </div>
               <ReactFlow
@@ -343,7 +352,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
           onScroll={handleScroll}
           className="absolute left-0 top-0 bottom-0 z-30 w-full md:w-[35%] h-full flex flex-col items-center overflow-y-auto snap-y snap-mandatory scrollbar-hide py-[calc(47.5vh-300px)] pointer-events-auto bg-transparent"
         >
-          {filteredTrends.map((trend, i) => (
+          {shuffledTrends.map((trend, i) => (
             <motion.div
               key={trend.id}
               className="carousel-item w-[85%] max-w-[360px] shrink-0 snap-center flex flex-col my-8 relative transition-all duration-300"
@@ -377,6 +386,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
                   }
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                   allowFullScreen
+                  loading="lazy"
                 />
               </div>
             </motion.div>
