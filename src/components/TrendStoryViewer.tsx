@@ -278,21 +278,6 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
                 <div className="bg-white dark:bg-[#1a1a1a] border border-slate-200 dark:border-[#333] rounded-2xl px-5 py-4">
                   <h2 className="text-2xl font-normal text-gray-900 dark:text-white">Arquitectura Algorítmica</h2>
                   <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 capitalize">{targetNetwork || ""}</p>
-                  <p className="text-[11px] font-light text-gray-400 dark:text-gray-500 mt-2">
-                    Toca el ojo en los nodos para ver el detalle
-                  </p>
-                  {/* Leyenda de niveles de confianza */}
-                  <div className="flex items-center gap-3 mt-3">
-                    <span className="flex items-center gap-1.5 text-[10px] font-light text-gray-500 dark:text-gray-400">
-                      <span className="w-2 h-2 rounded-full bg-[#22C55E]" /> Confirmado
-                    </span>
-                    <span className="flex items-center gap-1.5 text-[10px] font-light text-gray-500 dark:text-gray-400">
-                      <span className="w-2 h-2 rounded-full bg-[#F59E0B]" /> Muy probable
-                    </span>
-                    <span className="flex items-center gap-1.5 text-[10px] font-light text-gray-500 dark:text-gray-400">
-                      <span className="w-2 h-2 rounded-full bg-[#EF4444]" /> Hipótesis
-                    </span>
-                  </div>
                 </div>
               </div>
               <ReactFlow

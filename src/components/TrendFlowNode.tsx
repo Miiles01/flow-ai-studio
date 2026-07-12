@@ -55,12 +55,6 @@ const KIND_STYLES: Record<TrendNodeKind, { card: string; tag: string }> = {
   },
 };
 
-const CONFIDENCE_META: Record<TrendConfidence, { color: string; label: string }> = {
-  confirmed: { color: "#22C55E", label: "Confirmado" },
-  likely: { color: "#F59E0B", label: "Muy probable" },
-  hypothesis: { color: "#EF4444", label: "Hipótesis" },
-};
-
 const HIDDEN_HANDLE = "!w-1 !h-1 !min-w-0 !min-h-0 !opacity-0 !pointer-events-none !border-none !bg-transparent";
 
 const TrendFlowNode = ({ id, data }: NodeProps) => {
@@ -68,7 +62,6 @@ const TrendFlowNode = ({ id, data }: NodeProps) => {
   const kind = d.kind ?? "phase";
   const s = KIND_STYLES[kind];
   const isDetail = kind === "detail";
-  const conf = d.confidence ? CONFIDENCE_META[d.confidence] : null;
 
   return (
     <motion.div
@@ -79,22 +72,10 @@ const TrendFlowNode = ({ id, data }: NodeProps) => {
         isDetail ? "py-2.5 w-[210px]" : "py-3.5 w-[240px]"
       } ${s.card}`}
     >
-      {(d.tag || conf) && (
-        <div className="flex items-center justify-between gap-2 mb-1.5">
-          {d.tag ? (
-            <span className={`inline-block text-[9px] font-medium uppercase tracking-widest px-2 py-0.5 rounded-full ${s.tag}`}>
-              {d.tag}
-            </span>
-          ) : (
-            <span />
-          )}
-          {conf && (
-            <span className="flex items-center gap-1 text-[8px] uppercase tracking-wider opacity-70 shrink-0" title={conf.label}>
-              <span className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: conf.color }} />
-              {conf.label}
-            </span>
-          )}
-        </div>
+      {d.tag && (
+        <span className={`inline-block text-[9px] font-medium uppercase tracking-widest px-2 py-0.5 rounded-full mb-1.5 ${s.tag}`}>
+          {d.tag}
+        </span>
       )}
 
       {d.image && (
