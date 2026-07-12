@@ -1,6 +1,8 @@
 import type { TrendNodeKind, TrendConfidence } from "@/components/TrendFlowNode";
 import videoLight from "@/assets/trends/video-light.svg";
 import videoDark from "@/assets/trends/video-dark.svg";
+import videoHorizontalLight from "@/assets/trends/video-horizontal-light.svg";
+import videoHorizontalDark from "@/assets/trends/video-horizontal-dark.svg";
 import iconPlay from "@/assets/trends/play.svg";
 import iconHeart from "@/assets/trends/heart.svg";
 import iconShare from "@/assets/trends/share.svg";
@@ -413,7 +415,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
         position: { x: 0, y: 0 },
         data: {
           kind: "start", tag: "Inicio",
-          image: videoLight, imageDark: videoDark,
+          image: videoHorizontalLight, imageDark: videoHorizontalDark,
           label: "Subes un Short",
           sublabel: "Sin ventana de tiempo: puede escalar semanas después",
         },
