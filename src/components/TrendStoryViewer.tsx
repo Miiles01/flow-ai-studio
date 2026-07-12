@@ -82,31 +82,38 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
   
   // Get all trends for the clicked network
   const targetNetwork = startIndex !== null && trends[startIndex] ? trends[startIndex].network : null;
-  const filteredTrends = trends.filter(t => t.network === targetNetwork);
   
+  const [shuffledTrends, setShuffledTrends] = useState<Trend[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
 
   useEffect(() => {
     if (open && startIndex !== null) {
-      // Find the index of the clicked item within the filtered array
-      const clickedTrendId = trends[startIndex].id;
-      const filteredIndex = filteredTrends.findIndex(t => t.id === clickedTrendId);
-      setActiveIndex(filteredIndex >= 0 ? filteredIndex : 0);
+      const clickedTrend = trends[startIndex];
+      if (!clickedTrend) return;
+
+      // Filtrar todos los de la misma red excepto el que se clickeó
+      const sameNetwork = trends.filter(t => t.network === targetNetwork && t.id !== clickedTrend.id);
+      
+      // Mezclar aleatoriamente el resto de los videos
+      const shuffled = [...sameNetwork];
+      for (let i = shuffled.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+      }
+      
+      // El video clickeado siempre va primero
+      setShuffledTrends([clickedTrend, ...shuffled]);
+      setActiveIndex(0);
       
       setTimeout(() => {
         const el = containerRef.current;
         if (!el) return;
-        const items = el.querySelectorAll('.carousel-item');
-        const target = items[filteredIndex >= 0 ? filteredIndex : 0] as HTMLElement;
-        if (target) {
-          el.scrollTo({
-            top: target.offsetTop - el.clientHeight / 2 + target.clientHeight / 2,
-            behavior: 'instant'
-          });
-        }
+        el.scrollTop = 0;
       }, 50);
+    } else {
+      setShuffledTrends([]);
     }
-  }, [open, startIndex]);
+  }, [open, startIndex, targetNetwork, trends]);
 
   const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
     const el = e.currentTarget;
@@ -127,7 +134,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
 
     if (closestIdx !== activeIndex) {
       setActiveIndex(closestIdx);
-      const trend = filteredTrends[closestIdx];
+      const trend = shuffledTrends[closestIdx];
       if (trend && onView) onView(trend.id);
     }
   };
@@ -329,7 +336,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
           onScroll={handleScroll}
           className="absolute left-0 top-0 bottom-0 z-30 w-full md:w-[35%] h-full flex flex-col items-center overflow-y-auto snap-y snap-mandatory scrollbar-hide py-[calc(47.5vh-300px)] pointer-events-auto bg-transparent"
         >
-          {filteredTrends.map((trend, i) => (
+          {shuffledTrends.map((trend, i) => (
             <motion.div
               key={trend.id}
               className="carousel-item w-[85%] max-w-[360px] shrink-0 snap-center flex flex-col my-8 relative transition-all duration-300"
