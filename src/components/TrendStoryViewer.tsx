@@ -264,11 +264,13 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
           {activeFlow ? (
             <div className="w-full h-full relative">
               <div className="absolute top-8 left-8 md:left-[38%] z-20 pointer-events-none">
-                <h2 className="text-2xl font-normal text-gray-900 dark:text-white">Arquitectura Algorítmica</h2>
-                <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 capitalize">{targetNetwork || ""}</p>
-                <p className="text-[11px] font-light text-gray-400 dark:text-gray-500 mt-2">
-                  Toca el ojo en los nodos para ver el detalle
-                </p>
+                <div className="bg-white dark:bg-[#1a1a1a] border border-slate-200 dark:border-[#333] rounded-2xl px-5 py-4">
+                  <h2 className="text-2xl font-normal text-gray-900 dark:text-white">Arquitectura Algorítmica</h2>
+                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 capitalize">{targetNetwork || ""}</p>
+                  <p className="text-[11px] font-light text-gray-400 dark:text-gray-500 mt-2">
+                    Toca el ojo en los nodos para ver el detalle
+                  </p>
+                </div>
               </div>
               <ReactFlow
                 colorMode={isDark ? "dark" : "light"}
