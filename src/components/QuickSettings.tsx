@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Settings, Sun, Moon, Laptop, User, ArrowRight } from "lucide-react";
+import { Settings, Sun, Moon, Laptop, User, ArrowRight, Download } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { usePlan } from "@/hooks/usePlan";
+import { useInstallPrompt } from "@/hooks/useInstallPrompt";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
 
 export function QuickSettings({ children }: { children?: React.ReactNode }) {
   const { theme, setTheme, isDark } = useTheme();
