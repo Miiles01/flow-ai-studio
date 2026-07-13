@@ -10,6 +10,7 @@ import { NavLink } from "@/components/NavLink";
 import { toast } from "sonner";
 import { ThemeProvider, useTheme } from "@/contexts/ThemeContext";
 import { QuickSettings } from "@/components/QuickSettings";
+import { InstallAppBanner } from "@/components/InstallAppBanner";
 import {
   Sidebar,
   SidebarContent,
