@@ -220,15 +220,12 @@ export function QuickSettings({ children }: { children?: React.ReactNode }) {
               <button
                 onClick={handleInstall}
                 className={`
-                  w-full flex items-center justify-between px-3 py-2.5 rounded-2xl transition-all duration-200 text-left
+                  w-full flex items-center gap-2.5 px-3 py-2.5 rounded-2xl transition-all duration-200 text-left
                   ${isDark ? "hover:bg-white/5" : "hover:bg-gray-50"}
                 `}
               >
-                <div className="flex items-center gap-2.5">
-                  <Download size={16} strokeWidth={1.5} className="opacity-70" />
-                  <span className="text-[13px] font-light">Abrir en aplicación</span>
-                </div>
-                <ArrowRight size={14} strokeWidth={1.5} className="opacity-40" />
+                <Download size={16} strokeWidth={1.5} className="opacity-70" />
+                <span className="text-[13px] font-light">Abrir en aplicación</span>
               </button>
             )}
           </div>
