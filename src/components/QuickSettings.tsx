@@ -15,18 +15,26 @@ export function QuickSettings({ children }: { children?: React.ReactNode }) {
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
 
-  const showInstall = !isStandalone && (canInstall || isIOS);
+  const showInstall = !isStandalone;
 
   const handleInstall = async () => {
+    if (canInstall) {
+      const ok = await promptInstall();
+      if (ok) setIsOpen(false);
+      return;
+    }
     if (isIOS) {
       toast("Instala Miiles", {
         description: "Toca Compartir y luego “Agregar a inicio”.",
       });
       return;
     }
-    const ok = await promptInstall();
-    if (ok) setIsOpen(false);
+    toast("Abrir en aplicación", {
+      description:
+        "Usa el ícono de instalar en la barra de direcciones de tu navegador (o el menú ⋮ → “Instalar Miiles”).",
+    });
   };
+
 
 
   const planNames: Record<string, string> = {
