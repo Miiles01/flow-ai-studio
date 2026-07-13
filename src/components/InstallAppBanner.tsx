@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Download, X } from "lucide-react";
+import appIcon from "/app-icon-192.png";
 
 // BeforeInstallPromptEvent isn't in the standard TS lib
 interface BeforeInstallPromptEvent extends Event {
@@ -27,14 +28,15 @@ export function InstallAppBanner() {
     const ios = /iphone|ipad|ipod/.test(ua) && !(window as any).MSStream;
     if (ios) {
       setIsIOS(true);
-      setVisible(true);
-      return;
+      // Slight delay so it feels like a push notification
+      const t = setTimeout(() => setVisible(true), 1200);
+      return () => clearTimeout(t);
     }
 
     const handler = (e: Event) => {
       e.preventDefault();
       setDeferredPrompt(e as BeforeInstallPromptEvent);
-      setVisible(true);
+      setTimeout(() => setVisible(true), 1200);
     };
     window.addEventListener("beforeinstallprompt", handler);
     return () => window.removeEventListener("beforeinstallprompt", handler);
@@ -56,31 +58,41 @@ export function InstallAppBanner() {
   if (!visible) return null;
 
   return (
-    <div className="w-full bg-black text-white">
-      <div className="max-w-5xl mx-auto flex items-center gap-3 px-4 py-2.5 md:px-8">
-        <Download size={18} strokeWidth={1.8} className="flex-shrink-0" />
-        <p className="text-sm font-light flex-1 min-w-0">
-          {isIOS ? (
-            <>Instala Miiles: toca <span className="font-normal">Compartir</span> y luego <span className="font-normal">Agregar a inicio</span>.</>
-          ) : (
-            <>Descarga la aplicación de Miiles y ábrela como en tu computador.</>
-          )}
-        </p>
-        {!isIOS && (
+    <div className="fixed bottom-4 right-4 left-4 sm:left-auto z-[100] sm:max-w-sm animate-in slide-in-from-bottom-4 fade-in duration-500">
+      <div className="rounded-2xl bg-black text-white shadow-2xl ring-1 ring-white/10 p-4">
+        <div className="flex items-start gap-3">
+          <img
+            src={appIcon}
+            alt="Miiles"
+            width={44}
+            height={44}
+            className="w-11 h-11 rounded-xl flex-shrink-0"
+          />
+          <div className="min-w-0 flex-1">
+            <p className="text-sm font-normal leading-tight">Instala Miiles</p>
+            <p className="text-xs font-light text-white/70 leading-snug mt-1">
+              {isIOS
+                ? "Toca Compartir y luego “Agregar a inicio” para abrirla como una app."
+                : "Ábrela como una aplicación en tu computador, sin abrir el navegador."}
+            </p>
+            {!isIOS && (
+              <button
+                onClick={handleInstall}
+                className="mt-3 inline-flex items-center gap-2 rounded-full bg-white text-black text-sm font-normal px-4 py-1.5 hover:bg-white/90 transition-colors"
+              >
+                <Download size={15} strokeWidth={1.9} />
+                Instalar
+              </button>
+            )}
+          </div>
           <button
-            onClick={handleInstall}
-            className="flex-shrink-0 rounded-full bg-white text-black text-sm font-normal px-4 py-1.5 hover:bg-white/90 transition-colors"
+            onClick={dismiss}
+            aria-label="Cerrar"
+            className="flex-shrink-0 p-1 rounded-full text-white/60 hover:text-white hover:bg-white/10 transition-colors"
           >
-            Descargar
+            <X size={16} />
           </button>
-        )}
-        <button
-          onClick={dismiss}
-          aria-label="Cerrar"
-          className="flex-shrink-0 p-1 rounded-full hover:bg-white/10 transition-colors"
-        >
-          <X size={16} />
-        </button>
+        </div>
       </div>
     </div>
   );
