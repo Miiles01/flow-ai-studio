@@ -1,53 +1,26 @@
 import { useEffect, useState } from "react";
 import { Download, X } from "lucide-react";
 import appIcon from "/app-icon-192.png";
-
-// BeforeInstallPromptEvent isn't in the standard TS lib
-interface BeforeInstallPromptEvent extends Event {
-  prompt: () => Promise<void>;
-  userChoice: Promise<{ outcome: "accepted" | "dismissed" }>;
-}
+import { useInstallPrompt } from "@/hooks/useInstallPrompt";
 
 const DISMISS_KEY = "miiles_install_dismissed";
 
 export function InstallAppBanner() {
-  const [deferredPrompt, setDeferredPrompt] = useState<BeforeInstallPromptEvent | null>(null);
+  const { canInstall, isIOS, isStandalone, promptInstall } = useInstallPrompt();
   const [visible, setVisible] = useState(false);
-  const [isIOS, setIsIOS] = useState(false);
 
   useEffect(() => {
     if (sessionStorage.getItem(DISMISS_KEY)) return;
-
-    // Already installed / running standalone
-    const standalone =
-      window.matchMedia("(display-mode: standalone)").matches ||
-      (window.navigator as any).standalone === true;
-    if (standalone) return;
-
-    const ua = window.navigator.userAgent.toLowerCase();
-    const ios = /iphone|ipad|ipod/.test(ua) && !(window as any).MSStream;
-    if (ios) {
-      setIsIOS(true);
-      // Slight delay so it feels like a push notification
+    if (isStandalone) return;
+    if (canInstall || isIOS) {
       const t = setTimeout(() => setVisible(true), 1200);
       return () => clearTimeout(t);
     }
-
-    const handler = (e: Event) => {
-      e.preventDefault();
-      setDeferredPrompt(e as BeforeInstallPromptEvent);
-      setTimeout(() => setVisible(true), 1200);
-    };
-    window.addEventListener("beforeinstallprompt", handler);
-    return () => window.removeEventListener("beforeinstallprompt", handler);
-  }, []);
+  }, [canInstall, isIOS, isStandalone]);
 
   const handleInstall = async () => {
-    if (!deferredPrompt) return;
-    await deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === "accepted") setVisible(false);
-    setDeferredPrompt(null);
+    const ok = await promptInstall();
+    if (ok) setVisible(false);
   };
 
   const dismiss = () => {

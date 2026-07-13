@@ -1,16 +1,33 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Settings, Sun, Moon, Laptop, User, ArrowRight } from "lucide-react";
+import { Settings, Sun, Moon, Laptop, User, ArrowRight, Download } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import { usePlan } from "@/hooks/usePlan";
+import { useInstallPrompt } from "@/hooks/useInstallPrompt";
 import { Popover, PopoverTrigger, PopoverContent } from "@/components/ui/popover";
 import { motion } from "framer-motion";
+import { toast } from "sonner";
 
 export function QuickSettings({ children }: { children?: React.ReactNode }) {
   const { theme, setTheme, isDark } = useTheme();
   const { plan } = usePlan();
+  const { canInstall, isIOS, isStandalone, promptInstall } = useInstallPrompt();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+
+  const showInstall = !isStandalone && (canInstall || isIOS);
+
+  const handleInstall = async () => {
+    if (isIOS) {
+      toast("Instala Miiles", {
+        description: "Toca Compartir y luego “Agregar a inicio”.",
+      });
+      return;
+    }
+    const ok = await promptInstall();
+    if (ok) setIsOpen(false);
+  };
+
 
   const planNames: Record<string, string> = {
     free: "Plan Gratis",
@@ -189,6 +206,23 @@ export function QuickSettings({ children }: { children?: React.ReactNode }) {
                 <span className="text-[13px] font-light">Ajustes del perfil</span>
               </div>
             </button>
+
+            {/* Install app row */}
+            {showInstall && (
+              <button
+                onClick={handleInstall}
+                className={`
+                  w-full flex items-center justify-between px-3 py-2.5 rounded-2xl transition-all duration-200 text-left
+                  ${isDark ? "hover:bg-white/5" : "hover:bg-gray-50"}
+                `}
+              >
+                <div className="flex items-center gap-2.5">
+                  <Download size={16} strokeWidth={1.5} className="opacity-70" />
+                  <span className="text-[13px] font-light">Abrir en aplicación</span>
+                </div>
+                <ArrowRight size={14} strokeWidth={1.5} className="opacity-40" />
+              </button>
+            )}
           </div>
         </div>
       </PopoverContent>
