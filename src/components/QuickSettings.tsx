@@ -11,8 +11,23 @@ import { toast } from "sonner";
 export function QuickSettings({ children }: { children?: React.ReactNode }) {
   const { theme, setTheme, isDark } = useTheme();
   const { plan } = usePlan();
+  const { canInstall, isIOS, isStandalone, promptInstall } = useInstallPrompt();
   const navigate = useNavigate();
   const [isOpen, setIsOpen] = useState(false);
+
+  const showInstall = !isStandalone && (canInstall || isIOS);
+
+  const handleInstall = async () => {
+    if (isIOS) {
+      toast("Instala Miiles", {
+        description: "Toca Compartir y luego “Agregar a inicio”.",
+      });
+      return;
+    }
+    const ok = await promptInstall();
+    if (ok) setIsOpen(false);
+  };
+
 
   const planNames: Record<string, string> = {
     free: "Plan Gratis",
