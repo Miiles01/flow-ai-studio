@@ -10,6 +10,7 @@ import { NavLink } from "@/components/NavLink";
 import { toast } from "sonner";
 import { ThemeProvider, useTheme } from "@/contexts/ThemeContext";
 import { QuickSettings } from "@/components/QuickSettings";
+import { InstallAppBanner } from "@/components/InstallAppBanner";
 import {
   Sidebar,
   SidebarContent,
@@ -255,7 +256,10 @@ function DashboardContent({ children }: { children: ReactNode }) {
           <div className="fixed top-5 right-6 z-50">
             <QuickSettings />
           </div>
-          <main className="flex-1 overflow-y-auto">{children}</main>
+          <main className="flex-1 overflow-y-auto">
+            <InstallAppBanner />
+            {children}
+          </main>
         </div>
       </div>
     </SidebarProvider>
