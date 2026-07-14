@@ -2413,7 +2413,9 @@ const IndexContent = () => {
                 forceOpen={!!extendTarget}
                 extendLabel={extendTarget ? "Ampliando desde este elemento" : null}
                 onCancelExtend={() => setExtendTarget(null)}
+                onAddWidget={handleAddWidget}
               />
+
             </motion.div>
           )}
         </AnimatePresence>
