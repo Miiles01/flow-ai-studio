@@ -747,10 +747,12 @@ const CardEditorPopover = ({
     };
   }, [onClose]);
 
-  const showSubtitle = card.showSubtitle ?? !!card.subtitle;
-  const showDescription = card.description !== undefined;
-  const showUrl = card.url !== undefined;
-  const showImage = card.image !== undefined;
+  const [activeField, setActiveField] = useState<string | null>(null);
+
+  const showSubtitle = activeField === "subtitle" || !!card.subtitle;
+  const showDescription = activeField === "description" || !!card.description;
+  const showUrl = activeField === "url" || !!card.url;
+  const showImage = activeField === "image" || !!card.image?.url;
 
   const [newTagLabel, setNewTagLabel] = useState("");
   const [newTagColor, setNewTagColor] = useState(TAG_COLORS[0]);
@@ -797,7 +799,7 @@ const CardEditorPopover = ({
     <>
       <div
         ref={popoverRef}
-        className={`fixed z-[10000] w-[280px] max-h-[340px] overflow-y-auto kanban-scrollbar rounded-2xl shadow-xl ${panelCls}`}
+        className={`fixed z-[10000] w-[280px] max-h-[340px] overflow-y-auto editor-scrollbar rounded-2xl shadow-xl ${panelCls}`}
         style={{ top: pos.top, left: pos.left, visibility: pos.top === -999 ? "hidden" : "visible" }}
         onMouseDown={(e) => e.stopPropagation()}
         onClick={(e) => e.stopPropagation()}
@@ -827,70 +829,90 @@ const CardEditorPopover = ({
         />
       </Section>
 
-      <ToggleRow
+      <ExpandableRow
         icon={<Baseline size={12} />}
         label="Subtítulo"
-        enabled={showSubtitle}
-        onToggle={(v) => onUpdate({ showSubtitle: v, subtitle: v ? card.subtitle ?? "" : card.subtitle })}
+        isActive={showSubtitle}
+        onActivate={() => setActiveField("subtitle")}
         isDark={isDark}
       >
         {showSubtitle && (
           <input
+            autoFocus={activeField === "subtitle"}
             value={card.subtitle ?? ""}
             onChange={(e) => onUpdate({ subtitle: e.target.value })}
+            onBlur={(e) => {
+              if (!e.target.value.trim()) onUpdate({ subtitle: undefined });
+              setActiveField(null);
+            }}
             className={`w-full text-[12px] px-2 py-1.5 rounded-md outline-none ${inputCls}`}
             placeholder="Subtítulo"
           />
         )}
-      </ToggleRow>
+      </ExpandableRow>
 
-      <ToggleRow
+      <ExpandableRow
         icon={<AlignLeft size={12} />}
         label="Descripción"
-        enabled={showDescription}
-        onToggle={(v) => onUpdate({ description: v ? card.description ?? "" : undefined })}
+        isActive={showDescription}
+        onActivate={() => setActiveField("description")}
         isDark={isDark}
       >
         {showDescription && (
           <textarea
+            autoFocus={activeField === "description"}
             value={card.description ?? ""}
             onChange={(e) => onUpdate({ description: e.target.value })}
+            onBlur={(e) => {
+              if (!e.target.value.trim()) onUpdate({ description: undefined });
+              setActiveField(null);
+            }}
             rows={3}
             className={`w-full text-[12px] px-2 py-1.5 rounded-md outline-none resize-none ${inputCls}`}
             placeholder="Escribe una descripción…"
           />
         )}
-      </ToggleRow>
+      </ExpandableRow>
 
-      <ToggleRow
+      <ExpandableRow
         icon={<Link2 size={12} />}
         label="Enlace"
-        enabled={showUrl}
-        onToggle={(v) => onUpdate({ url: v ? card.url ?? "" : undefined })}
+        isActive={showUrl}
+        onActivate={() => setActiveField("url")}
         isDark={isDark}
       >
         {showUrl && (
           <input
+            autoFocus={activeField === "url"}
             value={card.url ?? ""}
             onChange={(e) => onUpdate({ url: e.target.value })}
+            onBlur={(e) => {
+              if (!e.target.value.trim()) onUpdate({ url: undefined });
+              setActiveField(null);
+            }}
             className={`w-full text-[12px] px-2 py-1.5 rounded-md outline-none ${inputCls}`}
             placeholder="https://…"
           />
         )}
-      </ToggleRow>
+      </ExpandableRow>
 
-      <ToggleRow
+      <ExpandableRow
         icon={<ImageIcon size={12} />}
         label="Imagen"
-        enabled={showImage}
-        onToggle={(v) => onUpdate({ image: v ? card.image ?? { url: "", ratio: "16:9" } : undefined })}
+        isActive={showImage}
+        onActivate={() => setActiveField("image")}
         isDark={isDark}
       >
         {showImage && (
           <div className="space-y-1.5">
             <input
+              autoFocus={activeField === "image"}
               value={card.image?.url ?? ""}
               onChange={(e) => onUpdate({ image: { url: e.target.value, ratio: card.image?.ratio ?? "16:9" } })}
+              onBlur={(e) => {
+                if (!e.target.value.trim()) onUpdate({ image: undefined });
+                setActiveField(null);
+              }}
               className={`w-full text-[12px] px-2 py-1.5 rounded-md outline-none ${inputCls}`}
               placeholder="URL de la imagen"
             />
@@ -919,7 +941,7 @@ const CardEditorPopover = ({
             </div>
           </div>
         )}
-      </ToggleRow>
+      </ExpandableRow>
 
       {/* Tags */}
       <Section label="Etiquetas" icon={<TagIcon size={12} />}>
@@ -1082,41 +1104,39 @@ const Section = ({
   </div>
 );
 
-const ToggleRow = ({
+const ExpandableRow = ({
   icon,
   label,
-  enabled,
-  onToggle,
+  isActive,
+  onActivate,
   isDark,
   children,
 }: {
   icon: React.ReactNode;
   label: string;
-  enabled: boolean;
-  onToggle: (v: boolean) => void;
+  isActive: boolean;
+  onActivate: () => void;
   isDark: boolean;
   children?: React.ReactNode;
 }) => (
   <div className="mb-2">
     <div
+      onClick={() => { if (!isActive) onActivate(); }}
       className={`w-full flex items-center justify-between gap-2 px-2 py-1.5 rounded-md text-[12px] font-medium transition-colors ${
-        enabled
+        isActive
           ? isDark
             ? "bg-white/10 text-white"
             : "bg-neutral-100 text-neutral-900"
           : isDark
-            ? "text-white/70 hover:bg-white/5"
-            : "text-neutral-600 hover:bg-neutral-50"
+            ? "text-white/70 hover:bg-white/5 cursor-pointer"
+            : "text-neutral-600 hover:bg-neutral-50 cursor-pointer"
       }`}
     >
       <div className="flex items-center gap-1.5">
         {icon} {label}
       </div>
-      <div onClick={(e) => e.stopPropagation()} className="flex items-center justify-center">
-        <Switch checked={enabled} onCheckedChange={(v) => onToggle(v)} />
-      </div>
     </div>
-    {enabled && children && <div className="mt-2 pl-1">{children}</div>}
+    {isActive && children && <div className="mt-2 pl-1">{children}</div>}
   </div>
 );
 

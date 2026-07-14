@@ -180,7 +180,32 @@
 }
 .kanban-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: color-mix(in srgb, var(--scrollbar-color) 25%, transparent) transparent;
+  scrollbar-color: color-mix(in srgb, var(--scrollbar-color) 30%, transparent) transparent;
+}
+
+/* Card Editor scrollbar */
+.editor-scrollbar::-webkit-scrollbar {
+  width: 4px;
+  height: 4px;
+}
+.editor-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+  margin-top: 60px;
+  margin-bottom: 20px;
+}
+.editor-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(0, 0, 0, 0.3);
+  border-radius: 999px;
+}
+.dark .editor-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.3);
+}
+.editor-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+}
+.dark .editor-scrollbar {
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
 }
 
 .react-flow__controls-button {
