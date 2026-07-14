@@ -65,6 +65,10 @@ export type Campaign = {
   exclusivityDays?: number;
   notes?: string;
   createdAt: number;
+  /** Ref al ClientCardNode asignado (id del nodo React Flow). */
+  clientId?: string;
+  /** Timestamp cuando se marcó como cobrada. Alimenta el widget Ingresos. */
+  paidAt?: number;
 };
 
 export type CampaignsNodeData = {
@@ -563,6 +567,38 @@ const CampaignEditorPopover = ({
   const total = totalPieces(campaign.deliverables);
   const status = STATUS_STYLES[campaign.status];
 
+  // ── Client integration: read clientCardNode instances from canvas ──
+  const { getNodes, setNodes } = useReactFlow();
+  const clientOptions = useMemo(() => {
+    return getNodes()
+      .filter((n) => n.type === "clientCardNode")
+      .map((n) => ({ id: n.id, name: ((n.data as any)?.name || "Sin nombre") as string, avatarUrl: (n.data as any)?.avatarUrl as string | undefined }));
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [getNodes, campaign.clientId]);
+  const selectedClient = clientOptions.find((c) => c.id === campaign.clientId);
+  const [clientPickerOpen, setClientPickerOpen] = useState(false);
+
+  const createAndAssignClient = (name: string) => {
+    const newId = `client-${Date.now()}`;
+    // Place the new client near the campaigns node
+    const nodes = getNodes();
+    const owner = nodes.find((n) => n.type === "campaignsNode" && ((n.data as any)?.campaigns ?? []).some((c: Campaign) => c.id === campaign.id));
+    const basePos = owner ? { x: owner.position.x + ((owner.style?.width as number) ?? 520) + 60, y: owner.position.y } : { x: 100, y: 100 };
+    setNodes((nds) => [
+      ...nds,
+      {
+        id: newId,
+        type: "clientCardNode",
+        position: basePos,
+        style: { width: 320, height: 340 },
+        data: { name: name || "Nuevo cliente", role: "", tags: [], assignees: [], fields: [] },
+      } as any,
+    ]);
+    onUpdate({ clientId: newId });
+    setClientPickerOpen(false);
+  };
+
+
   const content = (
     <div
       ref={popoverRef}
@@ -613,6 +649,84 @@ const CampaignEditorPopover = ({
             className="w-full bg-transparent border-none outline-none text-[22px] font-bold tracking-tight placeholder:opacity-40"
           />
         </div>
+
+        {/* Cliente asignado */}
+        <Section title="Cliente" subtle={subtle}>
+          <div className="relative">
+            <button
+              onClick={() => setClientPickerOpen((v) => !v)}
+              className={`w-full flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-left ${inputCls} hover:opacity-95`}
+            >
+              {selectedClient ? (
+                <>
+                  <div className="w-7 h-7 rounded-full flex items-center justify-center text-[11px] font-semibold text-white shrink-0" style={{ backgroundColor: accentColor }}>
+                    {selectedClient.avatarUrl ? <img src={selectedClient.avatarUrl} alt="" className="w-full h-full rounded-full object-cover" /> : initials(selectedClient.name)}
+                  </div>
+                  <span className="flex-1 text-[13px] font-medium truncate">{selectedClient.name}</span>
+                  <span className={`text-[11px] ${subtle}`}>Cambiar</span>
+                </>
+              ) : (
+                <>
+                  <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 ${softSurface}`}>
+                    <Users size={13} className="opacity-60" />
+                  </div>
+                  <span className={`flex-1 text-[13px] ${subtle}`}>Asignar cliente…</span>
+                </>
+              )}
+            </button>
+            {clientPickerOpen && (
+              <div className={`absolute top-full mt-1.5 left-0 right-0 z-50 rounded-xl shadow-2xl p-2 max-h-[280px] overflow-y-auto ${isDark ? "bg-[#1C1C1E] border border-white/10" : "bg-white border border-neutral-200"}`}>
+                {clientOptions.length > 0 && (
+                  <div className="mb-1 space-y-0.5">
+                    {clientOptions.map((c) => (
+                      <button
+                        key={c.id}
+                        onClick={() => { onUpdate({ clientId: c.id }); setClientPickerOpen(false); }}
+                        className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-left text-[12.5px] ${isDark ? "hover:bg-white/10" : "hover:bg-neutral-100"} ${c.id === campaign.clientId ? (isDark ? "bg-white/10" : "bg-neutral-100") : ""}`}
+                      >
+                        <div className="w-6 h-6 rounded-full flex items-center justify-center text-[10px] font-semibold text-white shrink-0" style={{ backgroundColor: accentColor }}>
+                          {c.avatarUrl ? <img src={c.avatarUrl} alt="" className="w-full h-full rounded-full object-cover" /> : initials(c.name)}
+                        </div>
+                        <span className="truncate">{c.name}</span>
+                      </button>
+                    ))}
+                  </div>
+                )}
+                {campaign.clientId && (
+                  <button
+                    onClick={() => { onUpdate({ clientId: undefined }); setClientPickerOpen(false); }}
+                    className={`w-full text-left px-2 py-1.5 rounded-lg text-[12px] ${subtle} ${isDark ? "hover:bg-white/10" : "hover:bg-neutral-100"}`}
+                  >
+                    Quitar cliente
+                  </button>
+                )}
+                <button
+                  onClick={() => createAndAssignClient(campaign.brand || "Nuevo cliente")}
+                  className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-left text-[12.5px] font-medium border-t mt-1 pt-2 ${isDark ? "border-white/10 hover:bg-white/10 text-white" : "border-neutral-100 hover:bg-neutral-100 text-neutral-900"}`}
+                >
+                  <Plus size={12} /> Crear nuevo cliente
+                </button>
+              </div>
+            )}
+          </div>
+        </Section>
+
+        {/* Cobro rápido */}
+        <Section title="Pago" subtle={subtle}>
+          <label className={`flex items-center gap-2.5 p-3 rounded-lg cursor-pointer ${softSurface}`}>
+            <input
+              type="checkbox"
+              checked={!!campaign.paidAt}
+              onChange={(e) => onUpdate({ paidAt: e.target.checked ? Date.now() : undefined })}
+              className="accent-[#22C55E]"
+            />
+            <span className="text-[12.5px] font-medium">Marcar como cobrada</span>
+            {campaign.paidAt && (
+              <span className="ml-auto text-[11px] text-[#22C55E] font-semibold">Cobrado</span>
+            )}
+          </label>
+        </Section>
+
 
         {/* Estado */}
         <Section title="Estado de la colaboración" subtle={subtle}>

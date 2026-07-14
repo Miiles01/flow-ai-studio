@@ -17,7 +17,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import { Columns3, UserSquare2, LayoutGrid, type LucideIcon } from "lucide-react";
+import { Columns3, UserSquare2, LayoutGrid, LineChart, type LucideIcon } from "lucide-react";
 import type { Node } from "@xyflow/react";
 
 export type WidgetDef = {
@@ -90,6 +90,24 @@ export const WIDGETS: WidgetDef[] = [
         tags: [],
         assignees: [],
         fields: [],
+      },
+    }),
+  },
+  {
+    id: "ingresos",
+    name: "Ingresos",
+    description: "Dashboard financiero: total cerrado, promedio, cobrado vs por cobrar, top marcas y pendientes. Se sincroniza con Campañas.",
+    icon: LineChart,
+    createNode: (position) => ({
+      id: `ingresos-${Date.now()}`,
+      type: "ingresosNode",
+      position,
+      style: { width: 880, height: 900 },
+      data: {
+        title: "Ingresos",
+        showTitle: true,
+        subtitle: "Lo que cerraste por mes y lo que está por entrar.",
+        showSubtitle: true,
       },
     }),
   },
