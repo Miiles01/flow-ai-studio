@@ -1,5 +1,5 @@
 import { memo, useState, useRef, useEffect, forwardRef } from "react";
-import { Handle, Position, type NodeProps, NodeResizer, useReactFlow } from "@xyflow/react";
+import { Handle, Position, type NodeProps, NodeResizer, useReactFlow, useViewport } from "@xyflow/react";
 import {
   Plus, Trash2, ArrowUp, ArrowDown, Minus, Check, Baseline, Heading1, Heading2, Square,
 } from "lucide-react";
@@ -145,6 +145,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
   const selectedNodes = getNodes().filter((n) => n.selected);
   const isSingleSelected = selected && selectedNodes.length === 1;
   const { isDark } = useTheme();
+  const { zoom } = useViewport();
 
   const nodeData = data as TodoNodeData;
   const showTitle = nodeData.showTitle ?? true;
@@ -296,6 +297,11 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
         {isSingleSelected && (
           <div
             className="absolute -top-16 left-1/2 -translate-x-1/2 z-[1000] pointer-events-auto node-floating-toolbar"
+            style={{
+              whiteSpace: "nowrap",
+              transform: `translate(-50%, 0) scale(${1 / zoom})`,
+              transformOrigin: "bottom center",
+            }}
             onClick={(e) => e.stopPropagation()}
             onMouseDown={(e) => e.stopPropagation()}
           >
