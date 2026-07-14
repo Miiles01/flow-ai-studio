@@ -26,7 +26,7 @@ import { type NodeProps, NodeResizer, useReactFlow, useViewport } from "@xyflow/
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Plus, Trash2, Palette, Baseline, X, Search, ArrowLeft, Repeat, DollarSign,
-  Instagram, Youtube, Calendar, Users, Minus,
+  Instagram, Youtube, Calendar, Users, Minus, Heading1, Heading2, Check,
 } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import NodeExtendHandles from "@/components/nodes/NodeExtendHandles";
@@ -69,6 +69,9 @@ export type Campaign = {
 
 export type CampaignsNodeData = {
   title?: string;
+  showTitle?: boolean;
+  subtitle?: string;
+  showSubtitle?: boolean;
   campaigns?: Campaign[];
   backgroundColor?: string;
   textColor?: string;
@@ -76,7 +79,7 @@ export type CampaignsNodeData = {
 };
 
 const RAINBOW_COLORS = [
-  { name: "Blanco", value: "#FFFFFF" },
+  { name: "Transparente", value: "transparent" },
   { name: "Rojo", value: "#EF4444" },
   { name: "Naranja", value: "#F97316" },
   { name: "Amarillo", value: "#FACC15" },
@@ -84,6 +87,7 @@ const RAINBOW_COLORS = [
   { name: "Azul", value: "#4059F1" },
   { name: "Morado", value: "#A855F7" },
   { name: "Rosa", value: "#FCB5B9" },
+  { name: "Blanco", value: "#FFFFFF" },
   { name: "Negro", value: "#1F2937" },
 ];
 const TEXT_COLORS = [
@@ -170,6 +174,10 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
   const rawText = d.textColor ?? "#111827";
   const textColor = isDark && (isBlack(rawText) || isWhite(rawFill)) ? "#FFFFFF" : rawText;
   const accentColor = d.accentColor ?? "#4059F1";
+  const title = d.title ?? "Campañas";
+  const showTitle = d.showTitle ?? true;
+  const subtitle = d.subtitle ?? "";
+  const showSubtitle = d.showSubtitle ?? false;
 
   const [activePicker, setActivePicker] = useState<"fill" | "text" | null>(null);
   const [filter, setFilter] = useState("");
@@ -210,7 +218,7 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
   const softSurface = isDark ? "bg-white/5" : "bg-neutral-50";
 
   return (
-    <div style={{ width: "100%", height: "100%", position: "relative" }}>
+    <div className="group/widget" style={{ width: "100%", height: "100%", position: "relative" }}>
       <NodeResizer isVisible={!!isSingleSelected} minWidth={380} minHeight={320} lineStyle={{ border: "none" }} />
 
       <AnimatePresence>
@@ -231,27 +239,54 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
               }`}
             >
               <button
-                onClick={() => setActivePicker(activePicker === "fill" ? null : "fill")}
-                className={`w-7 h-7 flex items-center justify-center rounded-lg relative ${isDark ? "hover:bg-white/10" : "hover:bg-neutral-100"}`}
-                title="Color de fondo"
+                onClick={() => update({ showTitle: !showTitle })}
+                className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${
+                  showTitle ? "bg-[#4059F1] text-white" : isDark ? "hover:bg-white/10 text-white/70" : "hover:bg-neutral-100 text-neutral-600"
+                }`}
+                title="Mostrar/ocultar título"
               >
-                <Palette size={13} className="text-[#6B7280]" />
-                <div className="absolute bottom-1 right-1 w-2 h-2 rounded-full border border-white" style={{ backgroundColor }} />
+                <Heading1 size={13} />
               </button>
               <button
-                onClick={() => setActivePicker(activePicker === "text" ? null : "text")}
-                className={`w-7 h-7 flex items-center justify-center rounded-lg ${isDark ? "hover:bg-white/10" : "hover:bg-neutral-100"}`}
-                title="Color de texto"
+                onClick={() => update({ showSubtitle: !showSubtitle })}
+                className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${
+                  showSubtitle ? "bg-[#4059F1] text-white" : isDark ? "hover:bg-white/10 text-white/70" : "hover:bg-neutral-100 text-neutral-600"
+                }`}
+                title="Mostrar/ocultar subtítulo"
               >
-                <Baseline size={13} style={{ color: textColor }} className="stroke-[2.5]" />
+                <Heading2 size={13} />
               </button>
 
-              {activePicker === "fill" && (
-                <PickerPopover colors={RAINBOW_COLORS} onPick={(v) => { update({ backgroundColor: v }); setActivePicker(null); }} isDark={isDark} />
-              )}
-              {activePicker === "text" && (
-                <PickerPopover colors={TEXT_COLORS} onPick={(v) => { update({ textColor: v }); setActivePicker(null); }} isDark={isDark} />
-              )}
+              <div className={`w-[1px] h-4 mx-1 ${isDark ? "bg-white/10" : "bg-neutral-200"}`} />
+
+              <div className="relative">
+                <button
+                  onClick={() => setActivePicker(activePicker === "fill" ? null : "fill")}
+                  className={`w-7 h-7 flex items-center justify-center rounded-lg relative ${isDark ? "hover:bg-white/10" : "hover:bg-neutral-100"}`}
+                  title="Color de fondo"
+                >
+                  <Palette size={13} className="text-[#6B7280]" />
+                  <div className="absolute bottom-1 right-1 w-2 h-2 rounded-full border border-white overflow-hidden" style={{ backgroundColor: backgroundColor === "transparent" ? "white" : backgroundColor }}>
+                    {backgroundColor === "transparent" && <div className="absolute inset-0 w-full h-[1px] top-1/2 bg-red-500 rotate-45" />}
+                  </div>
+                </button>
+                {activePicker === "fill" && (
+                  <PickerPopover colors={RAINBOW_COLORS} selected={rawFill} onPick={(v) => { update({ backgroundColor: v }); setActivePicker(null); }} isDark={isDark} />
+                )}
+              </div>
+
+              <div className="relative">
+                <button
+                  onClick={() => setActivePicker(activePicker === "text" ? null : "text")}
+                  className={`w-7 h-7 flex items-center justify-center rounded-lg ${isDark ? "hover:bg-white/10" : "hover:bg-neutral-100"}`}
+                  title="Color de texto"
+                >
+                  <Baseline size={13} style={{ color: textColor }} className="stroke-[2.5]" />
+                </button>
+                {activePicker === "text" && (
+                  <PickerPopover colors={TEXT_COLORS} selected={rawText} onPick={(v) => { update({ textColor: v }); setActivePicker(null); }} isDark={isDark} />
+                )}
+              </div>
 
               <div className={`w-[1px] h-4 mx-1 ${isDark ? "bg-white/10" : "bg-neutral-200"}`} />
 
@@ -269,12 +304,13 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
         )}
       </AnimatePresence>
 
-      {/* Drag handle */}
-      <div className="absolute top-1.5 left-1/2 -translate-x-1/2 w-8 h-1.5 rounded-full bg-neutral-300/60 dark:bg-white/15 opacity-0 hover:opacity-100 group-hover/handle:opacity-100 cursor-grab active:cursor-grabbing z-10" />
+      <div className="absolute top-0 left-1/2 z-20 h-5 w-28 -translate-x-1/2 cursor-grab rounded-b-xl active:cursor-grabbing" title="Mover widget">
+        <div className="mx-auto mt-1.5 h-1.5 w-8 rounded-full bg-neutral-300/70 opacity-0 transition-opacity group-hover/widget:opacity-100" />
+      </div>
 
       <div
         ref={anchorRef}
-        className={`w-full h-full rounded-2xl border overflow-hidden flex flex-col transition-all duration-300 group/handle ${selected ? "border-[#4059F1]/40" : borderCls}`}
+        className={`w-full h-full rounded-2xl border overflow-hidden flex flex-col transition-all duration-300 ${selected ? "border-[#4059F1]/40" : borderCls}`}
         style={{
           backgroundColor,
           color: textColor,
@@ -286,15 +322,28 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
         {/* Header */}
         <div className={`px-5 pt-5 pb-3 shrink-0 border-b ${isDark ? "border-white/10" : "border-neutral-100"}`}>
           <div className="flex items-start justify-between gap-3">
-            <div className="flex-1 min-w-0">
-              <input
-                value={d.title ?? "Campañas"}
-                onChange={(e) => update({ title: e.target.value })}
-                className="nodrag nopan w-full bg-transparent border-none outline-none text-[22px] font-semibold tracking-tight"
-                style={{ color: textColor }}
-              />
-              <p className={`text-[11.5px] mt-0.5 ${subtleText}`}>Una ficha por marca con todo lo importante.</p>
-            </div>
+            {(showTitle || showSubtitle) && (
+              <div className="flex-1 min-w-0">
+                {showTitle && (
+                  <input
+                    value={title}
+                    onChange={(e) => update({ title: e.target.value })}
+                    className="nodrag nopan w-full bg-transparent border-none outline-none text-[22px] font-semibold tracking-tight"
+                    style={{ color: textColor }}
+                    placeholder="Título"
+                  />
+                )}
+                {showSubtitle && (
+                  <input
+                    value={subtitle}
+                    onChange={(e) => update({ subtitle: e.target.value })}
+                    className="nodrag nopan w-full bg-transparent border-none outline-none text-[12px] font-light mt-0.5 opacity-70"
+                    style={{ color: textColor }}
+                    placeholder="Subtítulo"
+                  />
+                )}
+              </div>
+            )}
             <button
               onClick={addCampaign}
               className="nodrag nopan shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-[12px] font-medium text-white transition-opacity hover:opacity-90"
@@ -317,7 +366,7 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
         </div>
 
         {/* Grid of campaign cards */}
-        <div className="p-4 flex-1 overflow-y-auto kanban-scrollbar nodrag nopan">
+        <div className="p-4 flex-1 overflow-y-auto kanban-scrollbar">
           {filtered.length === 0 ? (
             <div className={`h-full flex flex-col items-center justify-center gap-2 text-center ${subtleText}`}>
               <div className={`w-12 h-12 rounded-full flex items-center justify-center ${softSurface}`}>
@@ -326,7 +375,7 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
               <p className="text-[12.5px]">Aún no tienes campañas.</p>
               <button
                 onClick={addCampaign}
-                className="text-[11.5px] underline underline-offset-2"
+                className="nodrag nopan text-[11.5px] underline underline-offset-2"
                 style={{ color: accentColor }}
               >
                 Añadir la primera
@@ -380,7 +429,7 @@ const CampaignCard = ({
   return (
     <button
       onClick={onOpen}
-      className={`text-left rounded-2xl border p-3.5 transition-all hover:shadow-md ${
+      className={`nodrag nopan text-left rounded-2xl border p-3.5 transition-all hover:shadow-md ${
         isDark ? "bg-white/5 border-white/10 hover:bg-white/10" : "bg-white border-[#E8ECFE] hover:border-[#C7CFFD]"
       }`}
     >
@@ -817,14 +866,15 @@ const DeliverableCounter = ({
 );
 
 const PickerPopover = ({
-  colors, onPick, isDark,
+  colors, selected, onPick, isDark,
 }: {
   colors: Array<{ name: string; value: string }>;
+  selected?: string;
   onPick: (v: string) => void;
   isDark: boolean;
 }) => (
   <div
-    className={`absolute top-full left-0 mt-2 p-2 rounded-xl shadow-xl grid grid-cols-5 gap-1 z-[1001] ${
+    className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl shadow-2xl p-2.5 grid grid-cols-5 gap-1.5 z-[1001] w-[150px] ${
       isDark ? "bg-[#1C1C1E] border border-white/10" : "bg-white border border-neutral-100"
     }`}
   >
@@ -832,10 +882,15 @@ const PickerPopover = ({
       <button
         key={c.value}
         onClick={() => onPick(c.value)}
-        className="w-6 h-6 rounded-md border border-black/10"
-        style={{ backgroundColor: c.value }}
+        className="w-6 h-6 rounded-full border border-neutral-200/60 transition-transform hover:scale-110 relative overflow-hidden shadow-sm flex items-center justify-center"
+        style={{ backgroundColor: c.value === "transparent" ? "white" : c.value }}
         title={c.name}
-      />
+      >
+        {c.value === "transparent" && <div className="absolute inset-0 w-full h-[1.5px] top-1/2 bg-red-500 rotate-45" />}
+        {selected === c.value && c.value !== "transparent" && (
+          <Check size={10} className={c.value === "#FFFFFF" ? "text-gray-700" : "text-white"} strokeWidth={2.5} />
+        )}
+      </button>
     ))}
   </div>
 );

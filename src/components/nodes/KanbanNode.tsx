@@ -252,7 +252,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
     : null;
 
   return (
-    <div style={{ width: "100%", height: "100%", position: "relative" }}>
+    <div className="group/widget" style={{ width: "100%", height: "100%", position: "relative" }}>
       <NodeResizer isVisible={!!isSingleSelected} minWidth={400} minHeight={280} lineStyle={{ border: "none" }} />
 
       <AnimatePresence>
@@ -353,6 +353,10 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
         )}
       </AnimatePresence>
 
+      <div className="absolute top-0 left-1/2 z-20 h-5 w-28 -translate-x-1/2 cursor-grab rounded-b-xl active:cursor-grabbing" title="Mover widget">
+        <div className="mx-auto mt-1.5 h-1.5 w-8 rounded-full bg-neutral-300/70 opacity-0 transition-opacity group-hover/widget:opacity-100" />
+      </div>
+
       <div
         className={`w-full h-full rounded-2xl border overflow-hidden flex flex-col transition-all duration-300 ${selected ? "border-[#4059F1]/40" : borderCls}`}
         style={{
@@ -385,7 +389,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
           </div>
         )}
 
-        <div className="flex-1 overflow-auto nodrag nopan kanban-scrollbar">
+        <div className="flex-1 overflow-auto kanban-scrollbar">
           <div className="flex gap-3 p-4 items-stretch min-w-min min-h-full">
             {columns.map((col) => (
               <div
