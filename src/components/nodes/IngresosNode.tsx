@@ -145,7 +145,8 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
     return allCampaigns.filter((c) => {
       const mk = campaignMonthKey(c);
       if (!mk) return true;
-      const p = parseKey(mk)!;
+      const p = parseKey(mk);
+      if (!p) return true;
       const val = p.y * 12 + p.m;
       if (from && val < from.y * 12 + from.m) return false;
       if (to && val > to.y * 12 + to.m) return false;
