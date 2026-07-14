@@ -246,14 +246,6 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
               >
                 <Baseline size={13} style={{ color: textColor }} className="stroke-[2.5]" />
               </button>
-              {/* Accent */}
-              <button
-                onClick={() => setActivePicker(activePicker === "accent" ? null : "accent")}
-                className={`w-7 h-7 flex items-center justify-center rounded-lg relative ${isDark ? "hover:bg-white/10" : "hover:bg-neutral-100"}`}
-                title="Color de acento (columnas)"
-              >
-                <div className="w-3 h-3 rounded-full" style={{ backgroundColor: accentColor }} />
-              </button>
 
               {activePicker === "fill" && (
                 <PickerPopover
@@ -275,16 +267,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
                   isDark={isDark}
                 />
               )}
-              {activePicker === "accent" && (
-                <PickerPopover
-                  colors={RAINBOW_COLORS.filter((c) => c.value !== "transparent")}
-                  onPick={(v) => {
-                    update({ accentColor: v });
-                    setActivePicker(null);
-                  }}
-                  isDark={isDark}
-                />
-              )}
+
 
               <div className={`w-[1px] h-4 mx-1 ${isDark ? "bg-white/10" : "bg-neutral-200"}`} />
 
