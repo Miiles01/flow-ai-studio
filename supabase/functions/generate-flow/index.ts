@@ -385,6 +385,30 @@ Los textNode NO son solo para títulos: en contenido conceptual DEBEN contener e
 ${apifyBlock}${prospectsBlock}${templatesBlock}`;
 
     const customInstructions = await loadInstructions(supabase, "generate");
+    const contentMode = await contentModePromise;
+
+    const modeGuidance =
+      contentMode === "learn"
+        ? `\n\n=== MODO DE CONTENIDO: LEARN (APRENDER) ===
+El usuario quiere ENTENDER un concepto, teoría o fundamentos. NO quiere tareas.
+REGLAS OBLIGATORIAS:
+- PROHIBIDO usar "todoNode" en este flujo (a menos que el usuario lo pida explícitamente en su prompt).
+- Construye un MAPA CONCEPTUAL / ESQUEMA visual:
+  * Un nodo central (shapeNode circle o hexagon) con el concepto principal.
+  * Ramas con subconceptos (shapeNode square/hexagon) y hojas con definiciones/ejemplos (textNode).
+  * Usa "diamond" solo para distinciones/decisiones conceptuales (ej. "¿es B2B o B2C?").
+- Los textNode DEBEN contener explicaciones completas en HTML: oraciones reales, definiciones ("El X es..."), ejemplos, con <b>, <i>, <ul><li>. NO listas de acciones.
+- Etiqueta los edges con relaciones conceptuales cortas cuando ayude ("incluye", "se divide en", "influye en", "vs").
+- Mezcla shapeNode y textNode para que el esquema sea visualmente rico, no una sola columna de cajas iguales.
+=== FIN MODO ===`
+        : contentMode === "plan"
+        ? `\n\n=== MODO DE CONTENIDO: PLAN (EJECUTAR) ===
+El usuario quiere un plan accionable. Usa "todoNode" con tareas concretas y verbos de acción, agrupadas por fases. Es el comportamiento estándar.
+=== FIN MODO ===`
+        : `\n\n=== MODO DE CONTENIDO: MIXED ===
+El usuario quiere contexto conceptual + acción. Empieza el esquema con nodos conceptuales (shapeNode + textNode explicativos) y añade 1-2 todoNode al final SOLO para la parte ejecutable. No conviertas los conceptos en tareas.
+=== FIN MODO ===`;
+
     const response = await fetch(
       "https://ai.gateway.lovable.dev/v1/chat/completions",
       {
@@ -396,9 +420,10 @@ ${apifyBlock}${prospectsBlock}${templatesBlock}`;
         body: JSON.stringify({
           model: "google/gemini-3-flash-preview",
           messages: [
-            { role: "system", content: systemPrompt + customInstructions },
+            { role: "system", content: systemPrompt + modeGuidance + customInstructions },
             { role: "user", content: prompt },
           ],
+        }),
         }),
       }
     );
