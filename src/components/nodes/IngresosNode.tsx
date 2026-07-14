@@ -80,7 +80,8 @@ const keyLabel = (k?: string) => {
   return `${MONTHS_FULL[p.m]} ${p.y}`;
 };
 const keyShort = (k: string) => {
-  const p = parseKey(k)!;
+  const p = parseKey(k);
+  if (!p) return k;
   return `${MONTHS_SHORT[p.m]} ${String(p.y).slice(2)}`;
 };
 
