@@ -49,7 +49,7 @@ const WidgetsPicker = ({ open, onClose, onPick }: Props) => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.97 }}
             transition={{ type: "spring", bounce: 0.25, duration: 0.4 }}
-            className="fixed z-[9999] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+            className="fixed z-[9999] left-1/2 top-[38%] -translate-x-1/2 -translate-y-1/2"
             style={{ width: "min(720px, calc(100vw - 32px))" }}
             onClick={(e) => e.stopPropagation()}
           >
