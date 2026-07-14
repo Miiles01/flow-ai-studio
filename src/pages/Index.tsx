@@ -1048,6 +1048,21 @@ const IndexContent = () => {
     [setNodes]
   );
 
+  const handleAddWidget = useCallback(
+    (widget: WidgetDef) => {
+      const center = reactFlowInstance
+        ? reactFlowInstance.screenToFlowPosition({ x: window.innerWidth / 2, y: window.innerHeight / 2 })
+        : { x: 400, y: 200 };
+      const width = 780;
+      const height = 440;
+      const node = widget.createNode({ x: center.x - width / 2, y: center.y - height / 2 });
+      setNodes((nds) => [...nds, node]);
+    },
+    [reactFlowInstance, setNodes]
+  );
+
+
+
   const runGenerate = useCallback(
     async (prompt: string) => {
       setIsGenerating(true);
