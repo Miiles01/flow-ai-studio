@@ -687,7 +687,7 @@ const CardView = ({
 /* ─────────── Card editor popover ─────────── */
 
 const CardEditorPopover = ({
-  anchor,
+  anchorEl,
   card,
   isDark,
   accentColor,
