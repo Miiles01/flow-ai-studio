@@ -68,6 +68,8 @@ export const WIDGETS: WidgetDef[] = [
       style: { width: 520, height: 520 },
       data: {
         title: "Campañas",
+        showTitle: true,
+        showSubtitle: false,
         campaigns: [],
       },
     }),

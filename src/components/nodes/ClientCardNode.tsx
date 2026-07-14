@@ -123,7 +123,7 @@ const ClientCardNode = ({ id, data, selected }: NodeProps) => {
   const role = d.role ?? "";
 
   return (
-    <div style={{ width: "100%", height: "100%", position: "relative" }}>
+    <div className="group/widget" style={{ width: "100%", height: "100%", position: "relative" }}>
       <NodeResizer isVisible={!!isSingleSelected} minWidth={260} minHeight={180} lineStyle={{ border: "none" }} />
 
       <AnimatePresence>
@@ -182,6 +182,10 @@ const ClientCardNode = ({ id, data, selected }: NodeProps) => {
         )}
       </AnimatePresence>
 
+      <div className="absolute top-0 left-1/2 z-20 h-5 w-28 -translate-x-1/2 cursor-grab rounded-b-xl active:cursor-grabbing" title="Mover widget">
+        <div className="mx-auto mt-1.5 h-1.5 w-8 rounded-full bg-neutral-300/70 opacity-0 transition-opacity group-hover/widget:opacity-100" />
+      </div>
+
       <div
         ref={anchorRef}
         onClick={(e) => {
@@ -228,7 +232,7 @@ const ClientCardNode = ({ id, data, selected }: NodeProps) => {
         </div>
 
         {/* Body */}
-        <div className="px-4 pb-4 flex-1 overflow-y-auto kanban-scrollbar nodrag nopan space-y-2">
+        <div className="px-4 pb-4 flex-1 overflow-y-auto kanban-scrollbar space-y-2">
           {(d.tags?.length ?? 0) > 0 && (
             <div className="flex flex-wrap gap-1">
               {d.tags!.map((t) => (
