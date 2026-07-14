@@ -43,16 +43,19 @@ const WidgetsPicker = ({ open, onClose, onPick }: Props) => {
           {/* Click-outside catcher (no visual overlay) */}
           <div className="fixed inset-0 z-[9998]" onClick={onClose} />
 
-          <motion.div
-            key="widgets-picker"
-            initial={{ opacity: 0, y: -10, scale: 0.97 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -10, scale: 0.97 }}
-            transition={{ type: "spring", bounce: 0.25, duration: 0.4 }}
+          <div
             className="fixed z-[9999] left-1/2 top-[38%] -translate-x-1/2 -translate-y-1/2"
             style={{ width: "min(720px, calc(100vw - 32px))" }}
-            onClick={(e) => e.stopPropagation()}
           >
+            <motion.div
+              key="widgets-picker"
+              initial={{ opacity: 0, y: -10, scale: 0.97 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: -10, scale: 0.97 }}
+              transition={{ type: "spring", bounce: 0.25, duration: 0.4 }}
+              className="w-full"
+              onClick={(e) => e.stopPropagation()}
+            >
             <div
               className={`rounded-3xl border overflow-hidden ${
                 isDark ? "bg-[#1C1C1E] border-white/10" : "bg-white border-neutral-200"
@@ -124,6 +127,7 @@ const WidgetsPicker = ({ open, onClose, onPick }: Props) => {
               </div>
             </div>
           </motion.div>
+          </div>
         </>
       )}
     </AnimatePresence>,
