@@ -739,6 +739,7 @@ const CardEditorPopover = ({
 
   const [newTagLabel, setNewTagLabel] = useState("");
   const [newTagColor, setNewTagColor] = useState(TAG_COLORS[0]);
+  const [showTagPicker, setShowTagPicker] = useState(false);
   const [newAssigneeName, setNewAssigneeName] = useState("");
   const [newAssigneeEmail, setNewAssigneeEmail] = useState("");
 
@@ -944,19 +945,32 @@ const CardEditorPopover = ({
             className={`flex-1 text-[11px] px-2 py-1 rounded-md outline-none ${inputCls}`}
             placeholder="Nueva etiqueta"
           />
-          <div className="flex flex-wrap w-16 gap-1">
-            {TAG_COLORS.map((c) => (
-              <button
-                key={c}
-                onClick={() => setNewTagColor(c)}
-                className={`w-3.5 h-3.5 rounded-full ${newTagColor === c ? "ring-2 ring-offset-1" : ""}`}
-                style={{
-                  backgroundColor: c,
-                  ["--tw-ring-color" as any]: c,
-                  ["--tw-ring-offset-color" as any]: isDark ? "#1C1C1E" : "#fff",
-                }}
-              />
-            ))}
+          <div className="relative flex items-center justify-center">
+            <button
+              onClick={() => setShowTagPicker(!showTagPicker)}
+              className="w-5 h-5 rounded-full border shadow-sm transition-transform hover:scale-105"
+              style={{ backgroundColor: newTagColor, borderColor: isDark ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.15)" }}
+              title="Seleccionar color"
+            />
+            {showTagPicker && (
+              <div className={`absolute bottom-full mb-2 -left-16 w-32 p-2 rounded-xl shadow-xl grid grid-cols-4 gap-2 z-50 ${isDark ? "bg-[#2C2C2E] border border-white/10" : "bg-white border border-neutral-100"}`}>
+                {TAG_COLORS.map((c) => (
+                  <button
+                    key={c}
+                    onClick={() => {
+                      setNewTagColor(c);
+                      setShowTagPicker(false);
+                    }}
+                    className={`w-5 h-5 rounded-full mx-auto ${newTagColor === c ? "ring-2 ring-offset-1" : "hover:scale-110 transition-transform"}`}
+                    style={{
+                      backgroundColor: c,
+                      ["--tw-ring-color" as any]: c,
+                      ["--tw-ring-offset-color" as any]: isDark ? "#2C2C2E" : "#fff",
+                    }}
+                  />
+                ))}
+              </div>
+            )}
           </div>
           <button
             onClick={() => {
