@@ -314,6 +314,12 @@ Node Types and Data:
    - Use for visual placeholders or logos.
 5. "embedNode": {"url": "https://..."} con "style": {"width": 480, "height": 320}
    - Embebe una página web real dentro del canvas (iframe en vivo). Úsalo SOLO con URLs reales (por ejemplo el campo "website" de un prospecto de la base de datos o de los prospectos recién encontrados). NUNCA inventes URLs.
+6. "kanbanNode" (WIDGET PIZARRA — SOLO usar si el usuario pide explícitamente una "pizarra", "kanban", "tablero de tareas", "board de tareas" o similar; NUNCA lo generes por defecto en flujos normales):
+   - "style": {"width": 780, "height": 440} (recomendado, puede ser mayor si hay muchas tarjetas)
+   - "data": {"title": "Nombre de la pizarra", "showTitle": true, "showSubtitle": false, "backgroundColor": "#FFFFFF", "textColor": "#111827", "accentColor": "#4059F1", "columns": [{"id":"col-1","title":"Por hacer","cards":[{"id":"c-1","title":"Tarea","subtitle":"Opcional","url":"https://opcional.com","fields":[{"id":"f-1","label":"Prioridad","value":"Alta"}]}]}]}
+   - Cada columna necesita "id" único y "title". Cada card necesita "id" único y "title"; "subtitle", "url" y "fields" son opcionales.
+   - Colores: fondo blanco #FFFFFF, texto #111827 (el UI invierte automáticamente en dark mode).
+   - POSICIONAMIENTO: si se incluye junto a un flujo, colócalo aparte para no chocar con los nodos del flujo (por ejemplo bien a la derecha o debajo, dejando al menos 200px de separación). NO conectes edges hacia/desde el kanbanNode (no admite conexiones).
 
 Rules for Premium Visual Design:
 - ALIGNMENT & SYMMETRY: Nodes in the same sequence must be aligned on the exact same horizontal grid line (e.g. Y: 250) to look like a high-end mind map.
