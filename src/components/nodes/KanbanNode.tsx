@@ -972,7 +972,7 @@ const CardEditorPopover = ({
               title="Seleccionar color"
             />
             {showTagPicker && (
-              <div className={`absolute bottom-full mb-2 -left-16 w-32 p-2 rounded-xl shadow-xl grid grid-cols-4 gap-2 z-50 ${isDark ? "bg-[#2C2C2E] border border-white/10" : "bg-white border border-neutral-100"}`}>
+              <div className={`absolute bottom-full mb-2 -left-12 w-[120px] rounded-xl shadow-2xl p-2.5 grid grid-cols-4 gap-1.5 z-50 ${isDark ? "bg-[#1C1C1E] border border-white/10" : "bg-white border border-neutral-100"}`}>
                 {TAG_COLORS.map((c) => (
                   <button
                     key={c}
@@ -980,7 +980,7 @@ const CardEditorPopover = ({
                       setNewTagColor(c);
                       setShowTagPicker(false);
                     }}
-                    className={`w-5 h-5 rounded-full mx-auto ${newTagColor === c ? "ring-2 ring-offset-1" : "hover:scale-110 transition-transform"}`}
+                    className={`w-6 h-6 rounded-full mx-auto border border-neutral-200/60 shadow-sm transition-transform ${newTagColor === c ? "ring-2 ring-offset-1" : "hover:scale-110"}`}
                     style={{
                       backgroundColor: c,
                       ["--tw-ring-color" as any]: c,
