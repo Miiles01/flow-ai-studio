@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import NodeExtendHandles from "@/components/nodes/NodeExtendHandles";
+import { Switch } from "@/components/ui/switch";
 
 export type KanbanAssignee = {
   id: string;
@@ -90,14 +91,14 @@ const TEXT_COLORS = [
 ];
 
 const TAG_COLORS = [
-  "#4059F1",
-  "#22C55E",
-  "#F97316",
-  "#EF4444",
-  "#A855F7",
-  "#FCB5B9",
-  "#6B7280",
-  "#FACC15",
+  "#EF4444", // Rojo
+  "#F97316", // Naranja
+  "#FACC15", // Amarillo
+  "#22C55E", // Verde
+  "#4059F1", // Azul
+  "#A855F7", // Morado
+  "#FCB5B9", // Rosa
+  "#1F2937", // Negro
 ];
 
 const PRESET_PRIORITY_TAGS: { label: string; color: string }[] = [
@@ -702,13 +703,7 @@ const CardEditorPopover = ({
   });
 
   useLayoutEffect(() => {
-    const w = 320;
-    const h = ref.current?.offsetHeight ?? 420;
-    let left = anchor.right + 8;
-    if (left + w > window.innerWidth - 12) left = Math.max(12, anchor.left - w - 8);
-    let top = anchor.top;
-    if (top + h > window.innerHeight - 12) top = Math.max(12, window.innerHeight - h - 12);
-    setPos({ top, left });
+    // Modal is now centered
   }, [anchor]);
 
   useEffect(() => {
@@ -772,22 +767,24 @@ const CardEditorPopover = ({
     : "border border-neutral-200 hover:bg-neutral-50 text-neutral-700";
 
   return createPortal(
-    <div
-      ref={ref}
-      className={`fixed z-[10000] w-[320px] max-h-[80vh] overflow-auto rounded-2xl shadow-[0_20px_60px_rgba(0,0,0,0.25)] p-3 ${panelCls}`}
-      style={{ top: pos.top, left: pos.left }}
-      onMouseDown={(e) => e.stopPropagation()}
-      onClick={(e) => e.stopPropagation()}
-    >
-      <div className="flex items-center justify-between mb-2">
-        <span className="text-[11px] font-semibold uppercase tracking-wider opacity-60">Editar tarjeta</span>
-        <button
-          onClick={onClose}
-          className={`w-6 h-6 flex items-center justify-center rounded-md ${isDark ? "hover:bg-white/10" : "hover:bg-neutral-100"}`}
-        >
-          <X size={12} />
-        </button>
-      </div>
+    <>
+      <div className="fixed inset-0 z-[9999] bg-black/10 backdrop-blur-[2px]" onClick={onClose} />
+      <div
+        ref={ref}
+        className={`fixed z-[10000] w-[280px] max-h-[70vh] overflow-y-auto kanban-scrollbar rounded-2xl shadow-xl p-4 ${panelCls} top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2`}
+        onMouseDown={(e) => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div className="flex items-center justify-between mb-4">
+          <span className="text-[13px] font-semibold">Editar tarjeta</span>
+          <button
+            onClick={onClose}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-colors text-[11px] font-medium ${isDark ? "bg-white/10 hover:bg-white/20 text-white" : "bg-black/5 hover:bg-black/10 text-black"}`}
+          >
+            <span>Cerrar</span>
+            <X size={12} />
+          </button>
+        </div>
 
       {/* Section: Basics */}
       <Section label="Título">
@@ -800,7 +797,7 @@ const CardEditorPopover = ({
       </Section>
 
       <ToggleRow
-        icon={<Heading2 size={12} />}
+        icon={<Baseline size={12} />}
         label="Subtítulo"
         enabled={showSubtitle}
         onToggle={(v) => onUpdate({ showSubtitle: v, subtitle: v ? card.subtitle ?? "" : card.subtitle })}
@@ -936,12 +933,12 @@ const CardEditorPopover = ({
             className={`flex-1 text-[11px] px-2 py-1 rounded-md outline-none ${inputCls}`}
             placeholder="Nueva etiqueta"
           />
-          <div className="flex gap-0.5">
-            {TAG_COLORS.slice(0, 4).map((c) => (
+          <div className="flex flex-wrap w-16 gap-1">
+            {TAG_COLORS.map((c) => (
               <button
                 key={c}
                 onClick={() => setNewTagColor(c)}
-                className={`w-4 h-4 rounded-full ${newTagColor === c ? "ring-2 ring-offset-1" : ""}`}
+                className={`w-3.5 h-3.5 rounded-full ${newTagColor === c ? "ring-2 ring-offset-1" : ""}`}
                 style={{
                   backgroundColor: c,
                   ["--tw-ring-color" as any]: c,
@@ -1016,7 +1013,8 @@ const CardEditorPopover = ({
           </button>
         </div>
       </Section>
-    </div>,
+      </div>
+    </>,
     document.body,
   );
 };
@@ -1030,8 +1028,8 @@ const Section = ({
   icon?: React.ReactNode;
   children: React.ReactNode;
 }) => (
-  <div className="mb-2.5">
-    <div className="flex items-center gap-1.5 text-[10px] font-semibold uppercase tracking-wider opacity-60 mb-1">
+  <div className="mb-4">
+    <div className="flex items-center gap-1.5 text-[12px] font-semibold opacity-80 mb-2 border-b pb-1" style={{ borderColor: "rgba(150,150,150,0.15)" }}>
       {icon}
       {label}
     </div>
@@ -1055,9 +1053,8 @@ const ToggleRow = ({
   children?: React.ReactNode;
 }) => (
   <div className="mb-2">
-    <button
-      onClick={() => onToggle(!enabled)}
-      className={`w-full flex items-center justify-between gap-2 px-2 py-1.5 rounded-md text-[11px] font-medium transition-colors ${
+    <div
+      className={`w-full flex items-center justify-between gap-2 px-2 py-1.5 rounded-md text-[12px] font-medium transition-colors ${
         enabled
           ? isDark
             ? "bg-white/10 text-white"
@@ -1067,20 +1064,17 @@ const ToggleRow = ({
             : "text-neutral-600 hover:bg-neutral-50"
       }`}
     >
-      <span className="flex items-center gap-1.5">
+      <div className="flex items-center gap-1.5">
         {icon} {label}
-      </span>
-      <span
-        className={`w-6 h-3 rounded-full relative transition-colors ${enabled ? "bg-[#4059F1]" : isDark ? "bg-white/20" : "bg-neutral-300"}`}
-      >
-        <span
-          className={`absolute top-0.5 w-2 h-2 rounded-full bg-white transition-all ${enabled ? "left-3.5" : "left-0.5"}`}
-        />
-      </span>
-    </button>
-    {enabled && children && <div className="mt-1.5">{children}</div>}
+      </div>
+      <div onClick={(e) => e.stopPropagation()} className="flex items-center justify-center">
+        <Switch checked={enabled} onCheckedChange={(v) => onToggle(v)} />
+      </div>
+    </div>
+    {enabled && children && <div className="mt-2 pl-1">{children}</div>}
   </div>
 );
+
 
 const PickerPopover = ({
   colors,
