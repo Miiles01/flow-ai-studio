@@ -106,6 +106,20 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
         },
       },
       {
+        id: "PLUS",
+        position: { x: -560, y: 370 },
+        data: {
+          kind: "strategy", tag: "Novedad 2026", confidence: "confirmed",
+          label: "Instagram Plus",
+          sublabel: "Nueva suscripción opcional de $3.99/mes con ventajas exclusivas",
+          details: [
+            { id: "p1", dx: -340, dy: -40, side: "left", tag: "Interacción", label: "Story Spotlight & Super Hearts", sublabel: "Prioridad en historias y corazones animados." },
+            { id: "p2", dx: -340, dy: 115, side: "left", tag: "Visualización", label: "Story Preview en secreto", sublabel: "Mira historias sin que lo sepan y descubre quién repitió las tuyas." },
+            { id: "p3", dx: -340, dy: 270, side: "left", tag: "Personalización", label: "Posts fijados y fuentes", sublabel: "Fija hasta 6 publicaciones y publica sin aparecer en el feed." }
+          ]
+        },
+      },
+      {
         id: "B",
         position: { x: 0, y: 370 },
         data: {
@@ -181,6 +195,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
     edges: [
       { id: "eA-OBJ", source: "A", target: "OBJ", sourceHandle: "l-s", targetHandle: "r-t", dashed: true },
       { id: "eA-S", source: "A", target: "S", sourceHandle: "r-s", targetHandle: "l-t", dashed: true },
+      { id: "eA-PLUS", source: "A", target: "PLUS", sourceHandle: "l-s", targetHandle: "r-t", dashed: true },
       { id: "eA-B", source: "A", target: "B" },
       { id: "eB-C", source: "B", target: "C" },
       { id: "eC-D", source: "C", target: "D" },
@@ -229,6 +244,20 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
             { id: "s3", dx: 340, dy: 270, side: "right", tag: "Estrategia", label: "Texto grande + b-roll", sublabel: "El formato que más está graduando: frase potente sobre video en movimiento." },
             { id: "s4", dx: 340, dy: 425, side: "right", tag: "Estrategia", label: "Audio en tendencia", sublabel: "Úsalo en las primeras 24h de la tendencia; después pierde empuje." },
           ],
+        },
+      },
+      {
+        id: "PLUS",
+        position: { x: -560, y: 370 },
+        data: {
+          kind: "strategy", tag: "Novedad 2026", confidence: "confirmed",
+          label: "Instagram Plus",
+          sublabel: "Nueva suscripción opcional de $3.99/mes con ventajas exclusivas",
+          details: [
+            { id: "p1", dx: -340, dy: -40, side: "left", tag: "Interacción", label: "Story Spotlight & Super Hearts", sublabel: "Prioridad en historias y corazones animados." },
+            { id: "p2", dx: -340, dy: 115, side: "left", tag: "Visualización", label: "Story Preview en secreto", sublabel: "Mira historias sin que lo sepan y descubre quién repitió las tuyas." },
+            { id: "p3", dx: -340, dy: 270, side: "left", tag: "Personalización", label: "Posts fijados y fuentes", sublabel: "Fija hasta 6 publicaciones y publica sin aparecer en el feed." }
+          ]
         },
       },
       {
@@ -299,6 +328,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
     edges: [
       { id: "eA-OBJ", source: "A", target: "OBJ", sourceHandle: "l-s", targetHandle: "r-t", dashed: true },
       { id: "eA-S", source: "A", target: "S", sourceHandle: "r-s", targetHandle: "l-t", dashed: true },
+      { id: "eA-PLUS", source: "A", target: "PLUS", sourceHandle: "l-s", targetHandle: "r-t", dashed: true },
       { id: "eA-B", source: "A", target: "B" },
       { id: "eB-C", source: "B", target: "C" },
       { id: "eC-D", source: "C", target: "D" },
@@ -344,6 +374,20 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
             { id: "s2", dx: 340, dy: 135, side: "right", tag: "Estrategia", label: "Video nativo + Reels de FB", sublabel: "Facebook empuja fuerte su propio reproductor frente a links externos." },
             { id: "s3", dx: 340, dy: 290, side: "right", tag: "Estrategia", label: "Grupos y comunidad", sublabel: "El contenido de grupos activos aparece casi siempre arriba del feed." },
           ],
+        },
+      },
+      {
+        id: "PLUS",
+        position: { x: -560, y: 370 },
+        data: {
+          kind: "strategy", tag: "Novedad 2026", confidence: "confirmed",
+          label: "Instagram Plus",
+          sublabel: "Nueva suscripción opcional de $3.99/mes con ventajas exclusivas",
+          details: [
+            { id: "p1", dx: -340, dy: -40, side: "left", tag: "Interacción", label: "Story Spotlight & Super Hearts", sublabel: "Prioridad en historias y corazones animados." },
+            { id: "p2", dx: -340, dy: 115, side: "left", tag: "Visualización", label: "Story Preview en secreto", sublabel: "Mira historias sin que lo sepan y descubre quién repitió las tuyas." },
+            { id: "p3", dx: -340, dy: 270, side: "left", tag: "Personalización", label: "Posts fijados y fuentes", sublabel: "Fija hasta 6 publicaciones y publica sin aparecer en el feed." }
+          ]
         },
       },
       {
@@ -400,6 +444,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
     edges: [
       { id: "eA-OBJ", source: "A", target: "OBJ", sourceHandle: "l-s", targetHandle: "r-t", dashed: true },
       { id: "eA-S", source: "A", target: "S", sourceHandle: "r-s", targetHandle: "l-t", dashed: true },
+      { id: "eA-PLUS", source: "A", target: "PLUS", sourceHandle: "l-s", targetHandle: "r-t", dashed: true },
       { id: "eA-B", source: "A", target: "B" },
       { id: "eB-C", source: "B", target: "C" },
       { id: "eC-D", source: "C", target: "D" },
@@ -443,6 +488,20 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
             { id: "s2", dx: 340, dy: 135, side: "right", tag: "Estrategia", label: "Conecta Shorts a tu canal", sublabel: "Shorts que llevan a videos largos convierten viewers en suscriptores." },
             { id: "s3", dx: 340, dy: 290, side: "right", tag: "Estrategia", label: "Títulos como búsqueda", sublabel: "Los Shorts se indexan: usa la frase exacta que buscaría tu audiencia." },
           ],
+        },
+      },
+      {
+        id: "PLUS",
+        position: { x: -560, y: 370 },
+        data: {
+          kind: "strategy", tag: "Novedad 2026", confidence: "confirmed",
+          label: "Instagram Plus",
+          sublabel: "Nueva suscripción opcional de $3.99/mes con ventajas exclusivas",
+          details: [
+            { id: "p1", dx: -340, dy: -40, side: "left", tag: "Interacción", label: "Story Spotlight & Super Hearts", sublabel: "Prioridad en historias y corazones animados." },
+            { id: "p2", dx: -340, dy: 115, side: "left", tag: "Visualización", label: "Story Preview en secreto", sublabel: "Mira historias sin que lo sepan y descubre quién repitió las tuyas." },
+            { id: "p3", dx: -340, dy: 270, side: "left", tag: "Personalización", label: "Posts fijados y fuentes", sublabel: "Fija hasta 6 publicaciones y publica sin aparecer en el feed." }
+          ]
         },
       },
       {
@@ -510,6 +569,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
     edges: [
       { id: "eA-OBJ", source: "A", target: "OBJ", sourceHandle: "l-s", targetHandle: "r-t", dashed: true },
       { id: "eA-S", source: "A", target: "S", sourceHandle: "r-s", targetHandle: "l-t", dashed: true },
+      { id: "eA-PLUS", source: "A", target: "PLUS", sourceHandle: "l-s", targetHandle: "r-t", dashed: true },
       { id: "eA-B", source: "A", target: "B" },
       { id: "eB-C", source: "B", target: "C" },
       { id: "eC-D", source: "C", target: "D", label: "≥70% desliza" },
