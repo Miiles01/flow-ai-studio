@@ -414,7 +414,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
                     <input
                       value={col.title}
                       onChange={(e) => renameColumn(col.id, e.target.value)}
-                      className="nodrag nopan bg-transparent border-none outline-none text-[12px] font-semibold flex-1 min-w-0 tracking-wider"
+                      className="nodrag nopan bg-transparent border-none outline-none text-[12px] font-semibold flex-1 min-w-0"
                       style={{ color: textColor }}
                     />
                     <span className="text-[10px] opacity-50 font-medium">{col.cards.length}</span>
