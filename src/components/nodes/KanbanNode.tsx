@@ -62,6 +62,16 @@ const defaultColumns = (): KanbanColumn[] => [
   { id: uid(), title: "En progreso", cards: [] },
   { id: uid(), title: "Hecho", cards: [] },
 ];
+const isWhiteColor = (color: string | undefined): boolean => {
+  if (!color) return false;
+  const c = color.trim().toLowerCase();
+  return c === "#ffffff" || c === "white" || c === "#fff" || c === "#fafafa" || c === "#f3f4f6";
+};
+const isBlackColor = (color: string | undefined): boolean => {
+  if (!color) return false;
+  const c = color.trim().toLowerCase();
+  return c === "#000000" || c === "black" || c === "#000" || c === "#111827" || c === "#1f2937" || c === "#1c1c1e";
+};
 
 const KanbanNode = ({ id, data, selected }: NodeProps) => {
   const { setNodes, getNodes } = useReactFlow();
@@ -76,14 +86,22 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
   const showTitle = nodeData.showTitle ?? true;
   const showSubtitle = nodeData.showSubtitle ?? false;
   const subtitle = nodeData.subtitle ?? "";
-  const backgroundColor = nodeData.backgroundColor ?? (isDark ? "#1C1C1E" : "#FFFFFF");
-  const textColor = nodeData.textColor ?? (isDark ? "#FFFFFF" : "#111827");
+
+  // Default: fondo blanco / texto negro. En dark mode se invierten dinámicamente
+  // (mismo patrón que ShapeNode).
+  const rawFill = nodeData.backgroundColor ?? "#FFFFFF";
+  const backgroundColor = isDark && isWhiteColor(rawFill) ? "#2C2C2E" : rawFill;
+
+  const rawText = nodeData.textColor ?? "#111827";
+  const textColor = isDark && (isBlackColor(rawText) || isWhiteColor(rawFill)) ? "#FFFFFF" : rawText;
+
   const accentColor = nodeData.accentColor ?? "#4059F1";
 
-  const [activePicker, setActivePicker] = useState<"fill" | "text" | "accent" | null>(null);
+  const [activePicker, setActivePicker] = useState<"fill" | "text" | null>(null);
   const [editingCard, setEditingCard] = useState<string | null>(null);
   const dragRef = useRef<{ cardId: string; fromCol: string } | null>(null);
   const [dropTarget, setDropTarget] = useState<{ col: string; index: number } | null>(null);
+
 
   const update = (patch: Partial<KanbanNodeData>) => {
     setNodes((nds) => nds.map((n) => (n.id === id ? { ...n, data: { ...n.data, ...patch } } : n)));
