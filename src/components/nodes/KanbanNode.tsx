@@ -174,7 +174,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
   };
 
   const cardBg = isDark ? "bg-white/5 hover:bg-white/10" : "bg-white hover:bg-neutral-50";
-  const columnBg = isDark ? "bg-white/[0.03]" : "bg-neutral-50";
+  const columnBg = "bg-transparent";
   const borderCls = isDark ? "border-white/10" : "border-neutral-200";
 
   return (
@@ -320,7 +320,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
             {columns.map((col) => (
               <div
                 key={col.id}
-                className={`w-[240px] shrink-0 rounded-xl ${columnBg} border ${borderCls} flex flex-col max-h-full`}
+                className={`w-[240px] shrink-0 rounded-md ${columnBg} border ${borderCls} flex flex-col max-h-full`}
                 onDragOver={(e) => {
                   if (!dragRef.current) return;
                   e.preventDefault();
@@ -507,7 +507,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
             {/* Add column */}
             <button
               onClick={addColumn}
-              className={`w-[240px] shrink-0 h-11 flex items-center justify-center gap-1 text-[12px] rounded-xl border border-dashed transition-colors ${
+              className={`w-[240px] shrink-0 h-11 flex items-center justify-center gap-1 text-[12px] rounded-md border border-dashed transition-colors ${
                 isDark ? "border-white/15 hover:bg-white/5 text-white/60" : "border-neutral-300 hover:bg-neutral-100 text-neutral-500"
               }`}
             >
