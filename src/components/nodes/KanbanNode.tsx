@@ -386,10 +386,10 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
                           dragRef.current = null;
                           setDropTarget(null);
                         }}
-                        className={`nodrag nopan group rounded-lg border ${borderCls} ${cardBg} p-2.5 cursor-grab active:cursor-grabbing transition-colors shadow-sm`}
+                        className={`nodrag nopan group rounded border ${borderCls} ${cardBg} p-2.5 cursor-grab active:cursor-grabbing transition-colors shadow-sm`}
                       >
-                        <div className="flex items-start gap-1.5">
-                          <GripVertical size={12} className="opacity-30 mt-0.5 shrink-0" />
+                        <div className="flex items-center gap-1.5 h-full">
+                          <GripVertical size={12} className="opacity-30 shrink-0" />
                           <div className="flex-1 min-w-0">
                             <input
                               value={card.title}
