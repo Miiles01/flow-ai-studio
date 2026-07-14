@@ -1,9 +1,11 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowUp, Loader2, EyeOff, X, Mic } from "lucide-react";
+import { ArrowUp, Loader2, EyeOff, X, Mic, LayoutTemplate } from "lucide-react";
 import logoImg from "@/assets/logo.webp";
 import { useTheme } from "@/contexts/ThemeContext";
 import AppsMenu from "@/components/AppsMenu";
+import WidgetsPicker from "@/components/widgets/WidgetsPicker";
+import type { WidgetDef } from "@/components/widgets/registry";
 
 type AIPromptBarProps = {
   onGenerate: (prompt: string) => void;
@@ -11,9 +13,11 @@ type AIPromptBarProps = {
   forceOpen?: boolean;
   extendLabel?: string | null;
   onCancelExtend?: () => void;
+  onAddWidget?: (widget: WidgetDef) => void;
 };
 
-const AIPromptBar = ({ onGenerate, isGenerating, forceOpen, extendLabel, onCancelExtend }: AIPromptBarProps) => {
+const AIPromptBar = ({ onGenerate, isGenerating, forceOpen, extendLabel, onCancelExtend, onAddWidget }: AIPromptBarProps) => {
+
   const [prompt, setPrompt] = useState("");
   const [isExpanded, setIsExpanded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
