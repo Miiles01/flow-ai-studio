@@ -247,8 +247,12 @@ const AIPromptBar = ({ onGenerate, isGenerating, forceOpen, extendLabel, onCance
           </motion.div>
         )}
       </AnimatePresence>
+      {onAddWidget && (
+        <WidgetsPicker open={widgetsOpen} onClose={() => setWidgetsOpen(false)} onPick={onAddWidget} />
+      )}
     </div>
   );
 };
+
 
 export default AIPromptBar;
