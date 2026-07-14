@@ -260,32 +260,32 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
               <div className={`w-[1px] h-4 mx-1 ${isDark ? "bg-white/10" : "bg-neutral-200"}`} />
 
               <div className="relative">
-              <button
-                onClick={() => setActivePicker(activePicker === "fill" ? null : "fill")}
-                className={`w-7 h-7 flex items-center justify-center rounded-lg relative ${isDark ? "hover:bg-white/10" : "hover:bg-neutral-100"}`}
-                title="Color de fondo"
-              >
-                <Palette size={13} className="text-[#6B7280]" />
-                <div className="absolute bottom-1 right-1 w-2 h-2 rounded-full border border-white overflow-hidden" style={{ backgroundColor: backgroundColor === "transparent" ? "white" : backgroundColor }}>
-                  {backgroundColor === "transparent" && <div className="absolute inset-0 w-full h-[1px] top-1/2 bg-red-500 rotate-45" />}
-                </div>
-              </button>
-              {activePicker === "fill" && (
-                <PickerPopover colors={RAINBOW_COLORS} selected={rawFill} onPick={(v) => { update({ backgroundColor: v }); setActivePicker(null); }} isDark={isDark} />
-              )}
+                <button
+                  onClick={() => setActivePicker(activePicker === "fill" ? null : "fill")}
+                  className={`w-7 h-7 flex items-center justify-center rounded-lg relative ${isDark ? "hover:bg-white/10" : "hover:bg-neutral-100"}`}
+                  title="Color de fondo"
+                >
+                  <Palette size={13} className="text-[#6B7280]" />
+                  <div className="absolute bottom-1 right-1 w-2 h-2 rounded-full border border-white overflow-hidden" style={{ backgroundColor: backgroundColor === "transparent" ? "white" : backgroundColor }}>
+                    {backgroundColor === "transparent" && <div className="absolute inset-0 w-full h-[1px] top-1/2 bg-red-500 rotate-45" />}
+                  </div>
+                </button>
+                {activePicker === "fill" && (
+                  <PickerPopover colors={RAINBOW_COLORS} selected={rawFill} onPick={(v) => { update({ backgroundColor: v }); setActivePicker(null); }} isDark={isDark} />
+                )}
               </div>
 
               <div className="relative">
-              <button
-                onClick={() => setActivePicker(activePicker === "text" ? null : "text")}
-                className={`w-7 h-7 flex items-center justify-center rounded-lg ${isDark ? "hover:bg-white/10" : "hover:bg-neutral-100"}`}
-                title="Color de texto"
-              >
-                <Baseline size={13} style={{ color: textColor }} className="stroke-[2.5]" />
-              </button>
-              {activePicker === "text" && (
-                <PickerPopover colors={TEXT_COLORS} selected={rawText} onPick={(v) => { update({ textColor: v }); setActivePicker(null); }} isDark={isDark} />
-              )}
+                <button
+                  onClick={() => setActivePicker(activePicker === "text" ? null : "text")}
+                  className={`w-7 h-7 flex items-center justify-center rounded-lg ${isDark ? "hover:bg-white/10" : "hover:bg-neutral-100"}`}
+                  title="Color de texto"
+                >
+                  <Baseline size={13} style={{ color: textColor }} className="stroke-[2.5]" />
+                </button>
+                {activePicker === "text" && (
+                  <PickerPopover colors={TEXT_COLORS} selected={rawText} onPick={(v) => { update({ textColor: v }); setActivePicker(null); }} isDark={isDark} />
+                )}
               </div>
 
               <div className={`w-[1px] h-4 mx-1 ${isDark ? "bg-white/10" : "bg-neutral-200"}`} />
