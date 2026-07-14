@@ -17,7 +17,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import { Columns3, UserSquare2, type LucideIcon } from "lucide-react";
+import { Columns3, UserSquare2, LayoutGrid, type LucideIcon } from "lucide-react";
 import type { Node } from "@xyflow/react";
 
 export type WidgetDef = {
@@ -53,6 +53,22 @@ export const WIDGETS: WidgetDef[] = [
           { id: uid(), title: "En progreso", cards: [] },
           { id: uid(), title: "Hecho", cards: [] },
         ],
+      },
+    }),
+  },
+  {
+    id: "campaigns",
+    name: "Campañas",
+    description: "Cuadrícula de tarjetas de colaboración con marcas: cobro, cuotas, entregables y exclusividad",
+    icon: LayoutGrid,
+    createNode: (position) => ({
+      id: `campaigns-${Date.now()}`,
+      type: "campaignsNode",
+      position,
+      style: { width: 520, height: 520 },
+      data: {
+        title: "Campañas",
+        campaigns: [],
       },
     }),
   },
