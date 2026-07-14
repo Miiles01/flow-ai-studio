@@ -708,7 +708,13 @@ const CardEditorPopover = ({
   });
 
   useLayoutEffect(() => {
-    // Modal is now centered
+    const w = 280;
+    const h = ref.current?.offsetHeight ?? 420;
+    let left = anchor.right + 8;
+    if (left + w > window.innerWidth - 12) left = Math.max(12, anchor.left - w - 8);
+    let top = anchor.top;
+    if (top + h > window.innerHeight - 12) top = Math.max(12, window.innerHeight - h - 12);
+    setPos({ top, left });
   }, [anchor]);
 
   useEffect(() => {
@@ -773,10 +779,10 @@ const CardEditorPopover = ({
 
   return createPortal(
     <>
-      <div className="fixed inset-0 z-[9999] bg-black/10 backdrop-blur-[2px]" onClick={onClose} />
       <div
         ref={ref}
-        className={`fixed z-[10000] w-[280px] max-h-[70vh] overflow-y-auto kanban-scrollbar rounded-2xl shadow-xl p-4 ${panelCls} top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2`}
+        className={`fixed z-[10000] w-[280px] max-h-[70vh] overflow-y-auto kanban-scrollbar rounded-2xl shadow-xl p-4 ${panelCls}`}
+        style={{ top: pos.top, left: pos.left }}
         onMouseDown={(e) => e.stopPropagation()}
         onClick={(e) => e.stopPropagation()}
       >
