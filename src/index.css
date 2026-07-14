@@ -164,23 +164,33 @@
 
 /* Kanban scrollbar - adapts to node's text color for contrast */
 .kanban-scrollbar::-webkit-scrollbar {
-  width: 6px;
-  height: 6px;
+  width: 4px;
+  height: 4px;
 }
 .kanban-scrollbar::-webkit-scrollbar-track {
   background: transparent;
-  margin: 4px;
+  margin-left: calc(50% - 140px);
+  margin-right: calc(50% - 140px);
 }
 .kanban-scrollbar::-webkit-scrollbar-thumb {
-  background: color-mix(in srgb, var(--scrollbar-color) 25%, transparent);
+  background: rgba(0, 0, 0, 0.3);
   border-radius: 999px;
 }
 .kanban-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: color-mix(in srgb, var(--scrollbar-color) 40%, transparent);
+  background: rgba(0, 0, 0, 0.5);
+}
+.dark .kanban-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+}
+.dark .kanban-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
 }
 .kanban-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: color-mix(in srgb, var(--scrollbar-color) 30%, transparent) transparent;
+  scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+}
+.dark .kanban-scrollbar {
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
 }
 
 /* Card Editor scrollbar */
