@@ -68,10 +68,9 @@ const SkeletonNode = ({
       </div>
 
       {/* Centered Loading Text */}
-      <div className="flex items-center gap-2 relative z-10">
-        <div className="w-2.5 h-2.5 rounded-full bg-[#4059F1] animate-ping" />
+      <div className="flex items-center justify-center relative z-10">
         <span
-          className={`text-[12px] font-semibold uppercase tracking-wider animate-pulse ${
+          className={`text-[13px] font-medium animate-pulse ${
             isDark ? "text-white/60" : "text-gray-500"
           }`}
         >
