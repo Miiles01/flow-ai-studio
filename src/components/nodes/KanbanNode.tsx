@@ -244,7 +244,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
   };
 
   const cardBg = isDark ? "bg-white/5 hover:bg-white/10" : "bg-white hover:bg-neutral-50";
-  const columnBg = isDark ? "bg-white/5" : "bg-black/[0.03]";
+  const columnBg = isDark ? "bg-white/[0.02]" : "bg-black/[0.015]";
   const borderCls = isDark ? "border-white/10" : "border-neutral-200";
 
   const editing = editingCard
