@@ -170,7 +170,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
   const accentColor = nodeData.accentColor ?? "#4059F1";
 
   const [activePicker, setActivePicker] = useState<"fill" | "text" | null>(null);
-  const [editingCard, setEditingCard] = useState<{ colId: string; cardId: string; anchor: DOMRect } | null>(null);
+  const [editingCard, setEditingCard] = useState<{ colId: string; cardId: string; anchorEl: HTMLElement } | null>(null);
   const dragRef = useRef<{ cardId: string; fromCol: string } | null>(null);
   const [dropTarget, setDropTarget] = useState<{ col: string; index: number } | null>(null);
 
@@ -444,7 +444,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
                           borderCls={borderCls}
                           cardBg={cardBg}
                           isOpen={editingCard?.cardId === card.id}
-                          onOpen={(rect) => setEditingCard({ colId: col.id, cardId: card.id, anchor: rect })}
+                          onOpen={(el) => setEditingCard({ colId: col.id, cardId: card.id, anchorEl: el })}
                           onUpdate={(patch) => updateCard(col.id, card.id, patch)}
                           onRemove={() => {
                             if (editingCard?.cardId === card.id) setEditingCard(null);
@@ -500,7 +500,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
 
       {editingCard && editing && (
         <CardEditorPopover
-          anchor={editingCard.anchor}
+          anchorEl={editingCard.anchorEl}
           card={editing}
           isDark={isDark}
           accentColor={accentColor}
@@ -540,7 +540,7 @@ const CardView = ({
   borderCls: string;
   cardBg: string;
   isOpen: boolean;
-  onOpen: (rect: DOMRect) => void;
+  onOpen: (el: HTMLElement) => void;
   onUpdate: (patch: Partial<KanbanCard>) => void;
   onRemove: () => void;
   onDragStart: (e: React.DragEvent) => void;
@@ -553,7 +553,7 @@ const CardView = ({
 
   const openEditor = () => {
     if (!ref.current) return;
-    onOpen(ref.current.getBoundingClientRect());
+    onOpen(ref.current);
   };
 
   return (
@@ -694,32 +694,47 @@ const CardEditorPopover = ({
   onClose,
   onUpdate,
 }: {
-  anchor: DOMRect;
+  anchorEl: HTMLElement;
   card: KanbanCard;
   isDark: boolean;
   accentColor: string;
   onClose: () => void;
   onUpdate: (patch: Partial<KanbanCard>) => void;
 }) => {
-  const ref = useRef<HTMLDivElement>(null);
-  const [pos, setPos] = useState<{ top: number; left: number }>({
-    top: anchor.top,
-    left: anchor.right + 8,
-  });
+  const popoverRef = useRef<HTMLDivElement>(null);
+  const [pos, setPos] = useState<{ top: number; left: number }>({ top: -999, left: -999 });
 
   useLayoutEffect(() => {
-    const w = 280;
-    const h = ref.current?.offsetHeight ?? 420;
-    let left = anchor.right + 8;
-    if (left + w > window.innerWidth - 12) left = Math.max(12, anchor.left - w - 8);
-    let top = anchor.top;
-    if (top + h > window.innerHeight - 12) top = Math.max(12, window.innerHeight - h - 12);
-    setPos({ top, left });
-  }, [anchor]);
+    let frame: number;
+    const updatePos = () => {
+      if (!popoverRef.current) {
+        frame = requestAnimationFrame(updatePos);
+        return;
+      }
+      const rect = anchorEl.getBoundingClientRect();
+      const w = popoverRef.current.offsetWidth;
+      const h = popoverRef.current.offsetHeight;
+      
+      let left = rect.right + 8;
+      if (left + w > window.innerWidth - 12) left = Math.max(12, rect.left - w - 8);
+      let top = rect.top;
+      if (top + h > window.innerHeight - 12) top = Math.max(12, window.innerHeight - h - 12);
+      
+      setPos(prev => {
+        if (Math.abs(prev.top - top) > 0.5 || Math.abs(prev.left - left) > 0.5) {
+          return { top, left };
+        }
+        return prev;
+      });
+      frame = requestAnimationFrame(updatePos);
+    };
+    updatePos();
+    return () => cancelAnimationFrame(frame);
+  }, [anchorEl]);
 
   useEffect(() => {
     const onDown = (e: MouseEvent) => {
-      if (ref.current && !ref.current.contains(e.target as Node)) onClose();
+      if (popoverRef.current && !popoverRef.current.contains(e.target as Node)) onClose();
     };
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") onClose();
@@ -781,13 +796,16 @@ const CardEditorPopover = ({
   return createPortal(
     <>
       <div
-        ref={ref}
-        className={`fixed z-[10000] w-[280px] max-h-[70vh] overflow-y-auto kanban-scrollbar rounded-2xl shadow-xl p-4 ${panelCls}`}
-        style={{ top: pos.top, left: pos.left }}
+        ref={popoverRef}
+        className={`fixed z-[10000] w-[280px] max-h-[70vh] overflow-y-auto kanban-scrollbar rounded-2xl shadow-xl ${panelCls}`}
+        style={{ top: pos.top, left: pos.left, visibility: pos.top === -999 ? "hidden" : "visible" }}
         onMouseDown={(e) => e.stopPropagation()}
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between mb-4">
+        <div 
+          className="sticky top-0 z-10 px-4 pt-4 pb-6 flex items-center justify-between"
+          style={{ background: isDark ? "linear-gradient(to bottom, #1C1C1E 60%, transparent)" : "linear-gradient(to bottom, #ffffff 60%, transparent)" }}
+        >
           <span className="text-[13px] font-semibold">Editar tarjeta</span>
           <button
             onClick={onClose}
@@ -798,7 +816,8 @@ const CardEditorPopover = ({
           </button>
         </div>
 
-      {/* Section: Basics */}
+        <div className="px-4 pb-4">
+          {/* Section: Basics */}
       <Section label="Título">
         <input
           value={card.title}
@@ -1038,6 +1057,7 @@ const CardEditorPopover = ({
           </button>
         </div>
       </Section>
+        </div>
       </div>
     </>,
     document.body,
