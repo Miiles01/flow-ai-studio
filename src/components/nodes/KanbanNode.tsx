@@ -320,7 +320,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
             {columns.map((col) => (
               <div
                 key={col.id}
-                className={`w-[240px] shrink-0 rounded-md ${columnBg} border ${borderCls} flex flex-col max-h-full`}
+                className={`w-[240px] shrink-0 rounded-md ${columnBg} border ${borderCls} flex flex-col max-h-full group/col`}
                 onDragOver={(e) => {
                   if (!dragRef.current) return;
                   e.preventDefault();
@@ -492,14 +492,16 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
                   ))}
 
                   {/* Add card */}
-                  <button
-                    onClick={() => addCard(col.id)}
-                    className={`nodrag nopan flex items-center justify-center gap-1 text-[11px] py-1.5 rounded-lg border border-dashed transition-colors ${
-                      isDark ? "border-white/10 hover:bg-white/5 text-white/50" : "border-neutral-300 hover:bg-neutral-100 text-neutral-500"
-                    }`}
-                  >
-                    <Plus size={12} /> Agregar tarjeta
-                  </button>
+                  <div className="max-h-0 opacity-0 overflow-hidden transition-all duration-200 ease-in-out group-hover/col:max-h-12 group-hover/col:opacity-100 group-hover/col:mt-1">
+                    <button
+                      onClick={() => addCard(col.id)}
+                      className={`w-full nodrag nopan flex items-center justify-center gap-1 text-[11px] py-1.5 rounded-lg border border-dashed transition-colors ${
+                        isDark ? "border-white/10 hover:bg-white/5 text-white/50" : "border-neutral-300 hover:bg-neutral-100 text-neutral-500"
+                      }`}
+                    >
+                      <Plus size={12} /> Agregar tarjeta
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
