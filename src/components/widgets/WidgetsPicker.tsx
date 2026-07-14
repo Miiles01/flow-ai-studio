@@ -49,12 +49,12 @@ const WidgetsPicker = ({ open, onClose, onPick }: Props) => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -10, scale: 0.97 }}
             transition={{ type: "spring", bounce: 0.25, duration: 0.4 }}
-            className="fixed z-[9999] left-1/2 -translate-x-1/2"
-            style={{ top: "15vh", width: "min(720px, calc(100vw - 32px))" }}
+            className="fixed z-[9999] left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
+            style={{ width: "min(720px, calc(100vw - 32px))" }}
             onClick={(e) => e.stopPropagation()}
           >
             <div
-              className={`rounded-3xl shadow-2xl border overflow-hidden ${
+              className={`rounded-3xl border overflow-hidden ${
                 isDark ? "bg-[#1C1C1E] border-white/10" : "bg-white border-neutral-200"
               }`}
             >
@@ -72,10 +72,13 @@ const WidgetsPicker = ({ open, onClose, onPick }: Props) => {
                 />
                 <button
                   onClick={onClose}
-                  className={`p-1 rounded-full transition-colors ${isDark ? "hover:bg-white/10 text-white/60" : "hover:bg-neutral-100 text-neutral-500"}`}
+                  className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-colors text-sm font-medium ${
+                    isDark ? "bg-white/10 hover:bg-white/20 text-white" : "bg-black/5 hover:bg-black/10 text-black"
+                  }`}
                   aria-label="Cerrar"
                 >
-                  <X size={16} />
+                  <span>Cerrar</span>
+                  <X size={14} />
                 </button>
               </div>
 
@@ -96,9 +99,9 @@ const WidgetsPicker = ({ open, onClose, onPick }: Props) => {
                             onPick(w);
                             onClose();
                           }}
-                          className={`group text-left p-4 rounded-2xl border transition-all hover:-translate-y-0.5 ${
+                          className={`group text-left p-4 rounded-2xl border transition-all hover:-translate-y-0.5 shadow-sm ${
                             isDark
-                              ? "bg-white/[0.03] border-white/10 hover:bg-white/[0.06] hover:border-white/20"
+                              ? "bg-white/[0.03] border-white/10 hover:bg-white/[0.06] hover:border-white/20 shadow-black/20"
                               : "bg-white border-neutral-200 hover:border-neutral-300 hover:shadow-md"
                           }`}
                         >
