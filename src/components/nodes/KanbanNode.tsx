@@ -797,7 +797,7 @@ const CardEditorPopover = ({
     <>
       <div
         ref={popoverRef}
-        className={`fixed z-[10000] w-[280px] max-h-[70vh] overflow-y-auto kanban-scrollbar rounded-2xl shadow-xl ${panelCls}`}
+        className={`fixed z-[10000] w-[280px] max-h-[340px] overflow-y-auto kanban-scrollbar rounded-2xl shadow-xl ${panelCls}`}
         style={{ top: pos.top, left: pos.left, visibility: pos.top === -999 ? "hidden" : "visible" }}
         onMouseDown={(e) => e.stopPropagation()}
         onClick={(e) => e.stopPropagation()}
