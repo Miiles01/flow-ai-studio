@@ -316,11 +316,11 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
 
         {/* Columns */}
         <div className="flex-1 overflow-auto nodrag nopan">
-          <div className="flex gap-3 p-4 items-start min-w-min">
+          <div className="flex gap-3 p-4 items-stretch min-w-min min-h-full">
             {columns.map((col) => (
               <div
                 key={col.id}
-                className={`w-[240px] shrink-0 rounded-md ${columnBg} border ${borderCls} flex flex-col max-h-full group/col`}
+                className="w-[240px] shrink-0 flex flex-col h-full"
                 onDragOver={(e) => {
                   if (!dragRef.current) return;
                   e.preventDefault();
@@ -335,6 +335,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
                   setDropTarget(null);
                 }}
               >
+                <div className={`w-full rounded-md ${columnBg} border ${borderCls} flex flex-col max-h-full group/col`}>
                 {/* Column header */}
                 <div
                   className="flex items-center gap-2 px-3 py-2.5 border-b"
@@ -502,6 +503,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
                       <Plus size={12} /> Agregar tarjeta
                     </button>
                   </div>
+                  </div>
                 </div>
               </div>
             ))}
@@ -509,7 +511,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
             {/* Add column */}
             <button
               onClick={addColumn}
-              className={`w-[240px] shrink-0 h-11 flex items-center justify-center gap-1 text-[12px] rounded-md border border-dashed transition-colors ${
+              className={`w-[240px] shrink-0 h-11 self-start flex items-center justify-center gap-1 text-[12px] rounded-md border border-dashed transition-colors ${
                 isDark ? "border-white/15 hover:bg-white/5 text-white/60" : "border-neutral-300 hover:bg-neutral-100 text-neutral-500"
               }`}
             >
