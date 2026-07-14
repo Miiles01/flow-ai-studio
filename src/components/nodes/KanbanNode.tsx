@@ -1030,7 +1030,7 @@ const CardEditorPopover = ({
       </Section>
 
       {/* Assignees */}
-      <Section label="Asignados" icon={<Users size={12} />}>
+      <Section label="Equipo" icon={<Users size={12} />}>
         {(card.assignees?.length ?? 0) > 0 && (
           <div className="space-y-1 mb-1.5">
             {card.assignees!.map((a) => (

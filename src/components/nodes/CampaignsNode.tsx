@@ -65,6 +65,10 @@ export type Campaign = {
   exclusivityDays?: number;
   notes?: string;
   createdAt: number;
+  /** Ref al ClientCardNode asignado (id del nodo React Flow). */
+  clientId?: string;
+  /** Timestamp cuando se marcó como cobrada. Alimenta el widget Ingresos. */
+  paidAt?: number;
 };
 
 export type CampaignsNodeData = {

@@ -49,6 +49,7 @@ import EmbedNode from "@/components/nodes/EmbedNode";
 import KanbanNode from "@/components/nodes/KanbanNode";
 import ClientCardNode from "@/components/nodes/ClientCardNode";
 import CampaignsNode from "@/components/nodes/CampaignsNode";
+import IngresosNode from "@/components/nodes/IngresosNode";
 import type { WidgetDef } from "@/components/widgets/registry";
 
 import { generateFlowFromPrompt, type ExtendContext } from "@/lib/generateFlow";
@@ -57,7 +58,7 @@ import { planFlow, buildPlanContext, type PlanResult } from "@/lib/planFlow";
 import { FlowExtendContext, type ExtendSide, type FlowExtendTarget } from "@/contexts/FlowExtendContext";
 
 const SHAPE_TYPES = ["square", "circle", "diamond", "hexagon", "star", "document", "cloud", "database", "cylinder", "callout", "speech", "heart"];
-const nodeTypes = { flowNode: FlowNode, shapeNode: ShapeNode, textNode: TextNode, todoNode: TodoNode, imageNode: ImageNode, embedNode: EmbedNode, frameNode: FrameNode, skeletonNode: SkeletonNode, kanbanNode: KanbanNode, clientCardNode: ClientCardNode, campaignsNode: CampaignsNode };
+const nodeTypes = { flowNode: FlowNode, shapeNode: ShapeNode, textNode: TextNode, todoNode: TodoNode, imageNode: ImageNode, embedNode: EmbedNode, frameNode: FrameNode, skeletonNode: SkeletonNode, kanbanNode: KanbanNode, clientCardNode: ClientCardNode, campaignsNode: CampaignsNode, ingresosNode: IngresosNode };
 
 const edgeTypes = {
   default: EditableEdge,
