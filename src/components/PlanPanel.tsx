@@ -83,19 +83,6 @@ const PlanPanel = ({ plan, isDark, isGenerating, onApprove, onClose }: PlanPanel
             </div>
           )}
 
-          {plan.deliverables.length > 0 && (
-            <div className="space-y-1.5 pt-1">
-              <p className={`text-[11px] uppercase tracking-wide font-medium ${isDark ? "text-white/40" : "text-[#9499AE]"}`}>
-                Entregables
-              </p>
-              {plan.deliverables.map((d, i) => (
-                <div key={i} className="flex items-center gap-2">
-                  <Check size={13} className="text-[#45B382] shrink-0" />
-                  <span className={`text-[12px] font-light ${isDark ? "text-white/70" : "text-[#374151]"}`}>{d}</span>
-                </div>
-              ))}
-            </div>
-          )}
         </div>
 
         {/* Footer */}
