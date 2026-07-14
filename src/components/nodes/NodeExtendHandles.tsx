@@ -23,15 +23,20 @@ const NodeExtendHandles = ({ nodeId }: { nodeId: string }) => {
         const show = hovered === side || isActive;
 
         const zoneStyle: React.CSSProperties = { position: "absolute", zIndex: 30, display: "flex" };
-        if (side === "top") Object.assign(zoneStyle, { top: -ZONE, left: 0, right: 0, height: ZONE, alignItems: "flex-start", justifyContent: "center" });
-        if (side === "bottom") Object.assign(zoneStyle, { bottom: -ZONE, left: 0, right: 0, height: ZONE, alignItems: "flex-end", justifyContent: "center" });
-        if (side === "left") Object.assign(zoneStyle, { left: -ZONE, top: 0, bottom: 0, width: ZONE, alignItems: "center", justifyContent: "flex-start" });
-        if (side === "right") Object.assign(zoneStyle, { right: -ZONE, top: 0, bottom: 0, width: ZONE, alignItems: "center", justifyContent: "flex-end" });
+        if (side === "top") Object.assign(zoneStyle, { top: -ZONE, left: 0, right: 0, height: ZONE, alignItems: "flex-end", justifyContent: "center" });
+        if (side === "bottom") Object.assign(zoneStyle, { bottom: -ZONE, left: 0, right: 0, height: ZONE, alignItems: "flex-start", justifyContent: "center" });
+        if (side === "left") Object.assign(zoneStyle, { left: -ZONE, top: 0, bottom: 0, width: ZONE, alignItems: "center", justifyContent: "flex-end" });
+        if (side === "right") Object.assign(zoneStyle, { right: -ZONE, top: 0, bottom: 0, width: ZONE, alignItems: "center", justifyContent: "flex-start" });
 
         const transformOrigin =
-          side === "top" ? "top center" :
-          side === "bottom" ? "bottom center" :
-          side === "left" ? "center left" : "center right";
+          side === "top" ? "bottom center" :
+          side === "bottom" ? "top center" :
+          side === "left" ? "center right" : "center left";
+
+        const marginCls = 
+          side === "top" ? "mb-1.5" :
+          side === "bottom" ? "mt-1.5" :
+          side === "left" ? "mr-1.5" : "ml-1.5";
 
         return (
           <div
@@ -54,7 +59,7 @@ const NodeExtendHandles = ({ nodeId }: { nodeId: string }) => {
                     requestExtend(nodeId, side);
                   }}
                   style={{ transform: `scale(${scale})`, transformOrigin }}
-                  className={`flex items-center justify-center w-7 h-7 rounded-lg shadow-md transition-colors ${
+                  className={`flex items-center justify-center w-7 h-7 rounded-lg shadow-md transition-colors ${marginCls} ${
                     isActive
                       ? "bg-[#4059F1] ring-2 ring-[#4059F1]/30"
                       : isDark
