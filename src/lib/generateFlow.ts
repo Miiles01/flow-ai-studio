@@ -123,6 +123,12 @@ Each node MUST have:
    - "data": {"url": "https://sitio-real.com"} con "style": {"width": 480, "height": 320}
    - Solo con URLs reales (ej. el "website" de un prospecto). NUNCA inventes URLs. Inclúyelo solo si aporta valor al plan/objetivos del cliente.
 
+6. "kanbanNode" (WIDGET PIZARRA — SOLO si el usuario pide explícitamente "pizarra", "kanban", "tablero de tareas" o similar; NO lo generes por defecto):
+   - "style": {"width": 780, "height": 440}
+   - "data": {"title": "Nombre", "showTitle": true, "showSubtitle": false, "backgroundColor": "#FFFFFF", "textColor": "#111827", "accentColor": "#4059F1", "columns": [{"id":"col-1","title":"Por hacer","cards":[{"id":"c-1","title":"Tarea","subtitle":"Opcional","url":"https://opcional.com","fields":[{"id":"f-1","label":"Prioridad","value":"Alta"}]}]}]}
+   - Columnas y cards con "id" único; subtitle/url/fields opcionales. Fondo blanco (invierte solo en dark mode).
+   - Colócalo aparte del flujo con al menos 200px de separación. NO conectes edges hacia/desde el kanbanNode.
+
 
 
 📐 ARCHITECTURE & LAYOUT RULES (CRITICAL - PREMIUM SYMMETRICAL DESIGN):
