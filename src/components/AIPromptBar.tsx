@@ -22,8 +22,10 @@ const AIPromptBar = ({ onGenerate, isGenerating, forceOpen, extendLabel, onCance
   const [isExpanded, setIsExpanded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+  const [widgetsOpen, setWidgetsOpen] = useState(false);
   const { isDark } = useTheme();
   const [isRecording, setIsRecording] = useState(false);
+
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const recognitionRef = useRef<any>(null);
