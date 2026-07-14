@@ -479,6 +479,7 @@ El usuario quiere contexto conceptual + acción. Empieza el esquema con nodos co
       used_templates: templates?.length ?? 0,
       apify_channel: apifyChannel,
       apify_found: apifyFound.length,
+      content_mode: contentMode,
     }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
