@@ -1,60 +1,97 @@
-## Problema
 
-La IA siempre entrega listas de tareas (`todoNode`), incluso cuando el usuario pide algo conceptual/teórico ("¿qué es el marketing?", "explícame X"). No distingue entre intención de **aprender** vs intención de **planear/ejecutar**.
+## Objetivo
+Agregar el widget **Ingresos** y crear una capa de datos compartida para que los 4 widgets (Pizarra, Tarjeta de Cliente, Campañas, Ingresos) estén sincronizados dentro del mismo flow.
 
-## Solución
+---
 
-Agregar una etapa de **clasificación de intención de contenido** en `supabase/functions/generate-flow/index.ts` y adaptar el system prompt según el modo detectado.
+## 1. Nuevo widget: Ingresos
 
-### 1. Nuevo clasificador `classifyContentMode`
+Contenedor grande tipo Campañas/Pizarra con dashboard financiero.
 
-Función ligera (Gemini flash) antes de generar el flujo. Devuelve uno de tres modos:
+**Header**
+- Título "Ingresos" (editable) + subtítulo "Lo que cerraste por mes y lo que está por entrar" (toggleable)
+- Filtros: rango Desde / Hasta (mes-año) + botón Resetear
 
-- `learn` — el usuario quiere entender / aprender / le expliquen un concepto, teoría, fundamentos ("qué es", "explícame", "cómo funciona", "diferencias entre", "conceptos de").
-- `plan` — el usuario quiere un plan accionable, pasos, checklist, estrategia a ejecutar ("crea un plan", "pasos para", "estrategia de lanzamiento", "tareas para").
-- `mixed` — combinación (por defecto cuando hay ambigüedad).
+**Fila 1 — KPIs (3 tarjetas)**
+- Total cerrado del año actual (+ histórico total)
+- Promedio mensual del año
+- Mes más alto (con etiqueta del mes)
 
-Prompt del clasificador breve, en español, salida JSON: `{"mode":"learn"|"plan"|"mixed"}`.
+**Fila 2 — Estado (2 tarjetas grandes coloreadas)**
+- Cobrado (verde) — suma de campañas con pagos marcados como cobrados
+- Por cobrar (amarillo) — suma pendiente
 
-### 2. Adaptar el system prompt por modo
+**Fila 3 — Visualizaciones**
+- Bar chart "Total cerrado por mes" (12 meses, recharts) con tooltip
+- Donut chart "Top marcas" con leyenda y % (recharts)
 
-Añadir un bloque `MODO DE CONTENIDO` inyectado dinámicamente en `systemPrompt`:
+**Fila 4 — Lista "Por cobrar"**
+- Agrupado por fecha estimada (o "Sin Fecha Estimada")
+- Cada fila: nombre campaña/marca → monto → botón Cobrado/Pendiente
 
-- **learn**: 
-  - PROHIBIDO usar `todoNode` salvo que el usuario lo pida explícitamente.
-  - Priorizar `shapeNode` (circle/hexagon/diamond para categorías, conceptos, relaciones) + `textNode` con HTML rico (definiciones, ejemplos, `<b>`, `<i>`, listas cortas explicativas — no tareas).
-  - Estructura tipo mapa conceptual / esquema visual: nodo central con el concepto, ramas con subconceptos, hojas con definiciones/ejemplos.
-  - Los `textNode` explican con oraciones completas ("El marketing es…"), no con verbos de acción.
-  - Edges con etiquetas cortas cuando ayuden a mostrar la relación (ej. "incluye", "se divide en").
+**Toolbar**: mismos controles que Campañas (color, título, subtítulo, mover, borrar). Handle superior para arrastrar.
 
-- **plan**:
-  - Comportamiento actual: `todoNode` con tareas accionables, fases, checklists.
+---
 
-- **mixed**:
-  - Empezar con nodos conceptuales (shape + text) y luego uno o dos `todoNode` para la parte accionable.
+## 2. Capa de datos compartida (sincronización)
 
-### 3. Ajustes menores en las reglas globales
+Crear `src/lib/flowDataContext.tsx` — Context provider a nivel del canvas del flow que expone:
 
-- Añadir regla explícita al system prompt: **"No conviertas todo en checklist. Elige el tipo de nodo según la intención: conceptos → shapeNode + textNode; acciones → todoNode."**
-- Aclarar que `textNode` puede (y debe, en modo learn) contener explicaciones largas en HTML, no solo títulos.
+```ts
+{
+  clients: Client[],           // fuente única de clientes
+  campaigns: Campaign[],       // fuente única de campañas
+  addClient, updateClient, removeClient,
+  addCampaign, updateCampaign, removeCampaign,
+  linkClientToCampaign, linkClientToKanbanCard,
+  getRevenueStats(range)       // deriva ingresos desde campaigns
+}
+```
 
-### 4. Respuesta al frontend
+- Persistencia: se serializa junto con `flow.nodes/edges` en Supabase (`flows.data` jsonb o dentro de un nodo "shared_data" oculto).
+- Cada widget lee/escribe vía `useFlowData()`.
 
-Incluir `content_mode` en el JSON de respuesta (informativo, sin cambios de UI necesarios).
+**Modelos**
+- `Client`: id, name, avatar, role, phone, email, tag, assignee, value, customFields
+- `Campaign`: id, brandName, clientId?, status, paymentType, totalAmount, installments[], deliverables, exclusivity, notes, paidAt?
 
-## Detalles técnicos
+---
 
-Archivo: `supabase/functions/generate-flow/index.ts`.
+## 3. Cambios en widgets existentes para conectarlos
 
-- Añadir `async function classifyContentMode(prompt, apiKey): Promise<"learn"|"plan"|"mixed">` cerca de `classifyIntent`.
-- Llamarla en `serve` en paralelo con la clasificación existente de Apify (`Promise.all`) para no añadir latencia serial.
-- Construir un `modeGuidance` string y concatenarlo al `systemPrompt` justo antes de `apifyBlock`.
-- Incluir `content_mode: mode` en el `Response` final.
+**KanbanNode (Pizarra)** — en el editor de tarjeta:
+- Renombrar sección "Asignados" → "Equipo"
+- Nueva sección "Clientes" debajo: selector con clientes existentes + botón "Crear nuevo cliente" (crea en el pool compartido y aparecerá en tarjetas ClientCard futuras)
 
-No se cambia el frontend ni `src/lib/generateFlow.ts`.
+**ClientCardNode** — al crear/editar, escribe en el pool compartido `clients[]`. Si el mismo cliente ya está referenciado en una pizarra o campaña, los cambios se reflejan en todos lados.
 
-## Fuera de alcance
+**CampaignsNode** — en el editor de campaña:
+- Nuevo campo "Cliente asignado": selector desde `clients[]` + opción "Crear nuevo cliente"
+- Los campos `totalAmount`, `installments`, `paidAt` alimentan directamente los stats del widget Ingresos
 
-- No tocar el UI del canvas ni componentes de nodo.
-- No cambiar el modelo por defecto.
-- No modificar `PlanPanel` ni el flujo de aprobación de plan.
+**IngresosNode** — solo lee desde `campaigns[]` (y `clients[]` para "Top marcas"). No tiene data propia; es un dashboard derivado.
+
+---
+
+## 4. Registro y wiring
+- `src/components/nodes/IngresosNode.tsx` (nuevo)
+- `src/components/widgets/registry.ts` — agregar entry `ingresos`
+- `src/pages/Index.tsx` — registrar `ingresosNode` en `nodeTypes` y envolver el ReactFlow en `<FlowDataProvider>`
+- Persistir el pool compartido junto con el flow (nodes/edges ya se guardan; agregar `sharedData` al save/load)
+
+---
+
+## Detalle técnico
+- Charts: `recharts` (ya usado en el proyecto si aplica, si no `bun add recharts`)
+- Dark mode: seguir reglas del design-system del proyecto (usar `isDark` + tokens semánticos)
+- No conectable con edges (igual que los otros widgets)
+- Handle de arrastre superior consistente con los demás
+
+---
+
+## Riesgo / cuidado
+- Migración de flows existentes: `sharedData` puede no existir → inicializar vacío al cargar
+- Evitar loops de update entre widgets: usar un solo setter por entidad
+- El usuario trabaja en paralelo con otra IA vía GitHub: no tocar archivos ajenos al scope
+
+Con tu OK arranco por el context + IngresosNode y luego conecto los 3 widgets existentes.
