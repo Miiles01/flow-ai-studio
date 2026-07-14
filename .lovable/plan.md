@@ -1,51 +1,123 @@
-# Revisión de la generación de flujos
 
-## Diagnóstico
-
-La generación de flujos usa 3 funciones de backend en cadena, disparadas desde la barra de IA (`AIPromptBar` → `handleAIGenerate` en `src/pages/Index.tsx`):
-
-```text
-Prompt del usuario
-   → clarify-flow   (¿hace falta aclarar? preguntas)
-   → plan-flow      (plan estratégico para aprobar)
-   → generate-flow  (nodos + edges finales para el canvas)
-```
-
-**Problema principal encontrado:** las funciones de backend **no están respondiendo**. Al probar los endpoints desplegados directamente, TODAS devuelven `404 NOT_FOUND_FUNCTION_BLOB`:
-
-```text
-generate-flow  → 404
-plan-flow      → 404
-clarify-flow   → 404
-chat           → 404   (también afectada)
-```
-
-Esto significa que el código de las funciones existe en el repositorio, pero **no está desplegado/activo** en el backend. Con esto, la generación de flujos falla siempre: `clarify-flow` y `plan-flow` "fallan en silencio" (siguen de largo), pero `generate-flow` lanza error y solo se ve un toast de "Error al generar el flujo". Los tableros que ya existen en la cuenta son flujos guardados previamente, no generados ahora.
+# Plan: Widgets en el canvas + primer widget "Pizarra"
 
 ## Objetivo
+Añadir un nuevo sistema de "Widgets" (elementos más elaborados que las formas), accesible desde un botón **Widgets** dentro del `AIPromptBar` (junto a "Apps"). El primer widget será una **Pizarra** tipo kanban (columnas con cards arrastrables). Reutiliza toda la lógica ya existente de nodos (drag, resize, selección, colores).
 
-Dejar la generación de flujos funcionando de punta a punta y hacerla más robusta ante respuestas imperfectas de la IA.
+## 1. Botón "Widgets" en el input
 
-## Cambios propuestos
+**Archivo:** `src/components/AIPromptBar.tsx`
+- Junto a `<AppsMenu />` (línea 196), añadir un botón blanco "Widgets" con ícono `LayoutTemplate` (lucide) del mismo tamaño/estilo que Apps pero con fondo blanco y texto negro para diferenciarlo.
+- Al hacer clic abre un pop-up centrado (ver §2). Se cierra al hacer clic fuera o con `Esc`.
 
-1. **Redesplegar las funciones Edge de flujos** (`generate-flow`, `plan-flow`, `clarify-flow`) junto con su código compartido en `_shared/` (`flow-instructions.ts`). Redesplegar también `chat` ya que muestra el mismo síntoma.
+## 2. Pop-up de Widgets
 
-2. **Verificación end-to-end (obligatoria antes de dar por cerrado):**
-   - Probar cada función desplegada y confirmar respuesta `200`.
-   - Ejecutar una generación real en la vista previa (prompt de prueba) y confirmar que aparecen nodos en el canvas, sin errores en consola/red.
+**Nuevo archivo:** `src/components/widgets/WidgetsPicker.tsx`
+- Renderizado vía portal (`createPortal` a `document.body`), posición `fixed`, centrado horizontalmente y con `top: ~15vh` (un poco arriba del centro).
+- **Sin overlay** — el resto de la pantalla sigue visible/interactivo salvo por captura de clics fuera para cerrarse.
+- Cuadrado blanco (dark: `bg-[#1C1C1E] border border-white/10`), `rounded-3xl`, `shadow-2xl`, ancho ~720px, alto máx `70vh`.
+- Estructura interna:
+  - Header: buscador (`Search` icon + input) con `placeholder="Buscar widgets…"` filtrando por nombre/descripción.
+  - Grid de **3 columnas** con scroll vertical (`overflow-y-auto scrollbar-hide`).
+  - Cada card de widget: ícono grande + nombre + descripción corta. Hover eleva ligeramente (`hover:-translate-y-0.5`). Clic → inserta el widget en el canvas y cierra el pop-up.
+- Registro de widgets desde `src/components/widgets/registry.ts` (lista extensible) — arrancamos con **1 entrada**: "Pizarra".
 
-3. **Endurecer el manejo de errores en el cliente** (`src/lib/generateFlow.ts`), para que fallos futuros no dejen al usuario sin contexto:
-   - Corregir el mensaje engañoso "La IA no generó pasos válidos": distinguir entre "no llegaron nodos" y "llegaron nodos sin `position`" (hoy cae al fallback antiguo y confunde).
-   - Aceptar nodos aunque el primero no traiga `position` (asignar posición por defecto en vez de descartar toda la respuesta).
+## 3. Widget "Pizarra" (nodo kanbanNode)
 
-## Notas técnicas (para referencia)
+**Nuevo nodo:** `src/components/nodes/KanbanNode.tsx`
+Sigue el patrón de `TodoNode`/`ShapeNode`:
+- Registrado en `nodeTypes` de `src/pages/Index.tsx` como `kanbanNode`.
+- **Sin handles de conexión** — no incluye `<Handle>` de React Flow (por lo tanto no conectable con líneas), pero sí incluye `<NodeExtendHandles />` (mismo patrón que TodoNode) para permitir extenderlo con IA. Confirmar con el usuario si tampoco quiere las handles de "ampliar con IA"; por defecto las mantengo consistentes con el resto.
+- Escalable con `<NodeResizer />` (min 400x300).
+- Barra flotante superior cuando `isSingleSelected` (mismo patrón visual que ShapeNode/FrameNode): color de fondo, color de texto, mostrar/ocultar título, mostrar/ocultar subtítulo, eliminar.
 
-- Cliente: `src/lib/generateFlow.ts` (`supabase.functions.invoke("generate-flow")`), `src/lib/planFlow.ts`, `src/lib/clarifyFlow.ts`.
-- Orquestación en `src/pages/Index.tsx`: `handleAIGenerate`, `proceedToPlanning`, `runGenerate`, `runExtendGenerate`.
-- Funciones: `supabase/functions/generate-flow|plan-flow|clarify-flow/index.ts`, modelo `google/gemini-3-flash-preview` vía Lovable AI Gateway.
-- Observación menor (no bloqueante): el prompt grande de instrucciones está duplicado en cliente y en `generate-flow`, lo que puede generar reglas contradictorias. Se puede simplificar en una iteración posterior si quieres.
+### Datos del nodo (`KanbanNodeData`)
+```ts
+type KanbanCard = {
+  id: string;
+  title: string;
+  subtitle?: string;
+  url?: string;              // link opcional
+  fields?: { id: string; label: string; value: string }[]; // campos extra
+};
+type KanbanColumn = { id: string; title: string; cards: KanbanCard[] };
+type KanbanNodeData = {
+  title?: string;            // "Pizarra" por defecto
+  showTitle?: boolean;       // true por defecto
+  subtitle?: string;
+  showSubtitle?: boolean;    // false por defecto
+  backgroundColor?: string;
+  textColor?: string;
+  accentColor?: string;      // color de cabecera de columna
+  columns: KanbanColumn[];
+};
+```
+Al insertarse: 3 columnas iniciales ("Por hacer", "En progreso", "Hecho"), cada una vacía; título "Pizarra".
 
-## Fuera de alcance
+### UI interna
+- Título editable (doble clic) arriba, si `showTitle`.
+- Fila horizontal de columnas con `overflow-x-auto`; cada columna:
+  - Cabecera con nombre editable (doble clic) + botón "..." con menú (Renombrar, Eliminar columna).
+  - Lista vertical de cards.
+  - Botón "+ Agregar card" al pie de la columna.
+- Botón "+ Columna" al final de la fila.
+- **Card**:
+  - Fondo blanco (dark: `bg-white/5`), `rounded-xl`, sombra suave.
+  - Título editable + subtítulo opcional + link opcional (chip con `Link2` icon) + campos personalizados (label:value).
+  - Al hacer clic → abre un mini-panel inline (o popover) para editar todos los campos: título, subtítulo, URL, y "+ Agregar campo".
+  - Botón papelera al hover para eliminar.
+- **Drag & drop nativo (HTML5)**:
+  - Cards: `draggable`, con `onDragStart` guardando `{cardId, fromColumnId}` en un ref del nodo (no `dataTransfer` global para evitar conflictos con React Flow).
+  - Columnas: `onDragOver` (preventDefault) + `onDrop` que mueve la card al final o a la posición del hover.
+  - Indicador visual (línea azul `#4059F1`) donde caerá.
+  - Mientras se arrastra una card: aplicar `stopPropagation` y clase `nodrag` al contenedor para que React Flow no arrastre el nodo padre.
+- Todos los inputs llevan clases `nodrag nopan` (patrón usado en ShapeNode/TodoNode).
 
-- No se tocan landing/auth ni el sistema de diseño.
-- No se cambia el modelo de IA ni el esquema de base de datos.
+## 4. Registro y creación
+
+**`src/components/widgets/registry.ts`** (nuevo):
+```ts
+export type WidgetDef = {
+  id: string;                 // "kanban"
+  name: string;               // "Pizarra"
+  description: string;        // "Organiza tarjetas por columnas de estado"
+  icon: LucideIcon;           // Columns3
+  createNode: () => Node;     // devuelve un Node listo para setNodes
+};
+export const WIDGETS: WidgetDef[] = [ kanbanWidget ];
+```
+
+**`src/pages/Index.tsx`:**
+- Añadir `kanbanNode: KanbanNode` a `nodeTypes` (línea 56).
+- Nueva callback `handleAddWidget(widget: WidgetDef)` que:
+  - Calcula posición centrada usando `reactFlowInstance.screenToFlowPosition` (mismo patrón que `runGenerate`).
+  - `setNodes(nds => [...nds, widget.createNode() con position ajustada])`.
+- Pasar `handleAddWidget` a `AIPromptBar` como prop, y de ahí al `WidgetsPicker`.
+
+## 5. Consideraciones
+
+- **No tocar `Toolbar.tsx`** — los widgets son independientes.
+- **No se conectan con líneas**: se logra omitiendo los `<Handle>` en `KanbanNode`. React Flow no puede iniciar edge desde un nodo sin handles.
+- **Persistencia**: los widgets se guardan como cualquier otro nodo dentro de `flows.nodes` en Supabase (ya funciona automáticamente porque el auto-save serializa `nodes`).
+- **Realtime/colab**: sin cambios adicionales — al ser un nodo estándar, `useFlowRealtime` propaga cambios de `data` (columnas/cards) igual que con TodoNode.
+- **Dark mode**: uso el patrón `useTheme()` + `isDark ? ... : ...` que ya sigue el proyecto (ver `project-knowledge`).
+- **i18n**: textos en español directos (el proyecto usa i18n solo en landing).
+
+## Detalles técnicos
+
+- **Ícono del botón Widgets**: `LayoutTemplate` de lucide-react (encaja visualmente con "Apps" que usa `LayoutGrid`).
+- **Ícono de la Pizarra en el picker**: `Columns3` de lucide-react.
+- **Selectores de color**: reusar constantes `RAINBOW_COLORS` (copiarlas al nodo o extraerlas a `src/lib/nodeColors.ts` — extraeré solo si es limpio, si no las duplico como ya se hace en ShapeNode/TodoNode/FrameNode).
+- **IDs**: `crypto.randomUUID()` para cards/columnas/campos.
+- **Tamaño inicial del nodo Pizarra**: 720×420, `style: { width: 720, height: 420 }`.
+
+## Archivos afectados
+
+Nuevos:
+- `src/components/widgets/WidgetsPicker.tsx`
+- `src/components/widgets/registry.ts`
+- `src/components/nodes/KanbanNode.tsx`
+
+Modificados:
+- `src/components/AIPromptBar.tsx` (botón Widgets + estado del pop-up)
+- `src/pages/Index.tsx` (registro en `nodeTypes` + `handleAddWidget` + prop al PromptBar)
