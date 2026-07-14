@@ -288,7 +288,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
       {/* Body */}
       <div
         className={`w-full h-full rounded-2xl border overflow-hidden flex flex-col ${borderCls}`}
-        style={{ backgroundColor, color: textColor }}
+        style={{ backgroundColor, color: textColor, "--scrollbar-color": textColor } as React.CSSProperties}
       >
         {/* Header */}
         {(showTitle || showSubtitle) && (
@@ -315,7 +315,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
         )}
 
         {/* Columns */}
-        <div className="flex-1 overflow-auto nodrag nopan">
+        <div className="flex-1 overflow-auto nodrag nopan kanban-scrollbar">
           <div className="flex gap-3 p-4 items-stretch min-w-min min-h-full">
             {columns.map((col) => (
               <div
@@ -361,7 +361,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
                 </div>
 
                 {/* Cards */}
-                <div className="flex flex-col gap-2 p-2 overflow-y-auto">
+                <div className="flex flex-col gap-2 p-2 overflow-y-auto kanban-scrollbar">
                   {col.cards.map((card, idx) => (
                     <div key={card.id}>
                       {dropTarget?.col === col.id && dropTarget.index === idx && (
