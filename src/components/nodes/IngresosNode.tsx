@@ -80,7 +80,8 @@ const keyLabel = (k?: string) => {
   return `${MONTHS_FULL[p.m]} ${p.y}`;
 };
 const keyShort = (k: string) => {
-  const p = parseKey(k)!;
+  const p = parseKey(k);
+  if (!p) return k;
   return `${MONTHS_SHORT[p.m]} ${String(p.y).slice(2)}`;
 };
 
@@ -145,7 +146,8 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
     return allCampaigns.filter((c) => {
       const mk = campaignMonthKey(c);
       if (!mk) return true;
-      const p = parseKey(mk)!;
+      const p = parseKey(mk);
+      if (!p) return true;
       const val = p.y * 12 + p.m;
       if (from && val < from.y * 12 + from.m) return false;
       if (to && val > to.y * 12 + to.m) return false;
