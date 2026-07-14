@@ -74,6 +74,40 @@ El "query" debe ser conciso y en el idioma del usuario. limit entre 4 y 8.`;
   }
 }
 
+// Classify whether the user wants to LEARN a concept vs PLAN actionable tasks.
+type ContentMode = "learn" | "plan" | "mixed";
+async function classifyContentMode(prompt: string, apiKey: string): Promise<ContentMode> {
+  const sys = `Eres un clasificador de intención para un generador de esquemas visuales.
+Debes decidir la INTENCIÓN del usuario:
+- "learn": quiere entender, aprender o que le expliquen un concepto, teoría, fundamentos, definición o funcionamiento. Ejemplos: "¿qué es el marketing?", "explícame la fotosíntesis", "cómo funciona SEO", "diferencia entre X y Y", "conceptos básicos de finanzas", "resumen de la teoría de...".
+- "plan": quiere un plan, estrategia, pasos o tareas accionables para EJECUTAR algo. Ejemplos: "crea un plan de lanzamiento", "pasos para conseguir clientes", "estrategia de contenido para mi marca", "tareas para migrar la app", "flujo de prospección".
+- "mixed": si el prompt claramente pide ambas cosas (entender + ejecutar).
+Ante duda entre learn y plan, elige el que mejor refleje el verbo principal del usuario. Si el usuario solo hace una pregunta conceptual sin pedir tareas, es "learn".
+Responde SOLO JSON válido: {"mode":"learn"|"plan"|"mixed"}`;
+  try {
+    const r = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
+      method: "POST",
+      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
+      body: JSON.stringify({
+        model: "google/gemini-3-flash-preview",
+        messages: [
+          { role: "system", content: sys },
+          { role: "user", content: prompt },
+        ],
+      }),
+    });
+    if (!r.ok) return "mixed";
+    const j = await r.json();
+    const c = j.choices?.[0]?.message?.content ?? "";
+    const cleaned = c.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
+    const parsed = JSON.parse(cleaned);
+    return parsed.mode === "learn" || parsed.mode === "plan" ? parsed.mode : "mixed";
+  } catch (e) {
+    console.error("classifyContentMode failed:", e);
+    return "mixed";
+  }
+}
+
 // Run an Apify actor synchronously and return its dataset items.
 async function runApify(actor: string, input: unknown, token: string): Promise<any[]> {
   const url = `https://api.apify.com/v2/acts/${actor}/run-sync-get-dataset-items?token=${token}&timeout=90`;
@@ -189,6 +223,9 @@ serve(async (req) => {
       Deno.env.get("SUPABASE_URL")!,
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
+
+    // Classify content intent (learn vs plan) in parallel with the rest of prep.
+    const contentModePromise = classifyContentMode(prompt, LOVABLE_API_KEY);
 
     const keywords = extractKeywords(prompt);
     let prospects: any[] = [];
@@ -338,9 +375,40 @@ Rules for Premium Visual Design:
 - Respond ONLY with valid JSON containing {"nodes": [...], "edges": [...]}, no markdown.
 
 Example output:
-{"nodes": [{"id":"1","type":"shapeNode","position":{"x":50,"y":120},"style":{"width":140,"height":140},"data":{"shape":"circle","label":"Inicio del Flujo","fillColor":"#000000","textColor":"#FFFFFF"}},{"id":"2","type":"todoNode","position":{"x":350,"y":70},"style":{"width":280,"height":240},"data":{"title":"Fase de Planificación","subtitle":"Descripción de la fase","tasks":[{"id":"t1","text":"Analizar requerimientos","completed":false}],"backgroundColor":"#FFFFFF","accentColor":"#4059F1","textColor":"#000000"}}], "edges": [{"id":"e1-2","source":"1","target":"2","animated":false,"style":{"stroke":"#4059F1","strokeWidth":2}}]}${apifyBlock}${prospectsBlock}${templatesBlock}`;
+{"nodes": [{"id":"1","type":"shapeNode","position":{"x":50,"y":120},"style":{"width":140,"height":140},"data":{"shape":"circle","label":"Inicio del Flujo","fillColor":"#000000","textColor":"#FFFFFF"}},{"id":"2","type":"todoNode","position":{"x":350,"y":70},"style":{"width":280,"height":240},"data":{"title":"Fase de Planificación","subtitle":"Descripción de la fase","tasks":[{"id":"t1","text":"Analizar requerimientos","completed":false}],"backgroundColor":"#FFFFFF","accentColor":"#4059F1","textColor":"#000000"}}], "edges": [{"id":"e1-2","source":"1","target":"2","animated":false,"style":{"stroke":"#4059F1","strokeWidth":2}}]}
+
+INTENT-BASED NODE SELECTION (REGLA CRÍTICA — LEE ANTES DE GENERAR):
+No conviertas todo en checklist. Elige el tipo de nodo según la INTENCIÓN del usuario:
+- Conceptos / teoría / explicaciones / "qué es" / "cómo funciona" → shapeNode + textNode (mapa conceptual, esquema visual).
+- Acciones / pasos / plan / estrategia / "cómo hago" → todoNode con tareas accionables.
+Los textNode NO son solo para títulos: en contenido conceptual DEBEN contener explicaciones completas en HTML (oraciones, definiciones, ejemplos, con <b>, <i>, <ul><li>) — nunca verbos de acción tipo tarea.
+${apifyBlock}${prospectsBlock}${templatesBlock}`;
 
     const customInstructions = await loadInstructions(supabase, "generate");
+    const contentMode = await contentModePromise;
+
+    const modeGuidance =
+      contentMode === "learn"
+        ? `\n\n=== MODO DE CONTENIDO: LEARN (APRENDER) ===
+El usuario quiere ENTENDER un concepto, teoría o fundamentos. NO quiere tareas.
+REGLAS OBLIGATORIAS:
+- PROHIBIDO usar "todoNode" en este flujo (a menos que el usuario lo pida explícitamente en su prompt).
+- Construye un MAPA CONCEPTUAL / ESQUEMA visual:
+  * Un nodo central (shapeNode circle o hexagon) con el concepto principal.
+  * Ramas con subconceptos (shapeNode square/hexagon) y hojas con definiciones/ejemplos (textNode).
+  * Usa "diamond" solo para distinciones/decisiones conceptuales (ej. "¿es B2B o B2C?").
+- Los textNode DEBEN contener explicaciones completas en HTML: oraciones reales, definiciones ("El X es..."), ejemplos, con <b>, <i>, <ul><li>. NO listas de acciones.
+- Etiqueta los edges con relaciones conceptuales cortas cuando ayude ("incluye", "se divide en", "influye en", "vs").
+- Mezcla shapeNode y textNode para que el esquema sea visualmente rico, no una sola columna de cajas iguales.
+=== FIN MODO ===`
+        : contentMode === "plan"
+        ? `\n\n=== MODO DE CONTENIDO: PLAN (EJECUTAR) ===
+El usuario quiere un plan accionable. Usa "todoNode" con tareas concretas y verbos de acción, agrupadas por fases. Es el comportamiento estándar.
+=== FIN MODO ===`
+        : `\n\n=== MODO DE CONTENIDO: MIXED ===
+El usuario quiere contexto conceptual + acción. Empieza el esquema con nodos conceptuales (shapeNode + textNode explicativos) y añade 1-2 todoNode al final SOLO para la parte ejecutable. No conviertas los conceptos en tareas.
+=== FIN MODO ===`;
+
     const response = await fetch(
       "https://ai.gateway.lovable.dev/v1/chat/completions",
       {
@@ -352,9 +420,10 @@ Example output:
         body: JSON.stringify({
           model: "google/gemini-3-flash-preview",
           messages: [
-            { role: "system", content: systemPrompt + customInstructions },
+            { role: "system", content: systemPrompt + modeGuidance + customInstructions },
             { role: "user", content: prompt },
           ],
+        }),
         }),
       }
     );
@@ -410,6 +479,7 @@ Example output:
       used_templates: templates?.length ?? 0,
       apify_channel: apifyChannel,
       apify_found: apifyFound.length,
+      content_mode: contentMode,
     }), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
