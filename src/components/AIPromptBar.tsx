@@ -198,9 +198,20 @@ const AIPromptBar = ({ onGenerate, isGenerating, forceOpen, extendLabel, onCance
               />
               
               <div className="flex items-center justify-between mt-2">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
                   <AppsMenu isDark={isDark} />
+                  {onAddWidget && (
+                    <button
+                      type="button"
+                      onClick={() => setWidgetsOpen(true)}
+                      className="flex items-center gap-2 bg-white h-10 px-4 rounded-full cursor-pointer hover:bg-white/90 transition-all group"
+                    >
+                      <LayoutTemplate size={15} strokeWidth={1.5} className="text-black" />
+                      <span className="text-[13px] font-light text-black tracking-wider">Widgets</span>
+                    </button>
+                  )}
                 </div>
+
 
                 <div className="flex items-center gap-3">
                   {speechSupported && (
