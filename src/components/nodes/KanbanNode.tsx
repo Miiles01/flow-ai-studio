@@ -354,8 +354,13 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
       </AnimatePresence>
 
       <div
-        className={`w-full h-full rounded-2xl border overflow-hidden flex flex-col ${borderCls}`}
-        style={{ backgroundColor, color: textColor, "--scrollbar-color": textColor } as React.CSSProperties}
+        className={`w-full h-full rounded-2xl border overflow-hidden flex flex-col transition-all duration-300 ${selected ? "border-[#4059F1]/40" : borderCls}`}
+        style={{
+          backgroundColor,
+          color: textColor,
+          "--scrollbar-color": textColor,
+          boxShadow: selected ? "0 10px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.04)" : "0 4px 12px -1px rgba(0,0,0,0.015), 0 2px 4px -1px rgba(0,0,0,0.01)"
+        } as React.CSSProperties}
       >
         {(showTitle || showSubtitle) && (
           <div className="px-5 pt-4 pb-3 shrink-0">
@@ -412,7 +417,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
                       className="nodrag nopan bg-transparent border-none outline-none text-[12px] font-semibold flex-1 min-w-0 tracking-wider"
                       style={{ color: textColor }}
                     />
-                    <span className="text-[10px] opacity-50 font-mono">{col.cards.length}</span>
+                    <span className="text-[10px] opacity-50 font-medium">{col.cards.length}</span>
                     <button
                       onClick={() => removeColumn(col.id)}
                       className={`opacity-0 hover:opacity-100 group-hover:opacity-100 p-1 rounded ${
@@ -579,8 +584,8 @@ const CardView = ({
         </div>
       )}
 
-      <div className="flex items-start gap-1.5">
-        <GripVertical size={12} className="opacity-30 shrink-0 mt-0.5" />
+      <div className="flex items-center gap-1.5">
+        <GripVertical size={12} className="opacity-30 shrink-0" />
         <div className="flex-1 min-w-0">
           <input
             value={card.title}
