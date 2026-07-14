@@ -1,9 +1,11 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowUp, Loader2, EyeOff, X, Mic } from "lucide-react";
+import { ArrowUp, Loader2, EyeOff, X, Mic, LayoutTemplate } from "lucide-react";
 import logoImg from "@/assets/logo.webp";
 import { useTheme } from "@/contexts/ThemeContext";
 import AppsMenu from "@/components/AppsMenu";
+import WidgetsPicker from "@/components/widgets/WidgetsPicker";
+import type { WidgetDef } from "@/components/widgets/registry";
 
 type AIPromptBarProps = {
   onGenerate: (prompt: string) => void;
@@ -11,15 +13,19 @@ type AIPromptBarProps = {
   forceOpen?: boolean;
   extendLabel?: string | null;
   onCancelExtend?: () => void;
+  onAddWidget?: (widget: WidgetDef) => void;
 };
 
-const AIPromptBar = ({ onGenerate, isGenerating, forceOpen, extendLabel, onCancelExtend }: AIPromptBarProps) => {
+const AIPromptBar = ({ onGenerate, isGenerating, forceOpen, extendLabel, onCancelExtend, onAddWidget }: AIPromptBarProps) => {
+
   const [prompt, setPrompt] = useState("");
   const [isExpanded, setIsExpanded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
+  const [widgetsOpen, setWidgetsOpen] = useState(false);
   const { isDark } = useTheme();
   const [isRecording, setIsRecording] = useState(false);
+
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const recognitionRef = useRef<any>(null);
@@ -192,9 +198,20 @@ const AIPromptBar = ({ onGenerate, isGenerating, forceOpen, extendLabel, onCance
               />
               
               <div className="flex items-center justify-between mt-2">
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2">
                   <AppsMenu isDark={isDark} />
+                  {onAddWidget && (
+                    <button
+                      type="button"
+                      onClick={() => setWidgetsOpen(true)}
+                      className="flex items-center gap-2 bg-white h-10 px-4 rounded-full cursor-pointer hover:bg-white/90 transition-all group"
+                    >
+                      <LayoutTemplate size={15} strokeWidth={1.5} className="text-black" />
+                      <span className="text-[13px] font-light text-black tracking-wider">Widgets</span>
+                    </button>
+                  )}
                 </div>
+
 
                 <div className="flex items-center gap-3">
                   {speechSupported && (
@@ -230,8 +247,12 @@ const AIPromptBar = ({ onGenerate, isGenerating, forceOpen, extendLabel, onCance
           </motion.div>
         )}
       </AnimatePresence>
+      {onAddWidget && (
+        <WidgetsPicker open={widgetsOpen} onClose={() => setWidgetsOpen(false)} onPick={onAddWidget} />
+      )}
     </div>
   );
 };
+
 
 export default AIPromptBar;

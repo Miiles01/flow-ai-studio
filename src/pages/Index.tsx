@@ -46,6 +46,8 @@ import ClarifyPanel from "@/components/ClarifyPanel";
 import PlanPanel from "@/components/PlanPanel";
 import EditableEdge from "@/components/EditableEdge";
 import EmbedNode from "@/components/nodes/EmbedNode";
+import KanbanNode from "@/components/nodes/KanbanNode";
+import type { WidgetDef } from "@/components/widgets/registry";
 
 import { generateFlowFromPrompt, type ExtendContext } from "@/lib/generateFlow";
 import { clarifyPrompt, buildEnrichedPrompt, type ClarifyResult } from "@/lib/clarifyFlow";
@@ -53,7 +55,8 @@ import { planFlow, buildPlanContext, type PlanResult } from "@/lib/planFlow";
 import { FlowExtendContext, type ExtendSide, type FlowExtendTarget } from "@/contexts/FlowExtendContext";
 
 const SHAPE_TYPES = ["square", "circle", "diamond", "hexagon", "star", "document", "cloud", "database", "cylinder", "callout", "speech", "heart"];
-const nodeTypes = { flowNode: FlowNode, shapeNode: ShapeNode, textNode: TextNode, todoNode: TodoNode, imageNode: ImageNode, embedNode: EmbedNode, frameNode: FrameNode, skeletonNode: SkeletonNode };
+const nodeTypes = { flowNode: FlowNode, shapeNode: ShapeNode, textNode: TextNode, todoNode: TodoNode, imageNode: ImageNode, embedNode: EmbedNode, frameNode: FrameNode, skeletonNode: SkeletonNode, kanbanNode: KanbanNode };
+
 const edgeTypes = {
   default: EditableEdge,
 };
@@ -1044,6 +1047,21 @@ const IndexContent = () => {
     },
     [setNodes]
   );
+
+  const handleAddWidget = useCallback(
+    (widget: WidgetDef) => {
+      const center = reactFlowInstance
+        ? reactFlowInstance.screenToFlowPosition({ x: window.innerWidth / 2, y: window.innerHeight / 2 })
+        : { x: 400, y: 200 };
+      const width = 780;
+      const height = 440;
+      const node = widget.createNode({ x: center.x - width / 2, y: center.y - height / 2 });
+      setNodes((nds) => [...nds, node]);
+    },
+    [reactFlowInstance, setNodes]
+  );
+
+
 
   const runGenerate = useCallback(
     async (prompt: string) => {
@@ -2395,7 +2413,9 @@ const IndexContent = () => {
                 forceOpen={!!extendTarget}
                 extendLabel={extendTarget ? "Ampliando desde este elemento" : null}
                 onCancelExtend={() => setExtendTarget(null)}
+                onAddWidget={handleAddWidget}
               />
+
             </motion.div>
           )}
         </AnimatePresence>
