@@ -224,6 +224,9 @@ serve(async (req) => {
       Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
     );
 
+    // Classify content intent (learn vs plan) in parallel with the rest of prep.
+    const contentModePromise = classifyContentMode(prompt, LOVABLE_API_KEY);
+
     const keywords = extractKeywords(prompt);
     let prospects: any[] = [];
     if (keywords.length > 0) {
