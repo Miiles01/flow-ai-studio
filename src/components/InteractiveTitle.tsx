@@ -25,7 +25,6 @@ const InteractiveTitle: React.FC = () => {
       { opacity: 1, y: 0, duration: 1.2, ease: 'power3.out', delay: 0.1 }
     );
 
-    // Only run on non-mobile screens for the interactive effect
     if (window.matchMedia("(max-width: 768px)").matches) return;
 
     const word = root.querySelector('.word') as HTMLElement;
@@ -35,9 +34,8 @@ const InteractiveTitle: React.FC = () => {
     if (letters.length === 0) return;
 
     const overflows = new Array(letters.length).fill(0);
-    const mediaWidth = 0.075 * window.innerWidth;
+    const mediaWidth = 0.095 * window.innerWidth;
     let mediaIndex = 0;
-    let activeImages = 0;
 
     const applyLetterOffsets = () => {
       let sumLeft = 0;
@@ -56,85 +54,62 @@ const InteractiveTitle: React.FC = () => {
       });
     };
 
-    const updateContainerScale = () => {
-      if (!root) return;
-      // Shrink the whole word container when images appear so they don't overflow the screen edges
-      const scaleValue = activeImages > 0 ? Math.max(0.7, 1 - (activeImages * 0.08)) : 1;
-      gsap.to(root, {
-        scale: scaleValue,
-        duration: 0.4,
-        ease: 'power2.out',
-        overwrite: 'auto'
-      });
-    };
-
     const createMedia = (letter: HTMLElement) => {
       const img = document.createElement('img');
       img.src = mediaSrcs[mediaIndex];
       img.classList.add('created-media');
       
-      // Inline styles based on CSS requirement
+      // Original CSS logic applied via inline styles
       img.style.position = 'absolute';
-      img.style.width = '7vw';
+      img.style.width = '9vw';
       img.style.height = 'auto';
       img.style.top = '50%';
       img.style.left = '50%';
-      img.style.transform = 'translate(-50%, -50%) scale(0)';
-      img.style.borderRadius = '1.5vw';
-      img.style.zIndex = '0';
-      img.style.pointerEvents = 'none'; // so it doesn't interfere with letter hovers
+      img.style.borderRadius = '1vw';
+      img.style.pointerEvents = 'none';
 
       letter.appendChild(img);
-      activeImages++;
-      updateContainerScale();
 
-      gsap.to(img, {
+      gsap.set(img, {
+        yPercent: -50,
+        xPercent: -50,
+      });
+      
+      gsap.from(img, {
+        rotation: (Math.random() - 0.5) * 20,
         scale: 1.05,
-        duration: 0.4,
-        ease: 'back.out(1.5)',
+        duration: 0.3,
+        ease: 'back.out(2)'
       });
 
       mediaIndex = (mediaIndex + 1) % mediaSrcs.length;
-      return img;
+
+      const index = letters.indexOf(letter);
+      if (index === -1) return;
+
+      const overflowX = Math.max(0, (mediaWidth - letter.getBoundingClientRect().width) / 2);
+      overflows[index] = Math.max(overflows[index], overflowX);
+      applyLetterOffsets();
+
+      gsap.delayedCall(1.2, () => {
+        const idx = letters.indexOf(letter);
+        if (idx !== -1) overflows[idx] = 0;
+
+        img.remove();
+        applyLetterOffsets();
+
+        gsap.from(letter, {
+          rotation: (Math.random() - 0.5) * 20,
+          scale: 1.05,
+          duration: 0.3,
+          ease: 'back.out(2)'
+        });
+      });
     };
 
     const handleMouseEnter = (e: MouseEvent) => {
       const letter = e.currentTarget as HTMLElement;
-      const index = letters.indexOf(letter);
-      if (index === -1) return;
-      if (letter.querySelector('.created-media')) return; // Already has media
-
-      const img = createMedia(letter);
-      
-      // Calculate overflow width for surrounding letters
-      const overflowX = Math.max(0, (mediaWidth - letter.getBoundingClientRect().width) / 2);
-      overflows[index] = overflowX;
-      applyLetterOffsets();
-
-      // Make letter transparent
-      gsap.to(letter, { color: 'transparent', duration: 0.2 });
-
-      // Clean up after some time
-      gsap.delayedCall(2, () => {
-        // Remove image
-        gsap.to(img, {
-          scale: 0,
-          opacity: 0,
-          duration: 0.3,
-          onComplete: () => {
-            img.remove();
-            activeImages = Math.max(0, activeImages - 1);
-            updateContainerScale();
-          }
-        });
-
-        // Reset text color
-        gsap.to(letter, { color: '#000', duration: 0.3 });
-
-        // Reset offset
-        overflows[index] = 0;
-        applyLetterOffsets();
-      });
+      if (letter.children.length === 0) createMedia(letter);
     };
 
     letters.forEach(letter => {
@@ -145,7 +120,6 @@ const InteractiveTitle: React.FC = () => {
       letters.forEach(letter => {
         letter.removeEventListener('mouseenter', handleMouseEnter);
       });
-      // Kill all ongoing delayed calls for this component
       gsap.killTweensOf(letters);
     };
   }, []);
@@ -157,11 +131,8 @@ const InteractiveTitle: React.FC = () => {
       <style>{`
         .letter {
           position: relative;
-          display: inline-block;
-          transition: color 0.1s ease;
         }
-        /* When letter has-media, hide the text by making it transparent */
-        .letter.has-media {
+        .letter:has(.created-media) {
           color: transparent;
         }
       `}</style>
@@ -169,7 +140,7 @@ const InteractiveTitle: React.FC = () => {
         ref={containerRef}
         className="text-[68px] sm:text-[100px] md:text-[120px] lg:text-[140px] xl:text-[160px] font-normal leading-[1] tracking-tighter mb-6 text-black flex justify-center whitespace-nowrap"
       >
-        <span className="word inline-flex justify-center relative">
+        <span className="word flex justify-center relative">
           {text.split('').map((char, index) => (
             <span key={index} className="letter cursor-default">
               {char}
