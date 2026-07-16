@@ -109,7 +109,7 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
 
   const isSingleSelected = selected && getNodes().filter((n) => n.selected).length === 1;
 
-  const bgColor = d.backgroundColor ?? (isDark ? "#1C1C1E" : "#FFFFFF");
+  const bgColor = d.backgroundColor ?? (isDark ? "#2C2C2E" : "#FFFFFF");
   const txt = d.textColor ?? (isDark ? "#F5F5F7" : "#111827");
   const accent = d.accentColor ?? "#4059F1";
   const subtle = isDark ? "text-white/60" : "text-neutral-500";

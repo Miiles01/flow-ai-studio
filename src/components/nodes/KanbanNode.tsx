@@ -161,8 +161,8 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
   const showSubtitle = nodeData.showSubtitle ?? false;
   const subtitle = nodeData.subtitle ?? "";
 
-  const rawFill = nodeData.backgroundColor ?? (isDark ? "#1C1C1E" : "#FFFFFF");
-  const backgroundColor = isDark && isWhiteColor(rawFill) ? "#1C1C1E" : rawFill;
+  const rawFill = nodeData.backgroundColor ?? (isDark ? "#2C2C2E" : "#FFFFFF");
+  const backgroundColor = isDark && isWhiteColor(rawFill) ? "#2C2C2E" : rawFill;
 
   const rawText = nodeData.textColor ?? "#111827";
   const textColor = isDark && (isBlackColor(rawText) || isWhiteColor(rawFill)) ? "#FFFFFF" : rawText;

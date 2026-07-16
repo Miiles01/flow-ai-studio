@@ -103,8 +103,8 @@ const ClientCardNode = ({ id, data, selected }: NodeProps) => {
 
   const isSingleSelected = selected && getNodes().filter((n) => n.selected).length === 1;
 
-  const rawFill = d.backgroundColor ?? (isDark ? "#1C1C1E" : "#FFFFFF");
-  const backgroundColor = isDark && isWhite(rawFill) ? "#1C1C1E" : rawFill;
+  const rawFill = d.backgroundColor ?? (isDark ? "#2C2C2E" : "#FFFFFF");
+  const backgroundColor = isDark && isWhite(rawFill) ? "#2C2C2E" : rawFill;
   const rawText = d.textColor ?? "#111827";
   const textColor = isDark && (isBlack(rawText) || isWhite(rawFill)) ? "#FFFFFF" : rawText;
   const accentColor = d.accentColor ?? "#4059F1";
