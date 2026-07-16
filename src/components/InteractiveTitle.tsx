@@ -19,13 +19,14 @@ const InteractiveTitle: React.FC = () => {
     const root = containerRef.current;
     if (!root) return;
 
-    // Initial simple fade in for the whole title
-    gsap.fromTo(root, 
-      { opacity: 0, y: 30 }, 
+    // Fade in animation for the whole title
+    gsap.fromTo(root,
+      { opacity: 0, y: 30 },
       { opacity: 1, y: 0, duration: 1.2, ease: 'power3.out', delay: 0.1 }
     );
 
-    if (window.matchMedia("(max-width: 768px)").matches) return;
+    // Only enable interactive effect on desktop
+    if (window.matchMedia('(max-width: 768px)').matches) return;
 
     const word = root.querySelector('.word') as HTMLElement;
     if (!word) return;
@@ -33,83 +34,78 @@ const InteractiveTitle: React.FC = () => {
     const letters = Array.from(word.querySelectorAll('.letter')) as HTMLElement[];
     if (letters.length === 0) return;
 
-    const overflows = new Array(letters.length).fill(0);
-    const mediaWidth = 0.095 * window.innerWidth;
     let mediaIndex = 0;
 
-    const applyLetterOffsets = () => {
-      let sumLeft = 0;
-      const targets = overflows.map((ov, i) => {
-        const sumRight = overflows.slice(i + 1).reduce((a, v) => a + v, 0);
-        const x = sumLeft - sumRight;
-        sumLeft += ov;
-        return x;
-      });
-
-      gsap.to(letters, {
-        x: (i) => targets[i],
-        duration: 0.3,
-        ease: 'back.out(3)',
-        overwrite: 'auto'
-      });
-    };
+    // ─── PORTAL ────────────────────────────────────────────────────────────────
+    // Images are rendered in a fixed portal at document.body level so they are
+    // NEVER clipped by the ScrollSmoother wrapper's overflow:hidden.
+    const portal = document.createElement('div');
+    portal.setAttribute('aria-hidden', 'true');
+    portal.style.cssText = [
+      'position:fixed',
+      'top:0',
+      'left:0',
+      'width:100%',
+      'height:100%',
+      'pointer-events:none',
+      'z-index:9999',
+    ].join(';');
+    document.body.appendChild(portal);
 
     const createMedia = (letter: HTMLElement) => {
+      const rect = letter.getBoundingClientRect();
+      const cx = rect.left + rect.width / 2;
+      const cy = rect.top + rect.height / 2;
+
       const img = document.createElement('img');
       img.src = mediaSrcs[mediaIndex];
-      img.classList.add('created-media');
-      
-      // Original CSS logic applied via inline styles
-      img.style.position = 'absolute';
-      img.style.width = '9vw';
-      img.style.height = 'auto';
-      img.style.top = '50%';
-      img.style.left = '50%';
-      img.style.borderRadius = '1vw';
-      img.style.pointerEvents = 'none';
+      img.style.cssText = [
+        'position:absolute',
+        'width:9vw',
+        'height:auto',
+        'border-radius:1vw',
+        'pointer-events:none',
+        `left:${cx}px`,
+        `top:${cy}px`,
+        'transform:translate(-50%,-50%)',
+      ].join(';');
+      portal.appendChild(img);
 
-      letter.appendChild(img);
+      // Appear with random rotation bounce
+      gsap.fromTo(img,
+        { scale: 0, rotation: (Math.random() - 0.5) * 20 },
+        { scale: 1, rotation: 0, duration: 0.3, ease: 'back.out(2)' }
+      );
 
-      gsap.set(img, {
-        yPercent: -50,
-        xPercent: -50,
-      });
-      
-      gsap.from(img, {
-        rotation: (Math.random() - 0.5) * 20,
-        scale: 1.05,
-        duration: 0.3,
-        ease: 'back.out(2)'
-      });
+      // Make letter transparent while image is shown
+      letter.style.color = 'transparent';
 
       mediaIndex = (mediaIndex + 1) % mediaSrcs.length;
 
-      const index = letters.indexOf(letter);
-      if (index === -1) return;
-
-      const overflowX = Math.max(0, (mediaWidth - letter.getBoundingClientRect().width) / 2);
-      overflows[index] = Math.max(overflows[index], overflowX);
-      applyLetterOffsets();
-
       gsap.delayedCall(1.2, () => {
-        const idx = letters.indexOf(letter);
-        if (idx !== -1) overflows[idx] = 0;
-
-        img.remove();
-        applyLetterOffsets();
-
-        gsap.from(letter, {
+        // Dismiss image
+        gsap.to(img, {
+          scale: 0,
           rotation: (Math.random() - 0.5) * 20,
-          scale: 1.05,
           duration: 0.3,
-          ease: 'back.out(2)'
+          ease: 'back.in(2)',
+          onComplete: () => img.remove(),
         });
+
+        // Restore letter with small bounce
+        letter.style.color = '';
+        gsap.fromTo(letter,
+          { scale: 1.05, rotation: (Math.random() - 0.5) * 10 },
+          { scale: 1, rotation: 0, duration: 0.3, ease: 'back.out(2)' }
+        );
       });
     };
 
     const handleMouseEnter = (e: MouseEvent) => {
       const letter = e.currentTarget as HTMLElement;
-      if (letter.children.length === 0) createMedia(letter);
+      // Don't spawn another image if one is already visible
+      if (letter.style.color === 'transparent') return;
+      createMedia(letter);
     };
 
     letters.forEach(letter => {
@@ -121,35 +117,30 @@ const InteractiveTitle: React.FC = () => {
         letter.removeEventListener('mouseenter', handleMouseEnter);
       });
       gsap.killTweensOf(letters);
+      portal.remove();
     };
   }, []);
 
-  const text = "Redefínelo";
+  const text = 'Redefínelo';
 
   return (
-    <>
-      <style>{`
-        .letter {
-          position: relative;
-        }
-        .letter:has(.created-media) {
-          color: transparent;
-        }
-      `}</style>
-      <h1
-        ref={containerRef}
-        className="font-normal leading-[1] tracking-tighter mb-6 text-black flex justify-center whitespace-nowrap"
-        style={{ fontSize: 'clamp(68px, 14vw, 220px)' }}
-      >
-        <span className="word flex justify-center relative">
-          {text.split('').map((char, index) => (
-            <span key={index} className="letter cursor-default">
-              {char}
-            </span>
-          ))}
-        </span>
-      </h1>
-    </>
+    <h1
+      ref={containerRef}
+      className="font-normal leading-[1] tracking-tighter mb-6 text-black flex justify-center whitespace-nowrap"
+      style={{ fontSize: 'clamp(68px, 15vw, 210px)' }}
+    >
+      <span className="word flex justify-center relative">
+        {text.split('').map((char, index) => (
+          <span
+            key={index}
+            className="letter cursor-default"
+            style={{ position: 'relative', display: 'inline-block', transition: 'color 0.15s ease' }}
+          >
+            {char}
+          </span>
+        ))}
+      </span>
+    </h1>
   );
 };
 
