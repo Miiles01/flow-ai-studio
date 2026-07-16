@@ -602,7 +602,7 @@ const CampaignEditorPopover = ({
   const content = (
     <div
       ref={popoverRef}
-      className={`fixed z-[10000] rounded-2xl shadow-2xl overflow-hidden flex flex-col ${panelCls}`}
+      className={`fixed z-[10000] rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] overflow-hidden flex flex-col ${panelCls}`}
       style={{
         top: pos.top,
         left: pos.left,
@@ -615,9 +615,6 @@ const CampaignEditorPopover = ({
     >
       {/* Header */}
       <div className={`px-5 py-3.5 flex items-center justify-between border-b ${isDark ? "border-white/10" : "border-neutral-100"} shrink-0`}>
-        <button onClick={onClose} className={`flex items-center gap-1.5 text-[13px] ${subtle} hover:opacity-80`}>
-          <ArrowLeft size={14} /> Volver
-        </button>
         <div className="flex items-center gap-2">
           <span
             className="text-[10.5px] px-2.5 py-1 rounded-full font-semibold"
@@ -635,6 +632,13 @@ const CampaignEditorPopover = ({
             <Trash2 size={14} />
           </button>
         </div>
+        <button
+          onClick={onClose}
+          className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-colors text-[11px] font-medium ${isDark ? "bg-white/10 hover:bg-white/20 text-white" : "bg-black/5 hover:bg-black/10 text-black"}`}
+        >
+          <span>Cerrar</span>
+          <X size={12} />
+        </button>
       </div>
 
       {/* Body */}
@@ -718,11 +722,11 @@ const CampaignEditorPopover = ({
               type="checkbox"
               checked={!!campaign.paidAt}
               onChange={(e) => onUpdate({ paidAt: e.target.checked ? Date.now() : undefined })}
-              className="accent-[#22C55E]"
+              className={isDark ? "accent-white" : "accent-black"}
             />
             <span className="text-[12.5px] font-medium">Marcar como cobrada</span>
             {campaign.paidAt && (
-              <span className="ml-auto text-[11px] text-[#22C55E] font-semibold">Cobrado</span>
+              <span className={`ml-auto text-[11px] font-semibold ${isDark ? "text-white" : "text-black"}`}>Cobrado</span>
             )}
           </label>
         </Section>
@@ -909,7 +913,7 @@ const Section = ({
 }: { title: string; subtle: string; right?: React.ReactNode; children: React.ReactNode }) => (
   <div>
     <div className="flex items-center justify-between mb-2">
-      <h4 className={`text-[11px] uppercase tracking-wider font-semibold ${subtle}`}>{title}</h4>
+      <h4 className={`text-[12px] font-semibold ${subtle}`}>{title}</h4>
       {right}
     </div>
     {children}

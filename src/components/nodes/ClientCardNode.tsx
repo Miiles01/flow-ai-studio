@@ -444,7 +444,7 @@ const ClientEditorPopover = ({
   return createPortal(
     <div
       ref={popoverRef}
-      className={`fixed z-[10000] w-[300px] max-h-[440px] overflow-y-auto editor-scrollbar rounded-2xl shadow-xl ${panelCls}`}
+      className={`fixed z-[10000] w-[300px] max-h-[440px] overflow-y-auto editor-scrollbar rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] ${panelCls}`}
       style={{ top: pos.top, left: pos.left, visibility: pos.top === -999 ? "hidden" : "visible" }}
       onMouseDown={(e) => e.stopPropagation()}
       onClick={(e) => e.stopPropagation()}
