@@ -16,11 +16,17 @@ const InteractiveTitle: React.FC = () => {
   const containerRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
-    // Only run on non-mobile screens
-    if (window.matchMedia("(max-width: 768px)").matches) return;
-
     const root = containerRef.current;
     if (!root) return;
+
+    // Initial simple fade in for the whole title
+    gsap.fromTo(root, 
+      { opacity: 0, y: 30 }, 
+      { opacity: 1, y: 0, duration: 1.2, ease: 'power3.out', delay: 0.1 }
+    );
+
+    // Only run on non-mobile screens for the interactive effect
+    if (window.matchMedia("(max-width: 768px)").matches) return;
 
     const word = root.querySelector('.word') as HTMLElement;
     if (!word) return;
@@ -148,8 +154,7 @@ const InteractiveTitle: React.FC = () => {
       `}</style>
       <h1
         ref={containerRef}
-        data-anim-heading
-        className="text-[68px] sm:text-[100px] md:text-[140px] lg:text-[170px] xl:text-[190px] font-normal leading-[1] tracking-tighter mb-6 text-black mwg_effect093 flex justify-center w-full"
+        className="text-[68px] sm:text-[100px] md:text-[140px] lg:text-[170px] xl:text-[190px] font-normal leading-[1] tracking-tighter mb-6 text-black flex justify-center w-full"
       >
         <span className="block word flex justify-center w-full">
           {text.split('').map((char, index) => (
