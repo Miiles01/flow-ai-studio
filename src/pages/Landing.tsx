@@ -411,16 +411,15 @@ const Landing = () => {
 
           {/* HERO */}
           <section className="min-h-[85vh] md:min-h-screen bg-white flex flex-col items-center justify-center text-center px-6 pt-32 pb-16 md:pb-32 relative z-10 overflow-hidden">
-            {/* Dotted Gradient Background */}
+            {/* Dotted Radial Gradient Background */}
             <div 
               className="absolute inset-0 pointer-events-none z-0"
               style={{
-                background: "linear-gradient(135deg, #4059F1, #FCB5B9)",
-                maskImage: "radial-gradient(black 1.5px, transparent 1.5px)",
-                WebkitMaskImage: "radial-gradient(black 1.5px, transparent 1.5px)",
-                maskSize: "24px 24px",
-                WebkitMaskSize: "24px 24px",
-                opacity: 0.8
+                background: "radial-gradient(circle at center, #FFFFFF 0%, rgba(140, 134, 162, 0.15) 59%, #FFFFFF 100%)",
+                maskImage: "radial-gradient(circle, black 1px, transparent 1.5px)",
+                WebkitMaskImage: "radial-gradient(circle, black 1px, transparent 1.5px)",
+                maskSize: "16px 16px",
+                WebkitMaskSize: "16px 16px",
               }}
             />
             
