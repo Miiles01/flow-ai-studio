@@ -568,7 +568,7 @@ const Landing = () => {
             </span>
             
             <h1
-              className="hero-title no-split text-[64px] sm:text-7xl md:text-8xl lg:text-[95px] font-normal leading-[1] tracking-tight mb-6"
+              className="hero-title no-split text-[72px] sm:text-[84px] md:text-[100px] lg:text-[120px] font-medium leading-[1] tracking-tighter mb-6"
             >
               <span className="block">
                 {renderWord("Redefínelo")}
