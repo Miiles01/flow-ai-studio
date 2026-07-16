@@ -436,7 +436,7 @@ const Landing = () => {
               
               <h1
                 data-anim-heading
-                className="text-[76px] sm:text-[96px] md:text-[120px] lg:text-[140px] font-normal leading-[1] tracking-tighter mb-6 text-black"
+                className="text-[68px] sm:text-[100px] md:text-[140px] lg:text-[170px] xl:text-[190px] font-normal leading-[1] tracking-tighter mb-6 text-black"
               >
                 <span className="block">
                   Redefínelo
