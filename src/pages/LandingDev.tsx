@@ -568,12 +568,11 @@ const Landing = () => {
             </span>
             
             <h1
-              className="hero-title no-split text-[42px] sm:text-6xl md:text-8xl lg:text-[95px] font-normal leading-[1.1] tracking-tight mb-6"
+              className="hero-title no-split text-[64px] sm:text-7xl md:text-8xl lg:text-[95px] font-normal leading-[1] tracking-tight mb-6"
             >
               <span className="block">
-                {renderWord("Crea")} {renderWord("tu")}{" "}
                 <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic", textTransform: "none", paddingRight: "0.1em" }}>
-                  {renderWord("estudio")}
+                  {renderWord("Redefínelo")}
                 </span>
               </span>
             </h1>

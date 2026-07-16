@@ -436,12 +436,11 @@ const Landing = () => {
               
               <h1
                 data-anim-heading
-                className="text-[42px] sm:text-6xl md:text-8xl lg:text-[95px] font-normal leading-[1.1] tracking-tight mb-6 text-black"
+                className="text-[64px] sm:text-7xl md:text-8xl lg:text-[95px] font-normal leading-[1] tracking-tight mb-6 text-black"
               >
                 <span className="block">
-                  Crea tu{" "}
                   <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic", textTransform: "none", paddingRight: "0.1em" }}>
-                    estudio
+                    Redefínelo
                   </span>
                 </span>
               </h1>
