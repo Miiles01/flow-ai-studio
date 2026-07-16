@@ -1211,9 +1211,9 @@ const Afiliados = () => {
       '.mwg-e022 .e022-pin{height:400vh}',
       '.mwg-e022 .e022-container{height:100vh;background:#fff}',
       '.mwg-e022 .e022-top{display:flex;justify-content:space-between;align-items:center;padding:8vw 8vw 4vw}',
-      '.mwg-e022 .e022-top-title{font-size:5vw;line-height:0.9;font-family:"Poppins",sans-serif;font-weight:500;letter-spacing:-0.05em;color:#000}',
+      '.mwg-e022 .e022-top-title{font-size:5vw;line-height:0.9;font-family:"Manrope",sans-serif;font-weight:500;letter-spacing:-0.05em;color:#000}',
       '.mwg-e022 .e022-paragraphs{display:flex;align-items:flex-start;padding:5vw 8vw;column-gap:4vw}',
-      '.mwg-e022 .e022-paragraph{font-size:2.3vw;line-height:1.2;font-family:"Poppins",sans-serif;font-weight:500;letter-spacing:-0.03em;color:#000;flex:1}',
+      '.mwg-e022 .e022-paragraph{font-size:2.3vw;line-height:1.2;font-family:"Manrope",sans-serif;font-weight:500;letter-spacing:-0.03em;color:#000;flex:1}',
       '.mwg-e022 .e022-word{position:relative;overflow:hidden;display:inline-block;margin:-0.14em 0}',
       '.mwg-e022 .e022-word span{display:block;padding:0.14em 0}',
       '.mwg-e022 .e022-paragraph:not(:first-child) .e022-word span{transform:translateY(100%)}',
@@ -1278,7 +1278,7 @@ const Afiliados = () => {
       '.mwg-h104 .h104-pin{height:500vh}',
       '.mwg-h104 .h104-container{height:100vh;display:flex;align-items:center;overflow:hidden}',
       '.mwg-h104 svg{display:block;width:120%;height:auto;overflow:visible;margin:8vw 0 0 -10%}',
-      '.mwg-h104 text{font-family:"Poppins",sans-serif;font-weight:300}',
+      '.mwg-h104 text{font-family:"Manrope",sans-serif;font-weight:300}',
     ].join('');
     document.head.appendChild(h104Style);
 
@@ -1321,7 +1321,7 @@ const Afiliados = () => {
           const fs = parseFloat((el as SVGTextElement).getAttribute('font-size') || '350');
           const cv = document.createElement('canvas');
           const ctx = cv.getContext('2d')!;
-          ctx.font = `300 ${fs}px Poppins, sans-serif`;
+          ctx.font = `300 ${fs}px Manrope, sans-serif`;
           return ctx.measureText(content).width;
         };
 
@@ -1420,7 +1420,7 @@ const Afiliados = () => {
 
       const df = document as Document & { fonts?: { ready: Promise<unknown>; load: (f: string) => Promise<unknown> } };
       if (df.fonts) {
-        Promise.all([df.fonts.ready, df.fonts.load('300 350px Poppins')]).then(runH104);
+        Promise.all([df.fonts.ready, df.fonts.load('300 350px Manrope')]).then(runH104);
       } else {
         runH104();
       }

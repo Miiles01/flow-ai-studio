@@ -190,7 +190,7 @@ const LandingNavbar = ({ onMenuAction, cta, isLanding }: LandingNavbarProps) => 
                         to={item.href}
                         onClick={() => handleLinkClick(item.href)}
                         className="block text-4xl md:text-5xl lg:text-[50px] font-medium text-white hover:opacity-50 transition-opacity duration-300 tracking-tight"
-                        style={{ fontFamily: "'Poppins', sans-serif" }}
+                        style={{ fontFamily: "'Manrope', sans-serif" }}
                       >
                         {item.label}
                       </Link>
@@ -210,7 +210,7 @@ const LandingNavbar = ({ onMenuAction, cta, isLanding }: LandingNavbarProps) => 
                       <button 
                         onClick={() => setIsLangMenuOpen(!isLangMenuOpen)}
                         className="flex items-center gap-3 text-4xl md:text-5xl lg:text-[50px] font-medium text-white hover:opacity-50 transition-opacity duration-300 tracking-tight text-left"
-                        style={{ fontFamily: "'Poppins', sans-serif" }}
+                        style={{ fontFamily: "'Manrope', sans-serif" }}
                       >
                         {t("navbar.language")}
                       </button>
