@@ -542,7 +542,7 @@ const Landing = () => {
           <LandingNavbar />
 
       <div id="smooth-wrapper" style={{ overflow: "hidden", position: "fixed", width: "100%", height: "100%", top: 0, left: 0 }}>
-        <div id="smooth-content" className="bg-white text-black font-sans overflow-hidden">
+        <div id="smooth-content" className="bg-white text-black font-sans">
 
           <section className="min-h-[85vh] md:min-h-screen bg-white flex flex-col items-center justify-center text-center px-6 pt-32 pb-16 md:pb-32 relative z-10">
             {/* Dotted Gradient Background */}
