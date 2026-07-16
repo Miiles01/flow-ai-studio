@@ -109,7 +109,7 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
 
   const isSingleSelected = selected && getNodes().filter((n) => n.selected).length === 1;
 
-  const bgColor = d.backgroundColor ?? (isDark ? "#111219" : "#FFFFFF");
+  const bgColor = d.backgroundColor ?? (isDark ? "#1C1C1E" : "#FFFFFF");
   const txt = d.textColor ?? (isDark ? "#F5F5F7" : "#111827");
   const accent = d.accentColor ?? "#4059F1";
   const subtle = isDark ? "text-white/60" : "text-neutral-500";
@@ -244,7 +244,14 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
   return (
     <div
       className="relative w-full h-full group/handle"
-      style={{ backgroundColor: bgColor, color: txt, borderRadius: 20, border: `1px solid ${isDark ? "rgba(255,255,255,0.08)" : "rgba(0,0,0,0.06)"}` }}
+      style={{
+        backgroundColor: bgColor,
+        color: txt,
+        borderRadius: 20,
+        boxShadow: selected
+          ? "0 10px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.04)"
+          : "0 4px 12px -1px rgba(0,0,0,0.015), 0 2px 4px -1px rgba(0,0,0,0.01)",
+      }}
     >
       <NodeResizer minWidth={640} minHeight={520} isVisible={!!selected} lineStyle={{ borderColor: accent, borderWidth: 1.5 }} handleStyle={{ backgroundColor: accent, width: 8, height: 8, borderRadius: 2, border: `2px solid ${bgColor}` }} />
       <NodeExtendHandles nodeId={id} />

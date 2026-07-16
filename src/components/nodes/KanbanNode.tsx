@@ -161,8 +161,8 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
   const showSubtitle = nodeData.showSubtitle ?? false;
   const subtitle = nodeData.subtitle ?? "";
 
-  const rawFill = nodeData.backgroundColor ?? "#FFFFFF";
-  const backgroundColor = isDark && isWhiteColor(rawFill) ? "#2C2C2E" : rawFill;
+  const rawFill = nodeData.backgroundColor ?? (isDark ? "#1C1C1E" : "#FFFFFF");
+  const backgroundColor = isDark && isWhiteColor(rawFill) ? "#1C1C1E" : rawFill;
 
   const rawText = nodeData.textColor ?? "#111827";
   const textColor = isDark && (isBlackColor(rawText) || isWhiteColor(rawFill)) ? "#FFFFFF" : rawText;
@@ -358,7 +358,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
       </div>
 
       <div
-        className={`w-full h-full rounded-2xl border overflow-hidden flex flex-col transition-all duration-300 ${selected ? "border-[#4059F1]/40" : borderCls}`}
+        className="w-full h-full rounded-2xl overflow-hidden flex flex-col transition-all duration-300"
         style={{
           backgroundColor,
           color: textColor,

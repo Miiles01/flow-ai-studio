@@ -103,8 +103,8 @@ const ClientCardNode = ({ id, data, selected }: NodeProps) => {
 
   const isSingleSelected = selected && getNodes().filter((n) => n.selected).length === 1;
 
-  const rawFill = d.backgroundColor ?? "#FFFFFF";
-  const backgroundColor = isDark && isWhite(rawFill) ? "#2C2C2E" : rawFill;
+  const rawFill = d.backgroundColor ?? (isDark ? "#1C1C1E" : "#FFFFFF");
+  const backgroundColor = isDark && isWhite(rawFill) ? "#1C1C1E" : rawFill;
   const rawText = d.textColor ?? "#111827";
   const textColor = isDark && (isBlack(rawText) || isWhite(rawFill)) ? "#FFFFFF" : rawText;
   const accentColor = d.accentColor ?? "#4059F1";
@@ -192,13 +192,13 @@ const ClientCardNode = ({ id, data, selected }: NodeProps) => {
           if ((e.target as HTMLElement).closest("input,textarea,button,a,select")) return;
           setEditorOpen(true);
         }}
-        className={`w-full h-full rounded-2xl border overflow-hidden flex flex-col transition-all duration-300 cursor-pointer ${selected ? "border-[#4059F1]/40" : borderCls}`}
+        className="w-full h-full rounded-2xl overflow-hidden flex flex-col transition-all duration-300 cursor-pointer"
         style={{
           backgroundColor,
           color: textColor,
           boxShadow: selected
-            ? "0 10px 25px -5px rgba(0,0,0,0.06), 0 8px 10px -6px rgba(0,0,0,0.05)"
-            : "0 6px 16px -2px rgba(0,0,0,0.06), 0 2px 6px -1px rgba(0,0,0,0.03)",
+            ? "0 10px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.04)"
+            : "0 4px 12px -1px rgba(0,0,0,0.015), 0 2px 4px -1px rgba(0,0,0,0.01)",
         }}
       >
         {/* Header: avatar + name + role */}
