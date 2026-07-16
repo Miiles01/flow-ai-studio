@@ -12,135 +12,191 @@ const mediaSrcs = [
   "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?q=80&w=400&auto=format&fit=crop",
 ];
 
+/**
+ * InteractiveTitle — mwg_effect093 React port
+ *
+ * The entire visual word lives in a portal appended directly to document.body
+ * so it is NEVER inside smooth-wrapper's overflow:hidden.
+ * Letters can spread freely without clipping.
+ *
+ * A transparent placeholder <div> is returned into the normal layout flow
+ * so sibling elements (subtitle, CTA…) keep their correct positions.
+ */
 const InteractiveTitle: React.FC = () => {
-  const containerRef = useRef<HTMLHeadingElement>(null);
+  const placeholderRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    const root = containerRef.current;
-    if (!root) return;
+    // ── 1. Inject global CSS for the effect ──────────────────────────────────
+    const styleEl = document.createElement('style');
+    styleEl.id = 'mwg-effect093-styles';
+    styleEl.textContent = `
+      .mwg_effect093 {
+        position: fixed;
+        top: 0; left: 0;
+        width: 100%; height: 100dvh;
+        display: grid;
+        place-items: center;
+        pointer-events: none;
+        z-index: 50;
+      }
+      .mwg_effect093 .word {
+        display: flex;
+        font-size: clamp(68px, 15vw, 210px);
+        font-family: 'Manrope', sans-serif;
+        font-weight: 400;
+        letter-spacing: -0.02em;
+        color: #000;
+        pointer-events: auto;
+        margin: 0;
+        padding: 0;
+        white-space: nowrap;
+        line-height: 1;
+      }
+      .mwg_effect093 .letter {
+        position: relative;
+        display: inline-block;
+      }
+      .mwg_effect093 .letter:has(.created-media) {
+        color: transparent;
+      }
+      .mwg_effect093 .created-media {
+        position: absolute;
+        width: 9vw;
+        height: auto;
+        top: 50%;
+        left: 50%;
+        border-radius: 1vw;
+        pointer-events: none;
+      }
+    `;
+    document.head.appendChild(styleEl);
 
-    // Fade in animation for the whole title
-    gsap.fromTo(root,
+    // ── 2. Create the portal section at document.body level ──────────────────
+    const section = document.createElement('section');
+    section.className = 'mwg_effect093';
+    document.body.appendChild(section);
+
+    // ── 3. Build the word + letters ──────────────────────────────────────────
+    const wordEl = document.createElement('p');
+    wordEl.className = 'word';
+    const text = 'Redefínelo';
+    wordEl.innerHTML = text
+      .split('')
+      .map(char => `<span class="letter">${char}</span>`)
+      .join('');
+    section.appendChild(wordEl);
+
+    // ── 4. Fade in ───────────────────────────────────────────────────────────
+    gsap.fromTo(section,
       { opacity: 0, y: 30 },
       { opacity: 1, y: 0, duration: 1.2, ease: 'power3.out', delay: 0.1 }
     );
 
-    // Only enable interactive effect on desktop
-    if (window.matchMedia('(max-width: 768px)').matches) return;
+    // ── 5. Interactive effect — EXACT port of mwg_effect093 JS ───────────────
+    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+    let ticker: (() => void) | null = null;
 
-    const word = root.querySelector('.word') as HTMLElement;
-    if (!word) return;
+    if (!isMobile) {
+      const letters = [...wordEl.querySelectorAll('.letter')] as HTMLElement[];
+      const overflows = new Array(letters.length).fill(0);
+      const mediaWidth = 0.095 * window.innerWidth;
+      let mediaIndex = 0;
 
-    const letters = Array.from(word.querySelectorAll('.letter')) as HTMLElement[];
-    if (letters.length === 0) return;
-
-    let mediaIndex = 0;
-
-    // ─── PORTAL ────────────────────────────────────────────────────────────────
-    // Images are rendered in a fixed portal at document.body level so they are
-    // NEVER clipped by the ScrollSmoother wrapper's overflow:hidden.
-    const portal = document.createElement('div');
-    portal.setAttribute('aria-hidden', 'true');
-    portal.style.cssText = [
-      'position:fixed',
-      'top:0',
-      'left:0',
-      'width:100%',
-      'height:100%',
-      'pointer-events:none',
-      'z-index:9999',
-    ].join(';');
-    document.body.appendChild(portal);
-
-    const createMedia = (letter: HTMLElement) => {
-      const rect = letter.getBoundingClientRect();
-      const cx = rect.left + rect.width / 2;
-      const cy = rect.top + rect.height / 2;
-
-      const img = document.createElement('img');
-      img.src = mediaSrcs[mediaIndex];
-      img.style.cssText = [
-        'position:absolute',
-        'width:9vw',
-        'height:auto',
-        'border-radius:1vw',
-        'pointer-events:none',
-        `left:${cx}px`,
-        `top:${cy}px`,
-        'transform:translate(-50%,-50%)',
-      ].join(';');
-      portal.appendChild(img);
-
-      // Appear with random rotation bounce
-      gsap.fromTo(img,
-        { scale: 0, rotation: (Math.random() - 0.5) * 20 },
-        { scale: 1, rotation: 0, duration: 0.3, ease: 'back.out(2)' }
-      );
-
-      // Make letter transparent while image is shown
-      letter.style.color = 'transparent';
-
-      mediaIndex = (mediaIndex + 1) % mediaSrcs.length;
-
-      gsap.delayedCall(1.2, () => {
-        // Dismiss image
-        gsap.to(img, {
-          scale: 0,
-          rotation: (Math.random() - 0.5) * 20,
+      function applyLetterOffsets() {
+        if (letters.length === 0) return;
+        let sumLeft = 0;
+        const targets = overflows.map((ov, i) => {
+          const sumRight = overflows.slice(i + 1).reduce((a: number, v: number) => a + v, 0);
+          const x = sumLeft - sumRight;
+          sumLeft += ov;
+          return x;
+        });
+        gsap.to(letters, {
+          x: (i: number) => targets[i],
           duration: 0.3,
-          ease: 'back.in(2)',
-          onComplete: () => img.remove(),
+          ease: 'back.out(3)',
+          overwrite: 'auto',
+        });
+      }
+
+      function createMedia(letter: HTMLElement) {
+        const img = document.createElement('img');
+        img.src = mediaSrcs[mediaIndex];
+        img.classList.add('created-media');
+        letter.appendChild(img);
+
+        gsap.set(img, { yPercent: -50, xPercent: -50 });
+        gsap.from(img, {
+          rotation: (Math.random() - 0.5) * 20,
+          scale: 1.05,
+          duration: 0.3,
+          ease: 'back.out(2)',
         });
 
-        // Restore letter with small bounce
-        letter.style.color = '';
-        gsap.fromTo(letter,
-          { scale: 1.05, rotation: (Math.random() - 0.5) * 10 },
-          { scale: 1, rotation: 0, duration: 0.3, ease: 'back.out(2)' }
-        );
-      });
-    };
+        mediaIndex = (mediaIndex + 1) % mediaSrcs.length;
 
-    const handleMouseEnter = (e: MouseEvent) => {
-      const letter = e.currentTarget as HTMLElement;
-      // Don't spawn another image if one is already visible
-      if (letter.style.color === 'transparent') return;
-      createMedia(letter);
-    };
+        const index = letters.indexOf(letter);
+        if (index === -1) return;
 
-    letters.forEach(letter => {
-      letter.addEventListener('mouseenter', handleMouseEnter);
-    });
+        const overflowX = Math.max(0, (mediaWidth - letter.getBoundingClientRect().width) / 2);
+        overflows[index] = Math.max(overflows[index], overflowX);
+        applyLetterOffsets();
 
-    return () => {
+        gsap.delayedCall(1.2, () => {
+          const parent = img.parentElement as HTMLElement | null;
+          const idx = parent ? letters.indexOf(parent) : -1;
+          if (idx !== -1) overflows[idx] = 0;
+          img.remove();
+          applyLetterOffsets();
+          if (parent) {
+            gsap.from(parent, {
+              rotation: (Math.random() - 0.5) * 20,
+              scale: 1.05,
+              duration: 0.3,
+              ease: 'back.out(2)',
+            });
+          }
+        });
+      }
+
       letters.forEach(letter => {
-        letter.removeEventListener('mouseenter', handleMouseEnter);
+        letter.addEventListener('mouseenter', () => {
+          if (letter.children.length === 0) createMedia(letter);
+        });
       });
-      gsap.killTweensOf(letters);
-      portal.remove();
+    }
+
+    // ── 6. Scroll-based visibility ────────────────────────────────────────────
+    // Read smooth-content's GSAP translateY to fade the portal as user scrolls.
+    const smoothContent = document.querySelector('#smooth-content') as HTMLElement | null;
+    const heroHeight = window.innerHeight;
+
+    if (smoothContent) {
+      ticker = () => {
+        const matrix = new DOMMatrix(window.getComputedStyle(smoothContent).transform);
+        const scrolled = -matrix.m42; // translateY is negative as page scrolls down
+        const progress = Math.max(0, Math.min(1, scrolled / heroHeight));
+        section.style.opacity = String(1 - progress);
+        section.style.pointerEvents = progress > 0.5 ? 'none' : 'auto';
+      };
+      gsap.ticker.add(ticker);
+    }
+
+    // ── 7. Cleanup ────────────────────────────────────────────────────────────
+    return () => {
+      if (ticker) gsap.ticker.remove(ticker);
+      section.remove();
+      styleEl.remove();
     };
   }, []);
 
-  const text = 'Redefínelo';
-
+  // Transparent placeholder — keeps layout space for CTA/subtitle below the title
   return (
-    <h1
-      ref={containerRef}
-      className="font-normal leading-[1] tracking-tighter mb-6 text-black flex justify-center whitespace-nowrap"
-      style={{ fontSize: 'clamp(68px, 15vw, 210px)' }}
-    >
-      <span className="word flex justify-center relative">
-        {text.split('').map((char, index) => (
-          <span
-            key={index}
-            className="letter cursor-default"
-            style={{ position: 'relative', display: 'inline-block', transition: 'color 0.15s ease' }}
-          >
-            {char}
-          </span>
-        ))}
-      </span>
-    </h1>
+    <div
+      ref={placeholderRef}
+      aria-hidden="true"
+      style={{ height: 'clamp(80px, 20vw, 260px)' }}
+    />
   );
 };
 
