@@ -583,7 +583,7 @@ const Landing = () => {
 
             <p 
               data-anim-heading 
-              className="text-base sm:text-lg md:text-xl font-light text-gray-500 mb-10 tracking-wide"
+              className="text-base sm:text-lg md:text-xl font-light text-black/80 mb-10 tracking-wide"
             >
               Imagina, escribe, créalo.
             </p>
@@ -591,7 +591,7 @@ const Landing = () => {
             <div data-anim-heading className="flex items-center justify-center gap-4 flex-wrap">
               <Link
                 to="/login"
-                className="px-8 py-4 rounded-full bg-black text-white text-[15px] font-normal hover:-translate-y-2 transition-transform duration-300 flex items-center gap-2"
+                className="px-8 py-4 rounded-full bg-black text-white text-[15px] font-normal hover:-translate-y-2 transition-transform duration-300 flex items-center gap-2 shadow-sm"
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                   <path d="M12 0C12.3 8.8 15.2 11.7 24 12C15.2 12.3 12.3 15.2 12 24C11.7 15.2 8.8 12.3 0 12C8.8 11.7 11.7 8.8 12 0Z" />
@@ -604,14 +604,14 @@ const Landing = () => {
 
           {/* BRAND CAROUSEL (Relocated) */}
           <section className="pt-4 pb-6 overflow-hidden bg-white relative z-10">
-            <h4 className="text-center text-xs font-light text-gray-400 mb-8 tracking-widest">
+            <h4 className="text-center text-xs font-light text-black/80 mb-8 tracking-widest">
               Elegido por
             </h4>
             <div className="px-[10%] md:px-[20%]">
               <div className="relative w-full" style={{ maskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)" }}>
                 <div className="flex w-max animate-marquee gap-20 items-center">
                   {[...brandLogos, ...brandLogos].map((logo, i) => (
-                    <img key={i} src={logo} alt="" className="h-6 md:h-7 w-auto opacity-70 shrink-0" />
+                    <img key={i} src={logo} alt="" className="h-6 md:h-7 w-auto shrink-0" />
                   ))}
                 </div>
               </div>

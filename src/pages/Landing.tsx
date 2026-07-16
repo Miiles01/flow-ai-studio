@@ -454,7 +454,7 @@ const Landing = () => {
 
               <p 
                 data-anim-heading 
-                className="text-base sm:text-lg md:text-xl font-light text-gray-500 mb-10 tracking-wide"
+                className="text-base sm:text-lg md:text-xl font-light text-black/80 mb-10 tracking-wide"
               >
                 {t("landing.hero_subtitle")}
               </p>
@@ -473,14 +473,14 @@ const Landing = () => {
 
               {/* BRAND CAROUSEL (Moved into Hero) */}
               <div className="w-full pt-8 md:pt-10 pb-6 mt-2 md:mt-4">
-                <h4 className="text-center text-xs font-light text-gray-400 mb-8 tracking-widest transition-colors duration-300">
+                <h4 className="text-center text-xs font-light text-black/80 mb-8 tracking-widest transition-colors duration-300">
                   {t("landing.trusted_by")}
                 </h4>
                 <div className="px-[10%] md:px-[20%]">
                   <div className="relative w-full" style={{ maskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)" }}>
                     <div className="flex w-max animate-marquee gap-20 items-center">
                       {[...brandLogos, ...brandLogos].map((logo, i) => (
-                        <img key={i} src={logo} alt="" className="h-6 md:h-7 w-auto opacity-70 shrink-0 transition-all duration-300" />
+                        <img key={i} src={logo} alt="" className="h-6 md:h-7 w-auto shrink-0 transition-all duration-300" />
                       ))}
                     </div>
                   </div>
