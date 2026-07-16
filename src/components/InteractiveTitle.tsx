@@ -1,15 +1,23 @@
 import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 
+import iconEstrella from '../assets/miiles/Estrella.svg';
+import iconEstrellaPng from '../assets/miiles/Estrella.png';
+import iconSonrisa from '../assets/miiles/Sonrisa.svg';
+import iconFlecha from '../assets/miiles/Flecha.png';
+import iconIsotipo from '../assets/miiles/isotipo.png';
+import iconFlor from '../assets/miiles/Flor.svg';
+import iconMiiles from '../assets/miiles/Miiles.svg';
+
 const mediaSrcs = [
-  "https://wearemiiles.com/wp-content/uploads/2026/01/3232-932x1024.png",
-  "https://wearemiiles.com/wp-content/uploads/2026/01/new233-933x1024.png",
-  "https://images.unsplash.com/photo-1611162617474-5b21e879e113?q=80&w=400&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=400&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?q=80&w=400&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1551288049-bebda4e38f71?q=80&w=400&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1533227260815-484d6641f1da?q=80&w=400&auto=format&fit=crop",
-  "https://images.unsplash.com/photo-1505373877841-8d25f7d46678?q=80&w=400&auto=format&fit=crop",
+  iconEstrella,
+  iconSonrisa,
+  iconFlecha,
+  iconIsotipo,
+  iconEstrellaPng,
+  iconFlor,
+  iconMiiles,
+  iconEstrella
 ];
 
 /**
