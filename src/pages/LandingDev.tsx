@@ -543,7 +543,10 @@ const Landing = () => {
         <div id="smooth-content" className="bg-white text-black font-sans overflow-hidden">
 
           {/* HERO */}
-          <section className="min-h-screen bg-white text-black flex flex-col items-center justify-center text-center px-6 py-24 relative z-10">
+          <section 
+            className="min-h-screen bg-white text-black flex flex-col items-center justify-center text-center px-6 py-24 relative z-10"
+            style={{ backgroundImage: "radial-gradient(#d1d5db 1.5px, transparent 1.5px)", backgroundSize: "24px 24px" }}
+          >
             <img 
               data-anim-heading 
               src={logoImg} 

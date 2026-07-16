@@ -410,18 +410,10 @@ const Landing = () => {
         <div id="smooth-content" className="bg-white text-black font-sans overflow-hidden">
 
           {/* HERO */}
-          <section className="min-h-[85vh] md:min-h-screen bg-white md:bg-transparent flex flex-col items-center justify-center text-center px-6 pt-32 pb-16 md:pb-32 relative z-10 overflow-hidden">
-            {/* Desktop Banner Background */}
-            <motion.div 
-              className="hidden md:block absolute inset-0 z-0"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              transition={{ duration: 1.5, ease: "easeOut" }}
-            >
-              <img src="/banner-miiles.png" alt="Hero Banner" className="w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-black/40" />
-            </motion.div>
-
+          <section 
+            className="min-h-[85vh] md:min-h-screen bg-white flex flex-col items-center justify-center text-center px-6 pt-32 pb-16 md:pb-32 relative z-10 overflow-hidden"
+            style={{ backgroundImage: "radial-gradient(#d1d5db 1.5px, transparent 1.5px)", backgroundSize: "24px 24px" }}
+          >
             <div className="relative z-10 w-full flex flex-col items-center justify-center">
               <img 
                 data-anim-heading 
@@ -429,13 +421,13 @@ const Landing = () => {
                 alt="Miiles Logo" 
                 className="w-14 h-14 mx-auto mb-3 logo-spin" 
               />
-              <span data-anim-heading className="text-[22px] font-normal mb-8 tracking-tight text-black md:text-white">
+              <span data-anim-heading className="text-[22px] font-normal mb-8 tracking-tight text-black">
                 {t("landing.hero_badge")}
               </span>
               
               <h1
                 data-anim-heading
-                className="text-[42px] sm:text-6xl md:text-8xl lg:text-[95px] font-normal leading-[1.1] tracking-tight mb-6 text-black md:text-white"
+                className="text-[42px] sm:text-6xl md:text-8xl lg:text-[95px] font-normal leading-[1.1] tracking-tight mb-6 text-black"
               >
                 <span className="block md:inline">
                   {t("landing.hero_title_hoy")} {t("landing.hero_title_es")}{" "}
@@ -453,7 +445,7 @@ const Landing = () => {
 
               <p 
                 data-anim-heading 
-                className="text-base sm:text-lg md:text-xl font-light text-gray-500 md:text-white/80 mb-10 tracking-wide"
+                className="text-base sm:text-lg md:text-xl font-light text-gray-500 mb-10 tracking-wide"
               >
                 {t("landing.hero_subtitle")}
               </p>
@@ -461,7 +453,7 @@ const Landing = () => {
               <div data-anim-heading className="flex items-center justify-center gap-4 flex-wrap">
                 <Link
                   to="/login"
-                  className="px-8 py-4 rounded-full bg-black md:bg-white text-white md:text-black text-[15px] font-normal hover:-translate-y-2 transition-transform duration-300 flex items-center gap-2 shadow-sm"
+                  className="px-8 py-4 rounded-full bg-black text-white text-[15px] font-normal hover:-translate-y-2 transition-transform duration-300 flex items-center gap-2 shadow-sm"
                 >
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                     <path d="M12 0C12.3 8.8 15.2 11.7 24 12C15.2 12.3 12.3 15.2 12 24C11.7 15.2 8.8 12.3 0 12C8.8 11.7 11.7 8.8 12 0Z" />
@@ -472,14 +464,14 @@ const Landing = () => {
 
               {/* BRAND CAROUSEL (Moved into Hero) */}
               <div className="w-full pt-8 md:pt-10 pb-6 mt-2 md:mt-4">
-                <h4 className="text-center text-xs font-light text-gray-400 md:text-white/80 mb-8 tracking-widest transition-colors duration-300">
+                <h4 className="text-center text-xs font-light text-gray-400 mb-8 tracking-widest transition-colors duration-300">
                   {t("landing.trusted_by")}
                 </h4>
                 <div className="px-[10%] md:px-[20%]">
                   <div className="relative w-full" style={{ maskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)" }}>
                     <div className="flex w-max animate-marquee gap-20 items-center">
                       {[...brandLogos, ...brandLogos].map((logo, i) => (
-                        <img key={i} src={logo} alt="" className="h-6 md:h-7 w-auto opacity-70 md:opacity-100 md:brightness-0 md:invert shrink-0 transition-all duration-300" />
+                        <img key={i} src={logo} alt="" className="h-6 md:h-7 w-auto opacity-70 shrink-0 transition-all duration-300" />
                       ))}
                     </div>
                   </div>
