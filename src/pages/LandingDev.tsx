@@ -570,14 +570,12 @@ const Landing = () => {
             <h1
               className="hero-title no-split text-[42px] sm:text-6xl md:text-8xl lg:text-[95px] font-normal leading-[1.1] tracking-tight mb-6"
             >
-              <span className="block md:inline">
-                {renderWord("Hoy")} {renderWord("es")}{" "}
-              </span>
-              <span className="block md:inline">
-                {renderWord("un")} {renderWord("buen")} {renderWord("día")}{" "}
-              </span>
               <span className="block">
-                {renderWord("para")} {renderWord("crear")}
+                <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic", textTransform: "none", paddingRight: "0.1em" }}>
+                  {renderWord("Crea")}
+                </span>
+                {" "}
+                {renderWord("tu")} {renderWord("estudio")}
               </span>
             </h1>
 

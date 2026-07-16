@@ -438,17 +438,11 @@ const Landing = () => {
                 data-anim-heading
                 className="text-[42px] sm:text-6xl md:text-8xl lg:text-[95px] font-normal leading-[1.1] tracking-tight mb-6 text-black"
               >
-                <span className="block md:inline">
-                  {t("landing.hero_title_hoy")} {t("landing.hero_title_es")}{" "}
-                </span>
-                <span className="block md:inline">
-                  {t("landing.hero_title_un")} {t("landing.hero_title_buen")} {t("landing.hero_title_dia")}{" "}
-                </span>
                 <span className="block">
-                  {t("landing.hero_title_para")}{" "}
-                  <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic", textTransform: "none" }}>
-                    {t("landing.hero_title_crear")}
+                  <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic", textTransform: "none", paddingRight: "0.1em" }}>
+                    Crea
                   </span>
+                  {" "}tu estudio
                 </span>
               </h1>
 
