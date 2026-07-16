@@ -37,6 +37,7 @@ const InteractiveTitle: React.FC = () => {
     const overflows = new Array(letters.length).fill(0);
     const mediaWidth = 0.075 * window.innerWidth;
     let mediaIndex = 0;
+    let activeImages = 0;
 
     const applyLetterOffsets = () => {
       let sumLeft = 0;
@@ -55,6 +56,18 @@ const InteractiveTitle: React.FC = () => {
       });
     };
 
+    const updateContainerScale = () => {
+      if (!root) return;
+      // Shrink the whole word container when images appear so they don't overflow the screen edges
+      const scaleValue = activeImages > 0 ? Math.max(0.7, 1 - (activeImages * 0.08)) : 1;
+      gsap.to(root, {
+        scale: scaleValue,
+        duration: 0.4,
+        ease: 'power2.out',
+        overwrite: 'auto'
+      });
+    };
+
     const createMedia = (letter: HTMLElement) => {
       const img = document.createElement('img');
       img.src = mediaSrcs[mediaIndex];
@@ -66,62 +79,62 @@ const InteractiveTitle: React.FC = () => {
       img.style.height = 'auto';
       img.style.top = '50%';
       img.style.left = '50%';
-      img.style.borderRadius = '1vw';
-      img.style.objectFit = 'cover';
-      img.style.aspectRatio = '1 / 1';
-      img.style.pointerEvents = 'none'; // prevent hover flicker
-      img.style.zIndex = '10';
+      img.style.transform = 'translate(-50%, -50%) scale(0)';
+      img.style.borderRadius = '1.5vw';
+      img.style.zIndex = '0';
+      img.style.pointerEvents = 'none'; // so it doesn't interfere with letter hovers
 
       letter.appendChild(img);
+      activeImages++;
+      updateContainerScale();
 
-      // Add a class to letter to trigger transparent text
-      letter.classList.add('has-media');
-
-      gsap.set(img, {
-        yPercent: -50,
-        xPercent: -50,
-      });
-
-      gsap.from(img, {
-        rotation: (Math.random() - 0.5) * 20,
+      gsap.to(img, {
         scale: 1.05,
-        duration: 0.3,
-        ease: 'back.out(2)'
+        duration: 0.4,
+        ease: 'back.out(1.5)',
       });
 
       mediaIndex = (mediaIndex + 1) % mediaSrcs.length;
-
-      const index = letters.indexOf(letter);
-      if (index === -1) return;
-
-      const overflowX = Math.max(0, (mediaWidth - letter.getBoundingClientRect().width) / 2);
-      overflows[index] = Math.max(overflows[index], overflowX);
-      applyLetterOffsets();
-
-      gsap.delayedCall(1.2, () => {
-        if (letters.indexOf(letter) !== -1) {
-          overflows[index] = 0;
-        }
-
-        letter.classList.remove('has-media');
-        img.remove();
-        applyLetterOffsets();
-
-        gsap.from(letter, {
-          rotation: (Math.random() - 0.5) * 20,
-          scale: 1.05,
-          duration: 0.3,
-          ease: 'back.out(2)'
-        });
-      });
+      return img;
     };
 
     const handleMouseEnter = (e: MouseEvent) => {
       const letter = e.currentTarget as HTMLElement;
-      // If we already have an image, do not spawn another
-      if (letter.querySelectorAll('.created-media').length === 0) {
-        createMedia(letter);
-      }
+      const index = letters.indexOf(letter);
+      if (index === -1) return;
+      if (letter.querySelector('.created-media')) return; // Already has media
+
+      const img = createMedia(letter);
+      
+      // Calculate overflow width for surrounding letters
+      const overflowX = Math.max(0, (mediaWidth - letter.getBoundingClientRect().width) / 2);
+      overflows[index] = overflowX;
+      applyLetterOffsets();
+
+      // Make letter transparent
+      gsap.to(letter, { color: 'transparent', duration: 0.2 });
+
+      // Clean up after some time
+      gsap.delayedCall(2, () => {
+        // Remove image
+        gsap.to(img, {
+          scale: 0,
+          opacity: 0,
+          duration: 0.3,
+          onComplete: () => {
+            img.remove();
+            activeImages = Math.max(0, activeImages - 1);
+            updateContainerScale();
+          }
+        });
+
+        // Reset text color
+        gsap.to(letter, { color: '#000', duration: 0.3 });
+
+        // Reset offset
+        overflows[index] = 0;
+        applyLetterOffsets();
+      });
     };
 
     letters.forEach(letter => {
