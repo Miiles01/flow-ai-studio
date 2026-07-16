@@ -348,19 +348,17 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
 
         {/* Cashflow row */}
         <div className="grid grid-cols-2 gap-4 mb-4">
-          <div className="rounded-2xl p-5" style={{ background: isDark ? "rgba(34,197,94,0.08)" : "linear-gradient(180deg, #ECFDF5 0%, #F7FEF9 100%)", border: `1px solid ${isDark ? "rgba(34,197,94,0.25)" : "#A7F3D0"}` }}>
+          <div className="rounded-2xl p-5" style={{ background: isDark ? "linear-gradient(180deg, #1A1D24 0%, #13151A 100%)" : "linear-gradient(180deg, #FDFDFD 0%, #F8F9FD 100%)" }}>
             <div className="flex items-center gap-1.5 mb-2">
-              <span className="w-2 h-2 rounded-full bg-[#22C55E]" />
-              <span className="text-[13px] font-semibold" style={{ color: isDark ? "#4ADE80" : "#166534" }}>Cobrado</span>
+              <span className="text-[13px] font-semibold" style={{ color: isDark ? "rgba(255,255,255,0.6)" : "rgba(0,0,0,0.5)" }}>Cobrado</span>
             </div>
-            <div className="text-[34px] font-bold tracking-tight leading-none" style={{ color: isDark ? "#F5F5F7" : "#0F172A" }}>{fmtMoney(stats.paid)}</div>
+            <div className="text-[34px] font-bold tracking-tight leading-none" style={{ color: "#4059F1" }}>{fmtMoney(stats.paid)}</div>
           </div>
-          <div className="rounded-2xl p-5" style={{ background: isDark ? "rgba(250,204,21,0.08)" : "linear-gradient(180deg, #FEFCE8 0%, #FEFDF3 100%)", border: `1px solid ${isDark ? "rgba(250,204,21,0.35)" : "#FDE68A"}` }}>
+          <div className="rounded-2xl p-5" style={{ backgroundColor: "#000000" }}>
             <div className="flex items-center gap-1.5 mb-2">
-              <span className="w-2 h-2 rounded-full bg-[#FACC15]" />
-              <span className="text-[13px] font-semibold" style={{ color: isDark ? "#FDE047" : "#854D0E" }}>Por cobrar</span>
+              <span className="text-[13px] font-semibold text-white/70">Por cobrar</span>
             </div>
-            <div className="text-[34px] font-bold tracking-tight leading-none" style={{ color: isDark ? "#F5F5F7" : "#0F172A" }}>{fmtMoney(stats.pending)}</div>
+            <div className="text-[34px] font-bold tracking-tight leading-none text-white">{fmtMoney(stats.pending)}</div>
           </div>
         </div>
 
