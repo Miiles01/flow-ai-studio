@@ -162,60 +162,60 @@
 }
 .todo-scrollbar { scrollbar-width: thin; scrollbar-color: #4059F1 transparent; }
 
-/* Kanban scrollbar - adapts to node's text color for contrast */
+/* Kanban scrollbar - minimal black style */
 .kanban-scrollbar::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
+  width: 3px;
+  height: 3px;
 }
 .kanban-scrollbar::-webkit-scrollbar-track {
   background: transparent;
-  margin-left: calc(50% - 140px);
-  margin-right: calc(50% - 140px);
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 .kanban-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.3);
+  background-color: #000000;
   border-radius: 999px;
-}
-.kanban-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.5);
+  border-top: 20px solid transparent;
+  border-bottom: 20px solid transparent;
+  background-clip: padding-box;
 }
 .dark .kanban-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.3);
-}
-.dark .kanban-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.5);
+  background-color: #000000;
 }
 .kanban-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+  scrollbar-color: #000000 transparent;
 }
 .dark .kanban-scrollbar {
-  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+  scrollbar-color: #000000 transparent;
 }
 
 /* Card Editor scrollbar */
 .editor-scrollbar::-webkit-scrollbar {
-  width: 4px;
-  height: 4px;
+  width: 3px;
+  height: 3px;
 }
 .editor-scrollbar::-webkit-scrollbar-track {
   background: transparent;
-  margin-top: 60px;
-  margin-bottom: 20px;
+  margin-top: 40px;
+  margin-bottom: 40px;
 }
 .editor-scrollbar::-webkit-scrollbar-thumb {
-  background-color: rgba(0, 0, 0, 0.3);
+  background-color: #000000;
   border-radius: 999px;
+  border-top: 20px solid transparent;
+  border-bottom: 20px solid transparent;
+  background-clip: padding-box;
 }
 .dark .editor-scrollbar::-webkit-scrollbar-thumb {
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: #000000;
 }
 .editor-scrollbar {
   scrollbar-width: thin;
-  scrollbar-color: rgba(0, 0, 0, 0.3) transparent;
+  scrollbar-color: #000000 transparent;
 }
 .dark .editor-scrollbar {
-  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+  scrollbar-color: #000000 transparent;
 }
 
 .react-flow__controls-button {
