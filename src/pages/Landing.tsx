@@ -16,7 +16,9 @@ import brand3 from "@/assets/miiles/brands/brand3.svg";
 import brand4 from "@/assets/miiles/brands/brand4.svg";
 import brand5 from "@/assets/miiles/brands/brand5.svg";
 import brand6 from "@/assets/miiles/brands/brand6.svg";
+import AnimatedOnboardingModal from "@/components/AnimatedOnboardingModal";
 import LandingNavbar from "@/components/LandingNavbar";
+import InteractiveTitle from "@/components/InteractiveTitle";
 import LandingFooter from "@/components/LandingFooter";
 // Graphic assets copied from Downloads
 
@@ -434,14 +436,7 @@ const Landing = () => {
                 {t("landing.hero_badge")}
               </span>
               
-              <h1
-                data-anim-heading
-                className="text-[68px] sm:text-[100px] md:text-[140px] lg:text-[170px] xl:text-[190px] font-normal leading-[1] tracking-tighter mb-6 text-black"
-              >
-                <span className="block">
-                  Redefínelo
-                </span>
-              </h1>
+              <InteractiveTitle />
 
               <p 
                 data-anim-heading 
