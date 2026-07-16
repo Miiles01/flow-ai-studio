@@ -55,10 +55,21 @@ const InteractiveTitle: React.FC = () => {
       .created-media {
         position: absolute;
         width: 12vw;
-        height: 12vw;
-        object-fit: contain;
+        height: 14vw;
+        background: #ffffff;
+        border-radius: 1.5vw;
+        box-shadow: 0 20px 40px rgba(0,0,0,0.08), inset 0 0 0 1px rgba(0,0,0,0.02);
         top: 50%; left: 50%;
         pointer-events: none;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 2vw;
+      }
+      .created-media img {
+        width: 100%;
+        height: 100%;
+        object-fit: contain;
       }
     `;
     document.head.appendChild(styleEl);
@@ -139,13 +150,17 @@ const InteractiveTitle: React.FC = () => {
     }
 
     function createMedia(letter: HTMLElement) {
+      // Create a uniform premium card to house the icons
+      const card = document.createElement('div');
+      card.classList.add('created-media');
+
       const img = document.createElement('img');
       img.src = mediaSrcs[mediaIndex];
-      img.classList.add('created-media');
-      letter.appendChild(img);
+      card.appendChild(img);
+      letter.appendChild(card);
 
-      gsap.set(img, { yPercent: -50, xPercent: -50 });
-      gsap.from(img, {
+      gsap.set(card, { yPercent: -50, xPercent: -50 });
+      gsap.from(card, {
         rotation: (Math.random() - 0.5) * 20,
         scale: 1.05,
         duration: 0.3,
@@ -157,6 +172,7 @@ const InteractiveTitle: React.FC = () => {
       const index = letters.indexOf(letter);
       if (index === -1) return;
 
+      // Card is exactly 12vw wide.
       const mediaWidth = 0.12 * window.innerWidth;
       const overflowX = Math.max(
         0,
@@ -166,10 +182,10 @@ const InteractiveTitle: React.FC = () => {
       applyLetterOffsets();
 
       gsap.delayedCall(1.2, () => {
-        const parent = img.parentElement as HTMLElement | null;
+        const parent = card.parentElement as HTMLElement | null;
         const idx = parent ? letters.indexOf(parent) : -1;
         if (idx !== -1) overflows[idx] = 0;
-        img.remove();
+        card.remove();
         applyLetterOffsets();
         if (parent) {
           gsap.from(parent, {
