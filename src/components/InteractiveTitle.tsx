@@ -101,7 +101,7 @@ const InteractiveTitle: React.FC = () => {
     );
 
     // ── 6. Interactive effect (desktop only) — exact mwg_effect093 JS ─────────
-    const isMobile = window.matchMedia('(max-width: 768px)').matches;
+    const isMobile = window.matchMedia('(max-width: 1024px)').matches;
     if (!isMobile) {
       const letters = Array.from(
         wordEl.querySelectorAll('.mwg-093-letter')
