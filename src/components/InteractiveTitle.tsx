@@ -172,8 +172,8 @@ const InteractiveTitle: React.FC = () => {
       const index = letters.indexOf(letter);
       if (index === -1) return;
 
-      // Card is exactly 12vw wide.
-      const mediaWidth = 0.12 * window.innerWidth;
+      // Card is 12vw wide, use 0.135 to create a 1.5vw gap between them
+      const mediaWidth = 0.135 * window.innerWidth;
       const overflowX = Math.max(
         0,
         (mediaWidth - letter.getBoundingClientRect().width) / 2
