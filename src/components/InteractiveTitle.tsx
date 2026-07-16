@@ -35,7 +35,7 @@ const InteractiveTitle: React.FC = () => {
     if (letters.length === 0) return;
 
     const overflows = new Array(letters.length).fill(0);
-    const mediaWidth = 0.095 * window.innerWidth;
+    const mediaWidth = 0.075 * window.innerWidth;
     let mediaIndex = 0;
 
     const applyLetterOffsets = () => {
@@ -62,7 +62,7 @@ const InteractiveTitle: React.FC = () => {
       
       // Inline styles based on CSS requirement
       img.style.position = 'absolute';
-      img.style.width = '9vw';
+      img.style.width = '7vw';
       img.style.height = 'auto';
       img.style.top = '50%';
       img.style.left = '50%';
@@ -154,9 +154,9 @@ const InteractiveTitle: React.FC = () => {
       `}</style>
       <h1
         ref={containerRef}
-        className="text-[68px] sm:text-[100px] md:text-[140px] lg:text-[170px] xl:text-[190px] font-normal leading-[1] tracking-tighter mb-6 text-black flex justify-center w-full"
+        className="text-[68px] sm:text-[100px] md:text-[120px] lg:text-[140px] xl:text-[160px] font-normal leading-[1] tracking-tighter mb-6 text-black flex justify-center whitespace-nowrap"
       >
-        <span className="block word flex justify-center w-full">
+        <span className="word inline-flex justify-center relative">
           {text.split('').map((char, index) => (
             <span key={index} className="letter cursor-default">
               {char}
