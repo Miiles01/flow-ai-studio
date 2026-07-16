@@ -73,7 +73,7 @@ const LandingNavbar = ({ onMenuAction, cta, isLanding }: LandingNavbarProps) => 
   return (
     <>
       {/* WRAPPER PARA NAV Y MENÚ */}
-      <div className="fixed top-6 left-1/2 -translate-x-1/2 w-[95vw] md:w-max z-50 flex flex-col gap-2">
+      <div className="fixed top-6 left-1/2 -translate-x-1/2 w-[95vw] md:w-max z-[100] flex flex-col gap-2">
         {/* NAV — flotante estilo glass */}
         <nav className={`w-full flex items-center justify-between gap-4 md:gap-16 px-6 md:px-8 py-2.5 rounded-full backdrop-blur-md shadow-[0_8px_30px_rgba(0,0,0,0.04)] transition-all duration-300 ${
           isHeroTransparent
@@ -125,7 +125,7 @@ const LandingNavbar = ({ onMenuAction, cta, isLanding }: LandingNavbarProps) => 
               left: "50%",
               x: "-50%",
             }}
-            className="fixed top-[92px] z-40 w-[90vw] md:w-[85vw] max-w-5xl rounded-[32px] md:rounded-[40px] shadow-[0_24px_70px_rgba(0,0,0,0.15)] border border-white/10 bg-black/70 backdrop-blur-2xl max-h-[80vh] overflow-y-auto"
+            className="fixed top-[92px] z-[90] w-[90vw] md:w-[85vw] max-w-5xl rounded-[32px] md:rounded-[40px] shadow-[0_24px_70px_rgba(0,0,0,0.15)] border border-white/10 bg-black/70 backdrop-blur-2xl max-h-[80vh] overflow-y-auto"
           >
             <div className="w-full flex flex-col md:flex-row pt-8 pb-24 px-10 md:py-16 md:px-20 gap-8 md:gap-0">
               
@@ -257,7 +257,7 @@ const LandingNavbar = ({ onMenuAction, cta, isLanding }: LandingNavbarProps) => 
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             onClick={() => setIsMenuOpen(false)}
-            className="fixed inset-0 z-30 cursor-pointer"
+            className="fixed inset-0 z-[80] cursor-pointer"
           />
         )}
       </AnimatePresence>
