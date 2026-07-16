@@ -1,8 +1,6 @@
 import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 
-import iconEstrella from '../assets/miiles/Estrella.svg';
-import iconEstrellaPng from '../assets/miiles/Estrella.png';
 import iconSonrisa from '../assets/miiles/Sonrisa.svg';
 import iconFlecha from '../assets/miiles/Flecha.png';
 import iconIsotipo from '../assets/miiles/isotipo.png';
@@ -10,14 +8,11 @@ import iconFlor from '../assets/miiles/Flor.svg';
 import iconMiiles from '../assets/miiles/Miiles.svg';
 
 const mediaSrcs = [
-  iconEstrella,
   iconSonrisa,
   iconFlecha,
   iconIsotipo,
-  iconEstrellaPng,
   iconFlor,
-  iconMiiles,
-  iconEstrella
+  iconMiiles
 ];
 
 /**
