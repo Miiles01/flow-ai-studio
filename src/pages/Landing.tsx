@@ -439,10 +439,10 @@ const Landing = () => {
                 className="text-[42px] sm:text-6xl md:text-8xl lg:text-[95px] font-normal leading-[1.1] tracking-tight mb-6 text-black"
               >
                 <span className="block">
+                  Crea tu{" "}
                   <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic", textTransform: "none", paddingRight: "0.1em" }}>
-                    Crea
+                    estudio
                   </span>
-                  {" "}tu estudio
                 </span>
               </h1>
 
