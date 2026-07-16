@@ -138,7 +138,8 @@ const InteractiveTitle: React.FC = () => {
       `}</style>
       <h1
         ref={containerRef}
-        className="text-[68px] sm:text-[100px] md:text-[120px] lg:text-[140px] xl:text-[160px] font-normal leading-[1] tracking-tighter mb-6 text-black flex justify-center whitespace-nowrap"
+        className="font-normal leading-[1] tracking-tighter mb-6 text-black flex justify-center whitespace-nowrap"
+        style={{ fontSize: 'clamp(68px, 14vw, 220px)' }}
       >
         <span className="word flex justify-center relative">
           {text.split('').map((char, index) => (
