@@ -54,9 +54,11 @@ const InteractiveTitle: React.FC = () => {
       .mwg-093-letter:has(.created-media) { color: transparent; }
       .created-media {
         position: absolute;
-        width: 14vw; height: auto;
+        width: 16vw; 
+        height: auto;
+        max-height: 16vw;
+        object-fit: contain;
         top: 50%; left: 50%;
-        border-radius: 1.5vw;
         pointer-events: none;
       }
     `;
@@ -118,7 +120,7 @@ const InteractiveTitle: React.FC = () => {
       wordEl.querySelectorAll('.mwg-093-letter')
     ) as HTMLElement[];
     const overflows = new Array(letters.length).fill(0);
-    const mediaWidth = 0.14 * window.innerWidth;
+    const mediaWidth = 0.16 * window.innerWidth;
     let mediaIndex = 0;
 
     function applyLetterOffsets() {
