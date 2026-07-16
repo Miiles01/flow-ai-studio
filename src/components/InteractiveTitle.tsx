@@ -54,8 +54,8 @@ const InteractiveTitle: React.FC = () => {
       .mwg-093-letter:has(.created-media) { color: transparent; }
       .created-media {
         position: absolute;
-        width: 1em; 
-        height: 1em;
+        height: 1.2em; 
+        width: auto;
         object-fit: contain;
         top: 50%; left: 50%;
         pointer-events: none;
@@ -157,14 +157,20 @@ const InteractiveTitle: React.FC = () => {
       const index = letters.indexOf(letter);
       if (index === -1) return;
 
-      // 1em is exactly the resolved font-size in pixels
-      const mediaWidth = parseFloat(window.getComputedStyle(wordEl).fontSize) || 100;
-      const overflowX = Math.max(
-        0,
-        (mediaWidth - letter.getBoundingClientRect().width) / 2
-      );
-      overflows[index] = Math.max(overflows[index], overflowX);
-      applyLetterOffsets();
+      // Calculate spread once the image has loaded its natural aspect ratio
+      img.onload = () => {
+        const actualWidth = img.getBoundingClientRect().width;
+        const overflowX = Math.max(
+          0,
+          (actualWidth - letter.getBoundingClientRect().width) / 2
+        );
+        overflows[index] = Math.max(overflows[index], overflowX);
+        applyLetterOffsets();
+      };
+      // Fallback in case it's already cached/loaded
+      if (img.complete) {
+        img.onload(new Event('load'));
+      }
 
       gsap.delayedCall(1.2, () => {
         const parent = img.parentElement as HTMLElement | null;
