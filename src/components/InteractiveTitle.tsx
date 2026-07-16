@@ -58,7 +58,7 @@ const InteractiveTitle: React.FC = () => {
         height: 14vw;
         background: #ffffff;
         border-radius: 1.5vw;
-        box-shadow: 0 20px 40px rgba(0,0,0,0.08), inset 0 0 0 1px rgba(0,0,0,0.02);
+        box-shadow: 0 10px 25px rgba(0,0,0,0.04), inset 0 0 0 1px rgba(0,0,0,0.03);
         top: 50%; left: 50%;
         pointer-events: none;
         display: flex;
