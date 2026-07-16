@@ -38,9 +38,9 @@ const InteractiveTitle: React.FC = () => {
       .mwg-093-letter:has(.created-media) { color: transparent; }
       .created-media {
         position: absolute;
-        width: 9vw; height: auto;
+        width: 14vw; height: auto;
         top: 50%; left: 50%;
-        border-radius: 1vw;
+        border-radius: 1.5vw;
         pointer-events: none;
       }
     `;
@@ -107,7 +107,9 @@ const InteractiveTitle: React.FC = () => {
         wordEl.querySelectorAll('.mwg-093-letter')
       ) as HTMLElement[];
       const overflows = new Array(letters.length).fill(0);
-      const mediaWidth = 0.095 * window.innerWidth;
+      // Font is 15vw, images are 14vw — scale mediaWidth proportionally
+      // so the spread is as dramatic as the original 10vw/9vw ratio.
+      const mediaWidth = 0.14 * window.innerWidth;
       let mediaIndex = 0;
 
       function applyLetterOffsets() {
