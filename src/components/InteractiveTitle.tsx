@@ -25,8 +25,21 @@ const mediaSrcs = [
  */
 const InteractiveTitle: React.FC = () => {
   const placeholderRef = useRef<HTMLDivElement>(null);
+  const [isMobile, setIsMobile] = React.useState(false);
 
   useEffect(() => {
+    // Check initial screen size
+    const checkMobile = () => {
+      setIsMobile(window.innerWidth <= 1024);
+    };
+    checkMobile();
+    window.addEventListener('resize', checkMobile);
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
+  useEffect(() => {
+    if (isMobile) return;
+
     const placeholderEl = placeholderRef.current;
     if (!placeholderEl) return;
 
@@ -47,7 +60,6 @@ const InteractiveTitle: React.FC = () => {
     document.head.appendChild(styleEl);
 
     // ── 2. Portal container ───────────────────────────────────────────────────
-    // position:fixed / height:0 / overflow:visible so letters are never clipped.
     const portal = document.createElement('div');
     portal.style.cssText = [
       'position:fixed',
@@ -85,8 +97,6 @@ const InteractiveTitle: React.FC = () => {
     portal.appendChild(wordEl);
 
     // ── 4. Initial Y position from placeholder ────────────────────────────────
-    // We read the placeholder's viewport center once.
-    // The ticker will keep adjusting based on scroll.
     const getPlaceholderCenterY = () => {
       const r = placeholderEl.getBoundingClientRect();
       return r.top + r.height / 2;
@@ -100,98 +110,89 @@ const InteractiveTitle: React.FC = () => {
       { opacity: 1, y: 0, duration: 1.2, ease: 'power3.out', delay: 0.1 }
     );
 
-    // ── 6. Interactive effect (desktop only) — exact mwg_effect093 JS ─────────
-    const isMobile = window.matchMedia('(max-width: 1024px)').matches;
-    if (!isMobile) {
-      const letters = Array.from(
-        wordEl.querySelectorAll('.mwg-093-letter')
-      ) as HTMLElement[];
-      const overflows = new Array(letters.length).fill(0);
-      // Font is 15vw, images are 14vw — scale mediaWidth proportionally
-      // so the spread is as dramatic as the original 10vw/9vw ratio.
-      const mediaWidth = 0.14 * window.innerWidth;
-      let mediaIndex = 0;
+    // ── 6. Interactive effect ──────────────────────────────────────────────────
+    const letters = Array.from(
+      wordEl.querySelectorAll('.mwg-093-letter')
+    ) as HTMLElement[];
+    const overflows = new Array(letters.length).fill(0);
+    const mediaWidth = 0.14 * window.innerWidth;
+    let mediaIndex = 0;
 
-      function applyLetterOffsets() {
-        if (!letters.length) return;
-        let sumLeft = 0;
-        const targets = overflows.map((ov, i) => {
-          const sumRight = overflows.slice(i + 1).reduce((a: number, v: number) => a + v, 0);
-          const x = sumLeft - sumRight;
-          sumLeft += ov;
-          return x;
-        });
-        gsap.to(letters, {
-          x: (i: number) => targets[i],
-          duration: 0.3,
-          ease: 'back.out(3)',
-          overwrite: 'auto',
-        });
-      }
-
-      function createMedia(letter: HTMLElement) {
-        const img = document.createElement('img');
-        img.src = mediaSrcs[mediaIndex];
-        img.classList.add('created-media');
-        letter.appendChild(img);
-
-        gsap.set(img, { yPercent: -50, xPercent: -50 });
-        gsap.from(img, {
-          rotation: (Math.random() - 0.5) * 20,
-          scale: 1.05,
-          duration: 0.3,
-          ease: 'back.out(2)',
-        });
-
-        mediaIndex = (mediaIndex + 1) % mediaSrcs.length;
-
-        const index = letters.indexOf(letter);
-        if (index === -1) return;
-
-        const overflowX = Math.max(
-          0,
-          (mediaWidth - letter.getBoundingClientRect().width) / 2
-        );
-        overflows[index] = Math.max(overflows[index], overflowX);
-        applyLetterOffsets();
-
-        gsap.delayedCall(1.2, () => {
-          const parent = img.parentElement as HTMLElement | null;
-          const idx = parent ? letters.indexOf(parent) : -1;
-          if (idx !== -1) overflows[idx] = 0;
-          img.remove();
-          applyLetterOffsets();
-          if (parent) {
-            gsap.from(parent, {
-              rotation: (Math.random() - 0.5) * 20,
-              scale: 1.05,
-              duration: 0.3,
-              ease: 'back.out(2)',
-            });
-          }
-        });
-      }
-
-      letters.forEach(letter => {
-        letter.addEventListener('mouseenter', () => {
-          if (letter.children.length === 0) createMedia(letter);
-        });
+    function applyLetterOffsets() {
+      if (!letters.length) return;
+      let sumLeft = 0;
+      const targets = overflows.map((ov, i) => {
+        const sumRight = overflows.slice(i + 1).reduce((a: number, v: number) => a + v, 0);
+        const x = sumLeft - sumRight;
+        sumLeft += ov;
+        return x;
+      });
+      gsap.to(letters, {
+        x: (i: number) => targets[i],
+        duration: 0.3,
+        ease: 'back.out(3)',
+        overwrite: 'auto',
       });
     }
 
-    // ── 7. Scroll sync via GSAP ticker ────────────────────────────────────────
-    // ScrollSmoother applies a CSS transform to #smooth-content.
-    // We read that transform's Y component each frame and mirror it on the portal
-    // word, so it scrolls in perfect sync with the page content.
-    const smoothContent = document.getElementById('smooth-content');
+    function createMedia(letter: HTMLElement) {
+      const img = document.createElement('img');
+      img.src = mediaSrcs[mediaIndex];
+      img.classList.add('created-media');
+      letter.appendChild(img);
 
+      gsap.set(img, { yPercent: -50, xPercent: -50 });
+      gsap.from(img, {
+        rotation: (Math.random() - 0.5) * 20,
+        scale: 1.05,
+        duration: 0.3,
+        ease: 'back.out(2)',
+      });
+
+      mediaIndex = (mediaIndex + 1) % mediaSrcs.length;
+
+      const index = letters.indexOf(letter);
+      if (index === -1) return;
+
+      const overflowX = Math.max(
+        0,
+        (mediaWidth - letter.getBoundingClientRect().width) / 2
+      );
+      overflows[index] = Math.max(overflows[index], overflowX);
+      applyLetterOffsets();
+
+      gsap.delayedCall(1.2, () => {
+        const parent = img.parentElement as HTMLElement | null;
+        const idx = parent ? letters.indexOf(parent) : -1;
+        if (idx !== -1) overflows[idx] = 0;
+        img.remove();
+        applyLetterOffsets();
+        if (parent) {
+          gsap.from(parent, {
+            rotation: (Math.random() - 0.5) * 20,
+            scale: 1.05,
+            duration: 0.3,
+            ease: 'back.out(2)',
+          });
+        }
+      });
+    }
+
+    letters.forEach(letter => {
+      letter.addEventListener('mouseenter', () => {
+        if (letter.children.length === 0) createMedia(letter);
+      });
+    });
+
+    // ── 7. Scroll sync via GSAP ticker ────────────────────────────────────────
+    const smoothContent = document.getElementById('smooth-content');
     const ticker = () => {
       let ty = 0;
       if (smoothContent) {
         const t = smoothContent.style.transform;
         if (t) {
           const m = new DOMMatrix(t);
-          ty = m.m42; // negative as page scrolls down
+          ty = m.m42;
         }
       }
       const centerY = initialCenterY + ty;
@@ -210,8 +211,22 @@ const InteractiveTitle: React.FC = () => {
       gsap.ticker.remove(ticker);
       portal.remove();
       styleEl.remove();
+      gsap.killTweensOf(letters);
     };
-  }, []);
+  }, [isMobile]);
+
+  const text = 'Redefínelo';
+
+  if (isMobile) {
+    return (
+      <h1
+        className="font-normal leading-[1] tracking-tighter mb-6 text-black flex justify-center whitespace-nowrap"
+        style={{ fontSize: 'clamp(68px, 15vw, 210px)' }}
+      >
+        {text}
+      </h1>
+    );
+  }
 
   // Transparent placeholder — keeps layout height for siblings below the title
   return (
