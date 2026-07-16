@@ -571,9 +571,7 @@ const Landing = () => {
               className="hero-title no-split text-[64px] sm:text-7xl md:text-8xl lg:text-[95px] font-normal leading-[1] tracking-tight mb-6"
             >
               <span className="block">
-                <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic", textTransform: "none", paddingRight: "0.1em" }}>
-                  {renderWord("Redefínelo")}
-                </span>
+                {renderWord("Redefínelo")}
               </span>
             </h1>
 

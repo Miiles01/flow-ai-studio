@@ -439,9 +439,7 @@ const Landing = () => {
                 className="text-[64px] sm:text-7xl md:text-8xl lg:text-[95px] font-normal leading-[1] tracking-tight mb-6 text-black"
               >
                 <span className="block">
-                  <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic", textTransform: "none", paddingRight: "0.1em" }}>
-                    Redefínelo
-                  </span>
+                  Redefínelo
                 </span>
               </h1>
 
