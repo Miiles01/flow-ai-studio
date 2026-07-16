@@ -15,95 +15,103 @@ const mediaSrcs = [
 /**
  * InteractiveTitle — mwg_effect093 React port
  *
- * The entire visual word lives in a portal appended directly to document.body
- * so it is NEVER inside smooth-wrapper's overflow:hidden.
- * Letters can spread freely without clipping.
- *
- * A transparent placeholder <div> is returned into the normal layout flow
- * so sibling elements (subtitle, CTA…) keep their correct positions.
+ * Strategy:
+ *  • The word lives in a portal div appended to document.body (position: fixed)
+ *    so it is NEVER inside smooth-wrapper's overflow:hidden — no letter clipping.
+ *  • A placeholder <div> is returned into the normal layout so siblings
+ *    (subtitle, CTA…) stay positioned correctly.
+ *  • A GSAP ticker reads smooth-content's CSS transform every frame and mirrors
+ *    the same Y translation to the portal word so it scrolls in perfect sync.
  */
 const InteractiveTitle: React.FC = () => {
   const placeholderRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
-    // ── 1. Inject global CSS for the effect ──────────────────────────────────
+    const placeholderEl = placeholderRef.current;
+    if (!placeholderEl) return;
+
+    // ── 1. Inject CSS ─────────────────────────────────────────────────────────
     const styleEl = document.createElement('style');
-    styleEl.id = 'mwg-effect093-styles';
+    styleEl.id = 'mwg-093-style';
     styleEl.textContent = `
-      .mwg_effect093 {
-        position: fixed;
-        top: 0; left: 0;
-        width: 100%; height: 100dvh;
-        display: grid;
-        place-items: center;
-        pointer-events: none;
-        z-index: 50;
-      }
-      .mwg_effect093 .word {
-        display: flex;
-        font-size: clamp(68px, 15vw, 210px);
-        font-family: 'Manrope', sans-serif;
-        font-weight: 400;
-        letter-spacing: -0.02em;
-        color: #000;
-        pointer-events: auto;
-        margin: 0;
-        padding: 0;
-        white-space: nowrap;
-        line-height: 1;
-      }
-      .mwg_effect093 .letter {
-        position: relative;
-        display: inline-block;
-      }
-      .mwg_effect093 .letter:has(.created-media) {
-        color: transparent;
-      }
-      .mwg_effect093 .created-media {
+      .mwg-093-letter { position: relative; display: inline-block; }
+      .mwg-093-letter:has(.created-media) { color: transparent; }
+      .created-media {
         position: absolute;
-        width: 9vw;
-        height: auto;
-        top: 50%;
-        left: 50%;
+        width: 9vw; height: auto;
+        top: 50%; left: 50%;
         border-radius: 1vw;
         pointer-events: none;
       }
     `;
     document.head.appendChild(styleEl);
 
-    // ── 2. Create the portal section at document.body level ──────────────────
-    const section = document.createElement('section');
-    section.className = 'mwg_effect093';
-    document.body.appendChild(section);
+    // ── 2. Portal container ───────────────────────────────────────────────────
+    // position:fixed / height:0 / overflow:visible so letters are never clipped.
+    const portal = document.createElement('div');
+    portal.style.cssText = [
+      'position:fixed',
+      'top:0', 'left:0',
+      'width:100%', 'height:0',
+      'overflow:visible',
+      'pointer-events:none',
+      'z-index:50',
+    ].join(';');
+    document.body.appendChild(portal);
 
-    // ── 3. Build the word + letters ──────────────────────────────────────────
+    // ── 3. Word element ───────────────────────────────────────────────────────
     const wordEl = document.createElement('p');
-    wordEl.className = 'word';
-    const text = 'Redefínelo';
-    wordEl.innerHTML = text
-      .split('')
-      .map(char => `<span class="letter">${char}</span>`)
-      .join('');
-    section.appendChild(wordEl);
+    wordEl.className = 'mwg-093-word';
+    wordEl.style.cssText = [
+      'position:absolute',
+      'left:50%',
+      'transform:translate(-50%,-50%)',
+      'display:flex',
+      'font-size:clamp(68px,15vw,210px)',
+      'font-family:Manrope,sans-serif',
+      'font-weight:400',
+      'letter-spacing:-0.02em',
+      'color:#000',
+      'margin:0', 'padding:0',
+      'white-space:nowrap',
+      'line-height:1',
+      'pointer-events:auto',
+    ].join(';');
 
-    // ── 4. Fade in ───────────────────────────────────────────────────────────
-    gsap.fromTo(section,
+    const text = 'Redefínelo';
+    wordEl.innerHTML = text.split('').map(c =>
+      `<span class="mwg-093-letter">${c}</span>`
+    ).join('');
+    portal.appendChild(wordEl);
+
+    // ── 4. Initial Y position from placeholder ────────────────────────────────
+    // We read the placeholder's viewport center once.
+    // The ticker will keep adjusting based on scroll.
+    const getPlaceholderCenterY = () => {
+      const r = placeholderEl.getBoundingClientRect();
+      return r.top + r.height / 2;
+    };
+    const initialCenterY = getPlaceholderCenterY();
+    wordEl.style.top = `${initialCenterY}px`;
+
+    // ── 5. Fade-in ─────────────────────────────────────────────────────────────
+    gsap.fromTo(wordEl,
       { opacity: 0, y: 30 },
       { opacity: 1, y: 0, duration: 1.2, ease: 'power3.out', delay: 0.1 }
     );
 
-    // ── 5. Interactive effect — EXACT port of mwg_effect093 JS ───────────────
+    // ── 6. Interactive effect (desktop only) — exact mwg_effect093 JS ─────────
     const isMobile = window.matchMedia('(max-width: 768px)').matches;
-    let ticker: (() => void) | null = null;
-
     if (!isMobile) {
-      const letters = [...wordEl.querySelectorAll('.letter')] as HTMLElement[];
+      const letters = Array.from(
+        wordEl.querySelectorAll('.mwg-093-letter')
+      ) as HTMLElement[];
       const overflows = new Array(letters.length).fill(0);
       const mediaWidth = 0.095 * window.innerWidth;
       let mediaIndex = 0;
 
       function applyLetterOffsets() {
-        if (letters.length === 0) return;
+        if (!letters.length) return;
         let sumLeft = 0;
         const targets = overflows.map((ov, i) => {
           const sumRight = overflows.slice(i + 1).reduce((a: number, v: number) => a + v, 0);
@@ -138,7 +146,10 @@ const InteractiveTitle: React.FC = () => {
         const index = letters.indexOf(letter);
         if (index === -1) return;
 
-        const overflowX = Math.max(0, (mediaWidth - letter.getBoundingClientRect().width) / 2);
+        const overflowX = Math.max(
+          0,
+          (mediaWidth - letter.getBoundingClientRect().width) / 2
+        );
         overflows[index] = Math.max(overflows[index], overflowX);
         applyLetterOffsets();
 
@@ -166,31 +177,41 @@ const InteractiveTitle: React.FC = () => {
       });
     }
 
-    // ── 6. Scroll-based visibility ────────────────────────────────────────────
-    // Read smooth-content's GSAP translateY to fade the portal as user scrolls.
-    const smoothContent = document.querySelector('#smooth-content') as HTMLElement | null;
-    const heroHeight = window.innerHeight;
+    // ── 7. Scroll sync via GSAP ticker ────────────────────────────────────────
+    // ScrollSmoother applies a CSS transform to #smooth-content.
+    // We read that transform's Y component each frame and mirror it on the portal
+    // word, so it scrolls in perfect sync with the page content.
+    const smoothContent = document.getElementById('smooth-content');
 
-    if (smoothContent) {
-      ticker = () => {
-        const matrix = new DOMMatrix(window.getComputedStyle(smoothContent).transform);
-        const scrolled = -matrix.m42; // translateY is negative as page scrolls down
-        const progress = Math.max(0, Math.min(1, scrolled / heroHeight));
-        section.style.opacity = String(1 - progress);
-        section.style.pointerEvents = progress > 0.5 ? 'none' : 'auto';
-      };
-      gsap.ticker.add(ticker);
-    }
+    const ticker = () => {
+      let ty = 0;
+      if (smoothContent) {
+        const t = smoothContent.style.transform;
+        if (t) {
+          const m = new DOMMatrix(t);
+          ty = m.m42; // negative as page scrolls down
+        }
+      }
+      const centerY = initialCenterY + ty;
+      wordEl.style.top = `${centerY}px`;
 
-    // ── 7. Cleanup ────────────────────────────────────────────────────────────
+      const halfH = wordEl.offsetHeight / 2;
+      const visible = centerY + halfH > 0 && centerY - halfH < window.innerHeight;
+      portal.style.pointerEvents = visible ? 'auto' : 'none';
+      wordEl.style.visibility = visible ? 'visible' : 'hidden';
+    };
+
+    gsap.ticker.add(ticker);
+
+    // ── 8. Cleanup ─────────────────────────────────────────────────────────────
     return () => {
-      if (ticker) gsap.ticker.remove(ticker);
-      section.remove();
+      gsap.ticker.remove(ticker);
+      portal.remove();
       styleEl.remove();
     };
   }, []);
 
-  // Transparent placeholder — keeps layout space for CTA/subtitle below the title
+  // Transparent placeholder — keeps layout height for siblings below the title
   return (
     <div
       ref={placeholderRef}
