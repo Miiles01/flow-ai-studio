@@ -543,11 +543,22 @@ const Landing = () => {
         <div id="smooth-content" className="bg-white text-black font-sans overflow-hidden">
 
           {/* HERO */}
-          <section 
-            className="min-h-screen bg-white text-black flex flex-col items-center justify-center text-center px-6 py-24 relative z-10"
-            style={{ backgroundImage: "radial-gradient(#d1d5db 1.5px, transparent 1.5px)", backgroundSize: "24px 24px" }}
-          >
-            <img 
+          <section className="min-h-screen bg-white text-black flex flex-col items-center justify-center text-center px-6 py-24 relative z-10 overflow-hidden">
+            {/* Dotted Gradient Background */}
+            <div 
+              className="absolute inset-0 pointer-events-none z-0"
+              style={{
+                background: "linear-gradient(135deg, #4059F1, #FCB5B9)",
+                maskImage: "radial-gradient(black 1.5px, transparent 1.5px)",
+                WebkitMaskImage: "radial-gradient(black 1.5px, transparent 1.5px)",
+                maskSize: "24px 24px",
+                WebkitMaskSize: "24px 24px",
+                opacity: 0.8
+              }}
+            />
+            
+            <div className="relative z-10 w-full flex flex-col items-center justify-center">
+              <img 
               data-anim-heading 
               src={logoImg} 
               alt="Miiles Logo" 
@@ -588,6 +599,7 @@ const Landing = () => {
                 </svg>
                 Unirse ahora
               </Link>
+            </div>
             </div>
           </section>
 
