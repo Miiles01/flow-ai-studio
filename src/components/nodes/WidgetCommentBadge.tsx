@@ -32,12 +32,15 @@ const WidgetCommentBadge = ({ comments, onChange }: Props) => {
     <div className="absolute -top-2 -right-2 z-30 nodrag nopan" onClick={(e) => e.stopPropagation()}>
       <button
         onClick={toggle}
-        className={`w-8 h-8 rounded-full flex items-center justify-center border-2 border-white shadow-lg transition-colors ${
+        className={`relative w-8 h-8 rounded-full flex items-center justify-center border-2 border-white dark:border-[#1C1C1E] shadow-lg transition-colors ${
           hasUnread ? "bg-black" : "bg-miiles-gray-400"
         }`}
-        title="Comentarios de Miiles"
+        title="Comentarios"
       >
         <img src={EstrellaIcon} alt="" className="w-4 h-4 invert" />
+        <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white dark:border-[#1C1C1E] shadow-sm">
+          {comments.length}
+        </span>
       </button>
 
       <AnimatePresence>
@@ -51,7 +54,7 @@ const WidgetCommentBadge = ({ comments, onChange }: Props) => {
           >
             <div className="flex items-center justify-between px-4 py-3.5 border-b border-black/5 dark:border-white/10 shrink-0">
               <div className="flex items-center gap-2">
-                <span className="text-[13px] font-semibold text-foreground">Miiles</span>
+                <span className="text-[13px] font-semibold text-foreground">Comentarios</span>
                 <button
                   onClick={clearAll}
                   className="p-1.5 rounded-lg transition-colors text-miiles-gray-400 hover:text-red-500 hover:bg-red-500/10"
