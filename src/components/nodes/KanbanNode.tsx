@@ -806,7 +806,7 @@ const CardEditorPopover = ({
     <>
       <div
         ref={popoverRef}
-        className={`fixed z-[10000] w-[280px] max-h-[340px] overflow-y-auto editor-scrollbar rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] ${panelCls}`}
+        className={`fixed z-[10000] w-[280px] max-h-[340px] overflow-y-auto editor-scrollbar rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] ${panelCls}`}
         style={{ top: pos.top, left: pos.left, visibility: pos.top === -999 ? "hidden" : "visible" }}
         onMouseDown={(e) => e.stopPropagation()}
         onClick={(e) => e.stopPropagation()}
@@ -1001,7 +1001,7 @@ const CardEditorPopover = ({
               title="Seleccionar color"
             />
             {showTagPicker && (
-              <div className={`absolute bottom-full mb-2 -left-12 w-[120px] rounded-xl shadow-2xl p-2.5 grid grid-cols-4 gap-1.5 z-50 ${isDark ? "bg-[#1C1C1E] border border-white/10" : "bg-white border border-neutral-100"}`}>
+              <div className={`absolute bottom-full mb-2 -left-12 w-[120px] rounded-xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] p-2.5 grid grid-cols-4 gap-1.5 z-50 ${isDark ? "bg-[#1C1C1E] border border-white/10" : "bg-white border border-neutral-100"}`}>
                 {TAG_COLORS.map((c) => (
                   <button
                     key={c}
@@ -1158,7 +1158,7 @@ const PickerPopover = ({
   isDark: boolean;
 }) => (
   <div
-    className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl shadow-2xl p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px] ${
+    className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px] ${
       isDark ? "bg-[#1C1C1E] border border-white/10" : "bg-white border border-neutral-100"
     }`}
   >

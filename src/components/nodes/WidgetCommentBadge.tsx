@@ -46,11 +46,11 @@ const WidgetCommentBadge = ({ comments, onChange }: Props) => {
       <AnimatePresence>
         {open && (
           <motion.div
-            initial={{ opacity: 0, y: -6, scale: 0.96 }}
-            animate={{ opacity: 1, y: 0, scale: 1 }}
-            exit={{ opacity: 0, y: -6, scale: 0.96 }}
+            initial={{ opacity: 0, x: -6, scale: 0.96 }}
+            animate={{ opacity: 1, x: 0, scale: 1 }}
+            exit={{ opacity: 0, x: -6, scale: 0.96 }}
             transition={{ duration: 0.15 }}
-            className="absolute top-10 right-0 w-[340px] max-h-[440px] rounded-2xl bg-white dark:bg-[#1C1C1E] shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-black/5 dark:border-white/10 flex flex-col overflow-hidden"
+            className="absolute top-0 left-12 w-[340px] max-h-[440px] rounded-2xl bg-white dark:bg-[#1C1C1E] shadow-[0_4px_24px_rgba(0,0,0,0.06)] border border-black/5 dark:border-white/10 flex flex-col overflow-hidden"
           >
             <div className="flex items-center justify-between px-4 py-3.5 border-b border-black/5 dark:border-white/10 shrink-0">
               <div className="flex items-center gap-2">

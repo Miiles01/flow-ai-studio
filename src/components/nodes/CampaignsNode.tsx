@@ -604,7 +604,7 @@ const CampaignEditorPopover = ({
   const content = (
     <div
       ref={popoverRef}
-      className={`fixed z-[10000] rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] overflow-hidden flex flex-col ${panelCls}`}
+      className={`fixed z-[10000] rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] overflow-hidden flex flex-col ${panelCls}`}
       style={{
         top: pos.top,
         left: pos.left,
@@ -681,7 +681,7 @@ const CampaignEditorPopover = ({
               )}
             </button>
             {clientPickerOpen && (
-              <div className={`absolute top-full mt-1.5 left-0 right-0 z-50 rounded-xl shadow-2xl p-2 max-h-[280px] overflow-y-auto ${isDark ? "bg-[#1C1C1E] border border-white/10" : "bg-white border border-neutral-200"}`}>
+              <div className={`absolute top-full mt-1.5 left-0 right-0 z-50 rounded-xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] p-2 max-h-[280px] overflow-y-auto ${isDark ? "bg-[#1C1C1E] border border-white/10" : "bg-white border border-neutral-200"}`}>
                 {clientOptions.length > 0 && (
                   <div className="mb-1 space-y-0.5">
                     {clientOptions.map((c) => (
@@ -994,7 +994,7 @@ const PickerPopover = ({
   isDark: boolean;
 }) => (
   <div
-    className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl shadow-2xl p-2.5 grid grid-cols-5 gap-1.5 z-[1001] w-[150px] ${
+    className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] p-2.5 grid grid-cols-5 gap-1.5 z-[1001] w-[150px] ${
       isDark ? "bg-[#1C1C1E] border border-white/10" : "bg-white border border-neutral-100"
     }`}
   >
