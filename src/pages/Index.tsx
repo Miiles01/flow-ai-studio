@@ -56,6 +56,13 @@ import { generateFlowFromPrompt, type ExtendContext } from "@/lib/generateFlow";
 import { clarifyPrompt, buildEnrichedPrompt, type ClarifyResult } from "@/lib/clarifyFlow";
 import { planFlow, buildPlanContext, type PlanResult } from "@/lib/planFlow";
 import { FlowExtendContext, type ExtendSide, type FlowExtendTarget } from "@/contexts/FlowExtendContext";
+import { runWidgetAI, type WidgetAIComment } from "@/lib/widgetAI";
+
+const WIDGET_NODE_TYPES = new Set(["kanbanNode", "clientCardNode", "campaignsNode", "ingresosNode"]);
+const uid = () =>
+  typeof crypto !== "undefined" && "randomUUID" in crypto
+    ? (crypto as any).randomUUID()
+    : `id-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
 const SHAPE_TYPES = ["square", "circle", "diamond", "hexagon", "star", "document", "cloud", "database", "cylinder", "callout", "speech", "heart"];
 const nodeTypes = { flowNode: FlowNode, shapeNode: ShapeNode, textNode: TextNode, todoNode: TodoNode, imageNode: ImageNode, embedNode: EmbedNode, frameNode: FrameNode, skeletonNode: SkeletonNode, kanbanNode: KanbanNode, clientCardNode: ClientCardNode, campaignsNode: CampaignsNode, ingresosNode: IngresosNode };
