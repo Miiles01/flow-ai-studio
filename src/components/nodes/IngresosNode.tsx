@@ -256,6 +256,7 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
     >
       <NodeResizer minWidth={640} minHeight={520} isVisible={!!selected} lineStyle={{ borderColor: accent, borderWidth: 1.5 }} handleStyle={{ backgroundColor: accent, width: 8, height: 8, borderRadius: 2, border: `2px solid ${bgColor}` }} />
       <NodeExtendHandles nodeId={id} />
+      <WidgetCommentSlot nodeId={id} />
 
       {/* Drag handle */}
       <div className="absolute top-1.5 left-1/2 -translate-x-1/2 z-20 cursor-grab active:cursor-grabbing">
