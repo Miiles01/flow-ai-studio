@@ -91,8 +91,8 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
       const clickedTrend = trends[startIndex];
       if (!clickedTrend) return;
 
-      // Filtrar todos los de la misma red excepto el que se clickeó
-      const sameNetwork = trends.filter(t => t.network === targetNetwork && t.id !== clickedTrend.id);
+      // Filtrar todos los de la misma red (y los marcados como 'all') excepto el que se clickeó
+      const sameNetwork = trends.filter(t => (t.network === targetNetwork || t.network === 'all') && t.id !== clickedTrend.id);
       
       // Mezclar aleatoriamente el resto de los videos
       const shuffled = [...sameNetwork];
