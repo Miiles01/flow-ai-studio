@@ -255,7 +255,7 @@ const IndexContent = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { isDark, toggleTheme } = useTheme();
-  const { setCenter, getNodes } = useReactFlow();
+  const { setCenter, getNodes, zoomTo } = useReactFlow();
   const updateNodeInternals = useUpdateNodeInternals();
 
   const isMobile = useIsMobile();
@@ -1921,6 +1921,25 @@ const IndexContent = () => {
                         Limpiar lienzo
                       </span>
                     </button>
+
+                    <div className={`mt-2 pt-2 border-t ${isDark ? 'border-white/10' : 'border-neutral-100'}`}>
+                      <p className="text-[10px] text-[#9CA3AF] font-light tracking-widest mb-2 px-2">Zoom</p>
+                      <div className="grid grid-cols-3 gap-1.5 px-1 mb-1">
+                        {[10, 25, 50, 100, 150, 200].map((percent) => (
+                          <button
+                            key={percent}
+                            onClick={() => zoomTo(percent / 100, { duration: 400 })}
+                            className={`py-1.5 rounded-lg text-[11px] font-medium transition-colors ${
+                              isDark 
+                                ? 'bg-white/5 hover:bg-white/10 text-white/80 hover:text-white' 
+                                : 'bg-neutral-50 hover:bg-neutral-100 text-neutral-600 hover:text-black border border-neutral-100/50'
+                            }`}
+                          >
+                            {percent}%
+                          </button>
+                        ))}
+                      </div>
+                    </div>
                   </div>
                 </motion.div>
               )}
