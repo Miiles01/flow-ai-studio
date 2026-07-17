@@ -337,6 +337,7 @@ const ClientCardNode = ({ id, data, selected }: NodeProps) => {
       )}
 
       <NodeExtendHandles nodeId={id} />
+      <WidgetCommentSlot nodeId={id} />
     </div>
   );
 };
