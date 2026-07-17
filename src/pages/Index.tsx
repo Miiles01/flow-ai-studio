@@ -2500,7 +2500,7 @@ const IndexContent = () => {
                 onGenerate={handleAIGenerate}
                 isGenerating={isGenerating || isClarifying || isPlanning}
                 forceOpen={!!extendTarget}
-                extendLabel={extendTarget ? "Ampliando desde este elemento" : null}
+                extendLabel={extendTarget ? (extendTargetIsWidget ? "Editar o preguntar con IA" : "Ampliando desde este elemento") : null}
                 onCancelExtend={() => setExtendTarget(null)}
                 onAddWidget={handleAddWidget}
               />
