@@ -21,6 +21,7 @@ import {
 } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import NodeExtendHandles from "@/components/nodes/NodeExtendHandles";
+import WidgetCommentSlot from "@/components/nodes/WidgetCommentSlot";
 import { Switch } from "@/components/ui/switch";
 
 export type KanbanAssignee = {
@@ -514,6 +515,8 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
       )}
 
       <NodeExtendHandles nodeId={id} />
+      <WidgetCommentSlot nodeId={id} />
+
     </div>
   );
 };

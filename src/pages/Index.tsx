@@ -56,6 +56,13 @@ import { generateFlowFromPrompt, type ExtendContext } from "@/lib/generateFlow";
 import { clarifyPrompt, buildEnrichedPrompt, type ClarifyResult } from "@/lib/clarifyFlow";
 import { planFlow, buildPlanContext, type PlanResult } from "@/lib/planFlow";
 import { FlowExtendContext, type ExtendSide, type FlowExtendTarget } from "@/contexts/FlowExtendContext";
+import { runWidgetAI, type WidgetAIComment } from "@/lib/widgetAI";
+
+const WIDGET_NODE_TYPES = new Set(["kanbanNode", "clientCardNode", "campaignsNode", "ingresosNode"]);
+const uid = () =>
+  typeof crypto !== "undefined" && "randomUUID" in crypto
+    ? (crypto as any).randomUUID()
+    : `id-${Date.now()}-${Math.random().toString(36).slice(2, 8)}`;
 
 const SHAPE_TYPES = ["square", "circle", "diamond", "hexagon", "star", "document", "cloud", "database", "cylinder", "callout", "speech", "heart"];
 const nodeTypes = { flowNode: FlowNode, shapeNode: ShapeNode, textNode: TextNode, todoNode: TodoNode, imageNode: ImageNode, embedNode: EmbedNode, frameNode: FrameNode, skeletonNode: SkeletonNode, kanbanNode: KanbanNode, clientCardNode: ClientCardNode, campaignsNode: CampaignsNode, ingresosNode: IngresosNode };
@@ -1360,9 +1367,69 @@ const IndexContent = () => {
     [runGenerate]
   );
 
+  const extendTargetNode = useMemo(
+    () => (extendTarget ? nodes.find((n) => n.id === extendTarget.nodeId) ?? null : null),
+    [extendTarget, nodes]
+  );
+  const extendTargetIsWidget = !!(extendTargetNode?.type && WIDGET_NODE_TYPES.has(extendTargetNode.type));
+
+  const runWidgetEdit = useCallback(
+    async (prompt: string, nodeId: string) => {
+      const node = nodes.find((n) => n.id === nodeId);
+      if (!node) return;
+      setIsGenerating(true);
+      try {
+        const history = ((node.data as any)?.aiComments as WidgetAIComment[] | undefined)?.map((c) => [
+          { role: "user" as const, content: c.prompt },
+          { role: "assistant" as const, content: c.answer },
+        ]).flat() ?? [];
+        const result = await runWidgetAI({
+          widgetType: node.type ?? "",
+          data: node.data,
+          prompt,
+          history,
+        });
+        setNodes((prev) => prev.map((n) => {
+          if (n.id !== nodeId) return n;
+          const existingComments = ((n.data as any)?.aiComments as WidgetAIComment[] | undefined) ?? [];
+          if (result.intent === "edit") {
+            const newComment: WidgetAIComment = {
+              id: uid(),
+              prompt,
+              answer: (result as any).answer || "✅ Cambios aplicados.",
+              createdAt: Date.now(),
+              read: false,
+            };
+            return { ...n, data: { ...(result.data as any), aiComments: [...existingComments, newComment] } };
+          }
+          const newComment: WidgetAIComment = {
+            id: uid(),
+            prompt,
+            answer: (result as any).answer || "",
+            createdAt: Date.now(),
+            read: false,
+          };
+          return { ...n, data: { ...(n.data as any), aiComments: [...existingComments, newComment] } };
+        }));
+      } catch (err) {
+        toast.error(err instanceof Error ? err.message : "Error con la IA del widget");
+      } finally {
+        setIsGenerating(false);
+      }
+    },
+    [nodes, setNodes]
+  );
+
   // Primero entiende la intención: si el prompt es muy general, abre el panel de preguntas.
   const handleAIGenerate = useCallback(
     async (prompt: string) => {
+      // Widgets: editar o preguntar con IA (no crea flujo).
+      if (extendTarget && extendTargetIsWidget) {
+        const nodeId = extendTarget.nodeId;
+        setExtendTarget(null);
+        await runWidgetEdit(prompt, nodeId);
+        return;
+      }
       // Modo ampliación: generar a partir del elemento seleccionado (sin clarify/plan).
       if (extendTarget) {
         const target = extendTarget;
@@ -1383,7 +1450,7 @@ const IndexContent = () => {
         setIsClarifying(false);
       }
     },
-    [proceedToPlanning, extendTarget, runExtendGenerate]
+    [proceedToPlanning, extendTarget, extendTargetIsWidget, runExtendGenerate, runWidgetEdit]
   );
 
   const handleClarifyConfirm = useCallback(
@@ -2433,7 +2500,7 @@ const IndexContent = () => {
                 onGenerate={handleAIGenerate}
                 isGenerating={isGenerating || isClarifying || isPlanning}
                 forceOpen={!!extendTarget}
-                extendLabel={extendTarget ? "Ampliando desde este elemento" : null}
+                extendLabel={extendTarget ? (extendTargetIsWidget ? "Editar o preguntar con IA" : "Ampliando desde este elemento") : null}
                 onCancelExtend={() => setExtendTarget(null)}
                 onAddWidget={handleAddWidget}
               />
