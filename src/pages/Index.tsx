@@ -279,8 +279,10 @@ const ZoomStepper = ({ isDark }: { isDark: boolean }) => {
 
   const handleManualSubmit = () => {
     setIsEditing(false);
-    const val = parseInt(editValue, 10);
-    if (!isNaN(val) && val > 0) {
+    let val = parseInt(editValue, 10);
+    if (!isNaN(val)) {
+      if (val > 200) val = 200;
+      if (val < 10) val = 10;
       zoomTo(val / 100, { duration: 300 });
     }
   };
