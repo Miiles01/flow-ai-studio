@@ -24,6 +24,7 @@ import {
 } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import NodeExtendHandles from "@/components/nodes/NodeExtendHandles";
+import WidgetCommentSlot from "@/components/nodes/WidgetCommentSlot";
 
 export type ClientTag = { id: string; label: string; color: string };
 export type ClientAssignee = { id: string; name: string; email?: string };
