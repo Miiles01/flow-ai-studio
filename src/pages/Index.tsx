@@ -17,7 +17,7 @@ import {
   type Edge,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { ArrowLeft, ArrowUp, ArrowDown, Loader2, Check, Cloud, CloudOff, Settings2, EyeOff, Eye, Trash2, Undo2, Redo2, Palette, Square, Type, Baseline, Sparkles, PanelRight, ListChecks, Plus, Share2, Sun, Moon, EyeIcon, Copy, Download } from "lucide-react";
+import { ArrowLeft, ArrowUp, ArrowDown, Loader2, Check, Cloud, CloudOff, Settings2, EyeOff, Eye, Trash2, Undo2, Redo2, Palette, Square, Type, Baseline, Sparkles, PanelRight, ListChecks, Plus, Minus, Share2, Sun, Moon, EyeIcon, Copy, Download } from "lucide-react";
 import { buildTasksInstructions, downloadTextFile, type TodoListLike } from "@/lib/todoInstructions";
 import ShareDialog from "@/components/ShareDialog";
 import PresenceStack from "@/components/PresenceStack";
@@ -256,6 +256,73 @@ const AutoResizingTextarea = forwardRef<HTMLTextAreaElement, AutoResizingTextare
   }
 );
 AutoResizingTextarea.displayName = "AutoResizingTextarea";
+
+const ZoomStepper = ({ isDark }: { isDark: boolean }) => {
+  const { zoom } = useViewport();
+  const { zoomTo } = useReactFlow();
+  const [isEditing, setIsEditing] = useState(false);
+  const [editValue, setEditValue] = useState("");
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const ZOOM_LEVELS = [10, 25, 50, 100, 150, 200];
+  const currentPct = Math.round(zoom * 100);
+
+  const handleZoomOut = () => {
+    const next = [...ZOOM_LEVELS].reverse().find(l => l < currentPct) || ZOOM_LEVELS[0];
+    zoomTo(next / 100, { duration: 300 });
+  };
+
+  const handleZoomIn = () => {
+    const next = ZOOM_LEVELS.find(l => l > currentPct) || ZOOM_LEVELS[ZOOM_LEVELS.length - 1];
+    zoomTo(next / 100, { duration: 300 });
+  };
+
+  const handleManualSubmit = () => {
+    setIsEditing(false);
+    const val = parseInt(editValue, 10);
+    if (!isNaN(val) && val > 0) {
+      zoomTo(val / 100, { duration: 300 });
+    }
+  };
+
+  return (
+    <div className={`flex items-center justify-between px-1.5 py-1.5 rounded-xl ${isDark ? 'bg-white/5' : 'bg-neutral-50 border border-neutral-100/50'}`}>
+      <button onClick={handleZoomOut} className={`p-1.5 rounded-lg transition-colors ${isDark ? 'hover:bg-white/10 text-white/80 hover:text-white' : 'hover:bg-neutral-200 text-neutral-600 hover:text-black'}`}>
+        <Minus size={14} />
+      </button>
+      
+      {isEditing ? (
+        <input
+          ref={inputRef}
+          type="number"
+          className={`w-14 text-center text-[12.5px] font-medium bg-transparent outline-none ${isDark ? 'text-white' : 'text-neutral-800'}`}
+          value={editValue}
+          onChange={(e) => setEditValue(e.target.value)}
+          onBlur={handleManualSubmit}
+          onKeyDown={(e) => {
+            if (e.key === "Enter") handleManualSubmit();
+            if (e.key === "Escape") setIsEditing(false);
+          }}
+          autoFocus
+        />
+      ) : (
+        <div 
+          className={`w-14 text-center text-[12.5px] font-medium cursor-text ${isDark ? 'text-white/90 hover:text-white' : 'text-neutral-700 hover:text-black'}`}
+          onClick={() => {
+            setEditValue(currentPct.toString());
+            setIsEditing(true);
+          }}
+        >
+          {currentPct}%
+        </div>
+      )}
+
+      <button onClick={handleZoomIn} className={`p-1.5 rounded-lg transition-colors ${isDark ? 'hover:bg-white/10 text-white/80 hover:text-white' : 'hover:bg-neutral-200 text-neutral-600 hover:text-black'}`}>
+        <Plus size={14} />
+      </button>
+    </div>
+  );
+};
 
 const IndexContent = () => {
   const { id } = useParams();
@@ -1991,20 +2058,8 @@ const IndexContent = () => {
 
                     <div className={`mt-2 pt-2 border-t ${isDark ? 'border-white/10' : 'border-neutral-100'}`}>
                       <p className="text-[10px] text-[#9CA3AF] font-light tracking-widest mb-2 px-2">Zoom</p>
-                      <div className="grid grid-cols-3 gap-1.5 px-1 mb-1">
-                        {[10, 25, 50, 100, 150, 200].map((percent) => (
-                          <button
-                            key={percent}
-                            onClick={() => zoomTo(percent / 100, { duration: 400 })}
-                            className={`py-1.5 rounded-lg text-[11px] font-medium transition-colors ${
-                              isDark 
-                                ? 'bg-white/5 hover:bg-white/10 text-white/80 hover:text-white' 
-                                : 'bg-neutral-50 hover:bg-neutral-100 text-neutral-600 hover:text-black border border-neutral-100/50'
-                            }`}
-                          >
-                            {percent}%
-                          </button>
-                        ))}
+                      <div className="px-1 mb-1">
+                        <ZoomStepper isDark={isDark} />
                       </div>
                     </div>
                   </div>
