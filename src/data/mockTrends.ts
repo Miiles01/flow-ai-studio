@@ -2,6 +2,30 @@ import type { Trend } from "@/hooks/useTrends";
 
 export const MOCK_TRENDS: Trend[] = [
   {
+    "id": "instagram_idea_1",
+    "network": "instagram",
+    "media_url": "https://www.instagram.com/reel/DagAdr2RtYG/?igsh=MWIwNzVmY2xybDk5OQ==",
+    "title": "Idea Instagram 1",
+    "summary": "",
+    "bullets": []
+  },
+  {
+    "id": "instagram_idea_2",
+    "network": "instagram",
+    "media_url": "https://www.instagram.com/reel/DZrckjfOqYB/?igsh=MWtqbXZhdjY2ODMzeQ==",
+    "title": "Idea Instagram 2",
+    "summary": "",
+    "bullets": []
+  },
+  {
+    "id": "instagram_idea_3",
+    "network": "instagram",
+    "media_url": "https://www.instagram.com/reel/DZ1yxjHjjY4/?igsh=NGw3eXJvZ2JmZ3ls",
+    "title": "Idea Instagram 3",
+    "summary": "",
+    "bullets": []
+  },
+  {
     "id": "instagram_new_1",
     "network": "instagram",
     "media_url": "https://www.instagram.com/reel/Da00SOQMCgF/?igsh=MXFzMTlrNjV2YmFsMA==",
