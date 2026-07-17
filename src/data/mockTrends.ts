@@ -2,6 +2,14 @@ import type { Trend } from "@/hooks/useTrends";
 
 export const MOCK_TRENDS: Trend[] = [
   {
+    "id": "idea_4",
+    "network": "all",
+    "media_url": "https://vt.tiktok.com/ZSX5qC8oK/",
+    "title": "Idea 4",
+    "summary": "",
+    "bullets": []
+  },
+  {
     "id": "idea_1",
     "network": "all",
     "media_url": "https://www.instagram.com/reel/DagAdr2RtYG/?igsh=MWIwNzVmY2xybDk5OQ==",
