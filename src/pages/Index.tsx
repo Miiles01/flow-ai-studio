@@ -2168,7 +2168,7 @@ const IndexContent = () => {
           elementsSelectable={isMobile ? false : activeDrawShape ? false : interactionMode === "edit"}
           panOnScroll={true}
           selectionMode={"partial" as any}
-          fitView
+          defaultViewport={{ x: 0, y: 0, zoom: 0.5 }}
           minZoom={0.05}
           maxZoom={4}
           onInit={setReactFlowInstance}
