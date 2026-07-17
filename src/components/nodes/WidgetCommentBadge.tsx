@@ -47,27 +47,28 @@ const WidgetCommentBadge = ({ comments, onChange }: Props) => {
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: -6, scale: 0.96 }}
             transition={{ duration: 0.15 }}
-            className="absolute top-10 right-0 w-[320px] max-h-[420px] rounded-2xl bg-white dark:bg-[#1C1E2A] shadow-2xl border border-black/5 dark:border-white/10 flex flex-col overflow-hidden"
+            className="absolute top-10 right-0 w-[340px] max-h-[440px] rounded-2xl bg-white dark:bg-[#1C1C1E] shadow-[0_8px_30px_rgba(0,0,0,0.12)] border border-black/5 dark:border-white/10 flex flex-col overflow-hidden"
           >
-            <div className="flex items-center justify-between px-3 py-2 border-b border-black/5 dark:border-white/10">
-              <span className="text-xs font-medium text-foreground">Miiles</span>
-              <div className="flex items-center gap-1">
+            <div className="flex items-center justify-between px-4 py-3.5 border-b border-black/5 dark:border-white/10 shrink-0">
+              <div className="flex items-center gap-2">
+                <span className="text-[13px] font-semibold text-foreground">Miiles</span>
                 <button
                   onClick={clearAll}
-                  className="w-6 h-6 rounded-md flex items-center justify-center text-miiles-gray-400 hover:text-red-500 hover:bg-red-500/10 transition"
+                  className="p-1.5 rounded-lg transition-colors text-miiles-gray-400 hover:text-red-500 hover:bg-red-500/10"
                   title="Borrar todos"
                 >
-                  <Trash2 size={12} />
-                </button>
-                <button
-                  onClick={() => setOpen(false)}
-                  className="w-6 h-6 rounded-md flex items-center justify-center text-miiles-gray-400 hover:bg-black/5 dark:hover:bg-white/10"
-                >
-                  <X size={12} />
+                  <Trash2 size={14} />
                 </button>
               </div>
+              <button
+                onClick={() => setOpen(false)}
+                className="flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-colors text-[11px] font-medium bg-black/5 hover:bg-black/10 dark:bg-white/10 dark:hover:bg-white/20 text-black dark:text-white"
+              >
+                <span>Cerrar</span>
+                <X size={12} />
+              </button>
             </div>
-            <div className="flex-1 overflow-y-auto p-3 space-y-3">
+            <div className="flex-1 overflow-y-auto editor-scrollbar p-3 space-y-3">
               {comments.map((c) => (
                 <div key={c.id} className="group">
                   <div className="text-[10px] text-miiles-gray-400 mb-1">Tú</div>
