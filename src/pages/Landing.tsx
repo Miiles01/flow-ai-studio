@@ -16,7 +16,7 @@ import brand3 from "@/assets/miiles/brands/brand3.svg";
 import brand4 from "@/assets/miiles/brands/brand4.svg";
 import brand5 from "@/assets/miiles/brands/brand5.svg";
 import brand6 from "@/assets/miiles/brands/brand6.svg";
-import AnimatedOnboardingModal from "@/components/AnimatedOnboardingModal";
+
 import LandingNavbar from "@/components/LandingNavbar";
 import InteractiveTitle from "@/components/InteractiveTitle";
 import LandingFooter from "@/components/LandingFooter";
