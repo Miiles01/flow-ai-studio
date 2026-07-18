@@ -131,7 +131,7 @@ function SidebarBody() {
                   (item.url === "/" && location.pathname === "/");
                 return (
                   <SidebarMenuItem key={item.title}>
-                    <SidebarMenuButton asChild className="h-auto p-0 hover:bg-transparent">
+                    <SidebarMenuButton asChild className="h-auto p-0 hover:bg-transparent dark:hover:text-white hover:text-black">
                       <NavLink
                         to={item.url}
                         end={item.url === "/"}
