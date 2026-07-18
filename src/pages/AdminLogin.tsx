@@ -24,7 +24,7 @@ export default function AdminLogin({ onSuccess }: { onSuccess: () => void }) {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[hsl(222,20%,8%)] p-6">
+    <div className="min-h-screen flex items-center justify-center bg-[#0f0f11] p-6">
       <form onSubmit={handle} className="w-full max-w-sm space-y-6 p-8 rounded-2xl bg-white/5 border border-white/10">
         <div className="flex flex-col items-center gap-3">
           <div className="h-12 w-12 rounded-full bg-white/10 flex items-center justify-center">

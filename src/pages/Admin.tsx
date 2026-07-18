@@ -13,7 +13,7 @@ export default function Admin() {
 
   if (checking) {
     return (
-      <div className="min-h-screen bg-[hsl(222,20%,8%)] flex items-center justify-center">
+      <div className="min-h-screen bg-[#0f0f11] flex items-center justify-center">
         <Loader2 className="h-6 w-6 animate-spin text-white/50" />
       </div>
     );
@@ -22,7 +22,7 @@ export default function Admin() {
   if (!valid) return <AdminLogin onSuccess={() => window.location.reload()} />;
 
   return (
-    <div className="min-h-screen bg-[hsl(222,20%,8%)] text-white">
+    <div className="min-h-screen bg-[#0f0f11] text-white">
       <header className="border-b border-white/10 px-6 md:px-10 py-5 flex items-center justify-between">
         <div>
           <h1 className="text-xl font-normal text-white">Miiles Admin</h1>

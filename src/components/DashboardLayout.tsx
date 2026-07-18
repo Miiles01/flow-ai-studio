@@ -246,7 +246,7 @@ function DashboardContent({ children }: { children: ReactNode }) {
 
   return (
     <SidebarProvider>
-      <div className={`min-h-screen flex w-full transition-colors duration-300 ${isDark ? "dark bg-[hsl(222,20%,8%)]" : "bg-background"}`}>
+      <div className={`min-h-screen flex w-full transition-colors duration-300 ${isDark ? "dark bg-[#0f0f11]" : "bg-background"}`}>
         <SidebarBody />
         <div className="flex-1 flex flex-col min-w-0 relative">
           <header className="h-12 flex md:hidden items-center px-4 sticky top-0 z-10 bg-background">
