@@ -1,6 +1,6 @@
 import { useState, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Trash2, X } from "lucide-react";
+import { Trash2, X, Check, Sparkles } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import EstrellaIcon from "@/assets/miiles/Estrella.svg";
 import type { WidgetAIComment } from "@/lib/widgetAI";
@@ -76,8 +76,13 @@ const WidgetCommentBadge = ({ comments, onChange }: Props) => {
                 <div key={c.id} className="group">
                   <div className="text-[10px] text-miiles-gray-400 mb-1">Tú</div>
                   <div className="text-xs text-foreground mb-2 whitespace-pre-wrap">{c.prompt}</div>
-                  <div className="rounded-lg bg-miiles-blue/10 dark:bg-miiles-blue/20 px-3 py-2 text-xs text-foreground prose prose-xs max-w-none dark:prose-invert">
-                    <ReactMarkdown>{c.answer}</ReactMarkdown>
+                  <div className="flex items-start gap-2 rounded-xl bg-neutral-100 dark:bg-white/10 px-3 py-2.5 text-xs text-neutral-900 dark:text-neutral-100">
+                    <div className="mt-0.5 shrink-0 text-neutral-500 dark:text-neutral-400">
+                      {(c.answer.includes("✅") || c.answer.includes("✔️")) ? <Check size={14} /> : <Sparkles size={14} />}
+                    </div>
+                    <div className="prose prose-xs max-w-none dark:prose-invert">
+                      <ReactMarkdown>{c.answer.replace(/[✅✔️]/g, "").trim()}</ReactMarkdown>
+                    </div>
                   </div>
                   <div className="flex justify-end mt-1">
                     <button
