@@ -72,7 +72,7 @@ function SidebarBody() {
     : user?.email?.charAt(0).toUpperCase() || "M";
 
   const sidebarBg = isDark
-    ? "linear-gradient(to bottom, hsl(222 20% 11%), hsl(222 20% 9%))"
+    ? "linear-gradient(to bottom, #151517, #0f0f11)"
     : "linear-gradient(to bottom, #FDFDFD, #F8F9FD)";
 
   return (
