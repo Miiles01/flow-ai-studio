@@ -49,7 +49,7 @@ Responde SIEMPRE con la tool "widget_result".`;
           properties: {
             intent: { type: "string", enum: ["query", "edit"] },
             answer: { type: "string", description: "Respuesta en Markdown si intent=query" },
-            data: { type: "object", description: "Nuevo objeto data completo si intent=edit", additionalProperties: true },
+            data_json: { type: "string", description: "Si intent=edit, JSON string con el objeto data COMPLETO ya modificado (mismo schema que el data actual)" },
           },
           required: ["intent"],
           additionalProperties: false,
