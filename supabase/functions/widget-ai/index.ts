@@ -94,7 +94,12 @@ Responde SIEMPRE con la tool "widget_result".`;
       });
     }
     const parsed = JSON.parse(call.function.arguments);
-    return new Response(JSON.stringify(parsed), {
+    const out: Record<string, unknown> = { intent: parsed.intent, answer: parsed.answer };
+    if (parsed.intent === "edit" && parsed.data_json) {
+      try { out.data = JSON.parse(parsed.data_json); }
+      catch { out.data = {}; out.error = "IA devolvió data_json inválido"; }
+    }
+    return new Response(JSON.stringify(out), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
   } catch (err) {
