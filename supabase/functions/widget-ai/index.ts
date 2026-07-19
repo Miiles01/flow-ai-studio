@@ -94,6 +94,7 @@ Responde SIEMPRE con la tool "widget_result".`;
       });
     }
     const parsed = JSON.parse(call.function.arguments);
+    console.log("widget-ai parsed:", JSON.stringify(parsed).slice(0, 500));
     const out: Record<string, unknown> = { intent: parsed.intent, answer: parsed.answer };
     if (parsed.intent === "edit" && parsed.data_json) {
       try { out.data = JSON.parse(parsed.data_json); }
