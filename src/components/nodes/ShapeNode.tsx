@@ -157,9 +157,13 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
   const [editing, setEditing] = useState(false);
   const [activePicker, setActivePicker] = useState<"fill" | "border" | "text" | null>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
+  const labelWrapperRef = useRef<HTMLDivElement>(null);
   const { setNodes, getNodes } = useReactFlow();
   const { zoom } = useViewport();
   const { isDark } = useTheme();
+
+  // Auto-grow node height when the label content is larger than the node.
+  useAutoGrowNode(id, labelWrapperRef, 32, 60);
 
   const selectedNodes = getNodes().filter((n) => n.selected);
   const isSingleSelected = selected && selectedNodes.length === 1;
@@ -473,30 +477,31 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
 
       {/* Label */}
       <div className="absolute inset-0 flex items-center justify-center z-10 px-3 pointer-events-none">
-        {editing ? (
-          <AutoResizingTextarea
-            ref={inputRef}
-            value={label}
-            onChange={(e) => setLabel(e.target.value)}
-            onBlur={handleBlur}
-            onKeyDown={(e) => {
-              if (e.key === "Escape") {
-                handleBlur();
-              }
-            }}
-            className="bg-transparent text-center outline-none w-full pointer-events-auto nodrag nopan font-sans whitespace-pre-wrap break-words resize-none overflow-hidden"
-            style={textStyle}
-            onClick={(e) => e.stopPropagation()}
-          />
-        ) : (
-          <span 
-            className="text-center select-none leading-snug whitespace-pre-wrap break-words font-sans"
-            style={textStyle}
-          >
-            {label.replace(/<br\s*\/?>/gi, "\n")}
-          </span>
-
-        )}
+        <div ref={labelWrapperRef} className="w-full">
+          {editing ? (
+            <AutoResizingTextarea
+              ref={inputRef}
+              value={label}
+              onChange={(e) => setLabel(e.target.value)}
+              onBlur={handleBlur}
+              onKeyDown={(e) => {
+                if (e.key === "Escape") {
+                  handleBlur();
+                }
+              }}
+              className="bg-transparent text-center outline-none w-full pointer-events-auto nodrag nopan font-sans whitespace-pre-wrap break-words resize-none overflow-hidden"
+              style={textStyle}
+              onClick={(e) => e.stopPropagation()}
+            />
+          ) : (
+            <span
+              className="block text-center select-none leading-snug whitespace-pre-wrap break-words font-sans"
+              style={textStyle}
+            >
+              {label.replace(/<br\s*\/?>/gi, "\n")}
+            </span>
+          )}
+        </div>
       </div>
 
       {/* Handles — visible solo cuando está seleccionado (rendered last to stack on top) */}
