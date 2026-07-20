@@ -7,6 +7,7 @@ import {
 import NodeExtendHandles from "@/components/nodes/NodeExtendHandles";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useAutoGrowNode } from "@/hooks/useAutoGrowNode";
 
 export type TextNodeData = {
   html?: string;
@@ -105,6 +106,9 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
   const editorRef = useRef<HTMLDivElement>(null);
   const linkInputRef = useRef<HTMLInputElement>(null);
   const htmlSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  // Auto-grow node height when the editor content is larger than the node.
+  useAutoGrowNode(id, editorRef, 0, 50);
 
   // Persist patches into this node's data via React Flow
   const commitData = useCallback((patch: Partial<TextNodeData>) => {
