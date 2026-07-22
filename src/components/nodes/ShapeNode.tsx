@@ -2,7 +2,8 @@ import { memo, useState, useRef, useEffect, forwardRef } from "react";
 import { Handle, Position, type NodeProps, NodeResizer, useReactFlow, useViewport } from "@xyflow/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "@/contexts/ThemeContext";
-import { Square, Circle, Triangle, Hexagon, Star, Plus, Minus, Palette, Bold, Italic, Underline, Diamond, Trash2, Baseline, Check } from "lucide-react";
+import { Square, Circle, Triangle, Hexagon, Star, Plus, Minus, Palette, Bold, Italic, Underline, Diamond, Trash2, Baseline, GripVertical } from "lucide-react";
+import { isColorDark } from "@/lib/utils";
 import NodeExtendHandles from "@/components/nodes/NodeExtendHandles";
 import { useAutoGrowNode } from "@/hooks/useAutoGrowNode";
 
@@ -117,27 +118,6 @@ const TEXT_COLOR_PALETTE = [
 const handleClass =
   "!w-[10px] !h-[10px] !rounded-full !bg-white !border-[1.5px] !border-[#4059F1] transition-all duration-200 hover:!bg-[#4059F1] before:absolute before:-inset-3 before:content-[''] !z-50";
 
-const isColorDark = (colorHex: string): boolean => {
-  if (!colorHex || colorHex === "transparent") return false;
-  const hex = colorHex.replace("#", "").trim();
-  if (hex.toLowerCase() === "white") return false;
-  if (hex.toLowerCase() === "black") return true;
-  
-  if (hex.length === 3) {
-    const r = parseInt(hex[0] + hex[0], 16);
-    const g = parseInt(hex[1] + hex[1], 16);
-    const b = parseInt(hex[2] + hex[2], 16);
-    return (r * 299 + g * 587 + b * 114) / 1000 < 140;
-  }
-  if (hex.length === 6) {
-    const r = parseInt(hex.substring(0, 2), 16);
-    const g = parseInt(hex.substring(2, 4), 16);
-    const b = parseInt(hex.substring(4, 6), 16);
-    return (r * 299 + g * 587 + b * 114) / 1000 < 140;
-  }
-  return false;
-};
-
 const isWhiteColor = (color: string | undefined): boolean => {
   if (!color) return false;
   const cleaned = color.trim().toLowerCase();
@@ -218,10 +198,14 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
       initial={{ scale: 0.9, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
       style={{ width: "100%", height: "100%" }}
-      className="relative"
+      className="relative group/widget"
       onDoubleClick={() => setEditing(true)}
     >
       <NodeResizer isVisible={!!isSingleSelected} minWidth={60} minHeight={60} lineStyle={{ border: "none" }} />
+
+      <div className="absolute top-0 left-1/2 z-20 h-5 w-28 -translate-x-1/2 cursor-grab rounded-b-xl active:cursor-grabbing" title="Mover widget">
+        <div className={`mx-auto mt-1.5 h-1.5 w-8 rounded-full opacity-0 transition-opacity group-hover/widget:opacity-100 ${isFillDark ? "bg-white/40" : "bg-black/20"}`} />
+      </div>
 
       {/* ── Custom Shape Toolbar ── */}
       <AnimatePresence>

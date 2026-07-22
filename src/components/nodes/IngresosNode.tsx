@@ -259,8 +259,8 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
       <WidgetCommentSlot nodeId={id} />
 
       {/* Drag handle */}
-      <div className="absolute top-1.5 left-1/2 -translate-x-1/2 z-20 cursor-grab active:cursor-grabbing">
-        <div className={`w-10 h-1.5 rounded-full transition-opacity ${isDark ? "bg-white/20" : "bg-neutral-300"} opacity-0 group-hover/handle:opacity-100`} />
+      <div className="absolute top-0 left-1/2 z-20 h-5 w-28 -translate-x-1/2 cursor-grab rounded-b-xl active:cursor-grabbing group/handle" title="Mover widget">
+        <div className={`mx-auto mt-1 h-1.5 w-8 rounded-full opacity-0 transition-opacity group-hover/handle:opacity-100 ${isDark ? "bg-white/40" : "bg-black/20"}`} />
       </div>
 
       {/* Floating toolbar */}

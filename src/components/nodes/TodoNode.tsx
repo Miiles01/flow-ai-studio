@@ -1,8 +1,9 @@
 import { memo, useState, useRef, useEffect, forwardRef } from "react";
 import { Handle, Position, type NodeProps, NodeResizer, useReactFlow, useViewport } from "@xyflow/react";
 import {
-  Plus, Trash2, ArrowUp, ArrowDown, Minus, Check, Baseline, Heading1, Heading2, Square,
+  Plus, Trash2, ArrowUp, ArrowDown, Minus, Check, Baseline, Heading1, Heading2, Square, GripVertical, AlignLeft
 } from "lucide-react";
+import { isColorDark } from "@/lib/utils";
 import NodeExtendHandles from "@/components/nodes/NodeExtendHandles";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -42,27 +43,6 @@ const RAINBOW_COLORS = [
   { name: "Blanco", value: "#FFFFFF" },
   { name: "Negro", value: "#1F2937" },
 ];
-
-const isColorDark = (colorHex: string): boolean => {
-  if (!colorHex || colorHex === "transparent") return false;
-  const hex = colorHex.replace("#", "").trim();
-  if (hex.toLowerCase() === "white") return false;
-  if (hex.toLowerCase() === "black") return true;
-  
-  if (hex.length === 3) {
-    const r = parseInt(hex[0] + hex[0], 16);
-    const g = parseInt(hex[1] + hex[1], 16);
-    const b = parseInt(hex[2] + hex[2], 16);
-    return (r * 299 + g * 587 + b * 114) / 1000 < 140;
-  }
-  if (hex.length === 6) {
-    const r = parseInt(hex.substring(0, 2), 16);
-    const g = parseInt(hex.substring(2, 4), 16);
-    const b = parseInt(hex.substring(4, 6), 16);
-    return (r * 299 + g * 587 + b * 114) / 1000 < 140;
-  }
-  return false;
-};
 
 interface AutoResizingTextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
   value: string;
@@ -161,8 +141,10 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
 
   // Reacción dinámica en modo oscuro: si tiene fondo blanco, se pone oscuro.
   const rawBg = nodeData.backgroundColor ?? (isDark ? "#1F2937" : "#FFFFFF");
-  const isWhiteBg = isWhiteColor(rawBg);
+  const isWhiteBg = rawBg === "#FFFFFF" || rawBg === "white" || rawBg === "#FAFAFA" || rawBg === "#F3F4F6";
   const backgroundColor = isDark && isWhiteBg ? "#1F2937" : rawBg;
+  
+  const isEffectiveBgDark = backgroundColor === "transparent" ? isDark : isColorDark(backgroundColor);
 
   const accentColor = nodeData.accentColor ?? "#4059F1";
   const isDarkMode = backgroundColor === "transparent" || !nodeData.backgroundColor
@@ -276,7 +258,9 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
       }}
       className="relative w-full h-full"
     >
-
+      <div className="absolute top-0 left-1/2 z-20 h-5 w-28 -translate-x-1/2 cursor-grab rounded-b-xl active:cursor-grabbing" title="Mover widget">
+        <div className={`mx-auto mt-1.5 h-1.5 w-8 rounded-full opacity-0 transition-opacity group-hover/widget:opacity-100 ${isEffectiveBgDark ? "bg-white/40" : "bg-black/20"}`} />
+      </div>
 
       <div
         style={{
@@ -286,7 +270,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
           color: isDarkMode ? "#F3F4F6" : "#1F2937",
           boxShadow: selected ? "0 10px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.04)" : "0 4px 12px -1px rgba(0,0,0,0.015), 0 2px 4px -1px rgba(0,0,0,0.01)",
         }}
-        className={`w-full h-full rounded-2xl flex flex-col p-5 select-none transition-all duration-300 border ${
+        className={`w-full h-full rounded-2xl flex flex-col p-5 select-none transition-all duration-300 border group/widget ${
           selected ? "border-[#4059F1]/40" : (isDark ? "border-white/10" : "border-[#E5E7EB]")
         }`}
       >

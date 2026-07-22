@@ -355,7 +355,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
       </AnimatePresence>
 
       <div className="absolute top-0 left-1/2 z-20 h-5 w-28 -translate-x-1/2 cursor-grab rounded-b-xl active:cursor-grabbing" title="Mover widget">
-        <div className="mx-auto mt-1.5 h-1.5 w-8 rounded-full bg-neutral-300/70 opacity-0 transition-opacity group-hover/widget:opacity-100" />
+        <div className={`mx-auto mt-1.5 h-1.5 w-8 rounded-full opacity-0 transition-opacity group-hover/widget:opacity-100 ${isDark ? "bg-white/40" : "bg-black/20"}`} />
       </div>
 
       <div

@@ -4,6 +4,7 @@ import {
   Bold, Italic, Underline, Link2, AlignLeft, AlignCenter, AlignRight,
   ExternalLink, Trash2, Minus, Plus, Baseline, Check,
 } from "lucide-react";
+import { isColorDark } from "@/lib/utils";
 import NodeExtendHandles from "@/components/nodes/NodeExtendHandles";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -255,6 +256,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
   const textColor = isDark && (isBlackText || isWhiteBg) ? "#FFFFFF" : rawTextColor;
   
   const backgroundColor = isDark && isWhiteBg ? "#1F2937" : rawBgColor;
+  const isEffectiveBgDark = backgroundColor === "transparent" ? isDark : isColorDark(backgroundColor);
 
   // Text color: apply to whole editor
   useEffect(() => {
@@ -296,9 +298,13 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
         minHeight: 50,
         backgroundColor: backgroundColor === "transparent" ? "transparent" : backgroundColor,
       }}
-      className={`relative ${backgroundColor !== "transparent" ? "rounded-3xl p-6" : ""}`}
+      className={`relative ${backgroundColor !== "transparent" ? "rounded-3xl p-6" : ""} group/widget`}
     >
       <NodeResizer isVisible={!!isSingleSelected} minWidth={140} minHeight={40} />
+
+      <div className="absolute top-0 left-1/2 z-20 h-5 w-28 -translate-x-1/2 cursor-grab rounded-b-xl active:cursor-grabbing" title="Mover widget">
+        <div className={`mx-auto mt-1.5 h-1.5 w-8 rounded-full opacity-0 transition-opacity group-hover/widget:opacity-100 ${isEffectiveBgDark ? "bg-white/40" : "bg-black/20"}`} />
+      </div>
 
       {/* ── Formatting Toolbar ── */}
       <AnimatePresence>

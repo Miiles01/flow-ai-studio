@@ -14,6 +14,7 @@
  */
 
 import { memo, useState, useRef, useEffect, useLayoutEffect } from "react";
+import { isColorDark } from "@/lib/utils";
 import { createPortal } from "react-dom";
 import { type NodeProps, NodeResizer, useReactFlow, useViewport } from "@xyflow/react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -106,6 +107,8 @@ const ClientCardNode = ({ id, data, selected }: NodeProps) => {
 
   const rawFill = d.backgroundColor ?? (isDark ? "#2C2C2E" : "#FFFFFF");
   const backgroundColor = isDark && isWhite(rawFill) ? "#2C2C2E" : rawFill;
+  
+  const isEffectiveBgDark = backgroundColor === "transparent" ? isDark : isColorDark(backgroundColor);
   const rawText = d.textColor ?? "#111827";
   const textColor = isDark && (isBlack(rawText) || isWhite(rawFill)) ? "#FFFFFF" : rawText;
   const accentColor = d.accentColor ?? "#4059F1";
@@ -184,7 +187,7 @@ const ClientCardNode = ({ id, data, selected }: NodeProps) => {
       </AnimatePresence>
 
       <div className="absolute top-0 left-1/2 z-20 h-5 w-28 -translate-x-1/2 cursor-grab rounded-b-xl active:cursor-grabbing" title="Mover widget">
-        <div className="mx-auto mt-1.5 h-1.5 w-8 rounded-full bg-neutral-300/70 opacity-0 transition-opacity group-hover/widget:opacity-100" />
+        <div className={`mx-auto mt-1.5 h-1.5 w-8 rounded-full opacity-0 transition-opacity group-hover/widget:opacity-100 ${isEffectiveBgDark ? "bg-white/40" : "bg-black/20"}`} />
       </div>
 
       <div
