@@ -113,7 +113,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
   const htmlSaveTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Auto-grow node height when the editor content is larger than the node.
-  useAutoGrowNode(id, editorRef, 0, 50);
+  useAutoGrowNode(id, editorRef, 40, 50);
 
   // Persist patches into this node's data via React Flow
   const commitData = useCallback((patch: Partial<TextNodeData>) => {
