@@ -298,7 +298,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
         minHeight: 50,
         backgroundColor: backgroundColor === "transparent" ? "transparent" : backgroundColor,
       }}
-      className={`relative ${backgroundColor !== "transparent" ? "rounded-3xl p-6" : ""} group/widget`}
+      className="relative w-full h-full rounded-2xl flex flex-col p-5 transition-all duration-300 group/widget"
     >
       <NodeResizer isVisible={!!isSingleSelected} minWidth={140} minHeight={40} />
 
@@ -612,7 +612,6 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
           outline: "none",
           cursor: "text",
           lineHeight: 1.5,
-          padding: "8px 10px",
           wordBreak: "break-word",
         }}
         className={`nodrag nopan w-full h-full font-sans font-light focus:outline-none [&_a]:text-[#4059F1] [&_a]:underline [&_a]:cursor-pointer ${isDark ? 'text-white' : 'text-black'}`}
