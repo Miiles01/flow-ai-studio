@@ -32,7 +32,8 @@ export function useAutoGrowNode(
         const next = nds.map((n) => {
           if (n.id !== id) return n;
           const currentH = Number((n.style as any)?.height ?? (n as any).height ?? 0);
-          if (needed > currentH + 0.5) {
+          // Allow shrinking and growing
+          if (Math.abs(needed - currentH) > 1) {
             changed = true;
             return { ...n, style: { ...(n.style ?? {}), height: needed } };
           }
@@ -41,6 +42,16 @@ export function useAutoGrowNode(
         return changed ? next : nds;
       });
     };
+
+    const handleInput = () => {
+      cancelAnimationFrame(frame);
+      frame = requestAnimationFrame(measureAndGrow);
+    };
+
+    const mo = new MutationObserver(handleInput);
+    mo.observe(el, { characterData: true, childList: true, subtree: true });
+
+    el.addEventListener("input", handleInput);
 
     const ro = new ResizeObserver(() => {
       cancelAnimationFrame(frame);
@@ -52,6 +63,8 @@ export function useAutoGrowNode(
     return () => {
       cancelAnimationFrame(frame);
       ro.disconnect();
+      mo.disconnect();
+      el.removeEventListener("input", handleInput);
     };
   }, [id, contentRef, extraPadding, minHeight, setNodes]);
 }
