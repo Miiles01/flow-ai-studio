@@ -14,16 +14,20 @@ export type TextNodeData = {
   fontSize?: number;
   align?: "left" | "center" | "right";
   textColor?: string;
+  backgroundColor?: string;
 };
 
-const TEXT_COLOR_PALETTE = [
-  { name: "Negro", value: "#111827" },
-  { name: "Gris", value: "#6B7280" },
-  { name: "Azul", value: "#2563EB" },
-  { name: "Verde", value: "#059669" },
-  { name: "Rojo", value: "#DC2626" },
-  { name: "Púrpura", value: "#7C3AED" },
+const RAINBOW_COLORS = [
+  { name: "Transparente", value: "transparent" },
+  { name: "Rojo", value: "#EF4444" },
+  { name: "Naranja", value: "#F97316" },
+  { name: "Amarillo", value: "#FACC15" },
+  { name: "Verde", value: "#22C55E" },
+  { name: "Azul", value: "#4059F1" },
+  { name: "Morado", value: "#A855F7" },
+  { name: "Rosa", value: "#FCB5B9" },
   { name: "Blanco", value: "#FFFFFF" },
+  { name: "Negro", value: "#1F2937" },
 ];
 
 const HANDLE_CLASS =
@@ -239,9 +243,18 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
   }, [nodeData.align]);
 
   // Reacción dinámica en modo oscuro: si tiene texto negro, se pone blanco.
-  const rawTextColor = nodeData.textColor ?? (isDark ? "#FFFFFF" : "#111827");
+  // Reacción dinámica en modo oscuro: si tiene texto negro, se pone blanco.
+  const rawTextColor = nodeData.textColor ?? (isDark ? "#FFFFFF" : "#1F2937");
   const isBlackText = isBlackColor(rawTextColor);
-  const textColor = isDark && isBlackText ? "#FFFFFF" : rawTextColor;
+  const rawBgColor = nodeData.backgroundColor ?? "transparent";
+  
+  // If the background is transparent or dark, and it's dark mode, we might want text white
+  // To keep it simple, we just use the raw text color and adjust black text to white in dark mode if no light background is forced.
+  // We'll mimic TodoNode text logic for better legibility:
+  const isWhiteBg = rawBgColor === "#FFFFFF" || rawBgColor === "white" || rawBgColor === "#FAFAFA" || rawBgColor === "#F3F4F6";
+  const textColor = isDark && (isBlackText || isWhiteBg) ? "#FFFFFF" : rawTextColor;
+  
+  const backgroundColor = isDark && isWhiteBg ? "#1F2937" : rawBgColor;
 
   // Text color: apply to whole editor
   useEffect(() => {
@@ -276,8 +289,14 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
     <motion.div
       initial={{ scale: 0.9, opacity: 0 }}
       animate={{ scale: 1, opacity: 1 }}
-      style={{ width: "100%", height: "100%", minWidth: 140, minHeight: 50 }}
-      className="relative"
+      style={{ 
+        width: "100%", 
+        height: "100%", 
+        minWidth: 140, 
+        minHeight: 50,
+        backgroundColor: backgroundColor === "transparent" ? "transparent" : backgroundColor,
+      }}
+      className={`relative ${backgroundColor !== "transparent" ? "rounded-3xl p-6" : ""}`}
     >
       <NodeResizer isVisible={!!isSingleSelected} minWidth={140} minHeight={40} />
 
@@ -425,6 +444,53 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
 
                 <div className={`w-[1px] h-4 mx-1 ${isDark ? 'bg-white/10' : 'bg-[#E5E7EB]'}`} />
 
+                {/* Background Color Picker */}
+                <div className="relative">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setActivePicker(activePicker === "bg" ? null : "bg");
+                    }}
+                    className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors relative ${isDark ? 'hover:bg-white/10 text-white/60 hover:text-white' : 'hover:bg-[#F3F4F6] text-[#6B7280]'}`}
+                    title="Color de fondo"
+                  >
+                    <div
+                      className="w-3.5 h-3.5 rounded-sm border overflow-hidden relative"
+                      style={{ 
+                        backgroundColor: backgroundColor === "transparent" ? "white" : (backgroundColor || "#FAFAFA"),
+                        borderColor: isDark ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.2)"
+                      }}
+                    >
+                      {backgroundColor === "transparent" && (
+                        <div className="absolute w-full h-[1px] bg-red-500 rotate-45" style={{ top: "45%" }} />
+                      )}
+                    </div>
+                  </button>
+                  {activePicker === "bg" && (
+                    <div className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.03)] p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px] ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-gray-100'}`}>
+                      {RAINBOW_COLORS.map((c) => (
+                        <button
+                          key={c.value}
+                          onClick={() => {
+                            commitData({ backgroundColor: c.value });
+                            setActivePicker(null);
+                          }}
+                          className="w-6 h-6 rounded-full border border-gray-200/60 transition-transform hover:scale-110 flex items-center justify-center overflow-hidden relative shadow-sm cursor-pointer"
+                          style={{ backgroundColor: c.value === "transparent" ? "white" : c.value }}
+                          title={c.name}
+                        >
+                          {c.value === "transparent" && <div className="absolute w-full h-[1.5px] bg-red-500 rotate-45" />}
+                          {backgroundColor === c.value && c.value !== "transparent" && (
+                            <Check size={10} className={c.value === "#FFFFFF" ? "text-gray-700" : "text-white"} strokeWidth={2.5} />
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                </div>
+
+                <div className={`w-[1px] h-4 mx-1 ${isDark ? 'bg-white/10' : 'bg-[#E5E7EB]'}`} />
+
                 {/* Text Color Picker */}
                 <div className="relative">
                   <button
@@ -432,26 +498,27 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                       e.stopPropagation();
                       setActivePicker(activePicker === "text" ? null : "text");
                     }}
-                    className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors ${isDark ? 'hover:bg-white/10' : 'hover:bg-[#F3F4F6]'}`}
+                    className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors ${isDark ? 'hover:bg-white/10 text-white/60 hover:text-white' : 'hover:bg-[#F3F4F6] text-[#6B7280]'}`}
                     title="Color del Texto"
                   >
                     <Baseline size={13} style={{ color: textColor }} className="stroke-[2.5]" />
                   </button>
                   {activePicker === "text" && (
-                    <div className={`absolute top-8 left-1/2 -translate-x-1/2 rounded-xl shadow-[0_4px_25px_rgba(0,0,0,0.04)] p-2.5 flex gap-1.5 z-50 ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-[#E5E7EB]'}`}>
-                      {TEXT_COLOR_PALETTE.map((c) => (
+                    <div className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.03)] p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px] ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-gray-100'}`}>
+                      {RAINBOW_COLORS.map((c) => (
                         <button
                           key={c.value}
                           onClick={() => {
                             commitData({ textColor: c.value });
                             setActivePicker(null);
                           }}
-                          className="w-5.5 h-5.5 rounded-full border border-gray-200 hover:scale-110 transition-transform flex items-center justify-center"
-                          style={{ backgroundColor: c.value }}
+                          className="w-6 h-6 rounded-full border border-gray-200/60 transition-transform hover:scale-110 flex items-center justify-center overflow-hidden relative shadow-sm cursor-pointer"
+                          style={{ backgroundColor: c.value === "transparent" ? "white" : c.value }}
                           title={c.name}
                         >
-                          {textColor === c.value && (
-                            <Check size={10} className={c.value === "#FFFFFF" ? "text-gray-800" : "text-white"} />
+                          {c.value === "transparent" && <div className="absolute w-full h-[1.5px] bg-red-500 rotate-45" />}
+                          {textColor === c.value && c.value !== "transparent" && (
+                            <Check size={10} className={c.value === "#FFFFFF" ? "text-gray-700" : "text-white"} strokeWidth={2.5} />
                           )}
                         </button>
                       ))}
