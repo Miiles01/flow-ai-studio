@@ -24,14 +24,24 @@ export function useAutoGrowNode(
     const measureAndGrow = () => {
       const el2 = contentRef.current;
       if (!el2) return;
-      const contentH = Math.max(el2.scrollHeight, el2.offsetHeight);
+      const oldHeight = el2.style.height;
+      const oldMinHeight = el2.style.minHeight;
+      el2.style.height = "auto";
+      el2.style.minHeight = "0px";
+      
+      const contentH = el2.scrollHeight;
+      
+      el2.style.height = oldHeight;
+      el2.style.minHeight = oldMinHeight;
+      
       const needed = Math.max(minHeight, contentH + extraPadding);
 
       setNodes((nds) => {
         let changed = false;
         const next = nds.map((n) => {
           if (n.id !== id) return n;
-          const currentH = Number((n.style as any)?.height ?? (n as any).height ?? 0);
+          const styleH = (n.style as any)?.height;
+          const currentH = parseFloat(String(styleH ?? (n.measured as any)?.height ?? (n as any).height ?? 0));
           // Allow shrinking and growing
           if (Math.abs(needed - currentH) > 1) {
             changed = true;
