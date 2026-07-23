@@ -694,7 +694,7 @@ export default function Dashboard() {
           </div>
         ) : (
           <div className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide -mx-8 md:-mx-12 px-4 md:px-6 py-8 -my-6">
-            <div className="shrink-0 w-2 md:w-4" />
+            <div className="snap-start shrink-0 w-2 md:w-4" />
             {flows.map((flow, i) => (
               <motion.div
                 key={flow.id}
@@ -727,7 +727,7 @@ export default function Dashboard() {
                 </Link>
               </motion.div>
             )}
-            <div className="shrink-0 w-2 md:w-4" />
+            <div className="snap-start shrink-0 w-2 md:w-4" />
           </div>
         )}
       </motion.div>
