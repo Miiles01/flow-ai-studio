@@ -320,18 +320,21 @@ export default function Dashboard() {
                 id: 1, 
                 title: "Instagram", 
                 image: "/discoveries/card1.png",
+                darkImage: "/discoveries/card1-dark.png",
                 icon: <Instagram className="w-5 h-5" /> 
               },
               { 
                 id: 2, 
                 title: "YouTube", 
                 image: "/discoveries/card2.png",
+                darkImage: "/discoveries/card2-dark.png",
                 icon: <Youtube className="w-5 h-5" />
               },
               { 
                 id: 3, 
                 title: "TikTok", 
                 image: "/discoveries/card3.png",
+                darkImage: "/discoveries/card3-dark.png",
                 icon: (
                   <svg width="18" height="18" viewBox="0 0 448 512" fill="currentColor">
                     <path d="M448 209.91a210.06 210.06 0 0 1-122.77-39.25V349.38A162.55 162.55 0 1 1 185 188.31V278.2a74.62 74.62 0 1 0 52.23 71.18V0l88 0a121.18 121.18 0 0 0 1.86 22.17h0A122.18 122.18 0 0 0 381 102.39a121.43 121.43 0 0 0 67 20.14Z"/>
@@ -342,6 +345,7 @@ export default function Dashboard() {
                 id: 4, 
                 title: "Facebook", 
                 image: "/discoveries/card4.png",
+                darkImage: "/discoveries/card4-dark.png",
                 icon: (
                   <svg className="w-5 h-5" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M22.5 2.5H18.75C17.0924 2.5 15.5027 3.15848 14.3306 4.33058C13.1585 5.50269 12.5 7.0924 12.5 8.75V12.5H8.75V17.5H12.5V27.5H17.5V17.5H21.25L22.5 12.5H17.5V8.75C17.5 8.41848 17.6317 8.10054 17.8661 7.86612C18.1005 7.6317 18.4185 7.5 18.75 7.5H22.5V2.5Z" fill="currentColor"/>
@@ -370,7 +374,7 @@ export default function Dashboard() {
                 </div>
                 <div className="flex-1 w-full mt-2 relative flex items-end justify-center z-0 overflow-hidden">
                   <img 
-                    src={item.image}
+                    src={isDark && item.darkImage ? item.darkImage : item.image}
                     alt={item.title} 
                     className="w-full h-full object-contain object-bottom"
                   />
