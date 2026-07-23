@@ -700,7 +700,7 @@ export default function Dashboard() {
             />
             <div 
               className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide px-4 md:px-6 py-8 -my-6"
-              onScroll={(e) => setCanScrollLeft(e.currentTarget.scrollLeft > 10)}
+              onScroll={(e) => setCanScrollLeft(e.currentTarget.scrollLeft > 40)}
             >
               <div className="snap-start shrink-0 w-2 md:w-4" />
               {flows.map((flow, i) => (
