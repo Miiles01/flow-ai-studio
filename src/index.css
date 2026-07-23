@@ -163,23 +163,32 @@
 }
 .todo-scrollbar { scrollbar-width: thin; scrollbar-color: #4059F1 transparent; }
 
-/* Prompt scrollbar */
-.prompt-scrollbar::-webkit-scrollbar {
+/* Panel scrollbar (adapts to light/dark) */
+.panel-scrollbar::-webkit-scrollbar {
   width: 4px;
 }
-.prompt-scrollbar::-webkit-scrollbar-track {
+.panel-scrollbar::-webkit-scrollbar-track {
   background: transparent;
 }
-.prompt-scrollbar::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.3);
+.panel-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(0, 0, 0, 0.2);
   border-radius: 999px;
 }
-.prompt-scrollbar::-webkit-scrollbar-thumb:hover {
+.panel-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.3);
+}
+.dark .panel-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+}
+.dark .panel-scrollbar::-webkit-scrollbar-thumb:hover {
   background: rgba(255, 255, 255, 0.5);
 }
-.prompt-scrollbar { 
+.panel-scrollbar { 
   scrollbar-width: thin; 
-  scrollbar-color: rgba(255, 255, 255, 0.3) transparent; 
+  scrollbar-color: rgba(0, 0, 0, 0.2) transparent; 
+}
+.dark .panel-scrollbar {
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
 }
 
 

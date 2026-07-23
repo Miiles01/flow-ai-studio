@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { motion } from "framer-motion";
 import { X, Sparkles, Check, Loader2, Target } from "lucide-react";
 import type { PlanResult } from "@/lib/planFlow";
@@ -11,6 +12,7 @@ type PlanPanelProps = {
 };
 
 const PlanPanel = ({ plan, isDark, isGenerating, onApprove, onClose }: PlanPanelProps) => {
+  const [canScrollTop, setCanScrollTop] = useState(false);
   return (
     <div className="absolute bottom-[210px] inset-x-0 z-20 flex justify-center px-4 pointer-events-none">
       <motion.div
@@ -49,7 +51,15 @@ const PlanPanel = ({ plan, isDark, isGenerating, onApprove, onClose }: PlanPanel
         </div>
 
         {/* Body */}
-        <div className="max-h-[320px] overflow-y-auto scrollbar-hide space-y-4 pr-1">
+        <div className="relative w-full">
+          {/* Gradient overlay for when scrolled down */}
+          <div 
+            className={`absolute top-0 left-0 right-0 h-6 bg-gradient-to-b ${isDark ? 'from-[#1C1C1E] to-[#1C1C1E]/0' : 'from-white to-white/0'} pointer-events-none transition-opacity duration-300 z-10 ${canScrollTop ? 'opacity-100' : 'opacity-0'}`}
+          />
+          <div 
+            className="max-h-[320px] overflow-y-auto panel-scrollbar space-y-4 pr-1"
+            onScroll={(e) => setCanScrollTop(e.currentTarget.scrollTop > 5)}
+          >
           {plan.objective && (
             <div className="flex items-start gap-2">
               <Target size={14} className="text-[#4059F1] mt-0.5 shrink-0" />
@@ -83,6 +93,7 @@ const PlanPanel = ({ plan, isDark, isGenerating, onApprove, onClose }: PlanPanel
             </div>
           )}
 
+          </div>
         </div>
 
         {/* Footer */}

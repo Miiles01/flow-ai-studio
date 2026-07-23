@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, ArrowRight, ArrowLeft, Loader2 } from "lucide-react";
 import type { ClarifyResult } from "@/lib/clarifyFlow";
@@ -17,6 +17,10 @@ const ClarifyPanel = ({ result, isDark, isGenerating, onConfirm, onSkip, onClose
   const [answers, setAnswers] = useState<Record<string, string[]>>({});
   const [customOpen, setCustomOpen] = useState<Record<string, boolean>>({});
   const [customText, setCustomText] = useState<Record<string, string>>({});
+  const [canScrollTop, setCanScrollTop] = useState(false);
+
+  // Reset scroll gradient when changing steps
+  useEffect(() => setCanScrollTop(false), [currentStep]);
 
   const q = result.questions[currentStep];
   const totalSteps = result.questions.length;
@@ -121,7 +125,11 @@ const ClarifyPanel = ({ result, isDark, isGenerating, onConfirm, onSkip, onClose
         </div>
 
         {/* Question Slide Area */}
-        <div className="overflow-hidden min-h-[110px] flex flex-col justify-center">
+        <div className="overflow-hidden min-h-[110px] flex flex-col justify-center relative w-full">
+          {/* Gradient overlay for when scrolled down */}
+          <div 
+            className={`absolute top-0 left-0 right-0 h-6 bg-gradient-to-b ${isDark ? 'from-[#1C1C1E] to-[#1C1C1E]/0' : 'from-white to-white/0'} pointer-events-none transition-opacity duration-300 z-20 ${canScrollTop ? 'opacity-100' : 'opacity-0'}`}
+          />
           <AnimatePresence mode="wait">
             <motion.div
               key={currentStep}
@@ -129,8 +137,11 @@ const ClarifyPanel = ({ result, isDark, isGenerating, onConfirm, onSkip, onClose
               animate={{ x: 0, opacity: 1 }}
               exit={{ x: -20, opacity: 0 }}
               transition={{ duration: 0.25, ease: "easeInOut" }}
-              className="space-y-3"
             >
+              <div 
+                className="max-h-[300px] overflow-y-auto panel-scrollbar pr-1 space-y-3"
+                onScroll={(e) => setCanScrollTop(e.currentTarget.scrollTop > 5)}
+              >
               <p className={`text-[15px] font-medium leading-relaxed ${isDark ? "text-white" : "text-black"}`}>
                 {q.question}
                 {q.allow_multiple && (
@@ -211,6 +222,7 @@ const ClarifyPanel = ({ result, isDark, isGenerating, onConfirm, onSkip, onClose
                 )}
               </AnimatePresence>
 
+              </div>
             </motion.div>
           </AnimatePresence>
         </div>
