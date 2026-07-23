@@ -215,7 +215,8 @@ export function QuickSettings({ children }: { children?: React.ReactNode }) {
               </div>
             </button>
 
-            {/* Install app row */}
+            {/* Install app row (temporarily hidden per user request) */}
+            {/*
             {showInstall && (
               <button
                 onClick={handleInstall}
@@ -228,6 +229,7 @@ export function QuickSettings({ children }: { children?: React.ReactNode }) {
                 <span className="text-[13px] font-light">Abrir en aplicación</span>
               </button>
             )}
+            */}
           </div>
         </div>
       </PopoverContent>
