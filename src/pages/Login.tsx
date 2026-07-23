@@ -46,14 +46,14 @@ const Login = () => {
     <motion.div
       initial={{ y: 20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      className="bg-white w-full lg:w-1/2 py-8 px-4 md:py-14 md:px-8 rounded-[32px] flex flex-col justify-center"
+      className="bg-white text-black w-full lg:w-1/2 py-8 px-4 md:py-14 md:px-8 rounded-[32px] flex flex-col justify-center"
       style={{ minHeight: "680px" }}
     >
       <div className="text-center mb-10">
         <Link to="/" className="inline-block mb-8 hover:opacity-80 transition-opacity">
           <img src={logotipoSvg} alt="miiles" className="h-6 mx-auto" />
         </Link>
-        <h1 className="text-[28px] font-medium text-foreground">Iniciar sesión</h1>
+        <h1 className="text-[28px] font-medium text-black">Iniciar sesión</h1>
       </div>
 
       <form onSubmit={handleLogin} className="space-y-5">
