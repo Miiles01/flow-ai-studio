@@ -163,6 +163,26 @@
 }
 .todo-scrollbar { scrollbar-width: thin; scrollbar-color: #4059F1 transparent; }
 
+/* Prompt scrollbar */
+.prompt-scrollbar::-webkit-scrollbar {
+  width: 4px;
+}
+.prompt-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.prompt-scrollbar::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.3);
+  border-radius: 999px;
+}
+.prompt-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: rgba(255, 255, 255, 0.5);
+}
+.prompt-scrollbar { 
+  scrollbar-width: thin; 
+  scrollbar-color: rgba(255, 255, 255, 0.3) transparent; 
+}
+
+
 /* Kanban scrollbar - minimal black style */
 .kanban-scrollbar::-webkit-scrollbar {
   width: 3px;

@@ -25,6 +25,7 @@ const AIPromptBar = ({ onGenerate, isGenerating, forceOpen, extendLabel, onCance
   const [widgetsOpen, setWidgetsOpen] = useState(false);
   const { isDark } = useTheme();
   const [isRecording, setIsRecording] = useState(false);
+  const [canScrollTop, setCanScrollTop] = useState(false);
 
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
@@ -184,18 +185,25 @@ const AIPromptBar = ({ onGenerate, isGenerating, forceOpen, extendLabel, onCance
                   </span>
                 </div>
               )}
-              <textarea
-                ref={textareaRef}
-                rows={1}
-                value={prompt}
-                onChange={(e) => setPrompt(e.target.value)}
-                onKeyDown={handleKeyDown}
-                onFocus={() => setIsFocused(true)}
-                onBlur={() => setIsFocused(false)}
-                placeholder={extendLabel ? "¿Qué quieres generar a partir de aquí?" : "Describe tu flujo o idea..."}
-                className="w-full bg-transparent text-white font-light text-[15px] placeholder:text-white/40 outline-none resize-none overflow-hidden min-h-[44px] leading-relaxed text-center placeholder:text-center"
-                disabled={isGenerating}
-              />
+              <div className="relative w-full">
+                {/* Gradient overlay for when scrolled down */}
+                <div 
+                  className={`absolute top-0 left-0 right-0 h-6 bg-gradient-to-b from-black to-transparent pointer-events-none transition-opacity duration-300 rounded-t-[10px] z-10 ${canScrollTop ? 'opacity-100' : 'opacity-0'}`}
+                />
+                <textarea
+                  ref={textareaRef}
+                  rows={1}
+                  value={prompt}
+                  onChange={(e) => setPrompt(e.target.value)}
+                  onScroll={(e) => setCanScrollTop(e.currentTarget.scrollTop > 5)}
+                  onKeyDown={handleKeyDown}
+                  onFocus={() => setIsFocused(true)}
+                  onBlur={() => setIsFocused(false)}
+                  placeholder={extendLabel ? "¿Qué quieres generar a partir de aquí?" : "Describe tu flujo o idea..."}
+                  className="w-full bg-transparent text-white font-light text-[15px] placeholder:text-white/40 outline-none resize-none overflow-y-auto max-h-[160px] min-h-[44px] leading-relaxed text-center placeholder:text-center prompt-scrollbar"
+                  disabled={isGenerating}
+                />
+              </div>
               
               <div className="flex items-center justify-between mt-2">
                 <div className="flex items-center gap-2">
