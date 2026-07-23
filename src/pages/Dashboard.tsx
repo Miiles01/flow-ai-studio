@@ -67,6 +67,7 @@ export default function Dashboard() {
   const [applications, setApplications] = useState<UserApplication[]>([]);
   const [appsOpen, setAppsOpen] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [notifOpen, setNotifOpen] = useState(false);
   const [selectedNotif, setSelectedNotif] = useState<Notification | null>(null);
@@ -693,9 +694,16 @@ export default function Dashboard() {
             </Link>
           </div>
         ) : (
-          <div className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide -mx-8 md:-mx-12 px-4 md:px-6 py-8 -my-6">
-            <div className="snap-start shrink-0 w-2 md:w-4" />
-            {flows.map((flow, i) => (
+          <div className="relative -mx-8 md:-mx-12">
+            <div 
+              className={`absolute top-0 left-0 bottom-0 w-20 md:w-32 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none transition-opacity duration-300 ${canScrollLeft ? 'opacity-100' : 'opacity-0'}`} 
+            />
+            <div 
+              className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide px-4 md:px-6 py-8 -my-6"
+              onScroll={(e) => setCanScrollLeft(e.currentTarget.scrollLeft > 10)}
+            >
+              <div className="snap-start shrink-0 w-2 md:w-4" />
+              {flows.map((flow, i) => (
               <motion.div
                 key={flow.id}
                 initial={{ x: 20, opacity: 0 }}
@@ -728,6 +736,7 @@ export default function Dashboard() {
               </motion.div>
             )}
             <div className="snap-start shrink-0 w-2 md:w-4" />
+            </div>
           </div>
         )}
       </motion.div>
