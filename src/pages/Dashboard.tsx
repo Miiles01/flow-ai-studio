@@ -696,7 +696,7 @@ export default function Dashboard() {
         ) : (
           <div className="relative -mx-8 md:-mx-12">
             <div 
-              className={`absolute top-0 left-0 bottom-0 w-20 md:w-32 bg-gradient-to-r from-background to-transparent z-10 pointer-events-none transition-opacity duration-300 ${canScrollLeft ? 'opacity-100' : 'opacity-0'}`} 
+              className={`hidden md:block absolute top-0 left-0 bottom-0 w-32 bg-gradient-to-r ${isDark ? 'from-[#0f0f11] to-[#0f0f11]/0' : 'from-background to-white/0'} z-10 pointer-events-none transition-opacity duration-300 ${canScrollLeft ? 'opacity-100' : 'opacity-0'}`} 
             />
             <div 
               className="flex overflow-x-auto snap-x snap-mandatory scrollbar-hide px-4 md:px-6 py-8 -my-6"
