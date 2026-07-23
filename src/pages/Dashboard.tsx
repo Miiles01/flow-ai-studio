@@ -374,10 +374,17 @@ export default function Dashboard() {
                 </div>
                 <div className="flex-1 w-full mt-2 relative flex items-end justify-center z-0 overflow-hidden">
                   <img 
-                    src={isDark && item.darkImage ? item.darkImage : item.image}
+                    src={item.image}
                     alt={item.title} 
-                    className="w-full h-full object-contain object-bottom"
+                    className={`absolute inset-0 w-full h-full object-contain object-bottom transition-opacity duration-500 ${isDark ? 'opacity-0' : 'opacity-100'}`}
                   />
+                  {item.darkImage && (
+                    <img 
+                      src={item.darkImage}
+                      alt={`${item.title} Dark`} 
+                      className={`absolute inset-0 w-full h-full object-contain object-bottom transition-opacity duration-500 ${isDark ? 'opacity-100' : 'opacity-0'}`}
+                    />
+                  )}
                 </div>
                 {/* Gradient Overlay */}
                 <div 
