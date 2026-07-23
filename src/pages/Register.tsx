@@ -61,9 +61,7 @@ const Register = () => {
         <Link to="/" className="inline-block mb-8 hover:opacity-80 transition-opacity">
           <img src={logotipoSvg} alt="miiles" className="h-6 mx-auto" />
         </Link>
-        <h1 className="text-[28px] font-medium text-black">
-          Crear <span className="font-['Pacifico'] text-[#4059F1] px-1 py-1 overflow-visible font-normal">cuenta</span>
-        </h1>
+        <h1 className="text-[28px] font-medium text-black">Crear cuenta</h1>
       </div>
 
       <form onSubmit={handleRegister} className="space-y-5">

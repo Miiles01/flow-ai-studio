@@ -53,9 +53,7 @@ const Login = () => {
         <Link to="/" className="inline-block mb-8 hover:opacity-80 transition-opacity">
           <img src={logotipoSvg} alt="miiles" className="h-6 mx-auto" />
         </Link>
-        <h1 className="text-[28px] font-medium text-black">
-          Iniciar <span className="font-['Pacifico'] text-[#4059F1] px-1 py-1 overflow-visible font-normal">sesión</span>
-        </h1>
+        <h1 className="text-[28px] font-medium text-black">Iniciar sesión</h1>
       </div>
 
       <form onSubmit={handleLogin} className="space-y-5">
