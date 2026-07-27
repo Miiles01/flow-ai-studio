@@ -22,20 +22,35 @@ Deno.serve(async (req) => {
       });
     }
 
-    const system = `Eres el asistente de widgets de Miiles. Recibes:
-- widgetType: uno de kanbanNode, clientCardNode, campaignsNode, ingresosNode
-- data: JSON actual del widget
-- prompt del usuario
+    const schemaHints: Record<string, string> = {
+      kanbanNode: `KanbanNodeData: { title?: string, columns: [{ id, title, cards: [{ id, title, subtitle?, description?, extraTexts?: [{id,label,value}], tags?: [{id,label,color}], assignees?: [{id,name,email?}], imageUrl?, imageRatio?: "1:1"|"4:3"|"16:9", priority?: "low"|"medium"|"high" }] }] }. Al VACIAR información (texto largo, listas, notas, ideas), REPARTE los items como cards en columnas lógicas (por defecto: "Por hacer", "En progreso", "Hecho"). Cada línea/idea del usuario = una card con title claro; usa description/subtitle si hay detalle; extrae assignees si hay nombres/emails; extrae tags si hay categorías; infiere priority si el usuario menciona urgencia.`,
+      clientCardNode: `ClientCardNodeData: { name, role?, company?, email?, phone?, notes?, value?, currency?, tags?: [{id,label,color}], assignees?, fields?: [{id,label,value}] }. Extrae datos de contacto y agrupa datos extra en "fields".`,
+      campaignsNode: `CampaignsNodeData: { title?, campaigns: [{ id, brand, status: "Pendiente"|"Activa"|"Completada", payType: "monetario"|"intercambio", amount?, currency?, installments?: [{id, amount, dueDate, paid}], deliverables?: { reels?, posts?, stories?, tiktoks?, ugc?, otros? }, startDate?, endDate?, notes?, client?, assignees? }] }. Cuando el usuario vacíe lista de marcas/campañas, crea una entrada por marca con los datos que menciones; usa valores plausibles si faltan.`,
+      ingresosNode: `IngresosNode agrega automáticamente los campañasNode del canvas — normalmente NO se edita su data manualmente; si el usuario pregunta, contesta como query.`,
+    };
 
-Debes decidir la intención:
-- "query": el usuario PIDE INFORMACIÓN sobre el contenido actual (consultas, resúmenes, preguntas). NO modificas nada; devuelves un texto claro y conciso en Markdown.
-- "edit": el usuario PIDE CAMBIOS (crear/añadir/quitar/modificar tarjetas, campañas, columnas, campos, etc.). Devuelves el objeto data COMPLETO ya modificado, respetando su estructura original.
+    const system = `Eres el asistente de widgets de Miiles. Recibes widgetType, data (JSON actual), prompt del usuario y opcional history.
 
-Reglas edit:
-- Preserva todos los campos existentes salvo lo que se pida cambiar.
-- Genera IDs nuevos como cadenas únicas (uuid-ish).
+Decide la intención:
+- "query": el usuario PIDE INFORMACIÓN (consultas, resúmenes, preguntas). NO modificas nada; devuelves respuesta clara y concisa en Markdown en "answer".
+- "edit": el usuario PIDE CAMBIOS o VACÍA INFORMACIÓN (listas de tareas, notas sueltas, ideas, marcas, contactos, texto largo desestructurado). Devuelves el objeto data COMPLETO ya modificado en "data_json".
+
+REGLA CLAVE — bulk ingest:
+Si el usuario pega/dicta un bloque grande de información con la intención de que "lo organices", "lo metas", "lo llenes", "lo estructures", o simplemente vacía muchos items, es SIEMPRE intent=edit.
+- Parsea líneas, viñetas, párrafos, listas separadas por comas, saltos de línea.
+- Deduplica items obviamente repetidos.
+- Distribuye lógicamente según el schema del widget (ver hints).
+- Rellena campos faltantes con valores plausibles y consistentes; no inventes datos sensibles (emails, teléfonos) salvo que el usuario los dé.
+- Si ya hay contenido en el widget, POR DEFECTO añade sin borrar lo existente, salvo que el usuario pida "reemplaza"/"limpia"/"empieza de cero".
+
+Reglas edit generales:
+- Devuelve SIEMPRE el objeto data COMPLETO (no un diff), respetando exactamente el schema del widget.
+- Preserva todos los campos existentes que no se cambien.
+- Genera IDs únicos como strings cortos (ej: "c_" + random).
 - No añadas propiedades desconocidas al schema.
-- Sé generoso: si el usuario dice "crea 20 campañas de prueba", créalas con datos plausibles.
+
+Schema del widget actual (${widgetType}):
+${schemaHints[widgetType] ?? "(schema desconocido — infiere del data actual)"}
 
 Responde SIEMPRE con la tool "widget_result".`;
 
