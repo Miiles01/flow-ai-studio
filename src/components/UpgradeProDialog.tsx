@@ -46,7 +46,7 @@ export function UpgradeProDialog({ open, onOpenChange }: UpgradeProDialogProps) 
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent hideClose className="max-w-5xl p-0 overflow-hidden gap-0 bg-background">
+      <DialogContent hideClose className="max-w-6xl p-0 overflow-hidden gap-0 bg-background">
         <div className="absolute right-4 top-4 z-50">
           <button
             onClick={() => handleClose(false)}
@@ -72,7 +72,7 @@ export function UpgradeProDialog({ open, onOpenChange }: UpgradeProDialogProps) 
               </div>
             </>
           ) : (
-            <div className="px-4 py-12 md:px-12 md:py-16 min-h-[75vh] flex flex-col w-full shrink-0">
+            <div className="p-4 md:p-8 min-h-[75vh] flex flex-col w-full h-full shrink-0">
               <StripeEmbeddedCheckout
                 priceId={priceId}
                 userId={user?.id}
