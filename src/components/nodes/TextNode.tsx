@@ -105,7 +105,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
   const [linkUrl, setLinkUrl] = useState("");
   const [activeLink, setActiveLink] = useState<HTMLAnchorElement | null>(null);
   const [savedRange, setSavedRange] = useState<Range | null>(null);
-  const [activePicker, setActivePicker] = useState<"text" | null>(null);
+  const [activePicker, setActivePicker] = useState<"text" | "bg" | null>(null);
   
 
   const editorRef = useRef<HTMLDivElement>(null);
