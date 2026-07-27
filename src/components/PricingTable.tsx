@@ -148,7 +148,11 @@ const plans = [
   },
 ];
 
-export default function PricingTable() {
+interface PricingTableProps {
+  onPlanSelect?: (planName: string, cycle: "monthly" | "annually") => void;
+}
+
+export default function PricingTable({ onPlanSelect }: PricingTableProps = {}) {
   const [cycle, setCycle] = useState<"monthly" | "annually">("monthly");
 
   return (
@@ -230,16 +234,30 @@ export default function PricingTable() {
                   </li>
                 ))}
               </ul>
-              <Link
-                to={plan.customPrice ? "/precios/negocios" : "/login"}
-                className={`text-center px-8 py-4 rounded-full text-xs font-normal transition-all duration-300 font-sans ${
-                  plan.highlighted 
-                    ? "bg-white text-black hover:bg-opacity-90" 
-                    : "bg-black text-white hover:bg-opacity-80"
-                }`}
-              >
-                {plan.cta}
-              </Link>
+              
+              {onPlanSelect ? (
+                <button
+                  onClick={() => onPlanSelect(plan.name, cycle)}
+                  className={`text-center px-8 py-4 rounded-full text-xs font-normal transition-all duration-300 font-sans ${
+                    plan.highlighted 
+                      ? "bg-white text-black hover:bg-opacity-90" 
+                      : "bg-black text-white hover:bg-opacity-80"
+                  }`}
+                >
+                  {plan.cta}
+                </button>
+              ) : (
+                <Link
+                  to={plan.customPrice ? "/precios/negocios" : "/login"}
+                  className={`text-center px-8 py-4 rounded-full text-xs font-normal transition-all duration-300 font-sans ${
+                    plan.highlighted 
+                      ? "bg-white text-black hover:bg-opacity-90" 
+                      : "bg-black text-white hover:bg-opacity-80"
+                  }`}
+                >
+                  {plan.cta}
+                </Link>
+              )}
             </div>
           ))}
         </div>

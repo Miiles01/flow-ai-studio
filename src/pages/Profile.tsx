@@ -219,6 +219,11 @@ const Profile = () => {
       toast.success("¡Pago recibido! Tu plan Pro se activará en unos segundos.");
       window.history.replaceState({}, "", "/profile#plan");
     }
+    if (params.get("upgrade") === "true") {
+      setUpgradeOpen(true);
+      const newUrl = window.location.pathname + window.location.hash;
+      window.history.replaceState({}, "", newUrl);
+    }
   }, []);
 
   const handleManageSubscription = async () => {
@@ -284,6 +289,78 @@ const Profile = () => {
         </div>
 
         <form onSubmit={handleSave} className="space-y-6">
+          {/* Sección de Membresía / Plan */}
+          <div ref={planRef} className="scroll-mt-6">
+            <Card className="border border-border">
+              <CardHeader className="pb-4">
+                <CardTitle className="text-base">Tu plan</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div 
+                  className={`
+                    p-5 rounded-2xl border transition-all duration-300 flex items-center justify-between
+                    ${isDark
+                      ? "bg-white/5 border-white/10 text-white"
+                      : "bg-gray-50 border-gray-100 text-black shadow-sm"
+                    }
+                  `}
+                >
+                  <div className="space-y-1">
+                    <span className="text-[10px] font-semibold tracking-wider uppercase opacity-50 block">Membresía Activa</span>
+                    <span className="text-base font-semibold block">
+                      {plan === "pro" ? "Plan Pro" : plan === "business" || plan === "negocios" ? "Plan Negocios" : "Plan Gratis"}
+                    </span>
+                    <span className="text-xs font-light text-muted-foreground block">
+                      {plan === "free"
+                        ? "Gratis para siempre"
+                        : subscription?.cancel_at_period_end && subscription?.current_period_end
+                          ? `Se cancela el ${new Date(subscription.current_period_end).toLocaleDateString("es-MX")}`
+                          : subscription?.current_period_end
+                            ? `Se renueva el ${new Date(subscription.current_period_end).toLocaleDateString("es-MX")}`
+                            : "Ciclo activo"}
+                    </span>
+                  </div>
+                  
+                  <div className="text-right">
+                    <span className="text-2xl font-semibold block">
+                      {plan === "pro"
+                        ? (subscription?.price_id === "pro_yearly" ? "$3,712" : "$386")
+                        : plan === "business" || plan === "negocios" ? "Custom" : "$0"}
+                    </span>
+                    <span className="text-[10px] font-light text-muted-foreground block">
+                      {plan === "free"
+                        ? "Gratis para siempre"
+                        : plan === "pro"
+                          ? (subscription?.price_id === "pro_yearly" ? "MXN / año" : "MXN / mes")
+                          : "Plan a medida"}
+                    </span>
+                  </div>
+                </div>
+
+                {plan === "free" ? (
+                  <Button
+                    type="button"
+                    onClick={() => setUpgradeOpen(true)}
+                    className={`w-full rounded-full ${isDark ? "bg-white text-black hover:bg-gray-100" : "bg-black text-white hover:bg-miiles-pink"}`}
+                  >
+                    Mejorar a Pro
+                  </Button>
+                ) : isActive && subscription ? (
+                  <Button
+                    type="button"
+                    variant="outline"
+                    disabled={openingPortal}
+                    onClick={handleManageSubscription}
+                    className="w-full rounded-full"
+                  >
+                    {openingPortal ? <Loader2 size={16} className="mr-2 animate-spin" /> : null}
+                    Gestionar suscripción
+                  </Button>
+                ) : null}
+              </CardContent>
+            </Card>
+          </div>
+
           {/* Información personal */}
           <Card>
             <CardHeader className="pb-4">
@@ -454,77 +531,6 @@ const Profile = () => {
             </CardContent>
           </Card>
 
-          {/* Sección de Membresía / Plan */}
-          <div ref={planRef} className="scroll-mt-6">
-            <Card className="border border-border">
-              <CardHeader className="pb-4">
-                <CardTitle className="text-base">Tu plan</CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                <div 
-                  className={`
-                    p-5 rounded-2xl border transition-all duration-300 flex items-center justify-between
-                    ${isDark
-                      ? "bg-white/5 border-white/10 text-white"
-                      : "bg-gray-50 border-gray-100 text-black shadow-sm"
-                    }
-                  `}
-                >
-                  <div className="space-y-1">
-                    <span className="text-[10px] font-semibold tracking-wider uppercase opacity-50 block">Membresía Activa</span>
-                    <span className="text-base font-semibold block">
-                      {plan === "pro" ? "Plan Pro" : plan === "business" || plan === "negocios" ? "Plan Negocios" : "Plan Gratis"}
-                    </span>
-                    <span className="text-xs font-light text-muted-foreground block">
-                      {plan === "free"
-                        ? "Gratis para siempre"
-                        : subscription?.cancel_at_period_end && subscription?.current_period_end
-                          ? `Se cancela el ${new Date(subscription.current_period_end).toLocaleDateString("es-MX")}`
-                          : subscription?.current_period_end
-                            ? `Se renueva el ${new Date(subscription.current_period_end).toLocaleDateString("es-MX")}`
-                            : "Ciclo activo"}
-                    </span>
-                  </div>
-                  
-                  <div className="text-right">
-                    <span className="text-2xl font-semibold block">
-                      {plan === "pro"
-                        ? (subscription?.price_id === "pro_yearly" ? "$3,712" : "$386")
-                        : plan === "business" || plan === "negocios" ? "Custom" : "$0"}
-                    </span>
-                    <span className="text-[10px] font-light text-muted-foreground block">
-                      {plan === "free"
-                        ? "Gratis para siempre"
-                        : plan === "pro"
-                          ? (subscription?.price_id === "pro_yearly" ? "MXN / año" : "MXN / mes")
-                          : "Plan a medida"}
-                    </span>
-                  </div>
-                </div>
-
-                {plan === "free" ? (
-                  <Button
-                    type="button"
-                    onClick={() => setUpgradeOpen(true)}
-                    className={`w-full rounded-full ${isDark ? "bg-white text-black hover:bg-gray-100" : "bg-black text-white hover:bg-miiles-pink"}`}
-                  >
-                    Mejorar a Pro
-                  </Button>
-                ) : isActive && subscription ? (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    disabled={openingPortal}
-                    onClick={handleManageSubscription}
-                    className="w-full rounded-full"
-                  >
-                    {openingPortal ? <Loader2 size={16} className="mr-2 animate-spin" /> : null}
-                    Gestionar suscripción
-                  </Button>
-                ) : null}
-              </CardContent>
-            </Card>
-          </div>
         </form>
 
         <UpgradeProDialog open={upgradeOpen} onOpenChange={setUpgradeOpen} />

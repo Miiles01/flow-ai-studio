@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -14,6 +14,7 @@ import TutorialModal from "@/components/TutorialModal";
 import tutorialBanner from "@/assets/tablero-banner.webp.asset.json";
 import { useTrends } from "@/hooks/useTrends";
 import { TrendStoryViewer } from "@/components/TrendStoryViewer";
+import { UpgradeProDialog } from "@/components/UpgradeProDialog";
 
 type Program = {
   id: string;
@@ -83,6 +84,18 @@ export default function Dashboard() {
   const [profiles, setProfiles] = useState<ProfileOption[]>([]);
   const [selectedUsers, setSelectedUsers] = useState<Set<string>>(new Set());
   const [sending, setSending] = useState(false);
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const [upgradeOpen, setUpgradeOpen] = useState(false);
+
+  useEffect(() => {
+    if (searchParams.get("upgrade") === "true") {
+      setUpgradeOpen(true);
+      searchParams.delete("upgrade");
+      // Optional: clean up the URL to remove the parameter
+      setSearchParams(searchParams, { replace: true });
+    }
+  }, [searchParams, setSearchParams]);
 
   useEffect(() => {
     if (!user) return;
@@ -345,7 +358,7 @@ export default function Dashboard() {
                 id: 4, 
                 title: "Facebook", 
                 image: "/discoveries/card4.png",
-                darkImage: "/discoveries/card4-dark.png",
+                darkImage: "/discoveries/card4-dark-v2.png",
                 icon: (
                   <svg className="w-5 h-5" viewBox="0 0 30 30" fill="none" xmlns="http://www.w3.org/2000/svg">
                     <path d="M22.5 2.5H18.75C17.0924 2.5 15.5027 3.15848 14.3306 4.33058C13.1585 5.50269 12.5 7.0924 12.5 8.75V12.5H8.75V17.5H12.5V27.5H17.5V17.5H21.25L22.5 12.5H17.5V8.75C17.5 8.41848 17.6317 8.10054 17.8661 7.86612C18.1005 7.6317 18.4185 7.5 18.75 7.5H22.5V2.5Z" fill="currentColor"/>
@@ -755,6 +768,9 @@ export default function Dashboard() {
 
       {/* Tutorial modal */}
       <TutorialModal userId={user?.id} triggerOpen={tutorialTrigger} />
+
+      {/* Upgrade Pro popup */}
+      <UpgradeProDialog open={upgradeOpen} onOpenChange={setUpgradeOpen} />
     </>
   );
 }

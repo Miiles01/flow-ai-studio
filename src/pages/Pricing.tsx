@@ -7,6 +7,8 @@ import { CustomEase } from "gsap/CustomEase";
 import LandingNavbar from "@/components/LandingNavbar";
 import LandingFooter from "@/components/LandingFooter";
 import PricingTable from "@/components/PricingTable";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "@/contexts/AuthContext";
 
 // Registro de plugins de GSAP
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText, CustomEase);
@@ -17,6 +19,8 @@ if (!CustomEase.get("osmo-ease")) {
 
 const Pricing = () => {
   const smootherRef = useRef<ScrollSmoother | null>(null);
+  const navigate = useNavigate();
+  const { user } = useAuth();
 
   useEffect(() => {
     smootherRef.current = ScrollSmoother.create({
@@ -42,6 +46,20 @@ const Pricing = () => {
     };
   }, []);
 
+  const handlePlanSelect = (planName: string, cycle: "monthly" | "annually") => {
+    if (planName === "Gratis") {
+      navigate(user ? "/dashboard" : "/login");
+    } else if (planName === "Pro") {
+      if (user) {
+        navigate(`/profile?upgrade=true&cycle=${cycle}`);
+      } else {
+        navigate(`/login?next=${encodeURIComponent(`/dashboard?upgrade=true&cycle=${cycle}`)}`);
+      }
+    } else if (planName === "Negocios") {
+      navigate("/precios/negocios");
+    }
+  };
+
   return (
     <>
       <LandingNavbar />
@@ -58,7 +76,7 @@ const Pricing = () => {
           </section>
 
           {/* Componente del selector de ciclo y tarjetas de planes */}
-          <PricingTable />
+          <PricingTable onPlanSelect={handlePlanSelect} />
 
           <LandingFooter />
         </div>
