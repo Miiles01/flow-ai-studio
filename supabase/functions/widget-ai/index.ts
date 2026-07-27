@@ -91,6 +91,7 @@ Responde SIEMPRE con la tool "widget_result".`;
         messages,
         tools,
         tool_choice: { type: "function", function: { name: "widget_result" } },
+        max_tokens: 16000,
       }),
     });
 
