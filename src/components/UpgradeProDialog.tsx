@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { X } from "lucide-react";
+import { useTheme } from "@/contexts/ThemeContext";
 import { StripeEmbeddedCheckout } from "@/components/StripeEmbeddedCheckout";
 import { PaymentTestModeBanner } from "@/components/PaymentTestModeBanner";
 import { useAuth } from "@/contexts/AuthContext";
@@ -14,6 +16,7 @@ interface UpgradeProDialogProps {
 
 export function UpgradeProDialog({ open, onOpenChange }: UpgradeProDialogProps) {
   const { user } = useAuth();
+  const { isDark } = useTheme();
   const navigate = useNavigate();
   const [cycle, setCycle] = useState<"monthly" | "yearly">("monthly");
   const [started, setStarted] = useState(false);
@@ -43,27 +46,42 @@ export function UpgradeProDialog({ open, onOpenChange }: UpgradeProDialogProps) 
 
   return (
     <Dialog open={open} onOpenChange={handleClose}>
-      <DialogContent className="max-w-5xl p-0 overflow-hidden gap-0 max-h-[90vh] overflow-y-auto panel-scrollbar">
-        <PaymentTestModeBanner />
-        {!started ? (
-          <>
-            <DialogHeader className="px-6 pt-8 pb-4 text-center">
-              <DialogTitle className="text-2xl font-normal text-center w-full">Elige tu plan</DialogTitle>
-            </DialogHeader>
-            <div className="pb-8">
-              <PricingTable onPlanSelect={handlePlanSelect} />
+      <DialogContent hideClose className="max-w-5xl p-0 overflow-hidden gap-0 bg-background">
+        <div className="absolute right-4 top-4 z-50">
+          <button
+            onClick={() => handleClose(false)}
+            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-colors text-sm font-medium shadow-sm ${
+              isDark ? "bg-white/10 hover:bg-white/20 text-white backdrop-blur-md" : "bg-white/80 hover:bg-black/5 text-black border border-black/5 backdrop-blur-md"
+            }`}
+            aria-label="Cerrar"
+          >
+            <span>Cerrar</span>
+            <X size={14} />
+          </button>
+        </div>
+        
+        <div className="max-h-[90vh] overflow-y-auto modal-scrollbar relative w-full flex flex-col">
+          <PaymentTestModeBanner />
+          {!started ? (
+            <>
+              <DialogHeader className="px-6 pt-10 pb-2 text-center shrink-0">
+                <DialogTitle className="text-2xl font-normal text-center w-full">Elige tu plan</DialogTitle>
+              </DialogHeader>
+              <div className="shrink-0">
+                <PricingTable onPlanSelect={handlePlanSelect} isModal />
+              </div>
+            </>
+          ) : (
+            <div className="p-4 h-[80vh] shrink-0">
+              <StripeEmbeddedCheckout
+                priceId={priceId}
+                userId={user?.id}
+                customerEmail={user?.email}
+                returnUrl={`${window.location.origin}/profile?checkout=success`}
+              />
             </div>
-          </>
-        ) : (
-          <div className="p-4 h-[80vh]">
-            <StripeEmbeddedCheckout
-              priceId={priceId}
-              userId={user?.id}
-              customerEmail={user?.email}
-              returnUrl={`${window.location.origin}/profile?checkout=success`}
-            />
-          </div>
-        )}
+          )}
+        </div>
       </DialogContent>
     </Dialog>
   );

@@ -220,6 +220,28 @@
   scrollbar-color: #000000 transparent;
 }
 
+/* Modal scrollbar - black and thin */
+.modal-scrollbar::-webkit-scrollbar {
+  width: 3px;
+}
+.modal-scrollbar::-webkit-scrollbar-track {
+  background: transparent;
+}
+.modal-scrollbar::-webkit-scrollbar-thumb {
+  background-color: #000000;
+  border-radius: 999px;
+}
+.dark .modal-scrollbar::-webkit-scrollbar-thumb {
+  background-color: rgba(255, 255, 255, 0.5);
+}
+.modal-scrollbar {
+  scrollbar-width: thin;
+  scrollbar-color: #000000 transparent;
+}
+.dark .modal-scrollbar {
+  scrollbar-color: rgba(255, 255, 255, 0.5) transparent;
+}
+
 /* Card Editor scrollbar */
 .editor-scrollbar::-webkit-scrollbar {
   width: 10px;

@@ -150,9 +150,10 @@ const plans = [
 
 interface PricingTableProps {
   onPlanSelect?: (planName: string, cycle: "monthly" | "annually") => void;
+  isModal?: boolean;
 }
 
-export default function PricingTable({ onPlanSelect }: PricingTableProps = {}) {
+export default function PricingTable({ onPlanSelect, isModal }: PricingTableProps = {}) {
   const [cycle, setCycle] = useState<"monthly" | "annually">("monthly");
 
   return (
@@ -184,7 +185,7 @@ export default function PricingTable({ onPlanSelect }: PricingTableProps = {}) {
       </section>
 
       {/* Grid de Tablas de Precios */}
-      <section className="px-6 mb-32">
+      <section className={`px-6 ${isModal ? "mb-4" : "mb-32"}`}>
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-3 gap-6">
           {plans.map((plan) => (
             <div
