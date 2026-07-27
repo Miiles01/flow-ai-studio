@@ -91,6 +91,7 @@ Responde SIEMPRE con la tool "widget_result".`;
         messages,
         tools,
         tool_choice: { type: "function", function: { name: "widget_result" } },
+        max_tokens: 16000,
       }),
     });
 
@@ -102,18 +103,36 @@ Responde SIEMPRE con la tool "widget_result".`;
     }
 
     const json = await res.json();
-    const call = json?.choices?.[0]?.message?.tool_calls?.[0];
+    const msg = json?.choices?.[0]?.message;
+    const call = msg?.tool_calls?.[0];
+    const finishReason = json?.choices?.[0]?.finish_reason;
     if (!call?.function?.arguments) {
+      console.error("widget-ai no tool_call. finish:", finishReason, "msg:", JSON.stringify(msg)?.slice(0, 500));
       return new Response(JSON.stringify({ error: "Respuesta inválida de IA" }), {
         status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
-    const parsed = JSON.parse(call.function.arguments);
-    console.log("widget-ai parsed:", JSON.stringify(parsed).slice(0, 500));
+    let parsed: any;
+    try {
+      parsed = JSON.parse(call.function.arguments);
+    } catch (e) {
+      console.error("widget-ai args no parseables. finish:", finishReason, "len:", call.function.arguments.length);
+      return new Response(JSON.stringify({ error: "IA devolvió respuesta truncada. Intenta con menos data o pide cambios más pequeños." }), {
+        status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    console.log("widget-ai parsed intent:", parsed.intent, "finish:", finishReason);
     const out: Record<string, unknown> = { intent: parsed.intent, answer: parsed.answer };
     if (parsed.intent === "edit" && parsed.data_json) {
-      try { out.data = JSON.parse(parsed.data_json); }
-      catch { out.data = {}; out.error = "IA devolvió data_json inválido"; }
+      try {
+        out.data = JSON.parse(parsed.data_json);
+      } catch (e) {
+        console.error("data_json inválido. finish:", finishReason, "len:", parsed.data_json.length, "tail:", parsed.data_json.slice(-200));
+        out.data = {};
+        out.error = finishReason === "length"
+          ? "La respuesta se truncó por tamaño. Divide la instrucción en partes más pequeñas."
+          : "IA devolvió data_json inválido";
+      }
     }
     return new Response(JSON.stringify(out), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
