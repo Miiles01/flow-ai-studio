@@ -891,7 +891,7 @@ const Features = () => {
                           <div className="w-full overflow-hidden relative z-10" style={{ maskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)" }}>
                             <div className="flex w-max gap-3.5 animate-marquee">
                               {brandsRow1.map((b, idx) => (
-                                <div key={idx} className="flex items-center justify-center px-6 sm:px-8 h-16 sm:h-20 rounded-[20px] border border-neutral-200/50 bg-white/90 text-neutral-900 shadow-sm backdrop-blur-md shrink-0">
+                                <div key={idx} className="flex items-center justify-center px-6 sm:px-8 h-16 sm:h-20 rounded-[20px] border border-neutral-200 bg-white shrink-0">
                                   <img src={b.logo} alt={b.name} className="h-6 sm:h-8 w-auto object-contain opacity-70 shrink-0" />
                                 </div>
                               ))}
@@ -902,7 +902,7 @@ const Features = () => {
                           <div className="w-full overflow-hidden relative z-10" style={{ maskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)" }}>
                             <div className="flex w-max gap-3.5 animate-marquee" style={{ animationDirection: "reverse" }}>
                               {brandsRow2.map((b, idx) => (
-                                <div key={idx} className="flex items-center justify-center px-6 sm:px-8 h-16 sm:h-20 rounded-[20px] border border-neutral-200/50 bg-white/90 text-neutral-900 shadow-sm backdrop-blur-md shrink-0">
+                                <div key={idx} className="flex items-center justify-center px-6 sm:px-8 h-16 sm:h-20 rounded-[20px] border border-neutral-200 bg-white shrink-0">
                                   <img src={b.logo} alt={b.name} className="h-6 sm:h-8 w-auto object-contain opacity-70 shrink-0" />
                                 </div>
                               ))}
