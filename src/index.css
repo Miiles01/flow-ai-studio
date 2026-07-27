@@ -223,13 +223,19 @@
 /* Modal scrollbar - black and thin */
 .modal-scrollbar::-webkit-scrollbar {
   width: 3px;
+  height: 3px;
 }
 .modal-scrollbar::-webkit-scrollbar-track {
   background: transparent;
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
 .modal-scrollbar::-webkit-scrollbar-thumb {
   background-color: #000000;
   border-radius: 999px;
+  border-top: 40px solid transparent;
+  border-bottom: 40px solid transparent;
+  background-clip: padding-box;
 }
 .dark .modal-scrollbar::-webkit-scrollbar-thumb {
   background-color: rgba(255, 255, 255, 0.5);

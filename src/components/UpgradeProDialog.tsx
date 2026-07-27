@@ -72,7 +72,7 @@ export function UpgradeProDialog({ open, onOpenChange }: UpgradeProDialogProps) 
               </div>
             </>
           ) : (
-            <div className="p-4 h-[80vh] shrink-0">
+            <div className="px-4 py-12 md:px-12 md:py-16 min-h-[75vh] flex flex-col w-full shrink-0">
               <StripeEmbeddedCheckout
                 priceId={priceId}
                 userId={user?.id}
