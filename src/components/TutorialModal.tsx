@@ -373,8 +373,8 @@ export default function TutorialModal({ userId, triggerOpen }: Props) {
                         <svg className="w-5 h-5 filter drop-shadow-[0_1px_3px_rgba(0,0,0,0.15)] rotate-[-10deg] shrink-0" viewBox="0 0 24 24">
                           <path d="M4 3l16 8-8 2-6 7z" fill="#4059F1" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
-                        <div className="bg-[#4059F1] text-white py-1.5 px-3 rounded-full shadow-[0_4px_10px_rgba(64,89,241,0.3)] -ml-1.5 mt-3.5 flex items-center justify-center">
-                          <span className="text-[10px] sm:text-[11px] font-semibold tracking-wide text-center leading-none">Mateo</span>
+                        <div className="bg-[#4059F1] text-white py-1 px-3.5 rounded-full shadow-[0_4px_12px_rgba(64,89,241,0.25)] -ml-1.5 mt-4 flex items-center justify-center">
+                          <span className="text-[10px] sm:text-[11px] font-semibold tracking-wide text-center leading-none pt-0.5">Mateo</span>
                         </div>
                       </div>
 
@@ -382,8 +382,8 @@ export default function TutorialModal({ userId, triggerOpen }: Props) {
                         <svg className="w-5 h-5 filter drop-shadow-[0_1px_3px_rgba(0,0,0,0.15)] rotate-[-10deg] shrink-0" viewBox="0 0 24 24">
                           <path d="M4 3l16 8-8 2-6 7z" fill="#FCB5B9" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                         </svg>
-                        <div className="bg-[#FCB5B9] text-neutral-800 py-1.5 px-3 rounded-full shadow-[0_4px_10px_rgba(252,181,185,0.3)] -ml-1.5 mt-3.5 flex items-center justify-center">
-                          <span className="text-[10px] sm:text-[11px] font-semibold tracking-wide text-center leading-none">Sofía</span>
+                        <div className="bg-[#FCB5B9] text-neutral-800 py-1 px-3.5 rounded-full shadow-[0_4px_12px_rgba(252,181,185,0.3)] -ml-1.5 mt-4 flex items-center justify-center">
+                          <span className="text-[10px] sm:text-[11px] font-semibold tracking-wide text-center leading-none pt-0.5">Sofía</span>
                         </div>
                       </div>
                     </div>

@@ -677,8 +677,8 @@ const CollaborationMockup = () => {
               strokeLinejoin="round" 
             />
           </svg>
-          <div className="bg-[#4059F1] text-white py-1 px-3.5 rounded-full shadow-[0_4px_12px_rgba(64,89,241,0.25)] -ml-1.5 mt-4">
-            <span className="text-[11px] sm:text-xs font-semibold tracking-wide">Mateo</span>
+          <div className="bg-[#4059F1] text-white py-1 px-3.5 rounded-full shadow-[0_4px_12px_rgba(64,89,241,0.25)] -ml-1.5 mt-4 flex items-center justify-center">
+            <span className="text-[11px] sm:text-xs font-semibold tracking-wide leading-none pt-0.5">Mateo</span>
           </div>
         </motion.div>
 
@@ -707,8 +707,8 @@ const CollaborationMockup = () => {
               strokeLinejoin="round" 
             />
           </svg>
-          <div className="bg-[#FCB5B9] text-neutral-800 py-1 px-3.5 rounded-full shadow-[0_4px_12px_rgba(252,181,185,0.3)] -ml-1.5 mt-4">
-            <span className="text-[11px] sm:text-xs font-semibold tracking-wide">Sofía</span>
+          <div className="bg-[#FCB5B9] text-neutral-800 py-1 px-3.5 rounded-full shadow-[0_4px_12px_rgba(252,181,185,0.3)] -ml-1.5 mt-4 flex items-center justify-center">
+            <span className="text-[11px] sm:text-xs font-semibold tracking-wide leading-none pt-0.5">Sofía</span>
           </div>
         </motion.div>
 
