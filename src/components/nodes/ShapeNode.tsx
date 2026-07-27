@@ -2,7 +2,7 @@ import { memo, useState, useRef, useEffect, forwardRef } from "react";
 import { Handle, Position, type NodeProps, NodeResizer, useReactFlow, useViewport } from "@xyflow/react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTheme } from "@/contexts/ThemeContext";
-import { Square, Circle, Triangle, Hexagon, Star, Plus, Minus, Palette, Bold, Italic, Underline, Diamond, Trash2, Baseline, GripVertical } from "lucide-react";
+import { Square, Circle, Triangle, Hexagon, Star, Plus, Minus, Palette, Bold, Italic, Underline, Diamond, Trash2, Baseline, GripVertical, Check } from "lucide-react";
 import { isColorDark } from "@/lib/utils";
 import NodeExtendHandles from "@/components/nodes/NodeExtendHandles";
 import { useAutoGrowNode } from "@/hooks/useAutoGrowNode";
