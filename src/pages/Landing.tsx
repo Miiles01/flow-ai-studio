@@ -462,7 +462,7 @@ const Landing = () => {
                   {t("landing.trusted_by")}
                 </h4>
                 <div className="px-[10%] md:px-[20%]">
-                  <div className="relative w-full" style={{ maskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)" }}>
+                  <div className="relative w-full overflow-hidden" style={{ maskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)" }}>
                     <div className="flex w-max animate-marquee gap-20 items-center">
                       {[...brandLogos, ...brandLogos].map((logo, i) => (
                         <img key={i} src={logo} alt="" className="h-6 md:h-7 w-auto shrink-0 transition-all duration-300" />
