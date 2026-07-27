@@ -94,7 +94,7 @@ const About = () => {
               </span>
               
               <p className="fade-up text-lg md:text-xl font-light text-gray-500 max-w-2xl mx-auto leading-relaxed">
-                Somos una empresa dedicada al desarrollo de procesos creativos con inteligencia artificial.
+                Diseñamos el futuro del trabajo creativo. Herramientas con inteligencia artificial para estructurar, colaborar y escalar sin límites.
               </p>
             </div>
           </section>
