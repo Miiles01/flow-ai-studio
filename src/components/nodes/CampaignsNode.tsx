@@ -188,6 +188,8 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
   const [filter, setFilter] = useState("");
   const [openCampaignId, setOpenCampaignId] = useState<string | null>(null);
   const anchorRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+  useWidgetAutoFit(id, (d as any)._aiFitNonce, scrollRef, anchorRef, { minHeight: 320, maxHeight: 2200 });
 
   const campaigns = d.campaigns ?? [];
 
