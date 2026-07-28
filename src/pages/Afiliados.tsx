@@ -1572,14 +1572,14 @@ const Afiliados = () => {
           </div>
 
           {/* ── MOBILE CTA SECTION ─────────────────────────── */}
-          <div className="block md:hidden py-24 px-6 text-center bg-white border-t border-black/5">
+          <div className="block md:hidden py-20 px-6 text-center bg-white border-t border-black/5">
             <div className="max-w-md mx-auto flex flex-col items-center">
               <h2 className="text-3xl font-normal leading-tight tracking-tight mb-8">
                 Empieza hoy mismo
               </h2>
               <Link
                 to="/register"
-                className="w-full max-w-xs py-4 px-8 rounded-full bg-black text-white text-base font-normal shadow-lg flex items-center justify-center gap-2 hover:-translate-y-1 transition-transform duration-300"
+                className="px-8 py-4 rounded-full bg-black text-white text-[15px] font-normal inline-flex items-center justify-center gap-2 hover:-translate-y-1 transition-transform duration-300"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12 0C12.3 8.8 15.2 11.7 24 12C15.2 12.3 12.3 15.2 12 24C11.7 15.2 8.8 12.3 0 12C8.8 11.7 11.7 8.8 12 0Z" />
