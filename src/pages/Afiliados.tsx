@@ -1183,8 +1183,8 @@ const Afiliados = () => {
         const split = SplitText.create(el, { type: "lines", mask: "lines" });
         splits.push(split);
         gsap.fromTo(split.lines, { yPercent: 110 }, {
-          yPercent: 0, duration: 0.9, stagger: 0.08, ease: "osmo-ease",
-          scrollTrigger: { trigger: el, start: "top 88%", once: true },
+          yPercent: 0, duration: 0.5, stagger: 0.04, ease: "power2.out",
+          scrollTrigger: { trigger: el, start: "top 92%", once: true },
           onComplete: () => split.lines.forEach(line => {
             if (line.parentElement) line.parentElement.style.overflow = "visible";
           }),
@@ -1196,11 +1196,12 @@ const Afiliados = () => {
     const fontsReady = (document as Document & { fonts?: { ready: Promise<unknown> } }).fonts?.ready;
     if (fontsReady) fontsReady.then(runSplit); else runSplit();
 
+    // Fade-in optimizado para tarjetas y elementos data-fade
     document.querySelectorAll<HTMLElement>("[data-fade]").forEach((el) => {
       animated.push(el);
-      gsap.fromTo(el, { opacity: 0, y: 24 }, {
-        opacity: 1, y: 0, duration: 0.8, ease: "power2.out",
-        scrollTrigger: { trigger: el, start: "top 87%", once: true },
+      gsap.fromTo(el, { opacity: 0, y: 12 }, {
+        opacity: 1, y: 0, duration: 0.45, ease: "power2.out",
+        scrollTrigger: { trigger: el, start: "top 92%", once: true },
       });
     });
 
