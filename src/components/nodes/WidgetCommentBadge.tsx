@@ -19,12 +19,17 @@ const WidgetCommentBadge = ({ comments, onChange }: Props) => {
   if (!comments.length) return null;
 
   useEffect(() => {
-    if (open && scrollRef.current) {
-      setTimeout(() => {
+    if (open) {
+      // Radix Popover anima la entrada, por lo que el scrollHeight puede no estar listo de inmediato.
+      // Hacemos unos pocos intentos rápidos para asegurar que se vaya hasta abajo.
+      let attempts = 0;
+      const interval = setInterval(() => {
         if (scrollRef.current) {
           scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
         }
-      }, 50);
+        if (++attempts > 10) clearInterval(interval);
+      }, 30);
+      return () => clearInterval(interval);
     }
   }, [open, comments.length]);
 
