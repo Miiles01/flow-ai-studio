@@ -599,21 +599,19 @@ const CardView = ({
       <div className="flex items-center gap-1.5">
         <GripVertical size={12} className="opacity-30 shrink-0" />
         <div className="flex-1 min-w-0">
-          <input
-            value={card.title}
-            onChange={(e) => onUpdate({ title: e.target.value })}
-            className="nodrag nopan w-full bg-transparent border-none outline-none text-[13px] font-medium"
+          <div
+            className="nodrag nopan w-full text-[13px] font-medium whitespace-pre-wrap break-words leading-tight"
             style={{ color: textColor }}
-            placeholder="Título"
-          />
+          >
+            {card.title || "Título"}
+          </div>
           {(card.showSubtitle || card.subtitle) && (
-            <input
-              value={card.subtitle ?? ""}
-              onChange={(e) => onUpdate({ subtitle: e.target.value })}
-              className="nodrag nopan w-full bg-transparent border-none outline-none text-[11px] font-light mt-0.5 opacity-70"
+            <div
+              className="nodrag nopan w-full text-[11px] font-light mt-1 opacity-70 whitespace-pre-wrap break-words leading-tight"
               style={{ color: textColor }}
-              placeholder="Subtítulo"
-            />
+            >
+              {card.subtitle || "Subtítulo"}
+            </div>
           )}
 
           {card.description && (
