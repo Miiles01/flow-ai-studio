@@ -363,6 +363,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
       </div>
 
       <div
+        ref={outerRef}
         className="w-full h-full rounded-2xl overflow-hidden flex flex-col transition-all duration-300"
         style={{
           backgroundColor,
@@ -394,7 +395,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
           </div>
         )}
 
-        <div className="flex-1 overflow-auto kanban-scrollbar">
+        <div ref={scrollRef} className="flex-1 overflow-auto kanban-scrollbar">
           <div className="flex gap-3 p-4 items-stretch min-w-min min-h-full">
             {columns.map((col) => (
               <div
