@@ -1451,7 +1451,7 @@ const Afiliados = () => {
               <span className="block">Crea contenido</span>
             </h1>
 
-            <p data-fade className="text-[17px] md:text-xl font-light text-gray-400 max-w-xl mx-auto mb-10 leading-relaxed px-2 md:px-0">
+            <p data-fade className="text-[17px] md:text-xl font-light text-zinc-600 max-w-xl mx-auto mb-10 leading-relaxed px-2 md:px-0">
               Únete al programa de afiliados de Miiles. Comparte tu link y recibe el <strong className="text-black font-normal">25%</strong> de comisión en suscripciones.
             </p>
 
@@ -1511,7 +1511,7 @@ const Afiliados = () => {
                 <h2 className="text-4xl md:text-6xl font-normal leading-[1.3] tracking-tight pb-2">
                   Empieza desde cualquier lugar
                 </h2>
-                <p data-fade className="text-sm font-light text-gray-400 mt-4 max-w-sm mx-auto">
+                <p data-fade className="text-sm font-light text-zinc-600 mt-4 max-w-sm mx-auto">
                   No hay formularios complicados ni procesos de aprobación largos.
                 </p>
               </div>
@@ -1523,10 +1523,10 @@ const Afiliados = () => {
                     data-fade
                     className="flex gap-6 items-start border border-black/8 rounded-3xl p-7 hover:-translate-y-2 hover:shadow-[0_16px_40px_rgba(0,0,0,0.06)] transition-all duration-300"
                   >
-                    <span className="text-[11px] font-normal text-black/25 mt-1 shrink-0 w-8">{s.n}</span>
+                    <span className="text-[11px] font-normal text-zinc-400 mt-1 shrink-0 w-8">{s.n}</span>
                     <div>
                       <div className="text-xl font-normal mb-2">{s.label}</div>
-                      <div className="text-sm font-light text-gray-400">{s.detail}</div>
+                      <div className="text-sm font-light text-zinc-600">{s.detail}</div>
                     </div>
                   </div>
                 ))}
@@ -1539,8 +1539,8 @@ const Afiliados = () => {
             </div>
           </section>
 
-          {/* ── H104 HORIZONTAL SCROLL TEXT ─────────────────────────── */}
-          <div className="mwg-h104" style={{ background: '#fff' }}>
+          {/* ── H104 HORIZONTAL SCROLL TEXT (DESKTOP) ─────────────────────────── */}
+          <div className="mwg-h104 hidden md:block" style={{ background: '#fff' }}>
             <div className="h104-pin">
               <div className="h104-container">
                 <svg width="2577" height="391" viewBox="0 0 2577 391" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -1568,6 +1568,24 @@ const Afiliados = () => {
                   </g>
                 </svg>
               </div>
+            </div>
+          </div>
+
+          {/* ── MOBILE CTA SECTION ─────────────────────────── */}
+          <div className="block md:hidden py-24 px-6 text-center bg-white border-t border-black/5">
+            <div className="max-w-md mx-auto flex flex-col items-center">
+              <h2 className="text-3xl font-normal leading-tight tracking-tight mb-8">
+                Empieza hoy mismo
+              </h2>
+              <Link
+                to="/register"
+                className="w-full max-w-xs py-4 px-8 rounded-full bg-black text-white text-base font-normal shadow-lg flex items-center justify-center gap-2 hover:-translate-y-1 transition-transform duration-300"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 0C12.3 8.8 15.2 11.7 24 12C15.2 12.3 12.3 15.2 12 24C11.7 15.2 8.8 12.3 0 12C8.8 11.7 11.7 8.8 12 0Z" />
+                </svg>
+                Crear cuenta
+              </Link>
             </div>
           </div>
 
