@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useRef, useEffect } from "react";
 import { Trash2, X, Check, Sparkles } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import EstrellaIcon from "@/assets/miiles/Estrella.svg";
@@ -12,8 +12,21 @@ type Props = {
 
 const WidgetCommentBadge = ({ comments, onChange }: Props) => {
   const [open, setOpen] = useState(false);
-  const hasUnread = useMemo(() => comments.some((c) => !c.read), [comments]);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const unreadCount = useMemo(() => comments.filter((c) => !c.read).length, [comments]);
+  const hasUnread = unreadCount > 0;
+  
   if (!comments.length) return null;
+
+  useEffect(() => {
+    if (open && scrollRef.current) {
+      setTimeout(() => {
+        if (scrollRef.current) {
+          scrollRef.current.scrollTop = scrollRef.current.scrollHeight;
+        }
+      }, 50);
+    }
+  }, [open, comments.length]);
 
   const onOpenChange = (next: boolean) => {
     setOpen(next);
@@ -38,9 +51,11 @@ const WidgetCommentBadge = ({ comments, onChange }: Props) => {
             title="Comentarios"
           >
             <img src={EstrellaIcon} alt="" className="w-4 h-4 invert" />
-            <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white dark:border-[#1C1C1E] shadow-sm">
-              {comments.length}
-            </span>
+            {unreadCount > 0 && (
+              <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white dark:border-[#1C1C1E] shadow-sm">
+                {unreadCount}
+              </span>
+            )}
           </button>
         </PopoverTrigger>
         <PopoverContent
@@ -68,7 +83,7 @@ const WidgetCommentBadge = ({ comments, onChange }: Props) => {
               <X size={12} />
             </button>
           </div>
-          <div className="flex-1 overflow-y-auto editor-scrollbar p-3 space-y-3">
+          <div ref={scrollRef} className="flex-1 overflow-y-auto editor-scrollbar p-3 space-y-3">
             {comments.map((c) => (
               <div key={c.id} className="group">
                 <div className="text-[10px] text-miiles-gray-400 mb-1">Tú</div>
