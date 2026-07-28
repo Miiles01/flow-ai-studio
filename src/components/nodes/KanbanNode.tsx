@@ -22,6 +22,7 @@ import {
 import { useTheme } from "@/contexts/ThemeContext";
 import NodeExtendHandles from "@/components/nodes/NodeExtendHandles";
 import WidgetCommentSlot from "@/components/nodes/WidgetCommentSlot";
+import { useWidgetAutoFit } from "@/hooks/useWidgetAutoFit";
 import { Switch } from "@/components/ui/switch";
 
 export type KanbanAssignee = {
@@ -174,6 +175,9 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
   const [editingCard, setEditingCard] = useState<{ colId: string; cardId: string; anchorEl: HTMLElement } | null>(null);
   const dragRef = useRef<{ cardId: string; fromCol: string } | null>(null);
   const [dropTarget, setDropTarget] = useState<{ col: string; index: number } | null>(null);
+  const outerRef = useRef<HTMLDivElement | null>(null);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+  useWidgetAutoFit(id, (nodeData as any)._aiFitNonce, scrollRef, outerRef, { minHeight: 280, maxHeight: 2000 });
 
   const update = (patch: Partial<KanbanNodeData>) => {
     setNodes((nds) => nds.map((n) => (n.id === id ? { ...n, data: { ...n.data, ...patch } } : n)));
@@ -359,6 +363,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
       </div>
 
       <div
+        ref={outerRef}
         className="w-full h-full rounded-2xl overflow-hidden flex flex-col transition-all duration-300"
         style={{
           backgroundColor,
@@ -390,7 +395,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
           </div>
         )}
 
-        <div className="flex-1 overflow-auto kanban-scrollbar">
+        <div ref={scrollRef} className="flex-1 overflow-auto kanban-scrollbar">
           <div className="flex gap-3 p-4 items-stretch min-w-min min-h-full">
             {columns.map((col) => (
               <div

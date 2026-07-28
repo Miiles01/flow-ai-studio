@@ -26,6 +26,7 @@ import {
 import { useTheme } from "@/contexts/ThemeContext";
 import NodeExtendHandles from "@/components/nodes/NodeExtendHandles";
 import WidgetCommentSlot from "@/components/nodes/WidgetCommentSlot";
+import { useWidgetAutoFit } from "@/hooks/useWidgetAutoFit";
 
 export type ClientTag = { id: string; label: string; color: string };
 export type ClientAssignee = { id: string; name: string; email?: string };
@@ -116,6 +117,8 @@ const ClientCardNode = ({ id, data, selected }: NodeProps) => {
   const [activePicker, setActivePicker] = useState<"fill" | "text" | null>(null);
   const [editorOpen, setEditorOpen] = useState(false);
   const anchorRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+  useWidgetAutoFit(id, (d as any)._aiFitNonce, scrollRef, anchorRef, { minHeight: 220, maxHeight: 1400 });
 
   const update = (patch: Partial<ClientCardNodeData>) =>
     setNodes((nds) => nds.map((n) => (n.id === id ? { ...n, data: { ...n.data, ...patch } } : n)));
@@ -236,7 +239,7 @@ const ClientCardNode = ({ id, data, selected }: NodeProps) => {
         </div>
 
         {/* Body */}
-        <div className="px-4 pb-4 flex-1 overflow-y-auto kanban-scrollbar space-y-2">
+        <div ref={scrollRef} className="px-4 pb-4 flex-1 overflow-y-auto kanban-scrollbar space-y-2">
           {(d.tags?.length ?? 0) > 0 && (
             <div className="flex flex-wrap gap-1">
               {d.tags!.map((t) => (

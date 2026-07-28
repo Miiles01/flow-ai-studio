@@ -31,6 +31,7 @@ import {
 import { useTheme } from "@/contexts/ThemeContext";
 import NodeExtendHandles from "@/components/nodes/NodeExtendHandles";
 import WidgetCommentSlot from "@/components/nodes/WidgetCommentSlot";
+import { useWidgetAutoFit } from "@/hooks/useWidgetAutoFit";
 
 export type CampaignStatus = "Pendiente" | "Activa" | "Completada";
 export type CampaignPayType = "monetario" | "intercambio";
@@ -188,6 +189,8 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
   const [filter, setFilter] = useState("");
   const [openCampaignId, setOpenCampaignId] = useState<string | null>(null);
   const anchorRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement | null>(null);
+  useWidgetAutoFit(id, (d as any)._aiFitNonce, scrollRef, anchorRef, { minHeight: 320, maxHeight: 2200 });
 
   const campaigns = d.campaigns ?? [];
 
@@ -371,7 +374,7 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
         </div>
 
         {/* Grid of campaign cards */}
-        <div className="p-4 flex-1 overflow-y-auto kanban-scrollbar">
+        <div ref={scrollRef} className="p-4 flex-1 overflow-y-auto kanban-scrollbar">
           {filtered.length === 0 ? (
             <div className={`h-full flex flex-col items-center justify-center gap-2 text-center ${subtleText}`}>
               <div className={`w-12 h-12 rounded-full flex items-center justify-center ${softSurface}`}>
