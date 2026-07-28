@@ -1448,7 +1448,7 @@ const Afiliados = () => {
           <section className="min-h-[90vh] flex flex-col items-center justify-center text-center px-6 pt-48 md:pt-56 pb-16 relative overflow-hidden">
 
             <h1 className="text-5xl md:text-7xl lg:text-[90px] font-normal leading-[1.05] tracking-tight mb-8 max-w-4xl mx-auto">
-              <span className="block">Crea contenido</span>
+              <span className="block">Afiliados y creadores</span>
             </h1>
 
             <p data-fade className="text-[17px] md:text-xl font-light text-zinc-600 max-w-xl mx-auto mb-10 leading-relaxed px-2 md:px-0">
