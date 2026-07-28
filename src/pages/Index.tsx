@@ -1469,7 +1469,16 @@ const IndexContent = () => {
               createdAt: Date.now(),
               read: false,
             };
-            return { ...n, data: { ...(result.data as any), aiComments: [...existingComments, newComment] } };
+            // _aiFitNonce triggers useWidgetAutoFit inside the widget so the node
+            // re-measures itself and grows/shrinks to fit the new data.
+            return {
+              ...n,
+              data: {
+                ...(result.data as any),
+                aiComments: [...existingComments, newComment],
+                _aiFitNonce: Date.now(),
+              },
+            };
           }
           const newComment: WidgetAIComment = {
             id: uid(),
