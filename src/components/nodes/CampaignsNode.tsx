@@ -31,6 +31,7 @@ import {
 import { useTheme } from "@/contexts/ThemeContext";
 import NodeExtendHandles from "@/components/nodes/NodeExtendHandles";
 import WidgetCommentSlot from "@/components/nodes/WidgetCommentSlot";
+import { useWidgetAutoFit } from "@/hooks/useWidgetAutoFit";
 
 export type CampaignStatus = "Pendiente" | "Activa" | "Completada";
 export type CampaignPayType = "monetario" | "intercambio";
