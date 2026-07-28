@@ -1487,9 +1487,9 @@ const Afiliados = () => {
                   <p className="e022-top-title">Quiénes somos</p>
                 </div>
                 <div className="e022-paragraphs">
-                  <p className="e022-paragraph">Somos Miiles — Un equipo enfocado en crear herramientas innovadoras para creativos.</p>
-                  <p className="e022-paragraph">Herramientas con IA — Nuestras soluciones le permiten a los creativos diseñar, estructurar y lanzar modelos de negocio impulsados por IA en minutos.</p>
-                  <p className="e022-paragraph">Nuestra misión — Ayudar a las personas a crear y crecer sin límites, descubriendo oportunidades reales.</p>
+                  <p className="e022-paragraph">Somos Miiles — Creamos herramientas para creativos.</p>
+                  <p className="e022-paragraph">Con Miiles — Puedes diseñar, estructurar y lanzar modelos de negocio impulsados por IA en minutos.</p>
+                  <p className="e022-paragraph">Nuestra misión — Ayudar a las personas a crear y crecer sin límites.</p>
                 </div>
               </div>
             </div>
