@@ -70,23 +70,20 @@ ${schemaHints[widgetType] ?? "(schema desconocido — infiere del data actual)"}
 
 Responde SIEMPRE con la tool "widget_result".`;
 
-    const tools = [{
-      type: "function",
-      function: {
-        name: "widget_result",
-        description: "Resultado de la operación sobre el widget",
-        parameters: {
-          type: "object",
-          properties: {
-            intent: { type: "string", enum: ["query", "edit"] },
-            answer: { type: "string", description: "Respuesta en Markdown si intent=query" },
-            data_json: { type: "string", description: "Si intent=edit, JSON string con el objeto data COMPLETO ya modificado (mismo schema que el data actual)" },
-          },
-          required: ["intent"],
-          additionalProperties: false,
+    const tool = {
+      name: "widget_result",
+      description: "Resultado de la operación sobre el widget",
+      parameters: {
+        type: "object",
+        properties: {
+          intent: { type: "string", enum: ["query", "edit"] },
+          answer: { type: "string", description: "Respuesta en Markdown si intent=query" },
+          data_json: { type: "string", description: "Si intent=edit, JSON string con el objeto data COMPLETO ya modificado (mismo schema que el data actual)" },
         },
+        required: ["intent"],
+        additionalProperties: false,
       },
-    }];
+    };
 
     const messages: any[] = [{ role: "system", content: system }];
     if (Array.isArray(history)) {
@@ -99,40 +96,29 @@ Responde SIEMPRE con la tool "widget_result".`;
       content: `widgetType: ${widgetType}\ndata actual:\n${JSON.stringify(data ?? {}, null, 2)}\n\nInstrucción del usuario:\n${prompt}`,
     });
 
-    const res = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "google/gemini-2.5-flash",
-        messages,
-        tools,
-        tool_choice: { type: "function", function: { name: "widget_result" } },
-        max_tokens: 16000,
-      }),
-    });
+    const target = resolveTarget(byok, FALLBACK_MODEL, apiKey ?? "");
+    console.log("widget-ai target:", target.label);
+    const res = await callLLM(target, messages, { tool, maxTokens: 16000 });
 
     if (!res.ok) {
-      const txt = await res.text();
-      return new Response(JSON.stringify({ error: `AI Gateway ${res.status}: ${txt}` }), {
+      return new Response(JSON.stringify({ error: `IA (${target.label}) ${res.status}: ${res.errorText ?? ""}` }), {
         status: res.status, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
-    const json = await res.json();
-    const msg = json?.choices?.[0]?.message;
-    const call = msg?.tool_calls?.[0];
-    const finishReason = json?.choices?.[0]?.finish_reason;
-    if (!call?.function?.arguments) {
-      console.error("widget-ai no tool_call. finish:", finishReason, "msg:", JSON.stringify(msg)?.slice(0, 500));
+    const finishReason = res.finishReason;
+    const rawArgs = res.toolArgs;
+    if (!rawArgs) {
+      console.error("widget-ai no tool_call. finish:", finishReason, "content:", res.content?.slice(0, 500));
       return new Response(JSON.stringify({ error: "Respuesta inválida de IA" }), {
         status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
     let parsed: any;
     try {
-      parsed = JSON.parse(call.function.arguments);
+      parsed = JSON.parse(rawArgs);
     } catch (e) {
-      console.error("widget-ai args no parseables. finish:", finishReason, "len:", call.function.arguments.length);
+      console.error("widget-ai args no parseables. finish:", finishReason, "len:", rawArgs.length);
       return new Response(JSON.stringify({ error: "IA devolvió respuesta truncada. Intenta con menos data o pide cambios más pequeños." }), {
         status: 502, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -150,6 +136,7 @@ Responde SIEMPRE con la tool "widget_result".`;
           : "IA devolvió data_json inválido";
       }
     }
+
     return new Response(JSON.stringify(out), {
       headers: { ...corsHeaders, "Content-Type": "application/json" },
     });
