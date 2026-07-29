@@ -152,8 +152,9 @@ Each node MUST have:
 Respond ONLY with valid JSON: {"nodes": [...], "edges": [...]}`;
 
   const { data, error } = await supabase.functions.invoke("generate-flow", {
-    body: { prompt: enhancedPrompt },
+    body: { prompt: enhancedPrompt, ...userModelPayload() },
   });
+
 
   if (error) {
     console.error("Edge function error:", error);
