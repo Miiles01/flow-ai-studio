@@ -1,6 +1,8 @@
 import type { Node, Edge } from "@xyflow/react";
 import type { FlowNodeData } from "@/components/nodes/FlowNode";
 import { supabase } from "@/integrations/supabase/client";
+import { userModelPayload } from "@/lib/aiModels";
+
 
 type AIStep = {
   label: string;
@@ -152,8 +154,9 @@ Each node MUST have:
 Respond ONLY with valid JSON: {"nodes": [...], "edges": [...]}`;
 
   const { data, error } = await supabase.functions.invoke("generate-flow", {
-    body: { prompt: enhancedPrompt },
+    body: { prompt: enhancedPrompt, ...userModelPayload() },
   });
+
 
   if (error) {
     console.error("Edge function error:", error);

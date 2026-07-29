@@ -1,12 +1,16 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { loadInstructions, loadInstruction } from "../_shared/flow-instructions.ts";
+import { callLLM, parseUserModel, resolveTarget, type LLMTarget } from "../_shared/llm.ts";
+
+const FALLBACK_MODEL = "google/gemini-3-flash-preview";
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers":
     "authorization, x-client-info, apikey, content-type",
 };
+
 
 function extractKeywords(prompt: string): string[] {
   const stop = new Set(["el","la","los","las","de","del","y","o","u","a","con","para","por","un","una","unos","unas","en","que","como","mi","tu","su","sus","me","te","se","lo","al","es","ser","estar","tiene","tengo","quiero","necesito","busco","ideas","negocio","flujo","crear","crea","haz","hazme","una","uno","sobre","sus","yo","como","esta","este","esto","ver"]);
@@ -34,7 +38,7 @@ type SearchPlan = {
 };
 
 // Ask the model whether the user wants to DISCOVER new real prospects, and on which channel.
-async function classifyIntent(prompt: string, apiKey: string, searchGuidance?: string): Promise<SearchPlan> {
+async function classifyIntent(prompt: string, target: LLMTarget, searchGuidance?: string): Promise<SearchPlan> {
   const sys = `Eres un clasificador de intención para un generador de flujos de prospección.
 Decide si el usuario quiere DESCUBRIR cuentas/negocios/prospectos REALES y NUEVOS (no solo planear).
 Canales disponibles:
@@ -45,22 +49,15 @@ Responde SOLO JSON válido con esta forma:
 {"needsSearch":boolean,"channel":"instagram"|"google_maps"|null,"query":"términos de búsqueda limpios","location":"ciudad/país o null","limit":6}
 El "query" debe ser conciso y en el idioma del usuario. limit entre 4 y 8.`;
   try {
-    const r = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
-        messages: [
-          { role: "system", content: sys },
-          { role: "user", content: prompt },
-        ],
-      }),
-    });
+    const r = await callLLM(target, [
+      { role: "system", content: sys },
+      { role: "user", content: prompt },
+    ], { maxTokens: 800 });
     if (!r.ok) return { needsSearch: false, channel: null, query: "", location: null, limit: 6 };
-    const j = await r.json();
-    const c = j.choices?.[0]?.message?.content ?? "";
+    const c = r.content ?? "";
     const cleaned = c.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
     const parsed = JSON.parse(cleaned);
+
     return {
       needsSearch: !!parsed.needsSearch,
       channel: parsed.channel === "instagram" || parsed.channel === "google_maps" ? parsed.channel : null,
@@ -76,7 +73,7 @@ El "query" debe ser conciso y en el idioma del usuario. limit entre 4 y 8.`;
 
 // Classify whether the user wants to LEARN a concept vs PLAN actionable tasks.
 type ContentMode = "learn" | "plan" | "mixed";
-async function classifyContentMode(prompt: string, apiKey: string): Promise<ContentMode> {
+async function classifyContentMode(prompt: string, target: LLMTarget): Promise<ContentMode> {
   const sys = `Eres un clasificador de intención para un generador de esquemas visuales.
 Debes decidir la INTENCIÓN del usuario:
 - "learn": quiere entender, aprender o que le expliquen un concepto, teoría, fundamentos, definición o funcionamiento. Ejemplos: "¿qué es el marketing?", "explícame la fotosíntesis", "cómo funciona SEO", "diferencia entre X y Y", "conceptos básicos de finanzas", "resumen de la teoría de...".
@@ -85,22 +82,15 @@ Debes decidir la INTENCIÓN del usuario:
 Ante duda entre learn y plan, elige el que mejor refleje el verbo principal del usuario. Si el usuario solo hace una pregunta conceptual sin pedir tareas, es "learn".
 Responde SOLO JSON válido: {"mode":"learn"|"plan"|"mixed"}`;
   try {
-    const r = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
-        messages: [
-          { role: "system", content: sys },
-          { role: "user", content: prompt },
-        ],
-      }),
-    });
+    const r = await callLLM(target, [
+      { role: "system", content: sys },
+      { role: "user", content: prompt },
+    ], { maxTokens: 200 });
     if (!r.ok) return "mixed";
-    const j = await r.json();
-    const c = j.choices?.[0]?.message?.content ?? "";
+    const c = r.content ?? "";
     const cleaned = c.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
     const parsed = JSON.parse(cleaned);
+
     return parsed.mode === "learn" || parsed.mode === "plan" ? parsed.mode : "mixed";
   } catch (e) {
     console.error("classifyContentMode failed:", e);
@@ -205,18 +195,24 @@ serve(async (req) => {
 
   try {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) {
-      throw new Error("LOVABLE_API_KEY is not configured");
-    }
     const APIFY_API_TOKEN = Deno.env.get("APIFY_API_TOKEN");
 
-    const { prompt } = await req.json();
+    const { prompt, userModel } = await req.json();
     if (!prompt || typeof prompt !== "string") {
       return new Response(
         JSON.stringify({ error: "prompt is required" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
+
+    // BYOK: si el usuario trae su propia llave, se usa su proveedor/modelo.
+    // Si no, fallback transparente al gateway global + google/gemini-3-flash-preview.
+    const byok = parseUserModel(userModel);
+    if (!byok && !LOVABLE_API_KEY) {
+      throw new Error("LOVABLE_API_KEY is not configured");
+    }
+    const target = resolveTarget(byok, FALLBACK_MODEL, LOVABLE_API_KEY ?? "");
+    console.log("generate-flow target:", target.label);
 
     // ─── RAG: fetch prospects + templates ────────────────────────────────
     const supabase = createClient(
@@ -225,7 +221,8 @@ serve(async (req) => {
     );
 
     // Classify content intent (learn vs plan) in parallel with the rest of prep.
-    const contentModePromise = classifyContentMode(prompt, LOVABLE_API_KEY);
+    const contentModePromise = classifyContentMode(prompt, target);
+
 
     const keywords = extractKeywords(prompt);
     let prospects: any[] = [];
@@ -251,7 +248,7 @@ serve(async (req) => {
     let apifyChannel: string | null = null;
     if (APIFY_API_TOKEN) {
       const searchGuidance = await loadInstruction(supabase, "search");
-      const plan = await classifyIntent(prompt, LOVABLE_API_KEY, searchGuidance);
+      const plan = await classifyIntent(prompt, target, searchGuidance);
       if (plan.needsSearch && plan.channel && plan.query) {
         apifyChannel = plan.channel;
 
@@ -372,7 +369,9 @@ Rules for Premium Visual Design:
 - When the user asks about prospects or business ideas, prefer real prospects from the database below over invented ones.
 - CONTEXTO DEL CLIENTE: Antes de diseñar, infiere el contexto, la industria y los OBJETIVOS del cliente a partir del prompt y de los prospectos disponibles, y construye el flujo en función de esos objetivos.
 - EMBEDS / ENLACES DE PROSPECTOS: Si hay "PROSPECTOS RECIÉN ENCONTRADOS EN VIVO", DEBES incluir cada uno en el flujo con su enlace real (embedNode con su "website", o textNode con un <a href> clicable). Para prospectos de la base de datos con "website", PUEDES añadir un "embedNode" cuando aporte valor.
+- 🚫 REGLA ESTRICTA E INQUEBRANTABLE (APLICA A CUALQUIER MODELO DE IA): Bajo ninguna circunstancia debes generar listas de tareas, bullets o checklists dentro de los nodos del flujo, a menos que el usuario lo solicite explícitamente en su mensaje. Esto incluye "todoNode", viñetas ("-", "•", "1.") dentro de labels de shapeNode, y <ul>/<ol>/<li> con tareas dentro de textNode. Si el usuario NO pidió tareas/checklist/plan de acción explícitamente, expresa el contenido como conceptos, definiciones y relaciones usando shapeNode + textNode. Aunque cambie el modelo de IA, sigues operando estrictamente bajo las reglas del formato del canvas descritas aquí.
 - Respond ONLY with valid JSON containing {"nodes": [...], "edges": [...]}, no markdown.
+
 
 Example output:
 {"nodes": [{"id":"1","type":"shapeNode","position":{"x":50,"y":120},"style":{"width":140,"height":140},"data":{"shape":"circle","label":"Inicio del Flujo","fillColor":"#000000","textColor":"#FFFFFF"}},{"id":"2","type":"todoNode","position":{"x":350,"y":70},"style":{"width":280,"height":240},"data":{"title":"Fase de Planificación","subtitle":"Descripción de la fase","tasks":[{"id":"t1","text":"Analizar requerimientos","completed":false}],"backgroundColor":"#FFFFFF","accentColor":"#4059F1","textColor":"#000000"}}], "edges": [{"id":"e1-2","source":"1","target":"2","animated":false,"style":{"stroke":"#4059F1","strokeWidth":2}}]}
@@ -409,23 +408,13 @@ El usuario quiere un plan accionable. Usa "todoNode" con tareas concretas y verb
 El usuario quiere contexto conceptual + acción. Empieza el esquema con nodos conceptuales (shapeNode + textNode explicativos) y añade 1-2 todoNode al final SOLO para la parte ejecutable. No conviertas los conceptos en tareas.
 === FIN MODO ===`;
 
-    const response = await fetch(
-      "https://ai.gateway.lovable.dev/v1/chat/completions",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${LOVABLE_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model: "google/gemini-3-flash-preview",
-          messages: [
-            { role: "system", content: systemPrompt + modeGuidance + customInstructions },
-            { role: "user", content: prompt },
-          ],
-        }),
-        }),
-      }
+    const response = await callLLM(
+      target,
+      [
+        { role: "system", content: systemPrompt + modeGuidance + customInstructions },
+        { role: "user", content: prompt },
+      ],
+      { maxTokens: 16000 },
     );
 
     if (!response.ok) {
@@ -441,13 +430,18 @@ El usuario quiere contexto conceptual + acción. Empieza el esquema con nodos co
           { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
-      const errorText = await response.text();
-      console.error("AI gateway error:", response.status, errorText);
-      throw new Error(`AI gateway error: ${response.status}`);
+      if (byok && (response.status === 401 || response.status === 403)) {
+        return new Response(
+          JSON.stringify({ error: `Tu API Key de ${byok.provider} fue rechazada. Revísala en Apps → Modelos.` }),
+          { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+      console.error("AI error:", target.label, response.status, response.errorText?.slice(0, 300));
+      throw new Error(`AI error (${target.label}): ${response.status}`);
     }
 
-    const data = await response.json();
-    const content = data.choices?.[0]?.message?.content;
+    const content = response.content;
+
 
     if (!content) {
       throw new Error("No content in AI response");

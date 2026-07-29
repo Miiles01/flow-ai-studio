@@ -1,10 +1,14 @@
 import { useState } from "react";
-import { LayoutGrid, Plus, Trash2, Server, Globe } from "lucide-react";
+import { LayoutGrid, Plus, Trash2, Server, Globe, Sparkles } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Switch } from "@/components/ui/switch";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useUserApps } from "@/hooks/useUserApps";
+import { useUserModels } from "@/hooks/useUserModels";
+import { AI_PROVIDERS, AIProviderId, getProvider, maskKey } from "@/lib/aiModels";
+import AddModelDialog from "@/components/AddModelDialog";
 import AddAppModal from "@/components/AddAppModal";
+
 
 function GoogleIcon({ className }: { className?: string }) {
   return (
@@ -24,14 +28,27 @@ type AppsMenuProps = {
 const AppsMenu = ({ isDark }: AppsMenuProps) => {
   const [open, setOpen] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
+  const [modelOpen, setModelOpen] = useState(false);
+  const [presetProvider, setPresetProvider] = useState<AIProviderId | null>(null);
   const { customApps, webSearchEnabled, createApp, toggleApp, toggleWebSearch, deleteApp } = useUserApps();
+  const { models, addModel, toggleModel, deleteModel } = useUserModels();
   useTheme();
 
   const rowText = isDark ? "text-white" : "text-black";
   const subText = isDark ? "text-white/40" : "text-miiles-gray-400";
+  const sectionLabel = `px-3 pt-2 pb-1 text-[10px] font-light uppercase tracking-wider ${
+    isDark ? "text-white/30" : "text-miiles-gray-400"
+  }`;
+
+  const openModelDialog = (p: AIProviderId | null) => {
+    setPresetProvider(p);
+    setOpen(false);
+    setModelOpen(true);
+  };
 
   return (
     <>
+
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <button
@@ -52,12 +69,86 @@ const AppsMenu = ({ isDark }: AppsMenuProps) => {
             isDark ? "bg-[#15161d] border-white/10" : "bg-white border-miiles-gray-200"
           }`}
         >
-          <div className="max-h-[320px] overflow-y-auto scrollbar-hide">
+          <div className="max-h-[380px] overflow-y-auto scrollbar-hide">
+            {/* ─── Modelos ─────────────────────────────────────────── */}
+            <p className={sectionLabel}>Modelos</p>
+
+            {models.map((m) => {
+              const p = getProvider(m.provider);
+              return (
+                <div key={m.id} className="group flex items-center gap-3 px-3 py-2.5 rounded-xl">
+                  <div
+                    className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md ${
+                      isDark ? "bg-white/10" : "bg-miiles-gray-100"
+                    }`}
+                  >
+                    <Sparkles size={13} strokeWidth={1.5} className={subText} />
+                  </div>
+                  <div className="flex-1 min-w-0">
+                    <p className={`truncate text-sm font-normal ${rowText}`}>{p?.name ?? m.provider}</p>
+                    <p className={`truncate text-[11px] font-light ${subText}`}>
+                      {m.model} · {maskKey(m.apiKey)}
+                    </p>
+                  </div>
+                  <button
+                    onClick={() => deleteModel(m.id)}
+                    className={`opacity-0 group-hover:opacity-100 transition-opacity ${subText} hover:text-red-400`}
+                    aria-label="Eliminar modelo"
+                  >
+                    <Trash2 size={14} strokeWidth={1.5} />
+                  </button>
+                  <Switch checked={m.enabled} onCheckedChange={(v) => toggleModel(m.id, v)} />
+                </div>
+              );
+            })}
+
+            <div className="flex flex-wrap gap-1.5 px-3 pb-1 pt-1">
+              {AI_PROVIDERS.map((p) => (
+                <button
+                  key={p.id}
+                  onClick={() => openModelDialog(p.id)}
+                  className={`rounded-full px-2.5 py-1 text-[11px] font-light transition-colors ${
+                    isDark
+                      ? "bg-white/10 text-white/60 hover:bg-white/20 hover:text-white"
+                      : "bg-miiles-gray-100 text-miiles-gray-600 hover:bg-miiles-gray-200"
+                  }`}
+                >
+                  {p.name}
+                </button>
+              ))}
+            </div>
+
+            <button
+              onClick={() => openModelDialog(null)}
+              className={`flex w-full items-center gap-3 px-3 py-2.5 rounded-xl transition-colors ${
+                isDark ? "hover:bg-white/5 text-white" : "hover:bg-miiles-gray-50 text-black"
+              }`}
+            >
+              <div
+                className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md ${
+                  isDark ? "bg-white/10" : "bg-miiles-gray-100"
+                }`}
+              >
+                <Plus size={14} strokeWidth={1.5} />
+              </div>
+              <div className="flex-1 min-w-0 text-left">
+                <p className="text-sm font-normal">Agregar modelo</p>
+                <p className={`text-[11px] font-light ${subText}`}>
+                  {models.some((m) => m.enabled) ? "Usando tu propia API Key" : "Usa tu propia API Key"}
+                </p>
+              </div>
+            </button>
+
+            {/* ─── Herramientas ────────────────────────────────────── */}
+            <p className={`${sectionLabel} mt-1`}>Herramientas</p>
+
             <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl">
               <GoogleIcon className="w-6 h-6 shrink-0" />
               <span className={`flex-1 text-sm font-normal ${rowText}`}>Búsqueda en la web</span>
               <Switch checked={webSearchEnabled} onCheckedChange={toggleWebSearch} />
             </div>
+
+
 
             {customApps.map((app) => (
               <div key={app.id} className="group flex items-center gap-3 px-3 py-2.5 rounded-xl">
@@ -121,6 +212,14 @@ const AppsMenu = ({ isDark }: AppsMenuProps) => {
         onToggle={toggleApp}
         onDelete={deleteApp}
       />
+
+      <AddModelDialog
+        open={modelOpen}
+        onClose={() => setModelOpen(false)}
+        initialProvider={presetProvider}
+        onSave={addModel}
+      />
+
     </>
   );
 };
