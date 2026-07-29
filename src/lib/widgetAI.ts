@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { userModelPayload } from "@/lib/aiModels";
 
 export type WidgetAIHistoryMsg = { role: "user" | "assistant"; content: string };
 export type WidgetAIResult =
@@ -11,11 +12,14 @@ export async function runWidgetAI(params: {
   prompt: string;
   history?: WidgetAIHistoryMsg[];
 }): Promise<WidgetAIResult> {
-  const { data, error } = await supabase.functions.invoke("widget-ai", { body: params });
+  const { data, error } = await supabase.functions.invoke("widget-ai", {
+    body: { ...params, ...userModelPayload() },
+  });
   if (error) throw new Error(error.message || "Error llamando a widget-ai");
   if ((data as any)?.error) throw new Error((data as any).error);
   return data as WidgetAIResult;
 }
+
 
 export type WidgetAIComment = {
   id: string;
