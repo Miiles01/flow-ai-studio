@@ -248,7 +248,7 @@ serve(async (req) => {
     let apifyChannel: string | null = null;
     if (APIFY_API_TOKEN) {
       const searchGuidance = await loadInstruction(supabase, "search");
-      const plan = await classifyIntent(prompt, LOVABLE_API_KEY, searchGuidance);
+      const plan = await classifyIntent(prompt, target, searchGuidance);
       if (plan.needsSearch && plan.channel && plan.query) {
         apifyChannel = plan.channel;
 
@@ -369,7 +369,9 @@ Rules for Premium Visual Design:
 - When the user asks about prospects or business ideas, prefer real prospects from the database below over invented ones.
 - CONTEXTO DEL CLIENTE: Antes de diseñar, infiere el contexto, la industria y los OBJETIVOS del cliente a partir del prompt y de los prospectos disponibles, y construye el flujo en función de esos objetivos.
 - EMBEDS / ENLACES DE PROSPECTOS: Si hay "PROSPECTOS RECIÉN ENCONTRADOS EN VIVO", DEBES incluir cada uno en el flujo con su enlace real (embedNode con su "website", o textNode con un <a href> clicable). Para prospectos de la base de datos con "website", PUEDES añadir un "embedNode" cuando aporte valor.
+- 🚫 REGLA ESTRICTA E INQUEBRANTABLE (APLICA A CUALQUIER MODELO DE IA): Bajo ninguna circunstancia debes generar listas de tareas, bullets o checklists dentro de los nodos del flujo, a menos que el usuario lo solicite explícitamente en su mensaje. Esto incluye "todoNode", viñetas ("-", "•", "1.") dentro de labels de shapeNode, y <ul>/<ol>/<li> con tareas dentro de textNode. Si el usuario NO pidió tareas/checklist/plan de acción explícitamente, expresa el contenido como conceptos, definiciones y relaciones usando shapeNode + textNode. Aunque cambie el modelo de IA, sigues operando estrictamente bajo las reglas del formato del canvas descritas aquí.
 - Respond ONLY with valid JSON containing {"nodes": [...], "edges": [...]}, no markdown.
+
 
 Example output:
 {"nodes": [{"id":"1","type":"shapeNode","position":{"x":50,"y":120},"style":{"width":140,"height":140},"data":{"shape":"circle","label":"Inicio del Flujo","fillColor":"#000000","textColor":"#FFFFFF"}},{"id":"2","type":"todoNode","position":{"x":350,"y":70},"style":{"width":280,"height":240},"data":{"title":"Fase de Planificación","subtitle":"Descripción de la fase","tasks":[{"id":"t1","text":"Analizar requerimientos","completed":false}],"backgroundColor":"#FFFFFF","accentColor":"#4059F1","textColor":"#000000"}}], "edges": [{"id":"e1-2","source":"1","target":"2","animated":false,"style":{"stroke":"#4059F1","strokeWidth":2}}]}
