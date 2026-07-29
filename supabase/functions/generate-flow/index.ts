@@ -408,23 +408,13 @@ El usuario quiere un plan accionable. Usa "todoNode" con tareas concretas y verb
 El usuario quiere contexto conceptual + acción. Empieza el esquema con nodos conceptuales (shapeNode + textNode explicativos) y añade 1-2 todoNode al final SOLO para la parte ejecutable. No conviertas los conceptos en tareas.
 === FIN MODO ===`;
 
-    const response = await fetch(
-      "https://ai.gateway.lovable.dev/v1/chat/completions",
-      {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${LOVABLE_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          model: "google/gemini-3-flash-preview",
-          messages: [
-            { role: "system", content: systemPrompt + modeGuidance + customInstructions },
-            { role: "user", content: prompt },
-          ],
-        }),
-        }),
-      }
+    const response = await callLLM(
+      target,
+      [
+        { role: "system", content: systemPrompt + modeGuidance + customInstructions },
+        { role: "user", content: prompt },
+      ],
+      { maxTokens: 16000 },
     );
 
     if (!response.ok) {
@@ -440,13 +430,18 @@ El usuario quiere contexto conceptual + acción. Empieza el esquema con nodos co
           { status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
-      const errorText = await response.text();
-      console.error("AI gateway error:", response.status, errorText);
-      throw new Error(`AI gateway error: ${response.status}`);
+      if (byok && (response.status === 401 || response.status === 403)) {
+        return new Response(
+          JSON.stringify({ error: `Tu API Key de ${byok.provider} fue rechazada. Revísala en Apps → Modelos.` }),
+          { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
+        );
+      }
+      console.error("AI error:", target.label, response.status, response.errorText?.slice(0, 300));
+      throw new Error(`AI error (${target.label}): ${response.status}`);
     }
 
-    const data = await response.json();
-    const content = data.choices?.[0]?.message?.content;
+    const content = response.content;
+
 
     if (!content) {
       throw new Error("No content in AI response");
