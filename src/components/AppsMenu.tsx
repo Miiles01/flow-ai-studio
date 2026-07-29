@@ -1,10 +1,14 @@
 import { useState } from "react";
-import { LayoutGrid, Plus, Trash2, Server, Globe } from "lucide-react";
+import { LayoutGrid, Plus, Trash2, Server, Globe, Sparkles } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Switch } from "@/components/ui/switch";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useUserApps } from "@/hooks/useUserApps";
+import { useUserModels } from "@/hooks/useUserModels";
+import { AI_PROVIDERS, AIProviderId, getProvider, maskKey } from "@/lib/aiModels";
+import AddModelDialog from "@/components/AddModelDialog";
 import AddAppModal from "@/components/AddAppModal";
+
 
 function GoogleIcon({ className }: { className?: string }) {
   return (
