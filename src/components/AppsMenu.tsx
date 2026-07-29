@@ -212,6 +212,14 @@ const AppsMenu = ({ isDark }: AppsMenuProps) => {
         onToggle={toggleApp}
         onDelete={deleteApp}
       />
+
+      <AddModelDialog
+        open={modelOpen}
+        onClose={() => setModelOpen(false)}
+        initialProvider={presetProvider}
+        onSave={addModel}
+      />
+
     </>
   );
 };
