@@ -73,7 +73,7 @@ El "query" debe ser conciso y en el idioma del usuario. limit entre 4 y 8.`;
 
 // Classify whether the user wants to LEARN a concept vs PLAN actionable tasks.
 type ContentMode = "learn" | "plan" | "mixed";
-async function classifyContentMode(prompt: string, apiKey: string): Promise<ContentMode> {
+async function classifyContentMode(prompt: string, target: LLMTarget): Promise<ContentMode> {
   const sys = `Eres un clasificador de intención para un generador de esquemas visuales.
 Debes decidir la INTENCIÓN del usuario:
 - "learn": quiere entender, aprender o que le expliquen un concepto, teoría, fundamentos, definición o funcionamiento. Ejemplos: "¿qué es el marketing?", "explícame la fotosíntesis", "cómo funciona SEO", "diferencia entre X y Y", "conceptos básicos de finanzas", "resumen de la teoría de...".
@@ -82,22 +82,15 @@ Debes decidir la INTENCIÓN del usuario:
 Ante duda entre learn y plan, elige el que mejor refleje el verbo principal del usuario. Si el usuario solo hace una pregunta conceptual sin pedir tareas, es "learn".
 Responde SOLO JSON válido: {"mode":"learn"|"plan"|"mixed"}`;
   try {
-    const r = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
-        messages: [
-          { role: "system", content: sys },
-          { role: "user", content: prompt },
-        ],
-      }),
-    });
+    const r = await callLLM(target, [
+      { role: "system", content: sys },
+      { role: "user", content: prompt },
+    ], { maxTokens: 200 });
     if (!r.ok) return "mixed";
-    const j = await r.json();
-    const c = j.choices?.[0]?.message?.content ?? "";
+    const c = r.content ?? "";
     const cleaned = c.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
     const parsed = JSON.parse(cleaned);
+
     return parsed.mode === "learn" || parsed.mode === "plan" ? parsed.mode : "mixed";
   } catch (e) {
     console.error("classifyContentMode failed:", e);
