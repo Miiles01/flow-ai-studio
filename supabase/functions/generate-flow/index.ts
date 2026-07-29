@@ -195,18 +195,24 @@ serve(async (req) => {
 
   try {
     const LOVABLE_API_KEY = Deno.env.get("LOVABLE_API_KEY");
-    if (!LOVABLE_API_KEY) {
-      throw new Error("LOVABLE_API_KEY is not configured");
-    }
     const APIFY_API_TOKEN = Deno.env.get("APIFY_API_TOKEN");
 
-    const { prompt } = await req.json();
+    const { prompt, userModel } = await req.json();
     if (!prompt || typeof prompt !== "string") {
       return new Response(
         JSON.stringify({ error: "prompt is required" }),
         { status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" } }
       );
     }
+
+    // BYOK: si el usuario trae su propia llave, se usa su proveedor/modelo.
+    // Si no, fallback transparente al gateway global + google/gemini-3-flash-preview.
+    const byok = parseUserModel(userModel);
+    if (!byok && !LOVABLE_API_KEY) {
+      throw new Error("LOVABLE_API_KEY is not configured");
+    }
+    const target = resolveTarget(byok, FALLBACK_MODEL, LOVABLE_API_KEY ?? "");
+    console.log("generate-flow target:", target.label);
 
     // ─── RAG: fetch prospects + templates ────────────────────────────────
     const supabase = createClient(
@@ -215,7 +221,8 @@ serve(async (req) => {
     );
 
     // Classify content intent (learn vs plan) in parallel with the rest of prep.
-    const contentModePromise = classifyContentMode(prompt, LOVABLE_API_KEY);
+    const contentModePromise = classifyContentMode(prompt, target);
+
 
     const keywords = extractKeywords(prompt);
     let prospects: any[] = [];
