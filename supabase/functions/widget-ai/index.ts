@@ -1,26 +1,32 @@
 // Widget AI — clasifica intención (query/edit) y aplica cambios o responde con un comentario.
+import { callLLM, parseUserModel, resolveTarget } from "../_shared/llm.ts";
+
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
   "Access-Control-Allow-Headers": "authorization, x-client-info, apikey, content-type",
 };
 
+const FALLBACK_MODEL = "google/gemini-2.5-flash";
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { widgetType, data, prompt, history } = await req.json();
+    const { widgetType, data, prompt, history, userModel } = await req.json();
     if (!widgetType || !prompt) {
       return new Response(JSON.stringify({ error: "widgetType y prompt requeridos" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 
+    const byok = parseUserModel(userModel);
     const apiKey = Deno.env.get("LOVABLE_API_KEY");
-    if (!apiKey) {
+    if (!byok && !apiKey) {
       return new Response(JSON.stringify({ error: "LOVABLE_API_KEY no configurada" }), {
         status: 500, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+
 
     const schemaHints: Record<string, string> = {
       kanbanNode: `KanbanNodeData: { title?: string, columns: [{ id, title, cards: [{ id, title, subtitle?, description?, extraTexts?: [{id,label,value}], tags?: [{id,label,color}], assignees?: [{id,name,email?}], imageUrl?, imageRatio?: "1:1"|"4:3"|"16:9", priority?: "low"|"medium"|"high" }] }] }. Al VACIAR información (texto largo, listas, notas, ideas), REPARTE los items como cards en columnas lógicas (por defecto: "Por hacer", "En progreso", "Hecho"). Cada línea/idea del usuario = una card con title claro; usa description/subtitle si hay detalle; extrae assignees si hay nombres/emails; extrae tags si hay categorías; infiere priority si el usuario menciona urgencia.`,
