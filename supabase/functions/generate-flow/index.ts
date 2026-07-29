@@ -38,7 +38,7 @@ type SearchPlan = {
 };
 
 // Ask the model whether the user wants to DISCOVER new real prospects, and on which channel.
-async function classifyIntent(prompt: string, apiKey: string, searchGuidance?: string): Promise<SearchPlan> {
+async function classifyIntent(prompt: string, target: LLMTarget, searchGuidance?: string): Promise<SearchPlan> {
   const sys = `Eres un clasificador de intención para un generador de flujos de prospección.
 Decide si el usuario quiere DESCUBRIR cuentas/negocios/prospectos REALES y NUEVOS (no solo planear).
 Canales disponibles:
@@ -49,22 +49,15 @@ Responde SOLO JSON válido con esta forma:
 {"needsSearch":boolean,"channel":"instagram"|"google_maps"|null,"query":"términos de búsqueda limpios","location":"ciudad/país o null","limit":6}
 El "query" debe ser conciso y en el idioma del usuario. limit entre 4 y 8.`;
   try {
-    const r = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
-      method: "POST",
-      headers: { Authorization: `Bearer ${apiKey}`, "Content-Type": "application/json" },
-      body: JSON.stringify({
-        model: "google/gemini-3-flash-preview",
-        messages: [
-          { role: "system", content: sys },
-          { role: "user", content: prompt },
-        ],
-      }),
-    });
+    const r = await callLLM(target, [
+      { role: "system", content: sys },
+      { role: "user", content: prompt },
+    ], { maxTokens: 800 });
     if (!r.ok) return { needsSearch: false, channel: null, query: "", location: null, limit: 6 };
-    const j = await r.json();
-    const c = j.choices?.[0]?.message?.content ?? "";
+    const c = r.content ?? "";
     const cleaned = c.replace(/```json\n?/g, "").replace(/```\n?/g, "").trim();
     const parsed = JSON.parse(cleaned);
+
     return {
       needsSearch: !!parsed.needsSearch,
       channel: parsed.channel === "instagram" || parsed.channel === "google_maps" ? parsed.channel : null,
