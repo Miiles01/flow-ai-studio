@@ -28,14 +28,27 @@ type AppsMenuProps = {
 const AppsMenu = ({ isDark }: AppsMenuProps) => {
   const [open, setOpen] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
+  const [modelOpen, setModelOpen] = useState(false);
+  const [presetProvider, setPresetProvider] = useState<AIProviderId | null>(null);
   const { customApps, webSearchEnabled, createApp, toggleApp, toggleWebSearch, deleteApp } = useUserApps();
+  const { models, addModel, toggleModel, deleteModel } = useUserModels();
   useTheme();
 
   const rowText = isDark ? "text-white" : "text-black";
   const subText = isDark ? "text-white/40" : "text-miiles-gray-400";
+  const sectionLabel = `px-3 pt-2 pb-1 text-[10px] font-light uppercase tracking-wider ${
+    isDark ? "text-white/30" : "text-miiles-gray-400"
+  }`;
+
+  const openModelDialog = (p: AIProviderId | null) => {
+    setPresetProvider(p);
+    setOpen(false);
+    setModelOpen(true);
+  };
 
   return (
     <>
+
       <Popover open={open} onOpenChange={setOpen}>
         <PopoverTrigger asChild>
           <button
