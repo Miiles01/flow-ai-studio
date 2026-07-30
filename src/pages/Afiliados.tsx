@@ -1188,7 +1188,7 @@ const AnimatedDashboardMockup = () => {
 /* ─── Data ──────────────────────────────────────────────────────────────── */
 const STEPS = [
   { n: "01", label: "Plan Pro gratis", detail: "Únete como afiliado y accede a todas las herramientas de Miiles sin pagar nada. Tú usas, tú vendes, tú ganas." },
-  { n: "02", label: "Copia tu link", detail: "Ve a la sección Afiliados en tu menú lateral y genera tu enlace único con un solo clic." },
+  { n: "02", label: "Link de afiliado", detail: "Ve a la sección Afiliados en tu menú lateral y genera tu enlace único con un solo clic." },
   { n: "03", label: "Gana el 25%", detail: "Compártelo en tus redes, stories o bio. Cada membresía vendida con tu link te da el 25% directo." },
   { n: "04", label: "Comunidad exclusiva", detail: "Acceso a comunidad privada, drops de contenido y eventos que no están abiertos al público." },
 ];
