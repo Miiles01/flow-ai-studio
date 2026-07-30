@@ -1610,7 +1610,7 @@ const Afiliados = () => {
           <div className="block md:hidden py-20 px-6 text-center bg-white border-t border-black/5">
             <div className="max-w-md mx-auto flex flex-col items-center">
               <h2 className="text-3xl font-normal leading-tight tracking-tight mb-8">
-                Empieza hoy mismo
+                Empieza hoy <span style={{ fontFamily: "'Welth Catritz', serif", overflow: 'visible' }} className="pr-1 italic tracking-normal font-light">mismo</span>
               </h2>
               <Link
                 to="/register"
