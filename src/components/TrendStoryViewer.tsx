@@ -52,28 +52,48 @@ type Props = {
 
 function getEmbedUrl(url: string | null, isActive: boolean) {
   if (!url) return "";
+  const autoPlayParam = isActive ? "1" : "0";
+  let parsed: URL;
   try {
-    const autoPlayParam = isActive ? "1" : "0";
-    if (url.includes("youtube.com") || url.includes("youtu.be")) {
-      const v = new URL(url).searchParams.get("v") || url.split('/').pop();
-      if (v) return `https://www.youtube.com/embed/${v}?autoplay=${autoPlayParam}&mute=1&controls=0&modestbranding=1&rel=0&loop=1&playlist=${v}&playsinline=1&iv_load_policy=3&fs=0&disablekb=1&cc_load_policy=0`;
-    }
-    if (url.includes("instagram.com")) {
-      return url.replace(/\/$/, "") + "/embed/?hidecaption=true";
-    }
-    if (url.includes("tiktok.com")) {
-      const match = url.match(/\/video\/(\d+)/);
-      // Player oficial v1: permite apagar toda la UI (controles, música, descripción, botones)
-      if (match) return `https://www.tiktok.com/player/v1/${match[1]}?autoplay=${autoPlayParam}&loop=1&controls=0&progress_bar=0&play_button=0&volume_control=0&fullscreen_button=0&timestamp=0&music_info=0&description=0&rel=0&native_context_menu=0&closed_caption=0`;
-    }
-    if (url.includes("facebook.com")) {
-      return `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false&autoplay=${isActive ? "true" : "false"}`;
-    }
-  } catch (e) {
-    return url;
+    parsed = new URL(url.trim());
+  } catch {
+    return "";
   }
+  const host = parsed.hostname.toLowerCase().replace(/^(www|m|vt|vm)\./, "");
+
+  if (host === "youtube.com" || host === "youtu.be") {
+    const v =
+      parsed.searchParams.get("v") ||
+      parsed.pathname.split("/").filter(Boolean).pop() ||
+      "";
+    if (v) {
+      return `https://www.youtube.com/embed/${v}?autoplay=${autoPlayParam}&mute=1&controls=0&modestbranding=1&rel=0&loop=1&playlist=${v}&playsinline=1&iv_load_policy=3&fs=0&disablekb=1&cc_load_policy=0`;
+    }
+    return "";
+  }
+
+  if (host.endsWith("instagram.com")) {
+    // Soporta /reel/, /reels/, /p/, /tv/ y descarta query params (?igsh=...)
+    const match = parsed.pathname.match(/\/(?:reels?|p|tv)\/([A-Za-z0-9_-]+)/);
+    if (match) return `https://www.instagram.com/reel/${match[1]}/embed/?hidecaption=true`;
+    return "";
+  }
+
+  if (host.endsWith("tiktok.com")) {
+    const match = parsed.pathname.match(/\/video\/(\d+)/);
+    if (match) {
+      return `https://www.tiktok.com/player/v1/${match[1]}?autoplay=${autoPlayParam}&loop=1&controls=0&progress_bar=0&play_button=0&volume_control=0&fullscreen_button=0&timestamp=0&music_info=0&description=0&rel=0&native_context_menu=0&closed_caption=0`;
+    }
+    return "";
+  }
+
+  if (host.endsWith("facebook.com") || host === "fb.watch") {
+    return `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false&autoplay=${isActive ? "true" : "false"}`;
+  }
+
   return url;
 }
+
 
 export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props) {
   const { isDark } = useTheme();
