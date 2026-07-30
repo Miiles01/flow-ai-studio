@@ -1565,6 +1565,39 @@ const Afiliados = () => {
             </div>
           </section>
 
+          {/* ── 3 COLUMNAS CON IMAGEN AL FONDO ───────────────────────────── */}
+          <section className="py-24 px-6 bg-white">
+            <div className="max-w-[1200px] mx-auto">
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+                {[
+                  { title: "Título de la tarjeta 1", desc: "Agrega aquí una breve descripción para esta tarjeta. El texto se alinea en la parte superior." },
+                  { title: "Título de la tarjeta 2", desc: "Agrega aquí una breve descripción para esta tarjeta. El texto se alinea en la parte superior." },
+                  { title: "Título de la tarjeta 3", desc: "Agrega aquí una breve descripción para esta tarjeta. El texto se alinea en la parte superior." }
+                ].map((item, i) => (
+                  <div 
+                    key={i} 
+                    className="flex flex-col bg-gradient-to-b from-[#FDFDFD] to-[#F8F9FD] rounded-[2rem] overflow-hidden border border-black/[0.04] shadow-[0_8px_30px_rgb(0,0,0,0.03)] min-h-[550px]"
+                  >
+                    <div className="p-10 pb-6 flex-shrink-0">
+                      <h3 className="text-[22px] font-medium mb-3 tracking-tight">{item.title}</h3>
+                      <p className="text-gray-500 font-light leading-relaxed text-[15px]">
+                        {item.desc}
+                      </p>
+                    </div>
+                    {/* Contenedor de la imagen (mt-auto empuja hacia abajo) */}
+                    <div className="mt-auto w-full pt-8 flex justify-center items-end">
+                      <img 
+                        src={`https://placehold.co/600x500/e5e7eb/9ca3af?text=Imagen+${i+1}`} 
+                        alt={`Imagen ${i+1}`} 
+                        className="w-full h-auto object-cover object-bottom"
+                      />
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </section>
+
           {/* ── BOARD MOCKUP ───────────────────────────────────────────── */}
           <section className="py-12 md:py-32 px-6 bg-white">
             <div className="max-w-5xl mx-auto">
