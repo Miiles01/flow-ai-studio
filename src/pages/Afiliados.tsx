@@ -1522,9 +1522,9 @@ const Afiliados = () => {
                   </p>
                 </div>
                 <div className="e022-paragraphs">
-                  <p className="e022-paragraph">Somos Miiles. Creamos herramientas para creativos.</p>
-                  <p className="e022-paragraph">Con Miiles, puedes diseñar, estructurar y lanzar modelos de negocio impulsados por IA en minutos.</p>
-                  <p className="e022-paragraph">Nuestra misión es ayudar a las personas a crear y crecer sin límites.</p>
+                  <p className="e022-paragraph">Creamos tecnología</p>
+                  <p className="e022-paragraph">para ayudar a los creadores</p>
+                  <p className="e022-paragraph">a construir sin límites.</p>
                 </div>
               </div>
             </div>
