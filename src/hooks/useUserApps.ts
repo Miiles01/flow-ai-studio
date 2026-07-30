@@ -9,7 +9,8 @@ export type UserApp = {
   name: string;
   connector_type: ConnectorType;
   url: string | null;
-  api_key: string | null;
+  /** Never fetched to the client; keys stay write-only. */
+  has_api_key?: boolean;
   enabled: boolean;
   is_builtin: boolean;
   builtin_key: string | null;
@@ -38,7 +39,7 @@ export function useUserApps() {
     setLoading(true);
     const { data, error } = await supabase
       .from("user_apps")
-      .select("id, name, connector_type, url, api_key, enabled, is_builtin, builtin_key")
+      .select("id, name, connector_type, url, enabled, is_builtin, builtin_key")
       .eq("user_id", user.id)
       .order("is_builtin", { ascending: false })
       .order("created_at", { ascending: true });
