@@ -1487,8 +1487,20 @@ const Afiliados = () => {
 
           {/* ── HERO ───────────────────────────────────────────────────── */}
           <section className="min-h-[90vh] flex flex-col items-center justify-center text-center px-6 pt-48 md:pt-56 pb-16 relative overflow-hidden">
+            {/* Dotted Gradient Background */}
+            <div 
+              className="absolute inset-0 pointer-events-none z-0"
+              style={{
+                background: "radial-gradient(circle at center, #FFFFFF 0%, rgba(140, 134, 162, 0.15) 59%, #FFFFFF 100%)",
+                maskImage: "radial-gradient(circle, black 1px, transparent 1.5px)",
+                WebkitMaskImage: "radial-gradient(circle, black 1px, transparent 1.5px)",
+                maskSize: "16px 16px",
+                WebkitMaskSize: "16px 16px",
+              }}
+            />
 
-            <h1 className="text-5xl md:text-7xl lg:text-[90px] font-normal leading-[1.05] tracking-tight mb-8 max-w-4xl mx-auto">
+            <div className="relative z-10 w-full flex flex-col items-center justify-center">
+              <h1 className="text-5xl md:text-7xl lg:text-[90px] font-normal leading-[1.05] tracking-tight mb-8 max-w-4xl mx-auto">
               <span className="block">Afiliados y creadores</span>
             </h1>
 
@@ -1533,7 +1545,6 @@ const Afiliados = () => {
                 />
               </div>
             </div>
-
           </section>
 
           {/* ── E022 WORD TRANSITIONS ─────────────────────────────────── */}
