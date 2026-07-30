@@ -1246,71 +1246,75 @@ const Afiliados = () => {
       });
     });
 
-    // ── E022 WORD TRANSITION CSS ─────────────────────────────────
-    const e022Style = document.createElement('style');
-    e022Style.id = 'e022-css';
-    e022Style.textContent = [
-      '.mwg-e022 .e022-pin{height:400vh}',
-      '.mwg-e022 .e022-container{height:100vh;background:#fff}',
-      '.mwg-e022 .e022-top{display:flex;justify-content:space-between;align-items:center;padding:8vw 8vw 4vw}',
-      '.mwg-e022 .e022-top-title{font-size:5vw;line-height:0.9;font-family:"Manrope",sans-serif;font-weight:500;letter-spacing:-0.05em;color:#000}',
-      '.mwg-e022 .e022-paragraphs{display:flex;align-items:flex-start;padding:5vw 8vw;column-gap:4vw}',
-      '.mwg-e022 .e022-paragraph{font-size:2.3vw;line-height:1.2;font-family:"Manrope",sans-serif;font-weight:500;letter-spacing:-0.03em;color:#000;flex:1}',
-      '.mwg-e022 .e022-word{position:relative;overflow:hidden;display:inline-block;margin:-0.14em 0}',
-      '.mwg-e022 .e022-word span{display:block;padding:0.14em 0}',
-      '.mwg-e022 .e022-paragraph:not(:first-child) .e022-word span{transform:translateY(100%)}',
-      '@media(max-width:768px){',
-      '  .mwg-e022 .e022-pin{height:auto !important}',
-      '  .mwg-e022 .e022-container{height:auto !important;padding:48px 24px !important}',
-      '  .mwg-e022 .e022-top{padding:0 0 24px 0 !important}',
-      '  .mwg-e022 .e022-top-title{font-size:32px !important;line-height:1.1 !important;letter-spacing:-0.03em !important}',
-      '  .mwg-e022 .e022-paragraphs{display:flex !important;flex-direction:column !important;padding:0 !important;gap:24px !important}',
-      '  .mwg-e022 .e022-paragraph{font-size:16px !important;line-height:1.4 !important;letter-spacing:-0.01em !important;margin:0 !important}',
-      '  .mwg-e022 .e022-paragraph .e022-word span{transform:none !important}',
-      '  .mwg-e022 .e022-paragraph:not(:first-child) .e022-word span{transform:none !important}',
-      '}',
+    // ── EFFECT046 WORD TRANSITION CSS ─────────────────────────────
+    const e046Style = document.createElement('style');
+    e046Style.id = 'e046-css';
+    e046Style.textContent = [
+      '.mwg_effect046 { position: relative; background: #fff; color: #000; overflow: clip; }',
+      '.mwg_effect046 .pin-height { height: 400vh; }',
+      '.mwg_effect046 .container-pin { display: flex; flex-direction: column; justify-content: center; height: 100vh; width: 100%; }',
+      '.mwg_effect046 .sentence { width: 90%; max-width: 1200px; margin: 0 auto; font-family: "Manrope", sans-serif; font-size: 5vw; line-height: 1.1; font-weight: 500; letter-spacing: -0.04em; text-align: center; }',
+      '.mwg_effect046 .sentence .word { display: inline-block; margin-right: 0.3em; }',
+      '.mwg_effect046 .sentence .letter { display: inline-block; clip-path: polygon(-10% -10%, -10% 120%, 110% 120%, 110% -10%); overflow: hidden; padding: 0.1em 0; margin: -0.1em 0; }',
+      '.mwg_effect046 .sentence .letter > span { display: inline-block; transform: translateY(110%); }',
+      '@media (max-width: 768px) {',
+      '  .mwg_effect046 .pin-height { height: 300vh; }',
+      '  .mwg_effect046 .sentence { font-size: 8vw; }',
+      '}'
     ].join('');
-    document.head.appendChild(e022Style);
+    document.head.appendChild(e046Style);
 
-    // ── E022 WORD TRANSITION ANIMATION ───────────────────────────
-    const e022Root = document.querySelector<HTMLElement>('.mwg-e022');
-    if (e022Root && window.innerWidth >= 768) {
-      const pinEl       = e022Root.querySelector<HTMLElement>('.e022-pin');
-      const containerEl = e022Root.querySelector<HTMLElement>('.e022-container');
-      const paragraphs  = e022Root.querySelectorAll<HTMLElement>('.e022-paragraph');
-
-      const wrapWords = (el: HTMLElement) => {
-        const text = el.textContent || '';
-        el.innerHTML = text.split(' ')
-          .map(w => `<span class="e022-word"><span>${w}</span></span>`)
+    // ── EFFECT046 WORD TRANSITION ANIMATION ───────────────────────
+    const e046Root = document.querySelector<HTMLElement>('.mwg_effect046');
+    if (e046Root) {
+      const sentenceEl = e046Root.querySelector<HTMLElement>('.sentence');
+      if (sentenceEl) {
+        const text = sentenceEl.textContent || "";
+        sentenceEl.innerHTML = text.trim()
+          .split(' ')
+          .map(word => 
+            `<span class="word">${word
+              .split('')
+              .map(char => `<span class="letter"><span>${char}</span></span>`)
+              .join('')}</span>`
+          )
           .join(' ');
-      };
-      paragraphs.forEach(p => wrapWords(p));
-
-      ScrollTrigger.create({
-        trigger: pinEl,
-        start: 'top top',
-        end: 'bottom bottom',
-        pin: containerEl,
-        anticipatePin: 1,
-        invalidateOnRefresh: true,
-      });
-
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: pinEl,
-          start: 'top top',
-          end: 'bottom bottom',
-          scrub: true,
-        },
-      });
-
-      paragraphs.forEach((paragraph, index) => {
-        if (index === 0) return;
-        tl.to(paragraph.querySelectorAll('.e022-word span'), {
-          y: '0%', duration: 1, stagger: 0.15, ease: 'power4.out',
-        });
-      });
+          
+        const letters = sentenceEl.querySelectorAll<HTMLElement>('.letter > span');
+        const pinHeight = e046Root.querySelector<HTMLElement>('.pin-height');
+        const container = e046Root.querySelector<HTMLElement>('.container-pin');
+        
+        if (pinHeight && container && letters.length > 0) {
+          const lettersArray = Array.from(letters);
+          for (let i = lettersArray.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [lettersArray[i], lettersArray[j]] = [lettersArray[j], lettersArray[i]];
+          }
+          
+          ScrollTrigger.create({
+            trigger: pinHeight,
+            start: 'top top',
+            end: 'bottom bottom',
+            pin: container,
+          });
+          
+          const distPerLetter = (pinHeight.clientHeight - window.innerHeight) / lettersArray.length;
+          
+          lettersArray.forEach((letter, i) => {
+            gsap.to(letter, {
+              y: '0%',
+              ease: 'power4.inOut',
+              duration: 0.8,
+              scrollTrigger: {
+                trigger: pinHeight,
+                start: 'top top-=' + distPerLetter * i,
+                end: '+=1',
+                toggleActions: 'play none reverse none'
+              }
+            });
+          });
+        }
+      }
     }
 
     // ── H104 SCROLL TEXT CSS ─────────────────────────────────────
@@ -1473,7 +1477,7 @@ const Afiliados = () => {
       ScrollTrigger.getAll().forEach((t) => t.kill());
       splits.forEach((s) => s.revert());
       gsap.set(animated, { clearProps: "all" });
-      document.getElementById('e022-css')?.remove();
+      document.getElementById('e046-css')?.remove();
       document.getElementById('h104-css')?.remove();
     };
   }, []);
@@ -1547,23 +1551,16 @@ const Afiliados = () => {
             </div>
           </section>
 
-          {/* ── E022 WORD TRANSITIONS ─────────────────────────────────── */}
-          <div className="mwg-e022">
-            <div className="e022-pin">
-              <div className="e022-container">
-                <div className="e022-top">
-                  <p className="e022-top-title">
-                    Quiénes <span style={{ fontFamily: "'Welth Catritz', serif", overflow: 'visible' }} className="pr-1 italic tracking-normal">somos</span>
-                  </p>
-                </div>
-                <div className="e022-paragraphs">
-                  <p className="e022-paragraph">Creamos tecnología para ayudar a los creadores a construir sin límites.</p>
-                  <p className="e022-paragraph">Con Miiles, puedes diseñar, estructurar y lanzar modelos de negocio impulsados por IA en minutos.</p>
-                  <p className="e022-paragraph">Nuestra misión es ayudar a las personas a crear y crecer sin límites.</p>
-                </div>
+          {/* ── EFFECT046 WORD TRANSITIONS ────────────────────────────── */}
+          <section className="mwg_effect046">
+            <div className="pin-height">
+              <div className="container-pin">
+                <p className="sentence">
+                  Creamos tecnología para ayudar a los creadores a construir sin límites.
+                </p>
               </div>
             </div>
-          </div>
+          </section>
 
           {/* ── BOARD MOCKUP ───────────────────────────────────────────── */}
           <section className="py-12 md:py-32 px-6 bg-white">
