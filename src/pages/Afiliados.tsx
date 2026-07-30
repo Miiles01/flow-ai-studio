@@ -1499,7 +1499,7 @@ const Afiliados = () => {
               <span className="block">Afiliados y creadores</span>
             </h1>
 
-            <p data-fade className="text-[17px] md:text-xl font-light text-zinc-600 max-w-xl mx-auto mb-10 leading-relaxed px-2 md:px-0">
+            <p data-fade className="text-[17px] md:text-xl font-light text-black max-w-xl mx-auto mb-10 leading-relaxed px-2 md:px-0">
               Únete al programa de afiliados de Miiles. Comparte tu link y recibe el <strong className="text-black font-normal">25%</strong> de comisión en suscripciones.
             </p>
 
