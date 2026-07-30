@@ -9,7 +9,8 @@ export type UserApp = {
   name: string;
   connector_type: ConnectorType;
   url: string | null;
-  api_key: string | null;
+  /** Never fetched to the client; keys stay write-only. */
+  has_api_key?: boolean;
   enabled: boolean;
   is_builtin: boolean;
   builtin_key: string | null;
