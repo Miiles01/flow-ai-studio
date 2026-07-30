@@ -39,14 +39,18 @@ const ChecklistItem = ({ checked, label, isPlaceholder = false }: { checked: boo
 /* ─── Mockup: Tablero con flujo — UI fiel al app real ──────────────────── */
 const BoardMockup = () => {
   const [scale, setScale] = useState(1);
+  const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
   const isHoveredRef = useRef(false);
   const [phase, setPhase] = useState<'idle' | 'move_to_input' | 'click_input' | 'expand_input' | 'typing' | 'move_to_submit' | 'click_submit' | 'show_skeleton_1' | 'show_skeleton_2' | 'show_skeleton_3' | 'show_flow' | 'reset'>('idle');
   const [typedText, setTypedText] = useState('');
   const [flowGenerated, setFlowGenerated] = useState(false);
 
+  const isInputActive = ['expand_input', 'typing', 'move_to_submit', 'click_submit'].includes(phase);
+
   useEffect(() => {
     const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
       if (!containerRef.current) return;
       const width = containerRef.current.getBoundingClientRect().width;
       const newScale = Math.min(1, (width - 64) / 960);
@@ -230,9 +234,20 @@ const BoardMockup = () => {
           transform: `scale(${scale})`,
           transformOrigin: "top center",
           flexShrink: 0,
+          overflow: "hidden",
+          borderRadius: "24px",
         }}
       >
-        <div className="w-full h-full rounded-3xl overflow-hidden border border-black/8 shadow-[0_24px_80px_rgba(0,0,0,0.10)] bg-white flex flex-col">
+        <motion.div
+          animate={{
+            scale: isMobile && isInputActive ? 1.6 : 1,
+            y: 0,
+          }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="w-full h-full"
+          style={{ transformOrigin: "bottom center" }}
+        >
+          <div className="w-full h-full rounded-3xl overflow-hidden border border-black/8 shadow-[0_24px_80px_rgba(0,0,0,0.10)] bg-white flex flex-col">
           {/* window chrome */}
           <div className="flex items-center gap-2 px-4 py-3 bg-white border-b border-black/6 flex-shrink-0">
             <div className="flex gap-1.5">
@@ -695,7 +710,7 @@ const BoardMockup = () => {
             </motion.div>
 
           </div>
-        </div>
+        </motion.div>
       </div>
     </div>
   );
