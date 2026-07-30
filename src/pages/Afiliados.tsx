@@ -1556,7 +1556,7 @@ const Afiliados = () => {
             <div className="pin-height">
               <div className="container-pin">
                 <p className="sentence">
-                  Creamos tecnología para ayudar a los creadores a construir sin límites.
+                  Somos Miiles. Creamos tecnología para ayudar a los creadores a construir sin límites.
                 </p>
               </div>
             </div>
