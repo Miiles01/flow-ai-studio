@@ -861,7 +861,7 @@ const AnimatedDashboardMockup = () => {
         <motion.div
           animate={{
             scale: isMobile && isPopupOpen ? 1.8 : 1,
-            y: 0,
+            y: isMobile && isPopupOpen ? -40 : 0,
           }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="w-full h-full"
