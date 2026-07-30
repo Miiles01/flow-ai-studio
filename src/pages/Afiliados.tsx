@@ -11,7 +11,7 @@ import LandingNavbar from "@/components/LandingNavbar";
 import LandingFooter from "@/components/LandingFooter";
 import logoImg from "@/assets/logo.webp";
 import creadoresHeroImg from "@/assets/creadores-hero.webp";
-import { MousePointer, Hand, Square, Type, ListTodo, Image as ImageIcon, SquareDashed, ArrowLeft, Settings2, Share2, Undo2, Redo2, PanelRight, Plus, Minus } from "lucide-react";
+import { MousePointer, Hand, Square, Type, ListTodo, Image as ImageIcon, SquareDashed, ArrowLeft, Settings2, Share2, Undo2, Redo2, PanelRight, Plus, Minus, Gift, Link2, Percent, Users } from "lucide-react";
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText, CustomEase, MorphSVGPlugin);
 if (!CustomEase.get("osmo-ease")) {
@@ -1187,10 +1187,10 @@ const AnimatedDashboardMockup = () => {
 
 /* ─── Data ──────────────────────────────────────────────────────────────── */
 const STEPS = [
-  { n: "01", label: "Plan Pro gratis", detail: "Únete como afiliado y accede a todas las herramientas de Miiles sin pagar nada. Tú usas, tú vendes, tú ganas." },
-  { n: "02", label: "Link de afiliado", detail: "Ve a la sección Afiliados en tu menú lateral y genera tu enlace único con un solo clic." },
-  { n: "03", label: "Gana el 25%", detail: "Compártelo en tus redes, stories o bio. Cada membresía vendida con tu link te da el 25% directo." },
-  { n: "04", label: "Comunidad exclusiva", detail: "Acceso a comunidad privada, drops de contenido y eventos que no están abiertos al público." },
+  { icon: Gift, label: "Plan Pro gratis", detail: "Únete como afiliado y accede a todas las herramientas de Miiles sin pagar nada. Tú usas, tú vendes, tú ganas." },
+  { icon: Link2, label: "Link de afiliado", detail: "Ve a la sección Afiliados en tu menú lateral y genera tu enlace único con un solo clic." },
+  { icon: Percent, label: "Gana el 25%", detail: "Compártelo en tus redes, stories o bio. Cada membresía vendida con tu link te da el 25% directo." },
+  { icon: Users, label: "Comunidad exclusiva", detail: "Acceso a comunidad privada, drops de contenido y eventos que no están abiertos al público." },
 ];
 
 /* ─── Page ──────────────────────────────────────────────────────────────── */
@@ -1558,7 +1558,9 @@ const Afiliados = () => {
                     data-fade
                     className="flex gap-6 items-start border border-black/8 rounded-3xl p-7 hover:-translate-y-2 hover:shadow-[0_16px_40px_rgba(0,0,0,0.06)] transition-all duration-300"
                   >
-                    <span className="text-[11px] font-normal text-zinc-400 mt-1 shrink-0 w-8">{s.n}</span>
+                    <div className="shrink-0 w-12 h-12 flex items-center justify-center bg-zinc-100 rounded-xl mt-1">
+                      <s.icon className="w-5 h-5 text-zinc-700" />
+                    </div>
                     <div>
                       <div className="text-xl font-normal mb-2">{s.label}</div>
                       <div className="text-sm font-light text-zinc-600">{s.detail}</div>
