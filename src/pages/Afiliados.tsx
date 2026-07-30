@@ -1549,6 +1549,7 @@ const Afiliados = () => {
                 />
               </div>
             </div>
+            </div>
           </section>
 
           {/* ── EFFECT046 WORD TRANSITIONS ────────────────────────────── */}
