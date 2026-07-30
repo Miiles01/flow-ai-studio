@@ -1576,7 +1576,7 @@ const Afiliados = () => {
                 ].map((item, i) => (
                   <div 
                     key={i} 
-                    className="flex flex-col bg-gradient-to-b from-[#FDFDFD] to-[#F8F9FD] rounded-[2rem] overflow-hidden border border-black/[0.04] shadow-[0_8px_30px_rgb(0,0,0,0.03)] min-h-[550px]"
+                    className="flex flex-col bg-gradient-to-b from-[#FDFDFD] to-[#F8F9FD] rounded-[25px] overflow-hidden border border-black/[0.04] min-h-[550px]"
                   >
                     <div className="p-10 pb-6 flex-shrink-0">
                       <h3 className="text-[22px] font-medium mb-3 tracking-tight">{item.title}</h3>
