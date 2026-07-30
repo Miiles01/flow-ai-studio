@@ -1570,9 +1570,9 @@ const Afiliados = () => {
             <div className="max-w-[1200px] mx-auto">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {[
-                  { title: "Creatividad", desc: "Con Miiles tienes un canvas en el que puedes diseñar flujos, preparar campañas y descubrir oportunidades." },
-                  { title: "Algoritmo", desc: "Aprende cómo funciona el algoritmo de las redes sociales y mejora tu contenido." },
-                  { title: "Control", desc: "Lleva el control de tus ingresos, proyectos y mucho más, todo en un solo lugar sin límites." }
+                  { title: "Creatividad", desc: "Con Miiles tienes un canvas en el que puedes diseñar flujos, preparar campañas y descubrir oportunidades.", image: "/Creatividad.png" },
+                  { title: "Algoritmo", desc: "Aprende cómo funciona el algoritmo de las redes sociales y mejora tu contenido.", image: "/Algoritmo.png" },
+                  { title: "Control", desc: "Lleva el control de tus ingresos, proyectos y mucho más, todo en un solo lugar sin límites.", image: "/Control.png" }
                 ].map((item, i) => (
                   <div 
                     key={i} 
@@ -1587,8 +1587,8 @@ const Afiliados = () => {
                     {/* Contenedor de la imagen (mt-auto empuja hacia abajo) */}
                     <div className="mt-auto w-full pt-8 flex justify-center items-end">
                       <img 
-                        src={`https://placehold.co/600x500/e5e7eb/9ca3af?text=Imagen+${i+1}`} 
-                        alt={`Imagen ${i+1}`} 
+                        src={item.image} 
+                        alt={item.title} 
                         className="w-full h-auto object-cover object-bottom"
                       />
                     </div>
