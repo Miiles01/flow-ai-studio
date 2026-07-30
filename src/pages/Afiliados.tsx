@@ -1598,6 +1598,16 @@ const Afiliados = () => {
             </div>
           </section>
 
+          {/* ── TÍTULO INTERMEDIO ──────────────────────────────────────── */}
+          <section className="pt-12 pb-12 md:pt-24 md:pb-12 px-6 bg-white text-center">
+            <div className="max-w-4xl mx-auto" data-fade>
+              <h2 className="text-5xl md:text-7xl lg:text-[80px] font-normal leading-[1.1] tracking-tight">
+                Herramientas para<br/>
+                hacer la <span style={{ fontFamily: "'Welth Catritz', serif", overflow: 'visible' }} className="pr-2 italic tracking-normal font-light">diferencia</span>
+              </h2>
+            </div>
+          </section>
+
           {/* ── BOARD MOCKUP ───────────────────────────────────────────── */}
           <section className="py-12 md:py-32 px-6 bg-white">
             <div className="max-w-5xl mx-auto">
