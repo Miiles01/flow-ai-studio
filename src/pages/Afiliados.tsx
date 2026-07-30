@@ -1253,7 +1253,7 @@ const Afiliados = () => {
       '.mwg_effect046 { position: relative; background: #fff; color: #000; overflow: clip; }',
       '.mwg_effect046 .pin-height { height: 400vh; }',
       '.mwg_effect046 .container-pin { display: flex; flex-direction: column; justify-content: center; height: 100vh; width: 100%; padding-left: 4vw; }',
-      '.mwg_effect046 .sentence { width: 90%; max-width: 1200px; font-family: "Manrope", sans-serif; font-size: 6.5vw; line-height: 1.15; font-weight: 500; letter-spacing: -0.04em; text-align: left; }',
+      '.mwg_effect046 .sentence { width: 90%; max-width: 1200px; font-family: "Manrope", sans-serif; font-size: 6.5vw; line-height: 0.95; font-weight: 500; letter-spacing: -0.04em; text-align: left; }',
       '.mwg_effect046 .sentence .word { display: inline-block; margin-right: 0.3em; }',
       '.mwg_effect046 .sentence .letter { display: inline-block; clip-path: polygon(-10% -10%, -10% 120%, 110% 120%, 110% -10%); overflow: hidden; padding: 0.1em 0; margin: -0.1em 0; }',
       '.mwg_effect046 .sentence .letter > span { display: inline-block; transform: translateY(110%); }',
