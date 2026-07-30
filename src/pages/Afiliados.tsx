@@ -704,10 +704,12 @@ const BoardMockup = () => {
 /* ─── Mockup: Dashboard animado con popup de afiliados ─────────────────── */
 const AnimatedDashboardMockup = () => {
   const [scale, setScale] = useState(1);
+  const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     const handleResize = () => {
+      setIsMobile(window.innerWidth < 768);
       if (!containerRef.current) return;
       const width = containerRef.current.getBoundingClientRect().width;
       const newScale = Math.min(1, (width - 64) / 960);
@@ -719,6 +721,7 @@ const AnimatedDashboardMockup = () => {
   }, []);
   const [phase, setPhase] = useState<'idle' | 'enter' | 'hover_sidebar' | 'click_sidebar' | 'open_popup' | 'hover_generate' | 'click_generate' | 'show_link' | 'hover_copy' | 'click_copy' | 'copied'>('idle');
 
+  const isPopupOpen = ['open_popup', 'hover_generate', 'click_generate', 'show_link', 'hover_copy', 'click_copy', 'copied'].includes(phase);
   const isHoveredRef = useRef(false);
 
   // IntersectionObserver to pause loop off-screen
@@ -842,11 +845,15 @@ const AnimatedDashboardMockup = () => {
 
   return (
     <div ref={containerRef} className="w-full flex justify-center p-8" style={{ height: (610 * scale) + 64 }}>
-      <div
+      <motion.div
+        animate={{
+          scale: isMobile && isPopupOpen ? scale * 1.8 : scale,
+          y: isMobile && isPopupOpen ? -120 * scale : 0,
+        }}
+        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
         style={{
           width: 960,
           height: 610,
-          transform: `scale(${scale})`,
           transformOrigin: "top center",
           flexShrink: 0,
         }}
