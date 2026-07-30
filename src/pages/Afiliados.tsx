@@ -1517,7 +1517,9 @@ const Afiliados = () => {
             <div className="e022-pin">
               <div className="e022-container">
                 <div className="e022-top">
-                  <p className="e022-top-title">Quiénes somos</p>
+                  <p className="e022-top-title">
+                    Quiénes <span style={{ fontFamily: "'Welth Catritz', serif", overflow: 'visible' }} className="pr-1 italic tracking-normal">somos</span>
+                  </p>
                 </div>
                 <div className="e022-paragraphs">
                   <p className="e022-paragraph">Somos Miiles. Creamos herramientas para creativos.</p>
@@ -1542,7 +1544,7 @@ const Afiliados = () => {
             <div className="max-w-5xl mx-auto">
               <div className="text-center mb-20">
                 <h2 className="text-4xl md:text-6xl font-normal leading-[1.3] tracking-tight pb-2">
-                  Empieza desde cualquier lugar
+                  Empieza desde <span style={{ fontFamily: "'Welth Catritz', serif", overflow: 'visible' }} className="pr-1 italic tracking-normal font-light">cualquier</span> lugar
                 </h2>
                 <p data-fade className="text-sm font-light text-zinc-600 mt-4 max-w-sm mx-auto">
                   No hay formularios complicados ni procesos de aprobación largos.
