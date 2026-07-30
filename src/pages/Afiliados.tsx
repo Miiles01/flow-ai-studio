@@ -1580,7 +1580,7 @@ const Afiliados = () => {
                   >
                     <div className="p-10 pb-6 flex-shrink-0">
                       <h3 className="text-[22px] font-medium mb-3 tracking-tight">{item.title}</h3>
-                      <p className="text-gray-500 font-light leading-relaxed text-[15px]">
+                      <p className="text-black font-normal leading-relaxed text-[15px]">
                         {item.desc}
                       </p>
                     </div>
