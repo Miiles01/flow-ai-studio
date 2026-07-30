@@ -55,8 +55,8 @@ const AppsMenu = ({ isDark }: AppsMenuProps) => {
             type="button"
             className="flex items-center gap-2 bg-white/10 h-10 px-4 rounded-full cursor-pointer hover:bg-white/20 transition-all group"
           >
-            <LayoutGrid size={15} strokeWidth={1.5} className="text-white/70 group-hover:text-white transition-colors" />
-            <span className="text-[13px] font-light text-white/70 group-hover:text-white transition-colors tracking-wider">
+            <LayoutGrid size={15} strokeWidth={1.5} className="text-white transition-colors" />
+            <span className="text-[13px] font-light text-white transition-colors tracking-wider">
               Apps
             </span>
           </button>

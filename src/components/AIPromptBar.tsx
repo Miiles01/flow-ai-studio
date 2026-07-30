@@ -232,7 +232,7 @@ const AIPromptBar = ({ onGenerate, isGenerating, forceOpen, extendLabel, onCance
                       className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-300 disabled:opacity-30 ${
                         isRecording
                           ? "bg-red-500 text-white hover:bg-red-600 ring-2 ring-red-400/50"
-                          : "bg-white/10 text-white/70 hover:bg-white/20 hover:text-white"
+                          : "bg-white/10 text-white hover:bg-white/20"
                       }`}
                     >
                       <Mic size={18} strokeWidth={1.5} />
@@ -241,7 +241,7 @@ const AIPromptBar = ({ onGenerate, isGenerating, forceOpen, extendLabel, onCance
                   <button
                     onClick={() => handleSubmit()}
                     disabled={!prompt.trim() || isGenerating}
-                    className={`w-10 h-10 rounded-full bg-white/10 flex items-center justify-center transition-all duration-300 hover:bg-white/20 hover:text-white disabled:transform-none ${isGenerating ? 'text-white opacity-100' : 'text-white/70 disabled:opacity-30'}`}
+                    className={`w-10 h-10 rounded-full bg-white/10 flex items-center justify-center transition-all duration-300 hover:bg-white/20 hover:text-white disabled:transform-none ${isGenerating ? 'text-white opacity-100' : 'text-white disabled:opacity-30'}`}
                   >
                     {isGenerating ? (
                       <Loader2 size={18} className="animate-spin text-white" />
