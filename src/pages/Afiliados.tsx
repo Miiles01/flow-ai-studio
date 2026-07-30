@@ -861,11 +861,11 @@ const AnimatedDashboardMockup = () => {
         <motion.div
           animate={{
             scale: isMobile && isPopupOpen ? 1.8 : 1,
-            y: isMobile && isPopupOpen ? -150 : 0,
+            y: 0,
           }}
           transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
           className="w-full h-full"
-          style={{ transformOrigin: "top center" }}
+          style={{ transformOrigin: "center center" }}
         >
           <div id="animated-dashboard-mockup" className="flex flex-col w-full h-full rounded-3xl overflow-hidden border border-black/8 shadow-[0_24px_80px_rgba(0,0,0,0.10)] relative" style={{ background: '#fff', transform: 'translate3d(0,0,0)', isolation: 'isolate' }}>
     {/* window chrome */}
