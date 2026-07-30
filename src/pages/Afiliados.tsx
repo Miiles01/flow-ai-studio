@@ -11,7 +11,15 @@ import LandingNavbar from "@/components/LandingNavbar";
 import LandingFooter from "@/components/LandingFooter";
 import logoImg from "@/assets/logo.webp";
 import creadoresHeroImg from "@/assets/creadores-hero.webp";
+import brand1 from "@/assets/miiles/brands/brand1.svg";
+import brand2 from "@/assets/miiles/brands/brand2.svg";
+import brand3 from "@/assets/miiles/brands/brand3.svg";
+import brand4 from "@/assets/miiles/brands/brand4.svg";
+import brand5 from "@/assets/miiles/brands/brand5.svg";
+import brand6 from "@/assets/miiles/brands/brand6.svg";
 import { MousePointer, Hand, Square, Type, ListTodo, Image as ImageIcon, SquareDashed, ArrowLeft, Settings2, Share2, Undo2, Redo2, PanelRight, Plus, Minus, Gift, Link2, Percent, Users } from "lucide-react";
+
+const brandLogos = [brand1, brand2, brand3, brand4, brand5, brand6];
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText, CustomEase, MorphSVGPlugin);
 if (!CustomEase.get("osmo-ease")) {
@@ -1496,6 +1504,22 @@ const Afiliados = () => {
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C12.3 8.8 15.2 11.7 24 12C15.2 12.3 12.3 15.2 12 24C11.7 15.2 8.8 12.3 0 12C8.8 11.7 11.7 8.8 12 0Z" /></svg>
                 Quiero ser creador
               </Link>
+            </div>
+
+            {/* BRAND CAROUSEL */}
+            <div data-fade className="w-full mt-16 md:mt-24 mb-4 overflow-hidden relative z-10">
+              <h4 className="text-center text-xs font-light text-black/80 mb-8 tracking-widest">
+                Elegido por
+              </h4>
+              <div className="px-[5%] md:px-[20%] max-w-7xl mx-auto">
+                <div className="relative w-full" style={{ maskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)" }}>
+                  <div className="flex w-max animate-marquee gap-14 md:gap-20 items-center">
+                    {[...brandLogos, ...brandLogos, ...brandLogos].map((logo, i) => (
+                      <img key={i} src={logo} alt="" className="h-5 md:h-7 w-auto shrink-0 opacity-60" />
+                    ))}
+                  </div>
+                </div>
+              </div>
             </div>
 
             {/* Hero Image */}
