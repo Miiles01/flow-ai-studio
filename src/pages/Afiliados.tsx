@@ -845,20 +845,29 @@ const AnimatedDashboardMockup = () => {
 
   return (
     <div ref={containerRef} className="w-full flex justify-center p-8" style={{ height: (610 * scale) + 64 }}>
-      <motion.div
-        animate={{
-          scale: isMobile && isPopupOpen ? scale * 1.8 : scale,
-          y: isMobile && isPopupOpen ? -120 * scale : 0,
-        }}
-        transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+      {/* Mask that maintains the original size and clips the zoomed content */}
+      <div
         style={{
           width: 960,
           height: 610,
+          transform: `scale(${scale})`,
           transformOrigin: "top center",
           flexShrink: 0,
+          overflow: "hidden",
+          borderRadius: "24px",
         }}
       >
-        <div id="animated-dashboard-mockup" className="flex flex-col w-full h-full rounded-3xl overflow-hidden border border-black/8 shadow-[0_24px_80px_rgba(0,0,0,0.10)] relative" style={{ background: '#fff', transform: 'translate3d(0,0,0)', isolation: 'isolate' }}>
+        {/* The zooming camera view */}
+        <motion.div
+          animate={{
+            scale: isMobile && isPopupOpen ? 1.8 : 1,
+            y: isMobile && isPopupOpen ? -150 : 0,
+          }}
+          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          className="w-full h-full"
+          style={{ transformOrigin: "top center" }}
+        >
+          <div id="animated-dashboard-mockup" className="flex flex-col w-full h-full rounded-3xl overflow-hidden border border-black/8 shadow-[0_24px_80px_rgba(0,0,0,0.10)] relative" style={{ background: '#fff', transform: 'translate3d(0,0,0)', isolation: 'isolate' }}>
     {/* window chrome */}
     <div className="flex items-center gap-2 px-4 py-3 bg-white border-b border-black/6">
       <div className="flex gap-1.5">
@@ -1153,8 +1162,9 @@ const AnimatedDashboardMockup = () => {
         )}
       </AnimatePresence>
     </div>
-        </div>
-      </motion.div>
+          </div>
+        </motion.div>
+      </div>
     </div>
   );
 };
