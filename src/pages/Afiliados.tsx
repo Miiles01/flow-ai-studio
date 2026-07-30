@@ -1253,14 +1253,14 @@ const Afiliados = () => {
       '.mwg_effect046 { position: relative; background: #fff; color: #000; overflow: clip; }',
       '.mwg_effect046 .pin-height { height: 400vh; }',
       '.mwg_effect046 .container-pin { display: flex; flex-direction: column; justify-content: center; height: 100vh; width: 100%; padding-left: 8vw; }',
-      '.mwg_effect046 .sentence { width: 85%; max-width: 1200px; font-family: "Manrope", sans-serif; font-size: 6.5vw; line-height: 1.05; font-weight: 500; letter-spacing: -0.04em; text-align: left; }',
+      '.mwg_effect046 .sentence { width: 85%; max-width: 1200px; font-family: "Manrope", sans-serif; font-size: 6.5vw; line-height: 1.2; font-weight: 500; letter-spacing: -0.04em; text-align: left; }',
       '.mwg_effect046 .sentence .word { display: inline-block; margin-right: 0.3em; }',
       '.mwg_effect046 .sentence .letter { display: inline-block; clip-path: polygon(-10% -10%, -10% 120%, 110% 120%, 110% -10%); overflow: hidden; padding: 0.1em 0; margin: -0.1em 0; }',
       '.mwg_effect046 .sentence .letter > span { display: inline-block; transform: translateY(110%); }',
       '@media (max-width: 768px) {',
       '  .mwg_effect046 .pin-height { height: auto; padding: 12vh 0; }',
       '  .mwg_effect046 .container-pin { height: auto; padding-left: 6vw; }',
-      '  .mwg_effect046 .sentence { font-size: 8vw; width: 90%; }',
+      '  .mwg_effect046 .sentence { font-size: 8vw; width: 90%; line-height: 1.05; }',
       '  .mwg_effect046 .sentence .letter > span { transform: none !important; }',
       '}'
     ].join('');
