@@ -1570,9 +1570,9 @@ const Afiliados = () => {
             <div className="max-w-[1200px] mx-auto">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {[
-                  { title: "Título de la tarjeta 1", desc: "Agrega aquí una breve descripción para esta tarjeta. El texto se alinea en la parte superior." },
-                  { title: "Título de la tarjeta 2", desc: "Agrega aquí una breve descripción para esta tarjeta. El texto se alinea en la parte superior." },
-                  { title: "Título de la tarjeta 3", desc: "Agrega aquí una breve descripción para esta tarjeta. El texto se alinea en la parte superior." }
+                  { title: "Creatividad", desc: "Con Miiles tienes un canvas en el que puedes diseñar flujos, preparar campañas y descubrir oportunidades." },
+                  { title: "Algoritmo", desc: "Aprende cómo funciona el algoritmo de las redes sociales y mejora tu contenido." },
+                  { title: "Control", desc: "Lleva el control de tus ingresos, proyectos y mucho más, todo en un solo lugar sin límites." }
                 ].map((item, i) => (
                   <div 
                     key={i} 
