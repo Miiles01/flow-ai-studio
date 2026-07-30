@@ -1154,7 +1154,7 @@ const AnimatedDashboardMockup = () => {
       </AnimatePresence>
     </div>
         </div>
-      </div>
+      </motion.div>
     </div>
   );
 };
