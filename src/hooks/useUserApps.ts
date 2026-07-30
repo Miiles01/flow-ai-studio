@@ -39,7 +39,7 @@ export function useUserApps() {
     setLoading(true);
     const { data, error } = await supabase
       .from("user_apps")
-      .select("id, name, connector_type, url, api_key, enabled, is_builtin, builtin_key")
+      .select("id, name, connector_type, url, enabled, is_builtin, builtin_key")
       .eq("user_id", user.id)
       .order("is_builtin", { ascending: false })
       .order("created_at", { ascending: true });
