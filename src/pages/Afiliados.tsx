@@ -1251,8 +1251,8 @@ const Afiliados = () => {
     e046Style.id = 'e046-css';
     e046Style.textContent = [
       '.mwg_effect046 { position: relative; background: #fff; color: #000; overflow: clip; }',
-      '.mwg_effect046 .pin-height { height: 400vh; }',
-      '.mwg_effect046 .container-pin { display: flex; flex-direction: column; justify-content: center; height: 100vh; width: 100%; padding-left: 8vw; }',
+      '.mwg_effect046 .pin-height { height: auto; padding: 16vh 0 6vh 0; }',
+      '.mwg_effect046 .container-pin { display: flex; flex-direction: column; justify-content: center; width: 100%; padding-left: 8vw; }',
       '.mwg_effect046 .sentence { width: 85%; max-width: 1200px; font-family: "Manrope", sans-serif; font-size: 6.5vw; line-height: 1.0; font-weight: 500; letter-spacing: -0.04em; text-align: left; }',
       '.mwg_effect046 .sentence .word { display: inline-block; margin-right: 0.3em; }',
       '.mwg_effect046 .sentence .letter { display: inline-block; clip-path: polygon(-30% -50%, 130% -50%, 130% 120%, -30% 120%); }',
@@ -1282,27 +1282,15 @@ const Afiliados = () => {
             [lettersArray[i], lettersArray[j]] = [lettersArray[j], lettersArray[i]];
           }
           
-          ScrollTrigger.create({
-            trigger: pinHeight,
-            start: 'top top',
-            end: 'bottom bottom',
-            pin: container,
-          });
-          
-          const distPerLetter = (pinHeight.clientHeight - window.innerHeight) / lettersArray.length;
-          
-          lettersArray.forEach((letter, i) => {
-            gsap.to(letter, {
-              y: '0%',
-              ease: 'power4.inOut',
-              duration: 0.8,
-              scrollTrigger: {
-                trigger: pinHeight,
-                start: 'top top-=' + distPerLetter * i,
-                end: '+=1',
-                toggleActions: 'play none reverse none'
-              }
-            });
+          gsap.to(lettersArray, {
+            y: '0%',
+            ease: 'power4.inOut',
+            duration: 0.8,
+            stagger: 0.015,
+            scrollTrigger: {
+              trigger: container,
+              start: 'top 80%',
+            }
           });
         }
       }
@@ -1566,7 +1554,7 @@ const Afiliados = () => {
           </section>
 
           {/* ── 3 COLUMNAS CON IMAGEN AL FONDO ───────────────────────────── */}
-          <section className="pt-8 pb-24 md:py-24 px-6 bg-white">
+          <section className="pt-8 pb-24 md:pt-12 md:pb-24 px-6 bg-white">
             <div className="max-w-[1200px] mx-auto">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {[
