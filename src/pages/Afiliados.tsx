@@ -1596,7 +1596,7 @@ const Afiliados = () => {
           <section className="pt-12 pb-12 md:pt-24 md:pb-12 px-6 bg-white text-center">
             <div className="max-w-4xl mx-auto" data-fade>
               <h2 className="text-4xl md:text-6xl font-normal leading-[1.3] tracking-tight pb-2">
-                Crea con el <span style={{ fontFamily: "'Welth Catritz', serif", overflow: 'visible' }} className="pr-1 italic tracking-normal font-light">poder</span><br className="hidden md:block" />
+                Crea con el <span style={{ fontFamily: "'Welth Catritz', serif", overflow: 'visible' }} className="pr-1 italic tracking-normal font-light">poder</span><br />
                 de la IA
               </h2>
             </div>
