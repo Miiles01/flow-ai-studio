@@ -1610,7 +1610,7 @@ const Afiliados = () => {
             <div className="max-w-5xl mx-auto">
               <div className="text-center mb-20">
                 <h2 className="text-4xl md:text-6xl font-normal leading-[1.3] tracking-tight pb-2">
-                  Empieza desde <span style={{ fontFamily: "'Welth Catritz', serif", overflow: 'visible' }} className="pr-1 italic tracking-normal font-light">cualquier</span> lugar
+                  Empieza desde<br className="hidden md:block" /> <span style={{ fontFamily: "'Welth Catritz', serif", overflow: 'visible' }} className="pr-1 italic tracking-normal font-light">cualquier</span> lugar
                 </h2>
                 <div data-fade className="text-[15px] font-normal text-zinc-600 mt-6 max-w-lg mx-auto flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6">
                   <div>
