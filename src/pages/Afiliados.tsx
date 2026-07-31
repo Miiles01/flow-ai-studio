@@ -1457,14 +1457,15 @@ const Afiliados = () => {
     }
 
     return () => {
+      splits.forEach((s) => { try { s.revert(); } catch { /* noop */ } });
       smootherRef.current?.kill();
       ScrollTrigger.getAll().forEach((t) => t.kill());
-      splits.forEach((s) => s.revert());
       gsap.set(animated, { clearProps: "all" });
       document.getElementById('e046-css')?.remove();
       document.getElementById('h104-css')?.remove();
     };
   }, []);
+
 
   return (
     <>
