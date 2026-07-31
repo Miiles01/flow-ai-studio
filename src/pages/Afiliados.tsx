@@ -1570,9 +1570,9 @@ const Afiliados = () => {
             <div className="max-w-[1200px] mx-auto">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {[
-                  { title: "Creatividad", desc: "Con Miiles puedes encontrar clientes, diseñar modelos de negocio y preparar campañas", image: "/Creatividad.png" },
-                  { title: "Algoritmo", desc: "Aprende cómo funciona el algoritmo de las redes sociales y mejora tu contenido.", image: "/Algoritmo.png" },
-                  { title: "Control", desc: "Lleva el control de tus ingresos, proyectos y mucho más, todo en un solo lugar sin límites.", image: "/Control.png" }
+                  { title: "Creatividad", desc: "Con Miiles puedes encontrar clientes, diseñar modelos de negocio y preparar campañas", image: "/Creatividad.webp" },
+                  { title: "Algoritmo", desc: "Aprende cómo funciona el algoritmo de las redes sociales y mejora tu contenido.", image: "/Algoritmo.webp" },
+                  { title: "Control", desc: "Lleva el control de tus ingresos, proyectos y mucho más, todo en un solo lugar sin límites.", image: "/Control.webp" }
                 ].map((item, i) => (
                   <div 
                     key={i} 
