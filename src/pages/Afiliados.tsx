@@ -17,7 +17,7 @@ import brand3 from "@/assets/miiles/brands/brand3.svg";
 import brand4 from "@/assets/miiles/brands/brand4.svg";
 import brand5 from "@/assets/miiles/brands/brand5.svg";
 import brand6 from "@/assets/miiles/brands/brand6.svg";
-import { MousePointer, Hand, Square, Type, ListTodo, Image as ImageIcon, SquareDashed, ArrowLeft, Settings2, Share2, Undo2, Redo2, PanelRight, Plus, Minus, Gift, Link2, Percent, Users } from "lucide-react";
+import { MousePointer, Hand, Square, Type, ListTodo, Image as ImageIcon, SquareDashed, ArrowLeft, Settings2, Share2, Undo2, Redo2, PanelRight, Plus, Minus, Gift, Link2, Percent, Users, Check } from "lucide-react";
 
 const brandLogos = [brand1, brand2, brand3, brand4, brand5, brand6];
 
@@ -1624,9 +1624,20 @@ const Afiliados = () => {
                 <h2 className="text-4xl md:text-6xl font-normal leading-[1.3] tracking-tight pb-2">
                   Empieza desde <span style={{ fontFamily: "'Welth Catritz', serif", overflow: 'visible' }} className="pr-1 italic tracking-normal font-light">cualquier</span> lugar
                 </h2>
-                <p data-fade className="text-sm font-light text-zinc-600 mt-4 max-w-sm mx-auto">
-                  No hay formularios complicados ni procesos de aprobación largos.
-                </p>
+                <div data-fade className="text-[15px] font-normal text-zinc-600 mt-6 max-w-lg mx-auto flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6">
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center justify-center w-5 h-5 rounded-full bg-black text-white shrink-0">
+                      <Check className="w-3 h-3" strokeWidth={3} />
+                    </div>
+                    <span>Sin formularios complicados.</span>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <div className="flex items-center justify-center w-5 h-5 rounded-full bg-black text-white shrink-0">
+                      <Check className="w-3 h-3" strokeWidth={3} />
+                    </div>
+                    <span>Sin procesos de aprobación largos.</span>
+                  </div>
+                </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-16">
