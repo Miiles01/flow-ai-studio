@@ -61,6 +61,7 @@ async function createCheckoutSession(options: {
     mode: isRecurring ? "subscription" : "payment",
     ui_mode: "embedded_page",
     return_url: options.returnUrl,
+    allow_promotion_codes: true,
     automatic_tax: { enabled: true },
     ...(customerId && { customer: customerId }),
     ...(customerId && { customer_update: { address: "auto" } }),
