@@ -1515,7 +1515,7 @@ const Afiliados = () => {
               <div className="px-[5%] md:px-[20%] max-w-7xl mx-auto">
                 <div className="relative w-full" style={{ maskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)" }}>
                   <div className="flex w-max animate-marquee gap-14 md:gap-20 items-center">
-                    {[...brandLogos, ...brandLogos, ...brandLogos].map((logo, i) => (
+                    {[...brandLogos, ...brandLogos, ...brandLogos, ...brandLogos].map((logo, i) => (
                       <img key={i} src={logo} alt="" className="h-5 md:h-7 w-auto shrink-0 opacity-60" />
                     ))}
                   </div>
