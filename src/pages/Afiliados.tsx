@@ -1258,7 +1258,7 @@ const Afiliados = () => {
       '.mwg_effect046 .sentence .letter { display: inline-block; clip-path: polygon(-30% -50%, 130% -50%, 130% 120%, -30% 120%); }',
       '.mwg_effect046 .sentence .letter > span { display: inline-block; transform: translateY(130%); }',
       '@media (max-width: 768px) {',
-      '  .mwg_effect046 .pin-height { height: auto; padding: 12vh 0; }',
+      '  .mwg_effect046 .pin-height { height: auto; padding: 12vh 0 2vh 0; }',
       '  .mwg_effect046 .container-pin { height: auto; padding-left: 6vw; }',
       '  .mwg_effect046 .sentence { font-size: 8vw; width: 90%; line-height: 1.05; }',
       '  .mwg_effect046 .sentence .letter > span { transform: none !important; }',
@@ -1566,7 +1566,7 @@ const Afiliados = () => {
           </section>
 
           {/* ── 3 COLUMNAS CON IMAGEN AL FONDO ───────────────────────────── */}
-          <section className="py-24 px-6 bg-white">
+          <section className="pt-8 pb-24 md:py-24 px-6 bg-white">
             <div className="max-w-[1200px] mx-auto">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {[
