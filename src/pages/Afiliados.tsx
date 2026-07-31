@@ -1221,6 +1221,10 @@ const Afiliados = () => {
 
     const runSplit = () => {
       document.querySelectorAll<HTMLElement>("#aff-content h1, #aff-content h2").forEach((el) => {
+        // SplitText reestructura el DOM; si el heading tiene hijos (spans, <br/>)
+        // que React controla, React fallará al desmontar (removeChild/insertBefore).
+        // Solo dividimos headings de texto plano.
+        if (el.children.length > 0 || el.dataset.nosplit !== undefined) return;
         const split = SplitText.create(el, { type: "lines", mask: "lines" });
         splits.push(split);
         gsap.fromTo(split.lines, { yPercent: 110 }, {
@@ -1233,6 +1237,7 @@ const Afiliados = () => {
       });
       requestAnimationFrame(() => ScrollTrigger.refresh());
     };
+
 
     const fontsReady = (document as Document & { fonts?: { ready: Promise<unknown> } }).fonts?.ready;
     if (fontsReady) fontsReady.then(runSplit); else runSplit();
@@ -1452,14 +1457,15 @@ const Afiliados = () => {
     }
 
     return () => {
+      splits.forEach((s) => { try { s.revert(); } catch { /* noop */ } });
       smootherRef.current?.kill();
       ScrollTrigger.getAll().forEach((t) => t.kill());
-      splits.forEach((s) => s.revert());
       gsap.set(animated, { clearProps: "all" });
       document.getElementById('e046-css')?.remove();
       document.getElementById('h104-css')?.remove();
     };
   }, []);
+
 
   return (
     <>
