@@ -1613,16 +1613,12 @@ const Afiliados = () => {
                   Empieza desde <span style={{ fontFamily: "'Welth Catritz', serif", overflow: 'visible' }} className="pr-1 italic tracking-normal font-light">cualquier</span> lugar
                 </h2>
                 <div data-fade className="text-[15px] font-normal text-zinc-600 mt-6 max-w-lg mx-auto flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6">
-                  <div className="flex items-center gap-2">
-                    <div className="flex items-center justify-center w-5 h-5 rounded-full bg-black text-white shrink-0">
-                      <Check className="w-3 h-3" strokeWidth={3} />
-                    </div>
+                  <div>
+                    <Check className="w-4 h-4 inline-block mr-1.5 text-black" strokeWidth={3} />
                     <span>Sin formularios complicados.</span>
                   </div>
-                  <div className="flex items-center gap-2">
-                    <div className="flex items-center justify-center w-5 h-5 rounded-full bg-black text-white shrink-0">
-                      <Check className="w-3 h-3" strokeWidth={3} />
-                    </div>
+                  <div>
+                    <Check className="w-4 h-4 inline-block mr-1.5 text-black" strokeWidth={3} />
                     <span>Sin procesos de aprobación largos.</span>
                   </div>
                 </div>
