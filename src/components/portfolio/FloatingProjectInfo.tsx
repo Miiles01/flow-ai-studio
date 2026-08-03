@@ -71,7 +71,7 @@ export const FloatingProjectInfo = ({ participation, isVisible }: FloatingProjec
     >
       <div className="bg-white/95 backdrop-blur-xl rounded-2xl p-6 shadow-[0_20px_50px_rgba(0,0,0,0.12)] border border-neutral-200/80 min-w-[280px]">
         <h4 className="text-[11px] font-semibold text-neutral-400 uppercase tracking-wider mb-4">
-          {lang === "es" ? "Mi participación" : "My participation"}
+          {lang === "es" ? "Nuestra participación" : "Our participation"}
         </h4>
         <div className="space-y-3.5">
           {displayData?.map((item, idx) => (

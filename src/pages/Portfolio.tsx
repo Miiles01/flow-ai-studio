@@ -136,7 +136,7 @@ export const Portfolio = () => {
               className="text-xl md:text-2xl lg:text-3xl font-light tracking-tight max-w-3xl mb-6 text-neutral-500 leading-relaxed"
             >
               {lang === "es"
-                ? "Pienso con propósito para marcas que buscan autenticidad y escalabilidad."
+                ? "Pensamos con propósito para marcas que buscan autenticidad y escalabilidad."
                 : "Designing with purpose for brands seeking authenticity and scalability."}
             </motion.p>
 
