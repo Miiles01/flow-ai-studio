@@ -4,7 +4,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  *  Los WIDGETS (KanbanNode, ClientCardNode y futuros) comparten esta lógica:
  *  1. Son nodos de React Flow arrastrables/redimensionables y con toolbar
- *     flotante (fondo, color de texto, eliminar) — misma UX que los demás.
+ *     flotante (fondo, eliminar) — misma UX que los demás.
  *  2. Tienen `NodeExtendHandles` para ampliar con IA desde sus lados.
  *  3. **NO CONECTAN LAZOS/EDGES.** No renderizan `<Handle>` de React Flow,
  *     por lo que no se les pueden arrastrar líneas de entrada/salida.
@@ -19,7 +19,7 @@ import { createPortal } from "react-dom";
 import { type NodeProps, NodeResizer, useReactFlow, useViewport } from "@xyflow/react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Plus, Trash2, Palette, Baseline, X, Mail, Phone, Building2, Tag as TagIcon,
+  Plus, Trash2, Palette, X, Mail, Phone, Building2, Tag as TagIcon,
   Users, AlignLeft, DollarSign, User as UserIcon, Image as ImageIcon,
   Link2, ListPlus,
 } from "lucide-react";
@@ -61,14 +61,7 @@ const RAINBOW_COLORS = [
   { name: "Rosa", value: "#FCB5B9" },
   { name: "Negro", value: "#1F2937" },
 ];
-const TEXT_COLORS = [
-  { name: "Negro", value: "#111827" },
-  { name: "Gris", value: "#6B7280" },
-  { name: "Blanco", value: "#FFFFFF" },
-  { name: "Azul", value: "#2563EB" },
-  { name: "Verde", value: "#059669" },
-  { name: "Rojo", value: "#DC2626" },
-];
+
 const TAG_COLORS = ["#EF4444", "#F97316", "#FACC15", "#22C55E", "#4059F1", "#A855F7", "#FCB5B9", "#1F2937"];
 const PRESET_STATUS_TAGS = [
   { label: "Nuevo", color: "#4059F1" },
@@ -85,12 +78,9 @@ const uid = () =>
 
 const isWhite = (c?: string) => {
   const v = (c || "").trim().toLowerCase();
-  return v === "#ffffff" || v === "white" || v === "#fff" || v === "#fafafa";
+  return v === "#ffffff" || v === "white" || v === "#fff" || v === "#fafafa" || v === "#f3f4f6";
 };
-const isBlack = (c?: string) => {
-  const v = (c || "").trim().toLowerCase();
-  return v === "#000000" || v === "black" || v === "#000" || v === "#111827" || v === "#1f2937";
-};
+
 const initials = (s: string) => {
   const t = (s || "").trim();
   if (!t) return "?";
@@ -110,11 +100,11 @@ const ClientCardNode = ({ id, data, selected }: NodeProps) => {
   const backgroundColor = isDark && isWhite(rawFill) ? "#2C2C2E" : rawFill;
   
   const isEffectiveBgDark = backgroundColor === "transparent" ? isDark : isColorDark(backgroundColor);
-  const rawText = d.textColor ?? "#111827";
-  const textColor = isDark && (isBlack(rawText) || isWhite(rawFill)) ? "#FFFFFF" : rawText;
+  const cardTextColor = isEffectiveBgDark ? "#FFFFFF" : "#111827";
+  const subtleText = isEffectiveBgDark ? "text-white/70" : "text-neutral-500";
   const accentColor = d.accentColor ?? "#4059F1";
 
-  const [activePicker, setActivePicker] = useState<"fill" | "text" | null>(null);
+  const [activePicker, setActivePicker] = useState<"fill" | null>(null);
   const [editorOpen, setEditorOpen] = useState(false);
   const anchorRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
@@ -123,11 +113,7 @@ const ClientCardNode = ({ id, data, selected }: NodeProps) => {
   const update = (patch: Partial<ClientCardNodeData>) =>
     setNodes((nds) => nds.map((n) => (n.id === id ? { ...n, data: { ...n.data, ...patch } } : n)));
 
-  const borderCls = isDark ? "border-white/10" : "border-neutral-200";
-  const subtleText = isDark ? "text-white/60" : "text-neutral-500";
-
-  const name = d.name ?? "Nuevo cliente";
-  const role = d.role ?? "";
+  const dividerCls = isEffectiveBgDark ? "border-white/10" : "border-neutral-100";
 
   return (
     <div className="group/widget" style={{ width: "100%", height: "100%", position: "relative" }}>
@@ -158,19 +144,9 @@ const ClientCardNode = ({ id, data, selected }: NodeProps) => {
                 <Palette size={13} className="text-[#6B7280]" />
                 <div className="absolute bottom-1 right-1 w-2 h-2 rounded-full border border-white" style={{ backgroundColor }} />
               </button>
-              <button
-                onClick={() => setActivePicker(activePicker === "text" ? null : "text")}
-                className={`w-7 h-7 flex items-center justify-center rounded-lg ${isDark ? "hover:bg-white/10" : "hover:bg-neutral-100"}`}
-                title="Color de texto"
-              >
-                <Baseline size={13} style={{ color: textColor }} className="stroke-[2.5]" />
-              </button>
 
               {activePicker === "fill" && (
                 <PickerPopover colors={RAINBOW_COLORS} onPick={(v) => { update({ backgroundColor: v }); setActivePicker(null); }} isDark={isDark} />
-              )}
-              {activePicker === "text" && (
-                <PickerPopover colors={TEXT_COLORS} onPick={(v) => { update({ textColor: v }); setActivePicker(null); }} isDark={isDark} />
               )}
 
               <div className={`w-[1px] h-4 mx-1 ${isDark ? "bg-white/10" : "bg-neutral-200"}`} />
@@ -202,7 +178,7 @@ const ClientCardNode = ({ id, data, selected }: NodeProps) => {
         className="w-full h-full rounded-2xl overflow-hidden flex flex-col transition-all duration-300 cursor-pointer"
         style={{
           backgroundColor,
-          color: textColor,
+          color: cardTextColor,
           boxShadow: selected
             ? "0 10px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.04)"
             : "0 4px 12px -1px rgba(0,0,0,0.015), 0 2px 4px -1px rgba(0,0,0,0.01)",
@@ -225,15 +201,19 @@ const ClientCardNode = ({ id, data, selected }: NodeProps) => {
               value={d.name ?? ""}
               onChange={(e) => update({ name: e.target.value })}
               placeholder="Nombre del cliente"
-              className="nodrag nopan w-full bg-transparent border-none outline-none text-[15px] font-semibold"
-              style={{ color: textColor }}
+              className={`nodrag nopan w-full bg-transparent border-none outline-none text-[15px] font-semibold ${
+                isEffectiveBgDark ? "placeholder:text-white/40" : "placeholder:text-neutral-400"
+              }`}
+              style={{ color: cardTextColor }}
             />
             <input
               value={d.role ?? ""}
               onChange={(e) => update({ role: e.target.value })}
               placeholder="Cargo / empresa"
-              className="nodrag nopan w-full bg-transparent border-none outline-none text-[11px] font-light mt-0.5 opacity-70"
-              style={{ color: textColor }}
+              className={`nodrag nopan w-full bg-transparent border-none outline-none text-[11px] font-light mt-0.5 opacity-70 ${
+                isEffectiveBgDark ? "placeholder:text-white/35" : "placeholder:text-neutral-400"
+              }`}
+              style={{ color: cardTextColor }}
             />
           </div>
         </div>
@@ -255,7 +235,7 @@ const ClientCardNode = ({ id, data, selected }: NodeProps) => {
           )}
 
           {d.description && (
-            <p className="text-[11.5px] opacity-75 whitespace-pre-wrap break-words leading-snug">
+            <p className="text-[11.5px] opacity-75 whitespace-pre-wrap break-words leading-snug" style={{ color: cardTextColor }}>
               {d.description}
             </p>
           )}
@@ -263,14 +243,14 @@ const ClientCardNode = ({ id, data, selected }: NodeProps) => {
           {(d.email || d.phone || d.website) && (
             <div className="space-y-1 pt-1">
               {d.email && (
-                <div className="flex items-center gap-1.5 text-[11px] opacity-80">
-                  <Mail size={11} className="opacity-60" />
+                <div className="flex items-center gap-1.5 text-[11px] opacity-80" style={{ color: cardTextColor }}>
+                  <Mail size={11} className="opacity-60 shrink-0" />
                   <span className="truncate">{d.email}</span>
                 </div>
               )}
               {d.phone && (
-                <div className="flex items-center gap-1.5 text-[11px] opacity-80">
-                  <Phone size={11} className="opacity-60" />
+                <div className="flex items-center gap-1.5 text-[11px] opacity-80" style={{ color: cardTextColor }}>
+                  <Phone size={11} className="opacity-60 shrink-0" />
                   <span className="truncate">{d.phone}</span>
                 </div>
               )}
@@ -280,10 +260,10 @@ const ClientCardNode = ({ id, data, selected }: NodeProps) => {
                   target="_blank"
                   rel="noreferrer"
                   onClick={(e) => e.stopPropagation()}
-                  className="flex items-center gap-1.5 text-[11px] truncate"
-                  style={{ color: accentColor }}
+                  className="flex items-center gap-1.5 text-[11px] truncate font-medium hover:underline"
+                  style={{ color: isEffectiveBgDark ? "#93C5FD" : accentColor }}
                 >
-                  <Link2 size={11} className="opacity-70" />
+                  <Link2 size={11} className="opacity-70 shrink-0" />
                   <span className="truncate">{d.website.replace(/^https?:\/\//, "")}</span>
                 </a>
               )}
@@ -291,20 +271,20 @@ const ClientCardNode = ({ id, data, selected }: NodeProps) => {
           )}
 
           {(d.fields?.length ?? 0) > 0 && (
-            <div className={`pt-1.5 border-t ${isDark ? "border-white/10" : "border-neutral-100"} space-y-1`}>
+            <div className={`pt-1.5 border-t ${dividerCls} space-y-1`}>
               {d.fields!.map((f) => (
                 <div key={f.id} className="flex items-baseline justify-between gap-2 text-[11px]">
                   <span className={`${subtleText} shrink-0`}>{f.label}</span>
-                  <span className="font-medium truncate text-right">{f.value}</span>
+                  <span className="font-medium truncate text-right" style={{ color: cardTextColor }}>{f.value}</span>
                 </div>
               ))}
             </div>
           )}
 
           {d.value && (
-            <div className={`pt-1.5 mt-1 border-t ${isDark ? "border-white/10" : "border-neutral-100"} flex items-center justify-between`}>
+            <div className={`pt-1.5 mt-1 border-t ${dividerCls} flex items-center justify-between`}>
               <span className={`text-[10px] uppercase tracking-wide ${subtleText}`}>Valor</span>
-              <span className="text-[13px] font-semibold" style={{ color: accentColor }}>{d.value}</span>
+              <span className="text-[13px] font-semibold" style={{ color: isEffectiveBgDark ? "#93C5FD" : accentColor }}>{d.value}</span>
             </div>
           )}
 
@@ -319,7 +299,7 @@ const ClientCardNode = ({ id, data, selected }: NodeProps) => {
                   style={{
                     backgroundColor: accentColor,
                     color: "#fff",
-                    borderColor: isDark ? "#2C2C2E" : "#fff",
+                    borderColor: isEffectiveBgDark ? "#2C2C2E" : "#fff",
                     marginLeft: -4,
                   }}
                 >

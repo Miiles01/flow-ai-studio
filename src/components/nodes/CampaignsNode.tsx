@@ -364,17 +364,19 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
           </div>
 
           <div
-            className={`mt-3 flex items-center gap-2 px-3 py-2 rounded-xl border transition-colors ${
-              isBoardDark ? "border-white/15 bg-white/10" : "border-neutral-200 bg-white"
-            }`}
+            className="mt-3 flex items-center gap-2 px-3 py-2 rounded-xl border transition-colors"
+            style={{
+              backgroundColor: isBoardDark ? "rgba(255,255,255,0.10)" : "rgba(0,0,0,0.08)",
+              borderColor: isBoardDark ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.10)",
+            }}
           >
-            <Search size={13} className={isBoardDark ? "text-white/70" : "text-neutral-500"} />
+            <Search size={13} style={{ color: boardTextColor, opacity: 0.6 }} />
             <input
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
               placeholder="Filtrar por marca…"
               className={`nodrag nopan flex-1 bg-transparent border-none outline-none text-[12.5px] ${
-                isBoardDark ? "placeholder:text-white/60" : "placeholder:text-neutral-400"
+                isBoardDark ? "placeholder:text-white/55" : "placeholder:text-black/35"
               }`}
               style={{ color: boardTextColor }}
             />
