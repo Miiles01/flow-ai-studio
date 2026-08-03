@@ -115,8 +115,26 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
   const accent = d.accentColor ?? "#4059F1";
   const subtle = isDark ? "text-white/60" : "text-neutral-500";
   const border = isDark ? "border-white/10" : "border-neutral-200";
-  const softSurface = isDark ? "bg-white/[0.03] border border-white/10" : "bg-white border border-neutral-200";
+  const softSurface = isDark ? "border border-white/[0.08]" : "bg-white border border-neutral-200";
+  const softSurfaceStyle: React.CSSProperties = isDark ? { backgroundColor: "#1C1C1E" } : {};
   const inputCls = isDark ? "bg-white/10 border border-white/10 text-white placeholder:text-white/40" : "bg-white border border-neutral-200 text-neutral-900 placeholder:text-neutral-400";
+
+  // Determina si el fondo del widget requiere texto blanco (igual que CampaignsNode)
+  const isBoardDark = (() => {
+    const v = (bgColor || "").trim().toLowerCase();
+    if (!v || v === "transparent") return isDark;
+    if (v === "#ef4444" || v === "#f97316" || v === "#4059f1" || v === "#2563eb" || v === "#a855f7" || v === "#1f2937" || v === "#111827" || v === "#2c2c2e" || v === "#1c1c1e" || v === "#000000" || v === "black") return true;
+    if (v === "#facc15" || v === "#22c55e" || v === "#fcb5b9" || v === "#ffffff" || v === "white" || v === "#fafafa" || v === "#f3f4f6") return false;
+    if (v.startsWith("#") && (v.length === 7 || v.length === 4)) {
+      const hex = v.length === 4 ? `#${v[1]}${v[1]}${v[2]}${v[2]}${v[3]}${v[3]}` : v;
+      const r = parseInt(hex.slice(1, 3), 16) / 255;
+      const g = parseInt(hex.slice(3, 5), 16) / 255;
+      const b = parseInt(hex.slice(5, 7), 16) / 255;
+      const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      return lum < 0.55;
+    }
+    return isDark;
+  })();
 
   const [bgOpen, setBgOpen] = useState(false);
   const [textOpen, setTextOpen] = useState(false);
@@ -239,7 +257,6 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
     );
   };
 
-  const toolbarScale = Math.min(1.4, Math.max(0.7, 1 / zoom));
   const donutColors = ["#4059F1", "#A855F7", "#22C55E", "#F97316", "#EF4444", "#FCB5B9"];
 
   return (
@@ -260,18 +277,29 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
 
       {/* Drag handle */}
       <div className="absolute top-0 left-1/2 z-20 h-5 w-28 -translate-x-1/2 cursor-grab rounded-b-xl active:cursor-grabbing group/handle" title="Mover widget">
-        <div className={`mx-auto mt-1 h-1.5 w-8 rounded-full opacity-0 transition-opacity group-hover/handle:opacity-100 ${isDark ? "bg-white/40" : "bg-black/20"}`} />
+        <div className={`mx-auto mt-1 h-1.5 w-8 rounded-full opacity-0 transition-opacity group-hover/handle:opacity-100 ${isBoardDark ? "bg-white/40" : "bg-black/20"}`} />
       </div>
 
       {/* Floating toolbar */}
       <AnimatePresence>
         {isSingleSelected && (
-          <motion.div
-            initial={{ opacity: 0, y: 6 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 6 }}
-            className="absolute z-40 nodrag nopan"
-            style={{ top: -14 - 44 * toolbarScale, left: "50%", transform: `translateX(-50%) scale(${toolbarScale})`, transformOrigin: "bottom center" }}
+          <div
+            className="absolute -top-14 left-1/2 z-[1000] pointer-events-auto nodrag nopan"
+            style={{
+              transform: `translate(-50%, 0) scale(${1 / zoom})`,
+              transformOrigin: "bottom center",
+              whiteSpace: "nowrap",
+            }}
+            onMouseDown={(e) => e.stopPropagation()}
+            onClick={(e) => e.stopPropagation()}
           >
-            <div className={`flex items-center gap-1 px-2 py-1.5 rounded-xl shadow-xl ${isDark ? "bg-[#1C1C1E] border border-white/10" : "bg-white border border-neutral-200"}`}>
+            <motion.div
+              initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 4 }}
+              transition={{ duration: 0.15 }}
+              className={`flex items-center gap-1 px-2 py-1.5 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.08)] ${
+                isDark ? "bg-[#1C1C1E] border border-white/10" : "bg-white border border-neutral-100"
+              }`}
+            >
               <ToolBtn active={d.showTitle !== false} onClick={() => update({ showTitle: !(d.showTitle !== false) })} title="Título" isDark={isDark}><Heading1 size={14} /></ToolBtn>
               <ToolBtn active={!!d.showSubtitle} onClick={() => update({ showSubtitle: !d.showSubtitle })} title="Subtítulo" isDark={isDark}><Heading2 size={14} /></ToolBtn>
               <div className={`w-px h-4 mx-0.5 ${isDark ? "bg-white/10" : "bg-neutral-200"}`} />
@@ -285,8 +313,8 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
               </div>
               <div className={`w-px h-4 mx-0.5 ${isDark ? "bg-white/10" : "bg-neutral-200"}`} />
               <ToolBtn onClick={remove} title="Eliminar" isDark={isDark} danger><Trash2 size={14} /></ToolBtn>
-            </div>
-          </motion.div>
+            </motion.div>
+          </div>
         )}
       </AnimatePresence>
 
@@ -366,7 +394,7 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
 
         {/* Charts row */}
         <div className="grid grid-cols-[1.6fr_1fr] gap-4 mb-4">
-          <div className={`rounded-2xl p-5 ${softSurface}`}>
+          <div className={`rounded-2xl p-5 ${softSurface}`} style={softSurfaceStyle}>
             <div className="text-[13.5px] font-semibold mb-3">Total cerrado por mes</div>
             <div className="h-[220px] nodrag nopan">
               <ResponsiveContainer width="100%" height="100%">
@@ -385,7 +413,7 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
             </div>
           </div>
 
-          <div className={`rounded-2xl p-5 ${softSurface}`}>
+          <div className={`rounded-2xl p-5 ${softSurface}`} style={softSurfaceStyle}>
             <div className="text-[13.5px] font-semibold mb-3">Top marcas</div>
             {stats.brands.length === 0 ? (
               <div className={`text-[12px] ${subtle} py-8 text-center`}>Aún no hay marcas.</div>
@@ -421,7 +449,7 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
         </div>
 
         {/* Pending list */}
-        <div className={`rounded-2xl p-5 ${softSurface}`}>
+        <div className={`rounded-2xl p-5 ${softSurface}`} style={softSurfaceStyle}>
           <div className="flex items-baseline justify-between mb-4">
             <div className="text-[15px] font-semibold">Por cobrar</div>
             <div className={`text-[12px] ${subtle}`}><span className="font-semibold" style={{ color: txt }}>{fmtMoney(stats.pending)}</span> pendiente</div>
@@ -440,7 +468,7 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
                     </div>
                     <div className="space-y-1.5">
                       {arr.map((c) => (
-                        <div key={c.id} className={`nodrag flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl ${isDark ? "bg-white/5 hover:bg-white/10" : "bg-neutral-50 hover:bg-neutral-100"} transition-colors`}>
+                        <div key={c.id} className={`nodrag flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl transition-colors ${isDark ? "hover:brightness-110" : "bg-neutral-50 hover:bg-neutral-100"}`} style={isDark ? { backgroundColor: "#252528" } : {}}>
                           <div className="flex items-center gap-1.5 min-w-0">
                             <span className="text-[13px] font-medium truncate">{c.brand || "Sin nombre"}</span>
                             <ArrowUpRight size={12} className="opacity-40 shrink-0" />
@@ -466,7 +494,7 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
         </div>
 
         {allCampaigns.length === 0 && (
-          <div className={`mt-4 rounded-xl p-4 text-[12.5px] text-center ${subtle} ${softSurface}`}>
+          <div className={`mt-4 rounded-xl p-4 text-[12.5px] text-center ${subtle} ${softSurface}`} style={softSurfaceStyle}>
             Añade el widget <span className="font-semibold">Campañas</span> y crea colaboraciones para ver aquí tus ingresos.
           </div>
         )}
@@ -492,7 +520,10 @@ const ToolBtn = ({ onClick, children, title, isDark, active, danger }: { onClick
 );
 
 const KpiCard = ({ isDark, icon, accent, label, value, sub }: { isDark: boolean; icon: React.ReactNode; accent: string; label: string; value: string; sub?: string }) => (
-  <div className={`rounded-2xl p-4 ${isDark ? "bg-white/[0.03] border border-white/10" : "bg-white border border-neutral-200"}`}>
+  <div
+    className={`rounded-2xl p-4 ${isDark ? "border border-white/[0.08]" : "bg-white border border-neutral-200"}`}
+    style={isDark ? { backgroundColor: "#1C1C1E" } : {}}
+  >
     <div className="w-8 h-8 rounded-lg flex items-center justify-center mb-3" style={{ backgroundColor: `${accent}18`, color: accent }}>{icon}</div>
     <div className={`text-[11.5px] mb-1 ${isDark ? "text-white/60" : "text-neutral-500"}`}>{label}</div>
     <div className="text-[24px] font-bold tracking-tight leading-tight">{value}</div>
