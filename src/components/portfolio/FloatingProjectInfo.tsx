@@ -67,10 +67,10 @@ export const FloatingProjectInfo = ({ participation, isVisible }: FloatingProjec
         scale: isVisible && hasMoved ? 1 : 0.8,
       }}
       transition={{ duration: 0.2 }}
-      className="hidden md:block"
+      className="hidden md:block font-sans"
     >
       <div className="bg-white/95 backdrop-blur-xl rounded-2xl p-6 shadow-[0_20px_50px_rgba(0,0,0,0.12)] border border-neutral-200/80 min-w-[280px]">
-        <h4 className="text-[11px] font-semibold text-neutral-400 uppercase tracking-wider mb-4">
+        <h4 className="text-[11px] font-normal text-neutral-400 uppercase tracking-widest mb-4">
           {lang === "es" ? "Nuestra participación" : "Our participation"}
         </h4>
         <div className="space-y-3.5">
@@ -79,7 +79,7 @@ export const FloatingProjectInfo = ({ participation, isVisible }: FloatingProjec
               <div className="w-7 h-7 flex items-center justify-center rounded-lg bg-neutral-100/80 p-1 shrink-0">
                 <img src={ICONS[item.icon]} alt="" className="w-full h-full object-contain" />
               </div>
-              <span className="text-[13.5px] font-medium tracking-tight text-neutral-900">
+              <span className="text-[13.5px] font-normal tracking-normal text-black">
                 {item.text[lang]}
               </span>
             </div>

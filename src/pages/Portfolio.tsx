@@ -88,19 +88,19 @@ const ProjectSection = ({
       >
         <div className="max-w-2xl">
           <Link to={`/trabajo/${slug}`} className="inline-flex items-center gap-2 group/title">
-            <h3 className="text-3xl md:text-4xl font-medium tracking-tight text-neutral-950 transition-colors group-hover/title:text-miiles-blue">
+            <h3 className="text-3xl md:text-4xl font-normal tracking-tight leading-tight text-black transition-colors group-hover/title:text-miiles-blue">
               {project.title}
             </h3>
             <ArrowUpRight className="w-6 h-6 text-neutral-400 opacity-0 group-hover/title:opacity-100 group-hover/title:translate-x-1 group-hover/title:-translate-y-1 transition-all" />
           </Link>
-          <p className="text-base md:text-lg font-light text-neutral-600 mt-2 leading-relaxed">
+          <p className="text-base md:text-lg font-light text-black/70 mt-2 leading-relaxed tracking-normal">
             {project.subtitle[lang]}
           </p>
         </div>
 
         <Link
           to={`/trabajo/${slug}`}
-          className="inline-flex items-center gap-1.5 text-xs font-semibold uppercase tracking-widest text-neutral-400 hover:text-neutral-900 transition-colors pt-2 md:pt-0"
+          className="inline-flex items-center gap-1.5 text-xs font-normal uppercase tracking-widest text-neutral-400 hover:text-black transition-colors pt-2 md:pt-0"
         >
           {lang === "es" ? "Ver proyecto completo" : "View full project"} &rarr;
         </Link>
@@ -118,7 +118,7 @@ export const Portfolio = () => {
 
   return (
     <PortfolioSmoothScroll>
-      <div className="min-h-screen bg-white text-neutral-950 flex flex-col selection:bg-neutral-900 selection:text-white">
+      <div className="min-h-screen bg-white text-black font-sans flex flex-col selection:bg-black selection:text-white">
         <FloatingProjectInfo
           participation={hoveredParticipation || []}
           isVisible={hoveredParticipation !== null}
@@ -133,7 +133,7 @@ export const Portfolio = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-              className="text-xl md:text-2xl lg:text-3xl font-light tracking-tight max-w-3xl mb-6 text-neutral-900 leading-relaxed"
+              className="text-xl md:text-2xl lg:text-3xl font-light tracking-tight max-w-3xl mb-6 text-black leading-relaxed"
             >
               {lang === "es"
                 ? "Pensamos con propósito para marcas que buscan autenticidad y escalabilidad."
@@ -144,7 +144,7 @@ export const Portfolio = () => {
               initial={{ opacity: 0, y: 25 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.8, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="text-6xl md:text-8xl lg:text-[7.5vw] font-medium tracking-tighter leading-[0.95] text-neutral-950"
+              className="text-6xl md:text-8xl lg:text-[7.5vw] font-normal tracking-tight leading-[1.05] text-black"
             >
               {lang === "es" ? "Proyectos" : "Selected Works"}
             </motion.h1>

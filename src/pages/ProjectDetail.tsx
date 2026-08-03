@@ -53,16 +53,16 @@ export const ProjectDetail = () => {
 
   if (!project) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center bg-white px-6">
-        <h1 className="text-4xl font-medium mb-4">
+      <div className="min-h-screen flex flex-col items-center justify-center bg-white px-6 font-sans">
+        <h1 className="text-4xl font-normal tracking-tight mb-4 text-black">
           {lang === "es" ? "Proyecto no encontrado" : "Project not found"}
         </h1>
-        <p className="text-neutral-500 mb-8">
+        <p className="text-neutral-500 mb-8 font-light">
           {lang === "es" ? "El proyecto que buscas no existe o ha sido movido." : "The project you are looking for does not exist."}
         </p>
         <Link
           to="/trabajo"
-          className="inline-flex items-center gap-2 px-6 py-3 bg-black text-white rounded-full text-sm font-medium hover:bg-neutral-800 transition-colors"
+          className="inline-flex items-center gap-2 px-6 py-3 bg-black text-white rounded-full text-sm font-normal hover:bg-neutral-800 transition-colors"
         >
           <ArrowLeft size={16} />
           {lang === "es" ? "Volver a proyectos" : "Back to projects"}
@@ -75,7 +75,7 @@ export const ProjectDetail = () => {
 
   return (
     <PortfolioSmoothScroll>
-      <div className="min-h-screen bg-white text-neutral-950 flex flex-col selection:bg-neutral-900 selection:text-white">
+      <div className="min-h-screen bg-white text-black font-sans flex flex-col selection:bg-black selection:text-white">
         <LandingNavbar isLanding={false} />
 
         <main className="flex-1 pt-32 md:pt-44 pb-24">
@@ -85,7 +85,7 @@ export const ProjectDetail = () => {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.7, ease: [0.25, 0.46, 0.45, 0.94] }}
-              className="text-6xl md:text-8xl lg:text-[8vw] font-medium tracking-tighter leading-none mb-8"
+              className="text-6xl md:text-8xl lg:text-[8vw] font-normal tracking-tight leading-tight mb-8 text-black"
             >
               {project.title}
             </motion.h1>
@@ -98,18 +98,18 @@ export const ProjectDetail = () => {
               className="grid md:grid-cols-2 gap-8 md:gap-16 max-w-4xl"
             >
               <div>
-                <p className="text-xs tracking-widest text-neutral-400 mb-2 font-mono uppercase font-semibold">
+                <p className="text-xs tracking-widest text-neutral-400 mb-2 font-normal uppercase">
                   {lang === "es" ? "Industria" : "Industry"}
                 </p>
-                <p className="text-lg font-light leading-relaxed text-neutral-900">
+                <p className="text-lg md:text-xl font-light leading-relaxed text-black/85">
                   {project.industry[lang]}
                 </p>
               </div>
               <div>
-                <p className="text-xs tracking-widest text-neutral-400 mb-2 font-mono uppercase font-semibold">
+                <p className="text-xs tracking-widest text-neutral-400 mb-2 font-normal uppercase">
                   {lang === "es" ? "Qué hicimos" : "What we did"}
                 </p>
-                <p className="text-lg font-light leading-relaxed text-neutral-900">
+                <p className="text-lg md:text-xl font-light leading-relaxed text-black/85">
                   {project.role[lang]}
                 </p>
               </div>
@@ -130,10 +130,10 @@ export const ProjectDetail = () => {
               transition={{ duration: 0.7 }}
               className="max-w-3xl"
             >
-              <p className="text-xs tracking-widest text-neutral-400 mb-4 font-mono uppercase font-semibold">
+              <p className="text-xs tracking-widest text-neutral-400 mb-4 font-normal uppercase">
                 {lang === "es" ? "Sobre el proyecto" : "About the project"}
               </p>
-              <p className="text-xl md:text-2xl font-light leading-relaxed text-neutral-800 whitespace-pre-line">
+              <p className="text-xl md:text-2xl font-light leading-relaxed text-black/85 whitespace-pre-line tracking-normal">
                 {project.description[lang]}
               </p>
             </motion.div>
@@ -157,7 +157,7 @@ export const ProjectDetail = () => {
             >
               <button
                 onClick={() => navigate("/trabajo")}
-                className="inline-flex items-center gap-3 text-2xl md:text-3xl font-medium tracking-tight hover:opacity-60 transition-opacity"
+                className="inline-flex items-center gap-3 text-2xl md:text-3xl font-normal tracking-tight text-black hover:opacity-60 transition-opacity"
               >
                 <ArrowLeft size={24} />
                 {lang === "es" ? "Volver a proyectos" : "Back to projects"}
