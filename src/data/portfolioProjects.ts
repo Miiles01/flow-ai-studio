@@ -88,95 +88,6 @@ export const portfolioProjects: Record<string, PortfolioProject> = {
       { icon: "eye", text: { es: "Automatización con IA", en: "AI Automation" } },
     ],
   },
-  "naabi-kanabi": {
-    slug: "naabi-kanabi",
-    title: "Naabi Kanabi",
-    folder: "Naabi-Kanabi",
-    subtitle: {
-      es: "Diseño de experiencia y branding para productos de bienestar natural.",
-      en: "Experience design and branding for natural wellness products.",
-    },
-    industry: {
-      es: "Skincare y Dermocosmética",
-      en: "Skincare & Dermocosmetics",
-    },
-    role: {
-      es: "Embudos de Ventas, Estrategia de Identidad de Marca y Automatización con IA",
-      en: "Sales Funnels, Brand Identity Strategy & AI Automation",
-    },
-    description: {
-      es: "Ejecutamos el lanzamiento integral de la marca bajo una visión de Growth Marketing. Desarrollamos un ecosistema de ventas en Shopify conectado a embudos de conversión en redes sociales altamente optimizados. Fuimos pioneros en la implementación de Agentes de IA Conversacional, diseñando una IA experta en cuidado de la piel que automatiza la consulta técnica y acelera el cierre de ventas. La estrategia de marca se potenció con una narrativa visual sólida (Manual de Identidad), campañas de Contenido Generado por el Usuario (UGC) y estrategias de Influencer Marketing. Además, coordinamos activaciones en puntos de venta y diseño de merchandising, logrando una conexión profunda entre el canal físico y el digital.",
-      en: "We executed the comprehensive brand launch under a Growth Marketing vision. We developed a Shopify sales ecosystem connected to highly optimized social media conversion funnels. We pioneered the implementation of Conversational AI Agents, designing a skincare-expert AI that automates technical consultation and accelerates sales closure. The brand strategy was enhanced with a solid visual narrative (Identity Manual), User-Generated Content (UGC) campaigns, and Influencer Marketing strategies. Additionally, we coordinated point-of-sale activations and merchandising design, achieving a deep connection between the physical and digital channels.",
-    },
-    strategy: {
-      es: "Para el mercado dermocosmético, la confianza es lo primero. Mapeamos la arquitectura de la IA conversacional instruyéndola con glosarios médicos para proveer diagnósticos previos certeros que terminan en sugerencias de producto automatizadas. Esto redujo un 70% los tiempos de respuesta humanos y derivó en conversiones automáticas durante la madrugada. Todo envuelto en una estrategia estética minimalista y 'clean' para reflejar pureza y ciencia.",
-      en: "In the dermocosmetic market, trust comes first. We mapped the conversational AI architecture by instructing it with medical glossaries to provide accurate pre-diagnoses that end in automated product suggestions. This reduced human response times by 70% and led to automatic conversions overnight. All wrapped in a minimalist and 'clean' aesthetic strategy to reflect purity and science.",
-    },
-    previewImages: [
-      "portada-1.webp",
-      "naabi-1.webp",
-      "naabi-2.webp",
-    ],
-    images: [
-      { src: "portada-1.webp", alt: "Naabi Kanabi — Cover", aspect: "wide" },
-      { src: "logotipo.webp", alt: "Naabi Kanabi — Logo", aspect: "wide" },
-      { src: "logo.webp", alt: "Naabi Kanabi — Logo Alt", aspect: "wide" },
-      { src: "iconos.webp", alt: "Naabi Kanabi — Iconography", aspect: "wide" },
-      { src: "productos.webp", alt: "Naabi Kanabi — Products", aspect: "wide" },
-      { src: "fotos-publicidad.webp", alt: "Naabi Kanabi — Advertising", aspect: "wide" },
-      { src: "portada-2.webp", alt: "Naabi Kanabi — Cover 2", aspect: "wide" },
-      { src: "publicidad-de-exterior.webp", alt: "Naabi Kanabi — Outdoor Advertising", aspect: "wide" },
-      { src: "tarejta-de-presentacion.webp", alt: "Naabi Kanabi — Business Card", aspect: "wide" },
-    ],
-    participation: [
-      { icon: "bar", text: { es: "Embudos de Ventas", en: "Sales Funnels" } },
-      { icon: "star", text: { es: "Estrategia de Identidad de Marca", en: "Brand Identity Strategy" } },
-      { icon: "eye", text: { es: "Automatización con IA", en: "AI Automation" } },
-    ],
-  },
-  tularosa: {
-    slug: "tularosa",
-    title: "Tularosa",
-    folder: "Tularosa",
-    subtitle: {
-      es: "Estrategia visual y comunicación para hospitality y gastronomía.",
-      en: "Visual strategy and communication for hospitality and gastronomy.",
-    },
-    industry: {
-      es: "Gastronomía y Hospitalidad",
-      en: "Gastronomy & Hospitality",
-    },
-    role: {
-      es: "Embudos de Ventas y Estrategia de Identidad de Marca",
-      en: "Sales Funnels & Brand Identity Strategy",
-    },
-    description: {
-      es: "Para Tularosa, el objetivo fue llevar un negocio gastronómico al siguiente nivel de digitalización mediante la creación de una plataforma web optimizada para resultados. Diseñamos un layout especializado en embudos de venta (funnel design) que integra un sistema de reservaciones estratégico, reduciendo la fricción en el proceso de conversión del usuario. Además de refinar la base visual de la marca mediante la creación de activos gráficos y manuales de identidad, realizamos la dirección y edición fotográfica profesional de alimentos. Este enfoque en el \"apetito visual\" fue clave para diferenciar la propuesta de Tularosa en un mercado altamente competitivo, logrando una presencia online que no solo es estética, sino funcional y orientada a la generación de reservas.",
-      en: "For Tularosa, the goal was to take a gastronomic business to the next level of digitalization by creating a results-optimized web platform. We designed a specialized funnel layout that integrates a strategic reservation system, reducing friction in the user conversion process. Beyond refining the brand's visual foundation through creating graphic assets and identity manuals, we performed professional food photography direction and editing. This focus on \"visual appetite\" was key to differentiating Tularosa's proposition in a highly competitive market, achieving an online presence that is not only aesthetic but functional and oriented toward generating reservations.",
-    },
-    strategy: {
-      es: "La industria restaurantera suele pecar de tener menús en PDF estáticos y flujos de reserva complicados. La estrategia fue diseñar el funnel pensando 100% en la tasa de «Reserva Directa». Creamos la arquitectura UX/UI de modo que la fotografía culinaria jugara agresivamente con la psicología del apetito, y a la par programamos incentivos visuales directos hacia la mesa. No hicimos solo una página; definimos un motor de ocupación diaria.",
-      en: "The restaurant industry often suffers from static PDF menus and complicated reservation flows. The strategy was to design the funnel thinking 100% on the «Direct Reservation» rate. We created the UX/UI architecture so that culinary photography aggressively played with appetite psychology, while programming direct visual incentives towards booking tables. We didn't just build a page; we defined a daily occupancy engine.",
-    },
-    previewImages: [
-      "portada-1.webp",
-      "tula-1.webp",
-      "tula-2.webp",
-    ],
-    images: [
-      { src: "portada-1.webp", alt: "Tularosa — Cover", aspect: "wide" },
-      { src: "portada-2.webp", alt: "Tularosa — Cover 2", aspect: "wide" },
-      { src: "mockup-de-comida.webp", alt: "Tularosa — Food Mockup", aspect: "wide" },
-      { src: "frase-publicitaria-1.webp", alt: "Tularosa — Tagline 1", aspect: "wide" },
-      { src: "frase-publicitaria-2.webp", alt: "Tularosa — Tagline 2", aspect: "wide" },
-      { src: "frase-publicitaria-3.webp", alt: "Tularosa — Tagline 3", aspect: "wide" },
-      { src: "publicidad-de-exterior.webp", alt: "Tularosa — Outdoor Advertising", aspect: "wide" },
-    ],
-    participation: [
-      { icon: "bar", text: { es: "Embudos de Ventas", en: "Sales Funnels" } },
-      { icon: "star", text: { es: "Estrategia de Identidad de Marca", en: "Brand Identity Strategy" } },
-    ],
-  },
   erpxtender: {
     slug: "erpxtender",
     title: "ERPXtender",
@@ -215,6 +126,47 @@ export const portfolioProjects: Record<string, PortfolioProject> = {
       { src: "elementos-graficos-para-web-y-redes-2.webp", alt: "ERPXtender — Web & Social Assets 2", aspect: "wide" },
       { src: "elementos-graficos-para-web-y-redes-3.webp", alt: "ERPXtender — Web & Social Assets 3", aspect: "wide" },
       { src: "publicidad-exterior.webp", alt: "ERPXtender — Outdoor Advertising", aspect: "wide" },
+    ],
+    participation: [
+      { icon: "bar", text: { es: "Embudos de Ventas", en: "Sales Funnels" } },
+      { icon: "star", text: { es: "Estrategia de Identidad de Marca", en: "Brand Identity Strategy" } },
+    ],
+  },
+  original: {
+    slug: "original",
+    title: "Original — Salon de Barbier",
+    folder: "Original",
+    subtitle: {
+      es: "Dirección de arte y diseño web orientado a reservas y conversión.",
+      en: "Art direction and web design oriented towards booking and conversion.",
+    },
+    industry: {
+      es: "Barbería y Cuidado Personal Masculino",
+      en: "Barbershop & Men's Grooming",
+    },
+    role: {
+      es: "Embudos de Ventas y Estrategia de Identidad de Marca",
+      en: "Sales Funnels & Brand Identity Strategy",
+    },
+    description: {
+      es: "Conceptualizamos y ejecutamos una estrategia de marca diseñada para romper la saturación del mercado de barberías, creando una identidad visual única con su respectivo manual de directrices. Desarrollamos una plataforma web orientada 100% a resultados, implementando un layout de embudo (funnel) optimizado que guía al usuario desde el descubrimiento hasta la reserva automática mediante un sistema integrado. Para potenciar la conversión, realizamos la edición fotográfica profesional de los servicios, utilizando el impacto visual y la prueba social como motores principales de atracción de nuevos clientes y fidelización de los actuales.",
+      en: "We conceptualized and executed a brand strategy designed to break through the saturated barbershop market, creating a unique visual identity with its respective guidelines manual. We developed a results-oriented web platform, implementing an optimized funnel layout that guides the user from discovery to automatic booking through an integrated system. To boost conversion, we performed professional photo editing of services, using visual impact and social proof as the main drivers for attracting new clients and retaining existing ones.",
+    },
+    strategy: {
+      es: "El gran reto fue posicionar a Original lejos del estereotipo clásico de barbería de barrio. Se conceptualizó la marca como un punto de encuentro premium para el «cuidado personal integral». A nivel de infraestructura (funnel), se diagramó un flujo que elimina fricciones: en lugar de obligar al usuario a leer menús largos, diseñamos un proceso visual donde en un máximo de 3 clics logran el agendamiento y pago, optimizando así el Customer Lifetime Value (LTV).",
+      en: "The main challenge was positioning Original far from the classic neighborhood barbershop stereotype. The brand was conceptualized as a premium meeting point for «comprehensive personal care». At the infrastructure level (funnel), a frictionless flow was diagrammed: instead of forcing the user to read long menus, we designed a visual process where within a maximum of 3 clicks they achieve booking and payment, optimizing Customer Lifetime Value (LTV).",
+    },
+    previewImages: [
+      "portada-1.webp",
+      "original-1.webp",
+      "original-2.webp",
+    ],
+    images: [
+      { src: "portada-1.webp", alt: "Original — Cover", aspect: "wide" },
+      { src: "isotipo.webp", alt: "Original — Isotipo", aspect: "wide" },
+      { src: "fotos-instagram.webp", alt: "Original — Instagram", aspect: "wide" },
+      { src: "landing-page-1.webp", alt: "Original — Landing Page 1", aspect: "wide" },
+      { src: "landing-page-2.webp", alt: "Original — Landing Page 2", aspect: "wide" },
     ],
     participation: [
       { icon: "bar", text: { es: "Embudos de Ventas", en: "Sales Funnels" } },
@@ -264,85 +216,50 @@ export const portfolioProjects: Record<string, PortfolioProject> = {
       { icon: "eye", text: { es: "Automatización con IA", en: "AI Automation" } },
     ],
   },
-  original: {
-    slug: "original",
-    title: "Original — Salon de Barbier",
-    folder: "Original",
+  "naabi-kanabi": {
+    slug: "naabi-kanabi",
+    title: "Naabi Kanabi",
+    folder: "Naabi-Kanabi",
     subtitle: {
-      es: "Dirección de arte y diseño web orientado a reservas y conversión.",
-      en: "Art direction and web design oriented towards booking and conversion.",
+      es: "Diseño de experiencia y branding para productos de bienestar natural.",
+      en: "Experience design and branding for natural wellness products.",
     },
     industry: {
-      es: "Barbería y Cuidado Personal Masculino",
-      en: "Barbershop & Men's Grooming",
+      es: "Skincare y Dermocosmética",
+      en: "Skincare & Dermocosmetics",
     },
     role: {
-      es: "Embudos de Ventas y Estrategia de Identidad de Marca",
-      en: "Sales Funnels & Brand Identity Strategy",
+      es: "Embudos de Ventas, Estrategia de Identidad de Marca y Automatización con IA",
+      en: "Sales Funnels, Brand Identity Strategy & AI Automation",
     },
     description: {
-      es: "Conceptualizamos y ejecutamos una estrategia de marca diseñada para romper la saturación del mercado de barberías, creando una identidad visual única con su respectivo manual de directrices. Desarrollamos una plataforma web orientada 100% a resultados, implementando un layout de embudo (funnel) optimizado que guía al usuario desde el descubrimiento hasta la reserva automática mediante un sistema integrado. Para potenciar la conversión, realizamos la edición fotográfica profesional de los servicios, utilizando el impacto visual y la prueba social como motores principales de atracción de nuevos clientes y fidelización de los actuales.",
-      en: "We conceptualized and executed a brand strategy designed to break through the saturated barbershop market, creating a unique visual identity with its respective guidelines manual. We developed a results-oriented web platform, implementing an optimized funnel layout that guides the user from discovery to automatic booking through an integrated system. To boost conversion, we performed professional photo editing of services, using visual impact and social proof as the main drivers for attracting new clients and retaining existing ones.",
+      es: "Ejecutamos el lanzamiento integral de la marca bajo una visión de Growth Marketing. Desarrollamos un ecosistema de ventas en Shopify conectado a embudos de conversión en redes sociales altamente optimizados. Fuimos pioneros en la implementación de Agentes de IA Conversacional, diseñando una IA experta en cuidado de la piel que automatiza la consulta técnica y acelera el cierre de ventas. La estrategia de marca se potenció con una narrativa visual sólida (Manual de Identidad), campañas de Contenido Generado por el Usuario (UGC) y estrategias de Influencer Marketing. Además, coordinamos activaciones en puntos de venta y diseño de merchandising, logrando una conexión profunda entre el canal físico y el digital.",
+      en: "We executed the comprehensive brand launch under a Growth Marketing vision. We developed a Shopify sales ecosystem connected to highly optimized social media conversion funnels. We pioneered the implementation of Conversational AI Agents, designing a skincare-expert AI that automates technical consultation and accelerates sales closure. The brand strategy was enhanced with a solid visual narrative (Identity Manual), User-Generated Content (UGC) campaigns, and Influencer Marketing strategies. Additionally, we coordinated point-of-sale activations and merchandising design, achieving a deep connection between the physical and digital channels.",
     },
     strategy: {
-      es: "El gran reto fue posicionar a Original lejos del estereotipo clásico de barbería de barrio. Se conceptualizó la marca como un punto de encuentro premium para el «cuidado personal integral». A nivel de infraestructura (funnel), se diagramó un flujo que elimina fricciones: en lugar de obligar al usuario a leer menús largos, diseñamos un proceso visual donde en un máximo de 3 clics logran el agendamiento y pago, optimizando así el Customer Lifetime Value (LTV).",
-      en: "The main challenge was positioning Original far from the classic neighborhood barbershop stereotype. The brand was conceptualized as a premium meeting point for «comprehensive personal care». At the infrastructure level (funnel), a frictionless flow was diagrammed: instead of forcing the user to read long menus, we designed a visual process where within a maximum of 3 clicks they achieve booking and payment, optimizing Customer Lifetime Value (LTV).",
+      es: "Para el mercado dermocosmético, la confianza es lo primero. Mapeamos la arquitectura de la IA conversacional instruyéndola con glosarios médicos para proveer diagnósticos previos certeros que terminan en sugerencias de producto automatizadas. Esto redujo un 70% los tiempos de respuesta humanos y derivó en conversiones automáticas durante la madrugada. Todo envuelto en una estrategia estética minimalista y 'clean' para reflejar pureza y ciencia.",
+      en: "In the dermocosmetic market, trust comes first. We mapped the conversational AI architecture by instructing it with medical glossaries to provide accurate pre-diagnoses that end in automated product suggestions. This reduced human response times by 70% and led to automatic conversions overnight. All wrapped in a minimalist and 'clean' aesthetic strategy to reflect purity and science.",
     },
     previewImages: [
       "portada-1.webp",
-      "original-1.webp",
-      "original-2.webp",
+      "naabi-1.webp",
+      "naabi-2.webp",
     ],
     images: [
-      { src: "portada-1.webp", alt: "Original — Cover", aspect: "wide" },
-      { src: "isotipo.webp", alt: "Original — Isotipo", aspect: "wide" },
-      { src: "fotos-instagram.webp", alt: "Original — Instagram", aspect: "wide" },
-      { src: "landing-page-1.webp", alt: "Original — Landing Page 1", aspect: "wide" },
-      { src: "landing-page-2.webp", alt: "Original — Landing Page 2", aspect: "wide" },
+      { src: "portada-1.webp", alt: "Naabi Kanabi — Cover", aspect: "wide" },
+      { src: "logotipo.webp", alt: "Naabi Kanabi — Logo", aspect: "wide" },
+      { src: "logo.webp", alt: "Naabi Kanabi — Logo Alt", aspect: "wide" },
+      { src: "iconos.webp", alt: "Naabi Kanabi — Iconography", aspect: "wide" },
+      { src: "productos.webp", alt: "Naabi Kanabi — Products", aspect: "wide" },
+      { src: "fotos-publicidad.webp", alt: "Naabi Kanabi — Advertising", aspect: "wide" },
+      { src: "portada-2.webp", alt: "Naabi Kanabi — Cover 2", aspect: "wide" },
+      { src: "publicidad-de-exterior.webp", alt: "Naabi Kanabi — Outdoor Advertising", aspect: "wide" },
+      { src: "tarejta-de-presentacion.webp", alt: "Naabi Kanabi — Business Card", aspect: "wide" },
     ],
     participation: [
       { icon: "bar", text: { es: "Embudos de Ventas", en: "Sales Funnels" } },
       { icon: "star", text: { es: "Estrategia de Identidad de Marca", en: "Brand Identity Strategy" } },
-    ],
-  },
-  colorfit: {
-    slug: "colorfit",
-    title: "Colorfit",
-    folder: "Colorfit",
-    subtitle: {
-      es: "Identidad visual y branding para marca de moda y fitness contemporánea.",
-      en: "Visual identity and branding for contemporary fashion and fitness brand.",
-    },
-    industry: {
-      es: "Fitness, Wellness y Salud",
-      en: "Fitness, Wellness & Health",
-    },
-    role: {
-      es: "Estrategia de Identidad de Marca",
-      en: "Brand Identity Strategy",
-    },
-    description: {
-      es: "Fuimos responsables de la creación de la identidad visual integral, enfocada en proyectar energía, disciplina y profesionalismo. Desarrollamos el branding completo y los manuales de marca que hoy rigen la comunicación de la empresa. Nuestro enfoque fue construir una marca sólida y escalable, capaz de conectar emocionalmente con el público fitness y mantener la coherencia visual en diversas aplicaciones, desde entornos digitales hasta materiales físicos de entrenamiento.",
-      en: "We were responsible for creating the comprehensive visual identity, focused on projecting energy, discipline, and professionalism. We developed the complete branding and brand manuals that today govern the company's communication. Our focus was to build a solid and scalable brand, capable of emotionally connecting with the fitness audience and maintaining visual coherence across various applications, from digital environments to physical training materials.",
-    },
-    strategy: {
-      es: "Para destacar en la saturada industria del fitness y wellness, nos alejamos del agresivo rojo y negro. Propusimos un acercamiento curativo a través del uso analítico de la psicología de color. Redactamos el manifiesto y lineamientos rectores de uso de logo que rigen su merchandising, asegurando que cuando la marca pasara de lo digital a lo textil (ropa deportiva), todo mantuviera su legibilidad, proporciones y vibra vanguardista intacta.",
-      en: "To stand out in the saturated fitness and wellness industry, we moved away from the aggressive red and black cliché. We proposed a healing approach through the analytical use of color psychology. We drafted the manifesto and core guidelines for logo usage governing their merchandising, ensuring that when the brand transitioned from digital to textiles (activewear), everything kept its legibility, proportions, and avant-garde vibe intact.",
-    },
-    previewImages: [
-      "portada-1.webp",
-      "colorfit-2.webp",
-      "mockup-ropa-2.webp",
-    ],
-    images: [
-      { src: "portada-1.webp", alt: "Colorfit — Cover", aspect: "wide" },
-      { src: "diferentes-mockups.webp", alt: "Colorfit — Mockups", aspect: "wide" },
-      { src: "mockup-ropa-1.webp", alt: "Colorfit — Apparel Mockup 1", aspect: "wide" },
-      { src: "mockup-ropa-2.webp", alt: "Colorfit — Apparel Mockup 2", aspect: "wide" },
-      { src: "mockup-tote-bag.webp", alt: "Colorfit — Tote Bag Mockup", aspect: "wide" },
-    ],
-    participation: [
-      { icon: "star", text: { es: "Estrategia de Identidad de Marca", en: "Brand Identity Strategy" } },
+      { icon: "eye", text: { es: "Automatización con IA", en: "AI Automation" } },
     ],
   },
   jambu: {
@@ -385,6 +302,89 @@ export const portfolioProjects: Record<string, PortfolioProject> = {
       { src: "mockup-totebag.webp", alt: "Jambú — Tote Bag Mockup", aspect: "wide" },
       { src: "carteles-publcidad-de-exterior.webp", alt: "Jambú — Outdoor Posters", aspect: "wide" },
       { src: "publicidad-exterior.webp", alt: "Jambú — Outdoor Advertising", aspect: "wide" },
+    ],
+    participation: [
+      { icon: "star", text: { es: "Estrategia de Identidad de Marca", en: "Brand Identity Strategy" } },
+    ],
+  },
+  tularosa: {
+    slug: "tularosa",
+    title: "Tularosa",
+    folder: "Tularosa",
+    subtitle: {
+      es: "Estrategia visual y comunicación para hospitality y gastronomía.",
+      en: "Visual strategy and communication for hospitality and gastronomy.",
+    },
+    industry: {
+      es: "Gastronomía y Hospitalidad",
+      en: "Gastronomy & Hospitality",
+    },
+    role: {
+      es: "Embudos de Ventas y Estrategia de Identidad de Marca",
+      en: "Sales Funnels & Brand Identity Strategy",
+    },
+    description: {
+      es: "Para Tularosa, el objetivo fue llevar un negocio gastronómico al siguiente nivel de digitalización mediante la creación de una plataforma web optimizada para resultados. Diseñamos un layout especializado en embudos de venta (funnel design) que integra un sistema de reservaciones estratégico, reduciendo la fricción en el proceso de conversión del usuario. Además de refinar la base visual de la marca mediante la creación de activos gráficos y manuales de identidad, realizamos la dirección y edición fotográfica profesional de alimentos. Este enfoque en el \"apetito visual\" fue clave para diferenciar la propuesta de Tularosa en un mercado altamente competitivo, logrando una presencia online que no solo es estética, sino funcional y orientada a la generación de reservas.",
+      en: "For Tularosa, the goal was to take a gastronomic business to the next level of digitalization by creating a results-optimized web platform. We designed a specialized funnel layout that integrates a strategic reservation system, reducing friction in the user conversion process. Beyond refining the brand's visual foundation through creating graphic assets and identity manuals, we performed professional food photography direction and editing. This focus on \"visual appetite\" was key to differentiating Tularosa's proposition in a highly competitive market, achieving an online presence that is not only aesthetic but functional and oriented toward generating reservations.",
+    },
+    strategy: {
+      es: "La industria restaurantera suele pecar de tener menús en PDF estáticos y flujos de reserva complicados. La estrategia fue diseñar el funnel pensando 100% en la tasa de «Reserva Directa». Creamos la arquitectura UX/UI de modo que la fotografía culinaria jugara agresivamente con la psicología del apetito, y a la par programamos incentivos visuales directos hacia la mesa. No hicimos solo una página; definimos un motor de ocupación diaria.",
+      en: "The restaurant industry often suffers from static PDF menus and complicated reservation flows. The strategy was to design the funnel thinking 100% on the «Direct Reservation» rate. We created the UX/UI architecture so that culinary photography aggressively played with appetite psychology, while programming direct visual incentives towards booking tables. We didn't just build a page; we defined a daily occupancy engine.",
+    },
+    previewImages: [
+      "portada-1.webp",
+      "tula-1.webp",
+      "tula-2.webp",
+    ],
+    images: [
+      { src: "portada-1.webp", alt: "Tularosa — Cover", aspect: "wide" },
+      { src: "portada-2.webp", alt: "Tularosa — Cover 2", aspect: "wide" },
+      { src: "mockup-de-comida.webp", alt: "Tularosa — Food Mockup", aspect: "wide" },
+      { src: "frase-publicitaria-1.webp", alt: "Tularosa — Tagline 1", aspect: "wide" },
+      { src: "frase-publicitaria-2.webp", alt: "Tularosa — Tagline 2", aspect: "wide" },
+      { src: "frase-publicitaria-3.webp", alt: "Tularosa — Tagline 3", aspect: "wide" },
+      { src: "publicidad-de-exterior.webp", alt: "Tularosa — Outdoor Advertising", aspect: "wide" },
+    ],
+    participation: [
+      { icon: "bar", text: { es: "Embudos de Ventas", en: "Sales Funnels" } },
+      { icon: "star", text: { es: "Estrategia de Identidad de Marca", en: "Brand Identity Strategy" } },
+    ],
+  },
+  colorfit: {
+    slug: "colorfit",
+    title: "Colorfit",
+    folder: "Colorfit",
+    subtitle: {
+      es: "Identidad visual y branding para marca de moda y fitness contemporánea.",
+      en: "Visual identity and branding for contemporary fashion and fitness brand.",
+    },
+    industry: {
+      es: "Fitness, Wellness y Salud",
+      en: "Fitness, Wellness & Health",
+    },
+    role: {
+      es: "Estrategia de Identidad de Marca",
+      en: "Brand Identity Strategy",
+    },
+    description: {
+      es: "Fuimos responsables de la creación de la identidad visual integral, enfocada en proyectar energía, disciplina y profesionalismo. Desarrollamos el branding completo y los manuales de marca que hoy rigen la comunicación de la empresa. Nuestro enfoque fue construir una marca sólida y escalable, capaz de conectar emocionalmente con el público fitness y mantener la coherencia visual en diversas aplicaciones, desde entornos digitales hasta materiales físicos de entrenamiento.",
+      en: "We were responsible for creating the comprehensive visual identity, focused on projecting energy, discipline, and professionalism. We developed the complete branding and brand manuals that today govern the company's communication. Our focus was to build a solid and scalable brand, capable of emotionally connecting with the fitness audience and maintaining visual coherence across various applications, from digital environments to physical training materials.",
+    },
+    strategy: {
+      es: "Para destacar en la saturada industria del fitness y wellness, nos alejamos del agresivo rojo y negro. Propusimos un acercamiento curativo a través del uso analítico de la psicología de color. Redactamos el manifiesto y lineamientos rectores de uso de logo que rigen su merchandising, asegurando que cuando la marca pasara de lo digital a lo textil (ropa deportiva), todo mantuviera su legibilidad, proporciones y vibra vanguardista intacta.",
+      en: "To stand out in the saturated fitness and wellness industry, we moved away from the aggressive red and black cliché. We proposed a healing approach through the analytical use of color psychology. We drafted the manifesto and core guidelines for logo usage governing their merchandising, ensuring that when the brand transitioned from digital to textiles (activewear), everything kept its legibility, proportions, and avant-garde vibe intact.",
+    },
+    previewImages: [
+      "portada-1.webp",
+      "colorfit-2.webp",
+      "mockup-ropa-2.webp",
+    ],
+    images: [
+      { src: "portada-1.webp", alt: "Colorfit — Cover", aspect: "wide" },
+      { src: "diferentes-mockups.webp", alt: "Colorfit — Mockups", aspect: "wide" },
+      { src: "mockup-ropa-1.webp", alt: "Colorfit — Apparel Mockup 1", aspect: "wide" },
+      { src: "mockup-ropa-2.webp", alt: "Colorfit — Apparel Mockup 2", aspect: "wide" },
+      { src: "mockup-tote-bag.webp", alt: "Colorfit — Tote Bag Mockup", aspect: "wide" },
     ],
     participation: [
       { icon: "star", text: { es: "Estrategia de Identidad de Marca", en: "Brand Identity Strategy" } },
