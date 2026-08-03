@@ -3,6 +3,7 @@ import type { PresenceUser } from "@/hooks/useFlowRealtime";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { QuickSettings } from "./QuickSettings";
 import { Settings } from "lucide-react";
+import { useTheme } from "@/contexts/ThemeContext";
 
 const initials = (name: string) =>
   name
@@ -14,13 +15,19 @@ const initials = (name: string) =>
     .toUpperCase();
 
 const PresenceStack = ({ users, localUserId }: { users: PresenceUser[], localUserId?: string }) => {
+  const { isDark } = useTheme();
   if (users.length === 0) return null;
   const sortedUsers = [...users].sort((a, b) => a.id === localUserId ? -1 : b.id === localUserId ? 1 : 0);
   const visible = sortedUsers.slice(0, 5);
   const overflow = sortedUsers.length - visible.length;
 
+  const ringCls = isDark ? "ring-black" : "ring-white";
+  const containerCls = isDark
+    ? "bg-[#1C1C1E] shadow-[0_8px_30px_rgb(0,0,0,0.3)]"
+    : "bg-white shadow-[0_8px_30px_rgb(0,0,0,0.06)]";
+
   return (
-    <div className="flex items-center -space-x-2 pointer-events-auto px-2 py-1.5 rounded-full bg-white shadow-[0_8px_30px_rgb(0,0,0,0.06)]">
+    <div className={`flex items-center -space-x-2 pointer-events-auto px-2 py-1.5 rounded-full ${containerCls}`}>
       {visible.map((u, i) => {
         const isLocal = u.id === localUserId;
         
@@ -28,7 +35,7 @@ const PresenceStack = ({ users, localUserId }: { users: PresenceUser[], localUse
           <motion.div
             initial={{ scale: 0.6, opacity: 0 }}
             animate={{ scale: 1, opacity: 1 }}
-            className={`relative w-7 h-7 rounded-full ring-2 ring-white overflow-hidden flex items-center justify-center text-[10px] font-medium text-white group ${isLocal ? 'cursor-pointer' : ''}`}
+            className={`relative w-7 h-7 rounded-full ring-2 ${ringCls} overflow-hidden flex items-center justify-center text-[10px] font-medium text-white group ${isLocal ? 'cursor-pointer' : ''}`}
             style={{ backgroundColor: u.color, zIndex: visible.length - i }}
           >
             {u.avatar_url ? (
@@ -64,7 +71,7 @@ const PresenceStack = ({ users, localUserId }: { users: PresenceUser[], localUse
         );
       })}
       {overflow > 0 && (
-        <div className="w-7 h-7 rounded-full ring-2 ring-white bg-[#F3F4F6] text-[10px] flex items-center justify-center text-[#6B7280] font-medium">
+        <div className={`w-7 h-7 rounded-full ring-2 ${ringCls} text-[10px] flex items-center justify-center font-medium ${isDark ? "bg-white/10 text-white/70" : "bg-[#F3F4F6] text-[#6B7280]"}`}>
           +{overflow}
         </div>
       )}
