@@ -456,14 +456,17 @@ const CampaignCard = ({
     <button
       onClick={onOpen}
       className={`nodrag nopan text-left rounded-2xl border p-3.5 transition-all hover:shadow-md ${
-        isDark ? "bg-white/5 border-white/10 hover:bg-white/10" : "bg-white border-[#E8ECFE] hover:border-[#C7CFFD] shadow-sm"
+        isDark ? "border-white/[0.08] hover:brightness-110" : "bg-white border-[#E8ECFE] hover:border-[#C7CFFD] shadow-sm"
       }`}
-      style={{ color: cardTextColor }}
+      style={{
+        color: cardTextColor,
+        ...(isDark ? { backgroundColor: "#1C1C1E" } : {}),
+      }}
     >
       <div className="flex items-start gap-3" style={{ color: cardTextColor }}>
         <div
           className={`w-10 h-10 rounded-lg shrink-0 flex items-center justify-center text-[12px] font-semibold ${
-            isDark ? "bg-white/10 text-white/90" : "bg-neutral-100 text-neutral-700"
+            isDark ? "bg-white/15 text-white" : "bg-neutral-100 text-neutral-700"
           }`}
         >
           {initials(brand)}

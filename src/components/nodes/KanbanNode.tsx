@@ -313,10 +313,11 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
     });
   };
 
-  const cardBg = isDark ? "bg-white/5 hover:bg-white/10" : "bg-white hover:bg-neutral-50";
+  const cardBg = isDark ? "hover:brightness-110" : "bg-white hover:bg-neutral-50";
+  const cardBgStyle = isDark ? { backgroundColor: "#1C1C1E" } : {};
   const columnBg = isBoardDark ? "bg-white/[0.08]" : isDark ? "bg-white/[0.02]" : "bg-black/[0.025]";
   const borderCls = isBoardDark ? "border-white/15" : isDark ? "border-white/10" : "border-black/10";
-  const cardBorderCls = isDark ? "border-white/10" : "border-neutral-200";
+  const cardBorderCls = isDark ? "border-white/[0.08]" : "border-neutral-200";
 
   const editing = editingCard
     ? columns.find((c) => c.id === editingCard.colId)?.cards.find((k) => k.id === editingCard.cardId) ?? null
@@ -507,6 +508,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
                           accentColor={accentColor}
                           borderCls={cardBorderCls}
                           cardBg={cardBg}
+                          cardBgStyle={cardBgStyle}
                           isOpen={editingCard?.cardId === card.id}
                           onOpen={(el) => setEditingCard({ colId: col.id, cardId: card.id, anchorEl: el })}
                           onUpdate={(patch) => updateCard(col.id, card.id, patch)}
@@ -594,6 +596,7 @@ const CardView = ({
   accentColor,
   borderCls,
   cardBg,
+  cardBgStyle,
   isOpen,
   isTodoDropTarget,
   onOpen,
@@ -610,6 +613,7 @@ const CardView = ({
   accentColor: string;
   borderCls: string;
   cardBg: string;
+  cardBgStyle: React.CSSProperties;
   isOpen: boolean;
   isTodoDropTarget?: boolean;
   onOpen: (el: HTMLElement) => void;
@@ -655,6 +659,7 @@ const CardView = ({
       }`}
       style={{
         color: textColor,
+        ...cardBgStyle,
         ...(isTodoDropTarget
           ? { boxShadow: `0 0 0 2px ${accentColor}, 0 0 14px 2px ${accentColor}66` }
           : isOpen
