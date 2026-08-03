@@ -25,7 +25,7 @@ import { createPortal } from "react-dom";
 import { type NodeProps, NodeResizer, useReactFlow, useViewport } from "@xyflow/react";
 import { motion, AnimatePresence } from "framer-motion";
 import {
-  Plus, Trash2, Palette, Baseline, X, Search, ArrowLeft, Repeat, DollarSign,
+  Plus, Trash2, Palette, X, Search, ArrowLeft, Repeat, DollarSign,
   Instagram, Youtube, Calendar, Users, Minus, Heading1, Heading2, Check,
 } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -95,12 +95,6 @@ const RAINBOW_COLORS = [
   { name: "Rosa", value: "#FCB5B9" },
   { name: "Blanco", value: "#FFFFFF" },
   { name: "Negro", value: "#1F2937" },
-];
-const TEXT_COLORS = [
-  { name: "Negro", value: "#111827" },
-  { name: "Gris", value: "#6B7280" },
-  { name: "Blanco", value: "#FFFFFF" },
-  { name: "Azul", value: "#2563EB" },
 ];
 
 const MONTHS = ["Enero", "Febrero", "Marzo", "Abril", "Mayo", "Junio", "Julio", "Agosto", "Septiembre", "Octubre", "Noviembre", "Diciembre"];
@@ -177,15 +171,36 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
 
   const rawFill = d.backgroundColor ?? (isDark ? "#2C2C2E" : "#FFFFFF");
   const backgroundColor = isDark && isWhite(rawFill) ? "#2C2C2E" : rawFill;
-  const rawText = d.textColor ?? "#111827";
-  const textColor = isDark && (isBlack(rawText) || isWhite(rawFill)) ? "#FFFFFF" : rawText;
   const accentColor = d.accentColor ?? "#4059F1";
   const title = d.title ?? "Campañas";
   const showTitle = d.showTitle ?? true;
   const subtitle = d.subtitle ?? "";
   const showSubtitle = d.showSubtitle ?? false;
 
-  const [activePicker, setActivePicker] = useState<"fill" | "text" | null>(null);
+  // Calculamos automáticamente si el fondo del widget es oscuro para adaptar el texto general
+  const isBoardDark = isDark
+    ? true
+    : (() => {
+        const v = (backgroundColor || "").trim().toLowerCase();
+        if (!v || v === "transparent") return false;
+        if (v === "#1f2937" || v === "#111827" || v === "#000000" || v === "black") return true;
+        if (v === "#4059f1" || v === "#2563eb" || v === "#ef4444" || v === "#a855f7" || v === "#f97316") return true;
+        if (v.startsWith("#") && (v.length === 7 || v.length === 4)) {
+          const hex = v.length === 4
+            ? `#${v[1]}${v[1]}${v[2]}${v[2]}${v[3]}${v[3]}`
+            : v;
+          const r = parseInt(hex.slice(1, 3), 16) / 255;
+          const g = parseInt(hex.slice(3, 5), 16) / 255;
+          const b = parseInt(hex.slice(5, 7), 16) / 255;
+          const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+          return lum < 0.55;
+        }
+        return false;
+      })();
+
+  const boardTextColor = isBoardDark ? "#FFFFFF" : "#111827";
+
+  const [activePicker, setActivePicker] = useState<"fill" | null>(null);
   const [filter, setFilter] = useState("");
   const [openCampaignId, setOpenCampaignId] = useState<string | null>(null);
   const anchorRef = useRef<HTMLDivElement>(null);
@@ -220,10 +235,6 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
   }, [campaigns, filter]);
 
   const openCampaign = campaigns.find((c) => c.id === openCampaignId) || null;
-
-  const borderCls = isDark ? "border-white/10" : "border-neutral-200";
-  const subtleText = isDark ? "text-white/60" : "text-neutral-500";
-  const softSurface = isDark ? "bg-white/5" : "bg-neutral-50";
 
   return (
     <div className="group/widget" style={{ width: "100%", height: "100%", position: "relative" }}>
@@ -283,19 +294,6 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
                 )}
               </div>
 
-              <div className="relative">
-                <button
-                  onClick={() => setActivePicker(activePicker === "text" ? null : "text")}
-                  className={`w-7 h-7 flex items-center justify-center rounded-lg ${isDark ? "hover:bg-white/10" : "hover:bg-neutral-100"}`}
-                  title="Color de texto"
-                >
-                  <Baseline size={13} style={{ color: textColor }} className="stroke-[2.5]" />
-                </button>
-                {activePicker === "text" && (
-                  <PickerPopover colors={TEXT_COLORS} selected={rawText} onPick={(v) => { update({ textColor: v }); setActivePicker(null); }} isDark={isDark} />
-                )}
-              </div>
-
               <div className={`w-[1px] h-4 mx-1 ${isDark ? "bg-white/10" : "bg-neutral-200"}`} />
 
               <button
@@ -321,14 +319,18 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
         className="w-full h-full rounded-2xl overflow-hidden flex flex-col transition-all duration-300 cursor-pointer"
         style={{
           backgroundColor,
-          color: textColor,
+          color: boardTextColor,
+          "--scrollbar-color": boardTextColor,
           boxShadow: selected
             ? "0 10px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.04)"
             : "0 4px 12px -1px rgba(0,0,0,0.015), 0 2px 4px -1px rgba(0,0,0,0.01)",
-        }}
+        } as React.CSSProperties}
       >
         {/* Header */}
-        <div className={`px-5 pt-5 pb-3 shrink-0 border-b ${isDark ? "border-white/10" : "border-neutral-100"}`}>
+        <div
+          className="px-5 pt-5 pb-3 shrink-0 border-b"
+          style={{ borderColor: isBoardDark ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.06)" }}
+        >
           <div className="flex items-start justify-between gap-3">
             {(showTitle || showSubtitle) && (
               <div className="flex-1 min-w-0">
@@ -337,7 +339,7 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
                     value={title}
                     onChange={(e) => update({ title: e.target.value })}
                     className="nodrag nopan w-full bg-transparent border-none outline-none text-[22px] font-semibold tracking-tight"
-                    style={{ color: textColor }}
+                    style={{ color: boardTextColor }}
                     placeholder="Título"
                   />
                 )}
@@ -346,7 +348,7 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
                     value={subtitle}
                     onChange={(e) => update({ subtitle: e.target.value })}
                     className="nodrag nopan w-full bg-transparent border-none outline-none text-[12px] font-light mt-0.5 opacity-70"
-                    style={{ color: textColor }}
+                    style={{ color: boardTextColor }}
                     placeholder="Subtítulo"
                   />
                 )}
@@ -354,21 +356,27 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
             )}
             <button
               onClick={addCampaign}
-              className="nodrag nopan shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-[12px] font-medium text-white transition-opacity hover:opacity-90"
+              className="nodrag nopan shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-[12px] font-medium text-white transition-opacity hover:opacity-90 shadow-sm"
               style={{ backgroundColor: accentColor }}
             >
               <Plus size={14} /> Nueva
             </button>
           </div>
 
-          <div className={`mt-3 flex items-center gap-2 px-3 py-2 rounded-xl border ${isDark ? "border-white/10 bg-white/5" : "border-neutral-200 bg-white"}`}>
-            <Search size={13} className={subtleText} />
+          <div
+            className={`mt-3 flex items-center gap-2 px-3 py-2 rounded-xl border transition-colors ${
+              isBoardDark ? "border-white/15 bg-white/10" : "border-neutral-200 bg-white"
+            }`}
+          >
+            <Search size={13} className={isBoardDark ? "text-white/70" : "text-neutral-500"} />
             <input
               value={filter}
               onChange={(e) => setFilter(e.target.value)}
               placeholder="Filtrar por marca…"
-              className="nodrag nopan flex-1 bg-transparent border-none outline-none text-[12.5px]"
-              style={{ color: textColor }}
+              className={`nodrag nopan flex-1 bg-transparent border-none outline-none text-[12.5px] ${
+                isBoardDark ? "placeholder:text-white/60" : "placeholder:text-neutral-400"
+              }`}
+              style={{ color: boardTextColor }}
             />
           </div>
         </div>
@@ -376,15 +384,15 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
         {/* Grid of campaign cards */}
         <div ref={scrollRef} className="p-4 flex-1 overflow-y-auto kanban-scrollbar">
           {filtered.length === 0 ? (
-            <div className={`h-full flex flex-col items-center justify-center gap-2 text-center ${subtleText}`}>
-              <div className={`w-12 h-12 rounded-full flex items-center justify-center ${softSurface}`}>
+            <div className={`h-full flex flex-col items-center justify-center gap-2 text-center ${isBoardDark ? "text-white/75" : "text-neutral-500"}`}>
+              <div className={`w-12 h-12 rounded-full flex items-center justify-center ${isBoardDark ? "bg-white/10 text-white" : "bg-black/[0.04] text-neutral-600"}`}>
                 <Plus size={20} />
               </div>
               <p className="text-[12.5px]">Aún no tienes campañas.</p>
               <button
                 onClick={addCampaign}
-                className="nodrag nopan text-[11.5px] underline underline-offset-2"
-                style={{ color: accentColor }}
+                className="nodrag nopan text-[11.5px] underline underline-offset-2 font-medium"
+                style={{ color: isBoardDark ? "#FFFFFF" : accentColor }}
               >
                 Añadir la primera
               </button>
@@ -430,22 +438,30 @@ const CampaignCard = ({
 }: {
   c: Campaign; isDark: boolean; accentColor: string; onOpen: () => void;
 }) => {
-  const status = STATUS_STYLES[c.status];
+  const status = isDark
+    ? (c.status === "Pendiente"
+        ? { bg: "rgba(245, 158, 11, 0.18)", text: "#FCD34D", border: "rgba(245, 158, 11, 0.35)" }
+        : c.status === "Activa"
+        ? { bg: "rgba(64, 89, 241, 0.22)", text: "#93C5FD", border: "rgba(64, 89, 241, 0.4)" }
+        : { bg: "rgba(16, 185, 129, 0.18)", text: "#6EE7B7", border: "rgba(16, 185, 129, 0.35)" })
+    : STATUS_STYLES[c.status];
   const pieces = totalPieces(c.deliverables);
   const fmt = primaryFormat(c.deliverables);
   const brand = c.brand || "Sin nombre";
+  const cardTextColor = isDark ? "#FFFFFF" : "#111827";
 
   return (
     <button
       onClick={onOpen}
       className={`nodrag nopan text-left rounded-2xl border p-3.5 transition-all hover:shadow-md ${
-        isDark ? "bg-white/5 border-white/10 hover:bg-white/10" : "bg-white border-[#E8ECFE] hover:border-[#C7CFFD]"
+        isDark ? "bg-white/5 border-white/10 hover:bg-white/10" : "bg-white border-[#E8ECFE] hover:border-[#C7CFFD] shadow-sm"
       }`}
+      style={{ color: cardTextColor }}
     >
-      <div className="flex items-start gap-3">
+      <div className="flex items-start gap-3" style={{ color: cardTextColor }}>
         <div
           className={`w-10 h-10 rounded-lg shrink-0 flex items-center justify-center text-[12px] font-semibold ${
-            isDark ? "bg-white/10 text-white/80" : "bg-neutral-100 text-neutral-500"
+            isDark ? "bg-white/10 text-white/90" : "bg-neutral-100 text-neutral-700"
           }`}
         >
           {initials(brand)}
@@ -453,8 +469,8 @@ const CampaignCard = ({
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0 flex-1">
-              <p className="text-[13.5px] font-semibold truncate leading-tight">{brand}</p>
-              <p className="text-[11px] opacity-60 mt-0.5 truncate">
+              <p className="text-[13.5px] font-semibold truncate leading-tight" style={{ color: cardTextColor }}>{brand}</p>
+              <p className="text-[11px] opacity-60 mt-0.5 truncate" style={{ color: cardTextColor }}>
                 {pieces} contenido{pieces === 1 ? "" : "s"}{fmt ? ` · ${fmt}` : ""}
               </p>
             </div>
@@ -463,7 +479,11 @@ const CampaignCard = ({
             {c.exclusivity && (
               <span
                 className="text-[10px] px-2 py-0.5 rounded-full font-medium"
-                style={{ backgroundColor: "#E8ECFE", color: "#4059F1", border: "1px solid #C7CFFD" }}
+                style={
+                  isDark
+                    ? { backgroundColor: "rgba(64, 89, 241, 0.22)", color: "#93C5FD", border: "1px solid rgba(64, 89, 241, 0.4)" }
+                    : { backgroundColor: "#E8ECFE", color: "#4059F1", border: "1px solid #C7CFFD" }
+                }
               >
                 Exclusividad
               </span>
@@ -478,7 +498,7 @@ const CampaignCard = ({
         </div>
       </div>
       <div className="mt-3 flex items-end justify-between">
-        <span className="text-[17px] font-bold tracking-tight">
+        <span className="text-[17px] font-bold tracking-tight" style={{ color: cardTextColor }}>
           {c.payType === "intercambio" ? "Intercambio" : formatMoney(c.amount)}
         </span>
       </div>
