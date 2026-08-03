@@ -26,14 +26,15 @@ const ProjectImage = ({ src, alt, index }: { src: string; alt: string; index: nu
     whileInView="visible"
     viewport={{ once: true, margin: "-80px" }}
     variants={fadeUp}
-    className="w-full overflow-hidden rounded-2xl md:rounded-3xl bg-neutral-100/50 shadow-sm"
+    className="w-full overflow-hidden rounded-2xl md:rounded-3xl bg-neutral-100/60 shadow-sm"
   >
     <img
       src={src}
       alt={alt}
       loading={index < 2 ? "eager" : "lazy"}
       decoding="async"
-      className="w-full h-auto object-cover"
+      fetchPriority={index === 0 ? "high" : "auto"}
+      className="w-full h-auto object-cover transition-opacity duration-500"
     />
   </motion.div>
 );
