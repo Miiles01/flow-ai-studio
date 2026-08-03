@@ -1,16 +1,48 @@
 # Aprendizajes de UI / UX y Comportamientos Globales
 
-## Transiciones en Modo Oscuro (Dark Mode)
+## 1. Portafolio / Páginas Editoriales y Tipografía
+- **Consistencia tipográfica con la Landing:** Usar siempre la tipografía corporativa `Manrope` (`font-sans`), respetando los pesos naturales (`font-normal` [400] para títulos y `font-light` [300] para subtítulos y párrafos descriptivos).
+- **Prohibido `font-mono` en metadatos editoriales:** Evitar fuentes monoespaciadas en etiquetas como "Industria", "Qué hicimos" o "Sobre el proyecto".
+- **Interletrado (Tracking) natural:** Utilizar `tracking-tight` para grandes encabezados y `tracking-normal` o `tracking-widest` para tags/subtítulos. No usar `tracking-tighter` que pegue excesivamente las letras.
+- **Contraste de textos clave:** Asegurar que los titulares introductorios tengan contraste sólido (`text-black` / `text-neutral-900`).
+
+## 2. Carga y Transición Progresiva de Imágenes (Fade-In)
+- **Eliminar saltos bruscos (snap):** Las imágenes no deben aparecer de golpe cuando el navegador completa su descarga.
+- **Doble Fade (Scroll + Load):**
+  - **Componente `FadeImage`:** Controla el evento `onLoad` para transicionar de `opacity-0` a `opacity-100` con `transition-opacity duration-1000 ease-out`.
+  - **Framer Motion (`whileInView`):** Usa curvas editoriales suaves (`[0.22, 1, 0.36, 1]`) con márgenes de activación moderados (`margin: "-40px"`) y stagger leve entre elementos secundarios.
+
+## 3. Orden Estricto de Proyectos en Portafolio (`/trabajo`)
+El orden de los proyectos es inmutable y debe respetarse siempre de arriba a abajo:
+1. **Miiles AI** (`miiles`)
+2. **Naabi Kanabi** (`naabi-kanabi`)
+3. **Tularosa** (`tularosa`)
+4. **ERPXtender** (`erpxtender`)
+5. **Mar & Vic** (`mar-vic`)
+6. **Original — Salon de Barbier** (`original`)
+7. **Colorfit** (`colorfit`)
+8. **Jambú** (`jambu`)
+*Regla:* Nunca alterar o reordenar las claves del objeto `portfolioProjects` en `src/data/portfolioProjects.ts`.
+
+## 4. Voz de Marca (Brand Voice)
+- **Siempre en plural corporativo:** Hablar siempre como **Miiles** en primera persona del plural ("Nosotros", "Lideramos", "Diseñamos", "Transformamos"), nunca en primera persona del singular ("Yo", "Mi enfoque").
+
+## 5. Notificaciones y Tooltips Flotantes en Mobile
+- **Guiado sutil:** Para indicar acciones táctiles en móvil (ej. "Toca cualquier imagen para ver el detalle"), utilizar un banner flotante fijado al fondo (`fixed bottom-6 inset-x-4 max-w-sm mx-auto`).
+- **Diseño:** Contenedor negro/oscuro (`bg-neutral-950/95` + `backdrop-blur-xl`), borde sutil `border-neutral-800`, ícono temático (ej. bombilla ámbar) y botón de cierre manual `✕`.
+- **Comportamiento:** Entrada suave desde abajo con delay inicial (~1s), permanencia durante **20 segundos** sincronizado con scroll, y salida automática hacia abajo.
+
+## 6. Transiciones en Modo Oscuro (Dark Mode)
 Para imágenes o componentes que cambian drásticamente entre el modo claro y el modo oscuro (ej. tarjetas de redes sociales, ilustraciones complejas):
 - **Evitar cambios bruscos (snap):** No cambies el `src` de una etiqueta `<img>` directamente según el tema, ya que produce un corte instantáneo.
 - **Usar Cross-fade (Desvanecimiento):** Coloca ambas imágenes (clara y oscura) empalmadas usando `position: absolute;` dentro de un contenedor `relative`. Alterna su opacidad (`opacity-0` a `opacity-100`) usando transiciones CSS (`transition-opacity duration-300`) en base a la variable del tema oscuro (ej. `isDark`). Esto asegura un cambio suave y orgánico.
 
-## Inputs y Paneles con Contenido Extenso
+## 7. Inputs y Paneles con Contenido Extenso
 Cuando se espere que un área de texto o un contenedor de AI (prompt bars, paneles de plan/aclaración) reciba contenido largo:
 - **Límites de crecimiento:** El contenedor nunca debe "crecer hasta el cielo". Establece un límite máximo de altura (ej. `max-h-[160px]` o un límite según el diseño).
 - **Scroll con estilo:** Aplica `overflow-y-auto` y usa siempre un scroll personalizado (ej. la clase `.panel-scrollbar` definida en el CSS global) que se adapte estéticamente tanto en el modo claro como en el modo oscuro.
-- **Indicadores de Scroll (Degradados):** Implementa un degradado superpuesto en la parte superior (y/o inferior) que aparezca dinámicamente cuando se detecte scroll. Esto protege el texto para que no sufra recortes visuales duros en los bordes e indica al usuario que hay más contenido oculto. (Excepción: estos degradados de scroll suelen omitirse en resoluciones `mobile` si el espacio es muy limitado).
+- **Indicadores de Scroll (Degradados):** Implementa un degradado superpuesto en la parte superior (y/o inferior) que aparezca dinámicamente cuando se detecte scroll. Esto protege el texto para que no sufra recortes visuales duros en los bordes e indica al usuario que hay más contenido oculto.
 
-## Espaciado Dinámico Inicial en Carruseles
+## 8. Espaciado Dinámico Inicial en Carruseles
 En componentes tipo carrusel (scroll horizontal) que requieren alinear su primer elemento con los márgenes del resto de la página:
 - Usa un bloque "espaciador" (ej. un `div` con `w-4 md:w-8 lg:w-32` y `shrink-0`) al inicio del contenedor en lugar de aplicar padding directo al contenedor con scroll. Esto garantiza que durante el desplazamiento libre, los elementos fluyan hasta el borde de la pantalla sin cortes antinaturales, manteniendo el margen inicial intacto cuando se vuelve al principio.
