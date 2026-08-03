@@ -18,7 +18,7 @@ import {
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import { ArrowLeft, ArrowUp, ArrowDown, Loader2, Check, Cloud, CloudOff, Settings2, EyeOff, Eye, Trash2, Undo2, Redo2, Palette, Square, Type, Baseline, Sparkles, PanelRight, ListChecks, Plus, Minus, Share2, Sun, Moon, EyeIcon, Copy, Download } from "lucide-react";
-import { buildTasksInstructions, downloadTextFile, type TodoListLike } from "@/lib/todoInstructions";
+import { buildTasksInstructions, buildCategorizedTasksInstructions, downloadTextFile, type TodoListLike } from "@/lib/todoInstructions";
 import ShareDialog from "@/components/ShareDialog";
 import PresenceStack from "@/components/PresenceStack";
 import { useFlowRealtime, type PresenceUser } from "@/hooks/useFlowRealtime";
