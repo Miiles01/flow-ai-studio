@@ -139,40 +139,13 @@ export const ProjectDetail = () => {
             </motion.div>
           </div>
 
-          {/* Image gallery — single columns with strategy block break */}
+          {/* Image gallery — single columns */}
           <div className="space-y-6 md:space-y-8">
-            {project.images.slice(1).map((img, idx) => {
-              const realIdx = idx + 1;
-
-              return (
-                <React.Fragment key={realIdx}>
-                  {/* Full-width image */}
-                  <div className="px-4 md:px-8 lg:px-12">
-                    <ProjectImage src={basePath + img.src} alt={img.alt} index={realIdx} />
-                  </div>
-
-                  {/* Render strategy right after the first gallery image */}
-                  {idx === 0 && project.strategy && (
-                    <div className="px-6 md:px-12 lg:px-20 container mx-auto my-20 md:my-32">
-                      <motion.div
-                        initial={{ opacity: 0, y: 20 }}
-                        whileInView={{ opacity: 1, y: 0 }}
-                        viewport={{ once: true }}
-                        transition={{ duration: 0.7 }}
-                        className="max-w-3xl pt-8"
-                      >
-                        <p className="text-xs tracking-widest text-neutral-400 mb-4 font-mono uppercase font-semibold">
-                          {lang === "es" ? "Qué se hizo / Planificación Funcional" : "Strategy / Action Plan"}
-                        </p>
-                        <p className="text-xl md:text-2xl font-light leading-relaxed text-neutral-800 whitespace-pre-line">
-                          {project.strategy[lang]}
-                        </p>
-                      </motion.div>
-                    </div>
-                  )}
-                </React.Fragment>
-              );
-            })}
+            {project.images.slice(1).map((img, idx) => (
+              <div key={idx + 1} className="px-4 md:px-8 lg:px-12">
+                <ProjectImage src={basePath + img.src} alt={img.alt} index={idx + 1} />
+              </div>
+            ))}
           </div>
 
           {/* Back to projects */}
