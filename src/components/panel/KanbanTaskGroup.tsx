@@ -1,8 +1,6 @@
-import { Check, Plus, Trash2, ArrowUp, ArrowDown, Copy, Columns3 } from "lucide-react";
+import { Check, Copy, Columns3 } from "lucide-react";
 import type { Node } from "@xyflow/react";
 import type { KanbanColumn, KanbanCard, KanbanTaskItem } from "@/components/nodes/KanbanNode";
-
-const uid = () => `tk-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`;
 
 export type KanbanCardEntry = { colId: string; colTitle: string; card: KanbanCard };
 
@@ -76,7 +74,7 @@ const KanbanTaskGroup = ({
         <Columns3 size={13} strokeWidth={1.5} style={{ color: mutedColor }} />
         <button
           onClick={onFocus}
-          className="text-[12px] font-medium truncate hover:underline"
+          className="text-[12px] font-medium truncate hover:underline text-left cursor-pointer"
           style={{ color: textColor }}
           title="Ir a la pizarra"
         >
@@ -95,15 +93,20 @@ const KanbanTaskGroup = ({
           return (
             <div
               key={key}
-              className="rounded-2xl border p-4 space-y-2 relative group/card transition-all duration-300"
+              onClick={onFocus}
+              className="rounded-2xl border p-5 space-y-3 relative group/card transition-all duration-300 cursor-pointer outline-none hover:shadow-[0_10px_25px_-5px_rgba(0,0,0,0.04),0_8px_10px_-6px_rgba(0,0,0,0.04)]"
               style={{
                 backgroundColor: cardBg,
                 borderColor,
                 boxShadow: "0 4px 12px -1px rgba(0,0,0,0.015), 0 2px 4px -1px rgba(0,0,0,0.01)",
               }}
             >
+              {/* Copy button */}
               <button
-                onClick={() => onCopy({ colId, colTitle, card })}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onCopy({ colId, colTitle, card });
+                }}
                 title="Copiar esta tarjeta como instrucciones para IA"
                 className={`absolute top-3 right-3 z-10 w-7 h-7 flex items-center justify-center rounded-lg border transition-all duration-200 ${
                   copiedId === key
@@ -118,106 +121,71 @@ const KanbanTaskGroup = ({
                 {copiedId === key ? <Check size={13} strokeWidth={2.5} /> : <Copy size={13} strokeWidth={2} />}
               </button>
 
+              {/* Card Title & Info */}
               <div className="space-y-0.5 pr-8">
-                <div className="text-[14px] font-semibold truncate" style={{ color: textColor }}>
+                <div className="text-[15px] font-semibold truncate" style={{ color: textColor }}>
                   {card.title || "Tarjeta"}
                 </div>
-                <div className="text-[11px] font-light" style={{ color: mutedColor }}>
+                <div className="text-[12px] font-light" style={{ color: mutedColor }}>
                   {colTitle} · {done}/{tasks.length}
                 </div>
               </div>
 
+              {/* Task Items */}
               <div className="space-y-2 pt-1">
-                {tasks.map((task, idx) => (
-                  <div key={task.id} className="group/task flex items-center gap-3 py-0.5">
+                {tasks.map((task) => (
+                  <div
+                    key={task.id}
+                    className="group/task flex items-center gap-3 py-0.5 select-none"
+                  >
                     <button
-                      onClick={() =>
+                      onClick={(e) => {
+                        e.stopPropagation();
                         mutateTasks(colId, card.id, (ts) =>
                           ts.map((t) => (t.id === task.id ? { ...t, completed: !t.completed } : t)),
-                        )
-                      }
-                      className="w-5 h-5 rounded-full flex items-center justify-center border-[1.5px] shrink-0 transition-all"
+                        );
+                      }}
+                      className={`w-5 h-5 rounded-full flex items-center justify-center border-[1.5px] border-solid transition-all shrink-0 duration-200 mt-[2px] ${
+                        task.completed
+                          ? ""
+                          : isDark
+                          ? "bg-white/[0.05] border-white/15 hover:border-white/30 hover:bg-white/[0.08]"
+                          : "bg-black/[0.03] border-black/15 hover:border-black/30 hover:bg-black/[0.05]"
+                      }`}
                       style={{
-                        borderColor: task.completed ? accentColor : isDark ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.15)",
-                        backgroundColor: task.completed ? accentColor : "transparent",
+                        borderColor: task.completed
+                          ? (accentColor && accentColor !== "transparent" ? accentColor : "#4059F1")
+                          : undefined,
+                        backgroundColor: task.completed
+                          ? (accentColor && accentColor !== "transparent" ? accentColor : "#4059F1")
+                          : undefined,
                       }}
+                      title={task.completed ? "Marcar como pendiente" : "Marcar como completada"}
                     >
-                      {task.completed && <Check size={12} className="text-white" strokeWidth={3} />}
+                      {task.completed && (
+                        <Check
+                          size={12}
+                          className={`${
+                            (accentColor === "#FFFFFF" || accentColor === "#FACC15")
+                              ? "text-gray-900"
+                              : "text-white"
+                          } stroke-[3.5]`}
+                        />
+                      )}
                     </button>
-                    <input
-                      value={task.text}
-                      onChange={(e) =>
-                        mutateTasks(colId, card.id, (ts) =>
-                          ts.map((t) => (t.id === task.id ? { ...t, text: e.target.value } : t)),
-                        )
-                      }
-                      onKeyDown={(e) => {
-                        if (e.key === "Enter") {
-                          e.preventDefault();
-                          mutateTasks(colId, card.id, (ts) => [...ts, { id: uid(), text: "", completed: false }]);
-                        }
-                      }}
-                      placeholder="Nueva tarea..."
-                      className="flex-1 bg-transparent border-none outline-none text-[13px] font-light leading-snug min-w-0 p-0"
+                    <span
+                      className="text-[13px] font-light leading-snug break-words flex-1 min-w-0"
                       style={{
                         color: task.completed ? mutedColor : textColor,
                         textDecoration: task.completed ? "line-through" : "none",
                         opacity: task.completed ? 0.7 : 1,
                       }}
-                    />
-                    <div className="flex items-center gap-1 shrink-0 opacity-0 pointer-events-none group-hover/task:opacity-100 group-hover/task:pointer-events-auto transition-opacity">
-                      <button
-                        onClick={() =>
-                          mutateTasks(colId, card.id, (ts) => {
-                            if (idx === 0) return ts;
-                            const next = [...ts];
-                            [next[idx - 1], next[idx]] = [next[idx], next[idx - 1]];
-                            return next;
-                          })
-                        }
-                        className="p-1 rounded-md hover:bg-black/10 dark:hover:bg-white/10 text-gray-400"
-                        title="Subir"
-                      >
-                        <ArrowUp size={11} />
-                      </button>
-                      <button
-                        onClick={() =>
-                          mutateTasks(colId, card.id, (ts) => {
-                            if (idx >= ts.length - 1) return ts;
-                            const next = [...ts];
-                            [next[idx], next[idx + 1]] = [next[idx + 1], next[idx]];
-                            return next;
-                          })
-                        }
-                        className="p-1 rounded-md hover:bg-black/10 dark:hover:bg-white/10 text-gray-400"
-                        title="Bajar"
-                      >
-                        <ArrowDown size={11} />
-                      </button>
-                      <button
-                        onClick={() => mutateTasks(colId, card.id, (ts) => ts.filter((t) => t.id !== task.id))}
-                        className="p-1 rounded-md hover:bg-red-50 dark:hover:bg-red-500/10 text-gray-400 hover:text-red-600"
-                        title="Eliminar"
-                      >
-                        <Trash2 size={11} />
-                      </button>
-                    </div>
+                    >
+                      {task.text || "Tarea"}
+                    </span>
                   </div>
                 ))}
               </div>
-
-              <button
-                onClick={() => mutateTasks(colId, card.id, (ts) => [...ts, { id: uid(), text: "", completed: false }])}
-                className="flex items-center gap-2 py-2 px-3 rounded-xl border border-dashed transition-all text-left mt-1 w-full opacity-0 group-hover/card:opacity-100"
-                style={{
-                  borderColor: isDark ? "rgba(255,255,255,0.1)" : "#D1D5DB",
-                  color: "#9CA3AF",
-                  backgroundColor: isDark ? "rgba(255,255,255,0.02)" : "rgba(0,0,0,0.02)",
-                }}
-              >
-                <Plus size={13} />
-                <span className="text-[13px]">Nueva tarea</span>
-              </button>
             </div>
           );
         })}

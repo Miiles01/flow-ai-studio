@@ -680,23 +680,42 @@ const CardView = ({
                 </span>
               </div>
               {tasks.map((t) => (
-                <div key={t.id} className="flex items-start gap-1.5">
+                <div key={t.id} className="flex items-start gap-2 py-0.5">
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
                       toggleTask(t.id);
                     }}
-                    className="mt-[2px] w-3.5 h-3.5 shrink-0 rounded-[4px] border flex items-center justify-center transition-colors"
+                    className={`w-4 h-4 rounded-full flex items-center justify-center border-[1.5px] border-solid transition-all shrink-0 duration-200 mt-[2px] ${
+                      t.completed
+                        ? ""
+                        : isDark
+                        ? "bg-white/[0.05] border-white/15 hover:border-white/30 hover:bg-white/[0.08]"
+                        : "bg-black/[0.03] border-black/15 hover:border-black/30 hover:bg-black/[0.05]"
+                    }`}
                     style={{
-                      borderColor: t.completed ? accentColor : isDark ? "rgba(255,255,255,0.25)" : "rgba(0,0,0,0.2)",
-                      backgroundColor: t.completed ? accentColor : "transparent",
+                      borderColor: t.completed
+                        ? (accentColor && accentColor !== "transparent" ? accentColor : "#4059F1")
+                        : undefined,
+                      backgroundColor: t.completed
+                        ? (accentColor && accentColor !== "transparent" ? accentColor : "#4059F1")
+                        : undefined,
                     }}
                     title={t.completed ? "Marcar como pendiente" : "Marcar como completada"}
                   >
-                    {t.completed && <Check size={9} className="text-white" strokeWidth={3} />}
+                    {t.completed && (
+                      <Check
+                        size={10}
+                        className={`${
+                          (accentColor && accentColor !== "transparent" ? (accentColor === "#FFFFFF" || accentColor === "#FACC15") : false)
+                            ? "text-gray-900"
+                            : "text-white"
+                        } stroke-[3.5]`}
+                      />
+                    )}
                   </button>
                   <span
-                    className="text-[10.5px] leading-snug break-words"
+                    className="text-[11px] leading-snug break-words flex-1 min-w-0"
                     style={{
                       color: textColor,
                       opacity: t.completed ? 0.45 : 0.85,
@@ -1206,16 +1225,36 @@ const CardEditorPopover = ({
         {cardTasks.length > 0 && (
           <div className="space-y-1 mb-2">
             {cardTasks.map((t, idx) => (
-              <div key={t.id} className="group/tk flex items-center gap-1.5">
+              <div key={t.id} className="group/tk flex items-center gap-2">
                 <button
                   onClick={() => toggleTask(t.id)}
-                  className="w-4 h-4 shrink-0 rounded-[5px] border flex items-center justify-center transition-colors"
+                  className={`w-4 h-4 shrink-0 rounded-full flex items-center justify-center border-[1.5px] border-solid transition-all duration-200 ${
+                    t.completed
+                      ? ""
+                      : isDark
+                      ? "bg-white/[0.05] border-white/15 hover:border-white/30 hover:bg-white/[0.08]"
+                      : "bg-black/[0.03] border-black/15 hover:border-black/30 hover:bg-black/[0.05]"
+                  }`}
                   style={{
-                    borderColor: t.completed ? accentColor : isDark ? "rgba(255,255,255,0.25)" : "rgba(0,0,0,0.2)",
-                    backgroundColor: t.completed ? accentColor : "transparent",
+                    borderColor: t.completed
+                      ? (accentColor && accentColor !== "transparent" ? accentColor : "#4059F1")
+                      : undefined,
+                    backgroundColor: t.completed
+                      ? (accentColor && accentColor !== "transparent" ? accentColor : "#4059F1")
+                      : undefined,
                   }}
+                  title={t.completed ? "Marcar como pendiente" : "Marcar como completada"}
                 >
-                  {t.completed && <Check size={10} className="text-white" strokeWidth={3} />}
+                  {t.completed && (
+                    <Check
+                      size={10}
+                      className={`${
+                        (accentColor && accentColor !== "transparent" ? (accentColor === "#FFFFFF" || accentColor === "#FACC15") : false)
+                          ? "text-gray-900"
+                          : "text-white"
+                      } stroke-[3.5]`}
+                    />
+                  )}
                 </button>
                 <input
                   value={t.text}
