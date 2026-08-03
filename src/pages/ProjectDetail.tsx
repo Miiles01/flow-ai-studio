@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useParams, Link, useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
@@ -8,36 +8,37 @@ import LandingFooter from "@/components/LandingFooter";
 import PortfolioSmoothScroll from "@/components/portfolio/PortfolioSmoothScroll";
 import { ArrowLeft } from "lucide-react";
 
-/* ── Fade-in animation variant ── */
-const fadeUp = {
-  hidden: { opacity: 0, y: 30 },
-  visible: (i: number) => ({
-    opacity: 1,
-    y: 0,
-    transition: { duration: 0.7, delay: i * 0.08, ease: [0.25, 0.46, 0.45, 0.94] },
-  }),
-};
+/* ── Full-width image block with smooth fade-in on scroll and load ── */
+const ProjectImage = ({ src, alt, index }: { src: string; alt: string; index: number }) => {
+  const [loaded, setLoaded] = useState(false);
 
-/* ── Full-width image block ── */
-const ProjectImage = ({ src, alt, index }: { src: string; alt: string; index: number }) => (
-  <motion.div
-    custom={index}
-    initial="hidden"
-    whileInView="visible"
-    viewport={{ once: true, margin: "-80px" }}
-    variants={fadeUp}
-    className="w-full overflow-hidden rounded-2xl md:rounded-3xl bg-neutral-100/60"
-  >
-    <img
-      src={src}
-      alt={alt}
-      loading={index < 2 ? "eager" : "lazy"}
-      decoding="async"
-      fetchPriority={index === 0 ? "high" : "auto"}
-      className="w-full h-auto object-cover transition-opacity duration-500"
-    />
-  </motion.div>
-);
+  return (
+    <motion.div
+      custom={index}
+      initial={{ opacity: 0, y: 35 }}
+      whileInView={{ opacity: 1, y: 0 }}
+      viewport={{ once: true, margin: "-40px" }}
+      transition={{
+        duration: 0.9,
+        delay: Math.min(index * 0.05, 0.25),
+        ease: [0.22, 1, 0.36, 1],
+      }}
+      className="w-full overflow-hidden rounded-2xl md:rounded-3xl bg-neutral-100/60"
+    >
+      <img
+        src={src}
+        alt={alt}
+        loading={index < 2 ? "eager" : "lazy"}
+        decoding="async"
+        fetchPriority={index === 0 ? "high" : "auto"}
+        onLoad={() => setLoaded(true)}
+        className={`w-full h-auto object-cover transition-opacity duration-1000 ease-out ${
+          loaded ? "opacity-100" : "opacity-0"
+        }`}
+      />
+    </motion.div>
+  );
+};
 
 export const ProjectDetail = () => {
   const { slug } = useParams<{ slug: string }>();

@@ -9,6 +9,35 @@ import PortfolioSmoothScroll from "@/components/portfolio/PortfolioSmoothScroll"
 import { portfolioProjects, PortfolioProject, Participation } from "@/data/portfolioProjects";
 import { ArrowUpRight } from "lucide-react";
 
+/* ── Smooth image with load fade ── */
+const FadeImage = ({
+  src,
+  alt,
+  className,
+  priority = false,
+}: {
+  src: string;
+  alt: string;
+  className?: string;
+  priority?: boolean;
+}) => {
+  const [loaded, setLoaded] = useState(false);
+
+  return (
+    <img
+      src={src}
+      alt={alt}
+      loading={priority ? "eager" : "lazy"}
+      decoding="async"
+      fetchPriority={priority ? "high" : "auto"}
+      onLoad={() => setLoaded(true)}
+      className={`${className || ""} transition-opacity duration-1000 ease-out ${
+        loaded ? "opacity-100" : "opacity-0"
+      }`}
+    />
+  );
+};
+
 const ProjectSection = ({
   project,
   slug,
@@ -31,19 +60,17 @@ const ProjectSection = ({
       onMouseLeave={() => onHover(null)}
     >
       {/* Main Cover */}
-      <Link to={`/trabajo/${slug}`} className="block w-full mb-6 md:mb-8 overflow-hidden rounded-[2rem] md:rounded-[2.5rem] bg-neutral-100/50 transition-all">
+      <Link to={`/trabajo/${slug}`} className="block w-full mb-6 md:mb-8 overflow-hidden rounded-[2rem] md:rounded-[2.5rem] bg-neutral-100/60 transition-all">
         <motion.div
-          initial={{ opacity: 0, y: 30 }}
+          initial={{ opacity: 0, y: 35 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
+          viewport={{ once: true, margin: "-40px" }}
+          transition={{ duration: 0.9, ease: [0.22, 1, 0.36, 1] }}
           className="aspect-[16/9] w-full overflow-hidden"
         >
-          <img
+          <FadeImage
             src={getPath(cover)}
             alt={project.title}
-            loading="lazy"
-            decoding="async"
             className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
           />
         </motion.div>
@@ -56,20 +83,18 @@ const ProjectSection = ({
             <Link
               key={idx}
               to={`/trabajo/${slug}`}
-              className="block overflow-hidden rounded-[2rem] bg-neutral-100/50 transition-all"
+              className="block overflow-hidden rounded-[2rem] bg-neutral-100/60 transition-all"
             >
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 35 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-80px" }}
-                transition={{ duration: 0.8, delay: 0.1 * (idx + 1), ease: [0.16, 1, 0.3, 1] }}
+                viewport={{ once: true, margin: "-40px" }}
+                transition={{ duration: 0.9, delay: 0.1 * (idx + 1), ease: [0.22, 1, 0.36, 1] }}
                 className="aspect-[4/5] overflow-hidden"
               >
-                <img
+                <FadeImage
                   src={getPath(img)}
                   alt={`${project.title} preview ${idx + 1}`}
-                  loading="lazy"
-                  decoding="async"
                   className="w-full h-full object-cover transition-transform duration-700 ease-out hover:scale-[1.04]"
                 />
               </motion.div>
