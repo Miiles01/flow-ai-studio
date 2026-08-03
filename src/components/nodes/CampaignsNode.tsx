@@ -369,8 +369,8 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
             )}
             <button
               onClick={addCampaign}
-              className="nodrag nopan shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-[12px] font-medium text-white transition-opacity hover:opacity-90 shadow-sm"
-              style={{ backgroundColor: accentColor }}
+              className="nodrag nopan shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-[12px] font-medium text-white transition-opacity hover:opacity-80 shadow-sm"
+              style={{ backgroundColor: "#111827" }}
             >
               <Plus size={14} /> Nueva
             </button>
