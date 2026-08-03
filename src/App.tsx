@@ -33,6 +33,8 @@ import PublicApplicants from "./pages/PublicApplicants";
 import NotFound from "./pages/NotFound";
 import JoinFlow from "./pages/JoinFlow";
 import Admin from "./pages/Admin";
+import Portfolio from "./pages/Portfolio";
+import ProjectDetail from "./pages/ProjectDetail";
 import AuthLayout from "./components/AuthLayout";
 import { useEffect, useState } from "react";
 import { capturePendingReferral, registerPendingReferral } from "@/lib/referral";
@@ -136,6 +138,15 @@ const App = () => (
                 <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
                 <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
               </Route>
+              {/* Portfolio (Public express landing - URL only) */}
+              <Route path="/trabajo" element={<Portfolio />} />
+              <Route path="/work" element={<Portfolio />} />
+              <Route path="/portafolio" element={<Portfolio />} />
+              <Route path="/portfolio" element={<Portfolio />} />
+              <Route path="/trabajo/:slug" element={<ProjectDetail />} />
+              <Route path="/work/:slug" element={<ProjectDetail />} />
+              <Route path="/proyecto/:slug" element={<ProjectDetail />} />
+
               <Route path="/admin" element={<Admin />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
