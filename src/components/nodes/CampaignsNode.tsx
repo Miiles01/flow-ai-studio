@@ -177,26 +177,39 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
   const subtitle = d.subtitle ?? "";
   const showSubtitle = d.showSubtitle ?? false;
 
-  // Calculamos automáticamente si el fondo del widget es oscuro para adaptar el texto general
-  const isBoardDark = isDark
-    ? true
-    : (() => {
-        const v = (backgroundColor || "").trim().toLowerCase();
-        if (!v || v === "transparent") return false;
-        if (v === "#1f2937" || v === "#111827" || v === "#000000" || v === "black") return true;
-        if (v === "#4059f1" || v === "#2563eb" || v === "#ef4444" || v === "#a855f7" || v === "#f97316") return true;
-        if (v.startsWith("#") && (v.length === 7 || v.length === 4)) {
-          const hex = v.length === 4
-            ? `#${v[1]}${v[1]}${v[2]}${v[2]}${v[3]}${v[3]}`
-            : v;
-          const r = parseInt(hex.slice(1, 3), 16) / 255;
-          const g = parseInt(hex.slice(3, 5), 16) / 255;
-          const b = parseInt(hex.slice(5, 7), 16) / 255;
-          const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-          return lum < 0.55;
-        }
-        return false;
-      })();
+  // Calculamos automáticamente si el fondo del widget requiere texto blanco
+  // IMPORTANTE: No forzar true por isDark — hay que evaluar el color real del fondo,
+  // porque el usuario puede elegir amarillo/verde/rosa en dark mode y el texto debe ser negro.
+  const isBoardDark = (() => {
+    const v = (backgroundColor || "").trim().toLowerCase();
+    if (!v || v === "transparent") return isDark;
+    // Oscuros / saturados → texto blanco
+    if (
+      v === "#ef4444" || v === "#f97316" ||
+      v === "#4059f1" || v === "#2563eb" ||
+      v === "#a855f7" ||
+      v === "#1f2937" || v === "#111827" ||
+      v === "#2c2c2e" || v === "#1c1c1e" ||
+      v === "#000000" || v === "black"
+    ) return true;
+    // Claros → texto negro
+    if (
+      v === "#facc15" || v === "#22c55e" || v === "#fcb5b9" ||
+      v === "#ffffff" || v === "white" || v === "#fafafa" || v === "#f3f4f6"
+    ) return false;
+    // Cálculo de luminancia para cualquier otro color
+    if (v.startsWith("#") && (v.length === 7 || v.length === 4)) {
+      const hex = v.length === 4
+        ? `#${v[1]}${v[1]}${v[2]}${v[2]}${v[3]}${v[3]}`
+        : v;
+      const r = parseInt(hex.slice(1, 3), 16) / 255;
+      const g = parseInt(hex.slice(3, 5), 16) / 255;
+      const b = parseInt(hex.slice(5, 7), 16) / 255;
+      const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
+      return lum < 0.55;
+    }
+    return isDark;
+  })();
 
   const boardTextColor = isBoardDark ? "#FFFFFF" : "#111827";
 
@@ -311,7 +324,7 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
       </AnimatePresence>
 
       <div className="absolute top-0 left-1/2 z-20 h-5 w-28 -translate-x-1/2 cursor-grab rounded-b-xl active:cursor-grabbing" title="Mover widget">
-        <div className={`mx-auto mt-1.5 h-1.5 w-8 rounded-full opacity-0 transition-opacity group-hover/widget:opacity-100 ${isDark ? "bg-white/40" : "bg-black/20"}`} />
+        <div className={`mx-auto mt-1.5 h-1.5 w-8 rounded-full opacity-0 transition-opacity group-hover/widget:opacity-100 ${isBoardDark ? "bg-white/40" : "bg-black/20"}`} />
       </div>
 
       <div
