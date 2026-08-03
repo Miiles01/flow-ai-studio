@@ -176,11 +176,11 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
   const rawFill = nodeData.backgroundColor ?? (isDark ? "#2C2C2E" : "#FFFFFF");
   const backgroundColor = isDark && isWhiteColor(rawFill) ? "#2C2C2E" : rawFill;
 
-  // Determina si el fondo efectivo de la pizarra es oscuro o saturado para contraste automático
-  const isBgDark = (() => {
+  // Determina si el fondo de la pizarra requiere texto blanco en el encabezado y columnas
+  const isBoardDark = (() => {
     if (backgroundColor === "transparent") return isDark;
     const c = (backgroundColor || "").trim().toLowerCase();
-    // Colores oscuros / saturados que requieren contraste blanco:
+    // Colores oscuros / saturados que requieren texto blanco en el título de la pizarra y cabecera de columnas:
     if (
       c === "#ef4444" || // Rojo
       c === "#f97316" || // Naranja
@@ -196,7 +196,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
     ) {
       return true;
     }
-    // Colores claros que requieren contraste negro:
+    // Colores claros que usan texto negro en el título y cabecera:
     if (
       c === "#facc15" || // Amarillo
       c === "#22c55e" || // Verde
@@ -220,11 +220,12 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
     return isDark;
   })();
 
-  const boardTextColor = isBgDark ? "#FFFFFF" : "#111827";
+  // Texto para el título de la pizarra, subtítulo, títulos de columna y botones del tablero:
+  const boardTextColor = isBoardDark ? "#FFFFFF" : "#111827";
+  // Texto para el interior de las tarjetas (en modo claro siempre negro sobre tarjeta blanca):
   const cardTextColor = isDark ? "#FFFFFF" : "#111827";
-
-  // Color del punto indicador de columna con alto contraste:
-  const colDotColor = isBgDark
+  
+  const colDotColor = isBoardDark
     ? "#FFFFFF"
     : isWhiteColor(backgroundColor) || backgroundColor === "transparent"
       ? (nodeData.accentColor ?? "#4059F1")
@@ -312,8 +313,8 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
   };
 
   const cardBg = isDark ? "bg-white/5 hover:bg-white/10" : "bg-white hover:bg-neutral-50";
-  const columnBg = isBgDark ? "bg-white/[0.08]" : isDark ? "bg-white/[0.02]" : "bg-black/[0.025]";
-  const borderCls = isBgDark ? "border-white/15" : isDark ? "border-white/10" : "border-black/10";
+  const columnBg = isBoardDark ? "bg-white/[0.08]" : isDark ? "bg-white/[0.02]" : "bg-black/[0.025]";
+  const borderCls = isBoardDark ? "border-white/15" : isDark ? "border-white/10" : "border-black/10";
   const cardBorderCls = isDark ? "border-white/10" : "border-neutral-200";
 
   const editing = editingCard
@@ -467,7 +468,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
                 <div className={`w-full rounded-md ${columnBg} border ${borderCls} flex flex-col max-h-full group/col`}>
                   <div
                     className="flex items-center gap-2 px-3 py-2.5 border-b"
-                    style={{ borderColor: isBgDark ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.06)" }}
+                    style={{ borderColor: isBoardDark ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.06)" }}
                   >
                     <div className="w-1.5 h-1.5 rounded-full shrink-0" style={{ backgroundColor: colDotColor }} />
                     <input
@@ -476,11 +477,11 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
                       className="nodrag nopan bg-transparent border-none outline-none text-[12px] font-semibold flex-1 min-w-0"
                       style={{ color: boardTextColor }}
                     />
-                    <span className={`text-[10px] font-medium ${isBgDark ? "text-white/70" : "text-black/50"}`}>{col.cards.length}</span>
+                    <span className={`text-[10px] font-medium ${isBoardDark ? "text-white/70" : "text-black/50"}`}>{col.cards.length}</span>
                     <button
                       onClick={() => removeColumn(col.id)}
                       className={`opacity-0 hover:opacity-100 group-hover:opacity-100 p-1 rounded transition-colors ${
-                        isBgDark ? "hover:bg-white/15 text-white/70 hover:text-white" : "hover:bg-black/10 text-neutral-500 hover:text-neutral-900"
+                        isBoardDark ? "hover:bg-white/15 text-white/70 hover:text-white" : "hover:bg-black/10 text-neutral-500 hover:text-neutral-900"
                       }`}
                       title="Eliminar columna"
                     >
@@ -541,7 +542,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
                       <button
                         onClick={() => addCard(col.id)}
                         className={`w-full nodrag nopan flex items-center justify-center gap-1 text-[11px] py-1.5 rounded-lg border border-dashed transition-colors ${
-                          isBgDark ? "border-white/20 hover:bg-white/10 text-white/80" : "border-black/20 hover:bg-black/5 text-neutral-700"
+                          isBoardDark ? "border-white/20 hover:bg-white/10 text-white/80" : "border-black/20 hover:bg-black/5 text-neutral-700"
                         }`}
                       >
                         <Plus size={12} /> Agregar tarjeta
@@ -555,7 +556,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
             <button
               onClick={addColumn}
               className={`w-[240px] shrink-0 h-11 self-start flex items-center justify-center gap-1 text-[12px] rounded-md border border-dashed transition-colors ${
-                isBgDark ? "border-white/25 hover:bg-white/10 text-white/90" : "border-black/20 hover:bg-black/5 text-neutral-700"
+                isBoardDark ? "border-white/25 hover:bg-white/10 text-white/90" : "border-black/20 hover:bg-black/5 text-neutral-700"
               }`}
             >
               <Plus size={13} /> Nueva columna
@@ -651,13 +652,14 @@ const CardView = ({
       className={`nodrag nopan group rounded border ${borderCls} ${cardBg} p-2.5 cursor-pointer transition-all shadow-sm ${
         isOpen || isTodoDropTarget ? "ring-2" : ""
       }`}
-      style={
-        isTodoDropTarget
-          ? ({ boxShadow: `0 0 0 2px ${accentColor}, 0 0 14px 2px ${accentColor}66` } as React.CSSProperties)
+      style={{
+        color: textColor,
+        ...(isTodoDropTarget
+          ? { boxShadow: `0 0 0 2px ${accentColor}, 0 0 14px 2px ${accentColor}66` }
           : isOpen
-            ? ({ boxShadow: `0 0 0 2px ${accentColor}` } as React.CSSProperties)
-            : undefined
-      }
+            ? { boxShadow: `0 0 0 2px ${accentColor}` }
+            : {}),
+      } as React.CSSProperties}
     >
 
       {card.image?.url && (
@@ -669,7 +671,7 @@ const CardView = ({
         </div>
       )}
 
-      <div className="flex items-start gap-1.5">
+      <div className="flex items-start gap-1.5" style={{ color: textColor }}>
         <GripVertical size={12} className="opacity-30 shrink-0 mt-0.5" />
         <div className="flex-1 min-w-0">
           {(card.tags?.length ?? 0) > 0 && (
@@ -706,14 +708,17 @@ const CardView = ({
           )}
 
           {card.description && (
-            <p className="text-[11px] mt-1.5 opacity-70 whitespace-pre-wrap break-words leading-snug">
+            <p
+              className="text-[11px] mt-1.5 opacity-70 whitespace-pre-wrap break-words leading-snug"
+              style={{ color: textColor }}
+            >
               {card.description}
             </p>
           )}
 
           {tasks.length > 0 && (
-            <div className="mt-2 space-y-1">
-              <div className="flex items-center gap-1.5 text-[9px] font-semibold opacity-60">
+            <div className="mt-2 space-y-1" style={{ color: textColor }}>
+              <div className="flex items-center gap-1.5 text-[9px] font-semibold opacity-60" style={{ color: textColor }}>
                 <ListChecks size={10} />
                 <span>
                   {doneCount}/{tasks.length}
