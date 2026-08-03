@@ -647,9 +647,27 @@ const CardView = ({
         </div>
       )}
 
-      <div className="flex items-center gap-1.5">
-        <GripVertical size={12} className="opacity-30 shrink-0" />
+      <div className="flex items-start gap-1.5">
+        <GripVertical size={12} className="opacity-30 shrink-0 mt-0.5" />
         <div className="flex-1 min-w-0">
+          {(card.tags?.length ?? 0) > 0 && (
+            <div className="flex flex-wrap gap-1 mb-1.5">
+              {card.tags!.map((t) => (
+                <span
+                  key={t.id}
+                  className="inline-flex items-center gap-1 text-[9px] px-1.5 py-0.5 rounded-full font-medium"
+                  style={{
+                    backgroundColor: `${t.color}22`,
+                    color: t.color,
+                    border: `1px solid ${t.color}44`,
+                  }}
+                >
+                  {t.label}
+                </span>
+              ))}
+            </div>
+          )}
+
           <div
             className="nodrag nopan w-full text-[13px] font-medium whitespace-pre-wrap break-words leading-tight"
             style={{ color: textColor }}
@@ -725,26 +743,6 @@ const CardView = ({
                     {t.text || "Tarea"}
                   </span>
                 </div>
-              ))}
-            </div>
-          )}
-
-
-
-          {(card.tags?.length ?? 0) > 0 && (
-            <div className="flex flex-wrap gap-1 mt-1.5">
-              {card.tags!.map((t) => (
-                <span
-                  key={t.id}
-                  className="inline-flex items-center gap-1 text-[9px] px-1.5 py-0.5 rounded-full font-medium"
-                  style={{
-                    backgroundColor: `${t.color}22`,
-                    color: t.color,
-                    border: `1px solid ${t.color}44`,
-                  }}
-                >
-                  {t.label}
-                </span>
               ))}
             </div>
           )}
