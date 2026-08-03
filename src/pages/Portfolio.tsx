@@ -21,8 +21,8 @@ const ProjectSection = ({
   onHover: (participation: Participation[] | null) => void;
 }) => {
   const getPath = (img: string) => `/proyectos/${project.folder}/${img}`;
-  const cover = project.images[0]?.src || "";
-  const secondary = project.images.slice(1, 3);
+  const cover = project.previewImages[0];
+  const secondary = [project.previewImages[1], project.previewImages[2]];
 
   return (
     <div
@@ -66,7 +66,7 @@ const ProjectSection = ({
                 className="aspect-[4/5] overflow-hidden"
               >
                 <img
-                  src={getPath(img.src)}
+                  src={getPath(img)}
                   alt={`${project.title} preview ${idx + 1}`}
                   loading="lazy"
                   decoding="async"
