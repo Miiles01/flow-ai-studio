@@ -84,121 +84,7 @@ export const portfolioProjects: Record<string, PortfolioProject> = {
       { icon: "eye", text: { es: "Automatización con IA", en: "AI Automation" } },
     ],
   },
-  erpxtender: {
-    slug: "erpxtender",
-    title: "ERPXtender",
-    folder: "Erpxtender",
-    subtitle: {
-      es: "Consultoría de marca y diseño de interfaz para ERP de alto rendimiento.",
-      en: "Brand consulting and interface design for high-performance ERP.",
-    },
-    industry: {
-      es: "ERP y Automatización B2B",
-      en: "ERP & B2B Automation",
-    },
-    role: {
-      es: "Embudo de Ventas y Estrategia de Identidad de Marca",
-      en: "Sales Funnel & Brand Identity Strategy",
-    },
-    description: {
-      es: "Transformamos la identidad y estrategia visual de ERPXtender para posicionarlo como una solución ágil e innovadora en la industria corporativa. Diseñamos una interfaz web centrada en UX y producimos activos visuales de alto impacto optimizados para un embudo de ventas B2B que acelera la toma de decisiones.",
-      en: "We transformed ERPXtender's visual identity and strategy to position it as an agile, innovative solution in the corporate industry. We designed a UX-centered web interface and produced high-impact visual assets optimized for a B2B sales funnel that accelerates decision-making.",
-    },
-    previewImages: [
-      "portada-1.webp",
-      "elementos-graficos-para-web-y-redes-1.webp",
-      "publicidad-exterior.webp",
-    ],
-    images: [
-      { src: "portada-1.webp", alt: "ERPXtender — Cover", aspect: "wide" },
-      { src: "logo.webp", alt: "ERPXtender — Logo", aspect: "wide" },
-      { src: "frase-publicitaria-1.webp", alt: "ERPXtender — Tagline", aspect: "wide" },
-      { src: "elementos-graficos-para-web-y-redes-1.webp", alt: "ERPXtender — Web & Social Assets 1", aspect: "wide" },
-      { src: "elementos-graficos-para-web-y-redes-2.webp", alt: "ERPXtender — Web & Social Assets 2", aspect: "wide" },
-      { src: "elementos-graficos-para-web-y-redes-3.webp", alt: "ERPXtender — Web & Social Assets 3", aspect: "wide" },
-      { src: "publicidad-exterior.webp", alt: "ERPXtender — Outdoor Advertising", aspect: "wide" },
-    ],
-    participation: [
-      { icon: "bar", text: { es: "Embudos de Ventas", en: "Sales Funnels" } },
-      { icon: "star", text: { es: "Estrategia de Identidad de Marca", en: "Brand Identity Strategy" } },
-    ],
-  },
-  original: {
-    slug: "original",
-    title: "Original — Salon de Barbier",
-    folder: "Original",
-    subtitle: {
-      es: "Dirección de arte y diseño web orientado a reservas y conversión.",
-      en: "Art direction and web design oriented towards booking and conversion.",
-    },
-    industry: {
-      es: "Barbería y Cuidado Personal Masculino",
-      en: "Barbershop & Men's Grooming",
-    },
-    role: {
-      es: "Embudos de Ventas y Estrategia de Identidad de Marca",
-      en: "Sales Funnels & Brand Identity Strategy",
-    },
-    description: {
-      es: "Desarrollamos una identidad de marca distintiva y una plataforma web orientada al agendamiento rápido sin fricciones. Mediante dirección fotográfica profesional y un layout de embudo optimizado, transformamos la presencia digital del salón para maximizar la captación y recurrencia de clientes.",
-      en: "We developed a distinctive brand identity and a frictionless booking-oriented web platform. Through professional photographic direction and an optimized funnel layout, we transformed the salon's digital presence to maximize client acquisition and retention.",
-    },
-    previewImages: [
-      "portada-1.webp",
-      "original-1.webp",
-      "original-2.webp",
-    ],
-    images: [
-      { src: "portada-1.webp", alt: "Original — Cover", aspect: "wide" },
-      { src: "isotipo.webp", alt: "Original — Isotipo", aspect: "wide" },
-      { src: "fotos-instagram.webp", alt: "Original — Instagram", aspect: "wide" },
-      { src: "landing-page-1.webp", alt: "Original — Landing Page 1", aspect: "wide" },
-      { src: "landing-page-2.webp", alt: "Original — Landing Page 2", aspect: "wide" },
-    ],
-    participation: [
-      { icon: "bar", text: { es: "Embudos de Ventas", en: "Sales Funnels" } },
-      { icon: "star", text: { es: "Estrategia de Identidad de Marca", en: "Brand Identity Strategy" } },
-    ],
-  },
-  "mar-vic": {
-    slug: "mar-vic",
-    title: "Mar & Vic",
-    folder: "Mar-Vic",
-    subtitle: {
-      es: "Branding sofisticado y ecosistema e-commerce para diseño de interiores.",
-      en: "Sophisticated branding and e-commerce ecosystem for interior design.",
-    },
-    industry: {
-      es: "Muebles, Retail y Diseño de Interiores",
-      en: "Furniture, Retail & Interior Design",
-    },
-    role: {
-      es: "Embudos de Ventas, Estrategia de Identidad de Marca y Automatización con IA",
-      en: "Sales Funnels, Brand Identity Strategy & AI Automation",
-    },
-    description: {
-      es: "Construimos el ecosistema digital y la tienda oficial en Shopify de la marca, implementando flujos automatizados de email marketing y nutrición de clientes. Desarrollamos la identidad visual sofisticada, dirección de arte fotográfica y lineamientos de marca para ofrecer una experiencia de compra premium y memorable.",
-      en: "We built the brand's digital ecosystem and official Shopify store, implementing automated email marketing and lead nurturing flows. We developed the sophisticated visual identity, photographic art direction, and brand guidelines to deliver a premium, memorable shopping experience.",
-    },
-    previewImages: [
-      "portada-1.webp",
-      "mar-1.webp",
-      "mar-2.webp",
-    ],
-    images: [
-      { src: "portada-1.webp", alt: "Mar & Vic — Cover", aspect: "wide" },
-      { src: "logotipo.webp", alt: "Mar & Vic — Logo", aspect: "wide" },
-      { src: "isotipo.webp", alt: "Mar & Vic — Isotipo", aspect: "wide" },
-      { src: "frase-publicitaria-1.webp", alt: "Mar & Vic — Tagline 1", aspect: "wide" },
-      { src: "frase-publicitaria-2.webp", alt: "Mar & Vic — Tagline 2", aspect: "wide" },
-      { src: "fotos-publicitarias.webp", alt: "Mar & Vic — Photography", aspect: "wide" },
-    ],
-    participation: [
-      { icon: "bar", text: { es: "Embudos de Ventas", en: "Sales Funnels" } },
-      { icon: "star", text: { es: "Estrategia de Identidad de Marca", en: "Brand Identity Strategy" } },
-      { icon: "eye", text: { es: "Automatización con IA", en: "AI Automation" } },
-    ],
-  },
+
   "naabi-kanabi": {
     slug: "naabi-kanabi",
     title: "Naabi Kanabi",
@@ -241,47 +127,7 @@ export const portfolioProjects: Record<string, PortfolioProject> = {
       { icon: "eye", text: { es: "Automatización con IA", en: "AI Automation" } },
     ],
   },
-  jambu: {
-    slug: "jambu",
-    title: "Jambú",
-    folder: "Jambu",
-    subtitle: {
-      es: "Rediseño de identidad y packaging inspirado en la riqueza natural.",
-      en: "Identity and packaging redesign inspired by natural abundance.",
-    },
-    industry: {
-      es: "Alimentos y Consumo Masivo",
-      en: "Food & Consumer Goods",
-    },
-    role: {
-      es: "Estrategia de Identidad de Marca",
-      en: "Brand Identity Strategy",
-    },
-    description: {
-      es: "Diseñamos un ecosistema de marca completo y empaques con alto impacto visual ('Shelf-Impact') para el sector alimentario y de consumo masivo. Desarrollamos manuales técnicos de identidad que garantizan una coherencia absoluta entre el packaging físico y la presencia digital de la marca.",
-      en: "We designed a complete brand ecosystem and high-impact packaging ('Shelf-Impact') for the food and consumer goods sector. We developed technical identity manuals ensuring absolute consistency between physical packaging and the brand's digital presence.",
-    },
-    previewImages: [
-      "portada-1.webp",
-      "packaging.webp",
-      "mockup-del-producto.webp",
-    ],
-    images: [
-      { src: "portada-1.webp", alt: "Jambú — Cover", aspect: "wide" },
-      { src: "logo.webp", alt: "Jambú — Logo", aspect: "wide" },
-      { src: "logo-2.webp", alt: "Jambú — Logo Alt", aspect: "wide" },
-      { src: "packaging.webp", alt: "Jambú — Packaging", aspect: "wide" },
-      { src: "mockup-del-producto.webp", alt: "Jambú — Product Mockup", aspect: "wide" },
-      { src: "mockup-con-frase-publicitaria.webp", alt: "Jambú — Tagline Mockup", aspect: "wide" },
-      { src: "mockup-de-imagen-publicitaria.webp", alt: "Jambú — Advertising Mockup", aspect: "wide" },
-      { src: "mockup-totebag.webp", alt: "Jambú — Tote Bag Mockup", aspect: "wide" },
-      { src: "carteles-publcidad-de-exterior.webp", alt: "Jambú — Outdoor Posters", aspect: "wide" },
-      { src: "publicidad-exterior.webp", alt: "Jambú — Outdoor Advertising", aspect: "wide" },
-    ],
-    participation: [
-      { icon: "star", text: { es: "Estrategia de Identidad de Marca", en: "Brand Identity Strategy" } },
-    ],
-  },
+
   tularosa: {
     slug: "tularosa",
     title: "Tularosa",
@@ -321,6 +167,125 @@ export const portfolioProjects: Record<string, PortfolioProject> = {
       { icon: "star", text: { es: "Estrategia de Identidad de Marca", en: "Brand Identity Strategy" } },
     ],
   },
+
+  erpxtender: {
+    slug: "erpxtender",
+    title: "ERPXtender",
+    folder: "Erpxtender",
+    subtitle: {
+      es: "Consultoría de marca y diseño de interfaz para ERP de alto rendimiento.",
+      en: "Brand consulting and interface design for high-performance ERP.",
+    },
+    industry: {
+      es: "ERP y Automatización B2B",
+      en: "ERP & B2B Automation",
+    },
+    role: {
+      es: "Embudo de Ventas y Estrategia de Identidad de Marca",
+      en: "Sales Funnel & Brand Identity Strategy",
+    },
+    description: {
+      es: "Transformamos la identidad y estrategia visual de ERPXtender para posicionarlo como una solución ágil e innovadora en la industria corporativa. Diseñamos una interfaz web centrada en UX y producimos activos visuales de alto impacto optimizados para un embudo de ventas B2B que acelera la toma de decisiones.",
+      en: "We transformed ERPXtender's visual identity and strategy to position it as an agile, innovative solution in the corporate industry. We designed a UX-centered web interface and produced high-impact visual assets optimized for a B2B sales funnel that accelerates decision-making.",
+    },
+    previewImages: [
+      "portada-1.webp",
+      "elementos-graficos-para-web-y-redes-1.webp",
+      "publicidad-exterior.webp",
+    ],
+    images: [
+      { src: "portada-1.webp", alt: "ERPXtender — Cover", aspect: "wide" },
+      { src: "logo.webp", alt: "ERPXtender — Logo", aspect: "wide" },
+      { src: "frase-publicitaria-1.webp", alt: "ERPXtender — Tagline", aspect: "wide" },
+      { src: "elementos-graficos-para-web-y-redes-1.webp", alt: "ERPXtender — Web & Social Assets 1", aspect: "wide" },
+      { src: "elementos-graficos-para-web-y-redes-2.webp", alt: "ERPXtender — Web & Social Assets 2", aspect: "wide" },
+      { src: "elementos-graficos-para-web-y-redes-3.webp", alt: "ERPXtender — Web & Social Assets 3", aspect: "wide" },
+      { src: "publicidad-exterior.webp", alt: "ERPXtender — Outdoor Advertising", aspect: "wide" },
+    ],
+    participation: [
+      { icon: "bar", text: { es: "Embudos de Ventas", en: "Sales Funnels" } },
+      { icon: "star", text: { es: "Estrategia de Identidad de Marca", en: "Brand Identity Strategy" } },
+    ],
+  },
+
+  "mar-vic": {
+    slug: "mar-vic",
+    title: "Mar & Vic",
+    folder: "Mar-Vic",
+    subtitle: {
+      es: "Branding sofisticado y ecosistema e-commerce para diseño de interiores.",
+      en: "Sophisticated branding and e-commerce ecosystem for interior design.",
+    },
+    industry: {
+      es: "Muebles, Retail y Diseño de Interiores",
+      en: "Furniture, Retail & Interior Design",
+    },
+    role: {
+      es: "Embudos de Ventas, Estrategia de Identidad de Marca y Automatización con IA",
+      en: "Sales Funnels, Brand Identity Strategy & AI Automation",
+    },
+    description: {
+      es: "Construimos el ecosistema digital y la tienda oficial en Shopify de la marca, implementando flujos automatizados de email marketing y nutrición de clientes. Desarrollamos la identidad visual sofisticada, dirección de arte fotográfica y lineamientos de marca para ofrecer una experiencia de compra premium y memorable.",
+      en: "We built the brand's digital ecosystem and official Shopify store, implementing automated email marketing and lead nurturing flows. We developed the sophisticated visual identity, photographic art direction, and brand guidelines to deliver a premium, memorable shopping experience.",
+    },
+    previewImages: [
+      "portada-1.webp",
+      "mar-1.webp",
+      "mar-2.webp",
+    ],
+    images: [
+      { src: "portada-1.webp", alt: "Mar & Vic — Cover", aspect: "wide" },
+      { src: "logotipo.webp", alt: "Mar & Vic — Logo", aspect: "wide" },
+      { src: "isotipo.webp", alt: "Mar & Vic — Isotipo", aspect: "wide" },
+      { src: "frase-publicitaria-1.webp", alt: "Mar & Vic — Tagline 1", aspect: "wide" },
+      { src: "frase-publicitaria-2.webp", alt: "Mar & Vic — Tagline 2", aspect: "wide" },
+      { src: "fotos-publicitarias.webp", alt: "Mar & Vic — Photography", aspect: "wide" },
+    ],
+    participation: [
+      { icon: "bar", text: { es: "Embudos de Ventas", en: "Sales Funnels" } },
+      { icon: "star", text: { es: "Estrategia de Identidad de Marca", en: "Brand Identity Strategy" } },
+      { icon: "eye", text: { es: "Automatización con IA", en: "AI Automation" } },
+    ],
+  },
+
+  original: {
+    slug: "original",
+    title: "Original — Salon de Barbier",
+    folder: "Original",
+    subtitle: {
+      es: "Dirección de arte y diseño web orientado a reservas y conversión.",
+      en: "Art direction and web design oriented towards booking and conversion.",
+    },
+    industry: {
+      es: "Barbería y Cuidado Personal Masculino",
+      en: "Barbershop & Men's Grooming",
+    },
+    role: {
+      es: "Embudos de Ventas y Estrategia de Identidad de Marca",
+      en: "Sales Funnels & Brand Identity Strategy",
+    },
+    description: {
+      es: "Desarrollamos una identidad de marca distintiva y una plataforma web orientada al agendamiento rápido sin fricciones. Mediante dirección fotográfica profesional y un layout de embudo optimizado, transformamos la presencia digital del salón para maximizar la captación y recurrencia de clientes.",
+      en: "We developed a distinctive brand identity and a frictionless booking-oriented web platform. Through professional photographic direction and an optimized funnel layout, we transformed the salon's digital presence to maximize client acquisition and retention.",
+    },
+    previewImages: [
+      "portada-1.webp",
+      "original-1.webp",
+      "original-2.webp",
+    ],
+    images: [
+      { src: "portada-1.webp", alt: "Original — Cover", aspect: "wide" },
+      { src: "isotipo.webp", alt: "Original — Isotipo", aspect: "wide" },
+      { src: "fotos-instagram.webp", alt: "Original — Instagram", aspect: "wide" },
+      { src: "landing-page-1.webp", alt: "Original — Landing Page 1", aspect: "wide" },
+      { src: "landing-page-2.webp", alt: "Original — Landing Page 2", aspect: "wide" },
+    ],
+    participation: [
+      { icon: "bar", text: { es: "Embudos de Ventas", en: "Sales Funnels" } },
+      { icon: "star", text: { es: "Estrategia de Identidad de Marca", en: "Brand Identity Strategy" } },
+    ],
+  },
+
   colorfit: {
     slug: "colorfit",
     title: "Colorfit",
@@ -352,6 +317,48 @@ export const portfolioProjects: Record<string, PortfolioProject> = {
       { src: "mockup-ropa-1.webp", alt: "Colorfit — Apparel Mockup 1", aspect: "wide" },
       { src: "mockup-ropa-2.webp", alt: "Colorfit — Apparel Mockup 2", aspect: "wide" },
       { src: "mockup-tote-bag.webp", alt: "Colorfit — Tote Bag Mockup", aspect: "wide" },
+    ],
+    participation: [
+      { icon: "star", text: { es: "Estrategia de Identidad de Marca", en: "Brand Identity Strategy" } },
+    ],
+  },
+
+  jambu: {
+    slug: "jambu",
+    title: "Jambú",
+    folder: "Jambu",
+    subtitle: {
+      es: "Rediseño de identidad y packaging inspirado en la riqueza natural.",
+      en: "Identity and packaging redesign inspired by natural abundance.",
+    },
+    industry: {
+      es: "Alimentos y Consumo Masivo",
+      en: "Food & Consumer Goods",
+    },
+    role: {
+      es: "Estrategia de Identidad de Marca",
+      en: "Brand Identity Strategy",
+    },
+    description: {
+      es: "Diseñamos un ecosistema de marca completo y empaques con alto impacto visual ('Shelf-Impact') para el sector alimentario y de consumo masivo. Desarrollamos manuales técnicos de identidad que garantizan una coherencia absoluta entre el packaging físico y la presencia digital de la marca.",
+      en: "We designed a complete brand ecosystem and high-impact packaging ('Shelf-Impact') for the food and consumer goods sector. We developed technical identity manuals ensuring absolute consistency between physical packaging and the brand's digital presence.",
+    },
+    previewImages: [
+      "portada-1.webp",
+      "packaging.webp",
+      "mockup-del-producto.webp",
+    ],
+    images: [
+      { src: "portada-1.webp", alt: "Jambú — Cover", aspect: "wide" },
+      { src: "logo.webp", alt: "Jambú — Logo", aspect: "wide" },
+      { src: "logo-2.webp", alt: "Jambú — Logo Alt", aspect: "wide" },
+      { src: "packaging.webp", alt: "Jambú — Packaging", aspect: "wide" },
+      { src: "mockup-del-producto.webp", alt: "Jambú — Product Mockup", aspect: "wide" },
+      { src: "mockup-con-frase-publicitaria.webp", alt: "Jambú — Tagline Mockup", aspect: "wide" },
+      { src: "mockup-de-imagen-publicitaria.webp", alt: "Jambú — Advertising Mockup", aspect: "wide" },
+      { src: "mockup-totebag.webp", alt: "Jambú — Tote Bag Mockup", aspect: "wide" },
+      { src: "carteles-publcidad-de-exterior.webp", alt: "Jambú — Outdoor Posters", aspect: "wide" },
+      { src: "publicidad-exterior.webp", alt: "Jambú — Outdoor Advertising", aspect: "wide" },
     ],
     participation: [
       { icon: "star", text: { es: "Estrategia de Identidad de Marca", en: "Brand Identity Strategy" } },
