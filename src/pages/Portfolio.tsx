@@ -31,7 +31,7 @@ const ProjectSection = ({
       onMouseLeave={() => onHover(null)}
     >
       {/* Main Cover */}
-      <Link to={`/trabajo/${slug}`} className="block w-full mb-6 md:mb-8 overflow-hidden rounded-[2rem] md:rounded-[2.5rem] bg-neutral-100 shadow-sm transition-all hover:shadow-xl">
+      <Link to={`/trabajo/${slug}`} className="block w-full mb-6 md:mb-8 overflow-hidden rounded-[2rem] md:rounded-[2.5rem] bg-neutral-100/50 transition-all">
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -56,7 +56,7 @@ const ProjectSection = ({
             <Link
               key={idx}
               to={`/trabajo/${slug}`}
-              className="block overflow-hidden rounded-[2rem] bg-neutral-100 shadow-sm transition-all hover:shadow-lg"
+              className="block overflow-hidden rounded-[2rem] bg-neutral-100/50 transition-all"
             >
               <motion.div
                 initial={{ opacity: 0, y: 30 }}

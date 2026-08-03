@@ -26,7 +26,7 @@ const ProjectImage = ({ src, alt, index }: { src: string; alt: string; index: nu
     whileInView="visible"
     viewport={{ once: true, margin: "-80px" }}
     variants={fadeUp}
-    className="w-full overflow-hidden rounded-2xl md:rounded-3xl bg-neutral-100/60 shadow-sm"
+    className="w-full overflow-hidden rounded-2xl md:rounded-3xl bg-neutral-100/60"
   >
     <img
       src={src}
