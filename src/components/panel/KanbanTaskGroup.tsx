@@ -22,7 +22,8 @@ type Props = {
   isDark: boolean;
   accentColor: string;
   gridClass: string;
-  onFocus: () => void;
+  onFocusBoard: () => void;
+  onFocusCard: (entry: KanbanCardEntry) => void;
   onCopy: (entry: KanbanCardEntry) => void;
   copiedId: string | null;
   setNodes: (updater: (nds: Node[]) => Node[]) => void;
@@ -34,7 +35,8 @@ const KanbanTaskGroup = ({
   isDark,
   accentColor,
   gridClass,
-  onFocus,
+  onFocusBoard,
+  onFocusCard,
   onCopy,
   copiedId,
   setNodes,
@@ -73,7 +75,7 @@ const KanbanTaskGroup = ({
       <div className="flex items-center gap-2 px-1">
         <Columns3 size={13} strokeWidth={1.5} style={{ color: mutedColor }} />
         <button
-          onClick={onFocus}
+          onClick={onFocusBoard}
           className="text-[12px] font-medium truncate hover:underline text-left cursor-pointer"
           style={{ color: textColor }}
           title="Ir a la pizarra"
@@ -93,7 +95,7 @@ const KanbanTaskGroup = ({
           return (
             <div
               key={key}
-              onClick={onFocus}
+              onClick={() => onFocusCard({ colId, colTitle, card })}
               className="rounded-2xl border p-5 space-y-3 relative group/card transition-all duration-300 cursor-pointer outline-none hover:shadow-[0_10px_25px_-5px_rgba(0,0,0,0.04),0_8px_10px_-6px_rgba(0,0,0,0.04)]"
               style={{
                 backgroundColor: cardBg,

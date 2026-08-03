@@ -2870,7 +2870,51 @@ const IndexContent = () => {
                       accentColor={((g.node.data as any)?.accentColor as string) || "#4059F1"}
                       gridClass={gridClass}
                       copiedId={copiedCardId}
-                      onFocus={() => setCenter(g.node.position.x + 300, g.node.position.y + 150, { zoom: 0.9, duration: 800 })}
+                      onFocusBoard={() => setCenter(g.node.position.x + 300, g.node.position.y + 150, { zoom: 0.9, duration: 800 })}
+                      onFocusCard={(entry) => {
+                        const cardId = entry.card.id;
+                        const colId = entry.colId;
+                        const cardEl = document.querySelector(`[data-kanban-card="${cardId}"]`) as HTMLElement | null;
+
+                        if (cardEl) {
+                          cardEl.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+
+                          // Visual highlight pulse
+                          const accent = ((g.node.data as any)?.accentColor as string) || "#4059F1";
+                          cardEl.style.transition = "transform 0.35s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.35s ease";
+                          const prevBoxShadow = cardEl.style.boxShadow;
+                          const prevTransform = cardEl.style.transform;
+                          cardEl.style.boxShadow = `0 0 0 3px ${accent}, 0 0 24px 6px ${accent}66`;
+                          cardEl.style.transform = "scale(1.025)";
+                          setTimeout(() => {
+                            cardEl.style.transform = prevTransform;
+                            cardEl.style.boxShadow = prevBoxShadow;
+                          }, 1800);
+
+                          const rect = cardEl.getBoundingClientRect();
+                          if (rect.width > 0 && rect.height > 0 && reactFlowInstance?.screenToFlowPosition) {
+                            const flowPos = reactFlowInstance.screenToFlowPosition({
+                              x: rect.left + rect.width / 2,
+                              y: rect.top + rect.height / 2,
+                            });
+                            setCenter(flowPos.x, flowPos.y, { zoom: 1.25, duration: 800 });
+                            return;
+                          }
+                        }
+
+                        // Geometric coordinate calculation fallback
+                        const cols = (((g.node.data as any)?.columns ?? []) as any[]);
+                        const colIdx = cols.findIndex((c) => c.id === colId);
+                        const targetCol = colIdx >= 0 ? cols[colIdx] : null;
+                        const cardIdx = targetCol ? targetCol.cards.findIndex((k: any) => k.id === cardId) : 0;
+                        const validCol = colIdx >= 0 ? colIdx : 0;
+                        const validCard = cardIdx >= 0 ? cardIdx : 0;
+
+                        const offsetX = 16 + validCol * 252 + 120;
+                        const offsetY = 60 + 45 + validCard * 110 + 50;
+
+                        setCenter(g.node.position.x + offsetX, g.node.position.y + offsetY, { zoom: 1.25, duration: 800 });
+                      }}
                       onCopy={async (entry) => {
                         const key = `${g.node.id}:${entry.card.id}`;
                         await copyTextToClipboard(
