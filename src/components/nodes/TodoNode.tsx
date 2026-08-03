@@ -139,10 +139,10 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
   ];
   const fontSize = nodeData.fontSize ?? 14;
 
-  // Reacción dinámica en modo oscuro: si tiene fondo blanco, se pone oscuro.
-  const rawBg = nodeData.backgroundColor ?? (isDark ? "#1F2937" : "#FFFFFF");
+  // Reacción dinámica en modo oscuro: si tiene fondo blanco, se pone oscuro (#2C2C2E).
+  const rawBg = nodeData.backgroundColor ?? (isDark ? "#2C2C2E" : "#FFFFFF");
   const isWhiteBg = rawBg === "#FFFFFF" || rawBg === "white" || rawBg === "#FAFAFA" || rawBg === "#F3F4F6";
-  const backgroundColor = isDark && isWhiteBg ? "#1F2937" : rawBg;
+  const backgroundColor = isDark && isWhiteBg ? "#2C2C2E" : rawBg;
   
   const isEffectiveBgDark = backgroundColor === "transparent" ? isDark : isColorDark(backgroundColor);
 
