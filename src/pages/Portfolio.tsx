@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import LandingNavbar from "@/components/LandingNavbar";
 import LandingFooter from "@/components/LandingFooter";
 import FloatingProjectInfo from "@/components/portfolio/FloatingProjectInfo";
+import MobileProjectHint from "@/components/portfolio/MobileProjectHint";
 import PortfolioSmoothScroll from "@/components/portfolio/PortfolioSmoothScroll";
 import { portfolioProjects, PortfolioProject, Participation } from "@/data/portfolioProjects";
 import { ArrowUpRight } from "lucide-react";
@@ -148,6 +149,8 @@ export const Portfolio = () => {
           participation={hoveredParticipation || []}
           isVisible={hoveredParticipation !== null}
         />
+
+        <MobileProjectHint />
 
         <LandingNavbar isLanding={false} />
 
