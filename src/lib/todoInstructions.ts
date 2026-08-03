@@ -118,7 +118,37 @@ export function buildTasksInstructions(
   return lines.join("\n");
 }
 
+/** Una categoría del panel lateral (una Pizarra, o "Otras tareas"). */
+export type TaskCategory = {
+  /** Nombre de la categoría: nombre de la Pizarra u "Otras tareas". */
+  name: string;
+  /** Listas dentro de la categoría (tarjetas del tablero o listas sueltas). */
+  lists: TodoListLike[];
+};
+
+/**
+ * Construye instrucciones en Markdown agrupadas por categorías
+ * (Pizarras primero, "Otras tareas" al final).
+ */
+export function buildCategorizedTasksInstructions(
+  categories: TaskCategory[],
+  options: BuildOptions = {}
+): string {
+  const blocks: string[] = [];
+  for (const cat of categories) {
+    const lists = cat.lists.filter((l) => (l.tasks ?? []).length > 0);
+    if (lists.length === 0) continue;
+    const inner = lists
+      .map((l) => buildTasksInstructions(l, options))
+      .join("\n\n");
+    blocks.push(`# Categoría: ${cat.name}\n\n${inner}`);
+  }
+  if (blocks.length === 0) return "_(No hay tareas pendientes.)_";
+  return blocks.join("\n\n---\n\n");
+}
+
 /** Descarga un texto como archivo en el navegador. */
+
 export function downloadTextFile(filename: string, content: string) {
   const blob = new Blob([content], { type: "text/markdown;charset=utf-8" });
   const url = URL.createObjectURL(blob);
