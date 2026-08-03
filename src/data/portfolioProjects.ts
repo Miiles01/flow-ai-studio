@@ -106,13 +106,12 @@ export const portfolioProjects: Record<string, PortfolioProject> = {
     },
     previewImages: [
       "portada-1.webp",
-      "erp-1.webp",
+      "elementos-graficos-para-web-y-redes-1.webp",
       "publicidad-exterior.webp",
     ],
     images: [
       { src: "portada-1.webp", alt: "ERPXtender — Cover", aspect: "wide" },
       { src: "logo.webp", alt: "ERPXtender — Logo", aspect: "wide" },
-      { src: "erp-1.webp", alt: "ERPXtender — Brand", aspect: "wide" },
       { src: "frase-publicitaria-1.webp", alt: "ERPXtender — Tagline", aspect: "wide" },
       { src: "elementos-graficos-para-web-y-redes-1.webp", alt: "ERPXtender — Web & Social Assets 1", aspect: "wide" },
       { src: "elementos-graficos-para-web-y-redes-2.webp", alt: "ERPXtender — Web & Social Assets 2", aspect: "wide" },
