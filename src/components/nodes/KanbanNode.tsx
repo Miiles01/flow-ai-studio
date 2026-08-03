@@ -18,6 +18,11 @@ import {
   AlignLeft,
   Mail,
   User as UserIcon,
+  ListChecks,
+  Check,
+  ArrowUp,
+  ArrowDown,
+
 } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import NodeExtendHandles from "@/components/nodes/NodeExtendHandles";
@@ -39,6 +44,13 @@ export type KanbanTag = {
 
 export type KanbanImageRatio = "1:1" | "4:3" | "16:9";
 
+export type KanbanTaskItem = {
+  id: string;
+  text: string;
+  completed: boolean;
+  note?: string;
+};
+
 export type KanbanCard = {
   id: string;
   title: string;
@@ -49,6 +61,8 @@ export type KanbanCard = {
   image?: { url: string; ratio: KanbanImageRatio };
   assignees?: KanbanAssignee[];
   tags?: KanbanTag[];
+  /** Checklist de tareas (puede provenir de una Lista de Tareas arrastrada). */
+  tasks?: KanbanTaskItem[];
   // Legacy — kept for backwards compat
   fields?: { id: string; label: string; value: string }[];
 };
@@ -59,6 +73,11 @@ export type KanbanColumn = {
   cards: KanbanCard[];
 };
 
+/** Hint temporal de drop cuando se arrastra un todoNode encima de la pizarra. */
+export type KanbanTodoDropHint =
+  | { kind: "column"; colId: string; index: number }
+  | { kind: "card"; colId: string; cardId: string };
+
 export type KanbanNodeData = {
   title?: string;
   showTitle?: boolean;
@@ -68,7 +87,9 @@ export type KanbanNodeData = {
   textColor?: string;
   accentColor?: string;
   columns?: KanbanColumn[];
+  _todoDrop?: KanbanTodoDropHint | null;
 };
+
 
 const RAINBOW_COLORS = [
   { name: "Transparente", value: "transparent" },
@@ -175,6 +196,8 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
   const [editingCard, setEditingCard] = useState<{ colId: string; cardId: string; anchorEl: HTMLElement } | null>(null);
   const dragRef = useRef<{ cardId: string; fromCol: string } | null>(null);
   const [dropTarget, setDropTarget] = useState<{ col: string; index: number } | null>(null);
+  const todoDrop = nodeData._todoDrop ?? null;
+
   const outerRef = useRef<HTMLDivElement | null>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
   useWidgetAutoFit(id, (nodeData as any)._aiFitNonce, scrollRef, outerRef, { minHeight: 280, maxHeight: 2000 });
@@ -400,7 +423,9 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
             {columns.map((col) => (
               <div
                 key={col.id}
+                data-kanban-col={col.id}
                 className="w-[240px] shrink-0 flex flex-col h-full"
+
                 onDragOver={(e) => {
                   if (!dragRef.current) return;
                   e.preventDefault();
@@ -441,13 +466,16 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
 
                   <div className="flex flex-col gap-2 p-2 overflow-y-auto kanban-scrollbar">
                     {col.cards.map((card, idx) => (
-                      <div key={card.id}>
-                        {dropTarget?.col === col.id && dropTarget.index === idx && (
+                      <div key={card.id} data-kanban-card={card.id} data-kanban-card-col={col.id}>
+                        {((dropTarget?.col === col.id && dropTarget.index === idx) ||
+                          (todoDrop?.kind === "column" && todoDrop.colId === col.id && todoDrop.index === idx)) && (
                           <div className="h-0.5 rounded-full mb-2" style={{ backgroundColor: accentColor }} />
                         )}
                         <CardView
                           card={card}
                           colId={col.id}
+                          isTodoDropTarget={todoDrop?.kind === "card" && todoDrop.cardId === card.id}
+
                           isDark={isDark}
                           textColor={textColor}
                           accentColor={accentColor}
@@ -480,6 +508,12 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
                         />
                       </div>
                     ))}
+
+                    {todoDrop?.kind === "column" && todoDrop.colId === col.id && todoDrop.index >= col.cards.length && (
+                      <div className="h-0.5 rounded-full" style={{ backgroundColor: accentColor }} />
+                    )}
+
+
 
                     <div className="max-h-0 opacity-0 overflow-hidden transition-all duration-200 ease-in-out group-hover/col:max-h-12 group-hover/col:opacity-100 group-hover/col:mt-1">
                       <button
@@ -537,6 +571,7 @@ const CardView = ({
   borderCls,
   cardBg,
   isOpen,
+  isTodoDropTarget,
   onOpen,
   onUpdate,
   onRemove,
@@ -552,6 +587,7 @@ const CardView = ({
   borderCls: string;
   cardBg: string;
   isOpen: boolean;
+  isTodoDropTarget?: boolean;
   onOpen: (el: HTMLElement) => void;
   onUpdate: (patch: Partial<KanbanCard>) => void;
   onRemove: () => void;
@@ -562,6 +598,14 @@ const CardView = ({
   const ref = useRef<HTMLDivElement>(null);
   const ratioValue = card.image?.ratio ?? "16:9";
   const ratioCss = IMAGE_RATIOS.find((r) => r.value === ratioValue)?.aspect ?? "16 / 9";
+  const tasks = card.tasks ?? [];
+  const doneCount = tasks.filter((t) => t.completed).length;
+
+  const toggleTask = (taskId: string) => {
+    onUpdate({
+      tasks: tasks.map((t) => (t.id === taskId ? { ...t, completed: !t.completed } : t)),
+    });
+  };
 
   const openEditor = () => {
     if (!ref.current) return;
@@ -582,11 +626,18 @@ const CardView = ({
         if ((e.target as HTMLElement).closest("input,textarea,button,a,select")) return;
         openEditor();
       }}
-      className={`nodrag nopan group rounded border ${borderCls} ${cardBg} p-2.5 cursor-pointer transition-colors shadow-sm ${
-        isOpen ? "ring-2" : ""
+      className={`nodrag nopan group rounded border ${borderCls} ${cardBg} p-2.5 cursor-pointer transition-all shadow-sm ${
+        isOpen || isTodoDropTarget ? "ring-2" : ""
       }`}
-      style={isOpen ? ({ boxShadow: `0 0 0 2px ${accentColor}` } as React.CSSProperties) : undefined}
+      style={
+        isTodoDropTarget
+          ? ({ boxShadow: `0 0 0 2px ${accentColor}, 0 0 14px 2px ${accentColor}66` } as React.CSSProperties)
+          : isOpen
+            ? ({ boxShadow: `0 0 0 2px ${accentColor}` } as React.CSSProperties)
+            : undefined
+      }
     >
+
       {card.image?.url && (
         <div
           className={`rounded overflow-hidden mb-2 border ${borderCls}`}
@@ -619,6 +670,47 @@ const CardView = ({
               {card.description}
             </p>
           )}
+
+          {tasks.length > 0 && (
+            <div className="mt-2 space-y-1">
+              <div className="flex items-center gap-1.5 text-[9px] font-semibold opacity-60">
+                <ListChecks size={10} />
+                <span>
+                  {doneCount}/{tasks.length}
+                </span>
+              </div>
+              {tasks.map((t) => (
+                <div key={t.id} className="flex items-start gap-1.5">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleTask(t.id);
+                    }}
+                    className="mt-[2px] w-3.5 h-3.5 shrink-0 rounded-[4px] border flex items-center justify-center transition-colors"
+                    style={{
+                      borderColor: t.completed ? accentColor : isDark ? "rgba(255,255,255,0.25)" : "rgba(0,0,0,0.2)",
+                      backgroundColor: t.completed ? accentColor : "transparent",
+                    }}
+                    title={t.completed ? "Marcar como pendiente" : "Marcar como completada"}
+                  >
+                    {t.completed && <Check size={9} className="text-white" strokeWidth={3} />}
+                  </button>
+                  <span
+                    className="text-[10.5px] leading-snug break-words"
+                    style={{
+                      color: textColor,
+                      opacity: t.completed ? 0.45 : 0.85,
+                      textDecoration: t.completed ? "line-through" : "none",
+                    }}
+                  >
+                    {t.text || "Tarea"}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
+
+
 
           {(card.tags?.length ?? 0) > 0 && (
             <div className="flex flex-wrap gap-1 mt-1.5">
@@ -794,6 +886,25 @@ const CardEditorPopover = ({
   const removeAssignee = (aid: string) => {
     onUpdate({ assignees: (card.assignees ?? []).filter((a) => a.id !== aid) });
   };
+
+  /* Checklist */
+  const cardTasks = card.tasks ?? [];
+  const setTasks = (next: KanbanTaskItem[]) => onUpdate({ tasks: next });
+  const addTask = () => setTasks([...cardTasks, { id: uid(), text: "", completed: false }]);
+  const updateTask = (tid: string, text: string) =>
+    setTasks(cardTasks.map((t) => (t.id === tid ? { ...t, text } : t)));
+  const toggleTask = (tid: string) =>
+    setTasks(cardTasks.map((t) => (t.id === tid ? { ...t, completed: !t.completed } : t)));
+  const removeTask = (tid: string) => setTasks(cardTasks.filter((t) => t.id !== tid));
+  const moveTask = (idx: number, dir: -1 | 1) => {
+    const target = idx + dir;
+    if (target < 0 || target >= cardTasks.length) return;
+    const next = [...cardTasks];
+    [next[idx], next[target]] = [next[target], next[idx]];
+    setTasks(next);
+  };
+
+
 
   const panelCls = isDark
     ? "bg-[#1C1C1E] border border-white/10 text-white"
@@ -1089,6 +1200,74 @@ const CardEditorPopover = ({
           </button>
         </div>
       </Section>
+
+      {/* Checklist de tareas */}
+      <Section label="Tareas" icon={<ListChecks size={12} />}>
+        {cardTasks.length > 0 && (
+          <div className="space-y-1 mb-2">
+            {cardTasks.map((t, idx) => (
+              <div key={t.id} className="group/tk flex items-center gap-1.5">
+                <button
+                  onClick={() => toggleTask(t.id)}
+                  className="w-4 h-4 shrink-0 rounded-[5px] border flex items-center justify-center transition-colors"
+                  style={{
+                    borderColor: t.completed ? accentColor : isDark ? "rgba(255,255,255,0.25)" : "rgba(0,0,0,0.2)",
+                    backgroundColor: t.completed ? accentColor : "transparent",
+                  }}
+                >
+                  {t.completed && <Check size={10} className="text-white" strokeWidth={3} />}
+                </button>
+                <input
+                  value={t.text}
+                  onChange={(e) => updateTask(t.id, e.target.value)}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+                      addTask();
+                    }
+                  }}
+                  placeholder="Tarea…"
+                  className={`flex-1 min-w-0 text-[11px] px-2 py-1 rounded-md outline-none ${inputCls}`}
+                  style={{
+                    textDecoration: t.completed ? "line-through" : "none",
+                    opacity: t.completed ? 0.6 : 1,
+                  }}
+                />
+                <div className="flex items-center gap-0.5 shrink-0 opacity-0 group-hover/tk:opacity-100 transition-opacity">
+                  <button
+                    onClick={() => moveTask(idx, -1)}
+                    className="p-0.5 rounded hover:bg-black/10 dark:hover:bg-white/10 opacity-60 hover:opacity-100"
+                    title="Subir"
+                  >
+                    <ArrowUp size={10} />
+                  </button>
+                  <button
+                    onClick={() => moveTask(idx, 1)}
+                    className="p-0.5 rounded hover:bg-black/10 dark:hover:bg-white/10 opacity-60 hover:opacity-100"
+                    title="Bajar"
+                  >
+                    <ArrowDown size={10} />
+                  </button>
+                  <button
+                    onClick={() => removeTask(t.id)}
+                    className="p-0.5 rounded opacity-60 hover:opacity-100 hover:text-red-500"
+                    title="Eliminar"
+                  >
+                    <Trash2 size={10} />
+                  </button>
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+        <button
+          onClick={addTask}
+          className={`w-full text-[11px] py-1 rounded-md flex items-center justify-center gap-1 ${ghostBtn}`}
+        >
+          <Plus size={11} /> Agregar tarea
+        </button>
+      </Section>
+
         </div>
       </div>
     </>,

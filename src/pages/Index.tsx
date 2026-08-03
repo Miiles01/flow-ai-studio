@@ -46,7 +46,9 @@ import ClarifyPanel from "@/components/ClarifyPanel";
 import PlanPanel from "@/components/PlanPanel";
 import EditableEdge from "@/components/EditableEdge";
 import EmbedNode from "@/components/nodes/EmbedNode";
-import KanbanNode from "@/components/nodes/KanbanNode";
+import KanbanNode, { type KanbanTodoDropHint, type KanbanCard, type KanbanColumn } from "@/components/nodes/KanbanNode";
+import KanbanTaskGroup, { getKanbanCardsWithTasks } from "@/components/panel/KanbanTaskGroup";
+
 import ClientCardNode from "@/components/nodes/ClientCardNode";
 import CampaignsNode from "@/components/nodes/CampaignsNode";
 import IngresosNode from "@/components/nodes/IngresosNode";
@@ -1036,17 +1038,159 @@ const IndexContent = () => {
     [reactFlowInstance, nodes, setNodes, setEdges]
   );
 
+  // ── Drag & drop: Lista de Tareas (todoNode) → Pizarra (kanbanNode) ────────
+  const todoDragRef = useRef<{
+    nodeId: string;
+    el: HTMLElement | null;
+    prevPointerEvents: string;
+    hint: { kanbanId: string; hint: KanbanTodoDropHint } | null;
+  } | null>(null);
+
+  const clearTodoDropHints = useCallback(() => {
+    setNodes((nds) =>
+      nds.map((n) =>
+        n.type === "kanbanNode" && (n.data as any)?._todoDrop
+          ? { ...n, data: { ...n.data, _todoDrop: null } }
+          : n,
+      ),
+    );
+  }, [setNodes]);
+
+  const hitTestKanban = useCallback(
+    (clientX: number, clientY: number): { kanbanId: string; hint: KanbanTodoDropHint } | null => {
+      const el = document.elementFromPoint(clientX, clientY) as HTMLElement | null;
+      if (!el) return null;
+      const nodeEl = el.closest(".react-flow__node") as HTMLElement | null;
+      const kanbanId = nodeEl?.getAttribute("data-id") ?? null;
+      if (!kanbanId) return null;
+      const kanbanNode = getNodes().find((n) => n.id === kanbanId);
+      if (!kanbanNode || kanbanNode.type !== "kanbanNode") return null;
+
+      const cardEl = el.closest("[data-kanban-card]") as HTMLElement | null;
+      if (cardEl) {
+        return {
+          kanbanId,
+          hint: {
+            kind: "card",
+            colId: cardEl.getAttribute("data-kanban-card-col") ?? "",
+            cardId: cardEl.getAttribute("data-kanban-card") ?? "",
+          },
+        };
+      }
+
+      const colEl = el.closest("[data-kanban-col]") as HTMLElement | null;
+      if (colEl) {
+        const colId = colEl.getAttribute("data-kanban-col") ?? "";
+        const cardEls = Array.from(colEl.querySelectorAll("[data-kanban-card]")) as HTMLElement[];
+        let index = cardEls.length;
+        for (let i = 0; i < cardEls.length; i++) {
+          const r = cardEls[i].getBoundingClientRect();
+          if (clientY < r.top + r.height / 2) {
+            index = i;
+            break;
+          }
+        }
+        return { kanbanId, hint: { kind: "column", colId, index } };
+      }
+      return null;
+    },
+    [getNodes],
+  );
+
   // Moving a node must NEVER remove its connections — keep edges intact while dragging.
   const onNodeDragStart = useCallback(
-    (_event: any, _node: Node) => {
-      // intentionally left empty: dragging should not disconnect nodes
+    (_event: any, node: Node) => {
+      if (node.type !== "todoNode") return;
+      const el = document.querySelector(
+        `.react-flow__node[data-id="${CSS.escape(node.id)}"]`,
+      ) as HTMLElement | null;
+      const prev = el?.style.pointerEvents ?? "";
+      if (el) el.style.pointerEvents = "none";
+      todoDragRef.current = { nodeId: node.id, el, prevPointerEvents: prev, hint: null };
     },
     []
+  );
+
+  const onNodeDrag = useCallback(
+    (event: React.MouseEvent, node: Node) => {
+      if (node.type !== "todoNode" || !todoDragRef.current) return;
+      const found = hitTestKanban(event.clientX, event.clientY);
+      const prev = todoDragRef.current.hint;
+      const same =
+        JSON.stringify(prev ?? null) === JSON.stringify(found ?? null);
+      if (same) return;
+      todoDragRef.current.hint = found;
+      setNodes((nds) =>
+        nds.map((n) => {
+          if (n.type !== "kanbanNode") return n;
+          const next = found && found.kanbanId === n.id ? found.hint : null;
+          if (JSON.stringify((n.data as any)?._todoDrop ?? null) === JSON.stringify(next)) return n;
+          return { ...n, data: { ...n.data, _todoDrop: next } };
+        }),
+      );
+    },
+    [hitTestKanban, setNodes],
   );
 
   // ── Frame parent-child: attach/detach nodes on drag stop ──────────────────
   const onNodeDragStop = useCallback(
     (_: React.MouseEvent, draggedNode: Node) => {
+      // Restaurar el nodo arrastrado y aplicar drop sobre pizarra si corresponde
+      if (draggedNode.type === "todoNode" && todoDragRef.current) {
+        const { el, prevPointerEvents, hint } = todoDragRef.current;
+        if (el) el.style.pointerEvents = prevPointerEvents;
+        todoDragRef.current = null;
+
+        if (hint) {
+          const todo = getNodes().find((n) => n.id === draggedNode.id);
+          const d = (todo?.data ?? {}) as any;
+          const srcTasks: { id: string; text: string; completed: boolean; note?: string }[] = (d.tasks ?? []).map(
+            (t: any) => ({
+              id: `tk-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+              text: t.text ?? "",
+              completed: !!t.completed,
+              ...(t.note ? { note: t.note } : {}),
+            }),
+          );
+
+          setNodes((nds) =>
+            nds
+              .filter((n) => n.id !== draggedNode.id)
+              .map((n) => {
+                if (n.type !== "kanbanNode") return n;
+                if (n.id !== hint.kanbanId) {
+                  return (n.data as any)?._todoDrop ? { ...n, data: { ...n.data, _todoDrop: null } } : n;
+                }
+                const cols: any[] = ((n.data as any).columns ?? []).map((c: any) => ({ ...c, cards: [...c.cards] }));
+                const col = cols.find((c) => c.id === hint.hint.colId);
+                if (col) {
+                  if (hint.hint.kind === "card") {
+                    col.cards = col.cards.map((c: any) =>
+                      c.id === (hint.hint as any).cardId
+                        ? { ...c, tasks: [...(c.tasks ?? []), ...srcTasks] }
+                        : c,
+                    );
+                  } else {
+                    const newCard = {
+                      id: `kc-${Date.now()}-${Math.random().toString(36).slice(2, 7)}`,
+                      title: d.title || "Lista de Tareas",
+                      subtitle: d.subtitle || undefined,
+                      showSubtitle: !!d.subtitle,
+                      tasks: srcTasks,
+                    };
+                    const at = Math.min((hint.hint as any).index ?? col.cards.length, col.cards.length);
+                    col.cards = [...col.cards.slice(0, at), newCard, ...col.cards.slice(at)];
+                  }
+                }
+                return { ...n, data: { ...n.data, columns: cols, _todoDrop: null } };
+              }),
+          );
+          return;
+        }
+        clearTodoDropHints();
+      }
+
+
       // Frames don't attach to other frames
       if (draggedNode.type === "frameNode") return;
 
@@ -2291,6 +2435,8 @@ const IndexContent = () => {
            nodeTypes={nodeTypes}
           edgeTypes={edgeTypes}
           onNodeDragStart={onNodeDragStart}
+          onNodeDrag={onNodeDrag}
+
           onNodeDragStop={onNodeDragStop}
           connectionMode={ConnectionMode.Loose}
           isValidConnection={isValidConnection}
@@ -2687,7 +2833,12 @@ const IndexContent = () => {
             <div className="flex-1 overflow-y-auto px-4 pt-4 pb-24">
               {(() => {
                 const todoNodes = nodes.filter((n) => n.type === "todoNode");
-                if (todoNodes.length === 0) {
+                const kanbanGroups = nodes
+                  .filter((n) => n.type === "kanbanNode")
+                  .map((n) => ({ node: n, entries: getKanbanCardsWithTasks(n) }))
+                  .filter((g) => g.entries.length > 0);
+
+                if (todoNodes.length === 0 && kanbanGroups.length === 0) {
                   return (
                     <div className="flex flex-col items-center justify-center h-full gap-3 text-center pt-16">
                       <div className={`w-10 h-10 rounded-full flex items-center justify-center ${isDark ? 'bg-white/5' : 'bg-[#F9FAFB]'}`}>
@@ -2709,7 +2860,46 @@ const IndexContent = () => {
                   : "flex flex-col gap-3";
 
                 return (
+                  <div className="space-y-7">
+                  {kanbanGroups.map((g) => (
+                    <KanbanTaskGroup
+                      key={g.node.id}
+                      node={g.node}
+                      entries={g.entries}
+                      isDark={isDark}
+                      accentColor={((g.node.data as any)?.accentColor as string) || "#4059F1"}
+                      gridClass={gridClass}
+                      copiedId={copiedCardId}
+                      onFocus={() => setCenter(g.node.position.x + 300, g.node.position.y + 150, { zoom: 0.9, duration: 800 })}
+                      onCopy={async (entry) => {
+                        const key = `${g.node.id}:${entry.card.id}`;
+                        await copyTextToClipboard(
+                          buildTasksInstructions({
+                            title: entry.card.title || "Tarjeta",
+                            subtitle: entry.card.subtitle || "",
+                            tasks: entry.card.tasks ?? [],
+                          } as TodoListLike),
+                        );
+                        setCopiedCardId(key);
+                        setTimeout(() => setCopiedCardId((c) => (c === key ? null : c)), 1600);
+                      }}
+                      setNodes={setNodes}
+                    />
+                  ))}
+
+                  {todoNodes.length > 0 && (
+                  <section className="space-y-3">
+                    {kanbanGroups.length > 0 && (
+                      <div className="flex items-center gap-2 px-1">
+                        <ListChecks size={13} strokeWidth={1.5} className="text-[#9CA3AF]" />
+                        <span className="text-[12px] font-medium" style={{ color: isDark ? "#FFFFFF" : "#1F2937" }}>
+                          Otras tareas
+                        </span>
+                        <span className="text-[11px] font-light text-[#9CA3AF]">{todoNodes.length}</span>
+                      </div>
+                    )}
                   <div className={gridClass}>
+
                     {todoNodes.map((node) => {
                       const d = node.data as any;
                       const tasks: { id: string; text: string; completed: boolean }[] = d.tasks ?? [];
@@ -2945,26 +3135,50 @@ const IndexContent = () => {
                       );
                     })}
                   </div>
+                  </section>
+                  )}
+                  </div>
                 );
+
               })()}
             </div>
 
             {/* Footer: copy / download all tasks */}
             {(() => {
               const todoNodes = nodes.filter((n) => n.type === "todoNode");
-              if (todoNodes.length === 0) return null;
+              const kanbanGroups = nodes
+                .filter((n) => n.type === "kanbanNode")
+                .map((n) => ({ node: n, entries: getKanbanCardsWithTasks(n) }))
+                .filter((g) => g.entries.length > 0);
+              if (todoNodes.length === 0 && kanbanGroups.length === 0) return null;
 
               const buildAll = () => {
-                const blocks = todoNodes.map((n) => {
-                  const d = n.data as any;
-                  return buildTasksInstructions({
-                    title: d.title || "Lista de Tareas",
-                    subtitle: d.subtitle || "",
-                    tasks: d.tasks ?? [],
-                  } as TodoListLike);
-                });
-                return blocks.join("\n\n---\n\n");
+                const categories = [
+                  ...kanbanGroups.map((g) => ({
+                    name: ((g.node.data as any)?.title as string) || "Pizarra",
+                    lists: g.entries.map((e) => ({
+                      title: e.card.title || "Tarjeta",
+                      subtitle: e.card.subtitle || "",
+                      tasks: e.card.tasks ?? [],
+                    })) as TodoListLike[],
+                  })),
+                  ...(todoNodes.length > 0
+                    ? [{
+                        name: "Otras tareas",
+                        lists: todoNodes.map((n) => {
+                          const d = n.data as any;
+                          return {
+                            title: d.title || "Lista de Tareas",
+                            subtitle: d.subtitle || "",
+                            tasks: d.tasks ?? [],
+                          } as TodoListLike;
+                        }),
+                      }]
+                    : []),
+                ];
+                return buildCategorizedTasksInstructions(categories);
               };
+
 
               return (
                 <div className="absolute bottom-6 left-0 right-0 flex items-center justify-center z-20 pointer-events-none">
