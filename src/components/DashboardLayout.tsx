@@ -201,7 +201,7 @@ function SidebarBody() {
             onClick={() => { closeMobile(); navigate("/profile"); }}
             title="Perfil"
           >
-            <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden shadow-sm ${isDark ? "bg-white/20" : "bg-black"}`}>
+            <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden ring-2 ${isDark ? "ring-black/60" : "ring-white shadow-sm"} ${isDark ? "bg-white/20" : "bg-black"}`}>
               {avatarUrl ? (
                 <img src={avatarUrl} alt={displayName || "Usuario"} className="w-full h-full object-cover" />
               ) : (
@@ -214,7 +214,7 @@ function SidebarBody() {
             className="mx-6 mb-4 mt-3 px-2 py-2 flex items-center gap-3 cursor-pointer hover:opacity-80 transition-opacity"
             onClick={() => { closeMobile(); navigate("/profile"); }}
           >
-            <div className={`w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden shadow-sm ${isDark ? "bg-white/20" : "bg-black"}`}>
+            <div className={`w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden ring-2 ${isDark ? "ring-black/60" : "ring-white shadow-sm"} ${isDark ? "bg-white/20" : "bg-black"}`}>
               {avatarUrl ? (
                 <img src={avatarUrl} alt={displayName || "Usuario"} className="w-full h-full object-cover" />
               ) : (
