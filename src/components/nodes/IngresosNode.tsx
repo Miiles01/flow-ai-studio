@@ -19,7 +19,7 @@ import { memo, useMemo, useState, useRef } from "react";
 import { type NodeProps, NodeResizer, useReactFlow, useViewport, useNodes } from "@xyflow/react";
 import { AnimatePresence, motion } from "framer-motion";
 import {
-  Trash2, Palette, Baseline, Heading1, Heading2, DollarSign, BarChart3,
+  Trash2, Palette, Heading1, Heading2, DollarSign, BarChart3,
   TrendingUp, Calendar, RotateCcw, ArrowUpRight,
 } from "lucide-react";
 import {
@@ -39,7 +39,6 @@ export type IngresosNodeData = {
   fromMonth?: string; // "YYYY-MM"
   toMonth?: string;   // "YYYY-MM"
   backgroundColor?: string;
-  textColor?: string;
   accentColor?: string;
 };
 
@@ -54,12 +53,6 @@ const RAINBOW_COLORS = [
   { name: "Rosa", value: "#FCB5B9" },
   { name: "Blanco", value: "#FFFFFF" },
   { name: "Negro", value: "#1F2937" },
-];
-const TEXT_COLORS = [
-  { name: "Negro", value: "#111827" },
-  { name: "Gris", value: "#6B7280" },
-  { name: "Blanco", value: "#FFFFFF" },
-  { name: "Azul", value: "#2563EB" },
 ];
 
 const MONTHS_SHORT = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"];
@@ -101,6 +94,11 @@ const campaignMonthKey = (c: Campaign): string | null => {
   return null;
 };
 
+const isWhite = (c?: string) => {
+  const v = (c || "").trim().toLowerCase();
+  return v === "#ffffff" || v === "white" || v === "#fff" || v === "#fafafa" || v === "#f3f4f6";
+};
+
 const IngresosNode = ({ id, data, selected }: NodeProps) => {
   const { setNodes, getNodes } = useReactFlow();
   const { zoom } = useViewport();
@@ -110,18 +108,13 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
 
   const isSingleSelected = selected && getNodes().filter((n) => n.selected).length === 1;
 
-  const bgColor = d.backgroundColor ?? (isDark ? "#2C2C2E" : "#FFFFFF");
-  const txt = d.textColor ?? (isDark ? "#F5F5F7" : "#111827");
+  const rawFill = d.backgroundColor ?? (isDark ? "#2C2C2E" : "#FFFFFF");
+  const backgroundColor = isDark && isWhite(rawFill) ? "#2C2C2E" : rawFill;
   const accent = d.accentColor ?? "#4059F1";
-  const subtle = isDark ? "text-white/60" : "text-neutral-500";
-  const border = isDark ? "border-white/10" : "border-neutral-200";
-  const softSurface = isDark ? "border border-white/[0.08]" : "bg-white border border-neutral-200";
-  const softSurfaceStyle: React.CSSProperties = isDark ? { backgroundColor: "#1C1C1E" } : {};
-  const inputCls = isDark ? "bg-white/10 border border-white/10 text-white placeholder:text-white/40" : "bg-white border border-neutral-200 text-neutral-900 placeholder:text-neutral-400";
 
-  // Determina si el fondo del widget requiere texto blanco (igual que CampaignsNode)
+  // Determina si el fondo del widget requiere texto blanco (igual que CampaignsNode y Pizarra)
   const isBoardDark = (() => {
-    const v = (bgColor || "").trim().toLowerCase();
+    const v = (backgroundColor || "").trim().toLowerCase();
     if (!v || v === "transparent") return isDark;
     if (v === "#ef4444" || v === "#f97316" || v === "#4059f1" || v === "#2563eb" || v === "#a855f7" || v === "#1f2937" || v === "#111827" || v === "#2c2c2e" || v === "#1c1c1e" || v === "#000000" || v === "black") return true;
     if (v === "#facc15" || v === "#22c55e" || v === "#fcb5b9" || v === "#ffffff" || v === "white" || v === "#fafafa" || v === "#f3f4f6") return false;
@@ -136,8 +129,14 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
     return isDark;
   })();
 
+  const boardTextColor = isBoardDark ? "#FFFFFF" : "#111827";
+  const boardSubtleColor = isBoardDark ? "text-white/60" : "text-neutral-500";
+  const subtle = isDark ? "text-white/60" : "text-neutral-500";
+  const border = isDark ? "border-white/10" : "border-neutral-200";
+  const softSurface = isDark ? "border border-white/[0.08]" : "bg-white border border-neutral-200";
+  const softSurfaceStyle: React.CSSProperties = isDark ? { backgroundColor: "#1C1C1E" } : {};
+
   const [bgOpen, setBgOpen] = useState(false);
-  const [textOpen, setTextOpen] = useState(false);
   const [fromOpen, setFromOpen] = useState(false);
   const [toOpen, setToOpen] = useState(false);
 
@@ -263,15 +262,15 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
     <div
       className="relative w-full h-full group/handle"
       style={{
-        backgroundColor: bgColor,
-        color: txt,
+        backgroundColor,
+        color: boardTextColor,
         borderRadius: 20,
         boxShadow: selected
           ? "0 10px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.04)"
           : "0 4px 12px -1px rgba(0,0,0,0.015), 0 2px 4px -1px rgba(0,0,0,0.01)",
       }}
     >
-      <NodeResizer minWidth={640} minHeight={520} isVisible={!!selected} lineStyle={{ borderColor: accent, borderWidth: 1.5 }} handleStyle={{ backgroundColor: accent, width: 8, height: 8, borderRadius: 2, border: `2px solid ${bgColor}` }} />
+      <NodeResizer minWidth={640} minHeight={520} isVisible={!!selected} lineStyle={{ borderColor: accent, borderWidth: 1.5 }} handleStyle={{ backgroundColor: accent, width: 8, height: 8, borderRadius: 2, border: `2px solid ${backgroundColor}` }} />
       <NodeExtendHandles nodeId={id} />
       <WidgetCommentSlot nodeId={id} />
 
@@ -304,12 +303,8 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
               <ToolBtn active={!!d.showSubtitle} onClick={() => update({ showSubtitle: !d.showSubtitle })} title="Subtítulo" isDark={isDark}><Heading2 size={14} /></ToolBtn>
               <div className={`w-px h-4 mx-0.5 ${isDark ? "bg-white/10" : "bg-neutral-200"}`} />
               <div className="relative">
-                <ToolBtn onClick={() => { setBgOpen((v) => !v); setTextOpen(false); }} title="Fondo" isDark={isDark}><Palette size={14} /></ToolBtn>
+                <ToolBtn onClick={() => setBgOpen((v) => !v)} title="Fondo" isDark={isDark}><Palette size={14} /></ToolBtn>
                 {bgOpen && <PickerPopover colors={RAINBOW_COLORS} onPick={(v) => { update({ backgroundColor: v === "transparent" ? undefined : v }); setBgOpen(false); }} isDark={isDark} />}
-              </div>
-              <div className="relative">
-                <ToolBtn onClick={() => { setTextOpen((v) => !v); setBgOpen(false); }} title="Texto" isDark={isDark}><Baseline size={14} /></ToolBtn>
-                {textOpen && <PickerPopover colors={TEXT_COLORS} onPick={(v) => { update({ textColor: v }); setTextOpen(false); }} isDark={isDark} />}
               </div>
               <div className={`w-px h-4 mx-0.5 ${isDark ? "bg-white/10" : "bg-neutral-200"}`} />
               <ToolBtn onClick={remove} title="Eliminar" isDark={isDark} danger><Trash2 size={14} /></ToolBtn>
@@ -325,6 +320,7 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
           <input
             value={d.title ?? "Ingresos"}
             onChange={(e) => update({ title: e.target.value })}
+            style={{ color: boardTextColor }}
             className="nodrag w-full bg-transparent border-none outline-none text-[28px] font-bold tracking-tight mb-1"
           />
         )}
@@ -332,7 +328,7 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
           <input
             value={d.subtitle ?? "Lo que cerraste por mes y lo que está por entrar."}
             onChange={(e) => update({ subtitle: e.target.value })}
-            className={`nodrag w-full bg-transparent border-none outline-none text-[13.5px] mb-5 ${subtle}`}
+            className={`nodrag w-full bg-transparent border-none outline-none text-[13.5px] mb-5 ${boardSubtleColor}`}
           />
         )}
         {d.showTitle === false && d.showSubtitle !== true && <div className="h-2" />}
@@ -340,21 +336,21 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
         {/* Date range */}
         <div className="flex items-end gap-3 mb-6 nodrag">
           <div>
-            <div className={`text-[11px] mb-1.5 ${subtle}`}>Desde</div>
+            <div className={`text-[11px] mb-1.5 ${boardSubtleColor}`}>Desde</div>
             <div className="relative">
-              <button onClick={() => { setFromOpen((v) => !v); setToOpen(false); }} className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-[13px] font-medium ${softSurface} hover:opacity-90`}>
+              <button onClick={() => { setFromOpen((v) => !v); setToOpen(false); }} className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-[13px] font-medium ${softSurface} hover:opacity-90`} style={softSurfaceStyle}>
                 <Calendar size={13} className="opacity-60" />
-                {keyLabel(d.fromMonth)}
+                <span style={{ color: isDark ? "#FFFFFF" : "#111827" }}>{keyLabel(d.fromMonth)}</span>
               </button>
               {fromOpen && <MonthPicker value={d.fromMonth} onPick={(v) => { update({ fromMonth: v }); setFromOpen(false); }} isDark={isDark} />}
             </div>
           </div>
           <div>
-            <div className={`text-[11px] mb-1.5 ${subtle}`}>Hasta</div>
+            <div className={`text-[11px] mb-1.5 ${boardSubtleColor}`}>Hasta</div>
             <div className="relative">
-              <button onClick={() => { setToOpen((v) => !v); setFromOpen(false); }} className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-[13px] font-medium ${softSurface} hover:opacity-90`}>
+              <button onClick={() => { setToOpen((v) => !v); setFromOpen(false); }} className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-[13px] font-medium ${softSurface} hover:opacity-90`} style={softSurfaceStyle}>
                 <Calendar size={13} className="opacity-60" />
-                {keyLabel(d.toMonth)}
+                <span style={{ color: isDark ? "#FFFFFF" : "#111827" }}>{keyLabel(d.toMonth)}</span>
               </button>
               {toOpen && <MonthPicker value={d.toMonth} onPick={(v) => { update({ toMonth: v }); setToOpen(false); }} isDark={isDark} />}
             </div>
@@ -362,7 +358,8 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
           {(d.fromMonth || d.toMonth) && (
             <button
               onClick={() => update({ fromMonth: undefined, toMonth: undefined })}
-              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-[12px] font-medium ${subtle} hover:opacity-80 ${softSurface}`}
+              className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-[12px] font-medium ${isBoardDark ? "text-white/80 hover:text-white" : "text-neutral-600 hover:text-neutral-900"} hover:opacity-80 ${softSurface}`}
+              style={softSurfaceStyle}
             >
               <RotateCcw size={12} /> Resetear
             </button>
@@ -451,8 +448,8 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
         {/* Pending list */}
         <div className={`rounded-2xl p-5 ${softSurface}`} style={softSurfaceStyle}>
           <div className="flex items-baseline justify-between mb-4">
-            <div className="text-[15px] font-semibold">Por cobrar</div>
-            <div className={`text-[12px] ${subtle}`}><span className="font-semibold" style={{ color: txt }}>{fmtMoney(stats.pending)}</span> pendiente</div>
+            <div className="text-[15px] font-semibold" style={{ color: isDark ? "#FFFFFF" : "#111827" }}>Por cobrar</div>
+            <div className={`text-[12px] ${subtle}`}><span className="font-semibold" style={{ color: isDark ? "#FFFFFF" : "#111827" }}>{fmtMoney(stats.pending)}</span> pendiente</div>
           </div>
           {stats.grouped.size === 0 ? (
             <div className={`text-[12.5px] ${subtle} py-6 text-center`}>Sin pendientes 🎉</div>
