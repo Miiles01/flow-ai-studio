@@ -46,3 +46,16 @@ Cuando se espere que un área de texto o un contenedor de AI (prompt bars, panel
 ## 8. Espaciado Dinámico Inicial en Carruseles
 En componentes tipo carrusel (scroll horizontal) que requieren alinear su primer elemento con los márgenes del resto de la página:
 - Usa un bloque "espaciador" (ej. un `div` con `w-4 md:w-8 lg:w-32` y `shrink-0`) al inicio del contenedor en lugar de aplicar padding directo al contenedor con scroll. Esto garantiza que durante el desplazamiento libre, los elementos fluyan hasta el borde de la pantalla sin cortes antinaturales, manteniendo el margen inicial intacto cuando se vuelve al principio.
+
+## 9. Ámbito de Color y Contraste en Widgets de Canvas (Tableros)
+- **Delimitar el color del widget al encabezado exterior:** El color de texto derivado del fondo del widget (`boardTextColor` / `isBoardDark`) debe aplicarse **únicamente** a los títulos, subtítulos, rangos de fechas y controles externos del widget.
+- **Tarjetas interiores gobernadas por el tema (`isDark`):** Las sub-tarjetas internas (KPIs, gráficas, listas de pendientes) deben mantener fondos y textos independientes según `isDark` (ej. fondo blanco con texto oscuro en modo claro, fondo `#1C1C1E` con texto blanco en modo oscuro), evitando que fondos personalizados del widget vuelvan invisible el texto interno.
+- **Subtítulos y Descripciones nítidas:** Evitar el uso de `opacity-70` o `opacity-75` fijo sobre texto claro en fondos oscuros. Usar `text-white/90` o `color: #FFFFFF` y asegurar placeholders proporcionales (`placeholder:text-white/45` en oscuro y `placeholder:text-black/35` en claro).
+
+## 10. Gráficos Donut / Recharts en Modo Oscuro
+- **Eliminar bordes blancos por defecto:** Por defecto, Recharts aplica `stroke="#fff"` a los arcos de `<Pie>` y `<Cell>`. En modo oscuro, siempre pasar explícitamente `stroke={isDark ? "#1C1C1E" : "#FFFFFF"}` tanto a `<Pie>` como a `<Cell>` para que las separaciones coincidan con el color de la superficie de la tarjeta.
+- **Contraste en Tooltips:** En `<RTooltip />`, configurar explícitamente `itemStyle={{ color: isDark ? "#FFFFFF" : "#111827" }}` y `labelStyle={{ color: isDark ? "#FFFFFF" : "#111827" }}` además de `contentStyle`, ya que Recharts aplica texto gris oscuro `#333` por defecto si no se especifican.
+
+## 11. Ámbito de Variables en Subcomponentes Hijos
+- Al renderizar subcomponentes o tarjetas hijas (ej. `KanbanCard`, `CampaignCard`), nunca referenciar variables computadas del nodo contenedor padre (como `isEffectiveBgDark` o `boardTextColor`) si no forman parte de sus props explícitas. Usar siempre las props locales del componente (`isDark`, `textColor`) para evitar `ReferenceError` en tiempo de ejecución.
+
