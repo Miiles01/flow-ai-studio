@@ -29,9 +29,9 @@ const LandingFooter = () => {
             <div className="space-y-6">
               <h4 className="text-[10px] font-normal text-gray-400 tracking-widest">{t("footer.social")}</h4>
               <div className="flex flex-col gap-4 text-sm font-light text-black">
-                <a href="https://instagram.com/wearemiiles" target="_blank" rel="noopener noreferrer" className="hover:opacity-50 transition-opacity">Instagram</a>
-                <a href="https://tiktok.com/@wearemiiles" target="_blank" rel="noopener noreferrer" className="hover:opacity-50 transition-opacity">Tiktok</a>
-                <a href="https://youtube.com" target="_blank" rel="noopener noreferrer" className="hover:opacity-50 transition-opacity">Youtube</a>
+                <a href="https://www.instagram.com/miiles.studio/" target="_blank" rel="noopener noreferrer" className="hover:opacity-50 transition-opacity">Instagram</a>
+                <a href="https://www.tiktok.com/@miiles.studio" target="_blank" rel="noopener noreferrer" className="hover:opacity-50 transition-opacity">Tiktok</a>
+                <a href="https://www.youtube.com/@MiilesAI/shorts" target="_blank" rel="noopener noreferrer" className="hover:opacity-50 transition-opacity">Youtube</a>
               </div>
             </div>
           </div>

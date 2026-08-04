@@ -48,9 +48,9 @@ const LandingNavbar = ({ onMenuAction, cta, isLanding }: LandingNavbarProps) => 
   ];
 
   const socialLinks = [
-    { label: "Instagram", href: "https://instagram.com/wearemiiles" },
-    { label: "Tiktok", href: "https://tiktok.com/@wearemiiles" },
-    { label: "Youtube", href: "https://youtube.com" },
+    { label: "Instagram", href: "https://www.instagram.com/miiles.studio/" },
+    { label: "Tiktok", href: "https://www.tiktok.com/@miiles.studio" },
+    { label: "Youtube", href: "https://www.youtube.com/@MiilesAI/shorts" },
   ];
 
   const handleLinkClick = (href: string) => {
