@@ -428,7 +428,9 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
               <input
                 value={title}
                 onChange={(e) => update({ title: e.target.value })}
-                className="nodrag nopan bg-transparent border-none outline-none text-[16px] font-semibold w-full"
+                className={`nodrag nopan bg-transparent border-none outline-none text-[16px] font-semibold w-full ${
+                  isBoardDark ? "placeholder:text-white/45" : "placeholder:text-black/35"
+                }`}
                 style={{ color: boardTextColor }}
                 placeholder="Título"
               />
@@ -437,7 +439,9 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
               <input
                 value={subtitle}
                 onChange={(e) => update({ subtitle: e.target.value })}
-                className="nodrag nopan bg-transparent border-none outline-none text-[12px] font-light w-full mt-0.5 opacity-75"
+                className={`nodrag nopan bg-transparent border-none outline-none text-[12px] font-normal w-full mt-0.5 ${
+                  isBoardDark ? "placeholder:text-white/45 text-white/90" : "placeholder:text-black/35 text-neutral-700"
+                }`}
                 style={{ color: boardTextColor }}
                 placeholder="Subtítulo"
               />
