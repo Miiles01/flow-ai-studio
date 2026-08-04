@@ -51,7 +51,7 @@ export type ClientCardNodeData = {
 };
 
 const RAINBOW_COLORS = [
-  { name: "Blanco", value: "#FFFFFF" },
+  { name: "Transparente", value: "transparent" },
   { name: "Rojo", value: "#EF4444" },
   { name: "Naranja", value: "#F97316" },
   { name: "Amarillo", value: "#FACC15" },
@@ -59,6 +59,7 @@ const RAINBOW_COLORS = [
   { name: "Azul", value: "#4059F1" },
   { name: "Morado", value: "#A855F7" },
   { name: "Rosa", value: "#FCB5B9" },
+  { name: "Blanco", value: "#FFFFFF" },
   { name: "Negro", value: "#1F2937" },
 ];
 
