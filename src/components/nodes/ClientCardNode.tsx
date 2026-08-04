@@ -211,10 +211,10 @@ const ClientCardNode = ({ id, data, selected }: NodeProps) => {
               value={d.role ?? ""}
               onChange={(e) => update({ role: e.target.value })}
               placeholder="Cargo / empresa"
-              className={`nodrag nopan w-full bg-transparent border-none outline-none text-[11px] font-light mt-0.5 opacity-70 ${
-                isEffectiveBgDark ? "placeholder:text-white/35" : "placeholder:text-neutral-400"
+              className={`nodrag nopan w-full bg-transparent border-none outline-none text-[11px] font-normal mt-0.5 ${
+                isEffectiveBgDark ? "placeholder:text-white/50 text-white/90" : "placeholder:text-neutral-400 text-neutral-600"
               }`}
-              style={{ color: cardTextColor }}
+              style={{ color: isEffectiveBgDark ? "#FFFFFF" : cardTextColor }}
             />
           </div>
         </div>
@@ -236,7 +236,12 @@ const ClientCardNode = ({ id, data, selected }: NodeProps) => {
           )}
 
           {d.description && (
-            <p className="text-[11.5px] opacity-75 whitespace-pre-wrap break-words leading-snug" style={{ color: cardTextColor }}>
+            <p
+              className={`text-[11.5px] whitespace-pre-wrap break-words leading-snug ${
+                isEffectiveBgDark ? "text-white" : "text-neutral-700"
+              }`}
+              style={{ color: isEffectiveBgDark ? "#FFFFFF" : cardTextColor }}
+            >
               {d.description}
             </p>
           )}
@@ -244,14 +249,14 @@ const ClientCardNode = ({ id, data, selected }: NodeProps) => {
           {(d.email || d.phone || d.website) && (
             <div className="space-y-1 pt-1">
               {d.email && (
-                <div className="flex items-center gap-1.5 text-[11px] opacity-80" style={{ color: cardTextColor }}>
-                  <Mail size={11} className="opacity-60 shrink-0" />
+                <div className={`flex items-center gap-1.5 text-[11px] ${isEffectiveBgDark ? "text-white" : "opacity-80"}`} style={{ color: isEffectiveBgDark ? "#FFFFFF" : cardTextColor }}>
+                  <Mail size={11} className={`${isEffectiveBgDark ? "text-white/70" : "opacity-60"} shrink-0`} />
                   <span className="truncate">{d.email}</span>
                 </div>
               )}
               {d.phone && (
-                <div className="flex items-center gap-1.5 text-[11px] opacity-80" style={{ color: cardTextColor }}>
-                  <Phone size={11} className="opacity-60 shrink-0" />
+                <div className={`flex items-center gap-1.5 text-[11px] ${isEffectiveBgDark ? "text-white" : "opacity-80"}`} style={{ color: isEffectiveBgDark ? "#FFFFFF" : cardTextColor }}>
+                  <Phone size={11} className={`${isEffectiveBgDark ? "text-white/70" : "opacity-60"} shrink-0`} />
                   <span className="truncate">{d.phone}</span>
                 </div>
               )}
@@ -276,7 +281,7 @@ const ClientCardNode = ({ id, data, selected }: NodeProps) => {
               {d.fields!.map((f) => (
                 <div key={f.id} className="flex items-baseline justify-between gap-2 text-[11px]">
                   <span className={`${subtleText} shrink-0`}>{f.label}</span>
-                  <span className="font-medium truncate text-right" style={{ color: cardTextColor }}>{f.value}</span>
+                  <span className="font-medium truncate text-right" style={{ color: isEffectiveBgDark ? "#FFFFFF" : cardTextColor }}>{f.value}</span>
                 </div>
               ))}
             </div>

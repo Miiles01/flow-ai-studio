@@ -418,10 +418,35 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
                 <div className="h-[150px] nodrag nopan">
                   <ResponsiveContainer width="100%" height="100%">
                     <PieChart>
-                      <Pie data={stats.brands} dataKey="value" nameKey="name" innerRadius={44} outerRadius={64} paddingAngle={2}>
-                        {stats.brands.map((_, i) => (<Cell key={i} fill={donutColors[i % donutColors.length]} />))}
+                      <Pie
+                        data={stats.brands}
+                        dataKey="value"
+                        nameKey="name"
+                        innerRadius={44}
+                        outerRadius={64}
+                        paddingAngle={2}
+                        stroke={isDark ? "#1C1C1E" : "#FFFFFF"}
+                      >
+                        {stats.brands.map((_, i) => (
+                          <Cell
+                            key={i}
+                            fill={donutColors[i % donutColors.length]}
+                            stroke={isDark ? "#1C1C1E" : "#FFFFFF"}
+                          />
+                        ))}
                       </Pie>
-                      <RTooltip formatter={(v: number) => fmtMoney(v)} contentStyle={{ background: isDark ? "#1C1C1E" : "#fff", border: `1px solid ${isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.08)"}`, borderRadius: 12, fontSize: 12, color: isDark ? "#fff" : "#111827" }} />
+                      <RTooltip
+                        formatter={(v: number) => fmtMoney(v)}
+                        contentStyle={{
+                          background: isDark ? "#1C1C1E" : "#fff",
+                          border: `1px solid ${isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.08)"}`,
+                          borderRadius: 12,
+                          fontSize: 12,
+                          color: isDark ? "#fff" : "#111827",
+                        }}
+                        itemStyle={{ color: isDark ? "#FFFFFF" : "#111827" }}
+                        labelStyle={{ color: isDark ? "#FFFFFF" : "#111827" }}
+                      />
                     </PieChart>
                   </ResponsiveContainer>
                 </div>
