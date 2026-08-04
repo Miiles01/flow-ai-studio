@@ -710,8 +710,8 @@ const CardView = ({
           </div>
           {(card.showSubtitle || card.subtitle) && (
             <div
-              className={`nodrag nopan w-full text-[11px] mt-1 whitespace-pre-wrap break-words leading-tight ${isEffectiveBgDark ? "text-white/85" : "text-neutral-600"}`}
-              style={{ color: isEffectiveBgDark ? "#FFFFFF" : textColor }}
+              className={`nodrag nopan w-full text-[11px] mt-1 whitespace-pre-wrap break-words leading-tight ${isDark ? "text-white/85" : "text-neutral-600"}`}
+              style={{ color: textColor }}
             >
               {card.subtitle || "Subtítulo"}
             </div>
@@ -719,8 +719,8 @@ const CardView = ({
 
           {card.description && (
             <p
-              className={`text-[11px] mt-1.5 whitespace-pre-wrap break-words leading-snug ${isEffectiveBgDark ? "text-white/90" : "text-neutral-700"}`}
-              style={{ color: isEffectiveBgDark ? "#FFFFFF" : textColor }}
+              className={`text-[11px] mt-1.5 whitespace-pre-wrap break-words leading-snug ${isDark ? "text-white/90" : "text-neutral-700"}`}
+              style={{ color: textColor }}
             >
               {card.description}
             </p>
