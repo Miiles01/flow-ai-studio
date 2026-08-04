@@ -133,8 +133,8 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
   const boardSubtleColor = isBoardDark ? "text-white/60" : "text-neutral-500";
   const subtle = isDark ? "text-white/60" : "text-neutral-500";
   const border = isDark ? "border-white/10" : "border-neutral-200";
-  const softSurface = isDark ? "border border-white/[0.08]" : "bg-white border border-neutral-200";
-  const softSurfaceStyle: React.CSSProperties = isDark ? { backgroundColor: "#1C1C1E" } : {};
+  const softSurface = isDark ? "border border-white/[0.08] text-white" : "bg-white border border-neutral-200 text-neutral-900";
+  const softSurfaceStyle: React.CSSProperties = isDark ? { backgroundColor: "#1C1C1E", color: "#FFFFFF" } : { backgroundColor: "#FFFFFF", color: "#111827" };
 
   const [bgOpen, setBgOpen] = useState(false);
   const [fromOpen, setFromOpen] = useState(false);
@@ -263,7 +263,6 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
       className="relative w-full h-full group/handle"
       style={{
         backgroundColor,
-        color: boardTextColor,
         borderRadius: 20,
         boxShadow: selected
           ? "0 10px 25px -5px rgba(0, 0, 0, 0.04), 0 8px 10px -6px rgba(0, 0, 0, 0.04)"
@@ -392,7 +391,7 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
         {/* Charts row */}
         <div className="grid grid-cols-[1.6fr_1fr] gap-4 mb-4">
           <div className={`rounded-2xl p-5 ${softSurface}`} style={softSurfaceStyle}>
-            <div className="text-[13.5px] font-semibold mb-3">Total cerrado por mes</div>
+            <div className={`text-[13.5px] font-semibold mb-3 ${isDark ? "text-white" : "text-neutral-900"}`}>Total cerrado por mes</div>
             <div className="h-[220px] nodrag nopan">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={stats.chartData} margin={{ top: 8, right: 8, left: -12, bottom: 0 }}>
@@ -401,7 +400,7 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
                   <YAxis tick={{ fill: isDark ? "#9CA3AF" : "#6B7280", fontSize: 11 }} axisLine={false} tickLine={false} width={44} />
                   <RTooltip
                     cursor={{ fill: isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.04)" }}
-                    contentStyle={{ background: isDark ? "#1C1C1E" : "#fff", border: `1px solid ${isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.08)"}`, borderRadius: 12, fontSize: 12 }}
+                    contentStyle={{ background: isDark ? "#1C1C1E" : "#fff", border: `1px solid ${isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.08)"}`, borderRadius: 12, fontSize: 12, color: isDark ? "#fff" : "#111827" }}
                     formatter={(v: number) => [fmtMoney(v), "Cerrado"]}
                   />
                   <Bar dataKey="value" fill={accent} radius={[6, 6, 0, 0]} />
@@ -411,9 +410,9 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
           </div>
 
           <div className={`rounded-2xl p-5 ${softSurface}`} style={softSurfaceStyle}>
-            <div className="text-[13.5px] font-semibold mb-3">Top marcas</div>
+            <div className={`text-[13.5px] font-semibold mb-3 ${isDark ? "text-white" : "text-neutral-900"}`}>Top marcas</div>
             {stats.brands.length === 0 ? (
-              <div className={`text-[12px] ${subtle} py-8 text-center`}>Aún no hay marcas.</div>
+              <div className={`text-[12px] ${isDark ? "text-white/60" : "text-neutral-500"} py-8 text-center`}>Aún no hay marcas.</div>
             ) : (
               <>
                 <div className="h-[150px] nodrag nopan">
@@ -422,7 +421,7 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
                       <Pie data={stats.brands} dataKey="value" nameKey="name" innerRadius={44} outerRadius={64} paddingAngle={2}>
                         {stats.brands.map((_, i) => (<Cell key={i} fill={donutColors[i % donutColors.length]} />))}
                       </Pie>
-                      <RTooltip formatter={(v: number) => fmtMoney(v)} contentStyle={{ background: isDark ? "#1C1C1E" : "#fff", border: `1px solid ${isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.08)"}`, borderRadius: 12, fontSize: 12 }} />
+                      <RTooltip formatter={(v: number) => fmtMoney(v)} contentStyle={{ background: isDark ? "#1C1C1E" : "#fff", border: `1px solid ${isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.08)"}`, borderRadius: 12, fontSize: 12, color: isDark ? "#fff" : "#111827" }} />
                     </PieChart>
                   </ResponsiveContainer>
                 </div>
@@ -433,9 +432,9 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
                       <div key={b.name} className="flex items-center justify-between text-[12px]">
                         <div className="flex items-center gap-2 min-w-0">
                           <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: donutColors[i % donutColors.length] }} />
-                          <span className="truncate">{b.name}</span>
+                          <span className={`truncate ${isDark ? "text-white" : "text-neutral-900"}`}>{b.name}</span>
                         </div>
-                        <span className={`${subtle} tabular-nums`}>{pct}%</span>
+                        <span className={`${isDark ? "text-white/60" : "text-neutral-500"} tabular-nums`}>{pct}%</span>
                       </div>
                     );
                   })}
@@ -448,11 +447,11 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
         {/* Pending list */}
         <div className={`rounded-2xl p-5 ${softSurface}`} style={softSurfaceStyle}>
           <div className="flex items-baseline justify-between mb-4">
-            <div className="text-[15px] font-semibold" style={{ color: isDark ? "#FFFFFF" : "#111827" }}>Por cobrar</div>
-            <div className={`text-[12px] ${subtle}`}><span className="font-semibold" style={{ color: isDark ? "#FFFFFF" : "#111827" }}>{fmtMoney(stats.pending)}</span> pendiente</div>
+            <div className={`text-[15px] font-semibold ${isDark ? "text-white" : "text-neutral-900"}`}>Por cobrar</div>
+            <div className={`text-[12px] ${isDark ? "text-white/60" : "text-neutral-500"}`}><span className={`font-semibold ${isDark ? "text-white" : "text-neutral-900"}`}>{fmtMoney(stats.pending)}</span> pendiente</div>
           </div>
           {stats.grouped.size === 0 ? (
-            <div className={`text-[12.5px] ${subtle} py-6 text-center`}>Sin pendientes 🎉</div>
+            <div className={`text-[12.5px] ${isDark ? "text-white/60" : "text-neutral-500"} py-6 text-center`}>Sin pendientes 🎉</div>
           ) : (
             <div className="space-y-4">
               {Array.from(stats.grouped.entries()).map(([label, arr]) => {
@@ -460,22 +459,21 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
                 return (
                   <div key={label}>
                     <div className="flex items-center justify-between mb-2">
-                      <div className="text-[12.5px] font-semibold capitalize">{label}</div>
-                      <div className={`text-[12px] ${subtle}`}>{fmtMoney(groupTotal)}</div>
+                      <div className={`text-[12.5px] font-semibold capitalize ${isDark ? "text-white" : "text-neutral-900"}`}>{label}</div>
+                      <div className={`text-[12px] ${isDark ? "text-white/60" : "text-neutral-500"}`}>{fmtMoney(groupTotal)}</div>
                     </div>
                     <div className="space-y-1.5">
                       {arr.map((c) => (
-                        <div key={c.id} className={`nodrag flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl transition-colors ${isDark ? "hover:brightness-110" : "bg-neutral-50 hover:bg-neutral-100"}`} style={isDark ? { backgroundColor: "#252528" } : {}}>
+                        <div key={c.id} className={`nodrag flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl transition-colors ${isDark ? "hover:brightness-110" : "bg-neutral-50 hover:bg-neutral-100"}`} style={isDark ? { backgroundColor: "#252528", color: "#FFFFFF" } : { backgroundColor: "#F9FAFB", color: "#111827" }}>
                           <div className="flex items-center gap-1.5 min-w-0">
-                            <span className="text-[13px] font-medium truncate">{c.brand || "Sin nombre"}</span>
+                            <span className={`text-[13px] font-medium truncate ${isDark ? "text-white" : "text-neutral-900"}`}>{c.brand || "Sin nombre"}</span>
                             <ArrowUpRight size={12} className="opacity-40 shrink-0" />
                           </div>
                           <div className="flex items-center gap-3 shrink-0">
-                            <span className="text-[13px] font-semibold tabular-nums">{fmtMoney(c.amount)}</span>
+                            <span className={`text-[13px] font-semibold tabular-nums ${isDark ? "text-white" : "text-neutral-900"}`}>{fmtMoney(c.amount)}</span>
                             <button
                               onClick={() => togglePaid(c.id)}
-                              className="text-[11px] font-semibold px-2.5 py-1 rounded-full border transition-colors"
-                              style={{ borderColor: isDark ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.1)", color: isDark ? "#E5E7EB" : "#374151" }}
+                              className={`text-[11px] font-semibold px-2.5 py-1 rounded-full border transition-colors ${isDark ? "border-white/15 text-[#E5E7EB] hover:bg-white/10" : "border-neutral-200 text-neutral-700 bg-white hover:bg-neutral-100"}`}
                             >
                               Cobrado
                             </button>
@@ -491,7 +489,7 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
         </div>
 
         {allCampaigns.length === 0 && (
-          <div className={`mt-4 rounded-xl p-4 text-[12.5px] text-center ${subtle} ${softSurface}`} style={softSurfaceStyle}>
+          <div className={`mt-4 rounded-xl p-4 text-[12.5px] text-center ${isDark ? "border border-white/[0.08] text-white/60" : "bg-white border border-neutral-200 text-neutral-600"}`} style={softSurfaceStyle}>
             Añade el widget <span className="font-semibold">Campañas</span> y crea colaboraciones para ver aquí tus ingresos.
           </div>
         )}
@@ -507,9 +505,9 @@ const ToolBtn = ({ onClick, children, title, isDark, active, danger }: { onClick
     className={`p-1.5 rounded-lg transition-colors ${
       danger
         ? isDark ? "hover:bg-red-500/20 text-white/70 hover:text-red-400" : "hover:bg-red-50 text-neutral-500 hover:text-red-500"
-        : active
-          ? isDark ? "bg-white/15 text-white" : "bg-neutral-900 text-white"
-          : isDark ? "hover:bg-white/10 text-white/70" : "hover:bg-neutral-100 text-neutral-600"
+      : active
+        ? isDark ? "bg-white/15 text-white" : "bg-neutral-900 text-white"
+        : isDark ? "hover:bg-white/10 text-white/70" : "hover:bg-neutral-100 text-neutral-600"
     }`}
   >
     {children}
@@ -518,12 +516,12 @@ const ToolBtn = ({ onClick, children, title, isDark, active, danger }: { onClick
 
 const KpiCard = ({ isDark, icon, accent, label, value, sub }: { isDark: boolean; icon: React.ReactNode; accent: string; label: string; value: string; sub?: string }) => (
   <div
-    className={`rounded-2xl p-4 ${isDark ? "border border-white/[0.08]" : "bg-white border border-neutral-200"}`}
-    style={isDark ? { backgroundColor: "#1C1C1E" } : {}}
+    className={`rounded-2xl p-4 ${isDark ? "border border-white/[0.08] text-white" : "bg-white border border-neutral-200 text-neutral-900"}`}
+    style={isDark ? { backgroundColor: "#1C1C1E", color: "#FFFFFF" } : { backgroundColor: "#FFFFFF", color: "#111827" }}
   >
     <div className="w-8 h-8 rounded-lg flex items-center justify-center mb-3" style={{ backgroundColor: `${accent}18`, color: accent }}>{icon}</div>
     <div className={`text-[11.5px] mb-1 ${isDark ? "text-white/60" : "text-neutral-500"}`}>{label}</div>
-    <div className="text-[24px] font-bold tracking-tight leading-tight">{value}</div>
+    <div className={`text-[24px] font-bold tracking-tight leading-tight ${isDark ? "text-white" : "text-neutral-900"}`}>{value}</div>
     {sub && <div className={`text-[11px] mt-1 ${isDark ? "text-white/40" : "text-neutral-400"}`}>{sub}</div>}
   </div>
 );
