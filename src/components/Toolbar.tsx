@@ -179,9 +179,43 @@ const Toolbar = ({
         </TooltipContent>
       </Tooltip>
 
-      <div className={`w-6 h-[1px] my-1 ${isDark ? 'bg-white/10' : 'bg-[#E5E7EB]'}`} />
+      <motion.div layout className={`w-6 h-[1px] my-1 ${isDark ? 'bg-white/10' : 'bg-[#E5E7EB]'}`} />
 
+      {/* Botón Plus (estado colapsado) */}
+      <AnimatePresence initial={false}>
+        {!expanded && (
+          <motion.button
+            key="plus"
+            layout
+            initial={{ opacity: 0, scale: 0.7 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.7 }}
+            transition={spring}
+            onClick={() => setActiveDrawShape(selectedShape)}
+            className={`w-10 h-10 flex items-center justify-center rounded-full transition-colors ${
+              isDark ? "hover:bg-white/10 text-gray-400 hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
+            }`}
+            aria-label="Más herramientas"
+          >
+            <Plus size={18} strokeWidth={1.5} />
+          </motion.button>
+        )}
+      </AnimatePresence>
+
+      {/* Herramientas de creación (estado expandido) */}
+      <AnimatePresence initial={false}>
+        {expanded && (
+          <motion.div
+            key="tools"
+            layout
+            initial={{ opacity: 0, scaleY: 0.85 }}
+            animate={{ opacity: 1, scaleY: 1 }}
+            exit={{ opacity: 0, scaleY: 0.85 }}
+            transition={spring}
+            className="flex flex-col items-center gap-1.5 origin-top"
+          >
       {/* Formas con flyout */}
+
       <div className="relative flex items-center" onMouseEnter={openFlyout} onMouseLeave={closeFlyout}>
         <Tooltip open={flyoutOpen ? false : undefined}>
           <TooltipTrigger asChild>
