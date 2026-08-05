@@ -69,11 +69,12 @@ const SHAPES = [
   },
 ];
 
-const springTransition = {
+/* Física de resorte orgánica con estiramiento elástico (overshoot natural estilo iOS/Figma) */
+const elasticSpring = {
   type: "spring" as const,
-  stiffness: 380,
-  damping: 28,
-  mass: 0.6,
+  stiffness: 350,
+  damping: 22,
+  mass: 0.55,
 };
 
 const Toolbar = ({
@@ -86,9 +87,31 @@ const Toolbar = ({
   const [selectedShape, setSelectedShape] = useState("square");
   const [flyoutOpen, setFlyoutOpen] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
+  const [isNear, setIsNear] = useState(false);
   const flyoutTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const barRef = useRef<HTMLDivElement>(null);
   const { isDark } = useTheme();
+
+  /* Detección de proximidad suave para expandir antes de tocar el borde exacto */
+  useEffect(() => {
+    const handleMouseMove = (e: MouseEvent) => {
+      if (!barRef.current) return;
+      const rect = barRef.current.getBoundingClientRect();
+      const proximityMargin = 70; // px alrededor de la barra
+
+      const isInsideProximity =
+        e.clientX >= rect.left - proximityMargin &&
+        e.clientX <= rect.right + proximityMargin &&
+        e.clientY >= rect.top - proximityMargin &&
+        e.clientY <= rect.bottom + proximityMargin;
+
+      setIsNear(isInsideProximity);
+    };
+
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, []);
 
   const handleMouseEnter = () => {
     if (hoverTimer.current) {
@@ -104,7 +127,7 @@ const Toolbar = ({
       if (!flyoutOpen) {
         setIsHovered(false);
       }
-    }, 180);
+    }, 200);
   };
 
   const openFlyout = () => {
@@ -116,7 +139,7 @@ const Toolbar = ({
   const closeFlyout = () => {
     flyoutTimer.current = setTimeout(() => {
       setFlyoutOpen(false);
-    }, 150);
+    }, 160);
   };
 
   useEffect(() => {
@@ -127,113 +150,109 @@ const Toolbar = ({
   }, []);
 
   const currentShape = SHAPES.find((s) => s.id === selectedShape) || SHAPES[0];
-  const isExpanded = isHovered || flyoutOpen || activeDrawShape !== null;
   const isDrawingToolActive = activeDrawShape !== null;
-
-  const toolItem = {
-    initial: { opacity: 0, y: -8, scale: 0.8 },
-    animate: { opacity: 1, y: 0, scale: 1 },
-    exit: { opacity: 0, y: -8, scale: 0.8 },
-  };
+  const isExpanded = isNear || isHovered || flyoutOpen || isDrawingToolActive;
 
   return (
-    <div
-      className="absolute inset-y-0 my-auto h-fit left-3 z-10 p-3"
+    <motion.div
+      ref={barRef}
+      layout
+      transition={elasticSpring}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
+      initial={{ x: -40, opacity: 0 }}
+      animate={{ x: 0, opacity: 1 }}
+      className={`absolute inset-y-0 my-auto h-fit left-6 z-10 flex flex-col items-center gap-1.5 px-2 py-2.5 rounded-[28px] shadow-[0_12px_40px_rgba(0,0,0,0.12)] font-sans select-none origin-center ${
+        isDark
+          ? "bg-[#1C1C1E] border border-white/10 text-white"
+          : "bg-white border border-black/[0.06] text-black"
+      }`}
     >
+      {/* 1. Seleccionar */}
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button
+            onClick={() => {
+              setInteractionMode("edit");
+              setActiveDrawShape(null);
+            }}
+            className={`w-10 h-10 flex items-center justify-center rounded-full transition-all duration-200 ${
+              interactionMode === "edit" && activeDrawShape === null
+                ? isDark
+                  ? "bg-white text-black shadow-md scale-100"
+                  : "bg-black text-white shadow-md scale-100"
+                : isDark
+                ? "hover:bg-white/10 text-gray-400 hover:text-white"
+                : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
+            }`}
+          >
+            <MousePointer size={18} strokeWidth={1.5} />
+          </button>
+        </TooltipTrigger>
+        <TooltipContent
+          side="right"
+          sideOffset={12}
+          className="text-[13px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light"
+        >
+          Seleccionar
+        </TooltipContent>
+      </Tooltip>
+
+      {/* 2. Navegar */}
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <button
+            onClick={() => {
+              setInteractionMode("pan");
+              setActiveDrawShape(null);
+            }}
+            className={`w-10 h-10 flex items-center justify-center rounded-full transition-all duration-200 ${
+              interactionMode === "pan"
+                ? isDark
+                  ? "bg-white text-black shadow-md scale-100"
+                  : "bg-black text-white shadow-md scale-100"
+                : isDark
+                ? "hover:bg-white/10 text-gray-400 hover:text-white"
+                : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
+            }`}
+          >
+            <Hand size={18} strokeWidth={1.5} />
+          </button>
+        </TooltipTrigger>
+        <TooltipContent
+          side="right"
+          sideOffset={12}
+          className="text-[13px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light"
+        >
+          Navegar
+        </TooltipContent>
+      </Tooltip>
+
+      {/* 3. Separador */}
       <motion.div
         layout
-        transition={springTransition}
-        initial={{ x: -40, opacity: 0 }}
-        animate={{ x: 0, opacity: 1 }}
-        className={`flex flex-col items-center gap-1.5 px-2 py-3 rounded-[30px] shadow-[0_8px_30px_rgb(0,0,0,0.06)] font-sans select-none overflow-visible ${
-          isDark
-            ? "bg-[#1C1C1E] border border-white/10 text-white"
-            : "bg-white border border-black/[0.04] text-black"
-        }`}
-      >
-        {/* 1. Seleccionar */}
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <button
-              onClick={() => {
-                setInteractionMode("edit");
-                setActiveDrawShape(null);
-              }}
-              className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
-                interactionMode === "edit" && activeDrawShape === null
-                  ? isDark
-                    ? "bg-white text-black shadow-md"
-                    : "bg-black text-white shadow-md"
-                  : isDark
-                  ? "hover:bg-white/10 text-gray-400 hover:text-white"
-                  : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
-              }`}
-            >
-              <MousePointer size={18} strokeWidth={1.5} />
-            </button>
-          </TooltipTrigger>
-          <TooltipContent
-            side="right"
-            sideOffset={12}
-            className="text-[13px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light"
-          >
-            Seleccionar
-          </TooltipContent>
-        </Tooltip>
+        transition={elasticSpring}
+        className={`w-6 h-[1px] my-0.5 shrink-0 ${isDark ? "bg-white/10" : "bg-[#E5E7EB]"}`}
+      />
 
-        {/* 2. Navegar */}
-        <Tooltip>
-          <TooltipTrigger asChild>
-            <button
-              onClick={() => {
-                setInteractionMode("pan");
-                setActiveDrawShape(null);
-              }}
-              className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
-                interactionMode === "pan"
-                  ? isDark
-                    ? "bg-white text-black shadow-md"
-                    : "bg-black text-white shadow-md"
-                  : isDark
-                  ? "hover:bg-white/10 text-gray-400 hover:text-white"
-                  : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
-              }`}
-            >
-              <Hand size={18} strokeWidth={1.5} />
-            </button>
-          </TooltipTrigger>
-          <TooltipContent
-            side="right"
-            sideOffset={12}
-            className="text-[13px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light"
-          >
-            Navegar
-          </TooltipContent>
-        </Tooltip>
-
-        {/* Separador */}
-        <motion.div
-          layout
-          className={`w-6 h-[1px] my-1 shrink-0 ${isDark ? "bg-white/10" : "bg-[#E5E7EB]"}`}
-        />
-
-        {/* 3. Ícono Plus cuando está colapsado / Formas + Herramientas cuando está expandido */}
-        <AnimatePresence mode="wait" initial={false}>
+      {/* 4. Sección de Herramientas Dinámicas */}
+      <motion.div layout transition={elasticSpring} className="flex flex-col items-center gap-1.5">
+        <AnimatePresence initial={false} mode="popLayout">
           {!isExpanded ? (
+            /* Estado Colapsado: Botón Plus con morphing elástico */
             <motion.div
               key="collapsed-plus"
-              initial={{ opacity: 0, scale: 0.6 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.6 }}
-              transition={{ duration: 0.15, ease: "easeOut" }}
+              layout
+              initial={{ opacity: 0, scale: 0.5, rotate: -45 }}
+              animate={{ opacity: 1, scale: 1, rotate: 0 }}
+              exit={{ opacity: 0, scale: 0.5, rotate: 45 }}
+              transition={elasticSpring}
             >
               <Tooltip>
                 <TooltipTrigger asChild>
                   <button
                     onClick={() => setIsHovered(true)}
-                    className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
+                    className={`w-10 h-10 flex items-center justify-center rounded-full transition-all duration-200 ${
                       isDrawingToolActive
                         ? isDark
                           ? "bg-white text-black shadow-md"
@@ -242,8 +261,9 @@ const Toolbar = ({
                         ? "hover:bg-white/10 text-gray-400 hover:text-white"
                         : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
                     }`}
+                    aria-label="Elementos y formas"
                   >
-                    <Plus size={18} strokeWidth={1.5} />
+                    <Plus size={19} strokeWidth={1.75} />
                   </button>
                 </TooltipTrigger>
                 <TooltipContent
@@ -256,13 +276,14 @@ const Toolbar = ({
               </Tooltip>
             </motion.div>
           ) : (
+            /* Estado Expandido: Formas y Elementos */
             <motion.div
               key="expanded-tools"
               layout
-              initial={{ opacity: 0, y: -4 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -4 }}
-              transition={springTransition}
+              initial={{ opacity: 0, scale: 0.85, y: -6 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.85, y: -6 }}
+              transition={elasticSpring}
               className="flex flex-col items-center gap-1.5"
             >
               {/* Formas con flyout */}
@@ -282,7 +303,7 @@ const Toolbar = ({
                           setInteractionMode("edit");
                         }
                       }}
-                      className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
+                      className={`w-10 h-10 flex items-center justify-center rounded-full transition-all duration-200 ${
                         activeDrawShape !== null &&
                         activeDrawShape !== "text" &&
                         activeDrawShape !== "todo" &&
@@ -313,9 +334,9 @@ const Toolbar = ({
                 <AnimatePresence>
                   {flyoutOpen && (
                     <motion.div
-                      initial={{ opacity: 0, x: -8, scale: 0.96 }}
+                      initial={{ opacity: 0, x: -8, scale: 0.94 }}
                       animate={{ opacity: 1, x: 0, scale: 1 }}
-                      exit={{ opacity: 0, x: -8, scale: 0.96 }}
+                      exit={{ opacity: 0, x: -8, scale: 0.94 }}
                       transition={{ duration: 0.14, ease: "easeOut" }}
                       onMouseEnter={openFlyout}
                       onMouseLeave={closeFlyout}
@@ -366,11 +387,11 @@ const Toolbar = ({
                         setInteractionMode("edit");
                       }
                     }}
-                    className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
+                    className={`w-10 h-10 flex items-center justify-center rounded-full transition-all duration-200 ${
                       activeDrawShape === "text"
                         ? isDark
                           ? "bg-white text-black shadow-md"
-                          : "bg-black text-white"
+                          : "bg-black text-white shadow-md"
                         : isDark
                         ? "hover:bg-white/10 text-gray-400 hover:text-white"
                         : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
@@ -400,11 +421,11 @@ const Toolbar = ({
                         setInteractionMode("edit");
                       }
                     }}
-                    className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
+                    className={`w-10 h-10 flex items-center justify-center rounded-full transition-all duration-200 ${
                       activeDrawShape === "todo"
                         ? isDark
                           ? "bg-white text-black shadow-md"
-                          : "bg-black text-white"
+                          : "bg-black text-white shadow-md"
                         : isDark
                         ? "hover:bg-white/10 text-gray-400 hover:text-white"
                         : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
@@ -434,11 +455,11 @@ const Toolbar = ({
                         setInteractionMode("edit");
                       }
                     }}
-                    className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
+                    className={`w-10 h-10 flex items-center justify-center rounded-full transition-all duration-200 ${
                       activeDrawShape === "image"
                         ? isDark
                           ? "bg-white text-black shadow-md"
-                          : "bg-black text-white"
+                          : "bg-black text-white shadow-md"
                         : isDark
                         ? "hover:bg-white/10 text-gray-400 hover:text-white"
                         : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
@@ -468,11 +489,11 @@ const Toolbar = ({
                         setInteractionMode("edit");
                       }
                     }}
-                    className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
+                    className={`w-10 h-10 flex items-center justify-center rounded-full transition-all duration-200 ${
                       activeDrawShape === "frame"
                         ? isDark
                           ? "bg-white text-black shadow-md"
-                          : "bg-black text-white"
+                          : "bg-black text-white shadow-md"
                         : isDark
                         ? "hover:bg-white/10 text-gray-400 hover:text-white"
                         : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
@@ -493,7 +514,7 @@ const Toolbar = ({
           )}
         </AnimatePresence>
       </motion.div>
-    </div>
+    </motion.div>
   );
 };
 
