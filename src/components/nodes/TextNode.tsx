@@ -2,7 +2,7 @@ import { memo, useState, useRef, useEffect, useCallback } from "react";
 import { Handle, Position, type NodeProps, NodeResizer, useReactFlow, useViewport } from "@xyflow/react";
 import {
   Bold, Italic, Underline, Link2, AlignLeft, AlignCenter, AlignRight,
-  ExternalLink, Trash2, Minus, Plus, Baseline, Check,
+  ExternalLink, Trash2, Minus, Plus, Baseline, Check, Palette,
 } from "lucide-react";
 import { isColorDark } from "@/lib/utils";
 import NodeExtendHandles from "@/components/nodes/NodeExtendHandles";
@@ -460,12 +460,10 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                     className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors relative ${isDark ? 'hover:bg-white/10 text-white/60 hover:text-white' : 'hover:bg-[#F3F4F6] text-[#6B7280]'}`}
                     title="Color de fondo"
                   >
+                    <Palette size={13} className="text-[#6B7280]" />
                     <div
-                      className="w-3.5 h-3.5 rounded-sm border overflow-hidden relative"
-                      style={{ 
-                        backgroundColor: backgroundColor === "transparent" ? "white" : (backgroundColor || "#FAFAFA"),
-                        borderColor: isDark ? "rgba(255,255,255,0.2)" : "rgba(0,0,0,0.2)"
-                      }}
+                      className="absolute bottom-1 right-1 w-2 h-2 rounded-full border border-white overflow-hidden shadow-xs"
+                      style={{ backgroundColor: backgroundColor === "transparent" ? "white" : (backgroundColor || "#FAFAFA") }}
                     >
                       {backgroundColor === "transparent" && (
                         <div className="absolute w-full h-[1px] bg-red-500 rotate-45" style={{ top: "45%" }} />

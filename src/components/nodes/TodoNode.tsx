@@ -1,7 +1,7 @@
 import { memo, useState, useRef, useEffect, forwardRef } from "react";
 import { Handle, Position, type NodeProps, NodeResizer, useReactFlow, useViewport } from "@xyflow/react";
 import {
-  Plus, Trash2, ArrowUp, ArrowDown, Minus, Check, Heading1, Heading2, Square,
+  Plus, Trash2, ArrowUp, ArrowDown, Minus, Check, Heading1, Heading2, Palette,
 } from "lucide-react";
 import NodeExtendHandles from "@/components/nodes/NodeExtendHandles";
 import WidgetCommentSlot from "@/components/nodes/WidgetCommentSlot";
@@ -389,7 +389,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                     className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors relative ${isDark ? 'hover:bg-white/10 text-white/60 hover:text-white' : 'hover:bg-[#F3F4F6] text-[#6B7280]'}`}
                     title="Color de fondo"
                   >
-                    <Square size={13} className="text-[#6B7280]" />
+                    <Palette size={13} className="text-[#6B7280]" />
                     <div
                       className="absolute bottom-1 right-1 w-2 h-2 rounded-full border border-white overflow-hidden shadow-xs"
                       style={{ backgroundColor: backgroundColor === "transparent" ? "white" : (backgroundColor || "#FAFAFA") }}

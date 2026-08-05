@@ -59,3 +59,8 @@ En componentes tipo carrusel (scroll horizontal) que requieren alinear su primer
 ## 11. Ámbito de Variables en Subcomponentes Hijos
 - Al renderizar subcomponentes o tarjetas hijas (ej. `KanbanCard`, `CampaignCard`), nunca referenciar variables computadas del nodo contenedor padre (como `isEffectiveBgDark` o `boardTextColor`) si no forman parte de sus props explícitas. Usar siempre las props locales del componente (`isDark`, `textColor`) para evitar `ReferenceError` en tiempo de ejecución.
 
+## 12. Iconografía y Tooltips Unificados en Barras Flotantes de Widgets (Canvas)
+- **Ícono estándar para Color de Fondo:** El botón para cambiar el color de fondo en la barra flotante de herramientas de cualquier widget (`ClientCardNode`, `CampaignsNode`, `KanbanNode`, `TodoNode`, `TextNode`, `IngresosNode`, etc.) debe usar **siempre** el ícono `<Palette />` de `lucide-react` con el tooltip descriptivo `title="Color de fondo"`.
+- **Badge / Indicador de color activo:** Debe incluir un punto o badge circular indicador en la esquina inferior derecha (`absolute bottom-1 right-1 w-2 h-2 rounded-full border border-white`) que refleje el color de fondo actual (con línea roja diagonal si es transparente) para dar una referencia visual inmediata al usuario.
+- **Prohibido usar íconos dispersos:** Nunca usar `<Square />`, `<PaintBucket />` u otros íconos genéricos para esta acción, garantizando consistencia, affordance y reconocimiento intuitivo en todo el canvas.
+

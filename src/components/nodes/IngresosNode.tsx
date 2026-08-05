@@ -302,7 +302,7 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
               <ToolBtn active={!!d.showSubtitle} onClick={() => update({ showSubtitle: !d.showSubtitle })} title="Subtítulo" isDark={isDark}><Heading2 size={14} /></ToolBtn>
               <div className={`w-px h-4 mx-0.5 ${isDark ? "bg-white/10" : "bg-neutral-200"}`} />
               <div className="relative">
-                <ToolBtn onClick={() => setBgOpen((v) => !v)} title="Fondo" isDark={isDark}><Palette size={14} /></ToolBtn>
+                <ToolBtn onClick={() => setBgOpen((v) => !v)} title="Color de fondo" isDark={isDark}><Palette size={14} /></ToolBtn>
                 {bgOpen && <PickerPopover colors={RAINBOW_COLORS} onPick={(v) => { update({ backgroundColor: v === "transparent" ? undefined : v }); setBgOpen(false); }} isDark={isDark} />}
               </div>
               <div className={`w-px h-4 mx-0.5 ${isDark ? "bg-white/10" : "bg-neutral-200"}`} />
