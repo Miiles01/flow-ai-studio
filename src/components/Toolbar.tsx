@@ -1,6 +1,6 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MousePointer, Hand, Type, ListTodo, ImageIcon, SquareDashed } from "lucide-react";
+import { MousePointer, Hand, Type, ListTodo, ImageIcon, SquareDashed, Plus } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useTheme } from "@/contexts/ThemeContext";
 
