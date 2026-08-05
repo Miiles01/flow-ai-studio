@@ -193,6 +193,7 @@ const AIPromptBar = ({
 
       {/* ── Contenedor único con morphing layout fluido ── */}
       <motion.div
+        ref={containerRef}
         layout
         transition={spring}
         onClick={!isExpanded ? expand : undefined}
