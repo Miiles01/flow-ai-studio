@@ -42,6 +42,7 @@ const AIPromptBar = ({
   const [canScrollTop, setCanScrollTop] = useState(false);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<any>(null);
   const baseTextRef = useRef("");
   const speechSupported =
@@ -103,6 +104,28 @@ const AIPromptBar = ({
     }
   }, [forceOpen]);
 
+  /* Colapso fluido al hacer clic fuera de la barra */
+  useEffect(() => {
+    if (!isExpanded) return;
+    const onPointerDown = (e: MouseEvent) => {
+      const target = e.target as HTMLElement | null;
+      if (!target) return;
+      if (containerRef.current?.contains(target)) return;
+      // Ignorar menús/portales flotantes (Apps, Widgets, dialogs)
+      if (
+        widgetsOpen ||
+        target.closest("[data-radix-popper-content-wrapper]") ||
+        target.closest("[role='dialog']") ||
+        target.closest("[role='menu']")
+      )
+        return;
+      if (isRecording || isGenerating || prompt.trim().length > 0 || extendLabel) return;
+      setIsExpanded(false);
+    };
+    document.addEventListener("mousedown", onPointerDown);
+    return () => document.removeEventListener("mousedown", onPointerDown);
+  }, [isExpanded, widgetsOpen, isRecording, isGenerating, prompt, extendLabel]);
+
   /* Auto-resize textarea */
   useEffect(() => {
     if (textareaRef.current) {
@@ -117,7 +140,13 @@ const AIPromptBar = ({
     stopRecording();
     onGenerate(prompt.trim());
     setPrompt("");
+    setIsFocused(false);
+    setIsHovered(false);
+    textareaRef.current?.blur();
+    // Contracción fluida de vuelta al squircle
+    setTimeout(() => setIsExpanded(false), 120);
   };
+
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
     if (e.key === "Enter" && !e.shiftKey) {
@@ -164,6 +193,7 @@ const AIPromptBar = ({
 
       {/* ── Contenedor único con morphing layout fluido ── */}
       <motion.div
+        ref={containerRef}
         layout
         transition={spring}
         onClick={!isExpanded ? expand : undefined}
