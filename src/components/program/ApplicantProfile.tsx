@@ -57,7 +57,7 @@ export default function ApplicantProfile({
         <div className="space-y-6 mt-4">
           {/* Info personal */}
           <div>
-            <p className="text-[10px] text-muted-foreground font-light uppercase tracking-wider mb-3">Información personal</p>
+            <p className="text-[11px] text-muted-foreground font-medium mb-3">Información personal</p>
             <div className="flex items-center gap-4">
               <Avatar className="h-16 w-16">
                 {applicant.avatar_url && <AvatarImage src={applicant.avatar_url} alt={applicant.display_name || ""} />}
@@ -75,7 +75,7 @@ export default function ApplicantProfile({
           {/* Bio */}
           {applicant.bio && (
             <div>
-              <p className="text-[10px] text-muted-foreground font-light uppercase tracking-wider mb-1">Bio</p>
+              <p className="text-[11px] text-muted-foreground font-medium mb-1">Bio</p>
               <p className="text-sm font-light leading-relaxed">{applicant.bio}</p>
             </div>
           )}
@@ -83,7 +83,7 @@ export default function ApplicantProfile({
           {/* Socials */}
           {socials.length > 0 && (
             <div>
-              <p className="text-[10px] text-muted-foreground font-light uppercase tracking-wider mb-2">Redes sociales</p>
+              <p className="text-[11px] text-muted-foreground font-medium mb-2">Redes sociales</p>
               <div className="space-y-2">
                 {socials.map(({ icon: Icon, label, value }, i) => (
                   <a
@@ -105,7 +105,7 @@ export default function ApplicantProfile({
           {/* Videos */}
           {videos.length > 0 && (
             <div>
-              <p className="text-[10px] text-muted-foreground font-light uppercase tracking-wider mb-2">Portafolio de videos</p>
+              <p className="text-[11px] text-muted-foreground font-medium mb-2">Portafolio de videos</p>
               <div className="grid grid-cols-2 gap-3">
                 {videos.map((url, i) => {
                   const embed = getVideoEmbedUrl(url);

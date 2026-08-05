@@ -122,8 +122,8 @@ export default function ProspectBrain({ prospects, activeCategory, onFilter }: P
           <div className="text-[40px] leading-none font-light text-white tabular-nums tracking-tight">
             <AnimatedCount value={prospects.length} />
           </div>
-          <div className="text-[10px] text-white/30 mt-1.5 font-light tracking-wide uppercase">
-            prospectos en red · {SECTORS.length} sectores
+          <div className="text-[11px] text-white/50 mt-1.5 font-light">
+            Prospectos en red · {SECTORS.length} sectores
           </div>
         </div>
 

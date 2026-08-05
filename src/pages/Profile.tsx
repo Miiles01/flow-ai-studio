@@ -306,7 +306,7 @@ const Profile = () => {
                   `}
                 >
                   <div className="space-y-1">
-                    <span className="text-[10px] font-semibold tracking-wider uppercase opacity-50 block">Membresía Activa</span>
+                    <span className="text-xs font-normal opacity-60 block">Membresía activa</span>
                     <span className="text-base font-semibold block">
                       {plan === "pro" ? "Plan Pro" : plan === "business" || plan === "negocios" ? "Plan Negocios" : "Plan Gratis"}
                     </span>

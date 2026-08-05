@@ -198,7 +198,7 @@ export default function EarningsCalculator({ commissionRate, priceMin, priceMax,
           {/* Right — chart + total */}
           <div className="flex flex-col">
             <div className="mb-4">
-              <p className="text-[10px] text-miiles-gray-400 font-light uppercase tracking-wider">Ganancia mensual estimada</p>
+              <p className="text-xs text-miiles-gray-400 font-light">Ganancia mensual estimada</p>
               <AnimatePresence mode="wait">
                 <motion.p
                   key={monthlyEarnings.toFixed(2)}

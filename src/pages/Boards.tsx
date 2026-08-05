@@ -226,7 +226,7 @@ export default function Boards() {
                 onClick={() => navigate(`/boards/${flow.id}`)}
               >
                 <div className="flex items-center justify-between">
-                  <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[10px] font-light uppercase tracking-wider ${
+                  <span className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-[11px] font-normal ${
                     flow.role === "editor"
                       ? isDark ? "bg-white/10 text-white/80" : "bg-miiles-blue-light text-miiles-blue"
                       : isDark ? "bg-white/5 text-white/50" : "bg-miiles-gray-100 text-miiles-gray-600"

@@ -128,7 +128,7 @@ export default function ProspectsTab() {
 
       {sources.length > 0 && (
         <div className="space-y-2">
-          <p className="text-xs text-white/50 uppercase tracking-wide">Archivos cargados</p>
+          <p className="text-xs text-white/50 font-normal">Archivos cargados</p>
           <div className="flex flex-wrap gap-2">
             {sources.map((s) => (
               <button

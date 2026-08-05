@@ -36,8 +36,8 @@ const AppsMenu = ({ isDark }: AppsMenuProps) => {
 
   const rowText = isDark ? "text-white" : "text-black";
   const subText = isDark ? "text-white/40" : "text-miiles-gray-400";
-  const sectionLabel = `px-3 pt-2 pb-1 text-[10px] font-light uppercase tracking-wider ${
-    isDark ? "text-white/30" : "text-miiles-gray-400"
+  const sectionLabel = `px-3 pt-2 pb-1 text-[11px] font-medium ${
+    isDark ? "text-white/50" : "text-gray-500"
   }`;
 
   const openModelDialog = (p: AIProviderId | null) => {

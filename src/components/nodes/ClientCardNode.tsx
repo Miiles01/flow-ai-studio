@@ -289,7 +289,7 @@ const ClientCardNode = ({ id, data, selected }: NodeProps) => {
 
           {d.value && (
             <div className={`pt-1.5 mt-1 border-t ${dividerCls} flex items-center justify-between`}>
-              <span className={`text-[10px] uppercase tracking-wide ${subtleText}`}>Valor</span>
+              <span className={`text-[10px] tracking-wide ${subtleText}`}>Valor</span>
               <span className="text-[13px] font-semibold" style={{ color: isEffectiveBgDark ? "#93C5FD" : accentColor }}>{d.value}</span>
             </div>
           )}
