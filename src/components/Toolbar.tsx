@@ -1,6 +1,6 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MousePointer, Hand, Type, ListTodo, ImageIcon, SquareDashed } from "lucide-react";
+import { MousePointer, Hand, Type, ListTodo, ImageIcon, SquareDashed, Plus } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useTheme } from "@/contexts/ThemeContext";
 
@@ -69,6 +69,15 @@ const SHAPES = [
   },
 ];
 
+const spring = {
+  type: "spring" as const,
+  stiffness: 380,
+  damping: 28,
+  mass: 0.5,
+};
+
+const PROXIMITY = 130; // px de radio alrededor del toolbar
+
 const Toolbar = ({
   onAddNode,
   interactionMode,
@@ -78,7 +87,9 @@ const Toolbar = ({
 }: ToolbarProps) => {
   const [selectedShape, setSelectedShape] = useState("square");
   const [flyoutOpen, setFlyoutOpen] = useState(false);
+  const [isNear, setIsNear] = useState(false);
   const flyoutTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const barRef = useRef<HTMLDivElement>(null);
   const { isDark } = useTheme();
 
   const openFlyout = () => {
@@ -89,14 +100,41 @@ const Toolbar = ({
     flyoutTimer.current = setTimeout(() => setFlyoutOpen(false), 120);
   };
 
+  /* Detección de proximidad del cursor */
+  useEffect(() => {
+    const onMove = (e: MouseEvent) => {
+      const rect = barRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      const dx = Math.max(rect.left - e.clientX, 0, e.clientX - rect.right);
+      const dy = Math.max(rect.top - e.clientY, 0, e.clientY - rect.bottom);
+      setIsNear(Math.hypot(dx, dy) < PROXIMITY);
+    };
+    window.addEventListener("mousemove", onMove);
+    return () => window.removeEventListener("mousemove", onMove);
+  }, []);
+
+  const isCreating =
+    activeDrawShape !== null && activeDrawShape !== undefined;
+  const expanded = isNear || flyoutOpen || isCreating;
+
   const currentShape = SHAPES.find((s) => s.id === selectedShape) || SHAPES[0];
+
+  const toolItem = {
+    initial: { opacity: 0, y: -8, scale: 0.8 },
+    animate: { opacity: 1, y: 0, scale: 1 },
+    exit: { opacity: 0, y: -8, scale: 0.8 },
+  };
 
   return (
     <motion.div
+      ref={barRef}
+      layout
       initial={{ x: -40, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
+      transition={spring}
       className={`absolute inset-y-0 my-auto h-fit left-6 z-10 flex flex-col items-center gap-1.5 px-2 py-3 rounded-[30px] shadow-[0_8px_30px_rgb(0,0,0,0.06)] font-sans ${isDark ? 'bg-[#1C1C1E] border border-white/10 text-white' : 'bg-white'}`}
     >
+
       {/* Seleccionar */}
       <Tooltip>
         <TooltipTrigger asChild>
@@ -141,9 +179,43 @@ const Toolbar = ({
         </TooltipContent>
       </Tooltip>
 
-      <div className={`w-6 h-[1px] my-1 ${isDark ? 'bg-white/10' : 'bg-[#E5E7EB]'}`} />
+      <motion.div layout className={`w-6 h-[1px] my-1 ${isDark ? 'bg-white/10' : 'bg-[#E5E7EB]'}`} />
 
+      {/* Botón Plus (estado colapsado) */}
+      <AnimatePresence initial={false}>
+        {!expanded && (
+          <motion.button
+            key="plus"
+            layout
+            initial={{ opacity: 0, scale: 0.7 }}
+            animate={{ opacity: 1, scale: 1 }}
+            exit={{ opacity: 0, scale: 0.7 }}
+            transition={spring}
+            onClick={() => setActiveDrawShape(selectedShape)}
+            className={`w-10 h-10 flex items-center justify-center rounded-full transition-colors ${
+              isDark ? "hover:bg-white/10 text-gray-400 hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
+            }`}
+            aria-label="Más herramientas"
+          >
+            <Plus size={18} strokeWidth={1.5} />
+          </motion.button>
+        )}
+      </AnimatePresence>
+
+      {/* Herramientas de creación (estado expandido) */}
+      <AnimatePresence initial={false}>
+        {expanded && (
+          <motion.div
+            key="tools"
+            layout
+            initial={{ opacity: 0, scaleY: 0.85 }}
+            animate={{ opacity: 1, scaleY: 1 }}
+            exit={{ opacity: 0, scaleY: 0.85 }}
+            transition={spring}
+            className="flex flex-col items-center gap-1.5 origin-top"
+          >
       {/* Formas con flyout */}
+
       <div className="relative flex items-center" onMouseEnter={openFlyout} onMouseLeave={closeFlyout}>
         <Tooltip open={flyoutOpen ? false : undefined}>
           <TooltipTrigger asChild>
@@ -311,7 +383,11 @@ const Toolbar = ({
           Sección
         </TooltipContent>
       </Tooltip>
+            </motion.div>
+          )}
+        </AnimatePresence>
     </motion.div>
+
   );
 };
 
