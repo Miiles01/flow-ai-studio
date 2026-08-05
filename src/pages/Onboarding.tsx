@@ -49,7 +49,7 @@ const slideVariants = {
   exit: (dir: number) => ({ x: dir > 0 ? -120 : 120, opacity: 0, scale: 0.96 }),
 };
 
-/* Custom SplitText using framer-motion matching requested GSAP curve */
+/* Custom SplitText using framer-motion matching requested curve */
 export const AnimatedText = forwardRef<HTMLDivElement, { text: string; className?: string }>(({ text, className = "" }, ref) => {
   const words = text.split(" ");
   return (
@@ -101,37 +101,37 @@ function VideoLinkPopover({
 }) {
   const [draft, setDraft] = useState(value);
   return (
-    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40" onClick={onCancel}>
+    <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/50 backdrop-blur-xs" onClick={onCancel}>
       <motion.div
-        initial={{ opacity: 0, y: 40 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: 40 }}
+        initial={{ opacity: 0, y: 40, scale: 0.95 }}
+        animate={{ opacity: 1, y: 0, scale: 1 }}
+        exit={{ opacity: 0, y: 40, scale: 0.95 }}
         onClick={(e) => e.stopPropagation()}
-        className="w-full max-w-md mx-4 mb-4 sm:mb-0 p-5 rounded-2xl bg-foreground space-y-4"
+        className="w-full max-w-md mx-4 mb-4 sm:mb-0 p-6 rounded-2xl bg-neutral-900 text-white dark:bg-[#1C1C1E] border border-white/10 shadow-2xl space-y-4"
       >
-        <p className="text-background text-sm font-medium">Pega el link del video</p>
+        <p className="text-white text-sm font-semibold">Pega el link del video</p>
         <Input
           autoFocus
           value={draft}
           onChange={(e) => setDraft(e.target.value)}
           placeholder="https://youtube.com/watch?v=..."
-          className="bg-background/10 border-none shadow-none text-background placeholder:text-background/40 text-base h-12"
+          className="bg-white/10 border-white/15 shadow-none text-white placeholder:text-white/40 text-base h-12 rounded-xl"
         />
-        <p className="text-xs text-background/60">
+        <p className="text-xs text-white/80 font-normal leading-relaxed">
           Acepta links públicos de YouTube, TikTok, Instagram, Facebook, Vimeo y Loom.
         </p>
-        <div className="flex gap-3">
+        <div className="flex gap-3 pt-1">
           <button
             type="button"
             onClick={() => onSave(draft.trim())}
-            className="flex-1 text-sm py-2.5 rounded-xl bg-background text-foreground font-medium"
+            className="flex-1 text-sm py-2.5 rounded-xl bg-white text-neutral-950 font-semibold hover:bg-neutral-100 transition-colors"
           >
             Guardar
           </button>
           <button
             type="button"
             onClick={onCancel}
-            className="text-sm py-2.5 px-5 rounded-xl text-background/70 hover:text-background"
+            className="text-sm py-2.5 px-5 rounded-xl text-white/80 hover:text-white font-medium transition-colors"
           >
             Cancelar
           </button>
@@ -272,11 +272,11 @@ const Onboarding = () => {
   ];
 
   return (
-    <div className="min-h-screen bg-background flex flex-col">
+    <div className="min-h-screen bg-background flex flex-col text-foreground">
       {/* Progress bar */}
-      <div className="w-full h-1 bg-muted">
+      <div className="w-full h-1 bg-neutral-200 dark:bg-neutral-800">
         <motion.div
-          className="h-full bg-foreground"
+          className="h-full bg-neutral-950 dark:bg-white"
           animate={{ width: `${progress}%` }}
           transition={{ duration: 0.4, ease: "easeInOut" }}
         />
@@ -284,11 +284,21 @@ const Onboarding = () => {
       {/* Top navigation arrows */}
       {step > 0 && step < 6 && (
         <div className="flex items-center justify-between px-4 sm:px-6 py-4">
-          <button type="button" onClick={prev} className="p-2 rounded-full hover:bg-muted transition-colors text-foreground">
+          <button
+            type="button"
+            onClick={prev}
+            className="p-2.5 rounded-full hover:bg-neutral-100 dark:hover:bg-white/10 transition-colors text-neutral-800 dark:text-neutral-200 hover:text-neutral-950 dark:hover:text-white"
+            title="Atrás"
+          >
             <ArrowLeft size={20} />
           </button>
           {step < 5 ? (
-            <button type="button" onClick={next} className="p-2 rounded-full hover:bg-muted transition-colors text-foreground">
+            <button
+              type="button"
+              onClick={next}
+              className="p-2.5 rounded-full hover:bg-neutral-100 dark:hover:bg-white/10 transition-colors text-neutral-800 dark:text-neutral-200 hover:text-neutral-950 dark:hover:text-white"
+              title="Siguiente"
+            >
               <ArrowRight size={20} />
             </button>
           ) : (
@@ -296,7 +306,8 @@ const Onboarding = () => {
               type="button"
               onClick={handleNextFromContact}
               disabled={saving}
-              className="p-2 rounded-full hover:bg-muted transition-colors text-foreground disabled:opacity-50"
+              className="p-2.5 rounded-full hover:bg-neutral-100 dark:hover:bg-white/10 transition-colors text-neutral-800 dark:text-neutral-200 hover:text-neutral-950 dark:hover:text-white disabled:opacity-50"
+              title="Guardar y finalizar"
             >
               {saving ? <Loader2 size={20} className="animate-spin" /> : <ArrowRight size={20} />}
             </button>
@@ -319,13 +330,13 @@ const Onboarding = () => {
               {/* Step 0: Welcome */}
               {step === 0 && (
                 <div className="text-center space-y-6 max-w-md mx-auto">
-                  <img src={onboardingHero} alt="Miiles" className="mx-auto w-full max-w-[280px] sm:max-w-sm rounded-2xl" />
-                  <AnimatedText text={`¡Hola ${displayName}!`} className="text-3xl font-normal" />
-                  <p className="text-muted-foreground font-light text-base max-w-xs mx-auto">
+                  <img src={onboardingHero} alt="Miiles" className="mx-auto w-full max-w-[280px] sm:max-w-sm rounded-2xl shadow-sm" />
+                  <AnimatedText text={`¡Hola ${displayName}!`} className="text-3xl sm:text-4xl font-normal text-neutral-950 dark:text-white tracking-tight" />
+                  <p className="text-neutral-700 dark:text-neutral-300 font-normal text-base max-w-sm mx-auto leading-relaxed">
                     Presentamos Miiles: una nueva forma para crear colaboraciones.
                   </p>
                   <div className="pt-2">
-                    <Button onClick={next} className="px-10 rounded-full">
+                    <Button onClick={next} className="px-10 rounded-full font-medium text-sm h-11">
                       Continuar
                     </Button>
                   </div>
@@ -335,9 +346,9 @@ const Onboarding = () => {
               {/* Step 1: Avatar upload */}
               {step === 1 && (
                 <div className="text-center space-y-6 max-w-md mx-auto">
-                  <AnimatedText text="Tu foto de perfil" className="text-2xl font-normal" />
-                  <p className="text-muted-foreground font-light text-sm">
-                    Agrega una foto para que las marcas te reconozcan.
+                  <AnimatedText text="Tu foto de perfil" className="text-2xl sm:text-3xl font-normal text-neutral-950 dark:text-white tracking-tight" />
+                  <p className="text-neutral-700 dark:text-neutral-300 font-normal text-sm sm:text-base leading-relaxed">
+                    Agrega una foto para que las marcas te reconozcan de inmediato.
                   </p>
                   <div className="flex flex-col items-center gap-3 py-4">
                     <AvatarUpload
@@ -347,7 +358,7 @@ const Onboarding = () => {
                       onUploaded={(url) => setAvatarUrl(url)}
                       size="lg"
                     />
-                    <p className="text-xs text-muted-foreground font-light">Toca para subir tu foto</p>
+                    <p className="text-xs text-neutral-600 dark:text-neutral-400 font-medium">Toca para subir tu foto</p>
                   </div>
                   <div className="flex flex-col items-center gap-2 pt-2 min-h-[64px] justify-center">
                     <AnimatePresence mode="popLayout">
@@ -358,7 +369,7 @@ const Onboarding = () => {
                           animate={{ opacity: 1, y: 0 }}
                           exit={{ opacity: 0, y: -10 }}
                         >
-                          <Button onClick={next} className="px-10 rounded-full">
+                          <Button onClick={next} className="px-10 rounded-full font-medium text-sm h-11">
                             Continuar
                           </Button>
                         </motion.div>
@@ -368,34 +379,39 @@ const Onboarding = () => {
                 </div>
               )}
 
-              {/* Step 1: Bio — card style like reference */}
+              {/* Step 2: Bio & Username */}
               {step === 2 && (
                 <div className="max-w-lg mx-auto space-y-8">
-                  <AnimatedText text="Cuéntanos sobre ti" className="text-2xl font-normal" />
+                  <div>
+                    <AnimatedText text="Cuéntanos sobre ti" className="text-2xl sm:text-3xl font-normal text-neutral-950 dark:text-white tracking-tight" />
+                    <p className="text-neutral-700 dark:text-neutral-300 font-normal text-sm sm:text-base mt-1.5 leading-relaxed">
+                      Escribe una breve descripción y elige tu nombre de usuario para tu enlace personal.
+                    </p>
+                  </div>
                   <div className="w-full">
                     <Textarea
                       value={bio}
                       onChange={(e) => setBio(e.target.value)}
-                      placeholder="Me dedico a..."
-                      className="min-h-[140px] font-light bg-transparent border-none shadow-none resize-none focus-visible:ring-0 focus:ring-0 p-0 text-base rounded-none outline-none"
+                      placeholder="Me dedico a crear contenido sobre estilo de vida, fotografía y tecnología..."
+                      className="min-h-[120px] font-normal text-neutral-950 dark:text-white placeholder:text-neutral-400 dark:placeholder:text-neutral-500 bg-transparent border-none shadow-none resize-none focus-visible:ring-0 focus:ring-0 p-0 text-base rounded-none outline-none leading-relaxed"
                       maxLength={200}
                     />
-                    <div className="mt-6 pt-6 border-t border-border">
-                      <label className="text-sm font-normal block mb-2">Elige tu nombre de usuario</label>
+                    <div className="mt-6 pt-6 border-t border-black/[0.08] dark:border-white/[0.1]">
+                      <label className="text-sm font-semibold text-neutral-900 dark:text-neutral-100 block mb-2">Elige tu nombre de usuario</label>
                       <div className="relative">
-                        <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">@</span>
+                        <span className="absolute left-3.5 top-1/2 -translate-y-1/2 text-neutral-600 dark:text-neutral-400 font-semibold text-sm">@</span>
                         <Input
                           value={username}
                           onChange={(e) => setUsername(e.target.value.replace(/\s/g, ""))}
                           placeholder="tunombre"
-                          className="pl-8"
+                          className="pl-8 bg-neutral-100 dark:bg-white/[0.06] border border-black/[0.08] dark:border-white/[0.1] text-neutral-950 dark:text-white placeholder:text-neutral-400 dark:placeholder:text-neutral-500 font-medium h-11 rounded-xl"
                         />
                       </div>
-                      <p className="text-xs text-muted-foreground font-light mt-1.5">Te identifica en tu link de afiliado. Podrás cambiarlo después.</p>
+                      <p className="text-xs text-neutral-600 dark:text-neutral-400 font-normal mt-2">Te identifica en tu link de afiliado. Podrás cambiarlo después.</p>
                     </div>
-                    <div className="flex items-center justify-between mt-4">
-                      <span className="text-xs text-muted-foreground">{bio.length}/200 caracteres</span>
-                      <Button onClick={next} size="sm" className="rounded-full px-6 text-xs">
+                    <div className="flex items-center justify-between mt-5">
+                      <span className="text-xs text-neutral-600 dark:text-neutral-400 font-medium">{bio.length}/200 caracteres</span>
+                      <Button onClick={next} size="sm" className="rounded-full px-7 text-xs font-semibold h-9">
                         Continuar
                       </Button>
                     </div>
@@ -403,34 +419,41 @@ const Onboarding = () => {
                 </div>
               )}
 
-              {/* Step 2: Medios de contacto — two column */}
+              {/* Step 3: Medios de contacto — two column */}
               {step === 3 && (
                 <div className="flex flex-col md:flex-row gap-8 md:gap-10 items-start w-full">
                   {/* Left */}
                   <div className="w-full md:w-2/5 space-y-4">
-                    <AnimatedText text="Medios de contacto" className="text-2xl font-normal" />
-                    <p className="text-muted-foreground font-light text-sm">
-                      Agrega al menos <span className="font-normal text-foreground">3 medios de contacto</span>.
+                    <AnimatedText text="Medios de contacto" className="text-2xl sm:text-3xl font-normal text-neutral-950 dark:text-white tracking-tight" />
+                    <p className="text-neutral-700 dark:text-neutral-300 font-normal text-sm sm:text-base leading-relaxed">
+                      Agrega al menos <span className="font-semibold text-neutral-950 dark:text-white">3 medios de contacto</span> para recibir propuestas y colaboraciones.
                     </p>
                     {filledSocialsCount >= 3 && (
                       <div className="pt-2 sm:pt-6">
-                        <Button onClick={next} className="rounded-full px-8 text-sm w-full md:w-auto">
+                        <Button onClick={next} className="rounded-full px-8 text-sm font-semibold h-11 w-full md:w-auto">
                           Continuar
                         </Button>
                       </div>
                     )}
                   </div>
                   {/* Right — platform list */}
-                  <div className="flex-1 w-full rounded-[2rem] bg-[#F8F9FD] p-3 sm:p-6 flex flex-col gap-2.5 shadow-[0px_20px_40px_-10px_rgba(0,0,0,0.02)]">
+                  <div className="flex-1 w-full rounded-[2rem] bg-[#F4F5FA] dark:bg-white/[0.04] p-3.5 sm:p-6 flex flex-col gap-2.5 border border-black/[0.05] dark:border-white/[0.06] shadow-[0px_20px_40px_-10px_rgba(0,0,0,0.04)]">
                     {SOCIAL_PLATFORMS.map(({ key, label, icon: Icon }) => {
                       const hasValue = socials[key]?.trim();
                       const isEditing = editingSocial === key;
                       return (
-                        <div key={key} className="bg-white rounded-2xl w-full border border-black/[0.03] shadow-[0_2px_8px_-4px_rgba(0,0,0,0.02)] overflow-hidden transition-all">
+                        <div key={key} className="bg-white dark:bg-[#1C1C1E] rounded-2xl w-full border border-black/[0.06] dark:border-white/[0.08] shadow-[0_2px_8px_-4px_rgba(0,0,0,0.04)] overflow-hidden transition-all">
                           <div className="flex items-center justify-between px-4 sm:px-5 py-4">
-                            <div className="flex items-center gap-3">
-                              <Icon size={20} className="text-foreground" />
-                              <span className="text-[15px] font-normal">{label}</span>
+                            <div className="flex items-center gap-3 min-w-0">
+                              <Icon size={20} className="text-neutral-900 dark:text-neutral-100 shrink-0" />
+                              <div className="flex flex-col min-w-0">
+                                <span className="text-[15px] font-semibold text-neutral-900 dark:text-neutral-100">{label}</span>
+                                {hasValue && !isEditing && (
+                                  <span className="text-xs text-neutral-600 dark:text-neutral-400 font-normal truncate max-w-[160px] sm:max-w-[220px]">
+                                    {socials[key]}
+                                  </span>
+                                )}
+                              </div>
                             </div>
                             <button
                               type="button"
@@ -442,7 +465,7 @@ const Onboarding = () => {
                                   setEditingSocial(key);
                                 }
                               }}
-                              className="text-[13px] text-muted-foreground hover:text-foreground transition-colors font-light"
+                              className="text-[13px] text-neutral-700 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-white transition-colors font-semibold px-2.5 py-1 rounded-lg hover:bg-black/5 dark:hover:bg-white/5"
                             >
                               {hasValue ? "Editar" : "Añadir"}
                             </button>
@@ -462,7 +485,7 @@ const Onboarding = () => {
                                       value={socialDraft}
                                       onChange={(e) => setSocialDraft(e.target.value)}
                                       placeholder={`Tu ${label}`}
-                                      className="flex-1 h-10 text-sm border-none shadow-none bg-muted focus-visible:ring-0 rounded-xl px-4"
+                                      className="flex-1 h-10 text-sm border border-black/[0.08] dark:border-white/[0.1] shadow-none bg-neutral-100 dark:bg-white/[0.08] text-neutral-950 dark:text-white placeholder:text-neutral-400 dark:placeholder:text-neutral-500 focus-visible:ring-0 rounded-xl px-4 font-normal"
                                       onKeyDown={(e) => {
                                         if (e.key === "Enter") {
                                           setSocials({ ...socials, [key]: socialDraft });
@@ -478,7 +501,8 @@ const Onboarding = () => {
                                           setSocialDraft("");
                                           setEditingSocial(null);
                                         }}
-                                        className="h-10 w-10 shrink-0 rounded-xl bg-muted text-muted-foreground hover:text-foreground transition-colors flex items-center justify-center"
+                                        className="h-10 w-10 shrink-0 rounded-xl bg-neutral-100 dark:bg-white/[0.08] text-neutral-700 dark:text-neutral-300 hover:text-red-500 transition-colors flex items-center justify-center"
+                                        title="Eliminar"
                                       >
                                         <X size={16} />
                                       </button>
@@ -486,7 +510,7 @@ const Onboarding = () => {
                                   </div>
                                   <Button
                                     size="sm"
-                                    className="rounded-xl px-6 h-10 text-xs w-full sm:w-auto hover:translate-y-0"
+                                    className="rounded-xl px-6 h-10 text-xs font-semibold w-full sm:w-auto hover:translate-y-0"
                                     onClick={() => {
                                       setSocials({ ...socials, [key]: socialDraft });
                                       setEditingSocial(null);
@@ -505,15 +529,15 @@ const Onboarding = () => {
                 </div>
               )}
 
-              {/* Step 3: Portafolio — floating input on click */}
+              {/* Step 4: Portafolio — videos */}
               {step === 4 && (
                 <div className="max-w-md mx-auto space-y-6">
                   <div>
-                    <AnimatedText text="Portafolio" className="text-2xl font-normal" />
-                    <p className="text-muted-foreground font-light text-sm mt-1">
+                    <AnimatedText text="Portafolio" className="text-2xl sm:text-3xl font-normal text-neutral-950 dark:text-white tracking-tight" />
+                    <p className="text-neutral-700 dark:text-neutral-300 font-normal text-sm sm:text-base mt-1.5 leading-relaxed">
                       Agrega hasta 3 videos que representen tu mejor trabajo.{" "}
-                      <span className="font-medium text-foreground">
-                        Esto puede ayudar a conocer mejor tus resultados.
+                      <span className="font-semibold text-neutral-950 dark:text-white">
+                        Esto ayuda a conocer mejor tus resultados.
                       </span>
                     </p>
                   </div>
@@ -523,7 +547,7 @@ const Onboarding = () => {
                       const isEditing = editingVideo === i;
                       return (
                         <div key={i} className="relative">
-                          <div className="aspect-[9/16] rounded-xl overflow-hidden shadow-sm bg-muted/40 relative">
+                          <div className="aspect-[9/16] rounded-2xl overflow-hidden shadow-sm bg-neutral-100 dark:bg-white/[0.05] border border-black/[0.06] dark:border-white/[0.08] relative">
                             {embedUrl ? (
                               <iframe
                                 src={embedUrl}
@@ -538,20 +562,22 @@ const Onboarding = () => {
                               <button
                                 type="button"
                                 onClick={() => setEditingVideo(i)}
-                                className="flex h-full w-full flex-col items-center justify-center gap-2 px-4 text-center text-muted-foreground hover:text-foreground transition-colors"
+                                className="flex h-full w-full flex-col items-center justify-center gap-2 px-4 text-center text-neutral-700 dark:text-neutral-300 hover:text-neutral-950 dark:hover:text-white transition-colors"
                               >
                                 <Pencil size={18} />
-                                <span className="text-xs font-light">No se pudo generar el preview</span>
-                                <span className="text-[10px] font-light opacity-80">Edita el link o usa un enlace público.</span>
+                                <span className="text-xs font-semibold">No se pudo generar el preview</span>
+                                <span className="text-[11px] font-normal text-neutral-600 dark:text-neutral-400">Edita el link o usa un enlace público.</span>
                               </button>
                             ) : (
                               <button
                                 type="button"
                                 onClick={() => setEditingVideo(i)}
-                                className="flex flex-col items-center justify-center w-full h-full text-muted-foreground hover:text-foreground transition-colors"
+                                className="flex flex-col items-center justify-center w-full h-full text-neutral-800 dark:text-neutral-200 hover:text-neutral-950 dark:hover:text-white hover:bg-black/[0.02] dark:hover:bg-white/[0.04] transition-all"
                               >
-                                <Plus size={20} />
-                                <span className="text-[10px] font-light mt-1">Video {i + 1}</span>
+                                <div className="w-10 h-10 rounded-full bg-white dark:bg-white/10 shadow-xs flex items-center justify-center mb-1.5 border border-black/[0.04] dark:border-white/[0.08]">
+                                  <Plus size={20} className="text-neutral-900 dark:text-white" />
+                                </div>
+                                <span className="text-xs font-semibold text-neutral-900 dark:text-white">Video {i + 1}</span>
                               </button>
                             )}
 
@@ -560,14 +586,16 @@ const Onboarding = () => {
                                 <button
                                   type="button"
                                   onClick={() => setEditingVideo(i)}
-                                  className="p-2 rounded-full bg-background/90 text-foreground shadow-sm"
+                                  className="p-2 rounded-full bg-white/95 text-neutral-900 dark:bg-neutral-900/95 dark:text-white shadow-md hover:scale-105 transition-transform"
+                                  title="Editar"
                                 >
                                   <Pencil size={14} />
                                 </button>
                                 <button
                                   type="button"
                                   onClick={() => { set(""); setEditingVideo(null); }}
-                                  className="p-2 rounded-full bg-background/90 text-foreground shadow-sm"
+                                  className="p-2 rounded-full bg-white/95 text-neutral-900 dark:bg-neutral-900/95 dark:text-white shadow-md hover:scale-105 transition-transform"
+                                  title="Eliminar"
                                 >
                                   <X size={14} />
                                 </button>
@@ -591,13 +619,13 @@ const Onboarding = () => {
                   <button
                     type="button"
                     onClick={next}
-                    className="flex items-center gap-1 text-sm text-muted-foreground hover:text-foreground transition-colors font-light mx-auto"
+                    className="flex items-center gap-1.5 text-sm text-neutral-600 dark:text-neutral-400 hover:text-neutral-950 dark:hover:text-white transition-colors font-medium mx-auto py-1"
                   >
                     <SkipForward size={14} /> No soy creador de contenido
                   </button>
                   {(videoUrl1 || videoUrl2 || videoUrl3) && (
-                    <div className="flex justify-center">
-                      <Button onClick={next} className="rounded-full px-8 text-sm">
+                    <div className="flex justify-center pt-2">
+                      <Button onClick={next} className="rounded-full px-9 text-sm font-semibold h-11">
                         Continuar
                       </Button>
                     </div>
@@ -605,28 +633,28 @@ const Onboarding = () => {
                 </div>
               )}
 
-              {/* Step 4: Phone */}
+              {/* Step 5: Phone */}
               {step === 5 && (
                 <div className="max-w-md mx-auto space-y-6">
                   <div>
-                    <AnimatedText text="Contacto" className="text-2xl font-normal" />
-                    <p className="text-muted-foreground font-light text-sm mt-1">
-                      ¿Cómo pueden contactarte?
+                    <AnimatedText text="Contacto" className="text-2xl sm:text-3xl font-normal text-neutral-950 dark:text-white tracking-tight" />
+                    <p className="text-neutral-700 dark:text-neutral-300 font-normal text-sm sm:text-base mt-1.5 leading-relaxed">
+                      ¿Cómo pueden contactarte directamente?
                     </p>
                   </div>
                   <div>
-                    <label className="text-xs text-muted-foreground mb-1.5 block font-light">Número celular</label>
-                    <div className="flex gap-2">
+                    <label className="text-xs text-neutral-800 dark:text-neutral-200 mb-2 block font-semibold">Número celular</label>
+                    <div className="flex gap-2.5">
                       {/* Country code selector */}
                       <div className="relative">
                         <button
                           type="button"
                           onClick={() => { setShowCountryPicker(!showCountryPicker); setCountrySearch(""); }}
-                          className="flex items-center gap-1.5 h-10 px-3 rounded-md bg-muted text-sm whitespace-nowrap"
+                          className="flex items-center gap-2 h-11 px-3.5 rounded-xl bg-neutral-100 dark:bg-white/[0.06] border border-black/[0.08] dark:border-white/[0.1] text-neutral-950 dark:text-white text-sm font-medium whitespace-nowrap hover:bg-neutral-200/60 dark:hover:bg-white/[0.1] transition-colors"
                         >
-                          <span>{countryCode.flag}</span>
+                          <span className="text-base">{countryCode.flag}</span>
                           <span>{countryCode.code}</span>
-                          <ChevronDown size={14} className="text-muted-foreground" />
+                          <ChevronDown size={14} className="text-neutral-600 dark:text-neutral-400" />
                         </button>
                         <AnimatePresence>
                           {showCountryPicker && (
@@ -634,21 +662,21 @@ const Onboarding = () => {
                               initial={{ opacity: 0, y: 4 }}
                               animate={{ opacity: 1, y: 0 }}
                               exit={{ opacity: 0, y: 4 }}
-                              className="absolute top-12 left-0 z-50 w-64 max-h-60 overflow-hidden rounded-xl bg-popover border border-border shadow-lg flex flex-col"
+                              className="absolute top-13 left-0 z-50 w-64 max-h-60 overflow-hidden rounded-2xl bg-white dark:bg-[#1C1C1E] border border-neutral-200 dark:border-white/10 shadow-xl flex flex-col"
                             >
-                              <div className="p-2 border-b border-border">
-                                <div className="flex items-center gap-2 px-2 rounded-lg bg-muted">
-                                  <Search size={14} className="text-muted-foreground" />
+                              <div className="p-2 border-b border-neutral-100 dark:border-white/10">
+                                <div className="flex items-center gap-2 px-3 rounded-xl bg-neutral-100 dark:bg-white/[0.06]">
+                                  <Search size={14} className="text-neutral-500" />
                                   <input
                                     autoFocus
                                     value={countrySearch}
                                     onChange={(e) => setCountrySearch(e.target.value)}
                                     placeholder="Buscar país..."
-                                    className="flex-1 bg-transparent border-none outline-none text-sm py-2 placeholder:text-muted-foreground"
+                                    className="flex-1 bg-transparent border-none outline-none text-sm py-2 text-neutral-950 dark:text-white placeholder:text-neutral-400 dark:placeholder:text-neutral-500 font-normal"
                                   />
                                 </div>
                               </div>
-                              <div className="overflow-y-auto flex-1">
+                              <div className="overflow-y-auto flex-1 p-1">
                                 {COUNTRY_CODES.filter(c =>
                                   c.country.toLowerCase().includes(countrySearch.toLowerCase()) ||
                                   c.code.includes(countrySearch)
@@ -657,11 +685,11 @@ const Onboarding = () => {
                                     key={`${c.code}-${c.country}-${i}`}
                                     type="button"
                                     onClick={() => { setCountryCode(c); setShowCountryPicker(false); }}
-                                    className="w-full flex items-center gap-3 px-4 py-2.5 text-sm hover:bg-muted transition-colors text-left"
+                                    className="w-full flex items-center gap-3 px-3.5 py-2.5 text-sm rounded-xl hover:bg-neutral-100 dark:hover:bg-white/[0.08] transition-colors text-left text-neutral-900 dark:text-neutral-100"
                                   >
-                                    <span>{c.flag}</span>
-                                    <span className="flex-1">{c.country}</span>
-                                    <span className="text-muted-foreground">{c.code}</span>
+                                    <span className="text-base">{c.flag}</span>
+                                    <span className="flex-1 font-medium">{c.country}</span>
+                                    <span className="text-neutral-600 dark:text-neutral-400 font-semibold text-xs">{c.code}</span>
                                   </button>
                                 ))}
                               </div>
@@ -673,7 +701,7 @@ const Onboarding = () => {
                         value={phone}
                         onChange={(e) => setPhone(e.target.value.replace(/[^0-9\s]/g, ""))}
                         placeholder="55 1234 5678"
-                        className="flex-1 shadow-none border-none bg-muted"
+                        className="flex-1 shadow-none bg-neutral-100 dark:bg-white/[0.06] border border-black/[0.08] dark:border-white/[0.1] text-neutral-950 dark:text-white placeholder:text-neutral-400 dark:placeholder:text-neutral-500 font-medium h-11 rounded-xl px-4"
                         type="tel"
                       />
                     </div>
@@ -681,18 +709,18 @@ const Onboarding = () => {
                 </div>
               )}
 
-              {/* Step 5: Done */}
+              {/* Step 6: Done */}
               {step === 6 && (
                 <div className="text-center space-y-6 max-w-md mx-auto">
                   <div className="mx-auto w-28 h-28">
                     <img src={onboardingDone} alt="Listo" className="w-full h-full object-contain" />
                   </div>
-                  <AnimatedText text="¡Todo listo!" className="text-3xl font-normal" />
-                  <p className="text-muted-foreground font-light text-base max-w-xs mx-auto">
+                  <AnimatedText text="¡Todo listo!" className="text-3xl sm:text-4xl font-normal text-neutral-950 dark:text-white tracking-tight" />
+                  <p className="text-neutral-700 dark:text-neutral-300 font-normal text-base max-w-xs mx-auto leading-relaxed">
                     Es hora de descubrir oportunidades y pasar al siguiente nivel.
                   </p>
                   <div className="pt-2">
-                    <Button onClick={handleFinish} className="px-10 rounded-full">
+                    <Button onClick={handleFinish} className="px-10 rounded-full font-semibold text-sm h-11">
                       Empezar a descubrir
                     </Button>
                   </div>
@@ -701,7 +729,6 @@ const Onboarding = () => {
             </motion.div>
           </AnimatePresence>
 
-
           {/* Step indicator dots */}
           {step < 6 && (
             <motion.div
@@ -709,13 +736,13 @@ const Onboarding = () => {
               initial={{ y: 20, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               transition={{ duration: 0.6, type: "spring", stiffness: 180, damping: 22, delay: 0.35 }}
-              className="flex justify-center gap-1.5 mt-8"
+              className="flex justify-center gap-1.5 mt-10"
             >
               {Array.from({ length: TOTAL_STEPS }).map((_, i) => (
                 <div
                   key={i}
                   className={`h-1.5 rounded-full transition-all duration-300 ${
-                    i === step ? "w-6 bg-foreground" : "w-1.5 bg-muted-foreground/30"
+                    i === step ? "w-6 bg-neutral-950 dark:bg-white" : "w-1.5 bg-neutral-300 dark:bg-neutral-700"
                   }`}
                 />
               ))}
