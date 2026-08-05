@@ -16,8 +16,22 @@ type AIPromptBarProps = {
   onAddWidget?: (widget: WidgetDef) => void;
 };
 
-const AIPromptBar = ({ onGenerate, isGenerating, forceOpen, extendLabel, onCancelExtend, onAddWidget }: AIPromptBarProps) => {
+/* Spring physics ultra-fluido y orgánico */
+const spring = {
+  type: "spring" as const,
+  stiffness: 380,
+  damping: 28,
+  mass: 0.5,
+};
 
+const AIPromptBar = ({
+  onGenerate,
+  isGenerating,
+  forceOpen,
+  extendLabel,
+  onCancelExtend,
+  onAddWidget,
+}: AIPromptBarProps) => {
   const [prompt, setPrompt] = useState("");
   const [isExpanded, setIsExpanded] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -26,7 +40,6 @@ const AIPromptBar = ({ onGenerate, isGenerating, forceOpen, extendLabel, onCance
   const { isDark } = useTheme();
   const [isRecording, setIsRecording] = useState(false);
   const [canScrollTop, setCanScrollTop] = useState(false);
-
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const recognitionRef = useRef<any>(null);
@@ -86,11 +99,11 @@ const AIPromptBar = ({ onGenerate, isGenerating, forceOpen, extendLabel, onCance
   useEffect(() => {
     if (forceOpen) {
       setIsExpanded(true);
-      // enfoca el input al activar el modo ampliación
-      setTimeout(() => textareaRef.current?.focus(), 60);
+      setTimeout(() => textareaRef.current?.focus(), 80);
     }
   }, [forceOpen]);
 
+  /* Auto-resize textarea */
   useEffect(() => {
     if (textareaRef.current) {
       textareaRef.current.style.height = "auto";
@@ -113,102 +126,107 @@ const AIPromptBar = ({ onGenerate, isGenerating, forceOpen, extendLabel, onCance
     }
   };
 
-  const showHideButton = isHovered || isFocused;
-
-  const springPhysics = {
-    type: "spring",
-    stiffness: 400,
-    damping: 28,
-    mass: 0.6,
+  const expand = () => {
+    setIsExpanded(true);
+    setTimeout(() => textareaRef.current?.focus(), 80);
   };
 
   const hasText = prompt.trim().length > 0;
+  const showHideButton = isHovered || isFocused;
 
   return (
     <div className="absolute bottom-12 inset-x-0 flex flex-col items-center justify-end z-10 pointer-events-none">
-      <AnimatePresence mode="wait" initial={false}>
-        {!isExpanded ? (
-          <motion.div
-            key="collapsed-ai-btn"
-            initial={{ scale: 0.8, opacity: 0, y: 15 }}
-            animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.8, opacity: 0, y: 15 }}
-            transition={springPhysics}
-            className="pointer-events-auto"
-          >
-            <button
-              onClick={() => setIsExpanded(true)}
-              className={`w-[52px] h-[52px] bg-black rounded-[20px] flex items-center justify-center shadow-[0_10px_30px_rgba(0,0,0,0.2)] hover:scale-105 active:scale-95 transition-all duration-200 ${
-                isDark ? "ring-1 ring-white/15" : "border border-white/10"
-              }`}
-              aria-label="Abrir asistente IA"
+      {/* Botón ocultar asistente (flota arriba de la barra) */}
+      <div className="relative flex justify-center w-full max-w-[calc(100vw-130px)] md:max-w-2xl">
+        <AnimatePresence>
+          {isExpanded && showHideButton && (
+            <motion.div
+              initial={{ y: 14, opacity: 0, scale: 0.75 }}
+              animate={{ y: -14, opacity: 1, scale: 1 }}
+              exit={{ y: 12, opacity: 0, scale: 0.75 }}
+              transition={{ type: "spring", stiffness: 500, damping: 28, mass: 0.4 }}
+              className="absolute -top-10 z-20 pointer-events-auto"
             >
-              <img src={logoImg} alt="AI" className="w-7 h-7 select-none" />
-            </button>
-          </motion.div>
-        ) : (
-          <motion.div
-            key="expanded-ai-bar"
-            initial={{ y: 20, opacity: 0, scale: 0.94 }}
-            animate={{ y: 0, opacity: 1, scale: 1 }}
-            exit={{ y: 20, opacity: 0, scale: 0.94 }}
-            transition={springPhysics}
-            className="relative w-full max-w-[calc(100vw-130px)] md:max-w-2xl pointer-events-auto flex flex-col"
-            onMouseEnter={() => setIsHovered(true)}
-            onMouseLeave={() => setIsHovered(false)}
-          >
-            {/* Hide button sliding from behind */}
-            <div className="absolute top-0 left-0 right-0 h-0 flex justify-center pointer-events-none">
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  setIsExpanded(false);
+                }}
+                className="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center shadow-lg hover:bg-neutral-800 active:scale-95 transition-all border border-white/10"
+                title="Ocultar asistente"
+              >
+                <EyeOff size={14} strokeWidth={1.5} />
+              </button>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* ── Contenedor único con morphing layout fluido ── */}
+      <motion.div
+        layout
+        transition={spring}
+        onClick={!isExpanded ? expand : undefined}
+        onMouseEnter={() => isExpanded && setIsHovered(true)}
+        onMouseLeave={() => isExpanded && setIsHovered(false)}
+        className={`pointer-events-auto bg-black text-white relative z-10 select-none overflow-hidden transition-shadow duration-300 ${
+          isDark ? "ring-1 ring-white/15" : "border border-white/10"
+        } ${
+          isExpanded
+            ? "w-full max-w-[calc(100vw-130px)] md:max-w-2xl rounded-[36px] pt-7 pb-4 px-6 shadow-[0_20px_50px_rgba(0,0,0,0.35)] flex flex-col justify-between"
+            : "w-[52px] h-[52px] rounded-[20px] p-0 flex items-center justify-center cursor-pointer shadow-[0_10px_30px_rgba(0,0,0,0.22)] hover:scale-105 active:scale-95"
+        }`}
+        aria-label={!isExpanded ? "Abrir asistente IA" : undefined}
+      >
+        <AnimatePresence mode="wait" initial={false}>
+          {!isExpanded ? (
+            /* Estado colapsado: Isotipo / Logo */
+            <motion.div
+              key="collapsed-logo"
+              initial={{ opacity: 0, scale: 0.7 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.7 }}
+              transition={{ duration: 0.15 }}
+              className="w-full h-full flex items-center justify-center"
+            >
+              <img src={logoImg} alt="AI" className="w-7 h-7 select-none pointer-events-none" />
+            </motion.div>
+          ) : (
+            /* Estado expandido: Campo de texto y herramientas */
+            <motion.div
+              key="expanded-content"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2, delay: 0.05 }}
+              className="w-full flex flex-col"
+            >
+              {/* Tag de ampliación de contexto */}
               <AnimatePresence>
-                {showHideButton && (
+                {extendLabel && (
                   <motion.div
-                    initial={{ y: 15, opacity: 0, scale: 0.8 }}
-                    animate={{ y: -52, opacity: 1, scale: 1 }}
-                    exit={{ y: 15, opacity: 0, scale: 0.8 }}
-                    transition={{ type: "spring", stiffness: 450, damping: 26 }}
-                    className="z-0 pointer-events-auto"
+                    initial={{ opacity: 0, y: -6 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -6 }}
+                    transition={spring}
+                    className="flex items-center justify-center gap-2 mb-3"
                   >
-                    <button
-                      onClick={() => setIsExpanded(false)}
-                      className="w-9 h-9 bg-black text-white rounded-full flex items-center justify-center shadow-lg hover:bg-neutral-800 active:scale-95 transition-all border border-white/10"
-                      title="Ocultar asistente"
-                    >
-                      <EyeOff size={15} strokeWidth={1.5} />
-                    </button>
+                    <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#4059F1]/20 text-[#9DB0FF] text-[11px] font-light">
+                      {extendLabel}
+                      <button
+                        onClick={() => onCancelExtend?.()}
+                        className="text-white/60 hover:text-white transition-colors"
+                        title="Cancelar ampliación"
+                      >
+                        <X size={12} strokeWidth={2} />
+                      </button>
+                    </span>
                   </motion.div>
                 )}
               </AnimatePresence>
-            </div>
 
-            {/* Main Prompt Bar */}
-            <motion.div
-              layout
-              transition={springPhysics}
-              className={`bg-black rounded-[36px] pt-7 pb-4 px-6 shadow-2xl relative z-10 w-full select-none ${
-                isDark ? "ring-1 ring-white/10" : "border border-white/10"
-              }`}
-            >
-              {extendLabel && (
-                <motion.div
-                  initial={{ opacity: 0, y: -5 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  exit={{ opacity: 0, y: -5 }}
-                  className="flex items-center justify-center gap-2 mb-3"
-                >
-                  <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#4059F1]/20 text-[#9DB0FF] text-[11px] font-light">
-                    {extendLabel}
-                    <button
-                      onClick={() => onCancelExtend?.()}
-                      className="text-white/60 hover:text-white transition-colors"
-                      title="Cancelar ampliación"
-                    >
-                      <X size={12} strokeWidth={2} />
-                    </button>
-                  </span>
-                </motion.div>
-              )}
+              {/* Textarea */}
               <div className="relative w-full">
-                {/* Gradient overlay for when scrolled down */}
                 <div
                   className={`absolute top-0 left-0 right-0 h-6 bg-gradient-to-b from-black to-transparent pointer-events-none transition-opacity duration-300 rounded-t-[10px] z-10 ${
                     canScrollTop ? "opacity-100" : "opacity-0"
@@ -229,6 +247,7 @@ const AIPromptBar = ({ onGenerate, isGenerating, forceOpen, extendLabel, onCance
                 />
               </div>
 
+              {/* Controles inferiores */}
               <div className="flex items-center justify-between mt-2 pt-1">
                 <div className="flex items-center gap-2">
                   <AppsMenu isDark={isDark} />
@@ -261,15 +280,25 @@ const AIPromptBar = ({ onGenerate, isGenerating, forceOpen, extendLabel, onCance
                       <Mic size={16} strokeWidth={1.5} />
                     </button>
                   )}
-                  <button
+                  <motion.button
                     onClick={() => handleSubmit()}
                     disabled={!hasText || isGenerating}
-                    className={`w-9 h-9 rounded-full flex items-center justify-center transition-all duration-200 ${
-                      isGenerating
-                        ? "bg-white/20 text-white cursor-wait"
+                    layout
+                    animate={{
+                      scale: hasText ? 1.07 : 1,
+                      backgroundColor: isGenerating
+                        ? "rgba(255,255,255,0.18)"
                         : hasText
-                        ? "bg-white text-black shadow-md scale-105 hover:scale-110 active:scale-95 cursor-pointer"
-                        : "bg-white/10 text-white/30 cursor-default"
+                        ? "#ffffff"
+                        : "rgba(255,255,255,0.1)",
+                    }}
+                    transition={spring}
+                    className={`w-9 h-9 rounded-full flex items-center justify-center transition-colors duration-200 ${
+                      isGenerating
+                        ? "text-white cursor-wait"
+                        : hasText
+                        ? "text-black shadow-md cursor-pointer hover:scale-110 active:scale-95"
+                        : "text-white/30 cursor-default"
                     }`}
                   >
                     {isGenerating ? (
@@ -277,13 +306,14 @@ const AIPromptBar = ({ onGenerate, isGenerating, forceOpen, extendLabel, onCance
                     ) : (
                       <ArrowUp size={16} strokeWidth={2} />
                     )}
-                  </button>
+                  </motion.button>
                 </div>
               </div>
             </motion.div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+          )}
+        </AnimatePresence>
+      </motion.div>
+
       {onAddWidget && (
         <WidgetsPicker open={widgetsOpen} onClose={() => setWidgetsOpen(false)} onPick={onAddWidget} />
       )}

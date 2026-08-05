@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { MousePointer, Hand, Type, ListTodo, ImageIcon, SquareDashed, Plus } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
@@ -69,11 +69,21 @@ const SHAPES = [
   },
 ];
 
+/** Distancia mínima del punto (px, py) al borde del rect. 0 si está dentro. */
+function distToRect(px: number, py: number, rect: DOMRect): number {
+  const dx = Math.max(rect.left - px, 0, px - rect.right);
+  const dy = Math.max(rect.top - py, 0, py - rect.bottom);
+  return Math.sqrt(dx * dx + dy * dy);
+}
+
+/** Zona de proximidad en píxeles */
+const PROXIMITY_THRESHOLD = 90;
+
 const springPhysics = {
-  type: "spring",
-  stiffness: 400,
-  damping: 28,
-  mass: 0.6,
+  type: "spring" as const,
+  stiffness: 350,
+  damping: 22,
+  mass: 0.5,
 };
 
 const Toolbar = ({
@@ -85,166 +95,168 @@ const Toolbar = ({
 }: ToolbarProps) => {
   const [selectedShape, setSelectedShape] = useState("square");
   const [flyoutOpen, setFlyoutOpen] = useState(false);
-  const [isHovered, setIsHovered] = useState(false);
+  const [isNearby, setIsNearby] = useState(false);
+
+  const toolbarRef = useRef<HTMLDivElement>(null);
   const flyoutTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { isDark } = useTheme();
 
-  const handleMouseEnter = () => {
-    if (hoverTimer.current) {
-      clearTimeout(hoverTimer.current);
-      hoverTimer.current = null;
-    }
-    setIsHovered(true);
-  };
+  /* ── Proximidad: escucha mousemove en el window ── */
+  const handleMouseMove = useCallback((e: MouseEvent) => {
+    if (!toolbarRef.current) return;
+    const rect = toolbarRef.current.getBoundingClientRect();
+    const dist = distToRect(e.clientX, e.clientY, rect);
+    setIsNearby(dist < PROXIMITY_THRESHOLD);
+  }, []);
 
-  const handleMouseLeave = () => {
-    if (hoverTimer.current) clearTimeout(hoverTimer.current);
-    hoverTimer.current = setTimeout(() => {
-      if (!flyoutOpen) {
-        setIsHovered(false);
-      }
-    }, 220);
-  };
+  useEffect(() => {
+    window.addEventListener("mousemove", handleMouseMove, { passive: true });
+    return () => window.removeEventListener("mousemove", handleMouseMove);
+  }, [handleMouseMove]);
 
+  /* ── Flyout helpers ── */
   const openFlyout = () => {
     if (flyoutTimer.current) clearTimeout(flyoutTimer.current);
     setFlyoutOpen(true);
-    setIsHovered(true);
   };
 
   const closeFlyout = () => {
-    flyoutTimer.current = setTimeout(() => {
-      setFlyoutOpen(false);
-    }, 180);
+    flyoutTimer.current = setTimeout(() => setFlyoutOpen(false), 180);
   };
 
   useEffect(() => {
     return () => {
       if (flyoutTimer.current) clearTimeout(flyoutTimer.current);
-      if (hoverTimer.current) clearTimeout(hoverTimer.current);
     };
   }, []);
 
   const currentShape = SHAPES.find((s) => s.id === selectedShape) || SHAPES[0];
-  const isDrawingToolActive = activeDrawShape !== null;
-  const isExpanded = isHovered || flyoutOpen || isDrawingToolActive;
+
+  const isShapeActive =
+    activeDrawShape !== null &&
+    activeDrawShape !== "text" &&
+    activeDrawShape !== "todo" &&
+    activeDrawShape !== "image" &&
+    activeDrawShape !== "frame";
+
+  /* ── Clases de botón ── */
+  const btnCls = (isActive: boolean) =>
+    `w-10 h-10 flex items-center justify-center rounded-full transition-all duration-200 ${
+      isActive
+        ? isDark
+          ? "bg-white text-black shadow-sm"
+          : "bg-black text-white shadow-sm"
+        : isDark
+        ? "hover:bg-white/10 text-gray-400 hover:text-white"
+        : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
+    }`;
 
   return (
     <motion.div
-      layout
-      transition={springPhysics}
-      onMouseEnter={handleMouseEnter}
-      onMouseLeave={handleMouseLeave}
+      ref={toolbarRef}
       initial={{ x: -40, opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
-      className={`absolute inset-y-0 my-auto h-fit left-6 z-10 flex flex-col items-center gap-1.5 px-2 py-2.5 rounded-[28px] shadow-[0_8px_30px_rgb(0,0,0,0.06)] font-sans select-none ${
+      animate={{
+        x: 0,
+        opacity: 1,
+        translateX: isNearby ? 4 : 0,
+        scale: isNearby ? 1.04 : 1,
+        boxShadow: isNearby
+          ? isDark
+            ? "0 12px 40px rgba(255,255,255,0.06), 0 4px 16px rgba(0,0,0,0.3)"
+            : "0 12px 40px rgba(0,0,0,0.12), 0 4px 16px rgba(0,0,0,0.06)"
+          : "0 8px 30px rgba(0,0,0,0.06)",
+      }}
+      transition={{
+        x: { type: "spring", stiffness: 380, damping: 30, mass: 0.7 },
+        opacity: { duration: 0.3 },
+        translateX: springPhysics,
+        scale: springPhysics,
+        boxShadow: { duration: 0.25 },
+      }}
+      className={`absolute inset-y-0 my-auto h-fit left-6 z-10 flex flex-col items-center gap-1.5 px-2 py-2.5 rounded-[28px] font-sans select-none ${
         isDark ? "bg-[#1C1C1E] border border-white/10 text-white" : "bg-white border border-black/[0.06] text-black"
       }`}
     >
-      {/* 1. Seleccionar */}
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <button
-            onClick={() => {
-              setInteractionMode("edit");
-              setActiveDrawShape(null);
-            }}
-            className={`w-10 h-10 flex items-center justify-center rounded-full transition-all duration-200 ${
-              interactionMode === "edit" && activeDrawShape === null
-                ? isDark
-                  ? "bg-white text-black shadow-sm scale-100"
-                  : "bg-black text-white shadow-sm scale-100"
-                : isDark
-                ? "hover:bg-white/10 text-gray-400 hover:text-white"
-                : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
-            }`}
+      {/* ── Estado colapsado: solo el Plus con fade simple ── */}
+      <AnimatePresence mode="popLayout">
+        {!isNearby && (
+          <motion.div
+            key="collapsed-plus"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.18, ease: "easeInOut" }}
           >
-            <MousePointer size={18} strokeWidth={1.5} />
-          </button>
-        </TooltipTrigger>
-        <TooltipContent side="right" sideOffset={12} className="text-[13px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
-          Seleccionar
-        </TooltipContent>
-      </Tooltip>
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  className={`w-10 h-10 flex items-center justify-center rounded-full transition-all duration-200 ${
+                    isDark
+                      ? "hover:bg-white/10 text-gray-400 hover:text-white"
+                      : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
+                  }`}
+                  aria-label="Herramientas"
+                >
+                  <Plus size={19} strokeWidth={1.75} />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="right" sideOffset={12} className="text-[13px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
+                Herramientas
+              </TooltipContent>
+            </Tooltip>
+          </motion.div>
+        )}
 
-      {/* 2. Navegar */}
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <button
-            onClick={() => {
-              setInteractionMode("pan");
-              setActiveDrawShape(null);
-            }}
-            className={`w-10 h-10 flex items-center justify-center rounded-full transition-all duration-200 ${
-              interactionMode === "pan"
-                ? isDark
-                  ? "bg-white text-black shadow-sm scale-100"
-                  : "bg-black text-white shadow-sm scale-100"
-                : isDark
-                ? "hover:bg-white/10 text-gray-400 hover:text-white"
-                : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
-            }`}
+        {/* ── Estado expandido: todas las herramientas con fade simple ── */}
+        {isNearby && (
+          <motion.div
+            key="expanded-tools"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.18, ease: "easeInOut" }}
+            className="flex flex-col items-center gap-1.5"
           >
-            <Hand size={18} strokeWidth={1.5} />
-          </button>
-        </TooltipTrigger>
-        <TooltipContent side="right" sideOffset={12} className="text-[13px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
-          Navegar
-        </TooltipContent>
-      </Tooltip>
+            {/* 1. Seleccionar */}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => {
+                    setInteractionMode("edit");
+                    setActiveDrawShape(null);
+                  }}
+                  className={btnCls(interactionMode === "edit" && activeDrawShape === null)}
+                >
+                  <MousePointer size={18} strokeWidth={1.5} />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="right" sideOffset={12} className="text-[13px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
+                Seleccionar
+              </TooltipContent>
+            </Tooltip>
 
-      {/* 3. Separador */}
-      <motion.div layout transition={springPhysics} className={`w-6 h-[1px] my-0.5 shrink-0 ${isDark ? "bg-white/10" : "bg-[#E5E7EB]"}`} />
+            {/* 2. Navegar */}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => {
+                    setInteractionMode("pan");
+                    setActiveDrawShape(null);
+                  }}
+                  className={btnCls(interactionMode === "pan")}
+                >
+                  <Hand size={18} strokeWidth={1.5} />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="right" sideOffset={12} className="text-[13px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
+                Navegar
+              </TooltipContent>
+            </Tooltip>
 
-      {/* 4. Sección de Herramientas Dinámicas (Plus cuando colapsado, Lista cuando expandido) */}
-      <motion.div layout transition={springPhysics} className="flex flex-col items-center gap-1.5">
-        <AnimatePresence initial={false} mode="popLayout">
-          {!isExpanded ? (
-            /* Estado Colapsado: Botón Plus con animación elástica */
-            <motion.div
-              key="collapsed-plus"
-              layout
-              initial={{ opacity: 0, scale: 0.6, rotate: -45 }}
-              animate={{ opacity: 1, scale: 1, rotate: 0 }}
-              exit={{ opacity: 0, scale: 0.6, rotate: 45 }}
-              transition={springPhysics}
-            >
-              <Tooltip>
-                <TooltipTrigger asChild>
-                  <button
-                    onClick={() => setIsHovered(true)}
-                    className={`w-10 h-10 flex items-center justify-center rounded-full transition-all duration-200 ${
-                      isDrawingToolActive
-                        ? isDark
-                          ? "bg-white text-black shadow-sm"
-                          : "bg-black text-white shadow-sm"
-                        : isDark
-                        ? "hover:bg-white/10 text-gray-400 hover:text-white"
-                        : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
-                    }`}
-                    aria-label="Elementos y formas"
-                  >
-                    <Plus size={19} strokeWidth={1.75} />
-                  </button>
-                </TooltipTrigger>
-                <TooltipContent side="right" sideOffset={12} className="text-[13px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
-                  Elementos y formas
-                </TooltipContent>
-              </Tooltip>
-            </motion.div>
-          ) : (
-            /* Estado Expandido: Formas y Elementos */
-            <motion.div
-              key="expanded-tools"
-              layout
-              initial={{ opacity: 0, scale: 0.9, y: -8 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.9, y: -8 }}
-              transition={springPhysics}
-              className="flex flex-col items-center gap-1.5"
-            >
-            {/* Formas con flyout */}
+            {/* Separador */}
+            <div className={`w-6 h-[1px] my-0.5 shrink-0 ${isDark ? "bg-white/10" : "bg-[#E5E7EB]"}`} />
+
+            {/* 3. Formas (con flyout) */}
             <div className="relative flex items-center" onMouseEnter={openFlyout} onMouseLeave={closeFlyout}>
               <Tooltip open={flyoutOpen ? false : undefined}>
                 <TooltipTrigger asChild>
@@ -257,19 +269,7 @@ const Toolbar = ({
                         setInteractionMode("edit");
                       }
                     }}
-                    className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
-                      activeDrawShape !== null &&
-                      activeDrawShape !== "text" &&
-                      activeDrawShape !== "todo" &&
-                      activeDrawShape !== "image" &&
-                      activeDrawShape !== "frame"
-                        ? isDark
-                          ? "bg-white text-black shadow-md hover:bg-white/90"
-                          : "bg-black text-white shadow-md hover:bg-black/90"
-                        : isDark
-                        ? "hover:bg-white/10 text-gray-400 hover:text-white"
-                        : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
-                    }`}
+                    className={btnCls(isShapeActive)}
                   >
                     {currentShape.icon}
                   </button>
@@ -312,9 +312,7 @@ const Toolbar = ({
                           title={shape.label}
                           className={`w-12 h-12 flex items-center justify-center rounded-xl transition-all ${
                             selectedShape === shape.id
-                              ? isDark
-                                ? "bg-white text-black"
-                                : "bg-white text-black"
+                              ? "bg-white text-black"
                               : isDark
                               ? "text-gray-400 hover:bg-white/10 hover:text-white"
                               : "text-[#777] hover:bg-[#222] hover:text-white"
@@ -329,7 +327,7 @@ const Toolbar = ({
               </AnimatePresence>
             </div>
 
-            {/* Texto */}
+            {/* 4. Texto */}
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
@@ -341,15 +339,7 @@ const Toolbar = ({
                       setInteractionMode("edit");
                     }
                   }}
-                  className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
-                    activeDrawShape === "text"
-                      ? isDark
-                        ? "bg-white text-black shadow-md"
-                        : "bg-black text-white"
-                      : isDark
-                      ? "hover:bg-white/10 text-gray-400 hover:text-white"
-                      : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
-                  }`}
+                  className={btnCls(activeDrawShape === "text")}
                 >
                   <Type size={18} strokeWidth={1.5} />
                 </button>
@@ -359,7 +349,7 @@ const Toolbar = ({
               </TooltipContent>
             </Tooltip>
 
-            {/* Lista de Tareas */}
+            {/* 5. Lista de tareas */}
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
@@ -371,25 +361,17 @@ const Toolbar = ({
                       setInteractionMode("edit");
                     }
                   }}
-                  className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
-                    activeDrawShape === "todo"
-                      ? isDark
-                        ? "bg-white text-black shadow-md"
-                        : "bg-black text-white"
-                      : isDark
-                      ? "hover:bg-white/10 text-gray-400 hover:text-white"
-                      : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
-                  }`}
+                  className={btnCls(activeDrawShape === "todo")}
                 >
                   <ListTodo size={18} strokeWidth={1.5} />
                 </button>
               </TooltipTrigger>
               <TooltipContent side="right" sideOffset={12} className="text-[13px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
-                Lista de Tareas
+                Lista de tareas
               </TooltipContent>
             </Tooltip>
 
-            {/* Image Block */}
+            {/* 6. Imagen */}
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
@@ -401,15 +383,7 @@ const Toolbar = ({
                       setInteractionMode("edit");
                     }
                   }}
-                  className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
-                    activeDrawShape === "image"
-                      ? isDark
-                        ? "bg-white text-black shadow-md"
-                        : "bg-black text-white"
-                      : isDark
-                      ? "hover:bg-white/10 text-gray-400 hover:text-white"
-                      : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
-                  }`}
+                  className={btnCls(activeDrawShape === "image")}
                 >
                   <ImageIcon size={18} strokeWidth={1.5} />
                 </button>
@@ -419,7 +393,7 @@ const Toolbar = ({
               </TooltipContent>
             </Tooltip>
 
-            {/* Frame / Section */}
+            {/* 7. Sección */}
             <Tooltip>
               <TooltipTrigger asChild>
                 <button
@@ -431,15 +405,7 @@ const Toolbar = ({
                       setInteractionMode("edit");
                     }
                   }}
-                  className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
-                    activeDrawShape === "frame"
-                      ? isDark
-                        ? "bg-white text-black shadow-md"
-                        : "bg-black text-white"
-                      : isDark
-                      ? "hover:bg-white/10 text-gray-400 hover:text-white"
-                      : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
-                  }`}
+                  className={btnCls(activeDrawShape === "frame")}
                 >
                   <SquareDashed size={18} strokeWidth={1.5} />
                 </button>
@@ -451,7 +417,6 @@ const Toolbar = ({
           </motion.div>
         )}
       </AnimatePresence>
-      </motion.div>
     </motion.div>
   );
 };

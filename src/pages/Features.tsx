@@ -88,6 +88,8 @@ const featuresData = [
   }
 ];
 
+import logoImg from "@/assets/logo.webp";
+
 const TypewriterInput = () => {
   const phrases = [
     "Crea un embudo de ventas para mi curso online...",
@@ -97,66 +99,172 @@ const TypewriterInput = () => {
     "Organiza el proceso de soporte y tickets B2B..."
   ];
 
+  const [isExpanded, setIsExpanded] = useState(false);
   const [currentText, setCurrentText] = useState("");
   const [phraseIdx, setPhraseIdx] = useState(0);
-  const [isDeleting, setIsDeleting] = useState(false);
+  const [cursorPos, setCursorPos] = useState({ x: 30, y: 30, opacity: 0, scale: 1 });
+  const [isSubmitted, setIsSubmitted] = useState(false);
 
   useEffect(() => {
-    let timer: any;
-    const currentPhrase = phrases[phraseIdx];
-    
-    if (isDeleting) {
-      timer = setTimeout(() => {
-        setCurrentText(currentPhrase.substring(0, currentText.length - 1));
-      }, 30);
-    } else {
-      timer = setTimeout(() => {
-        setCurrentText(currentPhrase.substring(0, currentText.length + 1));
-      }, 60);
-    }
+    let timeouts: any[] = [];
 
-    if (!isDeleting && currentText === currentPhrase) {
-      timer = setTimeout(() => {
-        setIsDeleting(true);
-      }, 1800);
-    }
+    const runSequence = () => {
+      const phrase = phrases[phraseIdx];
+      setIsExpanded(false);
+      setCurrentText("");
+      setIsSubmitted(false);
+      setCursorPos({ x: 35, y: 35, opacity: 0, scale: 1 });
 
-    if (isDeleting && currentText === "") {
-      setIsDeleting(false);
-      setPhraseIdx((prev) => (prev + 1) % phrases.length);
-    }
+      // 1. El cursor se mueve al centro del contenedor pequeño con el logo
+      timeouts.push(setTimeout(() => {
+        setCursorPos({ x: 0, y: 0, opacity: 1, scale: 1 });
+      }, 700));
 
-    return () => clearTimeout(timer);
-  }, [currentText, isDeleting, phraseIdx]);
+      // 2. Click sobre el logo
+      timeouts.push(setTimeout(() => {
+        setCursorPos({ x: 0, y: 0, opacity: 1, scale: 0.85 });
+      }, 1300));
+
+      // 3. El contenedor crece fluidamente y el cursor se libera
+      timeouts.push(setTimeout(() => {
+        setCursorPos({ x: 0, y: 0, opacity: 1, scale: 1 });
+        setIsExpanded(true);
+      }, 1500));
+
+      // 4. Cursor se aleja mientras se ve el input
+      timeouts.push(setTimeout(() => {
+        setCursorPos({ x: 90, y: 50, opacity: 0, scale: 1 });
+      }, 1900));
+
+      // 5. Inicia la escritura del texto
+      const typeStartDelay = 2100;
+      for (let i = 1; i <= phrase.length; i++) {
+        timeouts.push(setTimeout(() => {
+          setCurrentText(phrase.substring(0, i));
+        }, typeStartDelay + i * 40));
+      }
+
+      const finishTypingTime = typeStartDelay + phrase.length * 40;
+
+      // 6. Cursor se mueve al botón de envío
+      timeouts.push(setTimeout(() => {
+        setCursorPos({ x: 120, y: 38, opacity: 1, scale: 1 });
+      }, finishTypingTime + 350));
+
+      // 7. Click en enviar
+      timeouts.push(setTimeout(() => {
+        setCursorPos({ x: 120, y: 38, opacity: 1, scale: 0.85 });
+        setIsSubmitted(true);
+      }, finishTypingTime + 850));
+
+      // 8. Soltar click
+      timeouts.push(setTimeout(() => {
+        setCursorPos({ x: 120, y: 38, opacity: 0, scale: 1 });
+      }, finishTypingTime + 1150));
+
+      // 9. Se contrae fluidamente de vuelta al contenedor pequeño con el logo
+      timeouts.push(setTimeout(() => {
+        setIsExpanded(false);
+        setIsSubmitted(false);
+        setCurrentText("");
+        setPhraseIdx((prev) => (prev + 1) % phrases.length);
+      }, finishTypingTime + 1850));
+    };
+
+    runSequence();
+
+    return () => {
+      timeouts.forEach(clearTimeout);
+    };
+  }, [phraseIdx]);
 
   return (
-    <div className="w-full max-w-[320px] bg-black text-white rounded-[32px] pt-7 pb-4 px-5 text-center flex flex-col justify-between min-h-[145px] shadow-none hover:scale-[1.02] transition-transform duration-300 select-none">
-      <div className="flex-1 flex items-center justify-center min-h-[50px] mb-3">
-        <p className="text-[13px] text-white font-light leading-relaxed text-center w-full">
-          {currentText}
-          <span className="inline-block w-[1.5px] h-3.5 ml-0.5 bg-white animate-pulse align-middle" />
-        </p>
-      </div>
+    <div className="relative w-full h-full flex items-center justify-center select-none">
+      {/* Contenedor interactivo que crece y decrece fluidamente con spring physics */}
+      <motion.div
+        layout
+        transition={{ type: "spring", stiffness: 380, damping: 28, mass: 0.5 }}
+        onClick={() => setIsExpanded((prev) => !prev)}
+        className={`bg-black text-white relative select-none overflow-hidden cursor-pointer ${
+          isExpanded
+            ? "w-full max-w-[320px] min-h-[145px] rounded-[32px] pt-7 pb-4 px-5 flex flex-col justify-between shadow-[0_20px_50px_rgba(0,0,0,0.35)]"
+            : "w-[52px] h-[52px] rounded-[20px] p-0 flex items-center justify-center shadow-[0_10px_30px_rgba(0,0,0,0.22)] hover:scale-105 active:scale-95"
+        }`}
+      >
+        <AnimatePresence mode="wait" initial={false}>
+          {!isExpanded ? (
+            /* Estado 1: Contenedor pequeño con logo */
+            <motion.div
+              key="logo-preview"
+              initial={{ opacity: 0, scale: 0.7 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.7 }}
+              transition={{ duration: 0.15 }}
+              className="w-full h-full flex items-center justify-center"
+            >
+              <img src={logoImg} alt="AI" className="w-7 h-7 select-none pointer-events-none" />
+            </motion.div>
+          ) : (
+            /* Estado 2: Contenedor expandido con input y controles */
+            <motion.div
+              key="input-preview"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.2, delay: 0.05 }}
+              className="w-full flex flex-col justify-between h-full flex-1"
+            >
+              <div className="flex-1 flex items-center justify-center min-h-[50px] mb-3">
+                <p className="text-[13px] text-white font-light leading-relaxed text-center w-full">
+                  {currentText}
+                  <span className="inline-block w-[1.5px] h-3.5 ml-0.5 bg-white animate-pulse align-middle" />
+                </p>
+              </div>
 
-      <div className="flex items-center justify-between mt-2">
-        <div className="flex items-center gap-2 bg-white/10 h-8 px-3 rounded-full">
-          <svg className="w-3 h-3 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-            <rect x="3" y="3" width="7" height="7" rx="1" />
-            <rect x="14" y="3" width="7" height="7" rx="1" />
-            <rect x="14" y="14" width="7" height="7" rx="1" />
-            <rect x="3" y="14" width="7" height="7" rx="1" />
-          </svg>
-          <span className="text-[11px] font-light text-white/70 tracking-wider">Apps</span>
-        </div>
-        <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
-          currentText.length > 5 
-            ? "bg-white/20 text-white" 
-            : "bg-white/5 text-white/30"
-        }`}>
-          <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
-            <path strokeLinecap="round" strokeLinejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" />
-          </svg>
-        </div>
+              <div className="flex items-center justify-between mt-2">
+                <div className="flex items-center gap-2 bg-white/10 h-8 px-3 rounded-full">
+                  <svg className="w-3 h-3 text-white/70" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <rect x="3" y="3" width="7" height="7" rx="1" />
+                    <rect x="14" y="3" width="7" height="7" rx="1" />
+                    <rect x="14" y="14" width="7" height="7" rx="1" />
+                    <rect x="3" y="14" width="7" height="7" rx="1" />
+                  </svg>
+                  <span className="text-[11px] font-light text-white/70 tracking-wider">Apps</span>
+                </div>
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
+                  isSubmitted || currentText.length > 5 
+                    ? "bg-white text-black shadow-md scale-105" 
+                    : "bg-white/10 text-white/40"
+                }`}>
+                  <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={1.5}>
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M5 10l7-7m0 0l7 7m-7-7v18" />
+                  </svg>
+                </div>
+              </div>
+            </motion.div>
+          )}
+        </AnimatePresence>
+      </motion.div>
+
+      {/* Cursor animado sincronizado con la interacción */}
+      <div 
+        className="absolute z-50 pointer-events-none select-none"
+        style={{
+          transform: `translate(${cursorPos.x}px, ${cursorPos.y}px) scale(${cursorPos.scale})`,
+          opacity: cursorPos.opacity,
+          transition: "transform 0.5s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.3s ease",
+        }}
+      >
+        <svg className="w-5.5 h-5.5 filter drop-shadow-[0_2px_5px_rgba(0,0,0,0.25)]" viewBox="0 0 24 24">
+          <path 
+            d="M4 3l16 8-8 2-6 7z" 
+            fill="#222222" 
+            stroke="white" 
+            strokeWidth="2" 
+            strokeLinecap="round" 
+            strokeLinejoin="round" 
+          />
+        </svg>
       </div>
     </div>
   );
