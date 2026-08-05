@@ -1,6 +1,6 @@
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { MousePointer, Hand, Type, ListTodo, ImageIcon, SquareDashed } from "lucide-react";
+import { MousePointer, Hand, Type, ListTodo, ImageIcon, SquareDashed, Plus } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useTheme } from "@/contexts/ThemeContext";
 
@@ -69,6 +69,13 @@ const SHAPES = [
   },
 ];
 
+const springTransition = {
+  type: "spring",
+  stiffness: 380,
+  damping: 26,
+  mass: 0.8,
+};
+
 const Toolbar = ({
   onAddNode,
   interactionMode,
@@ -78,26 +85,64 @@ const Toolbar = ({
 }: ToolbarProps) => {
   const [selectedShape, setSelectedShape] = useState("square");
   const [flyoutOpen, setFlyoutOpen] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const flyoutTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const { isDark } = useTheme();
+
+  const handleMouseEnter = () => {
+    if (hoverTimer.current) {
+      clearTimeout(hoverTimer.current);
+      hoverTimer.current = null;
+    }
+    setIsHovered(true);
+  };
+
+  const handleMouseLeave = () => {
+    if (hoverTimer.current) clearTimeout(hoverTimer.current);
+    hoverTimer.current = setTimeout(() => {
+      if (!flyoutOpen) {
+        setIsHovered(false);
+      }
+    }, 180);
+  };
 
   const openFlyout = () => {
     if (flyoutTimer.current) clearTimeout(flyoutTimer.current);
     setFlyoutOpen(true);
-  };
-  const closeFlyout = () => {
-    flyoutTimer.current = setTimeout(() => setFlyoutOpen(false), 120);
+    setIsHovered(true);
   };
 
+  const closeFlyout = () => {
+    flyoutTimer.current = setTimeout(() => {
+      setFlyoutOpen(false);
+    }, 150);
+  };
+
+  useEffect(() => {
+    return () => {
+      if (flyoutTimer.current) clearTimeout(flyoutTimer.current);
+      if (hoverTimer.current) clearTimeout(hoverTimer.current);
+    };
+  }, []);
+
   const currentShape = SHAPES.find((s) => s.id === selectedShape) || SHAPES[0];
+  const isExpanded = isHovered || flyoutOpen;
+  const isDrawingToolActive = activeDrawShape !== null;
 
   return (
     <motion.div
+      layout
+      transition={springTransition}
+      onMouseEnter={handleMouseEnter}
+      onMouseLeave={handleMouseLeave}
       initial={{ x: -40, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
-      className={`absolute inset-y-0 my-auto h-fit left-6 z-10 flex flex-col items-center gap-1.5 px-2 py-3 rounded-[30px] shadow-[0_8px_30px_rgb(0,0,0,0.06)] font-sans ${isDark ? 'bg-[#1C1C1E] border border-white/10 text-white' : 'bg-white'}`}
+      className={`absolute inset-y-0 my-auto h-fit left-6 z-10 flex flex-col items-center gap-1.5 px-2 py-3 rounded-[30px] shadow-[0_8px_30px_rgb(0,0,0,0.06)] font-sans select-none ${
+        isDark ? "bg-[#1C1C1E] border border-white/10 text-white" : "bg-white border border-black/[0.04] text-black"
+      }`}
     >
-      {/* Seleccionar */}
+      {/* 1. Seleccionar */}
       <Tooltip>
         <TooltipTrigger asChild>
           <button
@@ -107,8 +152,12 @@ const Toolbar = ({
             }}
             className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
               interactionMode === "edit" && activeDrawShape === null
-                ? isDark ? "bg-white text-black shadow-md" : "bg-black text-white shadow-md"
-                : isDark ? "hover:bg-white/10 text-gray-400 hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
+                ? isDark
+                  ? "bg-white text-black shadow-md"
+                  : "bg-black text-white shadow-md"
+                : isDark
+                ? "hover:bg-white/10 text-gray-400 hover:text-white"
+                : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
             }`}
           >
             <MousePointer size={18} strokeWidth={1.5} />
@@ -119,7 +168,7 @@ const Toolbar = ({
         </TooltipContent>
       </Tooltip>
 
-      {/* Navegar */}
+      {/* 2. Navegar */}
       <Tooltip>
         <TooltipTrigger asChild>
           <button
@@ -129,8 +178,12 @@ const Toolbar = ({
             }}
             className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
               interactionMode === "pan"
-                ? isDark ? "bg-white text-black shadow-md" : "bg-black text-white shadow-md"
-                : isDark ? "hover:bg-white/10 text-gray-400 hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
+                ? isDark
+                  ? "bg-white text-black shadow-md"
+                  : "bg-black text-white shadow-md"
+                : isDark
+                ? "hover:bg-white/10 text-gray-400 hover:text-white"
+                : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
             }`}
           >
             <Hand size={18} strokeWidth={1.5} />
@@ -141,176 +194,260 @@ const Toolbar = ({
         </TooltipContent>
       </Tooltip>
 
-      <div className={`w-6 h-[1px] my-1 ${isDark ? 'bg-white/10' : 'bg-[#E5E7EB]'}`} />
+      {/* 3. Separador */}
+      <motion.div layout className={`w-6 h-[1px] my-1 shrink-0 ${isDark ? "bg-white/10" : "bg-[#E5E7EB]"}`} />
 
-      {/* Formas con flyout */}
-      <div className="relative flex items-center" onMouseEnter={openFlyout} onMouseLeave={closeFlyout}>
-        <Tooltip open={flyoutOpen ? false : undefined}>
-          <TooltipTrigger asChild>
-            <button
-              onClick={() => {
-                if (activeDrawShape === selectedShape) {
-                  setActiveDrawShape(null);
-                } else {
-                  setActiveDrawShape(selectedShape);
-                  setInteractionMode("edit");
-                }
-              }}
-              className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
-                activeDrawShape !== null && activeDrawShape !== "text" && activeDrawShape !== "todo" && activeDrawShape !== "image" && activeDrawShape !== "frame"
-                  ? isDark ? "bg-white text-black shadow-md hover:bg-white/90" : "bg-black text-white shadow-md hover:bg-black/90"
-                  : isDark ? "hover:bg-white/10 text-gray-400 hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
-              }`}
-            >
-              {currentShape.icon}
-            </button>
-          </TooltipTrigger>
-          <TooltipContent side="right" sideOffset={12} className={`text-[13px] border-none rounded-full px-3 py-1.5 font-light ${isDark ? 'bg-white text-black' : 'bg-black text-white'}`}>
-            Formas
-          </TooltipContent>
-        </Tooltip>
-
-        <AnimatePresence>
-          {flyoutOpen && (
-            <motion.div
-              initial={{ opacity: 0, x: -8, scale: 0.96 }}
-              animate={{ opacity: 1, x: 0, scale: 1 }}
-              exit={{ opacity: 0, x: -8, scale: 0.96 }}
-              transition={{ duration: 0.14, ease: "easeOut" }}
-              onMouseEnter={openFlyout}
-              onMouseLeave={closeFlyout}
-              className={`absolute left-[calc(100%+16px)] w-[128px] rounded-2xl p-3 shadow-[0_16px_48px_rgb(0,0,0,0.3)] z-50 ${isDark ? 'bg-[#2C2C2E] border border-white/10' : 'bg-[#111]'}`}
-              style={{ top: '20px', transform: 'translateY(-50%)' }}
-            >
-              <div className="grid grid-cols-2 gap-2">
-                {SHAPES.map((shape) => (
+      {/* 4. Ícono 3: Plus cuando está colapsado, o lista de herramientas cuando está expandido */}
+      <AnimatePresence mode="wait" initial={false}>
+        {!isExpanded ? (
+          /* Estado Colapsado: Botón Plus */
+          <motion.div
+            key="collapsed-plus"
+            initial={{ opacity: 0, scale: 0.5, rotate: -45 }}
+            animate={{ opacity: 1, scale: 1, rotate: 0 }}
+            exit={{ opacity: 0, scale: 0.5, rotate: 45 }}
+            transition={springTransition}
+          >
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => setIsHovered(true)}
+                  className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
+                    isDrawingToolActive
+                      ? isDark
+                        ? "bg-white text-black shadow-md"
+                        : "bg-black text-white shadow-md"
+                      : isDark
+                      ? "hover:bg-white/10 text-gray-400 hover:text-white"
+                      : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
+                  }`}
+                  aria-label="Elementos y formas"
+                >
+                  <Plus size={19} strokeWidth={1.75} />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="right" sideOffset={12} className="text-[13px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
+                Elementos y formas
+              </TooltipContent>
+            </Tooltip>
+          </motion.div>
+        ) : (
+          /* Estado Expandido: Formas y Elementos */
+          <motion.div
+            key="expanded-tools"
+            initial={{ opacity: 0, scale: 0.9, y: -6 }}
+            animate={{ opacity: 1, scale: 1, y: 0 }}
+            exit={{ opacity: 0, scale: 0.85, y: -6 }}
+            transition={springTransition}
+            className="flex flex-col items-center gap-1.5"
+          >
+            {/* Formas con flyout */}
+            <div className="relative flex items-center" onMouseEnter={openFlyout} onMouseLeave={closeFlyout}>
+              <Tooltip open={flyoutOpen ? false : undefined}>
+                <TooltipTrigger asChild>
                   <button
-                    key={shape.id}
                     onClick={() => {
-                      setSelectedShape(shape.id);
-                      setActiveDrawShape(shape.id);
-                      setInteractionMode("edit");
-                      setFlyoutOpen(false);
+                      if (activeDrawShape === selectedShape) {
+                        setActiveDrawShape(null);
+                      } else {
+                        setActiveDrawShape(selectedShape);
+                        setInteractionMode("edit");
+                      }
                     }}
-                    title={shape.label}
-                    className={`w-12 h-12 flex items-center justify-center rounded-xl transition-all ${
-                      selectedShape === shape.id
-                        ? isDark ? "bg-white text-black" : "bg-white text-black"
-                        : isDark ? "text-gray-400 hover:bg-white/10 hover:text-white" : "text-[#777] hover:bg-[#222] hover:text-white"
+                    className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
+                      activeDrawShape !== null &&
+                      activeDrawShape !== "text" &&
+                      activeDrawShape !== "todo" &&
+                      activeDrawShape !== "image" &&
+                      activeDrawShape !== "frame"
+                        ? isDark
+                          ? "bg-white text-black shadow-md hover:bg-white/90"
+                          : "bg-black text-white shadow-md hover:bg-black/90"
+                        : isDark
+                        ? "hover:bg-white/10 text-gray-400 hover:text-white"
+                        : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
                     }`}
                   >
-                    {shape.icon}
+                    {currentShape.icon}
                   </button>
-                ))}
-              </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
+                </TooltipTrigger>
+                <TooltipContent
+                  side="right"
+                  sideOffset={12}
+                  className={`text-[13px] border-none rounded-full px-3 py-1.5 font-light ${
+                    isDark ? "bg-white text-black" : "bg-black text-white"
+                  }`}
+                >
+                  Formas
+                </TooltipContent>
+              </Tooltip>
 
-      {/* Texto */}
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <button
-            onClick={() => {
-              if (activeDrawShape === "text") {
-                setActiveDrawShape(null);
-              } else {
-                setActiveDrawShape("text");
-                setInteractionMode("edit");
-              }
-            }}
-            className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
-              activeDrawShape === "text"
-                ? isDark ? "bg-white text-black shadow-md" : "bg-black text-white"
-                : isDark ? "hover:bg-white/10 text-gray-400 hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
-            }`}
-          >
-            <Type size={18} strokeWidth={1.5} />
-          </button>
-        </TooltipTrigger>
-        <TooltipContent side="right" sideOffset={12} className="text-[13px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
-          Texto
-        </TooltipContent>
-      </Tooltip>
+              <AnimatePresence>
+                {flyoutOpen && (
+                  <motion.div
+                    initial={{ opacity: 0, x: -8, scale: 0.96 }}
+                    animate={{ opacity: 1, x: 0, scale: 1 }}
+                    exit={{ opacity: 0, x: -8, scale: 0.96 }}
+                    transition={{ duration: 0.14, ease: "easeOut" }}
+                    onMouseEnter={openFlyout}
+                    onMouseLeave={closeFlyout}
+                    className={`absolute left-[calc(100%+16px)] w-[128px] rounded-2xl p-3 shadow-[0_16px_48px_rgb(0,0,0,0.3)] z-50 ${
+                      isDark ? "bg-[#2C2C2E] border border-white/10" : "bg-[#111]"
+                    }`}
+                    style={{ top: "20px", transform: "translateY(-50%)" }}
+                  >
+                    <div className="grid grid-cols-2 gap-2">
+                      {SHAPES.map((shape) => (
+                        <button
+                          key={shape.id}
+                          onClick={() => {
+                            setSelectedShape(shape.id);
+                            setActiveDrawShape(shape.id);
+                            setInteractionMode("edit");
+                            setFlyoutOpen(false);
+                          }}
+                          title={shape.label}
+                          className={`w-12 h-12 flex items-center justify-center rounded-xl transition-all ${
+                            selectedShape === shape.id
+                              ? isDark
+                                ? "bg-white text-black"
+                                : "bg-white text-black"
+                              : isDark
+                              ? "text-gray-400 hover:bg-white/10 hover:text-white"
+                              : "text-[#777] hover:bg-[#222] hover:text-white"
+                          }`}
+                        >
+                          {shape.icon}
+                        </button>
+                      ))}
+                    </div>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
 
-      {/* Lista de Tareas */}
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <button
-            onClick={() => {
-              if (activeDrawShape === "todo") {
-                setActiveDrawShape(null);
-              } else {
-                setActiveDrawShape("todo");
-                setInteractionMode("edit");
-              }
-            }}
-            className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
-              activeDrawShape === "todo"
-                ? isDark ? "bg-white text-black shadow-md" : "bg-black text-white"
-                : isDark ? "hover:bg-white/10 text-gray-400 hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
-            }`}
-          >
-            <ListTodo size={18} strokeWidth={1.5} />
-          </button>
-        </TooltipTrigger>
-        <TooltipContent side="right" sideOffset={12} className="text-[13px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
-          Lista de Tareas
-        </TooltipContent>
-      </Tooltip>
+            {/* Texto */}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => {
+                    if (activeDrawShape === "text") {
+                      setActiveDrawShape(null);
+                    } else {
+                      setActiveDrawShape("text");
+                      setInteractionMode("edit");
+                    }
+                  }}
+                  className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
+                    activeDrawShape === "text"
+                      ? isDark
+                        ? "bg-white text-black shadow-md"
+                        : "bg-black text-white"
+                      : isDark
+                      ? "hover:bg-white/10 text-gray-400 hover:text-white"
+                      : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
+                  }`}
+                >
+                  <Type size={18} strokeWidth={1.5} />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="right" sideOffset={12} className="text-[13px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
+                Texto
+              </TooltipContent>
+            </Tooltip>
 
-      {/* Image Block */}
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <button
-            onClick={() => {
-              if (activeDrawShape === "image") {
-                setActiveDrawShape(null);
-              } else {
-                setActiveDrawShape("image");
-                setInteractionMode("edit");
-              }
-            }}
-            className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
-              activeDrawShape === "image"
-                ? isDark ? "bg-white text-black shadow-md" : "bg-black text-white"
-                : isDark ? "hover:bg-white/10 text-gray-400 hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
-            }`}
-          >
-            <ImageIcon size={18} strokeWidth={1.5} />
-          </button>
-        </TooltipTrigger>
-        <TooltipContent side="right" sideOffset={12} className="text-[13px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
-          Imagen
-        </TooltipContent>
-      </Tooltip>
+            {/* Lista de Tareas */}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => {
+                    if (activeDrawShape === "todo") {
+                      setActiveDrawShape(null);
+                    } else {
+                      setActiveDrawShape("todo");
+                      setInteractionMode("edit");
+                    }
+                  }}
+                  className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
+                    activeDrawShape === "todo"
+                      ? isDark
+                        ? "bg-white text-black shadow-md"
+                        : "bg-black text-white"
+                      : isDark
+                      ? "hover:bg-white/10 text-gray-400 hover:text-white"
+                      : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
+                  }`}
+                >
+                  <ListTodo size={18} strokeWidth={1.5} />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="right" sideOffset={12} className="text-[13px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
+                Lista de Tareas
+              </TooltipContent>
+            </Tooltip>
 
-      {/* Frame / Section */}
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <button
-            onClick={() => {
-              if (activeDrawShape === "frame") {
-                setActiveDrawShape(null);
-              } else {
-                setActiveDrawShape("frame");
-                setInteractionMode("edit");
-              }
-            }}
-            className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
-              activeDrawShape === "frame"
-                ? isDark ? "bg-white text-black shadow-md" : "bg-black text-white"
-                : isDark ? "hover:bg-white/10 text-gray-400 hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
-            }`}
-          >
-            <SquareDashed size={18} strokeWidth={1.5} />
-          </button>
-        </TooltipTrigger>
-        <TooltipContent side="right" sideOffset={12} className="text-[13px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
-          Sección
-        </TooltipContent>
-      </Tooltip>
+            {/* Image Block */}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => {
+                    if (activeDrawShape === "image") {
+                      setActiveDrawShape(null);
+                    } else {
+                      setActiveDrawShape("image");
+                      setInteractionMode("edit");
+                    }
+                  }}
+                  className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
+                    activeDrawShape === "image"
+                      ? isDark
+                        ? "bg-white text-black shadow-md"
+                        : "bg-black text-white"
+                      : isDark
+                      ? "hover:bg-white/10 text-gray-400 hover:text-white"
+                      : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
+                  }`}
+                >
+                  <ImageIcon size={18} strokeWidth={1.5} />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="right" sideOffset={12} className="text-[13px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
+                Imagen
+              </TooltipContent>
+            </Tooltip>
+
+            {/* Frame / Section */}
+            <Tooltip>
+              <TooltipTrigger asChild>
+                <button
+                  onClick={() => {
+                    if (activeDrawShape === "frame") {
+                      setActiveDrawShape(null);
+                    } else {
+                      setActiveDrawShape("frame");
+                      setInteractionMode("edit");
+                    }
+                  }}
+                  className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
+                    activeDrawShape === "frame"
+                      ? isDark
+                        ? "bg-white text-black shadow-md"
+                        : "bg-black text-white"
+                      : isDark
+                      ? "hover:bg-white/10 text-gray-400 hover:text-white"
+                      : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
+                  }`}
+                >
+                  <SquareDashed size={18} strokeWidth={1.5} />
+                </button>
+              </TooltipTrigger>
+              <TooltipContent side="right" sideOffset={12} className="text-[13px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
+                Sección
+              </TooltipContent>
+            </Tooltip>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   );
 };

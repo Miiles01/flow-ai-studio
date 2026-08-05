@@ -115,33 +115,44 @@ const AIPromptBar = ({ onGenerate, isGenerating, forceOpen, extendLabel, onCance
 
   const showHideButton = isHovered || isFocused;
 
+  const springTransition = {
+    type: "spring",
+    stiffness: 380,
+    damping: 28,
+    mass: 0.8,
+  };
+
   return (
     <div className="absolute bottom-12 inset-x-0 flex flex-col items-center justify-end z-10 pointer-events-none">
-      <AnimatePresence mode="wait">
+      <AnimatePresence mode="wait" initial={false}>
         {!isExpanded ? (
           <motion.div
-            key="collapsed"
-            initial={{ scale: 0.8, opacity: 0, y: 20 }}
+            key="collapsed-ai-btn"
+            layoutId="ai-prompt-capsule"
+            initial={{ scale: 0.85, opacity: 0, y: 15 }}
             animate={{ scale: 1, opacity: 1, y: 0 }}
-            exit={{ scale: 0.8, opacity: 0, y: 20 }}
-            transition={{ type: "spring", bounce: 0.4, duration: 0.5 }}
+            exit={{ scale: 0.85, opacity: 0, y: 15 }}
+            transition={springTransition}
             className="pointer-events-auto"
           >
             <button
               onClick={() => setIsExpanded(true)}
-              className={`w-[52px] h-[52px] bg-black rounded-[18px] flex items-center justify-center shadow-[0_8px_30px_rgb(0,0,0,0.12)] hover:-translate-y-1.5 transition-transform duration-300 ${isDark ? 'ring-1 ring-white/10' : ''}`}
+              className={`w-[52px] h-[52px] bg-black rounded-[18px] flex items-center justify-center shadow-[0_8px_30px_rgb(0,0,0,0.16)] hover:scale-105 active:scale-95 transition-transform duration-200 ${
+                isDark ? "ring-1 ring-white/15" : "border border-white/10"
+              }`}
               aria-label="Abrir asistente IA"
             >
-              <img src={logoImg} alt="AI" className="w-7 h-7" />
+              <img src={logoImg} alt="AI" className="w-7 h-7 select-none" />
             </button>
           </motion.div>
         ) : (
           <motion.div
-            key="expanded"
-            initial={{ y: 40, opacity: 0, scale: 0.95 }}
+            key="expanded-ai-bar"
+            layoutId="ai-prompt-capsule"
+            initial={{ y: 25, opacity: 0, scale: 0.95 }}
             animate={{ y: 0, opacity: 1, scale: 1 }}
-            exit={{ y: 40, opacity: 0, scale: 0.95 }}
-            transition={{ type: "spring", bounce: 0.3, duration: 0.5 }}
+            exit={{ y: 25, opacity: 0, scale: 0.95 }}
+            transition={springTransition}
             className="relative w-full max-w-[calc(100vw-130px)] md:max-w-2xl pointer-events-auto flex flex-col"
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
@@ -154,12 +165,12 @@ const AIPromptBar = ({ onGenerate, isGenerating, forceOpen, extendLabel, onCance
                     initial={{ y: 20, opacity: 0, scale: 0.8 }}
                     animate={{ y: -56, opacity: 1, scale: 1 }}
                     exit={{ y: 20, opacity: 0, scale: 0.8 }}
-                    transition={{ type: "spring", bounce: 0.4, duration: 0.4 }}
+                    transition={{ type: "spring", bounce: 0.35, duration: 0.35 }}
                     className="z-0 pointer-events-auto"
                   >
                     <button
                       onClick={() => setIsExpanded(false)}
-                      className="w-10 h-10 bg-black text-white rounded-full flex items-center justify-center shadow-lg hover:bg-black/80 transition-colors"
+                      className="w-10 h-10 bg-black text-white rounded-full flex items-center justify-center shadow-lg hover:bg-black/80 transition-colors border border-white/10"
                       title="Ocultar asistente"
                     >
                       <EyeOff size={16} strokeWidth={1.5} />
@@ -170,9 +181,20 @@ const AIPromptBar = ({ onGenerate, isGenerating, forceOpen, extendLabel, onCance
             </div>
 
             {/* Main Prompt Bar */}
-            <div className={`bg-black rounded-[40px] pt-8 pb-4 px-6 shadow-2xl transition-all duration-300 relative z-10 w-full ${isDark ? 'ring-1 ring-white/10' : ''}`}>
+            <motion.div
+              layout
+              transition={springTransition}
+              className={`bg-black rounded-[40px] pt-8 pb-4 px-6 shadow-2xl relative z-10 w-full ${
+                isDark ? "ring-1 ring-white/10" : "border border-white/10"
+              }`}
+            >
               {extendLabel && (
-                <div className="flex items-center justify-center gap-2 mb-3">
+                <motion.div
+                  initial={{ opacity: 0, y: -5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  exit={{ opacity: 0, y: -5 }}
+                  className="flex items-center justify-center gap-2 mb-3"
+                >
                   <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#4059F1]/20 text-[#9DB0FF] text-[11px] font-light">
                     {extendLabel}
                     <button
@@ -183,12 +205,14 @@ const AIPromptBar = ({ onGenerate, isGenerating, forceOpen, extendLabel, onCance
                       <X size={12} strokeWidth={2} />
                     </button>
                   </span>
-                </div>
+                </motion.div>
               )}
               <div className="relative w-full">
                 {/* Gradient overlay for when scrolled down */}
-                <div 
-                  className={`absolute top-0 left-0 right-0 h-6 bg-gradient-to-b from-black to-transparent pointer-events-none transition-opacity duration-300 rounded-t-[10px] z-10 ${canScrollTop ? 'opacity-100' : 'opacity-0'}`}
+                <div
+                  className={`absolute top-0 left-0 right-0 h-6 bg-gradient-to-b from-black to-transparent pointer-events-none transition-opacity duration-300 rounded-t-[10px] z-10 ${
+                    canScrollTop ? "opacity-100" : "opacity-0"
+                  }`}
                 />
                 <textarea
                   ref={textareaRef}
@@ -204,7 +228,7 @@ const AIPromptBar = ({ onGenerate, isGenerating, forceOpen, extendLabel, onCance
                   disabled={isGenerating}
                 />
               </div>
-              
+
               <div className="flex items-center justify-between mt-2">
                 <div className="flex items-center gap-2">
                   <AppsMenu isDark={isDark} />
@@ -219,7 +243,6 @@ const AIPromptBar = ({ onGenerate, isGenerating, forceOpen, extendLabel, onCance
                     </button>
                   )}
                 </div>
-
 
                 <div className="flex items-center gap-3">
                   {speechSupported && (
@@ -241,7 +264,9 @@ const AIPromptBar = ({ onGenerate, isGenerating, forceOpen, extendLabel, onCance
                   <button
                     onClick={() => handleSubmit()}
                     disabled={!prompt.trim() || isGenerating}
-                    className={`w-10 h-10 rounded-full bg-white/10 flex items-center justify-center transition-all duration-300 hover:bg-white/20 hover:text-white disabled:transform-none ${isGenerating ? 'text-white opacity-100' : 'text-white disabled:opacity-30'}`}
+                    className={`w-10 h-10 rounded-full bg-white/10 flex items-center justify-center transition-all duration-300 hover:bg-white/20 hover:text-white disabled:transform-none ${
+                      isGenerating ? "text-white opacity-100" : "text-white disabled:opacity-30"
+                    }`}
                   >
                     {isGenerating ? (
                       <Loader2 size={18} className="animate-spin text-white" />
@@ -251,7 +276,7 @@ const AIPromptBar = ({ onGenerate, isGenerating, forceOpen, extendLabel, onCance
                   </button>
                 </div>
               </div>
-            </div>
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
@@ -261,6 +286,5 @@ const AIPromptBar = ({ onGenerate, isGenerating, forceOpen, extendLabel, onCance
     </div>
   );
 };
-
 
 export default AIPromptBar;
