@@ -69,6 +69,15 @@ const SHAPES = [
   },
 ];
 
+const spring = {
+  type: "spring" as const,
+  stiffness: 380,
+  damping: 28,
+  mass: 0.5,
+};
+
+const PROXIMITY = 130; // px de radio alrededor del toolbar
+
 const Toolbar = ({
   onAddNode,
   interactionMode,
@@ -78,7 +87,9 @@ const Toolbar = ({
 }: ToolbarProps) => {
   const [selectedShape, setSelectedShape] = useState("square");
   const [flyoutOpen, setFlyoutOpen] = useState(false);
+  const [isNear, setIsNear] = useState(false);
   const flyoutTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const barRef = useRef<HTMLDivElement>(null);
   const { isDark } = useTheme();
 
   const openFlyout = () => {
@@ -89,14 +100,41 @@ const Toolbar = ({
     flyoutTimer.current = setTimeout(() => setFlyoutOpen(false), 120);
   };
 
+  /* Detección de proximidad del cursor */
+  useEffect(() => {
+    const onMove = (e: MouseEvent) => {
+      const rect = barRef.current?.getBoundingClientRect();
+      if (!rect) return;
+      const dx = Math.max(rect.left - e.clientX, 0, e.clientX - rect.right);
+      const dy = Math.max(rect.top - e.clientY, 0, e.clientY - rect.bottom);
+      setIsNear(Math.hypot(dx, dy) < PROXIMITY);
+    };
+    window.addEventListener("mousemove", onMove);
+    return () => window.removeEventListener("mousemove", onMove);
+  }, []);
+
+  const isCreating =
+    activeDrawShape !== null && activeDrawShape !== undefined;
+  const expanded = isNear || flyoutOpen || isCreating;
+
   const currentShape = SHAPES.find((s) => s.id === selectedShape) || SHAPES[0];
+
+  const toolItem = {
+    initial: { opacity: 0, y: -8, scale: 0.8 },
+    animate: { opacity: 1, y: 0, scale: 1 },
+    exit: { opacity: 0, y: -8, scale: 0.8 },
+  };
 
   return (
     <motion.div
+      ref={barRef}
+      layout
       initial={{ x: -40, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
+      transition={spring}
       className={`absolute inset-y-0 my-auto h-fit left-6 z-10 flex flex-col items-center gap-1.5 px-2 py-3 rounded-[30px] shadow-[0_8px_30px_rgb(0,0,0,0.06)] font-sans ${isDark ? 'bg-[#1C1C1E] border border-white/10 text-white' : 'bg-white'}`}
     >
+
       {/* Seleccionar */}
       <Tooltip>
         <TooltipTrigger asChild>
