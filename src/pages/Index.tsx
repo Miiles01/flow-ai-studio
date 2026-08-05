@@ -2140,7 +2140,8 @@ const IndexContent = () => {
             <input
               value={name}
               onChange={(e) => setName(e.target.value)}
-              className={`bg-transparent text-[14px] font-normal tracking-tight outline-none focus:ring-0 px-2 py-1 rounded transition-colors min-w-0 max-w-[40vw] ${isDark ? 'hover:bg-white/10' : 'hover:bg-[#F3F4F6]'}`}
+              size={Math.min(Math.max((name ?? "").length, 3), 28)}
+              className={`bg-transparent text-[14px] font-normal tracking-tight outline-none focus:ring-0 px-2 py-1 rounded transition-colors min-w-0 w-auto ${isDark ? 'hover:bg-white/10' : 'hover:bg-[#F3F4F6]'}`}
             />
           </div>
 
