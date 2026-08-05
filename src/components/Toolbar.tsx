@@ -69,17 +69,6 @@ const SHAPES = [
   },
 ];
 
-<<<<<<< HEAD
-const spring = {
-  type: "spring" as const,
-  stiffness: 380,
-  damping: 28,
-  mass: 0.5,
-};
-
-const PROXIMITY = 130; // px de radio alrededor del toolbar
-
-=======
 const springTransition = {
   type: "spring" as const,
   stiffness: 380,
@@ -87,7 +76,6 @@ const springTransition = {
   mass: 0.6,
 };
 
->>>>>>> b41dece (feat: restore fluid collapsible animated Toolbar with proximity hover and creation tools)
 const Toolbar = ({
   onAddNode,
   interactionMode,
@@ -97,15 +85,9 @@ const Toolbar = ({
 }: ToolbarProps) => {
   const [selectedShape, setSelectedShape] = useState("square");
   const [flyoutOpen, setFlyoutOpen] = useState(false);
-<<<<<<< HEAD
-  const [isNear, setIsNear] = useState(false);
-  const flyoutTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
-  const barRef = useRef<HTMLDivElement>(null);
-=======
   const [isHovered, setIsHovered] = useState(false);
   const flyoutTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
   const hoverTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
->>>>>>> b41dece (feat: restore fluid collapsible animated Toolbar with proximity hover and creation tools)
   const { isDark } = useTheme();
 
   const handleMouseEnter = () => {
@@ -137,25 +119,6 @@ const Toolbar = ({
     }, 150);
   };
 
-<<<<<<< HEAD
-  /* Detección de proximidad del cursor */
-  useEffect(() => {
-    const onMove = (e: MouseEvent) => {
-      const rect = barRef.current?.getBoundingClientRect();
-      if (!rect) return;
-      const dx = Math.max(rect.left - e.clientX, 0, e.clientX - rect.right);
-      const dy = Math.max(rect.top - e.clientY, 0, e.clientY - rect.bottom);
-      setIsNear(Math.hypot(dx, dy) < PROXIMITY);
-    };
-    window.addEventListener("mousemove", onMove);
-    return () => window.removeEventListener("mousemove", onMove);
-  }, []);
-
-  const isCreating =
-    activeDrawShape !== null && activeDrawShape !== undefined;
-  const expanded = isNear || flyoutOpen || isCreating;
-
-=======
   useEffect(() => {
     return () => {
       if (flyoutTimer.current) clearTimeout(flyoutTimer.current);
@@ -163,7 +126,6 @@ const Toolbar = ({
     };
   }, []);
 
->>>>>>> b41dece (feat: restore fluid collapsible animated Toolbar with proximity hover and creation tools)
   const currentShape = SHAPES.find((s) => s.id === selectedShape) || SHAPES[0];
   const isExpanded = isHovered || flyoutOpen || activeDrawShape !== null;
   const isDrawingToolActive = activeDrawShape !== null;
@@ -175,100 +137,6 @@ const Toolbar = ({
   };
 
   return (
-<<<<<<< HEAD
-    <motion.div
-      ref={barRef}
-      layout
-      initial={{ x: -40, opacity: 0 }}
-      animate={{ x: 0, opacity: 1 }}
-      transition={spring}
-      className={`absolute inset-y-0 my-auto h-fit left-6 z-10 flex flex-col items-center gap-1.5 px-2 py-3 rounded-[30px] shadow-[0_8px_30px_rgb(0,0,0,0.06)] font-sans ${isDark ? 'bg-[#1C1C1E] border border-white/10 text-white' : 'bg-white'}`}
-    >
-
-      {/* Seleccionar */}
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <button
-            onClick={() => {
-              setInteractionMode("edit");
-              setActiveDrawShape(null);
-            }}
-            className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
-              interactionMode === "edit" && activeDrawShape === null
-                ? isDark ? "bg-white text-black shadow-md" : "bg-black text-white shadow-md"
-                : isDark ? "hover:bg-white/10 text-gray-400 hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
-            }`}
-          >
-            <MousePointer size={18} strokeWidth={1.5} />
-          </button>
-        </TooltipTrigger>
-        <TooltipContent side="right" sideOffset={12} className="text-[13px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
-          Seleccionar
-        </TooltipContent>
-      </Tooltip>
-
-      {/* Navegar */}
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <button
-            onClick={() => {
-              setInteractionMode("pan");
-              setActiveDrawShape(null);
-            }}
-            className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
-              interactionMode === "pan"
-                ? isDark ? "bg-white text-black shadow-md" : "bg-black text-white shadow-md"
-                : isDark ? "hover:bg-white/10 text-gray-400 hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
-            }`}
-          >
-            <Hand size={18} strokeWidth={1.5} />
-          </button>
-        </TooltipTrigger>
-        <TooltipContent side="right" sideOffset={12} className="text-[13px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
-          Navegar
-        </TooltipContent>
-      </Tooltip>
-
-      <motion.div layout className={`w-6 h-[1px] my-1 ${isDark ? 'bg-white/10' : 'bg-[#E5E7EB]'}`} />
-
-      {/* Botón Plus (estado colapsado) */}
-      <AnimatePresence initial={false}>
-        {!expanded && (
-          <motion.button
-            key="plus"
-            layout
-            initial={{ opacity: 0, scale: 0.7 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.7 }}
-            transition={spring}
-            onClick={() => setActiveDrawShape(selectedShape)}
-            className={`w-10 h-10 flex items-center justify-center rounded-full transition-colors ${
-              isDark ? "hover:bg-white/10 text-gray-400 hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
-            }`}
-            aria-label="Más herramientas"
-          >
-            <Plus size={18} strokeWidth={1.5} />
-          </motion.button>
-        )}
-      </AnimatePresence>
-
-      {/* Herramientas de creación (estado expandido) */}
-      <AnimatePresence initial={false}>
-        {expanded && (
-          <motion.div
-            key="tools"
-            layout
-            initial={{ opacity: 0, scaleY: 0.85 }}
-            animate={{ opacity: 1, scaleY: 1 }}
-            exit={{ opacity: 0, scaleY: 0.85 }}
-            transition={spring}
-            className="flex flex-col items-center gap-1.5 origin-top"
-          >
-      {/* Formas con flyout */}
-
-      <div className="relative flex items-center" onMouseEnter={openFlyout} onMouseLeave={closeFlyout}>
-        <Tooltip open={flyoutOpen ? false : undefined}>
-=======
     <div
       className="absolute inset-y-0 my-auto h-fit left-3 z-10 p-3"
       onMouseEnter={handleMouseEnter}
@@ -287,7 +155,6 @@ const Toolbar = ({
       >
         {/* 1. Seleccionar */}
         <Tooltip>
->>>>>>> b41dece (feat: restore fluid collapsible animated Toolbar with proximity hover and creation tools)
           <TooltipTrigger asChild>
             <button
               onClick={() => {
@@ -625,121 +492,8 @@ const Toolbar = ({
             </motion.div>
           )}
         </AnimatePresence>
-<<<<<<< HEAD
-      </div>
-
-      {/* Texto */}
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <button
-            onClick={() => {
-              if (activeDrawShape === "text") {
-                setActiveDrawShape(null);
-              } else {
-                setActiveDrawShape("text");
-                setInteractionMode("edit");
-              }
-            }}
-            className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
-              activeDrawShape === "text"
-                ? isDark ? "bg-white text-black shadow-md" : "bg-black text-white"
-                : isDark ? "hover:bg-white/10 text-gray-400 hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
-            }`}
-          >
-            <Type size={18} strokeWidth={1.5} />
-          </button>
-        </TooltipTrigger>
-        <TooltipContent side="right" sideOffset={12} className="text-[13px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
-          Texto
-        </TooltipContent>
-      </Tooltip>
-
-      {/* Lista de Tareas */}
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <button
-            onClick={() => {
-              if (activeDrawShape === "todo") {
-                setActiveDrawShape(null);
-              } else {
-                setActiveDrawShape("todo");
-                setInteractionMode("edit");
-              }
-            }}
-            className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
-              activeDrawShape === "todo"
-                ? isDark ? "bg-white text-black shadow-md" : "bg-black text-white"
-                : isDark ? "hover:bg-white/10 text-gray-400 hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
-            }`}
-          >
-            <ListTodo size={18} strokeWidth={1.5} />
-          </button>
-        </TooltipTrigger>
-        <TooltipContent side="right" sideOffset={12} className="text-[13px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
-          Lista de Tareas
-        </TooltipContent>
-      </Tooltip>
-
-      {/* Image Block */}
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <button
-            onClick={() => {
-              if (activeDrawShape === "image") {
-                setActiveDrawShape(null);
-              } else {
-                setActiveDrawShape("image");
-                setInteractionMode("edit");
-              }
-            }}
-            className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
-              activeDrawShape === "image"
-                ? isDark ? "bg-white text-black shadow-md" : "bg-black text-white"
-                : isDark ? "hover:bg-white/10 text-gray-400 hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
-            }`}
-          >
-            <ImageIcon size={18} strokeWidth={1.5} />
-          </button>
-        </TooltipTrigger>
-        <TooltipContent side="right" sideOffset={12} className="text-[13px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
-          Imagen
-        </TooltipContent>
-      </Tooltip>
-
-      {/* Frame / Section */}
-      <Tooltip>
-        <TooltipTrigger asChild>
-          <button
-            onClick={() => {
-              if (activeDrawShape === "frame") {
-                setActiveDrawShape(null);
-              } else {
-                setActiveDrawShape("frame");
-                setInteractionMode("edit");
-              }
-            }}
-            className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
-              activeDrawShape === "frame"
-                ? isDark ? "bg-white text-black shadow-md" : "bg-black text-white"
-                : isDark ? "hover:bg-white/10 text-gray-400 hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
-            }`}
-          >
-            <SquareDashed size={18} strokeWidth={1.5} />
-          </button>
-        </TooltipTrigger>
-        <TooltipContent side="right" sideOffset={12} className="text-[13px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
-          Sección
-        </TooltipContent>
-      </Tooltip>
-            </motion.div>
-          )}
-        </AnimatePresence>
-    </motion.div>
-
-=======
       </motion.div>
     </div>
->>>>>>> b41dece (feat: restore fluid collapsible animated Toolbar with proximity hover and creation tools)
   );
 };
 
