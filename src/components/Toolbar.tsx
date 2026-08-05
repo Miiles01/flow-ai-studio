@@ -69,11 +69,11 @@ const SHAPES = [
   },
 ];
 
-const springTransition = {
+const springPhysics = {
   type: "spring",
-  stiffness: 380,
-  damping: 26,
-  mass: 0.8,
+  stiffness: 400,
+  damping: 28,
+  mass: 0.6,
 };
 
 const Toolbar = ({
@@ -104,7 +104,7 @@ const Toolbar = ({
       if (!flyoutOpen) {
         setIsHovered(false);
       }
-    }, 180);
+    }, 220);
   };
 
   const openFlyout = () => {
@@ -116,7 +116,7 @@ const Toolbar = ({
   const closeFlyout = () => {
     flyoutTimer.current = setTimeout(() => {
       setFlyoutOpen(false);
-    }, 150);
+    }, 180);
   };
 
   useEffect(() => {
@@ -127,19 +127,19 @@ const Toolbar = ({
   }, []);
 
   const currentShape = SHAPES.find((s) => s.id === selectedShape) || SHAPES[0];
-  const isExpanded = isHovered || flyoutOpen;
   const isDrawingToolActive = activeDrawShape !== null;
+  const isExpanded = isHovered || flyoutOpen || isDrawingToolActive;
 
   return (
     <motion.div
       layout
-      transition={springTransition}
+      transition={springPhysics}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
       initial={{ x: -40, opacity: 0 }}
       animate={{ x: 0, opacity: 1 }}
-      className={`absolute inset-y-0 my-auto h-fit left-6 z-10 flex flex-col items-center gap-1.5 px-2 py-3 rounded-[30px] shadow-[0_8px_30px_rgb(0,0,0,0.06)] font-sans select-none ${
-        isDark ? "bg-[#1C1C1E] border border-white/10 text-white" : "bg-white border border-black/[0.04] text-black"
+      className={`absolute inset-y-0 my-auto h-fit left-6 z-10 flex flex-col items-center gap-1.5 px-2 py-2.5 rounded-[28px] shadow-[0_8px_30px_rgb(0,0,0,0.06)] font-sans select-none ${
+        isDark ? "bg-[#1C1C1E] border border-white/10 text-white" : "bg-white border border-black/[0.06] text-black"
       }`}
     >
       {/* 1. Seleccionar */}
@@ -150,11 +150,11 @@ const Toolbar = ({
               setInteractionMode("edit");
               setActiveDrawShape(null);
             }}
-            className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
+            className={`w-10 h-10 flex items-center justify-center rounded-full transition-all duration-200 ${
               interactionMode === "edit" && activeDrawShape === null
                 ? isDark
-                  ? "bg-white text-black shadow-md"
-                  : "bg-black text-white shadow-md"
+                  ? "bg-white text-black shadow-sm scale-100"
+                  : "bg-black text-white shadow-sm scale-100"
                 : isDark
                 ? "hover:bg-white/10 text-gray-400 hover:text-white"
                 : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
@@ -176,11 +176,11 @@ const Toolbar = ({
               setInteractionMode("pan");
               setActiveDrawShape(null);
             }}
-            className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
+            className={`w-10 h-10 flex items-center justify-center rounded-full transition-all duration-200 ${
               interactionMode === "pan"
                 ? isDark
-                  ? "bg-white text-black shadow-md"
-                  : "bg-black text-white shadow-md"
+                  ? "bg-white text-black shadow-sm scale-100"
+                  : "bg-black text-white shadow-sm scale-100"
                 : isDark
                 ? "hover:bg-white/10 text-gray-400 hover:text-white"
                 : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
@@ -195,52 +195,55 @@ const Toolbar = ({
       </Tooltip>
 
       {/* 3. Separador */}
-      <motion.div layout className={`w-6 h-[1px] my-1 shrink-0 ${isDark ? "bg-white/10" : "bg-[#E5E7EB]"}`} />
+      <motion.div layout transition={springPhysics} className={`w-6 h-[1px] my-0.5 shrink-0 ${isDark ? "bg-white/10" : "bg-[#E5E7EB]"}`} />
 
-      {/* 4. Ícono 3: Plus cuando está colapsado, o lista de herramientas cuando está expandido */}
-      <AnimatePresence mode="wait" initial={false}>
-        {!isExpanded ? (
-          /* Estado Colapsado: Botón Plus */
-          <motion.div
-            key="collapsed-plus"
-            initial={{ opacity: 0, scale: 0.5, rotate: -45 }}
-            animate={{ opacity: 1, scale: 1, rotate: 0 }}
-            exit={{ opacity: 0, scale: 0.5, rotate: 45 }}
-            transition={springTransition}
-          >
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={() => setIsHovered(true)}
-                  className={`w-10 h-10 flex items-center justify-center rounded-full transition-all ${
-                    isDrawingToolActive
-                      ? isDark
-                        ? "bg-white text-black shadow-md"
-                        : "bg-black text-white shadow-md"
-                      : isDark
-                      ? "hover:bg-white/10 text-gray-400 hover:text-white"
-                      : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
-                  }`}
-                  aria-label="Elementos y formas"
-                >
-                  <Plus size={19} strokeWidth={1.75} />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent side="right" sideOffset={12} className="text-[13px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
-                Elementos y formas
-              </TooltipContent>
-            </Tooltip>
-          </motion.div>
-        ) : (
-          /* Estado Expandido: Formas y Elementos */
-          <motion.div
-            key="expanded-tools"
-            initial={{ opacity: 0, scale: 0.9, y: -6 }}
-            animate={{ opacity: 1, scale: 1, y: 0 }}
-            exit={{ opacity: 0, scale: 0.85, y: -6 }}
-            transition={springTransition}
-            className="flex flex-col items-center gap-1.5"
-          >
+      {/* 4. Sección de Herramientas Dinámicas (Plus cuando colapsado, Lista cuando expandido) */}
+      <motion.div layout transition={springPhysics} className="flex flex-col items-center gap-1.5">
+        <AnimatePresence initial={false} mode="popLayout">
+          {!isExpanded ? (
+            /* Estado Colapsado: Botón Plus con animación elástica */
+            <motion.div
+              key="collapsed-plus"
+              layout
+              initial={{ opacity: 0, scale: 0.6, rotate: -45 }}
+              animate={{ opacity: 1, scale: 1, rotate: 0 }}
+              exit={{ opacity: 0, scale: 0.6, rotate: 45 }}
+              transition={springPhysics}
+            >
+              <Tooltip>
+                <TooltipTrigger asChild>
+                  <button
+                    onClick={() => setIsHovered(true)}
+                    className={`w-10 h-10 flex items-center justify-center rounded-full transition-all duration-200 ${
+                      isDrawingToolActive
+                        ? isDark
+                          ? "bg-white text-black shadow-sm"
+                          : "bg-black text-white shadow-sm"
+                        : isDark
+                        ? "hover:bg-white/10 text-gray-400 hover:text-white"
+                        : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
+                    }`}
+                    aria-label="Elementos y formas"
+                  >
+                    <Plus size={19} strokeWidth={1.75} />
+                  </button>
+                </TooltipTrigger>
+                <TooltipContent side="right" sideOffset={12} className="text-[13px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
+                  Elementos y formas
+                </TooltipContent>
+              </Tooltip>
+            </motion.div>
+          ) : (
+            /* Estado Expandido: Formas y Elementos */
+            <motion.div
+              key="expanded-tools"
+              layout
+              initial={{ opacity: 0, scale: 0.9, y: -8 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.9, y: -8 }}
+              transition={springPhysics}
+              className="flex flex-col items-center gap-1.5"
+            >
             {/* Formas con flyout */}
             <div className="relative flex items-center" onMouseEnter={openFlyout} onMouseLeave={closeFlyout}>
               <Tooltip open={flyoutOpen ? false : undefined}>
@@ -448,6 +451,7 @@ const Toolbar = ({
           </motion.div>
         )}
       </AnimatePresence>
+      </motion.div>
     </motion.div>
   );
 };
