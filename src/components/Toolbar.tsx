@@ -349,7 +349,11 @@ const Toolbar = ({
           Sección
         </TooltipContent>
       </Tooltip>
+            </motion.div>
+          )}
+        </AnimatePresence>
     </motion.div>
+
   );
 };
 
