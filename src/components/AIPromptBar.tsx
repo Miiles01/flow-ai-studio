@@ -42,6 +42,7 @@ const AIPromptBar = ({
   const [canScrollTop, setCanScrollTop] = useState(false);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<any>(null);
   const baseTextRef = useRef("");
   const speechSupported =
