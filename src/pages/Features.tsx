@@ -88,7 +88,7 @@ const featuresData = [
   }
 ];
 
-import logoImg from "@/assets/logo.webp";
+import isotipoImg from "@/assets/isotipo.webp";
 
 const TypewriterInput = () => {
   const phrases = [
@@ -202,7 +202,7 @@ const TypewriterInput = () => {
               transition={{ duration: 0.15 }}
               className="w-full h-full flex items-center justify-center"
             >
-              <img src={logoImg} alt="AI" className="w-7 h-7 select-none pointer-events-none" />
+              <img src={isotipoImg} alt="AI" className="w-7 h-7 object-contain select-none pointer-events-none" />
             </motion.div>
           ) : (
             /* Estado 2: Contenedor expandido con input y controles */

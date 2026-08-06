@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { ArrowUp, Loader2, EyeOff, X, Mic, LayoutTemplate } from "lucide-react";
-import logoImg from "@/assets/logo.webp";
+import isotipoImg from "@/assets/isotipo.webp";
 import { useTheme } from "@/contexts/ThemeContext";
 import AppsMenu from "@/components/AppsMenu";
 import WidgetsPicker from "@/components/widgets/WidgetsPicker";
@@ -208,18 +208,18 @@ const AIPromptBar = ({
         }`}
         aria-label={!isExpanded ? "Abrir asistente IA" : undefined}
       >
-        <AnimatePresence mode="wait" initial={false}>
+        <AnimatePresence mode="wait" initial={true}>
           {!isExpanded ? (
-            /* Estado 1: Contenedor pequeño con logo (1:1 con Features.tsx) */
+            /* Estado 1: Contenedor pequeño con isotipo .webp animado con fade suave */
             <motion.div
-              key="logo-preview"
-              initial={{ opacity: 0, scale: 0.7 }}
+              key="isotipo-preview"
+              initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.7 }}
-              transition={{ duration: 0.15 }}
-              className="w-full h-full flex items-center justify-center"
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={{ duration: 0.18, ease: "easeOut" }}
+              className="w-full h-full flex items-center justify-center p-2.5"
             >
-              <img src={logoImg} alt="AI" className="w-7 h-7 select-none pointer-events-none" />
+              <img src={isotipoImg} alt="AI" className="w-7 h-7 object-contain select-none pointer-events-none" />
             </motion.div>
           ) : (
             /* Estado 2: Contenedor expandido con input y controles (1:1 con Features.tsx) */
