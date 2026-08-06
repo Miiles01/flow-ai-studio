@@ -283,8 +283,8 @@ const ZoomStepper = ({ isDark }: { isDark: boolean }) => {
     setIsEditing(false);
     let val = parseInt(editValue, 10);
     if (!isNaN(val)) {
-      if (val > 200) val = 200;
-      if (val < 10) val = 10;
+      if (val > 400) val = 400;
+      if (val < 5) val = 5;
       zoomTo(val / 100, { duration: 300 });
     }
   };
@@ -298,10 +298,13 @@ const ZoomStepper = ({ isDark }: { isDark: boolean }) => {
       {isEditing ? (
         <input
           ref={inputRef}
-          type="number"
-          className={`w-14 text-center text-[12.5px] font-medium bg-transparent outline-none ${isDark ? 'text-white' : 'text-black'}`}
+          type="text"
+          inputMode="numeric"
+          pattern="[0-9]*"
+          maxLength={4}
+          className={`w-14 text-center text-[12.5px] font-medium bg-transparent outline-none [appearance:textfield] [&::-webkit-outer-spin-button]:appearance-none [&::-webkit-inner-spin-button]:appearance-none ${isDark ? 'text-white' : 'text-black'}`}
           value={editValue}
-          onChange={(e) => setEditValue(e.target.value)}
+          onChange={(e) => setEditValue(e.target.value.replace(/[^0-9]/g, ""))}
           onBlur={handleManualSubmit}
           onKeyDown={(e) => {
             if (e.key === "Enter") handleManualSubmit();
