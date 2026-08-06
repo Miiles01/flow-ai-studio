@@ -290,8 +290,8 @@ const ZoomStepper = ({ isDark }: { isDark: boolean }) => {
   };
 
   return (
-    <div className={`flex items-center justify-between px-1.5 py-1.5 rounded-xl ${isDark ? 'bg-white/5' : 'bg-neutral-50 border border-neutral-100/50'}`}>
-      <button onClick={handleZoomOut} className={`p-1.5 rounded-lg transition-colors ${isDark ? 'hover:bg-white/10 text-white/80 hover:text-white' : 'hover:bg-neutral-200 text-neutral-600 hover:text-black'}`}>
+    <div className={`flex items-center justify-between px-1.5 py-1.5 rounded-xl ${isDark ? 'bg-white/5' : 'bg-[#F3F4F6]'}`}>
+      <button onClick={handleZoomOut} className={`p-1.5 rounded-lg transition-colors ${isDark ? 'hover:bg-white/10 text-[#9CA3AF] hover:text-white' : 'hover:bg-black/5 text-[#6B7280] hover:text-black'}`}>
         <Minus size={14} />
       </button>
       
@@ -299,7 +299,7 @@ const ZoomStepper = ({ isDark }: { isDark: boolean }) => {
         <input
           ref={inputRef}
           type="number"
-          className={`w-14 text-center text-[12.5px] font-medium bg-transparent outline-none ${isDark ? 'text-white' : 'text-neutral-800'}`}
+          className={`w-14 text-center text-[12.5px] font-medium bg-transparent outline-none ${isDark ? 'text-white' : 'text-black'}`}
           value={editValue}
           onChange={(e) => setEditValue(e.target.value)}
           onBlur={handleManualSubmit}
@@ -321,7 +321,7 @@ const ZoomStepper = ({ isDark }: { isDark: boolean }) => {
         </div>
       )}
 
-      <button onClick={handleZoomIn} className={`p-1.5 rounded-lg transition-colors ${isDark ? 'hover:bg-white/10 text-white/80 hover:text-white' : 'hover:bg-neutral-200 text-neutral-600 hover:text-black'}`}>
+      <button onClick={handleZoomIn} className={`p-1.5 rounded-lg transition-colors ${isDark ? 'hover:bg-white/10 text-[#9CA3AF] hover:text-white' : 'hover:bg-black/5 text-[#6B7280] hover:text-black'}`}>
         <Plus size={14} />
       </button>
     </div>

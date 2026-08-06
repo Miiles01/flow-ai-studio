@@ -141,13 +141,17 @@
 .react-flow__controls {
   background: white !important;
   border: none !important;
-  border-radius: var(--radius-sm) !important;
-  box-shadow: var(--shadow-sm) !important;
+  border-radius: 9999px !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06) !important;
   padding: 4px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 2px !important;
 }
 .dark .react-flow__controls {
-  background: #1C1C1E !important;
+  background: #000000 !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06) !important;
 }
 
 /* TodoNode scrollbar — solo línea azul delgada */
@@ -279,9 +283,14 @@
 .react-flow__controls-button {
   background: transparent !important;
   border: none !important;
-  color: black !important;
-  fill: black !important;
-  border-radius: var(--radius-xs) !important;
+  color: #6B7280 !important;
+  fill: #6B7280 !important;
+  border-radius: 9999px !important;
+  width: 28px !important;
+  height: 28px !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
   transition: all 0.2s ease !important;
 }
 .dark .react-flow__controls-button {
@@ -290,23 +299,26 @@
 }
 
 .react-flow__controls-button:hover {
-  background: #EEEFF2 !important;
+  background: #F3F4F6 !important;
+  color: #000000 !important;
+  fill: #000000 !important;
 }
 .dark .react-flow__controls-button:hover {
-  background: rgba(255, 255, 255, 0.08) !important;
-  color: white !important;
-  fill: white !important;
+  background: rgba(255, 255, 255, 0.1) !important;
+  color: #ffffff !important;
+  fill: #ffffff !important;
 }
 
 .react-flow__minimap {
   background: white !important;
   border: none !important;
-  border-radius: var(--radius-md) !important;
-  box-shadow: var(--shadow-md) !important;
+  border-radius: 20px !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06) !important;
 }
 .dark .react-flow__minimap {
-  background: #1C1C1E !important;
+  background: #000000 !important;
   border: 1px solid rgba(255, 255, 255, 0.1) !important;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.06) !important;
 }
 
 .react-flow__connection-path,
