@@ -16,12 +16,12 @@ type AIPromptBarProps = {
   onAddWidget?: (widget: WidgetDef) => void;
 };
 
-/* Spring physics ultra-fluido y orgánico */
-const spring = {
+/* Spring physics ultra-fluido y elástico (alineado con Toolbar) */
+const elasticSpring = {
   type: "spring" as const,
-  stiffness: 380,
-  damping: 28,
-  mass: 0.5,
+  stiffness: 350,
+  damping: 22,
+  mass: 0.55,
 };
 
 const AIPromptBar = ({
@@ -195,7 +195,7 @@ const AIPromptBar = ({
       <motion.div
         ref={containerRef}
         layout
-        transition={spring}
+        transition={elasticSpring}
         onClick={!isExpanded ? expand : undefined}
         onMouseEnter={() => isExpanded && setIsHovered(true)}
         onMouseLeave={() => isExpanded && setIsHovered(false)}
@@ -208,15 +208,16 @@ const AIPromptBar = ({
         }`}
         aria-label={!isExpanded ? "Abrir asistente IA" : undefined}
       >
-        <AnimatePresence mode="wait" initial={false}>
+        <AnimatePresence mode="popLayout" initial={false}>
           {!isExpanded ? (
-            /* Estado colapsado: Isotipo / Logo */
+            /* Estado colapsado: Isotipo / Logo con Fade Suave y Escala Elástica */
             <motion.div
               key="collapsed-logo"
-              initial={{ opacity: 0, scale: 0.7 }}
+              layout
+              initial={{ opacity: 0, scale: 0.6 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.7 }}
-              transition={{ duration: 0.15 }}
+              exit={{ opacity: 0, scale: 0.6, transition: { duration: 0.12 } }}
+              transition={elasticSpring}
               className="w-full h-full flex items-center justify-center"
             >
               <img src={logoImg} alt="AI" className="w-7 h-7 select-none pointer-events-none" />
@@ -225,10 +226,11 @@ const AIPromptBar = ({
             /* Estado expandido: Campo de texto y herramientas */
             <motion.div
               key="expanded-content"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2, delay: 0.05 }}
+              layout
+              initial={{ opacity: 0, scale: 0.96, y: 4 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.96, y: 4, transition: { duration: 0.12 } }}
+              transition={elasticSpring}
               className="w-full flex flex-col"
             >
               {/* Tag de ampliación de contexto */}
@@ -238,7 +240,7 @@ const AIPromptBar = ({
                     initial={{ opacity: 0, y: -6 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -6 }}
-                    transition={spring}
+                    transition={elasticSpring}
                     className="flex items-center justify-center gap-2 mb-3"
                   >
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#4059F1]/20 text-[#9DB0FF] text-[11px] font-light">
@@ -322,7 +324,7 @@ const AIPromptBar = ({
                         ? "#ffffff"
                         : "rgba(255,255,255,0.1)",
                     }}
-                    transition={spring}
+                    transition={elasticSpring}
                     className={`w-9 h-9 rounded-full flex items-center justify-center transition-colors duration-200 ${
                       isGenerating
                         ? "text-white cursor-wait"
