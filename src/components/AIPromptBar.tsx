@@ -165,71 +165,71 @@ const AIPromptBar = ({
 
   return (
     <div className="absolute bottom-12 inset-x-0 flex flex-col items-center justify-end z-10 pointer-events-none">
-      {/* Botón ocultar asistente (flota arriba de la barra) */}
-      <div className="relative flex justify-center w-full max-w-[calc(100vw-130px)] md:max-w-2xl">
-        <AnimatePresence>
-          {isExpanded && showHideButton && (
-            <motion.div
-              initial={{ y: 14, opacity: 0, scale: 0.75 }}
-              animate={{ y: -14, opacity: 1, scale: 1 }}
-              exit={{ y: 12, opacity: 0, scale: 0.75 }}
-              transition={{ type: "spring", stiffness: 500, damping: 28, mass: 0.4 }}
-              className="absolute -top-10 z-20 pointer-events-auto"
-            >
-              <button
-                onClick={(e) => {
-                  e.stopPropagation();
-                  setIsExpanded(false);
-                }}
-                className="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center shadow-lg hover:bg-neutral-800 active:scale-95 transition-all border border-white/10"
-                title="Ocultar asistente"
-              >
-                <EyeOff size={14} strokeWidth={1.5} />
-              </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </div>
-
-      {/* ── Contenedor único con morphing layout fluido ── */}
-      <motion.div
-        ref={containerRef}
-        layout
-        transition={spring}
-        onClick={!isExpanded ? expand : undefined}
-        onMouseEnter={() => isExpanded && setIsHovered(true)}
-        onMouseLeave={() => isExpanded && setIsHovered(false)}
-        className={`pointer-events-auto bg-black text-white relative z-10 select-none overflow-hidden transition-shadow duration-300 ${
-          isDark ? "ring-1 ring-white/15" : "border border-white/10"
-        } ${
-          isExpanded
-            ? "w-full max-w-[calc(100vw-130px)] md:max-w-2xl min-h-[145px] rounded-[32px] pt-7 pb-4 px-6 shadow-[0_20px_50px_rgba(0,0,0,0.35)] flex flex-col justify-between"
-            : "w-[52px] h-[52px] rounded-[20px] p-0 flex items-center justify-center cursor-pointer shadow-[0_10px_30px_rgba(0,0,0,0.22)] hover:scale-105 active:scale-95"
-        }`}
-        aria-label={!isExpanded ? "Abrir asistente IA" : undefined}
-      >
-        <AnimatePresence mode="wait" initial={true}>
-          {!isExpanded ? (
-            /* Estado 1: Contenedor pequeño con isotipo .webp */
-            <motion.div
-              key="isotipo-preview"
-              initial={{ opacity: 0, scale: 0.7 }}
-              animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.7 }}
-              transition={{ duration: 0.15 }}
-              className="w-full h-full flex items-center justify-center p-2.5"
+      <AnimatePresence mode="wait">
+        {!isExpanded ? (
+          /* Estado 1: Botón colapsado */
+          <motion.div
+            key="collapsed"
+            initial={{ scale: 0.8, opacity: 0, y: 20 }}
+            animate={{ scale: 1, opacity: 1, y: 0 }}
+            exit={{ scale: 0.8, opacity: 0, y: 20 }}
+            transition={{ type: "spring", bounce: 0.4, duration: 0.45 }}
+            className="pointer-events-auto"
+          >
+            <button
+              onClick={expand}
+              className={`w-[52px] h-[52px] bg-black rounded-[20px] flex items-center justify-center shadow-[0_10px_30px_rgba(0,0,0,0.22)] hover:scale-105 active:scale-95 transition-transform duration-200 ${
+                isDark ? "ring-1 ring-white/15" : "border border-white/10"
+              }`}
+              aria-label="Abrir asistente IA"
             >
               <img src={isotipoImg} alt="AI" className="w-7 h-7 object-contain select-none pointer-events-none" />
-            </motion.div>
-          ) : (
-            /* Estado 2: Contenedor expandido con input y controles */
-            <motion.div
-              key="input-preview"
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              transition={{ duration: 0.2, delay: 0.05 }}
-              className="w-full flex flex-col justify-between h-full flex-1"
+            </button>
+          </motion.div>
+        ) : (
+          /* Estado 2: Barra expandida (animación de entrada y salida original y limpia) */
+          <motion.div
+            key="expanded"
+            ref={containerRef}
+            initial={{ y: 40, opacity: 0, scale: 0.95 }}
+            animate={{ y: 0, opacity: 1, scale: 1 }}
+            exit={{ y: 40, opacity: 0, scale: 0.95 }}
+            transition={{ type: "spring", bounce: 0.3, duration: 0.45 }}
+            className="relative w-full max-w-[calc(100vw-130px)] md:max-w-2xl pointer-events-auto flex flex-col"
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+          >
+            {/* Botón ocultar asistente (flota arriba de la barra) */}
+            <div className="absolute top-0 left-0 right-0 h-0 flex justify-center pointer-events-none">
+              <AnimatePresence>
+                {showHideButton && (
+                  <motion.div
+                    initial={{ y: 20, opacity: 0, scale: 0.8 }}
+                    animate={{ y: -50, opacity: 1, scale: 1 }}
+                    exit={{ y: 20, opacity: 0, scale: 0.8 }}
+                    transition={{ type: "spring", bounce: 0.4, duration: 0.35 }}
+                    className="z-20 pointer-events-auto"
+                  >
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        setIsExpanded(false);
+                      }}
+                      className="w-8 h-8 bg-black text-white rounded-full flex items-center justify-center shadow-lg hover:bg-neutral-800 active:scale-95 transition-all border border-white/10"
+                      title="Ocultar asistente"
+                    >
+                      <EyeOff size={14} strokeWidth={1.5} />
+                    </button>
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
+
+            {/* Contenedor principal de la barra */}
+            <div
+              className={`bg-black text-white rounded-[32px] pt-7 pb-4 px-6 shadow-[0_20px_50px_rgba(0,0,0,0.35)] relative z-10 w-full min-h-[145px] flex flex-col justify-between select-none ${
+                isDark ? "ring-1 ring-white/15" : "border border-white/10"
+              }`}
             >
               {/* Tag de ampliación de contexto */}
               <AnimatePresence>
@@ -238,7 +238,7 @@ const AIPromptBar = ({
                     initial={{ opacity: 0, y: -6 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -6 }}
-                    transition={spring}
+                    transition={{ duration: 0.2 }}
                     className="flex items-center justify-center gap-2 mb-3"
                   >
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#4059F1]/20 text-[#9DB0FF] text-[11px] font-light">
@@ -313,7 +313,6 @@ const AIPromptBar = ({
                   <motion.button
                     onClick={() => handleSubmit()}
                     disabled={!hasText || isGenerating}
-                    layout
                     animate={{
                       scale: hasText ? 1.07 : 1,
                       backgroundColor: isGenerating
@@ -322,7 +321,7 @@ const AIPromptBar = ({
                         ? "#ffffff"
                         : "rgba(255,255,255,0.1)",
                     }}
-                    transition={spring}
+                    transition={{ duration: 0.2 }}
                     className={`w-9 h-9 rounded-full flex items-center justify-center transition-colors duration-200 ${
                       isGenerating
                         ? "text-white cursor-wait"
@@ -339,10 +338,10 @@ const AIPromptBar = ({
                   </motion.button>
                 </div>
               </div>
-            </motion.div>
-          )}
-        </AnimatePresence>
-      </motion.div>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
 
       {onAddWidget && (
         <WidgetsPicker open={widgetsOpen} onClose={() => setWidgetsOpen(false)} onPick={onAddWidget} />
