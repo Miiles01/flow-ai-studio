@@ -16,20 +16,12 @@ type AIPromptBarProps = {
   onAddWidget?: (widget: WidgetDef) => void;
 };
 
-/* Spring ágil y dinámico para abrir */
-const expandSpring = {
+/* Spring physics ultra-fluido y orgánico */
+const spring = {
   type: "spring" as const,
-  stiffness: 360,
-  damping: 27,
+  stiffness: 380,
+  damping: 28,
   mass: 0.5,
-};
-
-/* Spring gentle y suave para cerrar (animación pausada y elegante) */
-const collapseSpring = {
-  type: "spring" as const,
-  stiffness: 210,
-  damping: 26,
-  mass: 0.8,
 };
 
 const AIPromptBar = ({
@@ -199,11 +191,11 @@ const AIPromptBar = ({
         </AnimatePresence>
       </div>
 
-      {/* ── Contenedor único con morphing layout fluido (Apertura ágil, Cierre gentle) ── */}
+      {/* ── Contenedor único con morphing layout fluido ── */}
       <motion.div
         ref={containerRef}
         layout
-        transition={isExpanded ? expandSpring : collapseSpring}
+        transition={spring}
         onClick={!isExpanded ? expand : undefined}
         onMouseEnter={() => isExpanded && setIsHovered(true)}
         onMouseLeave={() => isExpanded && setIsHovered(false)}
@@ -218,24 +210,24 @@ const AIPromptBar = ({
       >
         <AnimatePresence mode="wait" initial={true}>
           {!isExpanded ? (
-            /* Estado 1: Contenedor pequeño con isotipo .webp animado con fade suave */
+            /* Estado 1: Contenedor pequeño con isotipo .webp */
             <motion.div
               key="isotipo-preview"
-              initial={{ opacity: 0, scale: 0.75 }}
+              initial={{ opacity: 0, scale: 0.7 }}
               animate={{ opacity: 1, scale: 1 }}
-              exit={{ opacity: 0, scale: 0.75, transition: { duration: 0.12 } }}
-              transition={{ duration: 0.22, delay: 0.06, ease: "easeOut" }}
+              exit={{ opacity: 0, scale: 0.7 }}
+              transition={{ duration: 0.15 }}
               className="w-full h-full flex items-center justify-center p-2.5"
             >
               <img src={isotipoImg} alt="AI" className="w-7 h-7 object-contain select-none pointer-events-none" />
             </motion.div>
           ) : (
-            /* Estado 2: Contenedor expandido con input y controles (desvanecimiento rápido al salir) */
+            /* Estado 2: Contenedor expandido con input y controles */
             <motion.div
               key="input-preview"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              exit={{ opacity: 0, transition: { duration: 0.12, ease: "easeOut" } }}
+              exit={{ opacity: 0 }}
               transition={{ duration: 0.2, delay: 0.05 }}
               className="w-full flex flex-col justify-between h-full flex-1"
             >
@@ -246,7 +238,7 @@ const AIPromptBar = ({
                     initial={{ opacity: 0, y: -6 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -6 }}
-                    transition={expandSpring}
+                    transition={spring}
                     className="flex items-center justify-center gap-2 mb-3"
                   >
                     <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#4059F1]/20 text-[#9DB0FF] text-[11px] font-light">
@@ -330,7 +322,7 @@ const AIPromptBar = ({
                         ? "#ffffff"
                         : "rgba(255,255,255,0.1)",
                     }}
-                    transition={expandSpring}
+                    transition={spring}
                     className={`w-9 h-9 rounded-full flex items-center justify-center transition-colors duration-200 ${
                       isGenerating
                         ? "text-white cursor-wait"
