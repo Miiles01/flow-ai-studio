@@ -1,97 +1,59 @@
-
 ## Objetivo
-Agregar el widget **Ingresos** y crear una capa de datos compartida para que los 4 widgets (Pizarra, Tarjeta de Cliente, Campañas, Ingresos) estén sincronizados dentro del mismo flow.
+Mejorar la barra de filtros del widget **Campañas**: dos controles de organización relacionados entre sí + buscador, todo responsivo y con contraste correcto sobre cualquier color de fondo.
 
 ---
 
-## 1. Nuevo widget: Ingresos
+## 1. Barra de filtros (header del widget)
 
-Contenedor grande tipo Campañas/Pizarra con dashboard financiero.
+Fila única, alineada, con el mismo lenguaje visual del widget (pills redondeadas, borde sutil, fondo translúcido que se adapta al fondo del widget):
 
-**Header**
-- Título "Ingresos" (editable) + subtítulo "Lo que cerraste por mes y lo que está por entrar" (toggleable)
-- Filtros: rango Desde / Hasta (mes-año) + botón Resetear
-
-**Fila 1 — KPIs (3 tarjetas)**
-- Total cerrado del año actual (+ histórico total)
-- Promedio mensual del año
-- Mes más alto (con etiqueta del mes)
-
-**Fila 2 — Estado (2 tarjetas grandes coloreadas)**
-- Cobrado (verde) — suma de campañas con pagos marcados como cobrados
-- Por cobrar (amarillo) — suma pendiente
-
-**Fila 3 — Visualizaciones**
-- Bar chart "Total cerrado por mes" (12 meses, recharts) con tooltip
-- Donut chart "Top marcas" con leyenda y % (recharts)
-
-**Fila 4 — Lista "Por cobrar"**
-- Agrupado por fecha estimada (o "Sin Fecha Estimada")
-- Cada fila: nombre campaña/marca → monto → botón Cobrado/Pendiente
-
-**Toolbar**: mismos controles que Campañas (color, título, subtítulo, mover, borrar). Handle superior para arrastrar.
-
----
-
-## 2. Capa de datos compartida (sincronización)
-
-Crear `src/lib/flowDataContext.tsx` — Context provider a nivel del canvas del flow que expone:
-
-```ts
-{
-  clients: Client[],           // fuente única de clientes
-  campaigns: Campaign[],       // fuente única de campañas
-  addClient, updateClient, removeClient,
-  addCampaign, updateCampaign, removeCampaign,
-  linkClientToCampaign, linkClientToKanbanCard,
-  getRevenueStats(range)       // deriva ingresos desde campaigns
-}
+```text
+[ Orden: Sin orden ▾ ]  [ Agrupar por: Estado ▾ ]  [ 🔍 Buscar marca… ]
 ```
 
-- Persistencia: se serializa junto con `flow.nodes/edges` en Supabase (`flows.data` jsonb o dentro de un nodo "shared_data" oculto).
-- Cada widget lee/escribe vía `useFlowData()`.
+En anchos pequeños la fila hace wrap: los dos selectores arriba, buscador debajo a ancho completo.
 
-**Modelos**
-- `Client`: id, name, avatar, role, phone, email, tag, assignee, value, customFields
-- `Campaign`: id, brandName, clientId?, status, paymentType, totalAmount, installments[], deliverables, exclusivity, notes, paidAt?
+### Filtro 1 — Disposición (principal)
+Menú desplegable con 3 opciones:
+- **Sin orden** (actual): grid auto-fill que se adapta al ancho.
+- **Por columnas**: las campañas se agrupan en columnas verticales tipo pizarra, una columna por grupo.
+- **Por filas**: cada grupo es una fila horizontal con sus tarjetas en línea (scroll horizontal interno si no caben).
 
----
+### Filtro 2 — Agrupar por (depende del primero)
+Solo está activo cuando la disposición es *Por columnas* o *Por filas* (en "Sin orden" queda deshabilitado/atenuado). Opciones:
+- **Estado de la colaboración**: Pendiente / Activa / Completada.
+- **Cobro**: Cobrado / Por cobrar / Intercambio (sin monto).
 
-## 3. Cambios en widgets existentes para conectarlos
+Cada grupo lleva encabezado con nombre + contador de campañas, y aparece aunque esté vacío para que la estructura no salte al filtrar.
 
-**KanbanNode (Pizarra)** — en el editor de tarjeta:
-- Renombrar sección "Asignados" → "Equipo"
-- Nueva sección "Clientes" debajo: selector con clientes existentes + botón "Crear nuevo cliente" (crea en el pool compartido y aparecerá en tarjetas ClientCard futuras)
-
-**ClientCardNode** — al crear/editar, escribe en el pool compartido `clients[]`. Si el mismo cliente ya está referenciado en una pizarra o campaña, los cambios se reflejan en todos lados.
-
-**CampaignsNode** — en el editor de campaña:
-- Nuevo campo "Cliente asignado": selector desde `clients[]` + opción "Crear nuevo cliente"
-- Los campos `totalAmount`, `installments`, `paidAt` alimentan directamente los stats del widget Ingresos
-
-**IngresosNode** — solo lee desde `campaigns[]` (y `clients[]` para "Top marcas"). No tiene data propia; es un dashboard derivado.
+### Buscador
+El input de lupa actual se compacta a la derecha de los selectores; sigue filtrando por marca y ahora también dentro de los grupos.
 
 ---
 
-## 4. Registro y wiring
-- `src/components/nodes/IngresosNode.tsx` (nuevo)
-- `src/components/widgets/registry.ts` — agregar entry `ingresos`
-- `src/pages/Index.tsx` — registrar `ingresosNode` en `nodeTypes` y envolver el ReactFlow en `<FlowDataProvider>`
-- Persistir el pool compartido junto con el flow (nodes/edges ya se guardan; agregar `sharedData` al save/load)
+## 2. Responsividad
+- **Columnas**: ancho mínimo por columna (~230px) y scroll horizontal cuando el widget es angosto; al agrandarlo las columnas se reparten el espacio.
+- **Filas**: cada fila es un carril con scroll horizontal propio y tarjetas de ancho fijo, para que redimensionar el widget nunca rompa el layout.
+- **Sin orden**: se mantiene el grid auto-fill actual.
+- Se conserva el auto-ajuste de altura por IA (`useWidgetAutoFit`) recalculando con la nueva estructura.
+
+---
+
+## 3. Contraste con el color de fondo
+- Los nuevos controles (pills, menús, encabezados de grupo, contadores) usan `isBoardDark`/`boardTextColor` — la lógica de luminancia que ya calcula el widget — en lugar de asumir dark mode.
+- **Corrección incluida**: las tarjetas de campaña (`CampaignCard`) hoy usan `isDark` en vez del contraste real del fondo, así que sobre amarillo/rosa/verde el texto se ve mal. Pasan a usar `isBoardDark`.
+- Los popovers de los selectores siguen el estilo de los menús existentes del widget.
 
 ---
 
 ## Detalle técnico
-- Charts: `recharts` (ya usado en el proyecto si aplica, si no `bun add recharts`)
-- Dark mode: seguir reglas del design-system del proyecto (usar `isDark` + tokens semánticos)
-- No conectable con edges (igual que los otros widgets)
-- Handle de arrastre superior consistente con los demás
+- Archivo: `src/components/nodes/CampaignsNode.tsx`.
+- Nuevos campos en `CampaignsNodeData`: `layout?: "none" | "columns" | "rows"` y `groupBy?: "status" | "payment"`, persistidos con el nodo (default `none` / `status`).
+- Agrupación derivada con `useMemo` desde `filtered`; sin cambios en el modelo `Campaign`.
+- Los controles llevan `nodrag nopan` para no interferir con el arrastre del nodo.
 
 ---
 
-## Riesgo / cuidado
-- Migración de flows existentes: `sharedData` puede no existir → inicializar vacío al cargar
-- Evitar loops de update entre widgets: usar un solo setter por entidad
-- El usuario trabaja en paralelo con otra IA vía GitHub: no tocar archivos ajenos al scope
-
-Con tu OK arranco por el context + IngresosNode y luego conecto los 3 widgets existentes.
+## Fuera de alcance
+- No se toca el editor de campaña ni el widget Ingresos.
+- No se agregan filtros de exclusión (solo orden/agrupación + búsqueda), tal como se pidió.
