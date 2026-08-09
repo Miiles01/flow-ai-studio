@@ -29,8 +29,7 @@ export async function loadUserApps(authHeader: string | null): Promise<UserAppRo
     const { data, error } = await admin
       .from("user_apps")
       .select("id, name, connector_type, url, api_key, enabled, is_builtin, builtin_key")
-      .eq("user_id", userId)
-      .eq("enabled", true);
+      .eq("user_id", userId);
     if (error) {
       console.error("loadUserApps error", error.message);
       return [];
@@ -45,8 +44,17 @@ export async function loadUserApps(authHeader: string | null): Promise<UserAppRo
 export function appsCatalogText(apps: UserAppRow[]): string {
   if (!apps.length) return "";
   return apps
-    .map((a) => `- ${a.name} (${a.connector_type === "mcp" ? "MCP" : "API"}) base: ${a.url}`)
+    .map((a) =>
+      `- ${a.name} (${a.connector_type === "mcp" ? "MCP" : "API"}) base: ${a.url}${
+        a.enabled ? "" : " [DESACTIVADA — el usuario debe activarla en Apps antes de poder usarla]"
+      }`
+    )
     .join("\n");
+}
+
+/** Apps que realmente se pueden llamar ahora mismo. */
+export function enabledApps(apps: UserAppRow[]): UserAppRow[] {
+  return apps.filter((a) => a.enabled);
 }
 
 type PlannedCall = { app: string; method?: string; path?: string; query?: string; body?: string };
@@ -112,7 +120,8 @@ export async function maybeUseApps(params: {
   prompt: string;
   contextLabel?: string;
 }): Promise<string> {
-  const { apps, target, prompt } = params;
+  const { target, prompt } = params;
+  const apps = enabledApps(params.apps);
   if (!apps.length) return "";
 
   const sys = `Eres un planificador de herramientas. El usuario tiene estas apps conectadas:

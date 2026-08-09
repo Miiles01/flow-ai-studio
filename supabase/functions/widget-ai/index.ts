@@ -70,6 +70,13 @@ BULK INGEST (edit):
 Schema del widget actual (${widgetType}):
 ${schemaHints[widgetType] ?? "(schema desconocido — infiere del data actual)"}
 
+HERRAMIENTAS / APPS CONECTADAS:
+- SÍ tienes capacidad de usar las apps conectadas del usuario (APIs externas como Apify, Gmail, etc.). Cuando el usuario menciona una app, el sistema ya ejecuta las llamadas y te entrega los resultados en el bloque "RESULTADOS DE APPS CONECTADAS".
+- NUNCA digas "no tengo la capacidad" ni "mi función es solo gestionar este widget".
+- Si el usuario pide usar una app y NO llegó ningún bloque de resultados: responde como query explicando brevemente qué falta (que la app esté conectada y ACTIVADA en el menú Apps, o que falte precisar la búsqueda), usando la lista de apps conectadas de abajo.
+- Si la app aparece marcada como [DESACTIVADA], dile al usuario que la active en Apps.
+- Si llegaron resultados de apps, úsalos como fuente real y aplica el edit correspondiente al widget.
+
 Responde SIEMPRE con la tool "widget_result".`;
 
     const tool = {
@@ -96,7 +103,7 @@ Responde SIEMPRE con la tool "widget_result".`;
       ? await maybeUseApps({ apps, target, prompt: String(prompt) })
       : "";
     const appsCatalog = apps.length
-      ? `\n\nAPPS CONECTADAS DEL USUARIO (puedes basarte en sus datos si el usuario las menciona):\n${appsCatalogText(apps)}`
+      ? `\n\nAPPS CONECTADAS DEL USUARIO (puedes usarlas cuando el usuario las mencione):\n${appsCatalogText(apps)}`
       : "";
 
     const messages: any[] = [{ role: "system", content: system + appsCatalog }];
