@@ -26,7 +26,7 @@ import { type NodeProps, NodeResizer, useReactFlow, useViewport } from "@xyflow/
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Plus, Trash2, Palette, X, Search, ArrowLeft, Repeat, DollarSign,
-  Instagram, Youtube, Calendar, Users, Minus, Heading1, Heading2, Check,
+  Instagram, Youtube, Calendar, Users, Minus, Heading1, Heading2, Check, ChevronDown,
 } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import NodeExtendHandles from "@/components/nodes/NodeExtendHandles";
@@ -82,7 +82,32 @@ export type CampaignsNodeData = {
   backgroundColor?: string;
   textColor?: string;
   accentColor?: string;
+  /** Disposición de las tarjetas: libre, agrupadas en columnas o en filas. */
+  layout?: CampaignsLayout;
+  /** Criterio de agrupación cuando layout != "none". */
+  groupBy?: CampaignsGroupBy;
 };
+
+export type CampaignsLayout = "none" | "columns" | "rows";
+export type CampaignsGroupBy = "status" | "payment";
+
+const LAYOUT_OPTIONS: Array<{ value: CampaignsLayout; label: string }> = [
+  { value: "none", label: "Sin orden" },
+  { value: "columns", label: "Por columnas" },
+  { value: "rows", label: "Por filas" },
+];
+
+const GROUP_OPTIONS: Array<{ value: CampaignsGroupBy; label: string }> = [
+  { value: "status", label: "Estado" },
+  { value: "payment", label: "Cobro" },
+];
+
+const STATUS_ORDER: CampaignStatus[] = ["Pendiente", "Activa", "Completada"];
+const PAYMENT_GROUPS = ["Cobrado", "Por cobrar", "Intercambio"] as const;
+
+const paymentGroupOf = (c: Campaign) =>
+  c.payType === "intercambio" ? "Intercambio" : c.paidAt ? "Cobrado" : "Por cobrar";
+
 
 const RAINBOW_COLORS = [
   { name: "Transparente", value: "transparent" },
@@ -247,6 +272,21 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
     return campaigns.filter((c) => c.brand.toLowerCase().includes(q));
   }, [campaigns, filter]);
 
+  const layout: CampaignsLayout = d.layout ?? "none";
+  const groupBy: CampaignsGroupBy = d.groupBy ?? "status";
+
+  const groups = useMemo(() => {
+    if (layout === "none") return [];
+    const keys: string[] = groupBy === "status" ? [...STATUS_ORDER] : [...PAYMENT_GROUPS];
+    return keys.map((key) => ({
+      key,
+      items: filtered.filter((c) =>
+        groupBy === "status" ? c.status === key : paymentGroupOf(c) === key
+      ),
+    }));
+  }, [filtered, layout, groupBy]);
+
+
   const openCampaign = campaigns.find((c) => c.id === openCampaignId) || null;
 
   return (
@@ -380,29 +420,49 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
             </button>
           </div>
 
-          <div
-            className="mt-3 flex items-center gap-2 px-3 py-2 rounded-xl border transition-colors"
-            style={{
-              backgroundColor: isBoardDark ? "rgba(255,255,255,0.10)" : "rgba(0,0,0,0.08)",
-              borderColor: isBoardDark ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.10)",
-            }}
-          >
-            <Search size={13} style={{ color: boardTextColor, opacity: 0.6 }} />
-            <input
-              value={filter}
-              onChange={(e) => setFilter(e.target.value)}
-              placeholder="Filtrar por marca…"
-              className={`nodrag nopan flex-1 bg-transparent border-none outline-none text-[12.5px] ${
-                isBoardDark ? "placeholder:text-white/55" : "placeholder:text-black/35"
-              }`}
-              style={{ color: boardTextColor }}
+          {/* Filtros: disposición + agrupación + buscador */}
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            <FilterSelect
+              label="Orden"
+              value={layout}
+              options={LAYOUT_OPTIONS}
+              onChange={(v) => update({ layout: v as CampaignsLayout })}
+              isBoardDark={isBoardDark}
+              textColor={boardTextColor}
             />
+            <FilterSelect
+              label="Agrupar"
+              value={groupBy}
+              options={GROUP_OPTIONS}
+              onChange={(v) => update({ groupBy: v as CampaignsGroupBy })}
+              isBoardDark={isBoardDark}
+              textColor={boardTextColor}
+              disabled={layout === "none"}
+            />
+            <div
+              className="flex items-center gap-2 px-3 py-1.5 rounded-full border transition-colors flex-1 min-w-[150px]"
+              style={{
+                backgroundColor: isBoardDark ? "rgba(255,255,255,0.10)" : "rgba(0,0,0,0.06)",
+                borderColor: isBoardDark ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.10)",
+              }}
+            >
+              <Search size={13} style={{ color: boardTextColor, opacity: 0.6 }} />
+              <input
+                value={filter}
+                onChange={(e) => setFilter(e.target.value)}
+                placeholder="Buscar marca…"
+                className={`nodrag nopan flex-1 min-w-0 bg-transparent border-none outline-none text-[12.5px] ${
+                  isBoardDark ? "placeholder:text-white/55" : "placeholder:text-black/35"
+                }`}
+                style={{ color: boardTextColor }}
+              />
+            </div>
           </div>
         </div>
 
-        {/* Grid of campaign cards */}
+        {/* Contenido */}
         <div ref={scrollRef} className="p-4 flex-1 overflow-y-auto kanban-scrollbar">
-          {filtered.length === 0 ? (
+          {campaigns.length === 0 ? (
             <div className={`h-full flex flex-col items-center justify-center gap-2 text-center ${isBoardDark ? "text-white/75" : "text-neutral-500"}`}>
               <div className={`w-12 h-12 rounded-full flex items-center justify-center ${isBoardDark ? "bg-white/10 text-white" : "bg-black/[0.04] text-neutral-600"}`}>
                 <Plus size={20} />
@@ -416,20 +476,69 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
                 Añadir la primera
               </button>
             </div>
+          ) : layout === "none" ? (
+            filtered.length === 0 ? (
+              <EmptySearch isBoardDark={isBoardDark} />
+            ) : (
+              <div className="grid gap-3" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))" }}>
+                {filtered.map((c) => (
+                  <CampaignCard
+                    key={c.id}
+                    c={c}
+                    isDark={isBoardDark}
+                    accentColor={accentColor}
+                    onOpen={() => setOpenCampaignId(c.id)}
+                  />
+                ))}
+              </div>
+            )
+          ) : layout === "columns" ? (
+            <div className="flex gap-3 items-start overflow-x-auto kanban-scrollbar pb-1">
+              {groups.map((g) => (
+                <div key={g.key} className="shrink-0 grow basis-[230px] min-w-[230px] max-w-[420px] flex flex-col gap-2">
+                  <GroupHeader label={g.key} count={g.items.length} isBoardDark={isBoardDark} textColor={boardTextColor} />
+                  <div className="flex flex-col gap-3">
+                    {g.items.map((c) => (
+                      <CampaignCard
+                        key={c.id}
+                        c={c}
+                        isDark={isBoardDark}
+                        accentColor={accentColor}
+                        onOpen={() => setOpenCampaignId(c.id)}
+                      />
+                    ))}
+                    {g.items.length === 0 && <GroupEmpty isBoardDark={isBoardDark} />}
+                  </div>
+                </div>
+              ))}
+            </div>
           ) : (
-            <div className="grid gap-3" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))" }}>
-              {filtered.map((c) => (
-                <CampaignCard
-                  key={c.id}
-                  c={c}
-                  isDark={isDark}
-                  accentColor={accentColor}
-                  onOpen={() => setOpenCampaignId(c.id)}
-                />
+            <div className="flex flex-col gap-4">
+              {groups.map((g) => (
+                <div key={g.key} className="flex flex-col gap-2">
+                  <GroupHeader label={g.key} count={g.items.length} isBoardDark={isBoardDark} textColor={boardTextColor} />
+                  {g.items.length === 0 ? (
+                    <GroupEmpty isBoardDark={isBoardDark} />
+                  ) : (
+                    <div className="flex gap-3 overflow-x-auto kanban-scrollbar pb-1">
+                      {g.items.map((c) => (
+                        <div key={c.id} className="shrink-0 w-[230px]">
+                          <CampaignCard
+                            c={c}
+                            isDark={isBoardDark}
+                            accentColor={accentColor}
+                            onOpen={() => setOpenCampaignId(c.id)}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               ))}
             </div>
           )}
         </div>
+
       </div>
 
       {openCampaign && anchorRef.current && (
@@ -450,7 +559,116 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
   );
 };
 
+/* ─────────── Controles de filtro / agrupación ─────────── */
+
+const FilterSelect = ({
+  label, value, options, onChange, isBoardDark, textColor, disabled,
+}: {
+  label: string;
+  value: string;
+  options: Array<{ value: string; label: string }>;
+  onChange: (v: string) => void;
+  isBoardDark: boolean;
+  textColor: string;
+  disabled?: boolean;
+}) => {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", onDown);
+    return () => document.removeEventListener("mousedown", onDown);
+  }, [open]);
+
+  useEffect(() => {
+    if (disabled) setOpen(false);
+  }, [disabled]);
+
+  const current = options.find((o) => o.value === value)?.label ?? options[0]?.label;
+
+  return (
+    <div ref={ref} className="relative nodrag nopan">
+      <button
+        onClick={() => !disabled && setOpen((v) => !v)}
+        disabled={disabled}
+        className={`nodrag nopan flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-[12px] font-medium transition-colors ${
+          disabled ? "opacity-40 cursor-not-allowed" : "hover:brightness-110"
+        }`}
+        style={{
+          color: textColor,
+          backgroundColor: isBoardDark ? "rgba(255,255,255,0.10)" : "rgba(0,0,0,0.06)",
+          borderColor: isBoardDark ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.10)",
+        }}
+      >
+        <span className="opacity-60">{label}:</span>
+        <span className="truncate max-w-[110px]">{current}</span>
+        <ChevronDown size={12} style={{ opacity: 0.6 }} />
+      </button>
+
+      {open && (
+        <div
+          className={`absolute top-full mt-1.5 left-0 z-[60] min-w-[160px] rounded-xl p-1.5 shadow-[0_8px_28px_rgba(0,0,0,0.14)] border ${
+            isBoardDark ? "bg-[#1C1C1E] border-white/10" : "bg-white border-neutral-200"
+          }`}
+        >
+          {options.map((o) => (
+            <button
+              key={o.value}
+              onClick={() => { onChange(o.value); setOpen(false); }}
+              className={`nodrag nopan w-full flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-lg text-left text-[12.5px] ${
+                isBoardDark ? "text-white hover:bg-white/10" : "text-neutral-900 hover:bg-neutral-100"
+              } ${o.value === value ? (isBoardDark ? "bg-white/10" : "bg-neutral-100") : ""}`}
+            >
+              {o.label}
+              {o.value === value && <Check size={13} />}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const GroupHeader = ({
+  label, count, isBoardDark, textColor,
+}: { label: string; count: number; isBoardDark: boolean; textColor: string }) => (
+  <div className="flex items-center gap-2 px-1">
+    <span className="text-[12px] font-semibold tracking-tight" style={{ color: textColor }}>{label}</span>
+    <span
+      className="text-[10.5px] font-medium px-1.5 py-0.5 rounded-full"
+      style={{
+        color: textColor,
+        opacity: 0.7,
+        backgroundColor: isBoardDark ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.06)",
+      }}
+    >
+      {count}
+    </span>
+  </div>
+);
+
+const GroupEmpty = ({ isBoardDark }: { isBoardDark: boolean }) => (
+  <div
+    className={`rounded-2xl border border-dashed py-4 text-center text-[11.5px] ${
+      isBoardDark ? "border-white/15 text-white/50" : "border-black/10 text-neutral-400"
+    }`}
+  >
+    Sin campañas
+  </div>
+);
+
+const EmptySearch = ({ isBoardDark }: { isBoardDark: boolean }) => (
+  <div className={`h-full flex items-center justify-center text-[12.5px] ${isBoardDark ? "text-white/60" : "text-neutral-500"}`}>
+    Sin resultados para tu búsqueda.
+  </div>
+);
+
 /* ─────────── Campaign card (grid tile) ─────────── */
+
 
 const CampaignCard = ({
   c, isDark, accentColor, onOpen,
