@@ -447,7 +447,7 @@ export default function AddAppModal({ open, onClose, onCreate, customApps, onTog
 
                     <div>
                       <label className={`mb-1.5 block text-xs font-light ${isDark ? "text-white/60" : "text-black/60"}`}>
-                        API key / token <span className="opacity-50">(opcional)</span>
+                        {keyLabel ?? "API key / token"} <span className="opacity-50">(opcional)</span>
                       </label>
                       <input
                         value={apiKey}
@@ -456,7 +456,13 @@ export default function AddAppModal({ open, onClose, onCreate, customApps, onTog
                         type="password"
                         className={inputClass}
                       />
+                      {keyHint && (
+                        <p className={`mt-1.5 text-[11px] font-light ${isDark ? "text-white/40" : "text-black/40"}`}>
+                          {keyHint}
+                        </p>
+                      )}
                     </div>
+
                   </div>
 
                   <div className="px-5 pb-5 pt-1">
