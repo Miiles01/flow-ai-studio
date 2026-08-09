@@ -1584,6 +1584,8 @@ const IndexContent = () => {
           data: node.data,
           prompt,
           history,
+          flowId: id && id !== "new" ? id : null,
+          nodeId,
         });
         setNodes((prev) => prev.map((n) => {
           if (n.id !== nodeId) return n;
