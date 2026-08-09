@@ -159,6 +159,11 @@ export default function AddAppModal({ open, onClose, onCreate, customApps, onTog
     <AnimatePresence>
       {open && (
         <motion.div
+          role="dialog"
+          aria-modal="true"
+          data-app-modal="true"
+          onMouseDown={(e) => e.stopPropagation()}
+          onPointerDown={(e) => e.stopPropagation()}
           className="fixed inset-0 z-[120] flex items-center justify-center p-4"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
