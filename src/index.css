@@ -983,3 +983,9 @@
 .mwg_effect098 .circle + .circle { margin-top: -93%; }
 .mwg_effect098 svg { width: 100%; height: auto; overflow: visible; }
 .mwg_effect098 textPath { fill: currentColor; }
+
+/* Loader de tareas en segundo plano (widgets con apps conectadas) */
+@keyframes widget-loader {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(300%); }
+}

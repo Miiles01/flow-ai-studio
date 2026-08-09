@@ -46,6 +46,19 @@ Deno.serve(async (req) => {
       return json({ error: "run no coincide con el job" }, 403);
     }
 
+    const eventType = String(payload?.eventType ?? "");
+    const runStatus = String(payload?.resource?.status ?? "");
+    const failed = /FAILED|ABORTED|TIMED_OUT/.test(eventType) || /FAILED|ABORTED|TIMED-OUT/.test(runStatus);
+    if (failed) {
+      await admin.from("widget_jobs")
+        .update({
+          status: "error",
+          answer: `La ejecución de Apify no terminó correctamente (${runStatus || eventType || "desconocido"}).`,
+        })
+        .eq("id", jobId);
+      return json({ ok: true, failed: true });
+    }
+
     const datasetId =
       payload?.resource?.defaultDatasetId ?? job.dataset_id ?? null;
     if (!datasetId) {
@@ -90,6 +103,17 @@ Deno.serve(async (req) => {
     }
 
     // Resumen breve en background para que el widget reciba algo legible aunque falle el LLM.
+    if (!items.length) {
+      await admin.from("widget_jobs")
+        .update({
+          status: "error",
+          answer: "Apify terminó pero no devolvió resultados. Prueba con una búsqueda más específica.",
+          result: { items: [] },
+        })
+        .eq("id", jobId);
+      return json({ ok: true, items: 0 });
+    }
+
     let answer = `Apify terminó: ${items.length} resultados listos.`;
     const lovableKey = Deno.env.get("LOVABLE_API_KEY");
     if (lovableKey && items.length) {

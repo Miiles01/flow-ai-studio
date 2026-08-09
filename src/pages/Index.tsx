@@ -1587,9 +1587,24 @@ const IndexContent = () => {
           flowId: id && id !== "new" ? id : null,
           nodeId,
         });
+        const pendingJobId = (result as any).jobId as string | undefined;
         setNodes((prev) => prev.map((n) => {
           if (n.id !== nodeId) return n;
           const existingComments = ((n.data as any)?.aiComments as WidgetAIComment[] | undefined) ?? [];
+          if (pendingJobId) {
+            // La app externa trabaja en segundo plano: dejamos el comentario con loader.
+            const pendingComment: WidgetAIComment = {
+              id: uid(),
+              prompt,
+              answer: (result as any).answer || "He iniciado la búsqueda profunda en segundo plano.",
+              createdAt: Date.now(),
+              read: false,
+              pending: true,
+              status: "running",
+              jobId: pendingJobId,
+            };
+            return { ...n, data: { ...(n.data as any), aiComments: [...existingComments, pendingComment] } };
+          }
           if (result.intent === "edit") {
             const newComment: WidgetAIComment = {
               id: uid(),
@@ -1635,60 +1650,126 @@ const IndexContent = () => {
 
   useEffect(() => {
     if (!user?.id) return;
-    const channel = supabase
-      .channel(`widget-jobs:${user.id}`)
-      .on(
-        "postgres_changes",
-        { event: "UPDATE", schema: "public", table: "widget_jobs", filter: `user_id=eq.${user.id}` },
-        async (payload) => {
-          const job = payload.new as any;
-          if (!job || job.status !== "ready" || handledJobsRef.current.has(job.id)) return;
+
+    const handleJob = async (job: any) => {
+        {
+          if (!job || handledJobsRef.current.has(job.id)) return;
+          if (job.status !== "ready" && job.status !== "error") return;
           handledJobsRef.current.add(job.id);
 
           const node = widgetNodesRef.current.find((n) => n.id === job.node_id);
           if (!node) return;
 
-          try {
-            setIsGenerating(true);
-            const result = await runWidgetAI({
-              widgetType: node.type ?? job.widget_type ?? "",
-              data: node.data,
-              prompt: `${job.prompt}\n\n---\nRESULTADOS YA OBTENIDOS DE APIFY (usa estos datos reales, no vuelvas a llamar a ninguna app):\n${job.answer ?? ""}\n\nJSON:\n${JSON.stringify(job.result?.items ?? []).slice(0, 20000)}`,
-              flowId: id && id !== "new" ? id : null,
-              nodeId: node.id,
-            });
+          const resolveComment = (patch: Partial<WidgetAIComment>, dataOverride?: Record<string, unknown>) => {
             setNodes((prev) =>
               prev.map((n) => {
                 if (n.id !== node.id) return n;
                 const existing = ((n.data as any)?.aiComments as WidgetAIComment[] | undefined) ?? [];
-                const comment: WidgetAIComment = {
-                  id: uid(),
-                  prompt: job.prompt,
-                  answer: (result as any).answer || job.answer || "✅ Resultados de Apify aplicados.",
-                  createdAt: Date.now(),
-                  read: false,
-                };
-                if (result.intent === "edit") {
-                  return {
-                    ...n,
-                    data: { ...(result.data as any), aiComments: [...existing, comment], _aiFitNonce: Date.now() },
-                  };
+                let matched = false;
+                const nextComments = existing.map((c) => {
+                  if (c.jobId === job.id) {
+                    matched = true;
+                    return { ...c, pending: false, read: false, ...patch } as WidgetAIComment;
+                  }
+                  return c;
+                });
+                if (!matched) {
+                  nextComments.push({
+                    id: uid(),
+                    prompt: job.prompt,
+                    answer: patch.answer ?? "",
+                    createdAt: Date.now(),
+                    read: false,
+                    jobId: job.id,
+                    status: patch.status,
+                  } as WidgetAIComment);
                 }
-                return { ...n, data: { ...(n.data as any), aiComments: [...existing, comment] } };
+                const baseData = dataOverride ?? (n.data as any);
+                return {
+                  ...n,
+                  data: {
+                    ...baseData,
+                    aiComments: nextComments,
+                    ...(dataOverride ? { _aiFitNonce: Date.now() } : {}),
+                  },
+                };
               })
             );
-            toast.success("Resultados de Apify listos");
+          };
+
+          if (job.status === "error") {
+            resolveComment({ status: "error", answer: job.answer || "La tarea en segundo plano falló." });
+            toast.error(job.answer || "La tarea en segundo plano falló");
+            await supabase.from("widget_jobs").update({ status: "applied" }).eq("id", job.id);
+            return;
+          }
+
+          const items = (job.result as any)?.items ?? [];
+          if (!Array.isArray(items) || items.length === 0) {
+            resolveComment({ status: "error", answer: job.answer || "La app no devolvió resultados utilizables." });
+            await supabase.from("widget_jobs").update({ status: "applied" }).eq("id", job.id);
+            return;
+          }
+
+          try {
+            const result = await runWidgetAI({
+              widgetType: node.type ?? job.widget_type ?? "",
+              data: node.data,
+              prompt: `${job.prompt}\n\n---\nRESULTADOS YA OBTENIDOS DE LA APP (${job.provider ?? "app"}). Son datos REALES: úsalos y APLÍCALOS al widget con intent="edit" (no vuelvas a llamar a ninguna app, no inventes nada, no respondas solo con texto si el usuario pidió meter información).\n\nResumen:\n${job.answer ?? ""}\n\nJSON:\n${JSON.stringify(items).slice(0, 20000)}`,
+              flowId: id && id !== "new" ? id : null,
+              nodeId: node.id,
+            });
+            if (result.intent === "edit" && (result as any).data && Object.keys((result as any).data).length) {
+              resolveComment(
+                { status: "done", answer: (result as any).answer || job.answer || "✅ Resultados aplicados al widget." },
+                (result as any).data
+              );
+              toast.success("Resultados aplicados al widget");
+            } else {
+              resolveComment({ status: "done", answer: (result as any).answer || job.answer || "" });
+              toast.success("Resultados listos");
+            }
           } catch (err) {
-            toast.error(err instanceof Error ? err.message : "Error aplicando resultados de Apify");
+            resolveComment({
+              status: "error",
+              answer: `${job.answer ?? ""}\n\n⚠️ No se pudieron aplicar automáticamente: ${err instanceof Error ? err.message : String(err)}`.trim(),
+            });
+            toast.error("No se pudieron aplicar los resultados");
           } finally {
-            setIsGenerating(false);
             await supabase.from("widget_jobs").update({ status: "applied" }).eq("id", job.id);
           }
         }
+    };
+
+    const channel = supabase
+      .channel(`widget-jobs:${user.id}`)
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "widget_jobs", filter: `user_id=eq.${user.id}` },
+        (payload) => { void handleJob(payload.new as any); }
       )
       .subscribe();
 
+    // Red de seguridad: si el webhook llegó mientras el canvas estaba cerrado o
+    // Realtime se perdió un evento, recuperamos los trabajos terminados.
+    let stopped = false;
+    const catchUp = async () => {
+      const { data: jobs } = await supabase
+        .from("widget_jobs")
+        .select("*")
+        .eq("user_id", user.id)
+        .in("status", ["ready", "error"])
+        .order("updated_at", { ascending: true })
+        .limit(10);
+      if (stopped) return;
+      for (const job of jobs ?? []) await handleJob(job);
+    };
+    void catchUp();
+    const poll = setInterval(catchUp, 20000);
+
     return () => {
+      stopped = true;
+      clearInterval(poll);
       supabase.removeChannel(channel);
     };
   }, [user?.id, id, setNodes]);
