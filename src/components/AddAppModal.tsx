@@ -139,19 +139,32 @@ export default function AddAppModal({ open, onClose, onCreate, customApps, onTog
                 Suma herramientas externas para que la IA pueda usarlas dentro de tus flujos.
               </p>
 
-              <div className="mt-6 md:mt-10 flex flex-col gap-4">
-                {features.map((f) => (
-                  <div key={f.title} className="flex gap-3">
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/10">
-                      <f.icon size={16} strokeWidth={1.5} className="text-white" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-white">{f.title}</p>
-                      <p className="text-xs font-light text-white/50 leading-snug">{f.desc}</p>
-                    </div>
-                  </div>
-                ))}
+              <div className="mt-6 md:mt-10 flex flex-col gap-3">
+                {navCards.map((c) => {
+                  const active = view === c.key || (c.key === "form" && view === "form");
+                  return (
+                    <button
+                      key={c.key}
+                      type="button"
+                      onClick={() => setView(c.key)}
+                      className={`flex gap-3 text-left rounded-2xl p-4 transition-colors border ${
+                        active
+                          ? "bg-white/15 border-white/25"
+                          : "bg-white/5 border-white/10 hover:bg-white/10"
+                      }`}
+                    >
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/10">
+                        <c.icon size={16} strokeWidth={1.5} className="text-white" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-white">{c.title}</p>
+                        <p className="text-xs font-light text-white/50 leading-snug">{c.desc}</p>
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
+
             </div>
 
             {/* Right panel — list / form */}
