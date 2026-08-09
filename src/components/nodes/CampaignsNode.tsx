@@ -420,29 +420,49 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
             </button>
           </div>
 
-          <div
-            className="mt-3 flex items-center gap-2 px-3 py-2 rounded-xl border transition-colors"
-            style={{
-              backgroundColor: isBoardDark ? "rgba(255,255,255,0.10)" : "rgba(0,0,0,0.08)",
-              borderColor: isBoardDark ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.10)",
-            }}
-          >
-            <Search size={13} style={{ color: boardTextColor, opacity: 0.6 }} />
-            <input
-              value={filter}
-              onChange={(e) => setFilter(e.target.value)}
-              placeholder="Filtrar por marca…"
-              className={`nodrag nopan flex-1 bg-transparent border-none outline-none text-[12.5px] ${
-                isBoardDark ? "placeholder:text-white/55" : "placeholder:text-black/35"
-              }`}
-              style={{ color: boardTextColor }}
+          {/* Filtros: disposición + agrupación + buscador */}
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            <FilterSelect
+              label="Orden"
+              value={layout}
+              options={LAYOUT_OPTIONS}
+              onChange={(v) => update({ layout: v as CampaignsLayout })}
+              isBoardDark={isBoardDark}
+              textColor={boardTextColor}
             />
+            <FilterSelect
+              label="Agrupar"
+              value={groupBy}
+              options={GROUP_OPTIONS}
+              onChange={(v) => update({ groupBy: v as CampaignsGroupBy })}
+              isBoardDark={isBoardDark}
+              textColor={boardTextColor}
+              disabled={layout === "none"}
+            />
+            <div
+              className="flex items-center gap-2 px-3 py-1.5 rounded-full border transition-colors flex-1 min-w-[150px]"
+              style={{
+                backgroundColor: isBoardDark ? "rgba(255,255,255,0.10)" : "rgba(0,0,0,0.06)",
+                borderColor: isBoardDark ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.10)",
+              }}
+            >
+              <Search size={13} style={{ color: boardTextColor, opacity: 0.6 }} />
+              <input
+                value={filter}
+                onChange={(e) => setFilter(e.target.value)}
+                placeholder="Buscar marca…"
+                className={`nodrag nopan flex-1 min-w-0 bg-transparent border-none outline-none text-[12.5px] ${
+                  isBoardDark ? "placeholder:text-white/55" : "placeholder:text-black/35"
+                }`}
+                style={{ color: boardTextColor }}
+              />
+            </div>
           </div>
         </div>
 
-        {/* Grid of campaign cards */}
+        {/* Contenido */}
         <div ref={scrollRef} className="p-4 flex-1 overflow-y-auto kanban-scrollbar">
-          {filtered.length === 0 ? (
+          {campaigns.length === 0 ? (
             <div className={`h-full flex flex-col items-center justify-center gap-2 text-center ${isBoardDark ? "text-white/75" : "text-neutral-500"}`}>
               <div className={`w-12 h-12 rounded-full flex items-center justify-center ${isBoardDark ? "bg-white/10 text-white" : "bg-black/[0.04] text-neutral-600"}`}>
                 <Plus size={20} />
@@ -456,20 +476,69 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
                 Añadir la primera
               </button>
             </div>
+          ) : layout === "none" ? (
+            filtered.length === 0 ? (
+              <EmptySearch isBoardDark={isBoardDark} />
+            ) : (
+              <div className="grid gap-3" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))" }}>
+                {filtered.map((c) => (
+                  <CampaignCard
+                    key={c.id}
+                    c={c}
+                    isDark={isBoardDark}
+                    accentColor={accentColor}
+                    onOpen={() => setOpenCampaignId(c.id)}
+                  />
+                ))}
+              </div>
+            )
+          ) : layout === "columns" ? (
+            <div className="flex gap-3 items-start overflow-x-auto kanban-scrollbar pb-1">
+              {groups.map((g) => (
+                <div key={g.key} className="shrink-0 grow basis-[230px] min-w-[230px] max-w-[420px] flex flex-col gap-2">
+                  <GroupHeader label={g.key} count={g.items.length} isBoardDark={isBoardDark} textColor={boardTextColor} />
+                  <div className="flex flex-col gap-3">
+                    {g.items.map((c) => (
+                      <CampaignCard
+                        key={c.id}
+                        c={c}
+                        isDark={isBoardDark}
+                        accentColor={accentColor}
+                        onOpen={() => setOpenCampaignId(c.id)}
+                      />
+                    ))}
+                    {g.items.length === 0 && <GroupEmpty isBoardDark={isBoardDark} />}
+                  </div>
+                </div>
+              ))}
+            </div>
           ) : (
-            <div className="grid gap-3" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))" }}>
-              {filtered.map((c) => (
-                <CampaignCard
-                  key={c.id}
-                  c={c}
-                  isDark={isDark}
-                  accentColor={accentColor}
-                  onOpen={() => setOpenCampaignId(c.id)}
-                />
+            <div className="flex flex-col gap-4">
+              {groups.map((g) => (
+                <div key={g.key} className="flex flex-col gap-2">
+                  <GroupHeader label={g.key} count={g.items.length} isBoardDark={isBoardDark} textColor={boardTextColor} />
+                  {g.items.length === 0 ? (
+                    <GroupEmpty isBoardDark={isBoardDark} />
+                  ) : (
+                    <div className="flex gap-3 overflow-x-auto kanban-scrollbar pb-1">
+                      {g.items.map((c) => (
+                        <div key={c.id} className="shrink-0 w-[230px]">
+                          <CampaignCard
+                            c={c}
+                            isDark={isBoardDark}
+                            accentColor={accentColor}
+                            onOpen={() => setOpenCampaignId(c.id)}
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  )}
+                </div>
               ))}
             </div>
           )}
         </div>
+
       </div>
 
       {openCampaign && anchorRef.current && (
