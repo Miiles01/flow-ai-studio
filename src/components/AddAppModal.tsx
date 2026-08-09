@@ -290,7 +290,9 @@ export default function AddAppModal({ open, onClose, onCreate, customApps, onTog
                             />
                           </button>
                         </div>
-                      ))
+                        );
+                      })
+
                     )}
                   </div>
                 </div>
