@@ -450,46 +450,33 @@ const IndexContent = () => {
     nodeStates: Array<{ id: string; x: number; y: number; w: number; h: number; fontSize: number }>;
   } | null>(null);
 
-  // Compute bounding box around all selected nodes in canvas coordinates (absolute space)
-  const selectionBounds = useMemo(() => {
-    if (selectedNodes.length <= 1) return null;
-    let minX = Infinity;
-    let minY = Infinity;
-    let maxX = -Infinity;
-    let maxY = -Infinity;
-
-    selectedNodes.forEach((node) => {
-      // Resolve absolute coordinates by accumulating parent positions
-      let absX = node.position.x;
-      let absY = node.position.y;
-      let pId = node.parentId;
-      while (pId) {
-        const parent = nodes.find((n) => n.id === pId);
-        if (parent) {
-          absX += parent.position.x;
-          absY += parent.position.y;
-          pId = parent.parentId;
-        } else {
-          break;
-        }
-      }
-
-      const w = (node.style?.width as number) || (node.measured?.width) || 100;
-      const h = (node.style?.height as number) || (node.measured?.height) || 100;
-
-      if (absX < minX) minX = absX;
-      if (absY < minY) minY = absY;
-      if (absX + w > maxX) maxX = absX + w;
-      if (absY + h > maxY) maxY = absY + h;
+  // Compute bounding box around all selected nodes in canvas coordinates (absolute space).
+  // We read from React Flow's internal nodeLookup so we always get the *measured* size and
+  // the resolved absolute position (parents/frames included). Returning a primitive string
+  // keeps the store selector referentially stable between renders.
+  const selectionBoundsKey = useStore((s: any) => {
+    let minX = Infinity, minY = Infinity, maxX = -Infinity, maxY = -Infinity, count = 0;
+    s.nodeLookup.forEach((n: any) => {
+      if (!n.selected || n.hidden) return;
+      count++;
+      const abs = n.internals?.positionAbsolute ?? n.position;
+      const w = n.measured?.width ?? (typeof n.width === "number" ? n.width : undefined) ?? (typeof n.style?.width === "number" ? n.style.width : 100);
+      const h = n.measured?.height ?? (typeof n.height === "number" ? n.height : undefined) ?? (typeof n.style?.height === "number" ? n.style.height : 100);
+      if (abs.x < minX) minX = abs.x;
+      if (abs.y < minY) minY = abs.y;
+      if (abs.x + w > maxX) maxX = abs.x + w;
+      if (abs.y + h > maxY) maxY = abs.y + h;
     });
+    if (count <= 1 || !Number.isFinite(minX)) return null;
+    return `${Math.round(minX)},${Math.round(minY)},${Math.round(maxX - minX)},${Math.round(maxY - minY)}`;
+  });
 
-    return {
-      x: minX,
-      y: minY,
-      w: maxX - minX,
-      h: maxY - minY,
-    };
-  }, [selectedNodes, nodes]);
+  const selectionBounds = useMemo(() => {
+    if (!selectionBoundsKey) return null;
+    const [x, y, w, h] = selectionBoundsKey.split(",").map(Number);
+    return { x, y, w, h };
+  }, [selectionBoundsKey]);
+
 
   // Handle pointer down on transform handles
   const handleTransformStart = useCallback((e: React.PointerEvent, handle: string) => {
