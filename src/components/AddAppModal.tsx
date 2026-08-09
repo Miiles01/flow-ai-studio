@@ -303,16 +303,32 @@ export default function AddAppModal({ open, onClose, onCreate, customApps, onTog
                   </div>
 
                   <div className="flex-1 min-h-0 overflow-y-auto px-4 pb-4 scrollbar-hide grid grid-cols-1 sm:grid-cols-2 gap-3 content-start">
-                    {CATALOG.map((app) => (
+                    {CATALOG.map((app) => {
+                      const connected = customApps.some(
+                        (a) => a.name.trim().toLowerCase() === app.name.toLowerCase()
+                      );
+                      return (
                       <button
                         key={app.id}
                         onClick={() => pickCatalog(app)}
-                        className={`text-left rounded-2xl p-4 border transition-colors ${
-                          isDark
-                            ? "bg-white/5 border-white/10 hover:bg-white/10"
-                            : "bg-white border-black/5 hover:bg-black/[0.03] shadow-sm"
+                        className={`relative text-left rounded-2xl p-4 border transition-colors ${
+                          connected
+                            ? isDark
+                              ? "bg-miiles-blue/10 border-miiles-blue/40"
+                              : "bg-white border-miiles-blue/40 shadow-sm"
+                            : isDark
+                              ? "bg-white/5 border-white/10 hover:bg-white/10"
+                              : "bg-white border-black/5 hover:bg-black/[0.03] shadow-sm"
                         }`}
                       >
+                        {connected && (
+                          <span
+                            className="absolute right-3 top-3 flex h-5 w-5 items-center justify-center rounded-full bg-miiles-blue"
+                            title="Conectada"
+                          >
+                            <Check size={12} strokeWidth={3} className="text-white" />
+                          </span>
+                        )}
                         <div className="flex items-center gap-2.5">
                           <img
                             src={app.logo}
@@ -324,8 +340,8 @@ export default function AddAppModal({ open, onClose, onCreate, customApps, onTog
                             <p className={`truncate text-sm font-normal ${isDark ? "text-white" : "text-black"}`}>
                               {app.name}
                             </p>
-                            <p className={`truncate text-[11px] font-light ${isDark ? "text-white/40" : "text-black/40"}`}>
-                              {app.category}
+                            <p className={`truncate text-[11px] font-light ${connected ? "text-miiles-blue" : isDark ? "text-white/40" : "text-black/40"}`}>
+                              {connected ? "Conectada" : app.category}
                             </p>
                           </div>
                         </div>
@@ -333,8 +349,10 @@ export default function AddAppModal({ open, onClose, onCreate, customApps, onTog
                           {app.desc}
                         </p>
                       </button>
-                    ))}
+                      );
+                    })}
                   </div>
+
                 </div>
               ) : (
 
