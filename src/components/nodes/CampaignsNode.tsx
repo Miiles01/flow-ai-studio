@@ -559,7 +559,116 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
   );
 };
 
+/* ─────────── Controles de filtro / agrupación ─────────── */
+
+const FilterSelect = ({
+  label, value, options, onChange, isBoardDark, textColor, disabled,
+}: {
+  label: string;
+  value: string;
+  options: Array<{ value: string; label: string }>;
+  onChange: (v: string) => void;
+  isBoardDark: boolean;
+  textColor: string;
+  disabled?: boolean;
+}) => {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", onDown);
+    return () => document.removeEventListener("mousedown", onDown);
+  }, [open]);
+
+  useEffect(() => {
+    if (disabled) setOpen(false);
+  }, [disabled]);
+
+  const current = options.find((o) => o.value === value)?.label ?? options[0]?.label;
+
+  return (
+    <div ref={ref} className="relative nodrag nopan">
+      <button
+        onClick={() => !disabled && setOpen((v) => !v)}
+        disabled={disabled}
+        className={`nodrag nopan flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-[12px] font-medium transition-colors ${
+          disabled ? "opacity-40 cursor-not-allowed" : "hover:brightness-110"
+        }`}
+        style={{
+          color: textColor,
+          backgroundColor: isBoardDark ? "rgba(255,255,255,0.10)" : "rgba(0,0,0,0.06)",
+          borderColor: isBoardDark ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.10)",
+        }}
+      >
+        <span className="opacity-60">{label}:</span>
+        <span className="truncate max-w-[110px]">{current}</span>
+        <ChevronDown size={12} style={{ opacity: 0.6 }} />
+      </button>
+
+      {open && (
+        <div
+          className={`absolute top-full mt-1.5 left-0 z-[60] min-w-[160px] rounded-xl p-1.5 shadow-[0_8px_28px_rgba(0,0,0,0.14)] border ${
+            isBoardDark ? "bg-[#1C1C1E] border-white/10" : "bg-white border-neutral-200"
+          }`}
+        >
+          {options.map((o) => (
+            <button
+              key={o.value}
+              onClick={() => { onChange(o.value); setOpen(false); }}
+              className={`nodrag nopan w-full flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-lg text-left text-[12.5px] ${
+                isBoardDark ? "text-white hover:bg-white/10" : "text-neutral-900 hover:bg-neutral-100"
+              } ${o.value === value ? (isBoardDark ? "bg-white/10" : "bg-neutral-100") : ""}`}
+            >
+              {o.label}
+              {o.value === value && <Check size={13} />}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+const GroupHeader = ({
+  label, count, isBoardDark, textColor,
+}: { label: string; count: number; isBoardDark: boolean; textColor: string }) => (
+  <div className="flex items-center gap-2 px-1">
+    <span className="text-[12px] font-semibold tracking-tight" style={{ color: textColor }}>{label}</span>
+    <span
+      className="text-[10.5px] font-medium px-1.5 py-0.5 rounded-full"
+      style={{
+        color: textColor,
+        opacity: 0.7,
+        backgroundColor: isBoardDark ? "rgba(255,255,255,0.12)" : "rgba(0,0,0,0.06)",
+      }}
+    >
+      {count}
+    </span>
+  </div>
+);
+
+const GroupEmpty = ({ isBoardDark }: { isBoardDark: boolean }) => (
+  <div
+    className={`rounded-2xl border border-dashed py-4 text-center text-[11.5px] ${
+      isBoardDark ? "border-white/15 text-white/50" : "border-black/10 text-neutral-400"
+    }`}
+  >
+    Sin campañas
+  </div>
+);
+
+const EmptySearch = ({ isBoardDark }: { isBoardDark: boolean }) => (
+  <div className={`h-full flex items-center justify-center text-[12.5px] ${isBoardDark ? "text-white/60" : "text-neutral-500"}`}>
+    Sin resultados para tu búsqueda.
+  </div>
+);
+
 /* ─────────── Campaign card (grid tile) ─────────── */
+
 
 const CampaignCard = ({
   c, isDark, accentColor, onOpen,
