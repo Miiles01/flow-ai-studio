@@ -1,11 +1,18 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef, useEffect, useMemo } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { ArrowUp, Loader2, EyeOff, X, Mic, LayoutTemplate } from "lucide-react";
+import { ArrowUp, Loader2, EyeOff, X, Mic, LayoutTemplate, Boxes } from "lucide-react";
 import isotipoImg from "@/assets/isotipo.webp";
 import { useTheme } from "@/contexts/ThemeContext";
 import AppsMenu from "@/components/AppsMenu";
 import WidgetsPicker from "@/components/widgets/WidgetsPicker";
 import type { WidgetDef } from "@/components/widgets/registry";
+import { useUserApps } from "@/hooks/useUserApps";
+import { logoForApp } from "@/lib/appCatalog";
+
+type MentionApp = { id: string; name: string; logo: string | null };
+
+const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
 
 type AIPromptBarProps = {
   onGenerate: (prompt: string) => void;
