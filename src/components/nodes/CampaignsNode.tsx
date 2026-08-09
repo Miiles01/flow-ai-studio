@@ -703,12 +703,13 @@ const CampaignCard = ({
       }}
     >
       {c.coverUrl && (
-        <div className={`-mx-3.5 -mt-3.5 mb-3 h-[92px] overflow-hidden rounded-t-2xl ${isDark ? "bg-white/5" : "bg-neutral-100"}`}>
+        <div className={`-mx-3.5 -mt-3.5 mb-3 h-[150px] overflow-hidden rounded-t-2xl ${isDark ? "bg-white/5" : "bg-neutral-100"}`}>
           <img
             src={c.coverUrl}
             alt={`Portada de ${brand}`}
             loading="lazy"
             className="w-full h-full object-cover"
+            style={{ objectPosition: `50% ${c.coverPosY ?? 50}%` }}
             onError={(e) => { (e.currentTarget.parentElement as HTMLElement).style.display = "none"; }}
           />
         </div>
