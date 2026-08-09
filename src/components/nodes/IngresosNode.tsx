@@ -20,7 +20,7 @@ import { type NodeProps, NodeResizer, useReactFlow, useViewport, useNodes } from
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Trash2, Palette, Heading1, Heading2, DollarSign, BarChart3,
-  TrendingUp, Calendar, RotateCcw, ArrowUpRight,
+  TrendingUp, Calendar, RotateCcw, ArrowUpRight, Layers, ChevronDown, Check,
 } from "lucide-react";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip as RTooltip, CartesianGrid, ResponsiveContainer,
@@ -40,6 +40,9 @@ export type IngresosNodeData = {
   toMonth?: string;   // "YYYY-MM"
   backgroundColor?: string;
   accentColor?: string;
+  /** Ids de los campaignsNode fuente. Vacío/ausente = todos */
+  sourceNodeIds?: string[];
+
 };
 
 const RAINBOW_COLORS = [
@@ -139,23 +142,60 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
   const [bgOpen, setBgOpen] = useState(false);
   const [fromOpen, setFromOpen] = useState(false);
   const [toOpen, setToOpen] = useState(false);
+  const [sourcesOpen, setSourcesOpen] = useState(false);
 
   const update = (patch: Partial<IngresosNodeData>) => {
     setNodes((nds) => nds.map((n) => (n.id === id ? { ...n, data: { ...(n.data as any), ...patch } } : n)));
   };
   const remove = () => setNodes((nds) => nds.filter((n) => n.id !== id));
 
+  // ── fuentes disponibles (widgets de Campañas del canvas) ──
+  const sources = useMemo(() => {
+    const list = allNodes
+      .filter((n) => n.type === "campaignsNode")
+      .map((n) => {
+        const nd = (n.data as any) ?? {};
+        const arr = (nd.campaigns ?? []) as Campaign[];
+        return {
+          id: n.id,
+          title: String(nd.title ?? "").trim() || "Campañas",
+          subtitle: String(nd.subtitle ?? "").trim(),
+          count: arr.length,
+        };
+      });
+    return list.sort((a, b) => a.title.localeCompare(b.title, "es"));
+  }, [allNodes]);
+
+  const selectedIds = useMemo(() => {
+    const raw = d.sourceNodeIds ?? [];
+    return raw.filter((sid) => sources.some((s) => s.id === sid));
+  }, [d.sourceNodeIds, sources]);
+
+  const isAllSources = selectedIds.length === 0;
+
+  const toggleSource = (sid: string) => {
+    const next = selectedIds.includes(sid) ? selectedIds.filter((x) => x !== sid) : [...selectedIds, sid];
+    update({ sourceNodeIds: next });
+  };
+
+  const sourcesLabel = isAllSources
+    ? "Todos"
+    : selectedIds.length === 1
+      ? (sources.find((s) => s.id === selectedIds[0])?.title ?? "1 widget")
+      : `${selectedIds.length} widgets`;
+
   // ── derive campaigns from canvas ─────────────────────────
   const allCampaigns: Campaign[] = useMemo(() => {
     const out: Campaign[] = [];
     for (const n of allNodes) {
-      if (n.type === "campaignsNode") {
-        const arr = ((n.data as any)?.campaigns ?? []) as Campaign[];
-        for (const c of arr) out.push(c);
-      }
+      if (n.type !== "campaignsNode") continue;
+      if (!isAllSources && !selectedIds.includes(n.id)) continue;
+      const arr = ((n.data as any)?.campaigns ?? []) as Campaign[];
+      for (const c of arr) out.push(c);
     }
     return out;
-  }, [allNodes]);
+  }, [allNodes, isAllSources, selectedIds]);
+
 
   // ── filter by date range ─────────────────────────────────
   const rangeCampaigns = useMemo(() => {
@@ -354,15 +394,40 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
               {toOpen && <MonthPicker value={d.toMonth} onPick={(v) => { update({ toMonth: v }); setToOpen(false); }} isDark={isDark} />}
             </div>
           </div>
-          {(d.fromMonth || d.toMonth) && (
+          <div>
+            <div className={`text-[11px] mb-1.5 ${boardSubtleColor}`}>Campañas</div>
+            <div className="relative">
+              <button
+                onClick={() => { setSourcesOpen((v) => !v); setFromOpen(false); setToOpen(false); }}
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-[13px] font-medium ${softSurface} hover:opacity-90`}
+                style={softSurfaceStyle}
+              >
+                <Layers size={13} className="opacity-60" />
+                <span className="max-w-[150px] truncate" style={{ color: isDark ? "#FFFFFF" : "#111827" }}>{sourcesLabel}</span>
+                <ChevronDown size={13} className="opacity-50" />
+              </button>
+              {sourcesOpen && (
+                <SourcesPicker
+                  sources={sources}
+                  selectedIds={selectedIds}
+                  isAll={isAllSources}
+                  onToggle={toggleSource}
+                  onAll={() => { update({ sourceNodeIds: [] }); setSourcesOpen(false); }}
+                  isDark={isDark}
+                />
+              )}
+            </div>
+          </div>
+          {(d.fromMonth || d.toMonth || selectedIds.length > 0) && (
             <button
-              onClick={() => update({ fromMonth: undefined, toMonth: undefined })}
+              onClick={() => update({ fromMonth: undefined, toMonth: undefined, sourceNodeIds: [] })}
               className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-[12px] font-medium ${isBoardDark ? "text-white/80 hover:text-white" : "text-neutral-600 hover:text-neutral-900"} hover:opacity-80 ${softSurface}`}
               style={softSurfaceStyle}
             >
               <RotateCcw size={12} /> Resetear
             </button>
           )}
+
         </div>
 
         {/* KPI row */}
@@ -551,7 +616,53 @@ const KpiCard = ({ isDark, icon, accent, label, value, sub }: { isDark: boolean;
   </div>
 );
 
+const SourcesPicker = ({
+  sources, selectedIds, isAll, onToggle, onAll, isDark,
+}: {
+  sources: { id: string; title: string; subtitle: string; count: number }[];
+  selectedIds: string[];
+  isAll: boolean;
+  onToggle: (id: string) => void;
+  onAll: () => void;
+  isDark: boolean;
+}) => (
+  <div className={`nodrag nopan absolute top-full mt-2 left-0 z-50 rounded-xl shadow-2xl p-2 w-[260px] max-h-[280px] overflow-y-auto ${isDark ? "bg-[#1C1C1E] border border-white/10 text-white" : "bg-white border border-neutral-200 text-neutral-900"}`}>
+    <div className={`text-[10.5px] uppercase tracking-wide px-2 py-1 ${isDark ? "text-white/40" : "text-neutral-400"}`}>Widgets</div>
+    <button
+      onClick={onAll}
+      className={`w-full flex items-center justify-between gap-2 px-2 py-2 rounded-lg text-left text-[13px] ${isDark ? "hover:bg-white/10" : "hover:bg-neutral-100"}`}
+    >
+      <span>Todos los widgets</span>
+      {isAll && <Check size={14} className="text-[#4059F1]" />}
+    </button>
+    {sources.length === 0 && (
+      <div className={`px-2 py-3 text-[12px] ${isDark ? "text-white/50" : "text-neutral-500"}`}>
+        No hay widgets de Campañas en el tablero.
+      </div>
+    )}
+    {sources.map((s) => {
+      const sel = selectedIds.includes(s.id);
+      return (
+        <button
+          key={s.id}
+          onClick={() => onToggle(s.id)}
+          className={`w-full flex items-start justify-between gap-2 px-2 py-2 rounded-lg text-left ${isDark ? "hover:bg-white/10" : "hover:bg-neutral-100"}`}
+        >
+          <span className="min-w-0">
+            <span className="block text-[13px] truncate">{s.title}</span>
+            <span className={`block text-[11px] truncate ${isDark ? "text-white/45" : "text-neutral-500"}`}>
+              {s.subtitle || `${s.count} campaña${s.count === 1 ? "" : "s"}`}
+            </span>
+          </span>
+          {sel && <Check size={14} className="text-[#4059F1] shrink-0 mt-0.5" />}
+        </button>
+      );
+    })}
+  </div>
+);
+
 const MonthPicker = ({ value, onPick, isDark }: { value?: string; onPick: (v: string) => void; isDark: boolean }) => {
+
   const now = new Date();
   const [year, setYear] = useState(parseKey(value)?.y ?? now.getFullYear());
   return (
