@@ -101,9 +101,49 @@ Responde SIEMPRE con la tool "widget_result".`;
 
     // Herramientas: apps conectadas del usuario (funcionan con cualquier "cerebro", Lovable o BYOK).
     const apps = await loadUserApps(req.headers.get("Authorization"));
+
+    const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
+    const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
+    const admin = supabaseUrl && serviceKey
+      ? createClient(supabaseUrl, serviceKey, { auth: { persistSession: false } })
+      : null;
+
+    let userId: string | null = null;
+    if (admin) {
+      const token = req.headers.get("Authorization")?.replace(/^Bearer\s+/i, "").trim();
+      if (token) {
+        const { data: userRes } = await admin.auth.getUser(token);
+        userId = userRes?.user?.id ?? null;
+      }
+    }
+
     const appsBlock = apps.length
-      ? await maybeUseApps({ apps, target, prompt: String(prompt) })
+      ? await maybeUseApps({
+          apps,
+          target,
+          prompt: String(prompt),
+          ctx: {
+            webhookBaseUrl: supabaseUrl ? `${supabaseUrl}/functions/v1/apify-webhook` : undefined,
+            onRunStarted: async ({ jobId, runId, datasetId, appName }) => {
+              if (!admin || !userId || !nodeId) return;
+              const { error } = await admin.from("widget_jobs").insert({
+                id: jobId,
+                user_id: userId,
+                flow_id: flowId ?? null,
+                node_id: String(nodeId),
+                widget_type: String(widgetType),
+                prompt: String(prompt),
+                provider: appName,
+                run_id: runId,
+                dataset_id: datasetId,
+                status: "running",
+              });
+              if (error) console.error("widget_jobs insert error", error.message);
+            },
+          },
+        })
       : "";
+
     const appsCatalog = apps.length
       ? `\n\nAPPS CONECTADAS DEL USUARIO (puedes usarlas cuando el usuario las mencione):\n${appsCatalogText(apps)}`
       : "";
