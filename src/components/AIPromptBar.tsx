@@ -422,42 +422,25 @@ const AIPromptBar = ({
                     canScrollTop ? "opacity-100" : "opacity-0"
                   }`}
                 />
-                {/* Overlay con tags de apps (espejo del textarea) */}
+                {/* Capa de fondo: resalta las menciones sin alterar el ancho del texto */}
                 {hasMentions && (
                   <div
                     ref={overlayRef}
                     aria-hidden
-                    className="pointer-events-none absolute inset-0 overflow-hidden font-light text-[15px] leading-relaxed text-center text-white whitespace-pre-wrap break-words"
+                    className="pointer-events-none absolute inset-0 z-0 overflow-hidden font-light text-[15px] leading-relaxed text-center text-transparent whitespace-pre-wrap break-words"
                   >
                     {segments.map((seg, i) =>
                       seg.app ? (
                         <span
                           key={`${seg.index}-${i}`}
-                          className={`pointer-events-auto inline-flex items-center gap-1.5 rounded-full pl-1 pr-1.5 py-[1px] align-baseline mx-[1px] ${
-                            isDark ? "bg-white/15 text-white" : "bg-white/15 text-white"
-                          }`}
+                          className="rounded-full bg-white/15"
+                          style={{
+                            boxShadow: "0 0 0 3px rgba(255,255,255,0.15)",
+                            WebkitBoxDecorationBreak: "clone",
+                            boxDecorationBreak: "clone",
+                          }}
                         >
-                          <span className="flex h-4 w-4 items-center justify-center rounded-full bg-white/90 overflow-hidden">
-                            {seg.app.logo ? (
-                              <img
-                                src={seg.app.logo}
-                                alt=""
-                                className="h-3 w-3 object-contain"
-                                onError={(e) => (e.currentTarget.style.display = "none")}
-                              />
-                            ) : (
-                              <Boxes size={9} className="text-black/60" />
-                            )}
-                          </span>
-                          <span className="text-[13px]">{seg.app.name}</span>
-                          <button
-                            type="button"
-                            onClick={() => removeMention(seg.index, seg.text.length)}
-                            className="text-white/50 hover:text-white transition-colors"
-                            title="Quitar app"
-                          >
-                            <X size={10} strokeWidth={2.5} />
-                          </button>
+                          {seg.text}
                         </span>
                       ) : (
                         <span key={`${seg.index}-${i}`}>{seg.text}</span>
@@ -485,12 +468,48 @@ const AIPromptBar = ({
                     setTimeout(() => setSuggestions([]), 120);
                   }}
                   placeholder={extendLabel ? "¿Qué quieres generar a partir de aquí?" : "Describe tu flujo o idea..."}
-                  className={`relative z-[1] w-full bg-transparent font-light text-[15px] placeholder:text-white/40 outline-none resize-none overflow-y-auto max-h-[160px] min-h-[44px] leading-relaxed text-center placeholder:text-center panel-scrollbar select-text ${
-                    hasMentions ? "text-transparent caret-white" : "text-white"
-                  }`}
+                  className="relative z-[1] w-full bg-transparent font-light text-[15px] text-white placeholder:text-white/40 outline-none resize-none overflow-y-auto max-h-[160px] min-h-[44px] leading-relaxed text-center placeholder:text-center panel-scrollbar select-text"
                   disabled={isGenerating}
                 />
               </div>
+
+              {/* Chips de apps mencionadas */}
+              {hasMentions && (
+                <div className="flex flex-wrap items-center justify-center gap-1.5 mb-1">
+                  {segments
+                    .filter((s) => s.app)
+                    .map((seg, i) => (
+                      <span
+                        key={`chip-${seg.index}-${i}`}
+                        className="inline-flex items-center gap-1.5 rounded-full bg-white/10 border border-white/10 pl-1 pr-2 py-[2px] text-[12px] text-white"
+                      >
+                        <span className="flex h-4 w-4 items-center justify-center rounded-full bg-white/90 overflow-hidden">
+                          {seg.app!.logo ? (
+                            <img
+                              src={seg.app!.logo}
+                              alt=""
+                              className="h-3 w-3 object-contain"
+                              onError={(e) => (e.currentTarget.style.display = "none")}
+                            />
+                          ) : (
+                            <Boxes size={9} className="text-black/60" />
+                          )}
+                        </span>
+                        {seg.app!.name}
+                        <button
+                          type="button"
+                          onMouseDown={(e) => e.preventDefault()}
+                          onClick={() => removeMention(seg.index, seg.text.length)}
+                          className="text-white/50 hover:text-white transition-colors"
+                          title="Quitar app"
+                        >
+                          <X size={10} strokeWidth={2.5} />
+                        </button>
+                      </span>
+                    ))}
+                </div>
+              )}
+
 
 
               {/* Controles inferiores */}
