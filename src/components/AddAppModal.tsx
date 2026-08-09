@@ -19,6 +19,44 @@ const schema = z.object({
   api_key: z.string().trim().max(2000).optional(),
 });
 
+type CatalogApp = {
+  id: string;
+  name: string;
+  category: string;
+  desc: string;
+  connector_type: ConnectorType;
+  url: string;
+  keyLabel: string;
+  keyHint: string;
+  logo: string;
+};
+
+const CATALOG: CatalogApp[] = [
+  {
+    id: "gmail",
+    name: "Gmail",
+    category: "Correo",
+    desc: "Lee, busca y redacta correos desde tus flujos.",
+    connector_type: "api",
+    url: "https://gmail.googleapis.com/gmail/v1",
+    keyLabel: "Access token de Google",
+    keyHint: "Genera un token OAuth con el scope gmail.readonly o gmail.modify.",
+    logo: "https://www.google.com/s2/favicons?sz=64&domain=gmail.com",
+  },
+  {
+    id: "apify",
+    name: "Apify",
+    category: "Scraping",
+    desc: "Ejecuta actors y extrae datos de la web automáticamente.",
+    connector_type: "api",
+    url: "https://api.apify.com/v2",
+    keyLabel: "API token de Apify",
+    keyHint: "Lo encuentras en apify.com → Settings → Integrations.",
+    logo: "https://www.google.com/s2/favicons?sz=64&domain=apify.com",
+  },
+];
+
+
 type Props = {
   open: boolean;
   onClose: () => void;
