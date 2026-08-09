@@ -272,6 +272,21 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
     return campaigns.filter((c) => c.brand.toLowerCase().includes(q));
   }, [campaigns, filter]);
 
+  const layout: CampaignsLayout = d.layout ?? "none";
+  const groupBy: CampaignsGroupBy = d.groupBy ?? "status";
+
+  const groups = useMemo(() => {
+    if (layout === "none") return [];
+    const keys: string[] = groupBy === "status" ? [...STATUS_ORDER] : [...PAYMENT_GROUPS];
+    return keys.map((key) => ({
+      key,
+      items: filtered.filter((c) =>
+        groupBy === "status" ? c.status === key : paymentGroupOf(c) === key
+      ),
+    }));
+  }, [filtered, layout, groupBy]);
+
+
   const openCampaign = campaigns.find((c) => c.id === openCampaignId) || null;
 
   return (
