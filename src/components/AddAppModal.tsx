@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Server, Globe, Loader2, Plus, Trash2, ArrowLeft, Boxes } from "lucide-react";
+import { X, Server, Globe, Loader2, Plus, Trash2, ArrowLeft, Boxes, Check } from "lucide-react";
 import { z } from "zod";
 import { toast } from "sonner";
 import { useTheme } from "@/contexts/ThemeContext";
 import type { ConnectorType, NewUserApp, UserApp } from "@/hooks/useUserApps";
+import { CATALOG, type CatalogApp, logoForApp } from "@/lib/appCatalog";
 
 const schema = z.object({
   name: z.string().trim().min(1, "Ponle un nombre a tu app").max(60, "Máximo 60 caracteres"),
@@ -19,42 +20,6 @@ const schema = z.object({
   api_key: z.string().trim().max(2000).optional(),
 });
 
-type CatalogApp = {
-  id: string;
-  name: string;
-  category: string;
-  desc: string;
-  connector_type: ConnectorType;
-  url: string;
-  keyLabel: string;
-  keyHint: string;
-  logo: string;
-};
-
-const CATALOG: CatalogApp[] = [
-  {
-    id: "gmail",
-    name: "Gmail",
-    category: "Correo",
-    desc: "Lee, busca y redacta correos desde tus flujos.",
-    connector_type: "api",
-    url: "https://gmail.googleapis.com/gmail/v1",
-    keyLabel: "Access token de Google",
-    keyHint: "Genera un token OAuth con el scope gmail.readonly o gmail.modify.",
-    logo: "https://www.google.com/s2/favicons?sz=64&domain=gmail.com",
-  },
-  {
-    id: "apify",
-    name: "Apify",
-    category: "Scraping",
-    desc: "Ejecuta actors y extrae datos de la web automáticamente.",
-    connector_type: "api",
-    url: "https://api.apify.com/v2",
-    keyLabel: "API token de Apify",
-    keyHint: "Lo encuentras en apify.com → Settings → Integrations.",
-    logo: "https://www.google.com/s2/favicons?sz=64&domain=apify.com",
-  },
-];
 
 
 type Props = {
