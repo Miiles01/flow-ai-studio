@@ -200,7 +200,7 @@ export default function AddAppModal({ open, onClose, onCreate, customApps, onTog
                     <button
                       key={c.key}
                       type="button"
-                      onClick={() => setView(c.key)}
+                      onClick={() => { if (c.key === "form") resetForm(); setView(c.key); }}
                       className={`flex gap-3 text-left rounded-2xl p-4 transition-colors border ${
                         active
                           ? "bg-white/15 border-white/25"
