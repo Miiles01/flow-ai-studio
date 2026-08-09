@@ -71,6 +71,8 @@ export type Campaign = {
   clientId?: string;
   /** URL de imagen de portada de la campaña. */
   coverUrl?: string;
+  /** Posición vertical de la portada (0 = arriba, 100 = abajo). */
+  coverPosY?: number;
   /** Timestamp cuando se marcó como cobrada. Alimenta el widget Ingresos. */
   paidAt?: number;
 };
@@ -701,12 +703,13 @@ const CampaignCard = ({
       }}
     >
       {c.coverUrl && (
-        <div className={`-mx-3.5 -mt-3.5 mb-3 h-[92px] overflow-hidden rounded-t-2xl ${isDark ? "bg-white/5" : "bg-neutral-100"}`}>
+        <div className={`-mx-3.5 -mt-3.5 mb-3 h-[150px] overflow-hidden rounded-t-2xl ${isDark ? "bg-white/5" : "bg-neutral-100"}`}>
           <img
             src={c.coverUrl}
             alt={`Portada de ${brand}`}
             loading="lazy"
             className="w-full h-full object-cover"
+            style={{ objectPosition: `50% ${c.coverPosY ?? 50}%` }}
             onError={(e) => { (e.currentTarget.parentElement as HTMLElement).style.display = "none"; }}
           />
         </div>
@@ -756,6 +759,54 @@ const CampaignCard = ({
         </span>
       </div>
     </button>
+  );
+};
+
+/* ─────────── Cover positioner (drag to align) ─────────── */
+
+const CoverPositioner = ({
+  url, posY, softSurface, onChange,
+}: {
+  url: string; posY: number; softSurface: string; onChange: (v: number) => void;
+}) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const [dragging, setDragging] = useState(false);
+
+  const startDrag = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const el = ref.current;
+    if (!el) return;
+    const startY = e.clientY;
+    const startPos = posY;
+    const h = el.offsetHeight || 1;
+    setDragging(true);
+    const onMove = (ev: MouseEvent) => {
+      const delta = ((ev.clientY - startY) / h) * 100;
+      onChange(Math.min(100, Math.max(0, Math.round(startPos - delta))));
+    };
+    const onUp = () => {
+      setDragging(false);
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseup", onUp);
+    };
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", onUp);
+  };
+
+  return (
+    <div
+      ref={ref}
+      onMouseDown={startDrag}
+      className={`h-[150px] rounded-lg overflow-hidden select-none ${softSurface} ${dragging ? "cursor-grabbing" : "cursor-grab"}`}
+    >
+      <img
+        src={url}
+        alt="Vista previa de la portada"
+        draggable={false}
+        className="w-full h-full object-cover pointer-events-none"
+        style={{ objectPosition: `50% ${posY}%` }}
+      />
+    </div>
   );
 };
 
@@ -1002,16 +1053,22 @@ const CampaignEditorPopover = ({
             className={`w-full px-3 py-2.5 rounded-lg text-[13px] outline-none ${inputCls}`}
           />
           {campaign.coverUrl && (
-            <div className="mt-2 relative">
-              <div className={`h-[110px] rounded-lg overflow-hidden ${softSurface}`}>
-                <img src={campaign.coverUrl} alt="Vista previa de la portada" className="w-full h-full object-cover" />
+            <div className="mt-2">
+              <CoverPositioner
+                url={campaign.coverUrl}
+                posY={campaign.coverPosY ?? 50}
+                softSurface={softSurface}
+                onChange={(v) => onUpdate({ coverPosY: v })}
+              />
+              <div className="flex items-center justify-between mt-2">
+                <span className={`text-[11px] ${subtle}`}>Arrastra la imagen para ajustar la altura</span>
+                <button
+                  onClick={() => onUpdate({ coverUrl: undefined, coverPosY: undefined })}
+                  className={`text-[11.5px] ${subtle} hover:opacity-80`}
+                >
+                  Quitar portada
+                </button>
               </div>
-              <button
-                onClick={() => onUpdate({ coverUrl: undefined })}
-                className={`mt-2 text-[11.5px] ${subtle} hover:opacity-80`}
-              >
-                Quitar portada
-              </button>
             </div>
           )}
         </Section>
