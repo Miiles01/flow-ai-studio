@@ -117,6 +117,7 @@ Responde SIEMPRE con la tool "widget_result".`;
       }
     }
 
+    let startedJobId: string | null = null;
     const appsBlock = apps.length
       ? await maybeUseApps({
           apps,
@@ -125,6 +126,7 @@ Responde SIEMPRE con la tool "widget_result".`;
           ctx: {
             webhookBaseUrl: supabaseUrl ? `${supabaseUrl}/functions/v1/apify-webhook` : undefined,
             onRunStarted: async ({ jobId, runId, datasetId, appName }) => {
+              startedJobId = jobId;
               if (!admin || !userId || !nodeId) return;
               const { error } = await admin.from("widget_jobs").insert({
                 id: jobId,
@@ -187,6 +189,14 @@ Responde SIEMPRE con la tool "widget_result".`;
     }
     console.log("widget-ai parsed intent:", parsed.intent, "finish:", finishReason);
     const out: Record<string, unknown> = { intent: parsed.intent, answer: parsed.answer };
+    if (startedJobId) {
+      // Tarea en segundo plano: el canvas muestra un loader hasta que llegue el webhook.
+      out.jobId = startedJobId;
+      out.intent = "query";
+      out.pending = true;
+      if (!out.answer) out.answer = "He iniciado la búsqueda profunda en segundo plano. Te aviso en cuanto tenga los resultados.";
+      delete out.data;
+    }
     if (parsed.intent === "edit" && parsed.data_json) {
       try {
         out.data = JSON.parse(parsed.data_json);
