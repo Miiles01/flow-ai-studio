@@ -762,6 +762,54 @@ const CampaignCard = ({
   );
 };
 
+/* ─────────── Cover positioner (drag to align) ─────────── */
+
+const CoverPositioner = ({
+  url, posY, softSurface, onChange,
+}: {
+  url: string; posY: number; softSurface: string; onChange: (v: number) => void;
+}) => {
+  const ref = useRef<HTMLDivElement>(null);
+  const [dragging, setDragging] = useState(false);
+
+  const startDrag = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const el = ref.current;
+    if (!el) return;
+    const startY = e.clientY;
+    const startPos = posY;
+    const h = el.offsetHeight || 1;
+    setDragging(true);
+    const onMove = (ev: MouseEvent) => {
+      const delta = ((ev.clientY - startY) / h) * 100;
+      onChange(Math.min(100, Math.max(0, Math.round(startPos - delta))));
+    };
+    const onUp = () => {
+      setDragging(false);
+      window.removeEventListener("mousemove", onMove);
+      window.removeEventListener("mouseup", onUp);
+    };
+    window.addEventListener("mousemove", onMove);
+    window.addEventListener("mouseup", onUp);
+  };
+
+  return (
+    <div
+      ref={ref}
+      onMouseDown={startDrag}
+      className={`h-[150px] rounded-lg overflow-hidden select-none ${softSurface} ${dragging ? "cursor-grabbing" : "cursor-grab"}`}
+    >
+      <img
+        src={url}
+        alt="Vista previa de la portada"
+        draggable={false}
+        className="w-full h-full object-cover pointer-events-none"
+        style={{ objectPosition: `50% ${posY}%` }}
+      />
+    </div>
+  );
+};
+
 /* ─────────── Editor popover with full form ─────────── */
 
 const CampaignEditorPopover = ({
