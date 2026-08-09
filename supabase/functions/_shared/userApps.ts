@@ -124,10 +124,16 @@ async function runCall(apps: UserAppRow[], call: PlannedCall, ctx: AppsCtx = {})
       }
       payload.webhooks = [
         {
-          eventTypes: ["ACTOR.RUN.SUCCEEDED"],
+          eventTypes: [
+            "ACTOR.RUN.SUCCEEDED",
+            "ACTOR.RUN.FAILED",
+            "ACTOR.RUN.ABORTED",
+            "ACTOR.RUN.TIMED_OUT",
+          ],
           requestUrl: `${ctx.webhookBaseUrl}?jobId=${jobId}`,
         },
       ];
+
       bodyText = JSON.stringify(payload);
     }
   }
