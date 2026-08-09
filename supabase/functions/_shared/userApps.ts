@@ -109,6 +109,8 @@ async function runCall(apps: UserAppRow[], call: PlannedCall, ctx: AppsCtx = {})
   let asyncApify = false;
   let bodyText = call.body;
 
+  let queryParams = call.query ? new URLSearchParams(call.query) : new URLSearchParams();
+
   // Apify: forzamos arquitectura asíncrona (run + webhook) y nunca run-sync.
   if (isApify(app) && method === "POST") {
     if (path.includes("run-sync")) {
@@ -116,13 +118,7 @@ async function runCall(apps: UserAppRow[], call: PlannedCall, ctx: AppsCtx = {})
     }
     if (isApifyAsyncRun(path) && ctx.webhookBaseUrl) {
       asyncApify = true;
-      let payload: Record<string, unknown> = {};
-      try {
-        payload = bodyText ? JSON.parse(bodyText) : {};
-      } catch {
-        payload = {};
-      }
-      payload.webhooks = [
+      const webhooks = [
         {
           eventTypes: [
             "ACTOR.RUN.SUCCEEDED",
@@ -133,12 +129,14 @@ async function runCall(apps: UserAppRow[], call: PlannedCall, ctx: AppsCtx = {})
           requestUrl: `${ctx.webhookBaseUrl}?jobId=${jobId}`,
         },
       ];
-
-      bodyText = JSON.stringify(payload);
+      // Apify espera los ad-hoc webhooks en formato base64 en el query param
+      const base64Webhooks = btoa(JSON.stringify(webhooks));
+      queryParams.set("webhooks", base64Webhooks);
     }
   }
 
-  const url = `${base}${path}${call.query ? `?${call.query}` : ""}`;
+  const queryString = queryParams.toString();
+  const url = `${base}${path}${queryString ? `?${queryString}` : ""}`;
   try {
     const res = await fetch(url, {
       method,
