@@ -142,23 +142,60 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
   const [bgOpen, setBgOpen] = useState(false);
   const [fromOpen, setFromOpen] = useState(false);
   const [toOpen, setToOpen] = useState(false);
+  const [sourcesOpen, setSourcesOpen] = useState(false);
 
   const update = (patch: Partial<IngresosNodeData>) => {
     setNodes((nds) => nds.map((n) => (n.id === id ? { ...n, data: { ...(n.data as any), ...patch } } : n)));
   };
   const remove = () => setNodes((nds) => nds.filter((n) => n.id !== id));
 
+  // ── fuentes disponibles (widgets de Campañas del canvas) ──
+  const sources = useMemo(() => {
+    const list = allNodes
+      .filter((n) => n.type === "campaignsNode")
+      .map((n) => {
+        const nd = (n.data as any) ?? {};
+        const arr = (nd.campaigns ?? []) as Campaign[];
+        return {
+          id: n.id,
+          title: String(nd.title ?? "").trim() || "Campañas",
+          subtitle: String(nd.subtitle ?? "").trim(),
+          count: arr.length,
+        };
+      });
+    return list.sort((a, b) => a.title.localeCompare(b.title, "es"));
+  }, [allNodes]);
+
+  const selectedIds = useMemo(() => {
+    const raw = d.sourceNodeIds ?? [];
+    return raw.filter((sid) => sources.some((s) => s.id === sid));
+  }, [d.sourceNodeIds, sources]);
+
+  const isAllSources = selectedIds.length === 0;
+
+  const toggleSource = (sid: string) => {
+    const next = selectedIds.includes(sid) ? selectedIds.filter((x) => x !== sid) : [...selectedIds, sid];
+    update({ sourceNodeIds: next });
+  };
+
+  const sourcesLabel = isAllSources
+    ? "Todos"
+    : selectedIds.length === 1
+      ? (sources.find((s) => s.id === selectedIds[0])?.title ?? "1 widget")
+      : `${selectedIds.length} widgets`;
+
   // ── derive campaigns from canvas ─────────────────────────
   const allCampaigns: Campaign[] = useMemo(() => {
     const out: Campaign[] = [];
     for (const n of allNodes) {
-      if (n.type === "campaignsNode") {
-        const arr = ((n.data as any)?.campaigns ?? []) as Campaign[];
-        for (const c of arr) out.push(c);
-      }
+      if (n.type !== "campaignsNode") continue;
+      if (!isAllSources && !selectedIds.includes(n.id)) continue;
+      const arr = ((n.data as any)?.campaigns ?? []) as Campaign[];
+      for (const c of arr) out.push(c);
     }
     return out;
-  }, [allNodes]);
+  }, [allNodes, isAllSources, selectedIds]);
+
 
   // ── filter by date range ─────────────────────────────────
   const rangeCampaigns = useMemo(() => {
