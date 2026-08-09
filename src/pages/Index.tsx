@@ -337,7 +337,7 @@ const IndexContent = () => {
   const navigate = useNavigate();
   const { user } = useAuth();
   const { isDark, toggleTheme } = useTheme();
-  const { setCenter, getNodes, zoomTo } = useReactFlow();
+  const { setCenter, getNodes, zoomTo, getInternalNode } = useReactFlow();
   const updateNodeInternals = useUpdateNodeInternals();
 
   const isMobile = useIsMobile();
