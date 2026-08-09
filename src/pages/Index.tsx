@@ -1650,13 +1650,9 @@ const IndexContent = () => {
 
   useEffect(() => {
     if (!user?.id) return;
-    const channel = supabase
-      .channel(`widget-jobs:${user.id}`)
-      .on(
-        "postgres_changes",
-        { event: "UPDATE", schema: "public", table: "widget_jobs", filter: `user_id=eq.${user.id}` },
-        async (payload) => {
-          const job = payload.new as any;
+
+    const handleJob = async (job: any) => {
+        {
           if (!job || handledJobsRef.current.has(job.id)) return;
           if (job.status !== "ready" && job.status !== "error") return;
           handledJobsRef.current.add(job.id);
@@ -1743,10 +1739,37 @@ const IndexContent = () => {
             await supabase.from("widget_jobs").update({ status: "applied" }).eq("id", job.id);
           }
         }
+    };
+
+    const channel = supabase
+      .channel(`widget-jobs:${user.id}`)
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "widget_jobs", filter: `user_id=eq.${user.id}` },
+        (payload) => { void handleJob(payload.new as any); }
       )
       .subscribe();
 
+    // Red de seguridad: si el webhook llegó mientras el canvas estaba cerrado o
+    // Realtime se perdió un evento, recuperamos los trabajos terminados.
+    let stopped = false;
+    const catchUp = async () => {
+      const { data: jobs } = await supabase
+        .from("widget_jobs")
+        .select("*")
+        .eq("user_id", user.id)
+        .in("status", ["ready", "error"])
+        .order("updated_at", { ascending: true })
+        .limit(10);
+      if (stopped) return;
+      for (const job of jobs ?? []) await handleJob(job);
+    };
+    void catchUp();
+    const poll = setInterval(catchUp, 20000);
+
     return () => {
+      stopped = true;
+      clearInterval(poll);
       supabase.removeChannel(channel);
     };
   }, [user?.id, id, setNodes]);
