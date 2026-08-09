@@ -69,6 +69,8 @@ export type Campaign = {
   createdAt: number;
   /** Ref al ClientCardNode asignado (id del nodo React Flow). */
   clientId?: string;
+  /** URL de imagen de portada de la campaña. */
+  coverUrl?: string;
   /** Timestamp cuando se marcó como cobrada. Alimenta el widget Ingresos. */
   paidAt?: number;
 };
@@ -698,6 +700,17 @@ const CampaignCard = ({
         ...(isDark ? { backgroundColor: "#1C1C1E" } : {}),
       }}
     >
+      {c.coverUrl && (
+        <div className={`-mx-3.5 -mt-3.5 mb-3 h-[92px] overflow-hidden rounded-t-2xl ${isDark ? "bg-white/5" : "bg-neutral-100"}`}>
+          <img
+            src={c.coverUrl}
+            alt={`Portada de ${brand}`}
+            loading="lazy"
+            className="w-full h-full object-cover"
+            onError={(e) => { (e.currentTarget.parentElement as HTMLElement).style.display = "none"; }}
+          />
+        </div>
+      )}
       <div className="flex items-start gap-3" style={{ color: cardTextColor }}>
         <div
           className={`w-10 h-10 rounded-lg shrink-0 flex items-center justify-center text-[12px] font-semibold ${
@@ -979,6 +992,31 @@ const CampaignEditorPopover = ({
             )}
           </div>
         </Section>
+
+        {/* Portada */}
+        <Section title="Portada" subtle={subtle}>
+          <input
+            value={campaign.coverUrl ?? ""}
+            onChange={(e) => onUpdate({ coverUrl: e.target.value.trim() || undefined })}
+            placeholder="https://… URL de la imagen"
+            className={`w-full px-3 py-2.5 rounded-lg text-[13px] outline-none ${inputCls}`}
+          />
+          {campaign.coverUrl && (
+            <div className="mt-2 relative">
+              <div className={`h-[110px] rounded-lg overflow-hidden ${softSurface}`}>
+                <img src={campaign.coverUrl} alt="Vista previa de la portada" className="w-full h-full object-cover" />
+              </div>
+              <button
+                onClick={() => onUpdate({ coverUrl: undefined })}
+                className={`mt-2 text-[11.5px] ${subtle} hover:opacity-80`}
+              >
+                Quitar portada
+              </button>
+            </div>
+          )}
+        </Section>
+
+
 
         {/* Cobro rápido */}
         <Section title="Pago" subtle={subtle}>
