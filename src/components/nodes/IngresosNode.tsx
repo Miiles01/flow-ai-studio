@@ -40,6 +40,9 @@ export type IngresosNodeData = {
   toMonth?: string;   // "YYYY-MM"
   backgroundColor?: string;
   accentColor?: string;
+  /** Ids de los campaignsNode fuente. Vacío/ausente = todos */
+  sourceNodeIds?: string[];
+
 };
 
 const RAINBOW_COLORS = [
