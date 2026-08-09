@@ -1,4 +1,5 @@
 // Widget AI — clasifica intención (query/edit) y aplica cambios o responde con un comentario.
+import { createClient } from "npm:@supabase/supabase-js@2";
 import { callLLM, parseUserModel, resolveTarget } from "../_shared/llm.ts";
 import { appsCatalogText, loadUserApps, maybeUseApps } from "../_shared/userApps.ts";
 
@@ -14,7 +15,7 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { widgetType, data, prompt, history, userModel } = await req.json();
+    const { widgetType, data, prompt, history, userModel, flowId, nodeId } = await req.json();
     if (!widgetType || !prompt) {
       return new Response(JSON.stringify({ error: "widgetType y prompt requeridos" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
