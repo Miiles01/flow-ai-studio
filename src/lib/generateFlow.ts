@@ -2,6 +2,8 @@ import type { Node, Edge } from "@xyflow/react";
 import type { FlowNodeData } from "@/components/nodes/FlowNode";
 import { supabase } from "@/integrations/supabase/client";
 import { userModelPayload } from "@/lib/aiModels";
+import { buildAppsContext } from "@/lib/appsContext";
+
 
 
 type AIStep = {
