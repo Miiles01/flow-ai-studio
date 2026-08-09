@@ -394,15 +394,40 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
               {toOpen && <MonthPicker value={d.toMonth} onPick={(v) => { update({ toMonth: v }); setToOpen(false); }} isDark={isDark} />}
             </div>
           </div>
-          {(d.fromMonth || d.toMonth) && (
+          <div>
+            <div className={`text-[11px] mb-1.5 ${boardSubtleColor}`}>Campañas</div>
+            <div className="relative">
+              <button
+                onClick={() => { setSourcesOpen((v) => !v); setFromOpen(false); setToOpen(false); }}
+                className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-[13px] font-medium ${softSurface} hover:opacity-90`}
+                style={softSurfaceStyle}
+              >
+                <Layers size={13} className="opacity-60" />
+                <span className="max-w-[150px] truncate" style={{ color: isDark ? "#FFFFFF" : "#111827" }}>{sourcesLabel}</span>
+                <ChevronDown size={13} className="opacity-50" />
+              </button>
+              {sourcesOpen && (
+                <SourcesPicker
+                  sources={sources}
+                  selectedIds={selectedIds}
+                  isAll={isAllSources}
+                  onToggle={toggleSource}
+                  onAll={() => { update({ sourceNodeIds: [] }); setSourcesOpen(false); }}
+                  isDark={isDark}
+                />
+              )}
+            </div>
+          </div>
+          {(d.fromMonth || d.toMonth || selectedIds.length > 0) && (
             <button
-              onClick={() => update({ fromMonth: undefined, toMonth: undefined })}
+              onClick={() => update({ fromMonth: undefined, toMonth: undefined, sourceNodeIds: [] })}
               className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-[12px] font-medium ${isBoardDark ? "text-white/80 hover:text-white" : "text-neutral-600 hover:text-neutral-900"} hover:opacity-80 ${softSurface}`}
               style={softSurfaceStyle}
             >
               <RotateCcw size={12} /> Resetear
             </button>
           )}
+
         </div>
 
         {/* KPI row */}
