@@ -1,5 +1,7 @@
 // Widget AI — clasifica intención (query/edit) y aplica cambios o responde con un comentario.
 import { callLLM, parseUserModel, resolveTarget } from "../_shared/llm.ts";
+import { appsCatalogText, loadUserApps, maybeUseApps } from "../_shared/userApps.ts";
+
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -85,7 +87,19 @@ Responde SIEMPRE con la tool "widget_result".`;
       },
     };
 
-    const messages: any[] = [{ role: "system", content: system }];
+    const target = resolveTarget(byok, FALLBACK_MODEL, apiKey ?? "");
+    console.log("widget-ai target:", target.label);
+
+    // Herramientas: apps conectadas del usuario (funcionan con cualquier "cerebro", Lovable o BYOK).
+    const apps = await loadUserApps(req.headers.get("Authorization"));
+    const appsBlock = apps.length
+      ? await maybeUseApps({ apps, target, prompt: String(prompt) })
+      : "";
+    const appsCatalog = apps.length
+      ? `\n\nAPPS CONECTADAS DEL USUARIO (puedes basarte en sus datos si el usuario las menciona):\n${appsCatalogText(apps)}`
+      : "";
+
+    const messages: any[] = [{ role: "system", content: system + appsCatalog }];
     if (Array.isArray(history)) {
       for (const h of history.slice(-6)) {
         if (h?.role && h?.content) messages.push({ role: h.role, content: String(h.content) });
@@ -93,12 +107,11 @@ Responde SIEMPRE con la tool "widget_result".`;
     }
     messages.push({
       role: "user",
-      content: `widgetType: ${widgetType}\ndata actual:\n${JSON.stringify(data ?? {}, null, 2)}\n\nInstrucción del usuario:\n${prompt}`,
+      content: `widgetType: ${widgetType}\ndata actual:\n${JSON.stringify(data ?? {}, null, 2)}\n\nInstrucción del usuario:\n${prompt}${appsBlock}`,
     });
 
-    const target = resolveTarget(byok, FALLBACK_MODEL, apiKey ?? "");
-    console.log("widget-ai target:", target.label);
     const res = await callLLM(target, messages, { tool, maxTokens: 16000 });
+
 
     if (!res.ok) {
       return new Response(JSON.stringify({ error: `IA (${target.label}) ${res.status}: ${res.errorText ?? ""}` }), {

@@ -2,6 +2,8 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { loadInstructions, loadInstruction } from "../_shared/flow-instructions.ts";
 import { callLLM, parseUserModel, resolveTarget, type LLMTarget } from "../_shared/llm.ts";
+import { loadUserApps, maybeUseApps } from "../_shared/userApps.ts";
+
 
 const FALLBACK_MODEL = "google/gemini-3-flash-preview";
 
@@ -408,14 +410,21 @@ El usuario quiere un plan accionable. Usa "todoNode" con tareas concretas y verb
 El usuario quiere contexto conceptual + acción. Empieza el esquema con nodos conceptuales (shapeNode + textNode explicativos) y añade 1-2 todoNode al final SOLO para la parte ejecutable. No conviertas los conceptos en tareas.
 === FIN MODO ===`;
 
+    // Apps conectadas del usuario como herramientas reales (mismo comportamiento con cualquier modelo).
+    const userApps = await loadUserApps(req.headers.get("Authorization"));
+    const appsResults = userApps.length
+      ? await maybeUseApps({ apps: userApps, target, prompt: String(prompt) })
+      : "";
+
     const response = await callLLM(
       target,
       [
         { role: "system", content: systemPrompt + modeGuidance + customInstructions },
-        { role: "user", content: prompt },
+        { role: "user", content: `${prompt}${appsResults}` },
       ],
       { maxTokens: 16000 },
     );
+
 
     if (!response.ok) {
       if (response.status === 429) {
