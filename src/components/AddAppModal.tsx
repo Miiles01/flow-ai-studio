@@ -87,7 +87,20 @@ export default function AddAppModal({ open, onClose, onCreate, customApps, onTog
     setType("mcp");
     setUrl("");
     setApiKey("");
+    setKeyLabel(null);
+    setKeyHint(null);
   }
+
+  function pickCatalog(app: CatalogApp) {
+    setName(app.name);
+    setType(app.connector_type);
+    setUrl(app.url);
+    setApiKey("");
+    setKeyLabel(app.keyLabel);
+    setKeyHint(app.keyHint);
+    setView("form");
+  }
+
 
   function handleClose() {
     if (saving) return;
