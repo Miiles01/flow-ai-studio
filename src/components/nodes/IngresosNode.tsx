@@ -20,7 +20,7 @@ import { type NodeProps, NodeResizer, useReactFlow, useViewport, useNodes } from
 import { AnimatePresence, motion } from "framer-motion";
 import {
   Trash2, Palette, Heading1, Heading2, DollarSign, BarChart3,
-  TrendingUp, Calendar, RotateCcw, ArrowUpRight,
+  TrendingUp, Calendar, RotateCcw, ArrowUpRight, Layers, ChevronDown, Check,
 } from "lucide-react";
 import {
   BarChart, Bar, XAxis, YAxis, Tooltip as RTooltip, CartesianGrid, ResponsiveContainer,
