@@ -2,6 +2,8 @@ import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { loadInstructions, loadInstruction } from "../_shared/flow-instructions.ts";
 import { callLLM, parseUserModel, resolveTarget, type LLMTarget } from "../_shared/llm.ts";
+import { loadUserApps, maybeUseApps } from "../_shared/userApps.ts";
+
 
 const FALLBACK_MODEL = "google/gemini-3-flash-preview";
 
