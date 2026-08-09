@@ -30,16 +30,19 @@ type Props = {
 
 export default function AddAppModal({ open, onClose, onCreate, customApps, onToggle, onDelete }: Props) {
   const { isDark } = useTheme();
-  const [view, setView] = useState<"list" | "form">("list");
+  const [view, setView] = useState<"list" | "form" | "market">("market");
   const [name, setName] = useState("");
   const [type, setType] = useState<ConnectorType>("mcp");
   const [url, setUrl] = useState("");
   const [apiKey, setApiKey] = useState("");
   const [saving, setSaving] = useState(false);
+  const [keyLabel, setKeyLabel] = useState<string | null>(null);
+  const [keyHint, setKeyHint] = useState<string | null>(null);
 
   useEffect(() => {
-    if (open) setView(customApps.length === 0 ? "form" : "list");
+    if (open) setView(customApps.length === 0 ? "market" : "list");
   }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
+
 
   function resetForm() {
     setName("");
