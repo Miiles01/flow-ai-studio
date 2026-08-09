@@ -370,18 +370,17 @@ export default function AddAppModal({ open, onClose, onCreate, customApps, onTog
 
                 <form onSubmit={handleSubmit} className="flex flex-col h-full min-h-0">
                   <div className="flex items-center gap-2 px-5 pt-5 pb-1">
-                    {customApps.length > 0 && (
-                      <button
-                        type="button"
-                        onClick={() => setView("list")}
-                        className={`flex h-7 w-7 items-center justify-center rounded-full transition-colors ${
-                          isDark ? "hover:bg-white/10 text-white/70" : "hover:bg-black/5 text-black/60"
-                        }`}
-                        aria-label="Volver"
-                      >
-                        <ArrowLeft size={16} />
-                      </button>
-                    )}
+                    <button
+                      type="button"
+                      onClick={() => setView(keyLabel ? "market" : customApps.length > 0 ? "list" : "market")}
+                      className={`flex h-7 w-7 items-center justify-center rounded-full transition-colors ${
+                        isDark ? "hover:bg-white/10 text-white/70" : "hover:bg-black/5 text-black/60"
+                      }`}
+                      aria-label="Volver"
+                    >
+                      <ArrowLeft size={16} />
+                    </button>
+
                     <h3 className={`text-base font-normal ${isDark ? "text-white" : "text-black"}`}>
                       Nueva conexión
                     </h3>
