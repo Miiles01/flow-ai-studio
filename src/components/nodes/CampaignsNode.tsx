@@ -1005,16 +1005,22 @@ const CampaignEditorPopover = ({
             className={`w-full px-3 py-2.5 rounded-lg text-[13px] outline-none ${inputCls}`}
           />
           {campaign.coverUrl && (
-            <div className="mt-2 relative">
-              <div className={`h-[110px] rounded-lg overflow-hidden ${softSurface}`}>
-                <img src={campaign.coverUrl} alt="Vista previa de la portada" className="w-full h-full object-cover" />
+            <div className="mt-2">
+              <CoverPositioner
+                url={campaign.coverUrl}
+                posY={campaign.coverPosY ?? 50}
+                softSurface={softSurface}
+                onChange={(v) => onUpdate({ coverPosY: v })}
+              />
+              <div className="flex items-center justify-between mt-2">
+                <span className={`text-[11px] ${subtle}`}>Arrastra la imagen para ajustar la altura</span>
+                <button
+                  onClick={() => onUpdate({ coverUrl: undefined, coverPosY: undefined })}
+                  className={`text-[11.5px] ${subtle} hover:opacity-80`}
+                >
+                  Quitar portada
+                </button>
               </div>
-              <button
-                onClick={() => onUpdate({ coverUrl: undefined })}
-                className={`mt-2 text-[11.5px] ${subtle} hover:opacity-80`}
-              >
-                Quitar portada
-              </button>
             </div>
           )}
         </Section>
