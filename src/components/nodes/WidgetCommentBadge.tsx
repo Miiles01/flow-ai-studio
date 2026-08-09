@@ -10,6 +10,16 @@ type Props = {
   onChange: (next: WidgetAIComment[]) => void;
 };
 
+const formatStamp = (ts: number) => {
+  const d = new Date(ts);
+  if (isNaN(d.getTime())) return "";
+  const today = new Date();
+  const sameDay = d.toDateString() === today.toDateString();
+  const time = d.toLocaleTimeString("es-ES", { hour: "2-digit", minute: "2-digit" });
+  if (sameDay) return `Hoy ${time}`;
+  return `${d.toLocaleDateString("es-ES", { day: "2-digit", month: "short" })} ${time}`;
+};
+
 const WidgetCommentBadge = ({ comments, onChange }: Props) => {
   const [open, setOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -100,7 +110,15 @@ const WidgetCommentBadge = ({ comments, onChange }: Props) => {
           <div ref={scrollRef} className="flex-1 overflow-y-auto editor-scrollbar p-3 space-y-3">
             {comments.map((c) => (
               <div key={c.id} className="group">
-                <div className="text-[10px] text-miiles-gray-400 mb-1">Tú</div>
+                <div className="flex items-center gap-1.5 text-[10px] text-miiles-gray-400 mb-1">
+                  <span>Tú</span>
+                  {c.createdAt && (
+                    <>
+                      <span>·</span>
+                      <span>{formatStamp(c.createdAt)}</span>
+                    </>
+                  )}
+                </div>
                 <div className="text-xs text-foreground mb-2 whitespace-pre-wrap">{c.prompt}</div>
                 <div
                   className={`flex items-start gap-2 rounded-xl px-3 py-2.5 text-xs ${
