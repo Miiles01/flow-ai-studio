@@ -171,14 +171,17 @@ function appRecipes(apps: UserAppRow[]): string {
     apps.some((a) => `${a.name} ${a.url ?? ""}`.toLowerCase().includes(k));
 
   if (has("apify")) {
-    out.push(`APIFY (base https://api.apify.com/v2):
-- Para BUSCAR información en la web usa SIEMPRE el actor de búsqueda de Google:
-  POST /acts/apify~google-search-scraper/run-sync-get-dataset-items
+    out.push(`APIFY (base https://api.apify.com/v2) — SIEMPRE ASÍNCRONO:
+- NUNCA uses run-sync ni run-sync-get-dataset-items (provocan timeout). Usa SIEMPRE el endpoint de iniciar ejecución:
+  POST /acts/{actorId}/runs
+- Para BUSCAR información en la web usa el actor de búsqueda de Google:
+  POST /acts/apify~google-search-scraper/runs
   body: {"queries":"<consulta>","resultsPerPage":10,"maxPagesPerQuery":1,"countryCode":"us"}
   (queries es texto con una consulta por línea).
 - Para scrapear páginas concretas usa:
-  POST /acts/apify~website-content-crawler/run-sync-get-dataset-items
+  POST /acts/apify~website-content-crawler/runs
   body: {"startUrls":[{"url":"https://ejemplo.com"}],"maxCrawlPages":3}
+- NO incluyas el campo "webhooks": el sistema lo inyecta automáticamente para recibir los resultados.
 - NUNCA uses apify~web-scraper (exige pageFunction) ni inventes startUrls: si no tienes URLs reales, usa google-search-scraper.
 - El actor id lleva "~" (tilde), no "/". No pongas token en la URL.`);
   }
@@ -199,6 +202,7 @@ export async function maybeUseApps(params: {
   target: LLMTarget;
   prompt: string;
   contextLabel?: string;
+  ctx?: AppsCtx;
 }): Promise<string> {
   const { target, prompt } = params;
   const apps = enabledApps(params.apps);
@@ -234,7 +238,7 @@ Decide si para cumplir la instrucción hay que hacer peticiones HTTP a alguna de
   const calls = Array.isArray(plan.calls) ? plan.calls.slice(0, 2) : [];
   if (!plan.needsApps || !calls.length) return "";
 
-  const results = await Promise.all(calls.map((c) => runCall(apps, c)));
+  const results = await Promise.all(calls.map((c) => runCall(apps, c, params.ctx ?? {})));
 
   return `\n\n---
 RESULTADOS DE APPS CONECTADAS (úsalos como fuente real de datos; no inventes):
