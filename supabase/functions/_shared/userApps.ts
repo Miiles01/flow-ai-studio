@@ -110,6 +110,33 @@ async function runCall(apps: UserAppRow[], call: PlannedCall): Promise<string> {
   }
 }
 
+
+/** Recetas concretas por app para que el planificador no invente endpoints/inputs inválidos. */
+function appRecipes(apps: UserAppRow[]): string {
+  const out: string[] = [];
+  const has = (k: string) =>
+    apps.some((a) => `${a.name} ${a.url ?? ""}`.toLowerCase().includes(k));
+
+  if (has("apify")) {
+    out.push(`APIFY (base https://api.apify.com/v2):
+- Para BUSCAR información en la web usa SIEMPRE el actor de búsqueda de Google:
+  POST /acts/apify~google-search-scraper/run-sync-get-dataset-items
+  body: {"queries":"<consulta>","resultsPerPage":10,"maxPagesPerQuery":1,"countryCode":"us"}
+  (queries es texto con una consulta por línea).
+- Para scrapear páginas concretas usa:
+  POST /acts/apify~website-content-crawler/run-sync-get-dataset-items
+  body: {"startUrls":[{"url":"https://ejemplo.com"}],"maxCrawlPages":3}
+- NUNCA uses apify~web-scraper (exige pageFunction) ni inventes startUrls: si no tienes URLs reales, usa google-search-scraper.
+- El actor id lleva "~" (tilde), no "/". No pongas token en la URL.`);
+  }
+  if (has("gmail") || has("googleapis")) {
+    out.push(`GMAIL (base https://gmail.googleapis.com):
+- Listar: GET /gmail/v1/users/me/messages con query "q=<búsqueda>&maxResults=10"
+- Leer: GET /gmail/v1/users/me/messages/{id}`);
+  }
+  return out.length ? `\n\nRECETAS OBLIGATORIAS:\n${out.join("\n\n")}` : "";
+}
+
 /**
  * Si el usuario menciona/necesita apps, planifica y ejecuta las llamadas,
  * devolviendo un bloque de contexto con los resultados para el prompt final.
@@ -130,7 +157,9 @@ ${appsCatalogText(apps)}
 Decide si para cumplir la instrucción hay que hacer peticiones HTTP a alguna de ellas.
 - Usa apps SOLO si el usuario las menciona (por nombre o con un tag "@Nombre") o si claramente pide datos externos que requieren esa app.
 - Si no hace falta, responde needsApps=false y calls vacío.
-- Máximo 2 llamadas. Rutas relativas a la base URL. La autenticación ya se agrega automáticamente.`;
+- Máximo 2 llamadas. Rutas relativas a la base URL. La autenticación ya se agrega automáticamente (no incluyas tokens ni api keys).
+- Sigue EXACTAMENTE las recetas de abajo cuando existan para esa app; no inventes rutas ni campos de body.
+- Si el body requiere URLs y el usuario no dio ninguna, NO inventes URLs: usa la receta de búsqueda.${appRecipes(apps)}`;
 
   let plan: { needsApps?: boolean; calls?: PlannedCall[] } = {};
   try {
