@@ -69,6 +69,8 @@ export type Campaign = {
   createdAt: number;
   /** Ref al ClientCardNode asignado (id del nodo React Flow). */
   clientId?: string;
+  /** URL de imagen de portada de la campaña. */
+  coverUrl?: string;
   /** Timestamp cuando se marcó como cobrada. Alimenta el widget Ingresos. */
   paidAt?: number;
 };
