@@ -71,6 +71,8 @@ export type Campaign = {
   clientId?: string;
   /** URL de imagen de portada de la campaña. */
   coverUrl?: string;
+  /** Posición vertical de la portada (0 = arriba, 100 = abajo). */
+  coverPosY?: number;
   /** Timestamp cuando se marcó como cobrada. Alimenta el widget Ingresos. */
   paidAt?: number;
 };
