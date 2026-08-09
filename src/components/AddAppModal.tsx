@@ -85,23 +85,21 @@ export default function AddAppModal({ open, onClose, onCreate, customApps, onTog
       : "bg-white/90 border border-black/10 text-black placeholder:text-black/30 focus:border-black/30"
   }`;
 
-  const features = [
+  const navCards = [
     {
-      icon: Server,
-      title: "Servidores MCP",
-      desc: "Conecta servidores MCP para darle a la IA acceso a tus herramientas.",
-    },
-    {
-      icon: Globe,
-      title: "APIs y endpoints",
-      desc: "Integra cualquier API mediante una URL y una clave opcional.",
-    },
-    {
+      key: "market" as const,
       icon: Boxes,
-      title: "Tú tienes el control",
-      desc: "Activa o desactiva cada conexión cuando quieras.",
+      title: "Populares",
+      desc: "Explora apps sugeridas y conéctalas en un clic.",
+    },
+    {
+      key: "form" as const,
+      icon: Plus,
+      title: "Conectar otra",
+      desc: "Agrega manualmente un servidor MCP o una API.",
     },
   ];
+
 
   return createPortal(
     <AnimatePresence>
