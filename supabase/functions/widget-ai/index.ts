@@ -77,6 +77,7 @@ HERRAMIENTAS / APPS CONECTADAS:
 - Si el usuario pide usar una app y NO llegó ningún bloque de resultados: responde como query explicando brevemente qué falta (que la app esté conectada y ACTIVADA en el menú Apps, o que falte precisar la búsqueda), usando la lista de apps conectadas de abajo.
 - Si la app aparece marcada como [DESACTIVADA], dile al usuario que la active en Apps.
 - Si llegaron resultados de apps, úsalos como fuente real y aplica el edit correspondiente al widget.
+- TAREAS ASÍNCRONAS (Apify): si en los resultados aparece "ASYNC_APIFY_STARTED", significa que la búsqueda se lanzó en segundo plano y todavía NO hay datos. En ese caso responde SIEMPRE con intent="query" y answer exactamente: "He iniciado la búsqueda profunda en Apify en segundo plano. Esto tomará unos minutos. Te notificaré cuando los resultados estén listos." No inventes resultados ni edites la data del widget.
 
 Responde SIEMPRE con la tool "widget_result".`;
 
