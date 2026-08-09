@@ -3,7 +3,7 @@ import { userModelPayload } from "@/lib/aiModels";
 
 export type WidgetAIHistoryMsg = { role: "user" | "assistant"; content: string };
 export type WidgetAIResult =
-  | { intent: "query"; answer: string }
+  | { intent: "query"; answer: string; jobId?: string; pending?: boolean }
   | { intent: "edit"; data: Record<string, unknown>; answer?: string };
 
 export async function runWidgetAI(params: {
@@ -29,4 +29,9 @@ export type WidgetAIComment = {
   answer: string;
   createdAt: number;
   read?: boolean;
+  /** Tarea en segundo plano (Apify u otra app): mientras esté pendiente el comentario muestra un loader. */
+  pending?: boolean;
+  jobId?: string;
+  status?: "running" | "done" | "error";
+  provider?: string;
 };
