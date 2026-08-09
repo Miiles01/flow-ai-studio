@@ -226,7 +226,9 @@ export default function AddAppModal({ open, onClose, onCreate, customApps, onTog
                         </p>
                       </div>
                     ) : (
-                      customApps.map((app) => (
+                      customApps.map((app) => {
+                        const logo = logoForApp(app.name, app.url);
+                        return (
                         <div
                           key={app.id}
                           className={`group flex items-center gap-3 px-3 py-3 rounded-xl ${
@@ -234,24 +236,37 @@ export default function AddAppModal({ open, onClose, onCreate, customApps, onTog
                           }`}
                         >
                           <div
-                            className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${
+                            className={`relative flex h-8 w-8 shrink-0 items-center justify-center rounded-lg overflow-visible ${
                               isDark ? "bg-white/10" : "bg-black/5"
                             }`}
                           >
-                            {app.connector_type === "mcp" ? (
+                            {logo ? (
+                              <img
+                                src={logo}
+                                alt=""
+                                className="h-5 w-5 object-contain"
+                                onError={(e) => (e.currentTarget.style.display = "none")}
+                              />
+                            ) : app.connector_type === "mcp" ? (
                               <Server size={14} strokeWidth={1.5} className={isDark ? "text-white/60" : "text-black/50"} />
                             ) : (
                               <Globe size={14} strokeWidth={1.5} className={isDark ? "text-white/60" : "text-black/50"} />
+                            )}
+                            {app.enabled && (
+                              <span className="absolute -right-1 -bottom-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-miiles-blue ring-2 ring-black/0">
+                                <Check size={9} strokeWidth={3} className="text-white" />
+                              </span>
                             )}
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className={`truncate text-sm font-normal ${isDark ? "text-white" : "text-black"}`}>
                               {app.name}
                             </p>
-                            <p className={`truncate text-[11px] font-light ${isDark ? "text-white/40" : "text-black/40"}`}>
-                              {app.connector_type === "mcp" ? "Servidor MCP" : "API"}
+                            <p className={`truncate text-[11px] font-light ${app.enabled ? "text-miiles-blue" : isDark ? "text-white/40" : "text-black/40"}`}>
+                              {app.enabled ? "Conectada · " : ""}{app.connector_type === "mcp" ? "Servidor MCP" : "API"}
                             </p>
                           </div>
+
                           <button
                             onClick={() => onDelete(app.id)}
                             className={`opacity-0 group-hover:opacity-100 transition-opacity ${
