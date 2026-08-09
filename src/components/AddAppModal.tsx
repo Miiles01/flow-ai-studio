@@ -19,6 +19,44 @@ const schema = z.object({
   api_key: z.string().trim().max(2000).optional(),
 });
 
+type CatalogApp = {
+  id: string;
+  name: string;
+  category: string;
+  desc: string;
+  connector_type: ConnectorType;
+  url: string;
+  keyLabel: string;
+  keyHint: string;
+  logo: string;
+};
+
+const CATALOG: CatalogApp[] = [
+  {
+    id: "gmail",
+    name: "Gmail",
+    category: "Correo",
+    desc: "Lee, busca y redacta correos desde tus flujos.",
+    connector_type: "api",
+    url: "https://gmail.googleapis.com/gmail/v1",
+    keyLabel: "Access token de Google",
+    keyHint: "Genera un token OAuth con el scope gmail.readonly o gmail.modify.",
+    logo: "https://www.google.com/s2/favicons?sz=64&domain=gmail.com",
+  },
+  {
+    id: "apify",
+    name: "Apify",
+    category: "Scraping",
+    desc: "Ejecuta actors y extrae datos de la web automáticamente.",
+    connector_type: "api",
+    url: "https://api.apify.com/v2",
+    keyLabel: "API token de Apify",
+    keyHint: "Lo encuentras en apify.com → Settings → Integrations.",
+    logo: "https://www.google.com/s2/favicons?sz=64&domain=apify.com",
+  },
+];
+
+
 type Props = {
   open: boolean;
   onClose: () => void;
@@ -30,23 +68,39 @@ type Props = {
 
 export default function AddAppModal({ open, onClose, onCreate, customApps, onToggle, onDelete }: Props) {
   const { isDark } = useTheme();
-  const [view, setView] = useState<"list" | "form">("list");
+  const [view, setView] = useState<"list" | "form" | "market">("market");
   const [name, setName] = useState("");
   const [type, setType] = useState<ConnectorType>("mcp");
   const [url, setUrl] = useState("");
   const [apiKey, setApiKey] = useState("");
   const [saving, setSaving] = useState(false);
+  const [keyLabel, setKeyLabel] = useState<string | null>(null);
+  const [keyHint, setKeyHint] = useState<string | null>(null);
 
   useEffect(() => {
-    if (open) setView(customApps.length === 0 ? "form" : "list");
+    if (open) setView(customApps.length === 0 ? "market" : "list");
   }, [open]); // eslint-disable-line react-hooks/exhaustive-deps
+
 
   function resetForm() {
     setName("");
     setType("mcp");
     setUrl("");
     setApiKey("");
+    setKeyLabel(null);
+    setKeyHint(null);
   }
+
+  function pickCatalog(app: CatalogApp) {
+    setName(app.name);
+    setType(app.connector_type);
+    setUrl(app.url);
+    setApiKey("");
+    setKeyLabel(app.keyLabel);
+    setKeyHint(app.keyHint);
+    setView("form");
+  }
+
 
   function handleClose() {
     if (saving) return;
@@ -85,23 +139,21 @@ export default function AddAppModal({ open, onClose, onCreate, customApps, onTog
       : "bg-white/90 border border-black/10 text-black placeholder:text-black/30 focus:border-black/30"
   }`;
 
-  const features = [
+  const navCards = [
     {
-      icon: Server,
-      title: "Servidores MCP",
-      desc: "Conecta servidores MCP para darle a la IA acceso a tus herramientas.",
-    },
-    {
-      icon: Globe,
-      title: "APIs y endpoints",
-      desc: "Integra cualquier API mediante una URL y una clave opcional.",
-    },
-    {
+      key: "market" as const,
       icon: Boxes,
-      title: "Tú tienes el control",
-      desc: "Activa o desactiva cada conexión cuando quieras.",
+      title: "Populares",
+      desc: "Explora apps sugeridas y conéctalas en un clic.",
+    },
+    {
+      key: "form" as const,
+      icon: Plus,
+      title: "Conectar otra",
+      desc: "Agrega manualmente un servidor MCP o una API.",
     },
   ];
+
 
   return createPortal(
     <AnimatePresence>
@@ -141,19 +193,32 @@ export default function AddAppModal({ open, onClose, onCreate, customApps, onTog
                 Suma herramientas externas para que la IA pueda usarlas dentro de tus flujos.
               </p>
 
-              <div className="mt-6 md:mt-10 flex flex-col gap-4">
-                {features.map((f) => (
-                  <div key={f.title} className="flex gap-3">
-                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/10">
-                      <f.icon size={16} strokeWidth={1.5} className="text-white" />
-                    </div>
-                    <div>
-                      <p className="text-sm font-medium text-white">{f.title}</p>
-                      <p className="text-xs font-light text-white/50 leading-snug">{f.desc}</p>
-                    </div>
-                  </div>
-                ))}
+              <div className="mt-6 md:mt-10 flex flex-col gap-3">
+                {navCards.map((c) => {
+                  const active = view === c.key || (c.key === "form" && view === "form");
+                  return (
+                    <button
+                      key={c.key}
+                      type="button"
+                      onClick={() => { if (c.key === "form") resetForm(); setView(c.key); }}
+                      className={`flex gap-3 text-left rounded-2xl p-4 transition-colors border ${
+                        active
+                          ? "bg-white/15 border-white/25"
+                          : "bg-white/5 border-white/10 hover:bg-white/10"
+                      }`}
+                    >
+                      <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/10">
+                        <c.icon size={16} strokeWidth={1.5} className="text-white" />
+                      </div>
+                      <div>
+                        <p className="text-sm font-medium text-white">{c.title}</p>
+                        <p className="text-xs font-light text-white/50 leading-snug">{c.desc}</p>
+                      </div>
+                    </button>
+                  );
+                })}
               </div>
+
             </div>
 
             {/* Right panel — list / form */}
@@ -168,7 +233,7 @@ export default function AddAppModal({ open, onClose, onCreate, customApps, onTog
                       Conectadas
                     </h3>
                     <button
-                      onClick={() => setView("form")}
+                      onClick={() => { resetForm(); setView("market"); }}
                       className={`flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-medium transition-colors ${
                         isDark ? "bg-white text-black hover:bg-white/90" : "bg-black text-white hover:bg-miiles-pink"
                       }`}
@@ -244,21 +309,78 @@ export default function AddAppModal({ open, onClose, onCreate, customApps, onTog
                     )}
                   </div>
                 </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="flex flex-col h-full min-h-0">
-                  <div className="flex items-center gap-2 px-5 pt-5 pb-1">
+              ) : view === "market" ? (
+                <div className="flex flex-col h-full min-h-0">
+                  <div className="flex items-center justify-between px-5 pt-5 pb-3">
+                    <div>
+                      <h3 className={`text-base font-normal ${isDark ? "text-white" : "text-black"}`}>
+                        Populares
+                      </h3>
+                      <p className={`text-[11px] font-light ${isDark ? "text-white/40" : "text-black/40"}`}>
+                        Elige una app y completa tus datos.
+                      </p>
+                    </div>
                     {customApps.length > 0 && (
                       <button
-                        type="button"
                         onClick={() => setView("list")}
-                        className={`flex h-7 w-7 items-center justify-center rounded-full transition-colors ${
-                          isDark ? "hover:bg-white/10 text-white/70" : "hover:bg-black/5 text-black/60"
+                        className={`rounded-full px-3.5 py-2 text-xs font-medium transition-colors ${
+                          isDark ? "bg-white/10 text-white hover:bg-white/15" : "bg-black/5 text-black hover:bg-black/10"
                         }`}
-                        aria-label="Volver"
                       >
-                        <ArrowLeft size={16} />
+                        Conectadas ({customApps.length})
                       </button>
                     )}
+                  </div>
+
+                  <div className="flex-1 min-h-0 overflow-y-auto px-4 pb-4 scrollbar-hide grid grid-cols-1 sm:grid-cols-2 gap-3 content-start">
+                    {CATALOG.map((app) => (
+                      <button
+                        key={app.id}
+                        onClick={() => pickCatalog(app)}
+                        className={`text-left rounded-2xl p-4 border transition-colors ${
+                          isDark
+                            ? "bg-white/5 border-white/10 hover:bg-white/10"
+                            : "bg-white border-black/5 hover:bg-black/[0.03] shadow-sm"
+                        }`}
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <img
+                            src={app.logo}
+                            alt=""
+                            className="h-8 w-8 rounded-lg object-contain bg-white/80 p-1"
+                            onError={(e) => ((e.currentTarget.style.visibility = "hidden"))}
+                          />
+                          <div className="min-w-0">
+                            <p className={`truncate text-sm font-normal ${isDark ? "text-white" : "text-black"}`}>
+                              {app.name}
+                            </p>
+                            <p className={`truncate text-[11px] font-light ${isDark ? "text-white/40" : "text-black/40"}`}>
+                              {app.category}
+                            </p>
+                          </div>
+                        </div>
+                        <p className={`mt-3 text-xs font-light leading-snug ${isDark ? "text-white/50" : "text-black/50"}`}>
+                          {app.desc}
+                        </p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              ) : (
+
+                <form onSubmit={handleSubmit} className="flex flex-col h-full min-h-0">
+                  <div className="flex items-center gap-2 px-5 pt-5 pb-1">
+                    <button
+                      type="button"
+                      onClick={() => setView(keyLabel ? "market" : customApps.length > 0 ? "list" : "market")}
+                      className={`flex h-7 w-7 items-center justify-center rounded-full transition-colors ${
+                        isDark ? "hover:bg-white/10 text-white/70" : "hover:bg-black/5 text-black/60"
+                      }`}
+                      aria-label="Volver"
+                    >
+                      <ArrowLeft size={16} />
+                    </button>
+
                     <h3 className={`text-base font-normal ${isDark ? "text-white" : "text-black"}`}>
                       Nueva conexión
                     </h3>
@@ -325,7 +447,7 @@ export default function AddAppModal({ open, onClose, onCreate, customApps, onTog
 
                     <div>
                       <label className={`mb-1.5 block text-xs font-light ${isDark ? "text-white/60" : "text-black/60"}`}>
-                        API key / token <span className="opacity-50">(opcional)</span>
+                        {keyLabel ?? "API key / token"} <span className="opacity-50">(opcional)</span>
                       </label>
                       <input
                         value={apiKey}
@@ -334,7 +456,13 @@ export default function AddAppModal({ open, onClose, onCreate, customApps, onTog
                         type="password"
                         className={inputClass}
                       />
+                      {keyHint && (
+                        <p className={`mt-1.5 text-[11px] font-light ${isDark ? "text-white/40" : "text-black/40"}`}>
+                          {keyHint}
+                        </p>
+                      )}
                     </div>
+
                   </div>
 
                   <div className="px-5 pb-5 pt-1">
