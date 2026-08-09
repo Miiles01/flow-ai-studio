@@ -1,5 +1,7 @@
 // Widget AI — clasifica intención (query/edit) y aplica cambios o responde con un comentario.
 import { callLLM, parseUserModel, resolveTarget } from "../_shared/llm.ts";
+import { appsCatalogText, loadUserApps, maybeUseApps } from "../_shared/userApps.ts";
+
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
