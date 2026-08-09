@@ -616,7 +616,53 @@ const KpiCard = ({ isDark, icon, accent, label, value, sub }: { isDark: boolean;
   </div>
 );
 
+const SourcesPicker = ({
+  sources, selectedIds, isAll, onToggle, onAll, isDark,
+}: {
+  sources: { id: string; title: string; subtitle: string; count: number }[];
+  selectedIds: string[];
+  isAll: boolean;
+  onToggle: (id: string) => void;
+  onAll: () => void;
+  isDark: boolean;
+}) => (
+  <div className={`nodrag nopan absolute top-full mt-2 left-0 z-50 rounded-xl shadow-2xl p-2 w-[260px] max-h-[280px] overflow-y-auto ${isDark ? "bg-[#1C1C1E] border border-white/10 text-white" : "bg-white border border-neutral-200 text-neutral-900"}`}>
+    <div className={`text-[10.5px] uppercase tracking-wide px-2 py-1 ${isDark ? "text-white/40" : "text-neutral-400"}`}>Widgets</div>
+    <button
+      onClick={onAll}
+      className={`w-full flex items-center justify-between gap-2 px-2 py-2 rounded-lg text-left text-[13px] ${isDark ? "hover:bg-white/10" : "hover:bg-neutral-100"}`}
+    >
+      <span>Todos los widgets</span>
+      {isAll && <Check size={14} className="text-[#4059F1]" />}
+    </button>
+    {sources.length === 0 && (
+      <div className={`px-2 py-3 text-[12px] ${isDark ? "text-white/50" : "text-neutral-500"}`}>
+        No hay widgets de Campañas en el tablero.
+      </div>
+    )}
+    {sources.map((s) => {
+      const sel = selectedIds.includes(s.id);
+      return (
+        <button
+          key={s.id}
+          onClick={() => onToggle(s.id)}
+          className={`w-full flex items-start justify-between gap-2 px-2 py-2 rounded-lg text-left ${isDark ? "hover:bg-white/10" : "hover:bg-neutral-100"}`}
+        >
+          <span className="min-w-0">
+            <span className="block text-[13px] truncate">{s.title}</span>
+            <span className={`block text-[11px] truncate ${isDark ? "text-white/45" : "text-neutral-500"}`}>
+              {s.subtitle || `${s.count} campaña${s.count === 1 ? "" : "s"}`}
+            </span>
+          </span>
+          {sel && <Check size={14} className="text-[#4059F1] shrink-0 mt-0.5" />}
+        </button>
+      );
+    })}
+  </div>
+);
+
 const MonthPicker = ({ value, onPick, isDark }: { value?: string; onPick: (v: string) => void; isDark: boolean }) => {
+
   const now = new Date();
   const [year, setYear] = useState(parseKey(value)?.y ?? now.getFullYear());
   return (
