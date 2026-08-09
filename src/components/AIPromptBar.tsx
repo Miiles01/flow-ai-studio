@@ -246,11 +246,27 @@ const AIPromptBar = ({
 
 
   const handleKeyDown = (e: React.KeyboardEvent) => {
+    if (e.key === "Escape" && suggestions.length) {
+      e.preventDefault();
+      setSuggestions([]);
+      setMentionQuery(null);
+      return;
+    }
+    if (e.key === "Tab" && suggestions.length) {
+      e.preventDefault();
+      insertMention(suggestions[0]);
+      return;
+    }
     if (e.key === "Enter" && !e.shiftKey) {
       e.preventDefault();
+      if (suggestions.length) {
+        insertMention(suggestions[0]);
+        return;
+      }
       handleSubmit();
     }
   };
+
 
   const expand = () => {
     setIsExpanded(true);
