@@ -1,4 +1,5 @@
 // Widget AI — clasifica intención (query/edit) y aplica cambios o responde con un comentario.
+import { createClient } from "npm:@supabase/supabase-js@2";
 import { callLLM, parseUserModel, resolveTarget } from "../_shared/llm.ts";
 import { appsCatalogText, loadUserApps, maybeUseApps } from "../_shared/userApps.ts";
 
@@ -14,7 +15,7 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { widgetType, data, prompt, history, userModel } = await req.json();
+    const { widgetType, data, prompt, history, userModel, flowId, nodeId } = await req.json();
     if (!widgetType || !prompt) {
       return new Response(JSON.stringify({ error: "widgetType y prompt requeridos" }), {
         status: 400, headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -76,6 +77,7 @@ HERRAMIENTAS / APPS CONECTADAS:
 - Si el usuario pide usar una app y NO llegó ningún bloque de resultados: responde como query explicando brevemente qué falta (que la app esté conectada y ACTIVADA en el menú Apps, o que falte precisar la búsqueda), usando la lista de apps conectadas de abajo.
 - Si la app aparece marcada como [DESACTIVADA], dile al usuario que la active en Apps.
 - Si llegaron resultados de apps, úsalos como fuente real y aplica el edit correspondiente al widget.
+- TAREAS ASÍNCRONAS (Apify): si en los resultados aparece "ASYNC_APIFY_STARTED", significa que la búsqueda se lanzó en segundo plano y todavía NO hay datos. En ese caso responde SIEMPRE con intent="query" y answer exactamente: "He iniciado la búsqueda profunda en Apify en segundo plano. Esto tomará unos minutos. Te notificaré cuando los resultados estén listos." No inventes resultados ni edites la data del widget.
 
 Responde SIEMPRE con la tool "widget_result".`;
 
@@ -99,9 +101,49 @@ Responde SIEMPRE con la tool "widget_result".`;
 
     // Herramientas: apps conectadas del usuario (funcionan con cualquier "cerebro", Lovable o BYOK).
     const apps = await loadUserApps(req.headers.get("Authorization"));
+
+    const supabaseUrl = Deno.env.get("SUPABASE_URL") ?? "";
+    const serviceKey = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? "";
+    const admin = supabaseUrl && serviceKey
+      ? createClient(supabaseUrl, serviceKey, { auth: { persistSession: false } })
+      : null;
+
+    let userId: string | null = null;
+    if (admin) {
+      const token = req.headers.get("Authorization")?.replace(/^Bearer\s+/i, "").trim();
+      if (token) {
+        const { data: userRes } = await admin.auth.getUser(token);
+        userId = userRes?.user?.id ?? null;
+      }
+    }
+
     const appsBlock = apps.length
-      ? await maybeUseApps({ apps, target, prompt: String(prompt) })
+      ? await maybeUseApps({
+          apps,
+          target,
+          prompt: String(prompt),
+          ctx: {
+            webhookBaseUrl: supabaseUrl ? `${supabaseUrl}/functions/v1/apify-webhook` : undefined,
+            onRunStarted: async ({ jobId, runId, datasetId, appName }) => {
+              if (!admin || !userId || !nodeId) return;
+              const { error } = await admin.from("widget_jobs").insert({
+                id: jobId,
+                user_id: userId,
+                flow_id: flowId ?? null,
+                node_id: String(nodeId),
+                widget_type: String(widgetType),
+                prompt: String(prompt),
+                provider: appName,
+                run_id: runId,
+                dataset_id: datasetId,
+                status: "running",
+              });
+              if (error) console.error("widget_jobs insert error", error.message);
+            },
+          },
+        })
       : "";
+
     const appsCatalog = apps.length
       ? `\n\nAPPS CONECTADAS DEL USUARIO (puedes usarlas cuando el usuario las mencione):\n${appsCatalogText(apps)}`
       : "";

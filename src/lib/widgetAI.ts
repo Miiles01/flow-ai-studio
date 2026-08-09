@@ -11,6 +11,8 @@ export async function runWidgetAI(params: {
   data: unknown;
   prompt: string;
   history?: WidgetAIHistoryMsg[];
+  flowId?: string | null;
+  nodeId?: string;
 }): Promise<WidgetAIResult> {
   const { data, error } = await supabase.functions.invoke("widget-ai", {
     body: { ...params, ...userModelPayload() },

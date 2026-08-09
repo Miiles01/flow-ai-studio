@@ -731,6 +731,57 @@ export type Database = {
         }
         Relationships: []
       }
+      widget_jobs: {
+        Row: {
+          answer: string | null
+          created_at: string
+          dataset_id: string | null
+          flow_id: string | null
+          id: string
+          node_id: string
+          prompt: string
+          provider: string
+          result: Json | null
+          run_id: string | null
+          status: string
+          updated_at: string
+          user_id: string
+          widget_type: string
+        }
+        Insert: {
+          answer?: string | null
+          created_at?: string
+          dataset_id?: string | null
+          flow_id?: string | null
+          id?: string
+          node_id: string
+          prompt?: string
+          provider?: string
+          result?: Json | null
+          run_id?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+          widget_type?: string
+        }
+        Update: {
+          answer?: string | null
+          created_at?: string
+          dataset_id?: string | null
+          flow_id?: string | null
+          id?: string
+          node_id?: string
+          prompt?: string
+          provider?: string
+          result?: Json | null
+          run_id?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+          widget_type?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

@@ -85,14 +85,54 @@ const PLAN_TOOL = {
   },
 };
 
+/** Contexto para lanzar tareas asíncronas (Apify) y avisar al canvas cuando terminan. */
+export type AppsCtx = {
+  /** URL base de la edge function apify-webhook (sin query params). */
+  webhookBaseUrl?: string;
+  /** Se llama cuando Apify aceptó una ejecución en background. */
+  onRunStarted?: (info: { jobId: string; runId: string | null; datasetId: string | null; appName: string }) => Promise<void>;
+};
+
+const isApify = (app: UserAppRow) => `${app.name} ${app.url ?? ""}`.toLowerCase().includes("apify");
+/** POST /acts/{actorId}/runs (asíncrono), no el run-sync. */
+const isApifyAsyncRun = (path: string) => /\/acts\/[^/]+\/runs\/?$/.test(path);
+
 /** Ejecuta una llamada a una app conectada con su credencial guardada. */
-async function runCall(apps: UserAppRow[], call: PlannedCall): Promise<string> {
+async function runCall(apps: UserAppRow[], call: PlannedCall, ctx: AppsCtx = {}): Promise<string> {
   const app = apps.find((a) => a.name.trim().toLowerCase() === String(call.app ?? "").trim().toLowerCase());
   if (!app?.url) return `App "${call.app}" no encontrada.`;
   const base = app.url.replace(/\/+$/, "");
-  const path = String(call.path ?? "/").startsWith("/") ? call.path! : `/${call.path ?? ""}`;
-  const url = `${base}${path}${call.query ? `?${call.query}` : ""}`;
+  let path = String(call.path ?? "/").startsWith("/") ? call.path! : `/${call.path ?? ""}`;
   const method = (call.method ?? "GET").toUpperCase() === "POST" ? "POST" : "GET";
+
+  const jobId = crypto.randomUUID();
+  let asyncApify = false;
+  let bodyText = call.body;
+
+  // Apify: forzamos arquitectura asíncrona (run + webhook) y nunca run-sync.
+  if (isApify(app) && method === "POST") {
+    if (path.includes("run-sync")) {
+      path = path.replace(/\/run-sync[^/?]*/, "/runs");
+    }
+    if (isApifyAsyncRun(path) && ctx.webhookBaseUrl) {
+      asyncApify = true;
+      let payload: Record<string, unknown> = {};
+      try {
+        payload = bodyText ? JSON.parse(bodyText) : {};
+      } catch {
+        payload = {};
+      }
+      payload.webhooks = [
+        {
+          eventTypes: ["ACTOR.RUN.SUCCEEDED"],
+          requestUrl: `${ctx.webhookBaseUrl}?jobId=${jobId}`,
+        },
+      ];
+      bodyText = JSON.stringify(payload);
+    }
+  }
+
+  const url = `${base}${path}${call.query ? `?${call.query}` : ""}`;
   try {
     const res = await fetch(url, {
       method,
@@ -100,10 +140,23 @@ async function runCall(apps: UserAppRow[], call: PlannedCall): Promise<string> {
         "Content-Type": "application/json",
         ...(app.api_key ? { Authorization: `Bearer ${app.api_key}` } : {}),
       },
-      ...(method === "POST" && call.body ? { body: call.body } : {}),
+      ...(method === "POST" && bodyText ? { body: bodyText } : {}),
       signal: AbortSignal.timeout(50000),
     });
     const text = await res.text();
+
+    if (asyncApify && res.ok) {
+      let runId: string | null = null;
+      let datasetId: string | null = null;
+      try {
+        const parsed = JSON.parse(text);
+        runId = parsed?.data?.id ?? parsed?.id ?? null;
+        datasetId = parsed?.data?.defaultDatasetId ?? parsed?.defaultDatasetId ?? null;
+      } catch { /* ignore */ }
+      await ctx.onRunStarted?.({ jobId, runId, datasetId, appName: app.name });
+      return `↳ ${app.name} ${method} ${path} → ${res.status}\nASYNC_APIFY_STARTED runId=${runId ?? "?"} jobId=${jobId}\nLa tarea corre en segundo plano; los resultados llegarán por webhook.`;
+    }
+
     return `↳ ${app.name} ${method} ${path} → ${res.status}\n${text.slice(0, 6000)}`;
   } catch (e) {
     return `↳ ${app.name} ${method} ${path} → error: ${e instanceof Error ? e.message : String(e)}`;
@@ -118,14 +171,17 @@ function appRecipes(apps: UserAppRow[]): string {
     apps.some((a) => `${a.name} ${a.url ?? ""}`.toLowerCase().includes(k));
 
   if (has("apify")) {
-    out.push(`APIFY (base https://api.apify.com/v2):
-- Para BUSCAR información en la web usa SIEMPRE el actor de búsqueda de Google:
-  POST /acts/apify~google-search-scraper/run-sync-get-dataset-items
+    out.push(`APIFY (base https://api.apify.com/v2) — SIEMPRE ASÍNCRONO:
+- NUNCA uses run-sync ni run-sync-get-dataset-items (provocan timeout). Usa SIEMPRE el endpoint de iniciar ejecución:
+  POST /acts/{actorId}/runs
+- Para BUSCAR información en la web usa el actor de búsqueda de Google:
+  POST /acts/apify~google-search-scraper/runs
   body: {"queries":"<consulta>","resultsPerPage":10,"maxPagesPerQuery":1,"countryCode":"us"}
   (queries es texto con una consulta por línea).
 - Para scrapear páginas concretas usa:
-  POST /acts/apify~website-content-crawler/run-sync-get-dataset-items
+  POST /acts/apify~website-content-crawler/runs
   body: {"startUrls":[{"url":"https://ejemplo.com"}],"maxCrawlPages":3}
+- NO incluyas el campo "webhooks": el sistema lo inyecta automáticamente para recibir los resultados.
 - NUNCA uses apify~web-scraper (exige pageFunction) ni inventes startUrls: si no tienes URLs reales, usa google-search-scraper.
 - El actor id lleva "~" (tilde), no "/". No pongas token en la URL.`);
   }
@@ -146,6 +202,7 @@ export async function maybeUseApps(params: {
   target: LLMTarget;
   prompt: string;
   contextLabel?: string;
+  ctx?: AppsCtx;
 }): Promise<string> {
   const { target, prompt } = params;
   const apps = enabledApps(params.apps);
@@ -181,7 +238,7 @@ Decide si para cumplir la instrucción hay que hacer peticiones HTTP a alguna de
   const calls = Array.isArray(plan.calls) ? plan.calls.slice(0, 2) : [];
   if (!plan.needsApps || !calls.length) return "";
 
-  const results = await Promise.all(calls.map((c) => runCall(apps, c)));
+  const results = await Promise.all(calls.map((c) => runCall(apps, c, params.ctx ?? {})));
 
   return `\n\n---
 RESULTADOS DE APPS CONECTADAS (úsalos como fuente real de datos; no inventes):

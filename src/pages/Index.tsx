@@ -1584,6 +1584,8 @@ const IndexContent = () => {
           data: node.data,
           prompt,
           history,
+          flowId: id && id !== "new" ? id : null,
+          nodeId,
         });
         setNodes((prev) => prev.map((n) => {
           if (n.id !== nodeId) return n;
@@ -1624,6 +1626,74 @@ const IndexContent = () => {
     },
     [nodes, setNodes]
   );
+
+  // Tareas asíncronas (Apify): cuando el webhook deja los resultados listos,
+  // Realtime avisa y el widget se actualiza solo, sin que el usuario espere.
+  const widgetNodesRef = useRef(nodes);
+  widgetNodesRef.current = nodes;
+  const handledJobsRef = useRef<Set<string>>(new Set());
+
+  useEffect(() => {
+    if (!user?.id) return;
+    const channel = supabase
+      .channel(`widget-jobs:${user.id}`)
+      .on(
+        "postgres_changes",
+        { event: "UPDATE", schema: "public", table: "widget_jobs", filter: `user_id=eq.${user.id}` },
+        async (payload) => {
+          const job = payload.new as any;
+          if (!job || job.status !== "ready" || handledJobsRef.current.has(job.id)) return;
+          handledJobsRef.current.add(job.id);
+
+          const node = widgetNodesRef.current.find((n) => n.id === job.node_id);
+          if (!node) return;
+
+          try {
+            setIsGenerating(true);
+            const result = await runWidgetAI({
+              widgetType: node.type ?? job.widget_type ?? "",
+              data: node.data,
+              prompt: `${job.prompt}\n\n---\nRESULTADOS YA OBTENIDOS DE APIFY (usa estos datos reales, no vuelvas a llamar a ninguna app):\n${job.answer ?? ""}\n\nJSON:\n${JSON.stringify(job.result?.items ?? []).slice(0, 20000)}`,
+              flowId: id && id !== "new" ? id : null,
+              nodeId: node.id,
+            });
+            setNodes((prev) =>
+              prev.map((n) => {
+                if (n.id !== node.id) return n;
+                const existing = ((n.data as any)?.aiComments as WidgetAIComment[] | undefined) ?? [];
+                const comment: WidgetAIComment = {
+                  id: uid(),
+                  prompt: job.prompt,
+                  answer: (result as any).answer || job.answer || "✅ Resultados de Apify aplicados.",
+                  createdAt: Date.now(),
+                  read: false,
+                };
+                if (result.intent === "edit") {
+                  return {
+                    ...n,
+                    data: { ...(result.data as any), aiComments: [...existing, comment], _aiFitNonce: Date.now() },
+                  };
+                }
+                return { ...n, data: { ...(n.data as any), aiComments: [...existing, comment] } };
+              })
+            );
+            toast.success("Resultados de Apify listos");
+          } catch (err) {
+            toast.error(err instanceof Error ? err.message : "Error aplicando resultados de Apify");
+          } finally {
+            setIsGenerating(false);
+            await supabase.from("widget_jobs").update({ status: "applied" }).eq("id", job.id);
+          }
+        }
+      )
+      .subscribe();
+
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [user?.id, id, setNodes]);
+
+
 
   // Primero entiende la intención: si el prompt es muy general, abre el panel de preguntas.
   const handleAIGenerate = useCallback(
