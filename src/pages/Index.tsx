@@ -11,6 +11,7 @@ import {
   useViewport,
   ReactFlowProvider,
   useReactFlow,
+  useStore,
   useUpdateNodeInternals,
   type Connection,
   type Node,
