@@ -1,5 +1,5 @@
 import { useState, useMemo, useRef, useEffect } from "react";
-import { Trash2, X, Check, Sparkles } from "lucide-react";
+import { Trash2, X, Check, Sparkles, Loader2, AlertTriangle } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import EstrellaIcon from "@/assets/miiles/Estrella.svg";
 import type { WidgetAIComment } from "@/lib/widgetAI";
@@ -15,6 +15,7 @@ const WidgetCommentBadge = ({ comments, onChange }: Props) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const unreadCount = useMemo(() => comments.filter((c) => !c.read).length, [comments]);
   const hasUnread = unreadCount > 0;
+  const isWorking = useMemo(() => comments.some((c) => c.pending), [comments]);
 
   useEffect(() => {
     if (open) {
@@ -52,11 +53,18 @@ const WidgetCommentBadge = ({ comments, onChange }: Props) => {
         <PopoverTrigger asChild>
           <button
             className={`relative w-8 h-8 rounded-full flex items-center justify-center border-2 border-white dark:border-[#1C1C1E] shadow-lg transition-colors ${
-              hasUnread ? "bg-black" : "bg-miiles-gray-400"
+              isWorking || hasUnread ? "bg-black" : "bg-miiles-gray-400"
             }`}
-            title="Comentarios"
+            title={isWorking ? "Trabajando en tu tarea…" : "Comentarios"}
           >
-            <img src={EstrellaIcon} alt="" className="w-4 h-4 invert" />
+            {isWorking && (
+              <span className="absolute inset-0 rounded-full border-2 border-black/20 border-t-black animate-spin -m-1" />
+            )}
+            {isWorking ? (
+              <Loader2 size={14} className="text-white animate-spin" />
+            ) : (
+              <img src={EstrellaIcon} alt="" className="w-4 h-4 invert" />
+            )}
             {unreadCount > 0 && (
               <span className="absolute -top-1.5 -right-1.5 bg-red-500 text-white text-[9px] font-bold px-1.5 py-0.5 rounded-full border-2 border-white dark:border-[#1C1C1E] shadow-sm">
                 {unreadCount}
@@ -94,12 +102,38 @@ const WidgetCommentBadge = ({ comments, onChange }: Props) => {
               <div key={c.id} className="group">
                 <div className="text-[10px] text-miiles-gray-400 mb-1">Tú</div>
                 <div className="text-xs text-foreground mb-2 whitespace-pre-wrap">{c.prompt}</div>
-                <div className="flex items-start gap-2 rounded-xl bg-neutral-100 dark:bg-white/10 px-3 py-2.5 text-xs text-neutral-900 dark:text-neutral-100">
+                <div
+                  className={`flex items-start gap-2 rounded-xl px-3 py-2.5 text-xs ${
+                    c.status === "error"
+                      ? "bg-red-50 dark:bg-red-950/40 text-red-600 dark:text-red-300"
+                      : "bg-neutral-100 dark:bg-white/10 text-neutral-900 dark:text-neutral-100"
+                  }`}
+                >
                   <div className="mt-0.5 shrink-0 text-neutral-500 dark:text-neutral-400">
-                    {(c.answer.includes("✅") || c.answer.includes("✔️")) ? <Check size={14} /> : <Sparkles size={14} />}
+                    {c.pending ? (
+                      <Loader2 size={14} className="animate-spin text-black dark:text-white" />
+                    ) : c.status === "error" ? (
+                      <AlertTriangle size={14} className="text-red-500" />
+                    ) : (c.answer.includes("✅") || c.answer.includes("✔️")) ? (
+                      <Check size={14} />
+                    ) : (
+                      <Sparkles size={14} />
+                    )}
                   </div>
-                  <div className="prose prose-xs max-w-none dark:prose-invert">
-                    <ReactMarkdown>{c.answer.replace(/[✅✔️]/g, "").trim()}</ReactMarkdown>
+                  <div className="min-w-0 flex-1">
+                    <div className="prose prose-xs max-w-none dark:prose-invert">
+                      <ReactMarkdown>{c.answer.replace(/[✅✔️]/g, "").trim()}</ReactMarkdown>
+                    </div>
+                    {c.pending && (
+                      <div className="mt-2 flex items-center gap-2">
+                        <div className="h-1 flex-1 overflow-hidden rounded-full bg-black/10 dark:bg-white/15">
+                          <div className="h-full w-1/3 rounded-full bg-black dark:bg-white animate-[widget-loader_1.4s_ease-in-out_infinite]" />
+                        </div>
+                        <span className="text-[10px] text-miiles-gray-400 shrink-0">
+                          {c.provider ? `${c.provider} trabajando…` : "Trabajando en tu tarea…"}
+                        </span>
+                      </div>
+                    )}
                   </div>
                 </div>
                 <div className="flex justify-end mt-1">
