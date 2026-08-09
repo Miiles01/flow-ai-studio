@@ -713,15 +713,11 @@ const CampaignCard = ({
       )}
       <div className="flex items-start gap-3" style={{ color: cardTextColor }}>
         <div
-          className={`w-10 h-10 rounded-lg shrink-0 flex items-center justify-center text-[12px] font-semibold overflow-hidden ${
+          className={`w-10 h-10 rounded-lg shrink-0 flex items-center justify-center text-[12px] font-semibold ${
             isDark ? "bg-white/15 text-white" : "bg-neutral-100 text-neutral-700"
           }`}
         >
-          {c.coverUrl ? (
-            <img src={c.coverUrl} alt="" className="w-full h-full object-cover" />
-          ) : (
-            initials(brand)
-          )}
+          {initials(brand)}
         </div>
         <div className="flex-1 min-w-0">
           <div className="flex items-start justify-between gap-2">
