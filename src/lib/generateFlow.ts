@@ -91,7 +91,10 @@ REGLAS DE AMPLIACIÓN:
 - NO generes un nodo de título grande (NO uses "textNode" como encabezado suelto al inicio). En modo ampliación NO se necesita título; continúa directamente con más formas/nodos (shapeNode, todoNode, etc.) conectados entre sí a partir del elemento de origen.\n`
     : "";
 
-  const enhancedPrompt = `${prompt}${extendBlock}
+  const appsBlock = await buildAppsContext();
+
+  const enhancedPrompt = `${prompt}${extendBlock}${appsBlock}
+
 
 
 ---
