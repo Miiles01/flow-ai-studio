@@ -15,8 +15,6 @@ const WidgetCommentBadge = ({ comments, onChange }: Props) => {
   const scrollRef = useRef<HTMLDivElement>(null);
   const unreadCount = useMemo(() => comments.filter((c) => !c.read).length, [comments]);
   const hasUnread = unreadCount > 0;
-  
-  if (!comments.length) return null;
 
   useEffect(() => {
     if (open) {
@@ -32,6 +30,9 @@ const WidgetCommentBadge = ({ comments, onChange }: Props) => {
       return () => clearInterval(interval);
     }
   }, [open, comments.length]);
+
+  if (!comments.length) return null;
+
 
   const onOpenChange = (next: boolean) => {
     setOpen(next);
