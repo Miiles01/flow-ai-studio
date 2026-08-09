@@ -101,7 +101,7 @@ async function runCall(apps: UserAppRow[], call: PlannedCall): Promise<string> {
         ...(app.api_key ? { Authorization: `Bearer ${app.api_key}` } : {}),
       },
       ...(method === "POST" && call.body ? { body: call.body } : {}),
-      signal: AbortSignal.timeout(25000),
+      signal: AbortSignal.timeout(50000),
     });
     const text = await res.text();
     return `↳ ${app.name} ${method} ${path} → ${res.status}\n${text.slice(0, 6000)}`;
@@ -181,8 +181,7 @@ Decide si para cumplir la instrucción hay que hacer peticiones HTTP a alguna de
   const calls = Array.isArray(plan.calls) ? plan.calls.slice(0, 2) : [];
   if (!plan.needsApps || !calls.length) return "";
 
-  const results: string[] = [];
-  for (const c of calls) results.push(await runCall(apps, c));
+  const results = await Promise.all(calls.map((c) => runCall(apps, c)));
 
   return `\n\n---
 RESULTADOS DE APPS CONECTADAS (úsalos como fuente real de datos; no inventes):
