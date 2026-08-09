@@ -408,14 +408,21 @@ El usuario quiere un plan accionable. Usa "todoNode" con tareas concretas y verb
 El usuario quiere contexto conceptual + acción. Empieza el esquema con nodos conceptuales (shapeNode + textNode explicativos) y añade 1-2 todoNode al final SOLO para la parte ejecutable. No conviertas los conceptos en tareas.
 === FIN MODO ===`;
 
+    // Apps conectadas del usuario como herramientas reales (mismo comportamiento con cualquier modelo).
+    const userApps = await loadUserApps(req.headers.get("Authorization"));
+    const appsResults = userApps.length
+      ? await maybeUseApps({ apps: userApps, target, prompt: String(prompt) })
+      : "";
+
     const response = await callLLM(
       target,
       [
         { role: "system", content: systemPrompt + modeGuidance + customInstructions },
-        { role: "user", content: prompt },
+        { role: "user", content: `${prompt}${appsResults}` },
       ],
       { maxTokens: 16000 },
     );
+
 
     if (!response.ok) {
       if (response.status === 429) {
