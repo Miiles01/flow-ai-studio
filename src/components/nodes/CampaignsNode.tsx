@@ -26,7 +26,7 @@ import { type NodeProps, NodeResizer, useReactFlow, useViewport } from "@xyflow/
 import { motion, AnimatePresence } from "framer-motion";
 import {
   Plus, Trash2, Palette, X, Search, ArrowLeft, Repeat, DollarSign,
-  Instagram, Youtube, Calendar, Users, Minus, Heading1, Heading2, Check,
+  Instagram, Youtube, Calendar, Users, Minus, Heading1, Heading2, Check, ChevronDown,
 } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import NodeExtendHandles from "@/components/nodes/NodeExtendHandles";
