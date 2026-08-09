@@ -2,6 +2,8 @@ import type { Node, Edge } from "@xyflow/react";
 import type { FlowNodeData } from "@/components/nodes/FlowNode";
 import { supabase } from "@/integrations/supabase/client";
 import { userModelPayload } from "@/lib/aiModels";
+import { buildAppsContext } from "@/lib/appsContext";
+
 
 
 type AIStep = {
@@ -89,7 +91,10 @@ REGLAS DE AMPLIACIÓN:
 - NO generes un nodo de título grande (NO uses "textNode" como encabezado suelto al inicio). En modo ampliación NO se necesita título; continúa directamente con más formas/nodos (shapeNode, todoNode, etc.) conectados entre sí a partir del elemento de origen.\n`
     : "";
 
-  const enhancedPrompt = `${prompt}${extendBlock}
+  const appsBlock = await buildAppsContext();
+
+  const enhancedPrompt = `${prompt}${extendBlock}${appsBlock}
+
 
 
 ---

@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
-import { X, Server, Globe, Loader2, Plus, Trash2, ArrowLeft, Boxes } from "lucide-react";
+import { X, Server, Globe, Loader2, Plus, Trash2, ArrowLeft, Boxes, Check } from "lucide-react";
 import { z } from "zod";
 import { toast } from "sonner";
 import { useTheme } from "@/contexts/ThemeContext";
 import type { ConnectorType, NewUserApp, UserApp } from "@/hooks/useUserApps";
+import { CATALOG, type CatalogApp, logoForApp } from "@/lib/appCatalog";
 
 const schema = z.object({
   name: z.string().trim().min(1, "Ponle un nombre a tu app").max(60, "Máximo 60 caracteres"),
@@ -19,42 +20,6 @@ const schema = z.object({
   api_key: z.string().trim().max(2000).optional(),
 });
 
-type CatalogApp = {
-  id: string;
-  name: string;
-  category: string;
-  desc: string;
-  connector_type: ConnectorType;
-  url: string;
-  keyLabel: string;
-  keyHint: string;
-  logo: string;
-};
-
-const CATALOG: CatalogApp[] = [
-  {
-    id: "gmail",
-    name: "Gmail",
-    category: "Correo",
-    desc: "Lee, busca y redacta correos desde tus flujos.",
-    connector_type: "api",
-    url: "https://gmail.googleapis.com/gmail/v1",
-    keyLabel: "Access token de Google",
-    keyHint: "Genera un token OAuth con el scope gmail.readonly o gmail.modify.",
-    logo: "https://www.google.com/s2/favicons?sz=64&domain=gmail.com",
-  },
-  {
-    id: "apify",
-    name: "Apify",
-    category: "Scraping",
-    desc: "Ejecuta actors y extrae datos de la web automáticamente.",
-    connector_type: "api",
-    url: "https://api.apify.com/v2",
-    keyLabel: "API token de Apify",
-    keyHint: "Lo encuentras en apify.com → Settings → Integrations.",
-    logo: "https://www.google.com/s2/favicons?sz=64&domain=apify.com",
-  },
-];
 
 
 type Props = {
@@ -261,7 +226,9 @@ export default function AddAppModal({ open, onClose, onCreate, customApps, onTog
                         </p>
                       </div>
                     ) : (
-                      customApps.map((app) => (
+                      customApps.map((app) => {
+                        const logo = logoForApp(app.name, app.url);
+                        return (
                         <div
                           key={app.id}
                           className={`group flex items-center gap-3 px-3 py-3 rounded-xl ${
@@ -269,24 +236,37 @@ export default function AddAppModal({ open, onClose, onCreate, customApps, onTog
                           }`}
                         >
                           <div
-                            className={`flex h-8 w-8 shrink-0 items-center justify-center rounded-lg ${
+                            className={`relative flex h-8 w-8 shrink-0 items-center justify-center rounded-lg overflow-visible ${
                               isDark ? "bg-white/10" : "bg-black/5"
                             }`}
                           >
-                            {app.connector_type === "mcp" ? (
+                            {logo ? (
+                              <img
+                                src={logo}
+                                alt=""
+                                className="h-5 w-5 object-contain"
+                                onError={(e) => (e.currentTarget.style.display = "none")}
+                              />
+                            ) : app.connector_type === "mcp" ? (
                               <Server size={14} strokeWidth={1.5} className={isDark ? "text-white/60" : "text-black/50"} />
                             ) : (
                               <Globe size={14} strokeWidth={1.5} className={isDark ? "text-white/60" : "text-black/50"} />
+                            )}
+                            {app.enabled && (
+                              <span className="absolute -right-1 -bottom-1 flex h-3.5 w-3.5 items-center justify-center rounded-full bg-miiles-blue ring-2 ring-black/0">
+                                <Check size={9} strokeWidth={3} className="text-white" />
+                              </span>
                             )}
                           </div>
                           <div className="flex-1 min-w-0">
                             <p className={`truncate text-sm font-normal ${isDark ? "text-white" : "text-black"}`}>
                               {app.name}
                             </p>
-                            <p className={`truncate text-[11px] font-light ${isDark ? "text-white/40" : "text-black/40"}`}>
-                              {app.connector_type === "mcp" ? "Servidor MCP" : "API"}
+                            <p className={`truncate text-[11px] font-light ${app.enabled ? "text-miiles-blue" : isDark ? "text-white/40" : "text-black/40"}`}>
+                              {app.enabled ? "Conectada · " : ""}{app.connector_type === "mcp" ? "Servidor MCP" : "API"}
                             </p>
                           </div>
+
                           <button
                             onClick={() => onDelete(app.id)}
                             className={`opacity-0 group-hover:opacity-100 transition-opacity ${
@@ -310,7 +290,9 @@ export default function AddAppModal({ open, onClose, onCreate, customApps, onTog
                             />
                           </button>
                         </div>
-                      ))
+                        );
+                      })
+
                     )}
                   </div>
                 </div>
@@ -338,16 +320,32 @@ export default function AddAppModal({ open, onClose, onCreate, customApps, onTog
                   </div>
 
                   <div className="flex-1 min-h-0 overflow-y-auto px-4 pb-4 scrollbar-hide grid grid-cols-1 sm:grid-cols-2 gap-3 content-start">
-                    {CATALOG.map((app) => (
+                    {CATALOG.map((app) => {
+                      const connected = customApps.some(
+                        (a) => a.name.trim().toLowerCase() === app.name.toLowerCase()
+                      );
+                      return (
                       <button
                         key={app.id}
                         onClick={() => pickCatalog(app)}
-                        className={`text-left rounded-2xl p-4 border transition-colors ${
-                          isDark
-                            ? "bg-white/5 border-white/10 hover:bg-white/10"
-                            : "bg-white border-black/5 hover:bg-black/[0.03] shadow-sm"
+                        className={`relative text-left rounded-2xl p-4 border transition-colors ${
+                          connected
+                            ? isDark
+                              ? "bg-miiles-blue/10 border-miiles-blue/40"
+                              : "bg-white border-miiles-blue/40 shadow-sm"
+                            : isDark
+                              ? "bg-white/5 border-white/10 hover:bg-white/10"
+                              : "bg-white border-black/5 hover:bg-black/[0.03] shadow-sm"
                         }`}
                       >
+                        {connected && (
+                          <span
+                            className="absolute right-3 top-3 flex h-5 w-5 items-center justify-center rounded-full bg-miiles-blue"
+                            title="Conectada"
+                          >
+                            <Check size={12} strokeWidth={3} className="text-white" />
+                          </span>
+                        )}
                         <div className="flex items-center gap-2.5">
                           <img
                             src={app.logo}
@@ -359,8 +357,8 @@ export default function AddAppModal({ open, onClose, onCreate, customApps, onTog
                             <p className={`truncate text-sm font-normal ${isDark ? "text-white" : "text-black"}`}>
                               {app.name}
                             </p>
-                            <p className={`truncate text-[11px] font-light ${isDark ? "text-white/40" : "text-black/40"}`}>
-                              {app.category}
+                            <p className={`truncate text-[11px] font-light ${connected ? "text-miiles-blue" : isDark ? "text-white/40" : "text-black/40"}`}>
+                              {connected ? "Conectada" : app.category}
                             </p>
                           </div>
                         </div>
@@ -368,8 +366,10 @@ export default function AddAppModal({ open, onClose, onCreate, customApps, onTog
                           {app.desc}
                         </p>
                       </button>
-                    ))}
+                      );
+                    })}
                   </div>
+
                 </div>
               ) : (
 
