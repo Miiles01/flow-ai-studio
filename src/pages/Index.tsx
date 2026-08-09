@@ -485,28 +485,19 @@ const IndexContent = () => {
     e.preventDefault();
     e.stopPropagation();
 
-    // Capture initial absolute states
+    // Capture initial absolute states (measured size + resolved absolute position)
     const nodeStates = selectedNodes.map((n) => {
-      let absX = n.position.x;
-      let absY = n.position.y;
-      let pId = n.parentId;
-      while (pId) {
-        const parent = nodes.find((p) => p.id === pId);
-        if (parent) {
-          absX += parent.position.x;
-          absY += parent.position.y;
-          pId = parent.parentId;
-        } else {
-          break;
-        }
-      }
+      const internal: any = getInternalNode(n.id);
+      const abs = internal?.internals?.positionAbsolute ?? n.position;
+      const w = internal?.measured?.width ?? n.measured?.width ?? (typeof n.style?.width === "number" ? (n.style.width as number) : 100);
+      const h = internal?.measured?.height ?? n.measured?.height ?? (typeof n.style?.height === "number" ? (n.style.height as number) : 100);
       return {
         id: n.id,
-        x: absX,
-        y: absY,
-        w: (n.style?.width as number) || (n.measured?.width) || 100,
-        h: (n.style?.height as number) || (n.measured?.height) || 100,
-        fontSize: n.data?.fontSize || 14,
+        x: abs.x,
+        y: abs.y,
+        w,
+        h,
+        fontSize: (n.data?.fontSize as number) || 14,
       };
     });
 
@@ -518,7 +509,8 @@ const IndexContent = () => {
     };
 
     setResizing(handle);
-  }, [selectionBounds, selectedNodes, nodes]);
+  }, [selectionBounds, selectedNodes, getInternalNode]);
+
 
   // Pointer Move Listener (window-level)
   useEffect(() => {
