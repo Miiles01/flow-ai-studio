@@ -49,12 +49,102 @@ const AIPromptBar = ({
   const [canScrollTop, setCanScrollTop] = useState(false);
 
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const recognitionRef = useRef<any>(null);
   const baseTextRef = useRef("");
   const speechSupported =
     typeof window !== "undefined" &&
     ("SpeechRecognition" in window || "webkitSpeechRecognition" in window);
+
+  /* ---------- Menciones de apps conectadas ---------- */
+  const { customApps } = useUserApps();
+  const mentionApps: MentionApp[] = useMemo(
+    () =>
+      customApps
+        .filter((a) => a.enabled)
+        .map((a) => ({ id: a.id, name: a.name.trim(), logo: logoForApp(a.name, a.url) })),
+    [customApps]
+  );
+  const [suggestions, setSuggestions] = useState<MentionApp[]>([]);
+  const [mentionQuery, setMentionQuery] = useState<{ start: number; end: number } | null>(null);
+
+  const mentionRegex = useMemo(() => {
+    if (!mentionApps.length) return null;
+    const names = [...mentionApps]
+      .sort((a, b) => b.name.length - a.name.length)
+      .map((a) => escapeRe(a.name));
+    return new RegExp(`@(${names.join("|")})`, "gi");
+  }, [mentionApps]);
+
+  const findApp = (name: string) =>
+    mentionApps.find((a) => a.name.toLowerCase() === name.trim().toLowerCase()) ?? null;
+
+  const updateSuggestions = (text: string, caret: number) => {
+    if (!mentionApps.length) {
+      setSuggestions([]);
+      setMentionQuery(null);
+      return;
+    }
+    const before = text.slice(0, caret);
+    const m = before.match(/(^|\s)(@?)([\p{L}\p{N}._-]{2,30})$/u);
+    if (!m) {
+      setSuggestions([]);
+      setMentionQuery(null);
+      return;
+    }
+    const word = m[3];
+    const start = caret - word.length - (m[2] ? 1 : 0);
+    // Si ya es una mención completa insertada, no sugerir
+    if (m[2] && findApp(word)) {
+      setSuggestions([]);
+      setMentionQuery(null);
+      return;
+    }
+    const matches = mentionApps.filter((a) => a.name.toLowerCase().startsWith(word.toLowerCase()));
+    setSuggestions(matches.slice(0, 4));
+    setMentionQuery(matches.length ? { start, end: caret } : null);
+  };
+
+  const insertMention = (app: MentionApp) => {
+    const range = mentionQuery ?? { start: prompt.length, end: prompt.length };
+    const next = `${prompt.slice(0, range.start)}@${app.name} ${prompt.slice(range.end)}`;
+    setPrompt(next);
+    setSuggestions([]);
+    setMentionQuery(null);
+    const caret = range.start + app.name.length + 2;
+    requestAnimationFrame(() => {
+      textareaRef.current?.focus();
+      textareaRef.current?.setSelectionRange(caret, caret);
+    });
+  };
+
+  const removeMention = (index: number, length: number) => {
+    const next = (prompt.slice(0, index) + prompt.slice(index + length)).replace(/\s{2,}/g, " ");
+    setPrompt(next);
+    requestAnimationFrame(() => textareaRef.current?.focus());
+  };
+
+  /** Segmentos para el overlay: texto plano + tags de apps */
+  const segments = useMemo(() => {
+    const out: Array<{ text: string; app?: MentionApp; index: number }> = [];
+    if (!mentionRegex) return [{ text: prompt, index: 0 }];
+    let last = 0;
+    mentionRegex.lastIndex = 0;
+    let m: RegExpExecArray | null;
+    while ((m = mentionRegex.exec(prompt))) {
+      const app = findApp(m[1]);
+      if (!app) continue;
+      if (m.index > last) out.push({ text: prompt.slice(last, m.index), index: last });
+      out.push({ text: m[0], app, index: m.index });
+      last = m.index + m[0].length;
+    }
+    if (last < prompt.length) out.push({ text: prompt.slice(last), index: last });
+    return out;
+  }, [prompt, mentionRegex, mentionApps]);
+
+  const hasMentions = segments.some((s) => s.app);
+
 
   const stopRecording = () => {
     try {
