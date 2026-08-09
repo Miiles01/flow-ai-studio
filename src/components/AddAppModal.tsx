@@ -309,7 +309,65 @@ export default function AddAppModal({ open, onClose, onCreate, customApps, onTog
                     )}
                   </div>
                 </div>
+              ) : view === "market" ? (
+                <div className="flex flex-col h-full min-h-0">
+                  <div className="flex items-center justify-between px-5 pt-5 pb-3">
+                    <div>
+                      <h3 className={`text-base font-normal ${isDark ? "text-white" : "text-black"}`}>
+                        Populares
+                      </h3>
+                      <p className={`text-[11px] font-light ${isDark ? "text-white/40" : "text-black/40"}`}>
+                        Elige una app y completa tus datos.
+                      </p>
+                    </div>
+                    {customApps.length > 0 && (
+                      <button
+                        onClick={() => setView("list")}
+                        className={`rounded-full px-3.5 py-2 text-xs font-medium transition-colors ${
+                          isDark ? "bg-white/10 text-white hover:bg-white/15" : "bg-black/5 text-black hover:bg-black/10"
+                        }`}
+                      >
+                        Conectadas ({customApps.length})
+                      </button>
+                    )}
+                  </div>
+
+                  <div className="flex-1 min-h-0 overflow-y-auto px-4 pb-4 scrollbar-hide grid grid-cols-1 sm:grid-cols-2 gap-3 content-start">
+                    {CATALOG.map((app) => (
+                      <button
+                        key={app.id}
+                        onClick={() => pickCatalog(app)}
+                        className={`text-left rounded-2xl p-4 border transition-colors ${
+                          isDark
+                            ? "bg-white/5 border-white/10 hover:bg-white/10"
+                            : "bg-white border-black/5 hover:bg-black/[0.03] shadow-sm"
+                        }`}
+                      >
+                        <div className="flex items-center gap-2.5">
+                          <img
+                            src={app.logo}
+                            alt=""
+                            className="h-8 w-8 rounded-lg object-contain bg-white/80 p-1"
+                            onError={(e) => ((e.currentTarget.style.visibility = "hidden"))}
+                          />
+                          <div className="min-w-0">
+                            <p className={`truncate text-sm font-normal ${isDark ? "text-white" : "text-black"}`}>
+                              {app.name}
+                            </p>
+                            <p className={`truncate text-[11px] font-light ${isDark ? "text-white/40" : "text-black/40"}`}>
+                              {app.category}
+                            </p>
+                          </div>
+                        </div>
+                        <p className={`mt-3 text-xs font-light leading-snug ${isDark ? "text-white/50" : "text-black/50"}`}>
+                          {app.desc}
+                        </p>
+                      </button>
+                    ))}
+                  </div>
+                </div>
               ) : (
+
                 <form onSubmit={handleSubmit} className="flex flex-col h-full min-h-0">
                   <div className="flex items-center gap-2 px-5 pt-5 pb-1">
                     {customApps.length > 0 && (
