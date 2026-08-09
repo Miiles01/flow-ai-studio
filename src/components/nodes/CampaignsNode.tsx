@@ -993,6 +993,31 @@ const CampaignEditorPopover = ({
           </div>
         </Section>
 
+        {/* Portada */}
+        <Section title="Portada" subtle={subtle}>
+          <input
+            value={campaign.coverUrl ?? ""}
+            onChange={(e) => onUpdate({ coverUrl: e.target.value.trim() || undefined })}
+            placeholder="https://… URL de la imagen"
+            className={`w-full px-3 py-2.5 rounded-lg text-[13px] outline-none ${inputCls}`}
+          />
+          {campaign.coverUrl && (
+            <div className="mt-2 relative">
+              <div className={`h-[110px] rounded-lg overflow-hidden ${softSurface}`}>
+                <img src={campaign.coverUrl} alt="Vista previa de la portada" className="w-full h-full object-cover" />
+              </div>
+              <button
+                onClick={() => onUpdate({ coverUrl: undefined })}
+                className={`mt-2 text-[11.5px] ${subtle} hover:opacity-80`}
+              >
+                Quitar portada
+              </button>
+            </div>
+          )}
+        </Section>
+
+
+
         {/* Cobro rápido */}
         <Section title="Pago" subtle={subtle}>
           <label className={`flex items-center gap-2.5 p-3 rounded-lg cursor-pointer ${softSurface}`}>
