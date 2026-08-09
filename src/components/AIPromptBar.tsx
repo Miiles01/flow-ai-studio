@@ -294,10 +294,15 @@ const AIPromptBar = ({
               className={`w-[52px] h-[52px] bg-black rounded-[20px] flex items-center justify-center shadow-[0_10px_30px_rgba(0,0,0,0.22)] hover:scale-105 active:scale-95 transition-transform duration-200 ${
                 isDark ? "ring-1 ring-white/15" : "border border-white/10"
               }`}
-              aria-label="Abrir asistente IA"
+              aria-label={isGenerating ? "Generando…" : "Abrir asistente IA"}
             >
-              <img src={isotipoImg} alt="AI" className="w-7 h-7 object-contain select-none pointer-events-none" />
+              {isGenerating ? (
+                <Loader2 size={22} className="animate-spin text-white" />
+              ) : (
+                <img src={isotipoImg} alt="AI" className="w-7 h-7 object-contain select-none pointer-events-none" />
+              )}
             </button>
+
           </motion.div>
         ) : (
           /* Estado 2: Barra expandida (animación de entrada y salida original y limpia) */
