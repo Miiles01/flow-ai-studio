@@ -82,7 +82,32 @@ export type CampaignsNodeData = {
   backgroundColor?: string;
   textColor?: string;
   accentColor?: string;
+  /** Disposición de las tarjetas: libre, agrupadas en columnas o en filas. */
+  layout?: CampaignsLayout;
+  /** Criterio de agrupación cuando layout != "none". */
+  groupBy?: CampaignsGroupBy;
 };
+
+export type CampaignsLayout = "none" | "columns" | "rows";
+export type CampaignsGroupBy = "status" | "payment";
+
+const LAYOUT_OPTIONS: Array<{ value: CampaignsLayout; label: string }> = [
+  { value: "none", label: "Sin orden" },
+  { value: "columns", label: "Por columnas" },
+  { value: "rows", label: "Por filas" },
+];
+
+const GROUP_OPTIONS: Array<{ value: CampaignsGroupBy; label: string }> = [
+  { value: "status", label: "Estado" },
+  { value: "payment", label: "Cobro" },
+];
+
+const STATUS_ORDER: CampaignStatus[] = ["Pendiente", "Activa", "Completada"];
+const PAYMENT_GROUPS = ["Cobrado", "Por cobrar", "Intercambio"] as const;
+
+const paymentGroupOf = (c: Campaign) =>
+  c.payType === "intercambio" ? "Intercambio" : c.paidAt ? "Cobrado" : "Por cobrar";
+
 
 const RAINBOW_COLORS = [
   { name: "Transparente", value: "transparent" },
