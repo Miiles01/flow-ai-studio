@@ -1,5 +1,6 @@
 import { useEffect, useRef } from "react";
-import videoHome from "@/assets/miiles/videohome.mp4";
+import videoHomeAsset from "@/assets/miiles/videohome.mp4.asset.json";
+const videoHome = videoHomeAsset.url;
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
