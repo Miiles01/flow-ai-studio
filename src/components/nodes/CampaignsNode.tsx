@@ -484,7 +484,7 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
             filtered.length === 0 ? (
               <EmptySearch isBoardDark={isBoardDark} />
             ) : (
-              <div className="grid gap-3" style={{ gridTemplateColumns: "repeat(auto-fill, minmax(220px, 1fr))" }}>
+              <div className="flex flex-wrap gap-3 pb-2 px-1">
                 {filtered.map((c) => (
                   <CampaignCard
                     key={c.id}
@@ -497,11 +497,11 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
               </div>
             )
           ) : layout === "columns" ? (
-            <div className="flex gap-3 items-start overflow-x-auto kanban-scrollbar pb-1">
+            <div className="flex gap-4 items-start overflow-x-auto kanban-scrollbar pb-3 px-1">
               {groups.map((g) => (
-                <div key={g.key} className="shrink-0 grow basis-[230px] min-w-[230px] max-w-[420px] flex flex-col gap-2">
+                <div key={g.key} className="shrink-0 w-[240px] flex flex-col gap-2">
                   <GroupHeader label={g.key} count={g.items.length} isBoardDark={isBoardDark} textColor={boardTextColor} />
-                  <div className="flex flex-col gap-3">
+                  <div className="flex flex-col gap-3 pb-2">
                     {g.items.map((c) => (
                       <CampaignCard
                         key={c.id}
@@ -517,23 +517,22 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
               ))}
             </div>
           ) : (
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-5 pb-2 px-1">
               {groups.map((g) => (
                 <div key={g.key} className="flex flex-col gap-2">
                   <GroupHeader label={g.key} count={g.items.length} isBoardDark={isBoardDark} textColor={boardTextColor} />
                   {g.items.length === 0 ? (
                     <GroupEmpty isBoardDark={isBoardDark} />
                   ) : (
-                    <div className="flex gap-3 overflow-x-auto kanban-scrollbar pb-1">
+                    <div className="flex gap-3 overflow-x-auto kanban-scrollbar pb-3">
                       {g.items.map((c) => (
-                        <div key={c.id} className="shrink-0 w-[230px]">
-                          <CampaignCard
-                            c={c}
-                            isDark={isBoardDark}
-                            accentColor={accentColor}
-                            onOpen={() => setOpenCampaignId(c.id)}
-                          />
-                        </div>
+                        <CampaignCard
+                          key={c.id}
+                          c={c}
+                          isDark={isBoardDark}
+                          accentColor={accentColor}
+                          onOpen={() => setOpenCampaignId(c.id)}
+                        />
                       ))}
                     </div>
                   )}
@@ -694,12 +693,12 @@ const CampaignCard = ({
   return (
     <button
       onClick={onOpen}
-      className={`nodrag nopan text-left rounded-2xl border p-3.5 transition-all hover:${
-        isDark ? "border-white/[0.08] hover:brightness-110" : "bg-white border-[#E8ECFE] hover:border-[#C7CFFD] "
+      className={`nodrag nopan flex flex-col shrink-0 w-[240px] text-left rounded-2xl border p-3.5 shadow-sm transition-all hover:${
+        isDark ? "border-white/[0.08] hover:brightness-110 hover:shadow-md" : "bg-white border-[#E8ECFE] hover:border-[#C7CFFD] hover:shadow-md"
       }`}
       style={{
         color: cardTextColor,
-        ...(isDark ? { backgroundColor: "#1C1C1E" } : {}),
+        backgroundColor: isDark ? "#1C1C1E" : "#ffffff",
       }}
     >
       {c.coverUrl && (
