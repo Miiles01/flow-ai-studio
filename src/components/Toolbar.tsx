@@ -178,7 +178,7 @@ const Toolbar = ({
         onMouseLeave={handleMouseLeave}
         initial={{ x: -40, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
-        className={`absolute inset-y-0 my-auto h-fit left-6 z-10 flex flex-col items-center gap-1.5 px-2 py-2.5 rounded-[28px] shadow-[0_8px_30px_rgb(0,0,0,0.06)] font-sans select-none origin-center overflow-hidden ${
+        className={`absolute inset-y-0 my-auto h-fit left-6 z-10 flex flex-col items-center gap-1.5 px-2 py-2.5 rounded-[28px] font-sans select-none origin-center overflow-hidden ${
           isDark
             ? "bg-black text-white ring-1 ring-white/10"
             : "bg-white text-black ring-1 ring-gray-200"
