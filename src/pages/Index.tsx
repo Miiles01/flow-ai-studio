@@ -2591,7 +2591,7 @@ const IndexContent = () => {
           className={`${isDark ? 'bg-[#0f0f11]' : 'bg-white border border-gray-200 '} ${interactionMode === "pan" ? "pan-mode" : "edit-mode"} ${isMultiSelection ? "multi-select-active" : ""}`}
           style={{ cursor: activeDrawShape ? "crosshair" : "inherit" }}
         >
-          <Background variant={BackgroundVariant.Dots} gap={32} size={1} color={isDark ? "#333333" : "#E5E7EB"} />
+          <Background variant={BackgroundVariant.Dots} gap={32} size={1.2} color={isDark ? "#4b4b4b" : "#D1D5DB"} />
           {!hideTools && <Controls position="bottom-left" showInteractive={false} />}
         </ReactFlow>
 
