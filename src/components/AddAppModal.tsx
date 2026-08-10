@@ -147,12 +147,13 @@ export default function AddAppModal({ open, onClose, onCreate, customApps, onTog
           >
             <button
               onClick={handleClose}
-              className={`absolute right-4 top-4 z-50 flex h-9 w-9 items-center justify-center transition-opacity opacity-70 hover:opacity-100 ${
-                isDark ? "text-white" : "text-black"
+              className={`absolute right-4 top-4 z-50 flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-colors text-sm font-medium ${
+                isDark ? "bg-white/10 hover:bg-white/20 text-white" : "bg-black/5 hover:bg-black/10 text-black"
               }`}
               aria-label="Cerrar"
             >
-              <X size={18} strokeWidth={1.5} />
+              <span>Cerrar</span>
+              <X size={14} />
             </button>
 
             {/* Left panel — info */}
@@ -203,14 +204,6 @@ export default function AddAppModal({ open, onClose, onCreate, customApps, onTog
                     <h3 className={`text-base font-normal ${isDark ? "text-white" : "text-black"}`}>
                       Conectadas
                     </h3>
-                    <button
-                      onClick={() => { resetForm(); setView("market"); }}
-                      className={`flex items-center gap-1.5 rounded-full px-3.5 py-2 text-xs font-medium transition-colors ${
-                        isDark ? "bg-white text-black hover:bg-white/90" : "bg-black text-white hover:bg-miiles-pink"
-                      }`}
-                    >
-                      <Plus size={14} strokeWidth={2} /> Agregar nuevo
-                    </button>
                   </div>
 
                   <div className="flex-1 min-h-0 overflow-y-auto px-3 pb-4 scrollbar-hide">
@@ -288,6 +281,16 @@ export default function AddAppModal({ open, onClose, onCreate, customApps, onTog
 
                     )}
                   </div>
+                  <div className="px-5 pb-5 pt-2">
+                    <button
+                      onClick={() => { resetForm(); setView("market"); }}
+                      className={`flex w-full items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-medium transition-colors ${
+                        isDark ? "bg-white text-black hover:bg-white/90" : "bg-black text-white hover:bg-miiles-pink"
+                      }`}
+                    >
+                      <Plus size={16} strokeWidth={2} /> Agregar nuevo
+                    </button>
+                  </div>
                 </div>
               ) : view === "market" ? (
                 <div className="flex flex-col h-full min-h-0">
@@ -300,16 +303,6 @@ export default function AddAppModal({ open, onClose, onCreate, customApps, onTog
                         Elige una app y completa tus datos.
                       </p>
                     </div>
-                    {customApps.length > 0 && (
-                      <button
-                        onClick={() => setView("list")}
-                        className={`rounded-full px-3.5 py-2 text-xs font-medium transition-colors ${
-                          isDark ? "bg-white/10 text-white hover:bg-white/15" : "bg-black/5 text-black hover:bg-black/10"
-                        }`}
-                      >
-                        Conectadas ({customApps.length})
-                      </button>
-                    )}
                   </div>
 
                   <div className="flex-1 min-h-0 overflow-y-auto px-4 pb-4 scrollbar-hide grid grid-cols-1 sm:grid-cols-2 gap-3 content-start">
