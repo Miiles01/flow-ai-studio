@@ -225,7 +225,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 4 }}
               transition={{ duration: 0.15 }}
-              className={`flex items-center gap-0.5 rounded-xl shadow-[0_4px_24px_rgba(0,0,0,0.03)] px-2 py-1.5 ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-gray-100/50'}`}
+              className={`flex items-center gap-0.5 rounded-xl px-2 py-1.5 ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-gray-100/50'}`}
             >
               {/* Shape Selector flyout */}
               <div className="flex items-center gap-0.5">
@@ -300,12 +300,12 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
 
                 {/* Fill Color Popover */}
                 {activePicker === "fill" && (
-                  <div className={`absolute bottom-full mb-2 left-0 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.03)] p-2.5 grid grid-cols-5 gap-1.5 z-30 w-[150px] ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-gray-100'}`}>
+                  <div className={`absolute bottom-full mb-2 left-0 rounded-xl p-2.5 grid grid-cols-5 gap-1.5 z-30 w-[150px] ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-gray-100'}`}>
                     {RAINBOW_COLORS.map((c) => (
                       <button
                         key={c.value}
                         onClick={() => { updateNodeData({ fillColor: c.value }); setActivePicker(null); }}
-                        className="w-6 h-6 rounded-full border border-gray-200/60 transition-transform hover:scale-110 flex items-center justify-center overflow-hidden relative shadow-sm cursor-pointer"
+                        className="w-6 h-6 rounded-full border border-gray-200/60 transition-transform hover:scale-110 flex items-center justify-center overflow-hidden relative cursor-pointer"
                         style={{ backgroundColor: c.value === "transparent" ? "white" : c.value }}
                         title={c.name}
                       >
@@ -317,12 +317,12 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
 
                 {/* Border Color Popover */}
                 {activePicker === "border" && (
-                  <div className={`absolute bottom-full mb-2 left-0 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.03)] p-2.5 grid grid-cols-5 gap-1.5 z-30 w-[150px] ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-gray-100'}`}>
+                  <div className={`absolute bottom-full mb-2 left-0 rounded-xl p-2.5 grid grid-cols-5 gap-1.5 z-30 w-[150px] ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-gray-100'}`}>
                     {RAINBOW_COLORS.map((c) => (
                       <button
                         key={c.value}
                         onClick={() => { updateNodeData({ strokeColor: c.value }); setActivePicker(null); }}
-                        className="w-6 h-6 rounded-full border border-gray-200/60 transition-transform hover:scale-110 flex items-center justify-center overflow-hidden relative shadow-sm cursor-pointer"
+                        className="w-6 h-6 rounded-full border border-gray-200/60 transition-transform hover:scale-110 flex items-center justify-center overflow-hidden relative cursor-pointer"
                         style={{ backgroundColor: c.value === "transparent" ? "white" : c.value }}
                         title={c.name}
                       >
@@ -334,7 +334,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
 
                 {/* Text Color Popover */}
                 {activePicker === "text" && (
-                  <div className={`absolute bottom-full mb-2 left-0 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.03)] p-2.5 flex gap-1.5 z-30 ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-gray-100'}`}>
+                  <div className={`absolute bottom-full mb-2 left-0 rounded-xl p-2.5 flex gap-1.5 z-30 ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-gray-100'}`}>
                     {TEXT_COLOR_PALETTE.map((c) => (
                       <button
                         key={c.value}

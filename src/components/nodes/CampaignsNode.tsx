@@ -310,7 +310,7 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 4 }}
               transition={{ duration: 0.15 }}
-              className={`flex items-center gap-1 px-2 py-1.5 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.08)] relative ${
+              className={`flex items-center gap-1 px-2 py-1.5 rounded-2xl relative ${
                 isDark ? "bg-[#1C1C1E] border border-white/10" : "bg-white border border-neutral-100"
               }`}
             >
@@ -417,7 +417,7 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
             )}
             <button
               onClick={addCampaign}
-              className="nodrag nopan shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-[12px] font-medium text-white transition-opacity hover:opacity-80 shadow-sm"
+              className="nodrag nopan shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-[12px] font-medium text-white transition-opacity hover:opacity-80 "
               style={{ backgroundColor: "#111827" }}
             >
               <Plus size={14} /> Nueva
@@ -615,7 +615,7 @@ const FilterSelect = ({
 
       {open && (
         <div
-          className={`absolute top-full mt-1.5 left-0 z-[60] min-w-[160px] rounded-xl p-1.5 shadow-[0_8px_28px_rgba(0,0,0,0.14)] border ${
+          className={`absolute top-full mt-1.5 left-0 z-[60] min-w-[160px] rounded-xl p-1.5 border ${
             isBoardDark ? "bg-[#1C1C1E] border-white/10" : "bg-white border-neutral-200"
           }`}
         >
@@ -694,8 +694,8 @@ const CampaignCard = ({
   return (
     <button
       onClick={onOpen}
-      className={`nodrag nopan text-left rounded-2xl border p-3.5 transition-all hover:shadow-md ${
-        isDark ? "border-white/[0.08] hover:brightness-110" : "bg-white border-[#E8ECFE] hover:border-[#C7CFFD] shadow-sm"
+      className={`nodrag nopan text-left rounded-2xl border p-3.5 transition-all hover:${
+        isDark ? "border-white/[0.08] hover:brightness-110" : "bg-white border-[#E8ECFE] hover:border-[#C7CFFD] "
       }`}
       style={{
         color: cardTextColor,
@@ -860,12 +860,8 @@ const CampaignEditorPopover = ({
     };
   }, [onClose]);
 
-  const panelCls = isDark
-    ? "bg-[#1C1C1E] border border-white/10 text-white"
-    : "bg-white border border-neutral-200 text-neutral-900";
-  const inputCls = isDark
-    ? "bg-white/5 border border-white/10 text-white placeholder:text-white/40"
-    : "bg-white border border-neutral-200 text-neutral-900 placeholder:text-neutral-400";
+  const panelCls = isDark ? "bg-[#1C1C1E] border border-white/10 text-white" : "bg-white border border-neutral-200 text-neutral-900";
+  const inputCls = isDark ? "bg-white/5 border border-white/10 text-white placeholder:text-white/40" : "bg-white border border-neutral-200 text-neutral-900 placeholder:text-neutral-400";
   const subtle = isDark ? "text-white/60" : "text-neutral-500";
   const softSurface = isDark ? "bg-white/5" : "bg-neutral-50";
 
@@ -931,7 +927,7 @@ const CampaignEditorPopover = ({
   const content = (
     <div
       ref={popoverRef}
-      className={`fixed z-[10000] rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] overflow-hidden flex flex-col ${panelCls}`}
+      className={`fixed z-[10000] rounded-2xl overflow-hidden flex flex-col ${panelCls}`}
       style={{
         top: pos.top,
         left: pos.left,
@@ -1008,7 +1004,7 @@ const CampaignEditorPopover = ({
               )}
             </button>
             {clientPickerOpen && (
-              <div className={`absolute top-full mt-1.5 left-0 right-0 z-50 rounded-xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] p-2 max-h-[280px] overflow-y-auto ${isDark ? "bg-[#1C1C1E] border border-white/10" : "bg-white border border-neutral-200"}`}>
+              <div className={`absolute top-full mt-1.5 left-0 right-0 z-50 rounded-xl p-2 max-h-[280px] overflow-y-auto ${isDark ? "bg-[#1C1C1E] border border-white/10" : "bg-white border border-neutral-200"}`}>
                 {clientOptions.length > 0 && (
                   <div className="mb-1 space-y-0.5">
                     {clientOptions.map((c) => (
@@ -1352,7 +1348,7 @@ const PickerPopover = ({
   isDark: boolean;
 }) => (
   <div
-    className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] p-2.5 grid grid-cols-5 gap-1.5 z-[1001] w-[150px] ${
+    className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl p-2.5 grid grid-cols-5 gap-1.5 z-[1001] w-[150px] ${
       isDark ? "bg-[#1C1C1E] border border-white/10" : "bg-white border border-neutral-100"
     }`}
   >
@@ -1360,7 +1356,7 @@ const PickerPopover = ({
       <button
         key={c.value}
         onClick={() => onPick(c.value)}
-        className="w-6 h-6 rounded-full border border-neutral-200/60 transition-transform hover:scale-110 relative overflow-hidden shadow-sm flex items-center justify-center"
+        className="w-6 h-6 rounded-full border border-neutral-200/60 transition-transform hover:scale-110 relative overflow-hidden flex items-center justify-center"
         style={{ backgroundColor: c.value === "transparent" ? "white" : c.value }}
         title={c.name}
       >

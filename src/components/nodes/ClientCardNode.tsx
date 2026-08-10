@@ -133,7 +133,7 @@ const ClientCardNode = ({ id, data, selected }: NodeProps) => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 4 }}
               transition={{ duration: 0.15 }}
-              className={`flex items-center gap-1 px-2 py-1.5 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.08)] relative ${
+              className={`flex items-center gap-1 px-2 py-1.5 rounded-2xl relative ${
                 isDark ? "bg-[#1C1C1E] border border-white/10" : "bg-white border border-neutral-100"
               }`}
             >
@@ -390,15 +390,9 @@ const ClientEditorPopover = ({
   const [newFieldLabel, setNewFieldLabel] = useState("");
   const [newFieldValue, setNewFieldValue] = useState("");
 
-  const panelCls = isDark
-    ? "bg-[#1C1C1E] border border-white/10 text-white"
-    : "bg-white border border-neutral-200 text-neutral-900";
-  const inputCls = isDark
-    ? "bg-white/5 border border-white/10 text-white placeholder:text-white/40"
-    : "bg-white border border-neutral-200 text-neutral-900 placeholder:text-neutral-400";
-  const ghostBtn = isDark
-    ? "border border-white/10 hover:bg-white/5 text-white/80"
-    : "border border-neutral-200 hover:bg-neutral-50 text-neutral-700";
+  const panelCls = isDark ? "bg-[#1C1C1E] border border-white/10 text-white" : "bg-white border border-neutral-200 text-neutral-900";
+  const inputCls = isDark ? "bg-white/5 border border-white/10 text-white placeholder:text-white/40" : "bg-white border border-neutral-200 text-neutral-900 placeholder:text-neutral-400";
+  const ghostBtn = isDark ? "border border-white/10 hover:bg-white/5 text-white/80" : "border border-neutral-200 hover:bg-neutral-50 text-neutral-700";
 
   const addTag = (label: string, color: string) => {
     const clean = label.trim().slice(0, 30);
@@ -438,7 +432,7 @@ const ClientEditorPopover = ({
   return createPortal(
     <div
       ref={popoverRef}
-      className={`fixed z-[10000] w-[300px] max-h-[440px] overflow-y-auto editor-scrollbar rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] ${panelCls}`}
+      className={`fixed z-[10000] w-[300px] max-h-[440px] overflow-y-auto editor-scrollbar rounded-2xl ${panelCls}`}
       style={{ top: pos.top, left: pos.left, visibility: pos.top === -999 ? "hidden" : "visible" }}
       onMouseDown={(e) => e.stopPropagation()}
       onClick={(e) => e.stopPropagation()}
@@ -572,16 +566,16 @@ const ClientEditorPopover = ({
             <div className="relative flex items-center justify-center">
               <button
                 onClick={() => setShowTagPicker(!showTagPicker)}
-                className="w-5 h-5 rounded-full border shadow-sm"
+                className="w-5 h-5 rounded-full border "
                 style={{ backgroundColor: newTagColor, borderColor: isDark ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.15)" }}
               />
               {showTagPicker && (
-                <div className={`absolute bottom-full mb-2 -left-12 w-[120px] rounded-xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] p-2.5 grid grid-cols-4 gap-1.5 z-50 ${isDark ? "bg-[#1C1C1E] border border-white/10" : "bg-white border border-neutral-100"}`}>
+                <div className={`absolute bottom-full mb-2 -left-12 w-[120px] rounded-xl p-2.5 grid grid-cols-4 gap-1.5 z-50 ${isDark ? "bg-[#1C1C1E] border border-white/10" : "bg-white border border-neutral-100"}`}>
                   {TAG_COLORS.map((c) => (
                     <button
                       key={c}
                       onClick={() => { setNewTagColor(c); setShowTagPicker(false); }}
-                      className={`w-6 h-6 rounded-full mx-auto border border-neutral-200/60 shadow-sm ${newTagColor === c ? "ring-2 ring-offset-1" : "hover:scale-110"}`}
+                      className={`w-6 h-6 rounded-full mx-auto border border-neutral-200/60 ${newTagColor === c ? "ring-2 ring-offset-1" : "hover:scale-110"}`}
                       style={{ backgroundColor: c, ["--tw-ring-color" as any]: c, ["--tw-ring-offset-color" as any]: isDark ? "#2C2C2E" : "#fff" }}
                     />
                   ))}
@@ -695,12 +689,12 @@ const Section = ({ label, icon, children }: { label: string; icon?: React.ReactN
 );
 
 const PickerPopover = ({ colors, onPick, isDark }: { colors: { name: string; value: string }[]; onPick: (v: string) => void; isDark: boolean }) => (
-  <div className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px] ${isDark ? "bg-[#1C1C1E] border border-white/10" : "bg-white border border-neutral-100"}`}>
+  <div className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px] ${isDark ? "bg-[#1C1C1E] border border-white/10" : "bg-white border border-neutral-100"}`}>
     {colors.map((c) => (
       <button
         key={c.value}
         onClick={() => onPick(c.value)}
-        className="w-6 h-6 rounded-full border border-neutral-200/60 transition-transform hover:scale-110 relative overflow-hidden shadow-sm"
+        className="w-6 h-6 rounded-full border border-neutral-200/60 transition-transform hover:scale-110 relative overflow-hidden "
         style={{ backgroundColor: c.value === "transparent" ? "white" : c.value }}
         title={c.name}
       >

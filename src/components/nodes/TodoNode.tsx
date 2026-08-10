@@ -307,7 +307,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
                 transition={{ type: "spring", damping: 20, stiffness: 300 }}
-                className={`flex items-center gap-1.5 rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] px-3 py-1.5 shrink-0 border ${isDark ? 'bg-[#1C1C1E] border-white/10' : 'bg-white border-[#E5E7EB]'}`}
+                className={`flex items-center gap-1.5 rounded-xl px-3 py-1.5 shrink-0 border ${isDark ? 'bg-[#1C1C1E] border-white/10' : 'bg-white border-[#E5E7EB]'}`}
               >
                 {/* Show / Hide Title — H1 */}
                 <button
@@ -400,7 +400,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                     </div>
                   </button>
                   {activePicker === "bg" && (
-                    <div className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.12)] p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px] ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-gray-100'}`}>
+                    <div className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px] ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-gray-100'}`}>
                       {RAINBOW_COLORS.map((c) => (
                         <button
                           key={c.value}
@@ -408,7 +408,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                             updateNodeData({ backgroundColor: c.value });
                             setActivePicker(null);
                           }}
-                          className="w-6 h-6 rounded-full border border-gray-200/60 transition-transform hover:scale-110 flex items-center justify-center overflow-hidden relative shadow-sm cursor-pointer"
+                          className="w-6 h-6 rounded-full border border-gray-200/60 transition-transform hover:scale-110 flex items-center justify-center overflow-hidden relative cursor-pointer"
                           style={{ backgroundColor: c.value === "transparent" ? "white" : c.value }}
                           title={c.name}
                         >

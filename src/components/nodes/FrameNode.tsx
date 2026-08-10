@@ -108,7 +108,7 @@ const FrameNode = ({ id, data, selected }: NodeProps) => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 4 }}
               transition={{ duration: 0.15 }}
-              className={`flex items-center gap-1 px-2 py-1.5 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.03)] relative ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-[#F3F4F6]'}`}
+              className={`flex items-center gap-1 px-2 py-1.5 rounded-2xl relative ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-[#F3F4F6]'}`}
             >
               {/* Fill Color Picker */}
               <button
@@ -146,7 +146,7 @@ const FrameNode = ({ id, data, selected }: NodeProps) => {
 
               {/* Fill Color Popover */}
               {activePicker === "fill" && (
-                <div className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.03)] p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px] ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-gray-100'}`}>
+                <div className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px] ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-gray-100'}`}>
                   {RAINBOW_COLORS.map((c) => (
                     <button
                       key={c.value}
@@ -154,7 +154,7 @@ const FrameNode = ({ id, data, selected }: NodeProps) => {
                         updateNodeData({ fillColor: c.value });
                         setActivePicker(null);
                       }}
-                      className="w-6 h-6 rounded-full border border-gray-200/60 transition-transform hover:scale-110 flex items-center justify-center overflow-hidden relative shadow-sm cursor-pointer"
+                      className="w-6 h-6 rounded-full border border-gray-200/60 transition-transform hover:scale-110 flex items-center justify-center overflow-hidden relative cursor-pointer"
                       style={{
                         backgroundColor: c.value === "transparent" ? "white" : c.value,
                       }}
@@ -170,7 +170,7 @@ const FrameNode = ({ id, data, selected }: NodeProps) => {
 
               {/* Border Color Popover */}
               {activePicker === "border" && (
-                <div className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.03)] p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px] ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-gray-100'}`}>
+                <div className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px] ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-gray-100'}`}>
                   {RAINBOW_COLORS.map((c) => (
                     <button
                       key={c.value}
@@ -178,7 +178,7 @@ const FrameNode = ({ id, data, selected }: NodeProps) => {
                         updateNodeData({ strokeColor: c.value });
                         setActivePicker(null);
                       }}
-                      className="w-6 h-6 rounded-full border border-gray-200/60 transition-transform hover:scale-110 flex items-center justify-center overflow-hidden relative shadow-sm cursor-pointer"
+                      className="w-6 h-6 rounded-full border border-gray-200/60 transition-transform hover:scale-110 flex items-center justify-center overflow-hidden relative cursor-pointer"
                       style={{
                         backgroundColor: c.value === "transparent" ? "white" : c.value,
                       }}
@@ -208,9 +208,7 @@ const FrameNode = ({ id, data, selected }: NodeProps) => {
                   )
                 }
                 className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${
-                  isDark
-                    ? 'hover:bg-red-500/20 text-[#9CA3AF] hover:text-[#EF4444]'
-                    : 'hover:bg-[#FEE2E2] text-[#9CA3AF] hover:text-[#EF4444]'
+                  isDark ? 'hover:bg-red-500/20 text-[#9CA3AF] hover:text-[#EF4444]' : 'hover:bg-[#FEE2E2] text-[#9CA3AF] hover:text-[#EF4444]'
                 }`}
                 title="Eliminar sección"
               >

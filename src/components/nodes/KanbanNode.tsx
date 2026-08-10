@@ -313,7 +313,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
     });
   };
 
-  const cardBg = isDark ? "hover:brightness-110" : "bg-white hover:bg-neutral-50";
+  const cardBg = isDark ? "hover:brightness-110" : "bg-white hover:bg-neutral-50 border border-gray-200 ";
   const cardBgStyle = isDark ? { backgroundColor: "#1C1C1E" } : {};
   const columnBg = isBoardDark ? "bg-white/[0.08]" : isDark ? "bg-white/[0.02]" : "bg-black/[0.025]";
   const borderCls = isBoardDark ? "border-white/15" : isDark ? "border-white/10" : "border-black/10";
@@ -344,7 +344,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 4 }}
               transition={{ duration: 0.15 }}
-              className={`flex items-center gap-1 px-2 py-1.5 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.08)] relative ${
+              className={`flex items-center gap-1 px-2 py-1.5 rounded-2xl relative ${
                 isDark ? "bg-[#1C1C1E] border border-white/10" : "bg-white border border-neutral-100"
               }`}
             >
@@ -658,7 +658,7 @@ const CardView = ({
         if ((e.target as HTMLElement).closest("input,textarea,button,a,select")) return;
         openEditor();
       }}
-      className={`nodrag nopan group rounded border ${borderCls} ${cardBg} p-2.5 cursor-pointer transition-all shadow-sm ${
+      className={`nodrag nopan group rounded border ${borderCls} ${cardBg} p-2.5 cursor-pointer transition-all ${
         isOpen || isTodoDropTarget ? "ring-2" : ""
       }`}
       style={{
@@ -744,9 +744,7 @@ const CardView = ({
                     className={`w-4 h-4 rounded-full flex items-center justify-center border-[1.5px] border-solid transition-all shrink-0 duration-200 mt-[2px] ${
                       t.completed
                         ? ""
-                        : isDark
-                        ? "bg-white/[0.05] border-white/15 hover:border-white/30 hover:bg-white/[0.08]"
-                        : "bg-black/[0.03] border-black/15 hover:border-black/30 hover:bg-black/[0.05]"
+                        : isDark ? "bg-white/[0.05] border-white/15 hover:border-white/30 hover:bg-white/[0.08]" : "bg-black/[0.03] border-black/15 hover:border-black/30 hover:bg-black/[0.05]"
                     }`}
                     style={{
                       borderColor: t.completed
@@ -960,21 +958,15 @@ const CardEditorPopover = ({
 
 
 
-  const panelCls = isDark
-    ? "bg-[#1C1C1E] border border-white/10 text-white"
-    : "bg-white border border-neutral-200 text-neutral-900";
-  const inputCls = isDark
-    ? "bg-white/5 border border-white/10 text-white placeholder:text-white/40"
-    : "bg-white border border-neutral-200 text-neutral-900 placeholder:text-neutral-400";
-  const ghostBtn = isDark
-    ? "border border-white/10 hover:bg-white/5 text-white/80"
-    : "border border-neutral-200 hover:bg-neutral-50 text-neutral-700";
+  const panelCls = isDark ? "bg-[#1C1C1E] border border-white/10 text-white" : "bg-white border border-neutral-200 text-neutral-900";
+  const inputCls = isDark ? "bg-white/5 border border-white/10 text-white placeholder:text-white/40" : "bg-white border border-neutral-200 text-neutral-900 placeholder:text-neutral-400";
+  const ghostBtn = isDark ? "border border-white/10 hover:bg-white/5 text-white/80" : "border border-neutral-200 hover:bg-neutral-50 text-neutral-700";
 
   return createPortal(
     <>
       <div
         ref={popoverRef}
-        className={`fixed z-[10000] w-[280px] max-h-[340px] overflow-y-auto editor-scrollbar rounded-2xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] ${panelCls}`}
+        className={`fixed z-[10000] w-[280px] max-h-[340px] overflow-y-auto editor-scrollbar rounded-2xl ${panelCls}`}
         style={{ top: pos.top, left: pos.left, visibility: pos.top === -999 ? "hidden" : "visible" }}
         onMouseDown={(e) => e.stopPropagation()}
         onClick={(e) => e.stopPropagation()}
@@ -1103,9 +1095,7 @@ const CardEditorPopover = ({
                     className={`flex-1 text-[11px] py-1 rounded-md transition-colors ${
                       active
                         ? "text-white"
-                        : isDark
-                          ? "border border-white/10 text-white/70 hover:bg-white/5"
-                          : "border border-neutral-200 text-neutral-600 hover:bg-neutral-50"
+                        : isDark ? "border border-white/10 text-white/70 hover:bg-white/5" : "border border-neutral-200 text-neutral-600 hover:bg-neutral-50"
                     }`}
                     style={active ? { backgroundColor: accentColor } : undefined}
                   >
@@ -1164,12 +1154,12 @@ const CardEditorPopover = ({
           <div className="relative flex items-center justify-center">
             <button
               onClick={() => setShowTagPicker(!showTagPicker)}
-              className="w-5 h-5 rounded-full border shadow-sm transition-transform hover:scale-105"
+              className="w-5 h-5 rounded-full border transition-transform hover:scale-105"
               style={{ backgroundColor: newTagColor, borderColor: isDark ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.15)" }}
               title="Seleccionar color"
             />
             {showTagPicker && (
-              <div className={`absolute bottom-full mb-2 -left-12 w-[120px] rounded-xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] p-2.5 grid grid-cols-4 gap-1.5 z-50 ${isDark ? "bg-[#1C1C1E] border border-white/10" : "bg-white border border-neutral-100"}`}>
+              <div className={`absolute bottom-full mb-2 -left-12 w-[120px] rounded-xl p-2.5 grid grid-cols-4 gap-1.5 z-50 ${isDark ? "bg-[#1C1C1E] border border-white/10" : "bg-white border border-neutral-100"}`}>
                 {TAG_COLORS.map((c) => (
                   <button
                     key={c}
@@ -1177,7 +1167,7 @@ const CardEditorPopover = ({
                       setNewTagColor(c);
                       setShowTagPicker(false);
                     }}
-                    className={`w-6 h-6 rounded-full mx-auto border border-neutral-200/60 shadow-sm transition-transform ${newTagColor === c ? "ring-2 ring-offset-1" : "hover:scale-110"}`}
+                    className={`w-6 h-6 rounded-full mx-auto border border-neutral-200/60 transition-transform ${newTagColor === c ? "ring-2 ring-offset-1" : "hover:scale-110"}`}
                     style={{
                       backgroundColor: c,
                       ["--tw-ring-color" as any]: c,
@@ -1266,9 +1256,7 @@ const CardEditorPopover = ({
                   className={`w-4 h-4 shrink-0 rounded-full flex items-center justify-center border-[1.5px] border-solid transition-all duration-200 ${
                     t.completed
                       ? ""
-                      : isDark
-                      ? "bg-white/[0.05] border-white/15 hover:border-white/30 hover:bg-white/[0.08]"
-                      : "bg-black/[0.03] border-black/15 hover:border-black/30 hover:bg-black/[0.05]"
+                      : isDark ? "bg-white/[0.05] border-white/15 hover:border-white/30 hover:bg-white/[0.08]" : "bg-black/[0.03] border-black/15 hover:border-black/30 hover:bg-black/[0.05]"
                   }`}
                   style={{
                     borderColor: t.completed
@@ -1387,12 +1375,8 @@ const ExpandableRow = ({
       onClick={() => { if (!isActive) onActivate(); }}
       className={`w-full flex items-center justify-between gap-2 px-2 py-1.5 rounded-md text-[12px] font-medium transition-colors ${
         isActive
-          ? isDark
-            ? "bg-white/10 text-white"
-            : "bg-neutral-100 text-neutral-900"
-          : isDark
-            ? "text-white/70 hover:bg-white/5 cursor-pointer"
-            : "text-neutral-600 hover:bg-neutral-50 cursor-pointer"
+          ? isDark ? "bg-white/10 text-white" : "bg-neutral-100 text-neutral-900"
+          : isDark ? "text-white/70 hover:bg-white/5 cursor-pointer" : "text-neutral-600 hover:bg-neutral-50 cursor-pointer"
       }`}
     >
       <div className="flex items-center gap-1.5">
@@ -1414,7 +1398,7 @@ const PickerPopover = ({
   isDark: boolean;
 }) => (
   <div
-    className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl shadow-[0_4px_24px_rgba(0,0,0,0.06)] p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px] ${
+    className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px] ${
       isDark ? "bg-[#1C1C1E] border border-white/10" : "bg-white border border-neutral-100"
     }`}
   >
@@ -1422,7 +1406,7 @@ const PickerPopover = ({
       <button
         key={c.value}
         onClick={() => onPick(c.value)}
-        className="w-6 h-6 rounded-full border border-neutral-200/60 transition-transform hover:scale-110 relative overflow-hidden shadow-sm"
+        className="w-6 h-6 rounded-full border border-neutral-200/60 transition-transform hover:scale-110 relative overflow-hidden "
         style={{ backgroundColor: c.value === "transparent" ? "white" : c.value }}
         title={c.name}
       >

@@ -118,7 +118,7 @@ const ImageNode = ({ id, data, selected }: NodeProps) => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 4 }}
               transition={{ duration: 0.15 }}
-              className={`flex items-center gap-1 px-2 py-1.5 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.03)] border ${isDark ? 'bg-[#1C1C1E] border-white/10' : 'bg-white border-[#F3F4F6]'}`}
+              className={`flex items-center gap-1 px-2 py-1.5 rounded-2xl border ${isDark ? 'bg-[#1C1C1E] border-white/10' : 'bg-white border-[#F3F4F6]'}`}
             >
               {/* URL button */}
               <button
@@ -126,7 +126,7 @@ const ImageNode = ({ id, data, selected }: NodeProps) => {
                 className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${
                   imageUrl
                     ? isDark ? "hover:bg-white/10 text-zinc-400" : "hover:bg-[#F3F4F6] text-[#6B7280]"
-                    : isDark ? "bg-indigo-600/30 text-indigo-400 border border-indigo-500/20" : "bg-[#EEF2FF] text-[#4059F1]"
+                    : isDark ? "bg-indigo-600/30 text-indigo-400 border border-indigo-500/20" : "bg-[#EEF2FF] text-[#4059F1] border border-gray-200 "
                 }`}
                 title="Pegar URL de imagen"
               >
@@ -155,9 +155,7 @@ const ImageNode = ({ id, data, selected }: NodeProps) => {
               <button
                 onClick={handleDelete}
                 className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${
-                  isDark
-                    ? 'hover:bg-red-500/20 text-[#9CA3AF] hover:text-red-400'
-                    : 'hover:bg-[#FEE2E2] text-[#9CA3AF] hover:text-[#EF4444]'
+                  isDark ? 'hover:bg-red-500/20 text-[#9CA3AF] hover:text-red-400' : 'hover:bg-[#FEE2E2] text-[#9CA3AF] hover:text-[#EF4444]'
                 }`}
                 title="Eliminar imagen"
               >
@@ -177,7 +175,7 @@ const ImageNode = ({ id, data, selected }: NodeProps) => {
             animate={{ opacity: 1, y: 0, x: "-50%" }}
             exit={{ opacity: 0, y: -4, x: "-50%" }}
             transition={{ duration: 0.12 }}
-            className={`absolute top-[calc(100%+10px)] left-1/2 z-50 flex items-center gap-2 rounded-2xl shadow-[0_8px_32px_rgba(0,0,0,0.03)] px-3 py-2.5 border ${isDark ? 'bg-[#1C1C1E] border-white/10' : 'bg-white border-[#F3F4F6]'}`}
+            className={`absolute top-[calc(100%+10px)] left-1/2 z-50 flex items-center gap-2 rounded-2xl px-3 py-2.5 border ${isDark ? 'bg-[#1C1C1E] border-white/10' : 'bg-white border-[#F3F4F6]'}`}
             style={{ minWidth: 300 }}
             onMouseDown={(e) => e.stopPropagation()}
           >
@@ -220,13 +218,11 @@ const ImageNode = ({ id, data, selected }: NodeProps) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className={`w-full h-full flex flex-col items-center justify-center gap-3 cursor-pointer border-2 border-dashed rounded-lg transition-all ${
-              isDark
-                ? 'bg-white/5 border-white/10 hover:border-white/20 hover:bg-white/10'
-                : 'bg-[#F9FAFB] border-[#E5E7EB] hover:border-[#4059F1]/40 hover:bg-[#EEF2FF]/20'
+              isDark ? 'bg-white/5 border-white/10 hover:border-white/20 hover:bg-white/10' : 'bg-[#F9FAFB] border-[#E5E7EB] hover:border-[#4059F1]/40 hover:bg-[#EEF2FF]/20'
             }`}
             onClick={handleToggleInput}
           >
-            <div className={`w-10 h-10 rounded-xl shadow-sm flex items-center justify-center ${isDark ? 'bg-white/5' : 'bg-white'}`}>
+            <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isDark ? 'bg-white/5' : 'bg-white border border-gray-200 '}`}>
               <ImageIcon size={18} className="text-[#9CA3AF]" strokeWidth={1.5} />
             </div>
             <div className="flex flex-col items-center gap-1">
@@ -243,9 +239,7 @@ const ImageNode = ({ id, data, selected }: NodeProps) => {
               <motion.div
                 className="absolute inset-0"
                 style={{
-                  background: isDark
-                    ? "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.05) 50%, transparent 100%)"
-                    : "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.6) 50%, transparent 100%)",
+                  background: isDark ? "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.05) 50%, transparent 100%)" : "linear-gradient(90deg, transparent 0%, rgba(255,255,255,0.6) 50%, transparent 100%)",
                   backgroundSize: "200% 100%",
                 }}
                 animate={{ backgroundPositionX: ["200%", "-200%"] }}
@@ -261,13 +255,11 @@ const ImageNode = ({ id, data, selected }: NodeProps) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             className={`w-full h-full flex flex-col items-center justify-center gap-3 rounded-lg cursor-pointer ${
-              isDark
-                ? 'bg-red-950/20 border border-red-900/35'
-                : 'bg-[#FEF2F2] border border-[#FECACA]'
+              isDark ? 'bg-red-950/20 border border-red-900/35' : 'bg-[#FEF2F2] border border-[#FECACA]'
             }`}
             onClick={handleToggleInput}
           >
-            <div className={`w-10 h-10 rounded-xl shadow-sm flex items-center justify-center ${isDark ? 'bg-white/5' : 'bg-white'}`}>
+            <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${isDark ? 'bg-white/5' : 'bg-white border border-gray-200 '}`}>
               <AlertTriangle size={18} className="text-[#EF4444]" strokeWidth={1.5} />
             </div>
             <div className="flex flex-col items-center gap-1">

@@ -334,7 +334,7 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
             <motion.div
               initial={{ opacity: 0, y: 4 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: 4 }}
               transition={{ duration: 0.15 }}
-              className={`flex items-center gap-1 px-2 py-1.5 rounded-2xl shadow-[0_8px_30px_rgba(0,0,0,0.08)] ${
+              className={`flex items-center gap-1 px-2 py-1.5 rounded-2xl ${
                 isDark ? "bg-[#1C1C1E] border border-white/10" : "bg-white border border-neutral-100"
               }`}
             >
@@ -626,7 +626,7 @@ const SourcesPicker = ({
   onAll: () => void;
   isDark: boolean;
 }) => (
-  <div className={`nodrag nopan absolute top-full mt-2 left-0 z-50 rounded-xl shadow-2xl p-2 w-[260px] max-h-[280px] overflow-y-auto ${isDark ? "bg-[#1C1C1E] border border-white/10 text-white" : "bg-white border border-neutral-200 text-neutral-900"}`}>
+  <div className={`nodrag nopan absolute top-full mt-2 left-0 z-50 rounded-xl p-2 w-[260px] max-h-[280px] overflow-y-auto ${isDark ? "bg-[#1C1C1E] border border-white/10 text-white" : "bg-white border border-neutral-200 text-neutral-900"}`}>
     <div className={`text-[10.5px] uppercase tracking-wide px-2 py-1 ${isDark ? "text-white/40" : "text-neutral-400"}`}>Widgets</div>
     <button
       onClick={onAll}
@@ -666,7 +666,7 @@ const MonthPicker = ({ value, onPick, isDark }: { value?: string; onPick: (v: st
   const now = new Date();
   const [year, setYear] = useState(parseKey(value)?.y ?? now.getFullYear());
   return (
-    <div className={`nodrag nopan absolute top-full mt-2 left-0 z-50 rounded-xl shadow-2xl p-3 w-[220px] ${isDark ? "bg-[#1C1C1E] border border-white/10" : "bg-white border border-neutral-200"}`}>
+    <div className={`nodrag nopan absolute top-full mt-2 left-0 z-50 rounded-xl p-3 w-[220px] ${isDark ? "bg-[#1C1C1E] border border-white/10" : "bg-white border border-neutral-200"}`}>
       <div className="flex items-center justify-between mb-2">
         <button onClick={() => setYear((y) => y - 1)} className={`px-2 py-1 rounded-md text-[12px] ${isDark ? "hover:bg-white/10" : "hover:bg-neutral-100"}`}>‹</button>
         <div className="text-[13px] font-semibold">{year}</div>
@@ -696,12 +696,12 @@ const MonthPicker = ({ value, onPick, isDark }: { value?: string; onPick: (v: st
 };
 
 const PickerPopover = ({ colors, onPick, isDark }: { colors: { name: string; value: string }[]; onPick: (v: string) => void; isDark: boolean }) => (
-  <div className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl shadow-2xl p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px] ${isDark ? "bg-[#1C1C1E] border border-white/10" : "bg-white border border-neutral-100"}`}>
+  <div className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px] ${isDark ? "bg-[#1C1C1E] border border-white/10" : "bg-white border border-neutral-100"}`}>
     {colors.map((c) => (
       <button
         key={c.value}
         onClick={() => onPick(c.value)}
-        className="w-6 h-6 rounded-full border border-neutral-200/60 transition-transform hover:scale-110 relative overflow-hidden shadow-sm"
+        className="w-6 h-6 rounded-full border border-neutral-200/60 transition-transform hover:scale-110 relative overflow-hidden "
         style={{ backgroundColor: c.value === "transparent" ? "white" : c.value }}
         title={c.name}
       >

@@ -2262,7 +2262,7 @@ const IndexContent = () => {
 
         {/* Left: back + name + settings */}
         <div className="flex items-center gap-2 pointer-events-auto">
-          <div className={`flex items-center gap-1 pl-2 pr-4 py-1.5 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.06)] min-w-0 ${isDark ? 'bg-black text-white ring-1 ring-white/10' : 'bg-white text-black'}`}>
+          <div className={`flex items-center gap-1 pl-2 pr-4 py-1.5 rounded-full min-w-0 ${isDark ? 'bg-black text-white ring-1 ring-white/10' : 'bg-white text-black ring-1 ring-gray-200 '}`}>
             <button
               onClick={() => navigate("/boards")}
               className={`p-2 rounded-full transition-colors ${isDark ? 'hover:bg-white/10 text-[#9CA3AF] hover:text-white' : 'hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black'}`}
@@ -2284,7 +2284,7 @@ const IndexContent = () => {
             <button
               ref={settingsButtonRef}
               onClick={() => setSettingsOpen(!settingsOpen)}
-              className={`w-9 h-9 flex items-center justify-center rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-all ${isDark ? 'bg-black text-white ring-1 ring-white/10 hover:bg-white/10' : 'bg-white hover:bg-[#F3F4F6]'} ${settingsOpen ? (isDark ? "bg-white/10" : "bg-[#F3F4F6]") : ""}`}
+              className={`w-9 h-9 flex items-center justify-center rounded-full transition-all ${isDark ? 'bg-black text-white ring-1 ring-white/10 hover:bg-white/10' : 'bg-white hover:bg-[#F3F4F6] ring-1 ring-gray-200 '} ${settingsOpen ? (isDark ? "bg-white/10" : "bg-[#F3F4F6]") : ""}`}
               aria-label="Configuración del tablero"
             >
               <Settings2 size={16} strokeWidth={1.5} className={isDark ? 'text-[#9CA3AF]' : 'text-[#6B7280]'} />
@@ -2297,7 +2297,7 @@ const IndexContent = () => {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -6, scale: 0.97 }}
                   transition={{ duration: 0.15, ease: "easeOut" }}
-                  className={`absolute top-[calc(100%+8px)] left-0 w-52 rounded-2xl shadow-[0_12px_40px_rgb(0,0,0,0.10)] overflow-hidden z-50 ${isDark ? 'bg-[#1C1C1E] border border-white/10 text-white' : 'bg-white text-black'}`}
+                  className={`absolute top-[calc(100%+8px)] left-0 w-52 rounded-2xl overflow-hidden z-50 ${isDark ? 'bg-[#1C1C1E] border border-white/10 text-white' : 'bg-white text-black border border-gray-200 '}`}
                 >
                   <div className="px-3 py-2.5">
                     <p className="text-[10px] text-[#9CA3AF] font-light tracking-widest mb-1 px-2">Ajustes</p>
@@ -2375,7 +2375,7 @@ const IndexContent = () => {
                     }
                     setShareOpen(true);
                   }}
-                  className={`w-9 h-9 flex items-center justify-center rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.06)] transition-all ${isDark ? 'bg-black text-white ring-1 ring-white/10 hover:bg-white/10' : 'bg-white hover:bg-[#F3F4F6]'}`}
+                  className={`w-9 h-9 flex items-center justify-center rounded-full transition-all ${isDark ? 'bg-black text-white ring-1 ring-white/10 hover:bg-white/10' : 'bg-white hover:bg-[#F3F4F6] ring-1 ring-gray-200 '}`}
                   aria-label="Compartir tablero"
                 >
                   <Share2 size={16} strokeWidth={1.5} className={isDark ? 'text-[#9CA3AF]' : 'text-[#6B7280]'} />
@@ -2410,7 +2410,7 @@ const IndexContent = () => {
                 animate={{ opacity: 1, scale: 1, y: 0 }}
                 exit={{ opacity: 0, scale: 0.96, y: 12 }}
                 transition={{ duration: 0.2, ease: [0.25, 0.1, 0.25, 1] }}
-                className={`relative z-10 w-full max-w-sm rounded-3xl shadow-2xl p-6 ${isDark ? 'bg-[#1C1C1E] border border-white/10 text-white' : 'bg-white text-black'}`}
+                className={`relative z-10 w-full max-w-sm rounded-3xl p-6 ${isDark ? 'bg-[#1C1C1E] border border-white/10 text-white' : 'bg-white text-black border border-gray-200 '}`}
               >
                 <h3 className={`text-base font-normal ${isDark ? 'text-white' : 'text-black'}`}>
                   ¿Cómo quieres llamar a este nuevo tablero?
@@ -2460,7 +2460,7 @@ const IndexContent = () => {
           {!hideTools && (
             <div className="flex items-center gap-2 z-50">
               {!canEdit && (
-                <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-light pointer-events-auto ${isDark ? 'bg-black text-white/80 ring-1 ring-white/10' : 'bg-white text-[#6B7280] shadow-[0_8px_30px_rgb(0,0,0,0.06)]'}`}>
+                <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-light pointer-events-auto ${isDark ? 'bg-black text-white/80 ring-1 ring-white/10' : 'bg-white text-[#6B7280] ring-1 ring-gray-200 '}`}>
                   <EyeIcon size={12} strokeWidth={1.5} />
                   Solo lectura
                 </div>
@@ -2473,7 +2473,7 @@ const IndexContent = () => {
 
           {/* History controls + task panel toggle */}
           {!hideTools && (
-            <div className={`flex items-center gap-1 pointer-events-auto px-1.5 py-1.5 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.06)] ${isDark ? 'bg-black text-white ring-1 ring-white/10' : 'bg-white'}`}>
+            <div className={`flex items-center gap-1 pointer-events-auto px-1.5 py-1.5 rounded-full ${isDark ? 'bg-black text-white ring-1 ring-white/10' : 'bg-white ring-1 ring-gray-200 '}`}>
               <Tooltip>
                 <TooltipTrigger asChild>
                   <button
@@ -2547,7 +2547,7 @@ const IndexContent = () => {
       {!hideTools && (
         <div className="md:hidden absolute bottom-5 right-4 flex flex-col items-end gap-2 pointer-events-none z-50">
           {!canEdit && (
-            <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-light pointer-events-auto ${isDark ? 'bg-black text-white/80 ring-1 ring-white/10' : 'bg-white text-[#6B7280] shadow-[0_8px_30px_rgb(0,0,0,0.06)]'}`}>
+            <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-light pointer-events-auto ${isDark ? 'bg-black text-white/80 ring-1 ring-white/10' : 'bg-white text-[#6B7280] ring-1 ring-gray-200 '}`}>
               <EyeIcon size={12} strokeWidth={1.5} />
               Lectura
             </div>
@@ -2588,7 +2588,7 @@ const IndexContent = () => {
           onInit={setReactFlowInstance}
           proOptions={{ hideAttribution: true }}
           colorMode={isDark ? "dark" : "light"}
-          className={`${isDark ? 'bg-[#0f0f11]' : 'bg-white'} ${interactionMode === "pan" ? "pan-mode" : "edit-mode"} ${isMultiSelection ? "multi-select-active" : ""}`}
+          className={`${isDark ? 'bg-[#0f0f11]' : 'bg-white border border-gray-200 '} ${interactionMode === "pan" ? "pan-mode" : "edit-mode"} ${isMultiSelection ? "multi-select-active" : ""}`}
           style={{ cursor: activeDrawShape ? "crosshair" : "inherit" }}
         >
           <Background variant={BackgroundVariant.Dots} gap={32} size={1} color={isDark ? "#333333" : "#E5E7EB"} />
@@ -2708,7 +2708,7 @@ const IndexContent = () => {
                   transform: "translateX(-50%)",
                   zIndex: 9999,
                 }}
-                className={`flex items-center gap-1 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] px-2 py-1.5 pointer-events-auto ${isDark ? 'bg-[#1C1C1E] border border-white/10 text-white' : 'bg-white border border-gray-100/50 text-black'}`}
+                className={`flex items-center gap-1 rounded-xl px-2 py-1.5 pointer-events-auto ${isDark ? 'bg-[#1C1C1E] border border-white/10 text-white' : 'bg-white border border-gray-100/50 text-black'}`}
               >
                 <span className="text-[11px] font-medium text-gray-400 px-1.5 border-r border-gray-100 mr-1 select-none">
                   {selectedNodes.length} seleccionados
@@ -2724,7 +2724,7 @@ const IndexContent = () => {
                     <Palette size={13} />
                   </button>
                   {groupPicker === "fill" && (
-                    <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 p-2 grid grid-cols-5 gap-1 z-[10000] w-[140px]">
+                    <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white rounded-xl border border-gray-100 p-2 grid grid-cols-5 gap-1 z-[10000] w-[140px]">
                       {RAINBOW_COLORS.map((c) => (
                         <button
                           key={c.value}
@@ -2752,7 +2752,7 @@ const IndexContent = () => {
                     <Square size={12} />
                   </button>
                   {groupPicker === "border" && (
-                    <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 p-2 grid grid-cols-5 gap-1 z-[10000] w-[140px]">
+                    <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white rounded-xl border border-gray-100 p-2 grid grid-cols-5 gap-1 z-[10000] w-[140px]">
                       {RAINBOW_COLORS.map((c) => (
                         <button
                           key={c.value}
@@ -2780,7 +2780,7 @@ const IndexContent = () => {
                     <Baseline size={13} />
                   </button>
                   {groupPicker === "text" && (
-                    <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 p-2 grid grid-cols-5 gap-1 z-[10000] w-[140px]">
+                    <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white rounded-xl border border-gray-100 p-2 grid grid-cols-5 gap-1 z-[10000] w-[140px]">
                       {RAINBOW_COLORS.map((c) => (
                         <button
                           key={c.value}
@@ -2892,7 +2892,7 @@ const IndexContent = () => {
             exit={{ opacity: 0, y: 50 }}
             className="absolute bottom-6 left-4 right-4 z-[9999] flex justify-center pointer-events-none"
           >
-            <div className="bg-black text-white text-[13px] font-normal px-5 py-3 rounded-2xl shadow-xl max-w-sm text-center pointer-events-auto">
+            <div className="bg-black text-white text-[13px] font-normal px-5 py-3 rounded-2xl max-w-sm text-center pointer-events-auto">
               Te recomendamos usar Miiles desde un ordenador o tablet para una mejor experiencia.
             </div>
           </motion.div>
@@ -2955,9 +2955,7 @@ const IndexContent = () => {
               <button
                 onClick={() => setTaskPanelOpen(false)}
                 className={`w-7 h-7 flex items-center justify-center rounded-full transition-colors ${
-                  isDark
-                    ? 'hover:bg-white/10 text-[#9CA3AF] hover:text-white'
-                    : 'hover:bg-[#F3F4F6] text-[#9CA3AF] hover:text-black'
+                  isDark ? 'hover:bg-white/10 text-[#9CA3AF] hover:text-white' : 'hover:bg-[#F3F4F6] text-[#9CA3AF] hover:text-black'
                 }`}
               >
                 <PanelRight size={14} strokeWidth={1.5} />
@@ -3370,12 +3368,10 @@ const IndexContent = () => {
                             setCopiedAll(true);
                             setTimeout(() => setCopiedAll(false), 1600);
                           }}
-                          className={`w-fit h-11 flex items-center justify-center gap-3 px-4 rounded-full transition-all duration-200 shrink-0 shadow-lg border ${
+                          className={`w-fit h-11 flex items-center justify-center gap-3 px-4 rounded-full transition-all duration-200 shrink-0 border ${
                             copiedAll
                               ? (isDark ? "bg-white text-black border-white" : "bg-black text-white border-black")
-                              : isDark
-                              ? "bg-black text-white border-white/20 hover:bg-neutral-900"
-                              : "bg-white text-[#4B4F63] border-gray-200 hover:bg-[#F9FAFB]"
+                              : isDark ? "bg-black text-white border-white/20 hover:bg-neutral-900" : "bg-white text-[#4B4F63] border-gray-200 hover:bg-[#F9FAFB]"
                           }`}
                         >
                           {copiedAll ? <Check size={14} strokeWidth={2.5} /> : <Copy size={14} strokeWidth={2} />}
@@ -3509,12 +3505,10 @@ const IndexContent = () => {
                             setDownloadedAll(true);
                             setTimeout(() => setDownloadedAll(false), 1600);
                           }}
-                          className={`w-11 h-11 flex items-center justify-center rounded-full transition-all duration-200 shrink-0 shadow-lg border ${
+                          className={`w-11 h-11 flex items-center justify-center rounded-full transition-all duration-200 shrink-0 border ${
                             downloadedAll
                               ? "bg-black text-white border-black"
-                              : isDark
-                              ? "bg-black text-white border-white/20 hover:bg-neutral-900"
-                              : "bg-white text-[#4B4F63] border-gray-200 hover:bg-[#F9FAFB]"
+                              : isDark ? "bg-black text-white border-white/20 hover:bg-neutral-900" : "bg-white text-[#4B4F63] border-gray-200 hover:bg-[#F9FAFB]"
                           }`}
                         >
                           {downloadedAll ? <Check size={14} strokeWidth={2.5} /> : <Download size={14} strokeWidth={2} />}

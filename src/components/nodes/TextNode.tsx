@@ -53,7 +53,7 @@ function LinkPopover({
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, y: 4 }}
       transition={{ duration: 0.12 }}
-      className={`absolute -bottom-11 left-0 flex items-center gap-1.5 rounded-xl shadow-[0_4px_20px_rgba(0,0,0,0.03)] px-2.5 py-1.5 z-30 pointer-events-auto ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white'}`}
+      className={`absolute -bottom-11 left-0 flex items-center gap-1.5 rounded-xl px-2.5 py-1.5 z-30 pointer-events-auto ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-gray-200 '}`}
       style={{ whiteSpace: "nowrap" }}
       onMouseDown={(e) => e.stopPropagation()}
     >
@@ -325,7 +325,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
               exit={{ opacity: 0, y: 4 }}
               transition={{ duration: 0.15 }}
             >
-              <div className={`flex items-center gap-0.5 rounded-xl shadow-[0_4px_24px_rgba(0,0,0,0.03)] px-2 py-1.5 ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white'}`}>
+              <div className={`flex items-center gap-0.5 rounded-xl px-2 py-1.5 ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-gray-200 '}`}>
                 {/* Font size */}
                 <button
                   onClick={() => setFontSize((f) => Math.max(10, f - 1))}
@@ -399,7 +399,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                   onClick={() => setAlign("left")}
                   className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors ${
                     align === "left" 
-                      ? (isDark ? "bg-white text-black" : "bg-black text-white") 
+                      ? (isDark ? "bg-white text-black border border-gray-200" : "bg-black text-white") 
                       : (isDark ? "hover:bg-white/10 text-[#9CA3AF] hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280]")
                   }`}
                   title="Alinear izquierda"
@@ -412,7 +412,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                   onClick={() => setAlign("center")}
                   className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors ${
                     align === "center" 
-                      ? (isDark ? "bg-white text-black" : "bg-black text-white") 
+                      ? (isDark ? "bg-white text-black border border-gray-200" : "bg-black text-white") 
                       : (isDark ? "hover:bg-white/10 text-[#9CA3AF] hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280]")
                   }`}
                   title="Centrar"
@@ -425,7 +425,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                   onClick={() => setAlign("right")}
                   className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors ${
                     align === "right" 
-                      ? (isDark ? "bg-white text-black" : "bg-black text-white") 
+                      ? (isDark ? "bg-white text-black border border-gray-200" : "bg-black text-white") 
                       : (isDark ? "hover:bg-white/10 text-[#9CA3AF] hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280]")
                   }`}
                   title="Alinear derecha"
@@ -440,7 +440,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                   onMouseDown={(e) => { e.preventDefault(); openLinkInput(); }}
                   className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors ${
                     activeLink 
-                      ? (isDark ? "bg-white text-black" : "bg-[#EEF2FF] text-[#4059F1]") 
+                      ? (isDark ? "bg-white text-black border border-gray-200" : "bg-[#EEF2FF] text-[#4059F1]") 
                       : (isDark ? "hover:bg-white/10 text-[#9CA3AF] hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280]")
                   }`}
                   title="Link (Ctrl+K)"
@@ -471,7 +471,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                     </div>
                   </button>
                   {activePicker === "bg" && (
-                    <div className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.03)] p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px] ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-gray-100'}`}>
+                    <div className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px] ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-gray-100'}`}>
                       {RAINBOW_COLORS.map((c) => (
                         <button
                           key={c.value}
@@ -479,7 +479,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                             commitData({ backgroundColor: c.value });
                             setActivePicker(null);
                           }}
-                          className="w-6 h-6 rounded-full border border-gray-200/60 transition-transform hover:scale-110 flex items-center justify-center overflow-hidden relative shadow-sm cursor-pointer"
+                          className="w-6 h-6 rounded-full border border-gray-200/60 transition-transform hover:scale-110 flex items-center justify-center overflow-hidden relative cursor-pointer"
                           style={{ backgroundColor: c.value === "transparent" ? "white" : c.value }}
                           title={c.name}
                         >
@@ -508,7 +508,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                     <Baseline size={13} style={{ color: textColor }} className="stroke-[2.5]" />
                   </button>
                   {activePicker === "text" && (
-                    <div className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl shadow-[0_8px_30px_rgba(0,0,0,0.03)] p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px] ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-gray-100'}`}>
+                    <div className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px] ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-gray-100'}`}>
                       {RAINBOW_COLORS.map((c) => (
                         <button
                           key={c.value}
@@ -516,7 +516,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                             commitData({ textColor: c.value });
                             setActivePicker(null);
                           }}
-                          className="w-6 h-6 rounded-full border border-gray-200/60 transition-transform hover:scale-110 flex items-center justify-center overflow-hidden relative shadow-sm cursor-pointer"
+                          className="w-6 h-6 rounded-full border border-gray-200/60 transition-transform hover:scale-110 flex items-center justify-center overflow-hidden relative cursor-pointer"
                           style={{ backgroundColor: c.value === "transparent" ? "white" : c.value }}
                           title={c.name}
                         >
@@ -550,7 +550,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -4 }}
                     transition={{ duration: 0.12 }}
-                    className={`absolute top-[calc(100%+6px)] left-1/2 -translate-x-1/2 flex items-center gap-2 rounded-xl shadow-[0_8px_32px_rgba(0,0,0,0.03)] px-3 py-2 z-40 ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white'}`}
+                    className={`absolute top-[calc(100%+6px)] left-1/2 -translate-x-1/2 flex items-center gap-2 rounded-xl px-3 py-2 z-40 ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-gray-200 '}`}
                     style={{ minWidth: 280 }}
                     onMouseDown={(e) => e.stopPropagation()}
                   >
