@@ -2297,7 +2297,7 @@ const IndexContent = () => {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -6, scale: 0.97 }}
                   transition={{ duration: 0.15, ease: "easeOut" }}
-                  className={`absolute top-[calc(100%+8px)] left-0 w-52 rounded-2xl overflow-hidden z-50 ${isDark ? 'bg-[#1C1C1E] border border-white/10 text-white' : 'bg-white text-black border border-gray-200 '}`}
+                  className={`absolute top-[calc(100%+8px)] left-0 w-52 rounded-2xl overflow-hidden z-50 shadow-2xl ${isDark ? 'bg-[#1C1C1E] border border-white/10 text-white' : 'bg-white text-black border border-gray-200 '}`}
                 >
                   <div className="px-3 py-2.5">
                     <p className="text-[10px] text-[#9CA3AF] font-light tracking-widest mb-1 px-2">Ajustes</p>

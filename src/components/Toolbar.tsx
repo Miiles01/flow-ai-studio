@@ -178,7 +178,7 @@ const Toolbar = ({
         onMouseLeave={handleMouseLeave}
         initial={{ x: -40, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
-        className={`absolute inset-y-0 my-auto h-fit left-6 z-10 flex flex-col items-center gap-1.5 px-2 py-2.5 rounded-[28px] font-sans select-none origin-center overflow-hidden ${
+        className={`absolute inset-y-0 my-auto h-fit left-6 z-10 flex flex-col items-center gap-1.5 px-2 py-2.5 rounded-[28px] shadow-[0_8px_30px_rgb(0,0,0,0.06)] font-sans select-none origin-center overflow-hidden ${
           isDark
             ? "bg-black text-white ring-1 ring-white/10"
             : "bg-white text-black ring-1 ring-gray-200"
@@ -501,8 +501,8 @@ const Toolbar = ({
                 transition={{ duration: 0.14, ease: "easeOut" }}
                 onMouseEnter={openFlyout}
                 onMouseLeave={closeFlyout}
-                className={`fixed w-[128px] rounded-2xl p-2.5 z-[9999] select-none ${
-                  isDark ? "bg-black ring-1 ring-white/10 text-white " : "bg-white border border-[#E5E7EB] text-black "
+                className={`fixed w-[128px] rounded-2xl p-2.5 z-[9999] select-none shadow-[0_16px_48px_rgba(0,0,0,0.12)] ${
+                  isDark ? "bg-black ring-1 ring-white/10 text-white shadow-[0_16px_48px_rgba(0,0,0,0.4)]" : "bg-white border border-[#E5E7EB] text-black "
                 }`}
                 style={{
                   top: `${flyoutPos.top}px`,
