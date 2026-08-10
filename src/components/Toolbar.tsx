@@ -178,10 +178,10 @@ const Toolbar = ({
         onMouseLeave={handleMouseLeave}
         initial={{ x: -40, opacity: 0 }}
         animate={{ x: 0, opacity: 1 }}
-        className={`absolute inset-y-0 my-auto h-fit left-6 z-10 flex flex-col items-center gap-1.5 px-2 py-2.5 rounded-[28px] shadow-[0_8px_30px_rgb(0,0,0,0.06)] font-sans select-none origin-center overflow-hidden ${
+        className={`absolute inset-y-0 my-auto h-fit left-6 z-10 flex flex-col items-center gap-1.5 px-2 py-2.5 rounded-[28px] font-sans select-none origin-center overflow-hidden ${
           isDark
             ? "bg-black text-white ring-1 ring-white/10"
-            : "bg-white text-black"
+            : "bg-white text-black ring-1 ring-gray-200"
         }`}
       >
         {/* 1. Seleccionar */}
@@ -195,8 +195,8 @@ const Toolbar = ({
               className={`w-10 h-10 flex items-center justify-center rounded-full transition-all duration-200 shrink-0 ${
                 interactionMode === "edit" && activeDrawShape === null
                   ? isDark
-                    ? "bg-white text-black shadow-sm scale-100"
-                    : "bg-black text-white shadow-sm scale-100"
+                    ? "bg-white text-black scale-100"
+                    : "bg-black text-white scale-100"
                   : isDark
                   ? "hover:bg-white/10 text-[#9CA3AF] hover:text-white"
                   : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
@@ -225,8 +225,8 @@ const Toolbar = ({
               className={`w-10 h-10 flex items-center justify-center rounded-full transition-all duration-200 shrink-0 ${
                 interactionMode === "pan"
                   ? isDark
-                    ? "bg-white text-black shadow-sm scale-100"
-                    : "bg-black text-white shadow-sm scale-100"
+                    ? "bg-white text-black scale-100"
+                    : "bg-black text-white scale-100"
                   : isDark
                   ? "hover:bg-white/10 text-[#9CA3AF] hover:text-white"
                   : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
@@ -272,8 +272,8 @@ const Toolbar = ({
                       className={`w-10 h-10 flex items-center justify-center rounded-full transition-all duration-200 ${
                         isDrawingToolActive
                           ? isDark
-                            ? "bg-white text-black shadow-sm"
-                            : "bg-black text-white shadow-sm"
+                            ? "bg-white text-black "
+                            : "bg-black text-white "
                           : isDark
                           ? "hover:bg-white/10 text-[#9CA3AF] hover:text-white"
                           : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
@@ -328,8 +328,8 @@ const Toolbar = ({
                           activeDrawShape !== "image" &&
                           activeDrawShape !== "frame"
                             ? isDark
-                              ? "bg-white text-black shadow-sm hover:bg-white/90"
-                              : "bg-black text-white shadow-sm hover:bg-black/90"
+                              ? "bg-white text-black hover:bg-white/90"
+                              : "bg-black text-white hover:bg-black/90"
                             : isDark
                             ? "hover:bg-white/10 text-[#9CA3AF] hover:text-white"
                             : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
@@ -363,8 +363,8 @@ const Toolbar = ({
                       className={`w-10 h-10 flex items-center justify-center rounded-full transition-all duration-200 shrink-0 ${
                         activeDrawShape === "text"
                           ? isDark
-                            ? "bg-white text-black shadow-sm"
-                            : "bg-black text-white shadow-sm"
+                            ? "bg-white text-black "
+                            : "bg-black text-white "
                           : isDark
                           ? "hover:bg-white/10 text-[#9CA3AF] hover:text-white"
                           : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
@@ -397,8 +397,8 @@ const Toolbar = ({
                       className={`w-10 h-10 flex items-center justify-center rounded-full transition-all duration-200 shrink-0 ${
                         activeDrawShape === "todo"
                           ? isDark
-                            ? "bg-white text-black shadow-sm"
-                            : "bg-black text-white shadow-sm"
+                            ? "bg-white text-black "
+                            : "bg-black text-white "
                           : isDark
                           ? "hover:bg-white/10 text-[#9CA3AF] hover:text-white"
                           : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
@@ -431,8 +431,8 @@ const Toolbar = ({
                       className={`w-10 h-10 flex items-center justify-center rounded-full transition-all duration-200 shrink-0 ${
                         activeDrawShape === "image"
                           ? isDark
-                            ? "bg-white text-black shadow-sm"
-                            : "bg-black text-white shadow-sm"
+                            ? "bg-white text-black "
+                            : "bg-black text-white "
                           : isDark
                           ? "hover:bg-white/10 text-[#9CA3AF] hover:text-white"
                           : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
@@ -465,8 +465,8 @@ const Toolbar = ({
                       className={`w-10 h-10 flex items-center justify-center rounded-full transition-all duration-200 shrink-0 ${
                         activeDrawShape === "frame"
                           ? isDark
-                            ? "bg-white text-black shadow-sm"
-                            : "bg-black text-white shadow-sm"
+                            ? "bg-white text-black "
+                            : "bg-black text-white "
                           : isDark
                           ? "hover:bg-white/10 text-[#9CA3AF] hover:text-white"
                           : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
@@ -501,8 +501,8 @@ const Toolbar = ({
                 transition={{ duration: 0.14, ease: "easeOut" }}
                 onMouseEnter={openFlyout}
                 onMouseLeave={closeFlyout}
-                className={`fixed w-[128px] rounded-2xl p-2.5 shadow-[0_16px_48px_rgba(0,0,0,0.12)] z-[9999] select-none ${
-                  isDark ? "bg-black ring-1 ring-white/10 text-white shadow-[0_16px_48px_rgba(0,0,0,0.4)]" : "bg-white border border-[#E5E7EB] text-black shadow-[0_16px_48px_rgba(0,0,0,0.08)]"
+                className={`fixed w-[128px] rounded-2xl p-2.5 z-[9999] select-none ${
+                  isDark ? "bg-black ring-1 ring-white/10 text-white " : "bg-white border border-[#E5E7EB] text-black "
                 }`}
                 style={{
                   top: `${flyoutPos.top}px`,
@@ -524,8 +524,8 @@ const Toolbar = ({
                       className={`w-11 h-11 flex items-center justify-center rounded-xl transition-all ${
                         selectedShape === shape.id
                           ? isDark
-                            ? "bg-white text-black shadow-sm"
-                            : "bg-black text-white shadow-sm"
+                            ? "bg-white text-black "
+                            : "bg-black text-white "
                           : isDark
                           ? "text-[#9CA3AF] hover:bg-white/10 hover:text-white"
                           : "text-[#6B7280] hover:bg-[#F3F4F6] hover:text-black"
