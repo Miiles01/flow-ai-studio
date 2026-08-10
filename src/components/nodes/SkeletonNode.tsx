@@ -44,7 +44,7 @@ const SkeletonNode = ({
     <motion.div
       animate={{ width, height }}
       transition={{ type: "spring", stiffness: 100, damping: 20 }}
-      className={`relative rounded-2xl flex items-center justify-center p-5 shadow-[0_8px_30px_rgba(0,0,0,0.03)] border overflow-hidden transition-colors duration-300
+      className={`relative rounded-2xl flex items-center justify-center p-5 shadow-sm border overflow-hidden transition-colors duration-300
         ${
           isDark
             ? "bg-[#1C1C1E] border-white/10 text-white"

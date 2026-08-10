@@ -330,7 +330,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
       <AnimatePresence>
         {isSingleSelected && (
           <div
-            className="absolute -top-14 left-1/2 z-[1000] pointer-events-auto node-floating-toolbar shadow-xl"
+            className="absolute -top-14 left-1/2 z-[1000] pointer-events-auto node-floating-toolbar shadow-sm"
             style={{
               transform: `translate(-50%, 0) scale(${1 / zoom})`,
               transformOrigin: "bottom center",
@@ -1159,7 +1159,7 @@ const CardEditorPopover = ({
               title="Seleccionar color"
             />
             {showTagPicker && (
-              <div className={`absolute bottom-full mb-2 -left-12 w-[120px] rounded-xl p-2.5 grid grid-cols-4 gap-1.5 z-50 ${isDark ? "bg-[#1C1C1E] border border-white/10" : "bg-white border border-neutral-100"} shadow-xl`}>
+              <div className={`absolute bottom-full mb-2 -left-12 w-[120px] rounded-xl p-2.5 grid grid-cols-4 gap-1.5 z-50 ${isDark ? "bg-[#1C1C1E] border border-white/10" : "bg-white border border-neutral-100"} shadow-sm`}>
                 {TAG_COLORS.map((c) => (
                   <button
                     key={c}
@@ -1400,7 +1400,7 @@ const PickerPopover = ({
   <div
     className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px] ${
       isDark ? "bg-[#1C1C1E] border border-white/10" : "bg-white border border-neutral-100"
-    } shadow-xl`}
+    } shadow-sm`}
   >
     {colors.map((c) => (
       <button

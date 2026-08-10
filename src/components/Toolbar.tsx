@@ -501,8 +501,8 @@ const Toolbar = ({
                 transition={{ duration: 0.14, ease: "easeOut" }}
                 onMouseEnter={openFlyout}
                 onMouseLeave={closeFlyout}
-                className={`fixed w-[128px] rounded-2xl p-2.5 z-[9999] select-none shadow-[0_16px_48px_rgba(0,0,0,0.12)] ${
-                  isDark ? "bg-black ring-1 ring-white/10 text-white shadow-[0_16px_48px_rgba(0,0,0,0.4)]" : "bg-white border border-[#E5E7EB] text-black "
+                className={`fixed w-[128px] rounded-2xl p-2.5 z-[9999] select-none shadow-sm ${
+                  isDark ? "bg-black ring-1 ring-white/10 text-white shadow-sm" : "bg-white border border-[#E5E7EB] text-black "
                 }`}
                 style={{
                   top: `${flyoutPos.top}px`,

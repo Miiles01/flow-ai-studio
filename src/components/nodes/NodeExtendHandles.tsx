@@ -59,7 +59,7 @@ const NodeExtendHandles = ({ nodeId }: { nodeId: string }) => {
                     requestExtend(nodeId, side);
                   }}
                   style={{ transform: `scale(${scale})`, transformOrigin }}
-                  className={`flex items-center justify-center w-7 h-7 rounded-lg shadow-md transition-colors ${marginCls} ${
+                  className={`flex items-center justify-center w-7 h-7 rounded-lg shadow-sm transition-colors ${marginCls} ${
                     isActive
                       ? "bg-[#4059F1] ring-2 ring-[#4059F1]/30"
                       : isDark

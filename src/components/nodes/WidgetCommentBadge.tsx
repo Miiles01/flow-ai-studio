@@ -62,7 +62,7 @@ const WidgetCommentBadge = ({ comments, onChange }: Props) => {
       <Popover open={open} onOpenChange={onOpenChange}>
         <PopoverTrigger asChild>
           <button
-            className={`relative w-8 h-8 rounded-full flex items-center justify-center border-2 border-white dark:border-[#1C1C1E] shadow-lg transition-colors ${
+            className={`relative w-8 h-8 rounded-full flex items-center justify-center border-2 border-white dark:border-[#1C1C1E] shadow-sm transition-colors ${
               isWorking || hasUnread ? "bg-black" : "bg-miiles-gray-400"
             }`}
             title={isWorking ? "Trabajando en tu tarea…" : "Comentarios"}
@@ -86,7 +86,7 @@ const WidgetCommentBadge = ({ comments, onChange }: Props) => {
           side="right"
           align="start"
           sideOffset={12}
-          className="w-[340px] max-h-[440px] rounded-2xl bg-white dark:bg-[#1C1C1E] shadow-[0_4px_24px_rgba(0,0,0,0.06)] border border-black/5 dark:border-white/10 flex flex-col overflow-hidden p-0 !z-[9999]"
+          className="w-[340px] max-h-[440px] rounded-2xl bg-white dark:bg-[#1C1C1E] shadow-sm border border-black/5 dark:border-white/10 flex flex-col overflow-hidden p-0 !z-[9999]"
         >
           <div className="flex items-center justify-between px-4 py-3.5 border-b border-black/5 dark:border-white/10 shrink-0">
             <div className="flex items-center gap-2">
