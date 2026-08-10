@@ -446,11 +446,11 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
             <div
               className="flex items-center gap-2 px-3 py-1.5 rounded-full border transition-colors flex-1 min-w-[150px]"
               style={{
-                backgroundColor: isBoardDark ? "rgba(255,255,255,0.10)" : "rgba(0,0,0,0.06)",
-                borderColor: isBoardDark ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.10)",
+                backgroundColor: isBoardDark ? "rgba(255,255,255,0.10)" : "#ffffff",
+                borderColor: isBoardDark ? "rgba(255,255,255,0.15)" : "#E5E7EB",
               }}
             >
-              <Search size={13} style={{ color: boardTextColor, opacity: 0.6 }} />
+              <Search size={13} style={{ color: isBoardDark ? "#ffffff" : "#000000", opacity: 0.6 }} />
               <input
                 value={filter}
                 onChange={(e) => setFilter(e.target.value)}
@@ -458,7 +458,7 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
                 className={`nodrag nopan flex-1 min-w-0 bg-transparent border-none outline-none text-[12.5px] ${
                   isBoardDark ? "placeholder:text-white/55" : "placeholder:text-black/35"
                 }`}
-                style={{ color: boardTextColor }}
+                style={{ color: isBoardDark ? "#ffffff" : "#000000" }}
               />
             </div>
           </div>
@@ -603,9 +603,9 @@ const FilterSelect = ({
           disabled ? "opacity-40 cursor-not-allowed" : "hover:brightness-110"
         }`}
         style={{
-          color: textColor,
-          backgroundColor: isBoardDark ? "rgba(255,255,255,0.10)" : "rgba(0,0,0,0.06)",
-          borderColor: isBoardDark ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.10)",
+          color: isBoardDark ? "#ffffff" : "#000000",
+          backgroundColor: isBoardDark ? "rgba(255,255,255,0.10)" : "#ffffff",
+          borderColor: isBoardDark ? "rgba(255,255,255,0.15)" : "#E5E7EB",
         }}
       >
         <span className="opacity-60">{label}:</span>
@@ -615,7 +615,7 @@ const FilterSelect = ({
 
       {open && (
         <div
-          className={`absolute top-full mt-1.5 left-0 z-[60] min-w-[160px] rounded-xl p-1.5 border ${
+          className={`absolute top-full mt-1.5 left-0 z-[60] min-w-[160px] rounded-md p-1.5 border shadow-sm ${
             isBoardDark ? "bg-[#1C1C1E] border-white/10" : "bg-white border-neutral-200"
           }`}
         >
