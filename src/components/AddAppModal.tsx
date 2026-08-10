@@ -7,6 +7,7 @@ import { toast } from "sonner";
 import { useTheme } from "@/contexts/ThemeContext";
 import type { ConnectorType, NewUserApp, UserApp } from "@/hooks/useUserApps";
 import { CATALOG, type CatalogApp, logoForApp } from "@/lib/appCatalog";
+import { Switch } from "@/components/ui/switch";
 
 const schema = z.object({
   name: z.string().trim().min(1, "Ponle un nombre a tu app").max(60, "Máximo 60 caracteres"),
@@ -266,7 +267,6 @@ export default function AddAppModal({ open, onClose, onCreate, customApps, onTog
                               {app.enabled ? "Conectada · " : ""}{app.connector_type === "mcp" ? "Servidor MCP" : "API"}
                             </p>
                           </div>
-
                           <button
                             onClick={() => onDelete(app.id)}
                             className={`opacity-0 group-hover:opacity-100 transition-opacity ${
@@ -276,19 +276,12 @@ export default function AddAppModal({ open, onClose, onCreate, customApps, onTog
                           >
                             <Trash2 size={15} strokeWidth={1.5} />
                           </button>
-                          <button
-                            onClick={() => onToggle(app.id, !app.enabled)}
-                            className={`relative h-5 w-9 shrink-0 rounded-full transition-colors ${
-                              app.enabled ? "bg-miiles-blue" : isDark ? "bg-white/15" : "bg-black/15"
-                            }`}
+                          <Switch
+                            checked={app.enabled}
+                            onCheckedChange={() => onToggle(app.id, !app.enabled)}
                             aria-label="Activar"
-                          >
-                            <span
-                              className={`absolute top-0.5 h-4 w-4 rounded-full bg-white transition-transform ${
-                                app.enabled ? "translate-x-4" : "translate-x-0.5"
-                              }`}
-                            />
-                          </button>
+                            className="data-[state=checked]:bg-miiles-blue"
+                          />
                         </div>
                         );
                       })
