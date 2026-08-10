@@ -98,7 +98,7 @@ const EmbedNode = ({ id, data, selected }: NodeProps) => {
       <AnimatePresence>
         {isSingleSelected && (
           <div
-            className="absolute -top-14 left-1/2 z-[1000] pointer-events-auto node-floating-toolbar"
+            className="absolute -top-14 left-1/2 z-[1000] pointer-events-auto node-floating-toolbar shadow-xl"
             style={{
               transform: `translate(-50%, 0) scale(${1 / zoom})`,
               transformOrigin: "bottom center",
@@ -165,7 +165,7 @@ const EmbedNode = ({ id, data, selected }: NodeProps) => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -4 }}
             transition={{ duration: 0.12 }}
-            className={`absolute top-[calc(100%+10px)] left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 rounded-2xl px-3 py-2.5 border ${isDark ? 'bg-[#1C1C1E] border-white/10' : 'bg-white border-[#F3F4F6]'}`}
+            className={`absolute top-[calc(100%+10px)] left-1/2 -translate-x-1/2 z-50 flex items-center gap-2 rounded-2xl px-3 py-2.5 border ${isDark ? 'bg-[#1C1C1E] border-white/10' : 'bg-white border-[#F3F4F6]'} shadow-xl`}
             style={{ minWidth: 300 }}
             onMouseDown={(e) => e.stopPropagation()}
           >

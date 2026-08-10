@@ -293,7 +293,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
         <AnimatePresence>
           {isSingleSelected && (
             <div
-              className="absolute -top-16 left-1/2 -translate-x-1/2 z-[1000] pointer-events-auto node-floating-toolbar"
+              className="absolute -top-16 left-1/2 -translate-x-1/2 z-[1000] pointer-events-auto node-floating-toolbar shadow-xl"
               style={{
                 whiteSpace: "nowrap",
                 transform: `translate(-50%, 0) scale(${1 / zoom})`,
@@ -400,7 +400,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                     </div>
                   </button>
                   {activePicker === "bg" && (
-                    <div className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px] ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-gray-100'}`}>
+                    <div className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px] ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-gray-100'} shadow-xl`}>
                       {RAINBOW_COLORS.map((c) => (
                         <button
                           key={c.value}

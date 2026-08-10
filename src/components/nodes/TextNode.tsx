@@ -310,7 +310,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
       <AnimatePresence>
         {isSingleSelected && (
           <div
-            className="absolute -top-16 left-1/2 -translate-x-1/2 z-20 pointer-events-auto node-floating-toolbar"
+            className="absolute -top-16 left-1/2 -translate-x-1/2 z-20 pointer-events-auto node-floating-toolbar shadow-xl"
             style={{
               whiteSpace: "nowrap",
               transform: `translate(-50%, 0) scale(${1 / zoom})`,
@@ -471,7 +471,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                     </div>
                   </button>
                   {activePicker === "bg" && (
-                    <div className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px] ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-gray-100'}`}>
+                    <div className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px] ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-gray-100'} shadow-xl`}>
                       {RAINBOW_COLORS.map((c) => (
                         <button
                           key={c.value}
@@ -508,7 +508,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                     <Baseline size={13} style={{ color: textColor }} className="stroke-[2.5]" />
                   </button>
                   {activePicker === "text" && (
-                    <div className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px] ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-gray-100'}`}>
+                    <div className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px] ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-gray-100'} shadow-xl`}>
                       {RAINBOW_COLORS.map((c) => (
                         <button
                           key={c.value}
@@ -550,7 +550,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: -4 }}
                     transition={{ duration: 0.12 }}
-                    className={`absolute top-[calc(100%+6px)] left-1/2 -translate-x-1/2 flex items-center gap-2 rounded-xl px-3 py-2 z-40 ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-gray-200 '}`}
+                    className={`absolute top-[calc(100%+6px)] left-1/2 -translate-x-1/2 flex items-center gap-2 rounded-xl px-3 py-2 z-40 ${isDark ? 'bg-[#1C1C1E] border border-white/10' : 'bg-white border border-gray-200 '} shadow-xl`}
                     style={{ minWidth: 280 }}
                     onMouseDown={(e) => e.stopPropagation()}
                   >

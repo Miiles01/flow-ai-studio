@@ -300,7 +300,7 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
       <AnimatePresence>
         {isSingleSelected && !openCampaign && (
           <div
-            className="absolute -top-14 left-1/2 z-[1000] pointer-events-auto node-floating-toolbar"
+            className="absolute -top-14 left-1/2 z-[1000] pointer-events-auto node-floating-toolbar shadow-xl"
             style={{ transform: `translate(-50%, 0) scale(${1 / zoom})`, transformOrigin: "bottom center", whiteSpace: "nowrap" }}
             onMouseDown={(e) => e.stopPropagation()}
             onClick={(e) => e.stopPropagation()}
@@ -1350,7 +1350,7 @@ const PickerPopover = ({
   <div
     className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl p-2.5 grid grid-cols-5 gap-1.5 z-[1001] w-[150px] ${
       isDark ? "bg-[#1C1C1E] border border-white/10" : "bg-white border border-neutral-100"
-    }`}
+    } shadow-xl`}
   >
     {colors.map((c) => (
       <button

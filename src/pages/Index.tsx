@@ -2708,7 +2708,7 @@ const IndexContent = () => {
                   transform: "translateX(-50%)",
                   zIndex: 9999,
                 }}
-                className={`flex items-center gap-1 rounded-xl px-2 py-1.5 pointer-events-auto ${isDark ? 'bg-[#1C1C1E] border border-white/10 text-white' : 'bg-white border border-gray-100/50 text-black'}`}
+                className={`flex items-center gap-1 rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] px-2 py-1.5 pointer-events-auto ${isDark ? 'bg-[#1C1C1E] border border-white/10 text-white' : 'bg-white border border-gray-100/50 text-black'}`}
               >
                 <span className="text-[11px] font-medium text-gray-400 px-1.5 border-r border-gray-100 mr-1 select-none">
                   {selectedNodes.length} seleccionados
@@ -2724,7 +2724,7 @@ const IndexContent = () => {
                     <Palette size={13} />
                   </button>
                   {groupPicker === "fill" && (
-                    <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white rounded-xl border border-gray-100 p-2 grid grid-cols-5 gap-1 z-[10000] w-[140px]">
+                    <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 p-2 grid grid-cols-5 gap-1 z-[10000] w-[140px]">
                       {RAINBOW_COLORS.map((c) => (
                         <button
                           key={c.value}
@@ -2752,7 +2752,7 @@ const IndexContent = () => {
                     <Square size={12} />
                   </button>
                   {groupPicker === "border" && (
-                    <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white rounded-xl border border-gray-100 p-2 grid grid-cols-5 gap-1 z-[10000] w-[140px]">
+                    <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 p-2 grid grid-cols-5 gap-1 z-[10000] w-[140px]">
                       {RAINBOW_COLORS.map((c) => (
                         <button
                           key={c.value}
@@ -2780,7 +2780,7 @@ const IndexContent = () => {
                     <Baseline size={13} />
                   </button>
                   {groupPicker === "text" && (
-                    <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white rounded-xl border border-gray-100 p-2 grid grid-cols-5 gap-1 z-[10000] w-[140px]">
+                    <div className="absolute bottom-full mb-2 left-1/2 -translate-x-1/2 bg-white rounded-xl shadow-[0_8px_30px_rgb(0,0,0,0.12)] border border-gray-100 p-2 grid grid-cols-5 gap-1 z-[10000] w-[140px]">
                       {RAINBOW_COLORS.map((c) => (
                         <button
                           key={c.value}
@@ -2892,7 +2892,7 @@ const IndexContent = () => {
             exit={{ opacity: 0, y: 50 }}
             className="absolute bottom-6 left-4 right-4 z-[9999] flex justify-center pointer-events-none"
           >
-            <div className="bg-black text-white text-[13px] font-normal px-5 py-3 rounded-2xl max-w-sm text-center pointer-events-auto">
+            <div className="bg-black text-white text-[13px] font-normal px-5 py-3 rounded-2xl shadow-xl max-w-sm text-center pointer-events-auto">
               Te recomendamos usar Miiles desde un ordenador o tablet para una mejor experiencia.
             </div>
           </motion.div>
@@ -3368,7 +3368,7 @@ const IndexContent = () => {
                             setCopiedAll(true);
                             setTimeout(() => setCopiedAll(false), 1600);
                           }}
-                          className={`w-fit h-11 flex items-center justify-center gap-3 px-4 rounded-full transition-all duration-200 shrink-0 border ${
+                          className={`w-fit h-11 flex items-center justify-center gap-3 px-4 rounded-full transition-all duration-200 shrink-0 shadow-lg border ${
                             copiedAll
                               ? (isDark ? "bg-white text-black border-white" : "bg-black text-white border-black")
                               : isDark ? "bg-black text-white border-white/20 hover:bg-neutral-900" : "bg-white text-[#4B4F63] border-gray-200 hover:bg-[#F9FAFB]"
@@ -3505,7 +3505,7 @@ const IndexContent = () => {
                             setDownloadedAll(true);
                             setTimeout(() => setDownloadedAll(false), 1600);
                           }}
-                          className={`w-11 h-11 flex items-center justify-center rounded-full transition-all duration-200 shrink-0 border ${
+                          className={`w-11 h-11 flex items-center justify-center rounded-full transition-all duration-200 shrink-0 shadow-lg border ${
                             downloadedAll
                               ? "bg-black text-white border-black"
                               : isDark ? "bg-black text-white border-white/20 hover:bg-neutral-900" : "bg-white text-[#4B4F63] border-gray-200 hover:bg-[#F9FAFB]"
