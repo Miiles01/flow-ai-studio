@@ -2297,19 +2297,19 @@ const IndexContent = () => {
                   animate={{ opacity: 1, y: 0, scale: 1 }}
                   exit={{ opacity: 0, y: -6, scale: 0.97 }}
                   transition={{ duration: 0.15, ease: "easeOut" }}
-                  className={`absolute top-[calc(100%+8px)] left-0 w-52 rounded-2xl overflow-hidden z-50 shadow-sm ${isDark ? 'bg-[#1C1C1E] border border-white/10 text-white' : 'bg-white text-black border border-gray-200 '}`}
+                  className={`absolute top-[calc(100%+8px)] left-0 w-52 rounded-2xl overflow-hidden z-50 shadow-[0_24px_70px_rgba(0,0,0,0.15)] border border-white/10 text-white ${isDark ? 'bg-[#1C1C1E]' : 'bg-black/70 backdrop-blur-2xl'}`}
                 >
                   <div className="px-3 py-2.5">
-                    <p className="text-[10px] text-[#9CA3AF] font-light tracking-widest mb-1 px-2">Ajustes</p>
+                    <p className="text-[10px] text-white/50 font-light tracking-widest mb-1 px-2">Ajustes</p>
                     <button
                       onClick={() => { setHideTools((v) => !v); setSettingsOpen(false); }}
-                      className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors text-left ${isDark ? 'hover:bg-white/10' : 'hover:bg-[#F3F4F6]'}`}
+                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors text-left hover:bg-white/10"
                     >
                       {hideTools
-                        ? <Eye size={15} strokeWidth={1.5} className={isDark ? 'text-[#9CA3AF] shrink-0' : 'text-[#6B7280] shrink-0'} />
-                        : <EyeOff size={15} strokeWidth={1.5} className={isDark ? 'text-[#9CA3AF] shrink-0' : 'text-[#6B7280] shrink-0'} />
+                        ? <Eye size={15} strokeWidth={1.5} className="text-white/70 shrink-0" />
+                        : <EyeOff size={15} strokeWidth={1.5} className="text-white/70 shrink-0" />
                       }
-                      <span className={`text-[13px] font-normal ${isDark ? 'text-white' : 'text-black'}`}>
+                      <span className="text-[13px] font-normal text-white">
                         {hideTools ? "Mostrar herramientas" : "Ocultar herramientas"}
                       </span>
                     </button>
@@ -2318,13 +2318,13 @@ const IndexContent = () => {
                       <button
                         onClick={() => { setSettingsOpen(false); openDuplicateDialog(); }}
                         disabled={duplicating}
-                        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors text-left disabled:opacity-50 ${isDark ? 'hover:bg-white/10' : 'hover:bg-[#F3F4F6]'}`}
+                        className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors text-left disabled:opacity-50 hover:bg-white/10"
                       >
                         {duplicating
-                          ? <Loader2 size={15} strokeWidth={1.5} className="animate-spin shrink-0 text-[#9CA3AF]" />
-                          : <Copy size={15} strokeWidth={1.5} className={isDark ? 'text-[#9CA3AF] shrink-0' : 'text-[#6B7280] shrink-0'} />
+                          ? <Loader2 size={15} strokeWidth={1.5} className="animate-spin shrink-0 text-white/70" />
+                          : <Copy size={15} strokeWidth={1.5} className="text-white/70 shrink-0" />
                         }
-                        <span className={`text-[13px] font-normal ${isDark ? 'text-white' : 'text-black'}`}>
+                        <span className="text-[13px] font-normal text-white">
                           Duplicar tablero
                         </span>
                       </button>
@@ -2338,18 +2338,18 @@ const IndexContent = () => {
                         setSettingsOpen(false);
                         toast.success("Lienzo limpiado correctamente");
                       }}
-                      className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors text-left group ${isDark ? 'hover:bg-[#EF4444]/20 hover:text-[#EF4444]' : 'hover:bg-[#FEE2E2] hover:text-[#EF4444]'}`}
+                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors text-left group hover:bg-[#EF4444]/20 hover:text-[#EF4444]"
                     >
-                      <Trash2 size={15} strokeWidth={1.5} className={`shrink-0 transition-colors ${isDark ? 'text-[#9CA3AF] group-hover:text-[#EF4444]' : 'text-[#6B7280] group-hover:text-[#EF4444]'}`} />
-                      <span className={`text-[13px] font-normal transition-colors ${isDark ? 'text-white group-hover:text-[#EF4444]' : 'text-black group-hover:text-[#EF4444]'}`}>
+                      <Trash2 size={15} strokeWidth={1.5} className="shrink-0 transition-colors text-white/70 group-hover:text-[#EF4444]" />
+                      <span className="text-[13px] font-normal transition-colors text-white group-hover:text-[#EF4444]">
                         Limpiar lienzo
                       </span>
                     </button>
 
-                    <div className={`mt-2 pt-2 border-t ${isDark ? 'border-white/10' : 'border-neutral-100'}`}>
-                      <p className="text-[10px] text-[#9CA3AF] font-light tracking-widest mb-2 px-2">Zoom</p>
+                    <div className="mt-2 pt-2 border-t border-white/10">
+                      <p className="text-[10px] text-white/50 font-light tracking-widest mb-2 px-2">Zoom</p>
                       <div className="px-1 mb-1">
-                        <ZoomStepper isDark={isDark} />
+                        <ZoomStepper isDark={true} />
                       </div>
                     </div>
                   </div>

@@ -501,8 +501,8 @@ const Toolbar = ({
                 transition={{ duration: 0.14, ease: "easeOut" }}
                 onMouseEnter={openFlyout}
                 onMouseLeave={closeFlyout}
-                className={`fixed w-[128px] rounded-2xl p-2.5 z-[9999] select-none shadow-sm ${
-                  isDark ? "bg-black ring-1 ring-white/10 text-white shadow-sm" : "bg-white border border-[#E5E7EB] text-black "
+                className={`fixed w-[128px] rounded-2xl p-2.5 z-[9999] select-none shadow-[0_24px_70px_rgba(0,0,0,0.15)] ring-1 ring-white/10 text-white ${
+                  isDark ? "bg-[#1C1C1E]" : "bg-black/70 backdrop-blur-2xl"
                 }`}
                 style={{
                   top: `${flyoutPos.top}px`,
@@ -514,8 +514,8 @@ const Toolbar = ({
                   {SHAPES.map((shape) => (
                     <button
                       key={shape.id}
-                      onClick={() => {
-                        setSelectedShape(shape.id);
+                      onClick={(e) => {
+                        e.stopPropagation();
                         setActiveDrawShape(shape.id);
                         setInteractionMode("edit");
                         setFlyoutOpen(false);
@@ -523,12 +523,8 @@ const Toolbar = ({
                       title={shape.label}
                       className={`w-11 h-11 flex items-center justify-center rounded-xl transition-all ${
                         selectedShape === shape.id
-                          ? isDark
-                            ? "bg-white text-black "
-                            : "bg-black text-white "
-                          : isDark
-                          ? "text-[#9CA3AF] hover:bg-white/10 hover:text-white"
-                          : "text-[#6B7280] hover:bg-[#F3F4F6] hover:text-black"
+                          ? "bg-white text-black "
+                          : "text-white/70 hover:bg-white/10 hover:text-white"
                       }`}
                     >
                       {shape.icon}

@@ -79,10 +79,11 @@ export function QuickSettings({ children }: { children?: React.ReactNode }) {
         align="end" 
         sideOffset={8}
         className={`
-          w-72 rounded-[24px] p-4 border shadow-[0_12px_40px_rgba(0,0,0,0.06)] backdrop-blur-md transition-colors duration-300
+          w-72 rounded-[24px] p-4 border shadow-[0_24px_70px_rgba(0,0,0,0.15)] transition-colors duration-300
+          border-white/10 text-white
           ${isDark
-            ? "bg-zinc-950/90 border-white/10 text-white"
-            : "bg-white/95 border-[#F3F4F6] text-black"
+            ? "bg-[#1C1C1E]"
+            : "bg-black/70 backdrop-blur-2xl"
           }
         `}
       >
@@ -91,13 +92,7 @@ export function QuickSettings({ children }: { children?: React.ReactNode }) {
           <div className="space-y-2">
             <h4 className="text-[11px] font-semibold tracking-wider opacity-50">Membresía</h4>
             <div 
-              className={`
-                p-3 rounded-2xl flex items-center justify-between border transition-all duration-300
-                ${isDark
-                  ? "bg-white/5 border-white/5 text-white"
-                  : "bg-black border-zinc-900 text-white"
-                }
-              `}
+              className="p-3 rounded-2xl flex items-center justify-between border transition-all duration-300 bg-white/5 border-white/5 text-white"
             >
               <div className="flex items-center gap-2 min-w-0">
                 <span className="text-[13px] font-medium truncate">
@@ -114,10 +109,7 @@ export function QuickSettings({ children }: { children?: React.ReactNode }) {
                   flex items-center text-[11px] font-medium px-2.5 py-1 rounded-full transition-all hover:scale-[1.03]
                   ${isPremium
                     ? "bg-white/10 hover:bg-white/20 text-white border border-white/10"
-                    : (isDark
-                        ? "bg-gradient-to-r from-violet-600 to-indigo-600 hover:opacity-90 text-white shadow-sm"
-                        : "bg-white hover:bg-gray-100 text-black shadow-sm"
-                      )
+                    : "bg-gradient-to-r from-violet-600 to-indigo-600 hover:opacity-90 text-white shadow-sm"
                   }
                 `}
               >
@@ -126,7 +118,7 @@ export function QuickSettings({ children }: { children?: React.ReactNode }) {
             </div>
           </div>
 
-          <div className={`h-[1px] w-full ${isDark ? "bg-white/10" : "bg-gray-100"}`} />
+          <div className="h-[1px] w-full bg-white/10" />
 
           {/* Quick Actions List */}
           <div className="space-y-2">
@@ -147,7 +139,7 @@ export function QuickSettings({ children }: { children?: React.ReactNode }) {
                 <span className="text-[13px] font-light">Tema</span>
               </div>
               
-              <div className={`flex items-center gap-1 p-0.5 rounded-full border ${isDark ? 'bg-white/5 border-white/10' : 'bg-gray-50 border-gray-100'}`}>
+              <div className="flex items-center gap-1 p-0.5 rounded-full border bg-white/5 border-white/10">
                 {/* Light Theme Button */}
                 <button
                   type="button"
@@ -156,8 +148,8 @@ export function QuickSettings({ children }: { children?: React.ReactNode }) {
                   className={`
                     p-1.5 rounded-full transition-all duration-200 hover:scale-105
                     ${theme === "light" 
-                      ? (isDark ? "bg-white text-black" : "bg-black text-white shadow-sm") 
-                      : "text-muted-foreground hover:text-foreground"
+                      ? "bg-white text-black shadow-sm" 
+                      : "text-white/60 hover:text-white"
                     }
                   `}
                 >
@@ -172,8 +164,8 @@ export function QuickSettings({ children }: { children?: React.ReactNode }) {
                   className={`
                     p-1.5 rounded-full transition-all duration-200 hover:scale-105
                     ${theme === "dark" 
-                      ? (isDark ? "bg-white text-black" : "bg-black text-white shadow-sm") 
-                      : "text-muted-foreground hover:text-foreground"
+                      ? "bg-white text-black shadow-sm" 
+                      : "text-white/60 hover:text-white"
                     }
                   `}
                 >
@@ -183,13 +175,13 @@ export function QuickSettings({ children }: { children?: React.ReactNode }) {
                 {/* System Theme Button */}
                 <button
                   type="button"
-                  title="Automático (Dispositivo)"
+                  title="Tema del sistema"
                   onClick={() => setTheme("system")}
                   className={`
                     p-1.5 rounded-full transition-all duration-200 hover:scale-105
                     ${theme === "system" 
-                      ? (isDark ? "bg-white text-black" : "bg-black text-white shadow-sm") 
-                      : "text-muted-foreground hover:text-foreground"
+                      ? "bg-white text-black shadow-sm" 
+                      : "text-white/60 hover:text-white"
                     }
                   `}
                 >
@@ -204,10 +196,7 @@ export function QuickSettings({ children }: { children?: React.ReactNode }) {
                 setIsOpen(false);
                 navigate("/profile");
               }}
-              className={`
-                w-full flex items-center justify-between px-3 py-2.5 rounded-2xl transition-all duration-200 text-left
-                ${isDark ? "hover:bg-white/5" : "hover:bg-gray-50"}
-              `}
+              className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl transition-all duration-200 group hover:bg-white/5"
             >
               <div className="flex items-center gap-2.5">
                 <User size={16} strokeWidth={1.5} className="opacity-70" />
@@ -220,10 +209,7 @@ export function QuickSettings({ children }: { children?: React.ReactNode }) {
             {showInstall && (
               <button
                 onClick={handleInstall}
-                className={`
-                  w-full flex items-center gap-2.5 px-3 py-2.5 rounded-2xl transition-all duration-200 text-left
-                  ${isDark ? "hover:bg-white/5" : "hover:bg-gray-50"}
-                `}
+                className="w-full flex items-center justify-between px-3 py-2.5 rounded-xl transition-all duration-200 group hover:bg-white/5"
               >
                 <Download size={16} strokeWidth={1.5} className="opacity-70" />
                 <span className="text-[13px] font-light">Abrir en aplicación</span>
