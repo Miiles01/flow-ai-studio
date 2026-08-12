@@ -17,7 +17,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import { Columns3, UserSquare2, LayoutGrid, LineChart, type LucideIcon } from "lucide-react";
+import { Columns3, UserSquare2, LayoutGrid, LineChart, Globe, type LucideIcon } from "lucide-react";
 import type { Node } from "@xyflow/react";
 
 export type WidgetDef = {
