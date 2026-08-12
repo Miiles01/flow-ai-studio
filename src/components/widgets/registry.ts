@@ -17,7 +17,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import { Columns3, UserSquare2, LayoutGrid, LineChart, type LucideIcon } from "lucide-react";
+import { Columns3, UserSquare2, LayoutGrid, LineChart, Globe, type LucideIcon } from "lucide-react";
 import type { Node } from "@xyflow/react";
 
 export type WidgetDef = {
@@ -108,6 +108,29 @@ export const WIDGETS: WidgetDef[] = [
         showTitle: true,
         subtitle: "Lo que cerraste por mes y lo que está por entrar.",
         showSubtitle: true,
+      },
+    }),
+  },
+  {
+    id: "collab-finder",
+    name: "Buscador de colaboraciones",
+    description: "Cuadrícula de sitios web donde encontrar colaboraciones: clic en la imagen y abre el enlace",
+    icon: Globe,
+    createNode: (position) => ({
+      id: `collab-${Date.now()}`,
+      type: "collabFinderNode",
+      position,
+      style: { width: 520, height: 480 },
+      data: {
+        title: "Buscador de colaboraciones",
+        showTitle: true,
+        links: [
+          { id: uid(), url: "https://creator.brkaway.co/", label: "Brkaway" },
+          { id: uid(), url: "https://www.hubb.mx/", label: "Hubb" },
+          { id: uid(), url: "https://www.conugc.com/", label: "ConUGC" },
+          { id: uid(), url: "https://fuelyourbrands.com/", label: "Fuel Your Brands" },
+          { id: uid(), url: "https://app.lizza.ai/", label: "Lizza" },
+        ],
       },
     }),
   },
