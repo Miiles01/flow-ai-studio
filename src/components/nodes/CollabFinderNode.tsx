@@ -123,14 +123,6 @@ const CollabFinderNode = ({ id, data, selected }: NodeProps) => {
                 <PickerPopover colors={RAINBOW_COLORS} onPick={(v) => { update({ backgroundColor: v }); setActivePicker(null); }} isDark={isDark} />
               )}
 
-              <button
-                onClick={() => setEditorOpen(true)}
-                className={`h-7 px-2 flex items-center gap-1 rounded-lg text-[11px] ${isDark ? "hover:bg-white/10 text-white/70" : "hover:bg-neutral-100 text-neutral-600"}`}
-                title="Editar enlaces"
-              >
-                <Link2 size={13} /> Enlaces
-              </button>
-
               <div className={`w-[1px] h-4 mx-1 ${isDark ? "bg-white/10" : "bg-neutral-200"}`} />
 
               <button
