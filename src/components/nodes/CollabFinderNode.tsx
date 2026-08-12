@@ -156,15 +156,9 @@ const CollabFinderNode = ({ id, data, selected }: NodeProps) => {
       >
         {(d.showTitle ?? true) && (
           <div className="px-4 pt-4 pb-2 shrink-0">
-            <input
-              value={d.title ?? ""}
-              onChange={(e) => update({ title: e.target.value })}
-              placeholder="Buscador de colaboraciones"
-              className={`nodrag nopan w-full bg-transparent border-none outline-none text-[15px] font-semibold ${
-                isEffectiveBgDark ? "placeholder:text-white/40" : "placeholder:text-neutral-400"
-              }`}
-              style={{ color: textColor }}
-            />
+            <div className="text-[15px] font-semibold" style={{ color: textColor }}>
+              {d.title || "Buscador de colaboraciones"}
+            </div>
           </div>
         )}
 
