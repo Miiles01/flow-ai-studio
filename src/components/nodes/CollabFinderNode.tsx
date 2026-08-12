@@ -11,7 +11,7 @@ import { createPortal } from "react-dom";
 import { isColorDark } from "@/lib/utils";
 import { type NodeProps, NodeResizer, useReactFlow, useViewport } from "@xyflow/react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Trash2, Palette, X, Plus, Link2, ExternalLink, Image as ImageIcon } from "lucide-react";
+import { Trash2, Palette, ExternalLink } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import NodeExtendHandles from "@/components/nodes/NodeExtendHandles";
 import WidgetCommentSlot from "@/components/nodes/WidgetCommentSlot";
@@ -81,7 +81,6 @@ const CollabFinderNode = ({ id, data, selected }: NodeProps) => {
   const subtleText = isEffectiveBgDark ? "text-white/60" : "text-neutral-500";
 
   const [activePicker, setActivePicker] = useState<"fill" | null>(null);
-  const [editorOpen, setEditorOpen] = useState(false);
   const anchorRef = useRef<HTMLDivElement>(null);
   const scrollRef = useRef<HTMLDivElement | null>(null);
   useWidgetAutoFit(id, (d as any)._aiFitNonce, scrollRef, anchorRef, { minHeight: 240, maxHeight: 1400 });
@@ -94,7 +93,7 @@ const CollabFinderNode = ({ id, data, selected }: NodeProps) => {
       <NodeResizer isVisible={!!isSingleSelected} minWidth={300} minHeight={220} lineStyle={{ border: "none" }} />
 
       <AnimatePresence>
-        {isSingleSelected && !editorOpen && (
+        {isSingleSelected && (
           <div
             className="absolute -top-14 left-1/2 z-[1000] pointer-events-auto node-floating-toolbar shadow-sm"
             style={{ transform: `translate(-50%, 0) scale(${1 / zoom})`, transformOrigin: "bottom center", whiteSpace: "nowrap" }}
@@ -122,14 +121,6 @@ const CollabFinderNode = ({ id, data, selected }: NodeProps) => {
               {activePicker === "fill" && (
                 <PickerPopover colors={RAINBOW_COLORS} onPick={(v) => { update({ backgroundColor: v }); setActivePicker(null); }} isDark={isDark} />
               )}
-
-              <button
-                onClick={() => setEditorOpen(true)}
-                className={`h-7 px-2 flex items-center gap-1 rounded-lg text-[11px] ${isDark ? "hover:bg-white/10 text-white/70" : "hover:bg-neutral-100 text-neutral-600"}`}
-                title="Editar enlaces"
-              >
-                <Link2 size={13} /> Enlaces
-              </button>
 
               <div className={`w-[1px] h-4 mx-1 ${isDark ? "bg-white/10" : "bg-neutral-200"}`} />
 
@@ -164,15 +155,9 @@ const CollabFinderNode = ({ id, data, selected }: NodeProps) => {
       >
         {(d.showTitle ?? true) && (
           <div className="px-4 pt-4 pb-2 shrink-0">
-            <input
-              value={d.title ?? ""}
-              onChange={(e) => update({ title: e.target.value })}
-              placeholder="Buscador de colaboraciones"
-              className={`nodrag nopan w-full bg-transparent border-none outline-none text-[15px] font-semibold ${
-                isEffectiveBgDark ? "placeholder:text-white/40" : "placeholder:text-neutral-400"
-              }`}
-              style={{ color: textColor }}
-            />
+            <div className="text-[15px] font-semibold" style={{ color: textColor }}>
+              {d.title || "Buscador de colaboraciones"}
+            </div>
           </div>
         )}
 
@@ -221,32 +206,14 @@ const CollabFinderNode = ({ id, data, selected }: NodeProps) => {
               </a>
             ))}
 
-            <button
-              onClick={() => setEditorOpen(true)}
-              className={`nodrag nopan rounded-xl border border-dashed aspect-[16/10] flex flex-col items-center justify-center gap-1 text-[11px] transition-colors ${
-                isEffectiveBgDark ? "border-white/20 text-white/60 hover:bg-white/5" : "border-neutral-300 text-neutral-500 hover:bg-neutral-50"
-              }`}
-            >
-              <Plus size={16} />
-              Añadir sitio
-            </button>
           </div>
 
           {links.length === 0 && (
-            <p className={`text-[11px] mt-3 ${subtleText}`}>Añade sitios donde encontrar colaboraciones.</p>
+            <p className={`text-[11px] mt-3 ${subtleText}`}>No hay sitios disponibles.</p>
           )}
         </div>
       </div>
 
-      {editorOpen && anchorRef.current && (
-        <LinksEditorPopover
-          anchorEl={anchorRef.current}
-          links={links}
-          isDark={isDark}
-          onClose={() => setEditorOpen(false)}
-          onChange={(next) => update({ links: next })}
-        />
-      )}
 
       <NodeExtendHandles nodeId={id} />
       <WidgetCommentSlot nodeId={id} />
@@ -256,138 +223,6 @@ const CollabFinderNode = ({ id, data, selected }: NodeProps) => {
 
 /* ─────────── Editor popover ─────────── */
 
-const LinksEditorPopover = ({
-  anchorEl, links, isDark, onClose, onChange,
-}: {
-  anchorEl: HTMLElement;
-  links: CollabLink[];
-  isDark: boolean;
-  onClose: () => void;
-  onChange: (next: CollabLink[]) => void;
-}) => {
-  const popoverRef = useRef<HTMLDivElement>(null);
-  const [pos, setPos] = useState({ top: -999, left: -999 });
-  const [newUrl, setNewUrl] = useState("");
-  const [newImage, setNewImage] = useState("");
-
-  useLayoutEffect(() => {
-    let frame: number;
-    const updatePos = () => {
-      if (!popoverRef.current) { frame = requestAnimationFrame(updatePos); return; }
-      const rect = anchorEl.getBoundingClientRect();
-      const w = popoverRef.current.offsetWidth;
-      const h = popoverRef.current.offsetHeight;
-      let left = rect.right + 8;
-      if (left + w > window.innerWidth - 12) left = Math.max(12, rect.left - w - 8);
-      let top = rect.top;
-      if (top + h > window.innerHeight - 12) top = Math.max(12, window.innerHeight - h - 12);
-      setPos((prev) => (Math.abs(prev.top - top) > 0.5 || Math.abs(prev.left - left) > 0.5 ? { top, left } : prev));
-      frame = requestAnimationFrame(updatePos);
-    };
-    updatePos();
-    return () => cancelAnimationFrame(frame);
-  }, [anchorEl]);
-
-  useEffect(() => {
-    const onDown = (e: MouseEvent) => {
-      if (popoverRef.current && !popoverRef.current.contains(e.target as Node)) onClose();
-    };
-    const onKey = (e: KeyboardEvent) => { if (e.key === "Escape") onClose(); };
-    document.addEventListener("mousedown", onDown);
-    document.addEventListener("keydown", onKey);
-    return () => {
-      document.removeEventListener("mousedown", onDown);
-      document.removeEventListener("keydown", onKey);
-    };
-  }, [onClose]);
-
-  const panelCls = isDark ? "bg-[#1C1C1E] border border-white/10 text-white" : "bg-white border border-neutral-200 text-neutral-900";
-  const inputCls = isDark ? "bg-white/5 border border-white/10 text-white placeholder:text-white/40" : "bg-white border border-neutral-200 text-neutral-900 placeholder:text-neutral-400";
-
-  const add = () => {
-    const url = newUrl.trim();
-    if (!url) return;
-    onChange([...links, { id: uid(), url, imageUrl: newImage.trim() || undefined }]);
-    setNewUrl("");
-    setNewImage("");
-  };
-  const patch = (id: string, p: Partial<CollabLink>) =>
-    onChange(links.map((l) => (l.id === id ? { ...l, ...p } : l)));
-  const remove = (id: string) => onChange(links.filter((l) => l.id !== id));
-
-  return createPortal(
-    <div
-      ref={popoverRef}
-      className={`fixed z-[10000] w-[320px] max-h-[70vh] overflow-y-auto rounded-2xl p-4 shadow-xl ${panelCls}`}
-      style={{ top: pos.top, left: pos.left }}
-      onMouseDown={(e) => e.stopPropagation()}
-      onClick={(e) => e.stopPropagation()}
-    >
-      <div className="flex items-center justify-between mb-3">
-        <div className="text-[13px] font-semibold">Sitios de colaboraciones</div>
-        <button onClick={onClose} className="opacity-60 hover:opacity-100"><X size={14} /></button>
-      </div>
-
-      <div className="space-y-2 mb-4">
-        {links.map((l) => (
-          <div key={l.id} className={`rounded-lg p-2 space-y-1.5 ${isDark ? "bg-white/5" : "bg-neutral-50"}`}>
-            <div className="flex items-center gap-1.5">
-              <img src={faviconFor(l.url)} alt="" className="w-4 h-4 rounded-sm shrink-0" />
-              <input
-                value={l.url}
-                onChange={(e) => patch(l.id, { url: e.target.value })}
-                className={`flex-1 text-[11px] px-2 py-1 rounded-md outline-none ${inputCls}`}
-                placeholder="https://sitio.com"
-              />
-              <button onClick={() => remove(l.id)} className="opacity-60 hover:opacity-100 hover:text-red-500 px-1"><X size={11} /></button>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <ImageIcon size={12} className="opacity-50 shrink-0" />
-              <input
-                value={l.imageUrl ?? ""}
-                onChange={(e) => patch(l.id, { imageUrl: e.target.value })}
-                className={`flex-1 text-[11px] px-2 py-1 rounded-md outline-none ${inputCls}`}
-                placeholder="URL de imagen (opcional)"
-              />
-            </div>
-            <input
-              value={l.label ?? ""}
-              onChange={(e) => patch(l.id, { label: e.target.value })}
-              className={`w-full text-[11px] px-2 py-1 rounded-md outline-none ${inputCls}`}
-              placeholder="Nombre (opcional)"
-            />
-          </div>
-        ))}
-      </div>
-
-      <div className="space-y-1.5">
-        <input
-          value={newUrl}
-          onChange={(e) => setNewUrl(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && add()}
-          className={`w-full text-[11px] px-2 py-1.5 rounded-md outline-none ${inputCls}`}
-          placeholder="https://nuevo-sitio.com"
-        />
-        <input
-          value={newImage}
-          onChange={(e) => setNewImage(e.target.value)}
-          onKeyDown={(e) => e.key === "Enter" && add()}
-          className={`w-full text-[11px] px-2 py-1.5 rounded-md outline-none ${inputCls}`}
-          placeholder="URL de imagen (opcional)"
-        />
-        <button
-          onClick={add}
-          className={`w-full flex items-center justify-center gap-1 text-[11px] px-2 py-1.5 rounded-md ${
-            isDark ? "bg-white/10 hover:bg-white/15 text-white" : "bg-black text-white hover:bg-neutral-800"
-          }`}
-        >
-          <Plus size={12} /> Añadir sitio
-        </button>
-      </div>
-    </div>,
-    document.body,
-  );
-};
 
 const PickerPopover = ({ colors, onPick, isDark }: { colors: { name: string; value: string }[]; onPick: (v: string) => void; isDark: boolean }) => (
   <div className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px] ${isDark ? "bg-[#1C1C1E] border border-white/10" : "bg-white border border-neutral-100"} shadow-sm`}>
