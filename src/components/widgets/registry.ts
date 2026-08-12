@@ -111,4 +111,27 @@ export const WIDGETS: WidgetDef[] = [
       },
     }),
   },
+  {
+    id: "collab-finder",
+    name: "Buscador de colaboraciones",
+    description: "Cuadrícula de sitios web donde encontrar colaboraciones: clic en la imagen y abre el enlace",
+    icon: Globe,
+    createNode: (position) => ({
+      id: `collab-${Date.now()}`,
+      type: "collabFinderNode",
+      position,
+      style: { width: 520, height: 480 },
+      data: {
+        title: "Buscador de colaboraciones",
+        showTitle: true,
+        links: [
+          { id: uid(), url: "https://creator.brkaway.co/", label: "Brkaway" },
+          { id: uid(), url: "https://www.hubb.mx/", label: "Hubb" },
+          { id: uid(), url: "https://www.conugc.com/", label: "ConUGC" },
+          { id: uid(), url: "https://fuelyourbrands.com/", label: "Fuel Your Brands" },
+          { id: uid(), url: "https://app.lizza.ai/", label: "Lizza" },
+        ],
+      },
+    }),
+  },
 ];
