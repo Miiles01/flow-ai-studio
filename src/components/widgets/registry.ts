@@ -130,6 +130,7 @@ export const WIDGETS: WidgetDef[] = [
           { id: uid(), url: "https://www.conugc.com/", label: "ConUGC" },
           { id: uid(), url: "https://fuelyourbrands.com/", label: "Fuel Your Brands" },
           { id: uid(), url: "https://app.lizza.ai/", label: "Lizza" },
+          { id: uid(), url: "https://www.heycollabify.com/", label: "Collabify" },
         ],
       },
     }),
