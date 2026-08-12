@@ -207,32 +207,14 @@ const CollabFinderNode = ({ id, data, selected }: NodeProps) => {
               </a>
             ))}
 
-            <button
-              onClick={() => setEditorOpen(true)}
-              className={`nodrag nopan rounded-xl border border-dashed aspect-[16/10] flex flex-col items-center justify-center gap-1 text-[11px] transition-colors ${
-                isEffectiveBgDark ? "border-white/20 text-white/60 hover:bg-white/5" : "border-neutral-300 text-neutral-500 hover:bg-neutral-50"
-              }`}
-            >
-              <Plus size={16} />
-              Añadir sitio
-            </button>
           </div>
 
           {links.length === 0 && (
-            <p className={`text-[11px] mt-3 ${subtleText}`}>Añade sitios donde encontrar colaboraciones.</p>
+            <p className={`text-[11px] mt-3 ${subtleText}`}>No hay sitios disponibles.</p>
           )}
         </div>
       </div>
 
-      {editorOpen && anchorRef.current && (
-        <LinksEditorPopover
-          anchorEl={anchorRef.current}
-          links={links}
-          isDark={isDark}
-          onClose={() => setEditorOpen(false)}
-          onChange={(next) => update({ links: next })}
-        />
-      )}
 
       <NodeExtendHandles nodeId={id} />
       <WidgetCommentSlot nodeId={id} />
