@@ -168,10 +168,22 @@ Responde SIEMPRE con la tool "widget_result".`;
         if (h?.role && h?.content) messages.push({ role: h.role, content: String(h.content) });
       }
     }
+    // Contexto de otros widgets del canvas (recortado para no saturar el prompt).
+    let contextBlock = "";
+    if (Array.isArray(canvasWidgets) && canvasWidgets.length) {
+      const trimmed = canvasWidgets.slice(0, 12).map((w: any) => {
+        let json = JSON.stringify(w?.data ?? {});
+        if (json.length > 6000) json = json.slice(0, 6000) + "…(truncado)";
+        return `- ${w?.widgetType ?? "widget"} (${w?.nodeId ?? "?"}): ${json}`;
+      }).join("\n");
+      contextBlock = `\n\nOTROS WIDGETS DEL CANVAS (solo lectura, úsalos como fuente de datos si el usuario los referencia):\n${trimmed}`;
+    }
+
     messages.push({
       role: "user",
-      content: `widgetType: ${widgetType}\ndata actual:\n${JSON.stringify(data ?? {}, null, 2)}\n\nInstrucción del usuario:\n${prompt}${appsBlock}`,
+      content: `widgetType: ${widgetType}\ndata actual:\n${JSON.stringify(data ?? {}, null, 2)}${contextBlock}\n\nInstrucción del usuario:\n${prompt}${appsBlock}`,
     });
+
 
     const res = await callLLM(target, messages, { tool, maxTokens: 16000 });
 
