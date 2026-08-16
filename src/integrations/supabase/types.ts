@@ -648,6 +648,39 @@ export type Database = {
         }
         Relationships: []
       }
+      suggestions: {
+        Row: {
+          context: string | null
+          created_at: string
+          id: string
+          message: string
+          network: string | null
+          status: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          context?: string | null
+          created_at?: string
+          id?: string
+          message: string
+          network?: string | null
+          status?: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          context?: string | null
+          created_at?: string
+          id?: string
+          message?: string
+          network?: string | null
+          status?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       trends: {
         Row: {
           bullets: Json
