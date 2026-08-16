@@ -36,6 +36,8 @@ const ContractPublic = () => {
   const [email, setEmail] = useState("");
   const [signed, setSigned] = useState(false);
   const [sending, setSending] = useState(false);
+  const [mode, setMode] = useState<"Dibujar" | "Escribir">("Dibujar");
+  const [typed, setTyped] = useState("");
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const drawing = useRef(false);
   const hasStroke = useRef(false);
