@@ -69,7 +69,6 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const pageIndex = Math.min(activePage, pages.length - 1);
-  const page = pages[pageIndex];
   const logoPosition = d.logoPosition || "top-left";
 
   const update = (patch: Partial<ContractsNodeData>) =>
