@@ -9,7 +9,10 @@
 import { memo, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { type NodeProps, useReactFlow, useViewport } from "@xyflow/react";
-import { Trash2, Plus, Upload, ExternalLink, ImageIcon } from "lucide-react";
+import { Trash2, Plus, Upload, ExternalLink, ImageIcon, PenLine } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import SignatureDialog from "@/components/contracts/SignatureDialog";
+import SignatureFieldBox from "@/components/contracts/SignatureFieldBox";
 import NodeExtendHandles from "@/components/nodes/NodeExtendHandles";
 import WidgetCommentSlot from "@/components/nodes/WidgetCommentSlot";
 import {
@@ -21,6 +24,8 @@ import {
   LOGO_POSITIONS,
   logoPositionClass,
   uid,
+  fetchFieldSignatures,
+  type SignatureField,
   type ContractPage,
   type ContractsNodeData,
   type LogoPosition,
@@ -47,10 +52,13 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
   const [openMenu, setOpenMenu] = useState<"moneda" | "hoja" | "logo" | null>(null);
   const [dragOver, setDragOver] = useState(false);
   const [editing, setEditing] = useState(false);
+  const [signingField, setSigningField] = useState<SignatureField | null>(null);
   const fileRef = useRef<HTMLInputElement>(null);
   const scrollRef = useRef<HTMLDivElement>(null);
 
   const pageIndex = Math.min(activePage, pages.length - 1);
+  const signatureFields: SignatureField[] = d.signatureFields ?? [];
+  const fieldSignatures = d.fieldSignatures ?? {};
   const logoPosition = d.logoPosition || "top-left";
 
   const update = (patch: Partial<ContractsNodeData>) =>
@@ -79,11 +87,41 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
   // Sincroniza la versión pública del documento.
   useEffect(() => {
     const t = setTimeout(() => {
-      void syncContract({ ...d, pages }, { nodeId: id, flowId });
+      void syncContract({ ...d, pages, signatureFields }, { nodeId: id, flowId });
     }, 900);
     return () => clearTimeout(t);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [d.title, d.currency, d.pageSize, d.logoUrl, d.logoPosition, d.logoRepeat, JSON.stringify(pages), d.publicId]);
+  }, [
+    d.title,
+    d.currency,
+    d.pageSize,
+    d.logoUrl,
+    d.logoPosition,
+    d.logoRepeat,
+    JSON.stringify(pages),
+    JSON.stringify(signatureFields),
+    d.publicId,
+  ]);
+
+  // Trae las firmas guardadas (propias o de quien recibió el enlace) para verlas en el canvas.
+  useEffect(() => {
+    if (!d.publicId) return;
+    let alive = true;
+    const pull = async () => {
+      const remote = await fetchFieldSignatures(d.publicId);
+      if (!alive || !remote) return;
+      if (JSON.stringify(remote) !== JSON.stringify(d.fieldSignatures ?? {})) {
+        update({ fieldSignatures: remote });
+      }
+    };
+    void pull();
+    const t = setInterval(pull, 20000);
+    return () => {
+      alive = false;
+      clearInterval(t);
+    };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [d.publicId, JSON.stringify(d.fieldSignatures ?? {})]);
 
   // Sincroniza la página activa con el scroll.
   useEffect(() => {
@@ -123,6 +161,37 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
     setActivePage((p) => Math.max(0, Math.min(p, next.length - 1)));
   };
 
+  const addSignatureField = () => {
+    update({
+      signatureFields: [...signatureFields, { id: uid(), pageIndex, label: "Firma" }],
+    });
+  };
+
+  const removeSignatureField = (fieldId: string) => {
+    update({ signatureFields: signatureFields.filter((f) => f.id !== fieldId) });
+  };
+
+  /** Guarda la firma en el documento compartido; el canvas la refleja al instante. */
+  const signField = async (field: SignatureField, payload: { name: string; email: string | null; dataUrl: string }) => {
+    if (!d.publicId) return;
+    await syncContract({ ...d, pages, signatureFields }, { nodeId: id, flowId });
+    const { data: res, error } = await supabase.functions.invoke("sign-contract", {
+      body: { publicId: d.publicId, fieldId: field.id, ...payload, signature: payload.dataUrl },
+    });
+    if (error || (res as any)?.error) return;
+    update({
+      fieldSignatures: {
+        ...fieldSignatures,
+        [field.id]: {
+          name: payload.name,
+          email: payload.email,
+          dataUrl: payload.dataUrl,
+          signedAt: new Date().toISOString(),
+        },
+      },
+    });
+  };
+
   const applyTemplate = (tpl: ContractTemplate, mode: "replace" | "append") => {
     const nuevas = templatePages(tpl);
     if (mode === "replace") {
@@ -148,7 +217,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
   };
 
   const openPublic = async () => {
-    await syncContract({ ...d, pages }, { nodeId: id, flowId });
+    await syncContract({ ...d, pages, signatureFields }, { nodeId: id, flowId });
     window.open(`/contrato/${d.publicId}`, "_blank", "noopener");
   };
 
@@ -291,6 +360,12 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
             )}
           </div>
 
+          <button onClick={addSignatureField} className={`${PILL} shrink-0`} title="Insertar campo de firma">
+            <span className="flex items-center gap-1.5">
+              <PenLine size={11} /> Firma
+            </span>
+          </button>
+
           <button onClick={openPublic} className={`${PILL} shrink-0`}>
             <span className="flex items-center gap-1.5">
               <ExternalLink size={11} /> Abrir
@@ -377,6 +452,21 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
                       Escribe aquí el contenido del contrato o pídeselo a la inteligencia artificial.
                     </span>
                   )}
+                </div>
+              )}
+              {signatureFields.filter((f) => f.pageIndex === i).length > 0 && (
+                <div className="mt-6 flex flex-wrap gap-6">
+                  {signatureFields
+                    .filter((f) => f.pageIndex === i)
+                    .map((f) => (
+                      <SignatureFieldBox
+                        key={f.id}
+                        label={f.label}
+                        signature={fieldSignatures[f.id]}
+                        onClick={fieldSignatures[f.id] ? undefined : () => setSigningField(f)}
+                        onRemove={() => removeSignatureField(f.id)}
+                      />
+                    ))}
                 </div>
               )}
               <div className="absolute bottom-6 left-0 right-0 text-center text-[11px] font-light text-gray-300">
@@ -478,6 +568,15 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
           <Plus size={12} />
         </button>
       </div>
+
+      <SignatureDialog
+        open={!!signingField}
+        label={signingField?.label}
+        onClose={() => setSigningField(null)}
+        onConfirm={async (payload) => {
+          if (signingField) await signField(signingField, payload);
+        }}
+      />
 
       <NodeExtendHandles nodeId={id} />
       <WidgetCommentSlot nodeId={id} />
