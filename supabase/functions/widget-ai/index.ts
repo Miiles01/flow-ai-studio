@@ -11,6 +11,36 @@ const corsHeaders = {
 
 const FALLBACK_MODEL = "google/gemini-2.5-flash";
 
+// La IA a veces devuelve JSON con saltos de línea o tabs SIN escapar dentro de los strings
+// (típico en contratos con cláusulas largas), lo que rompe JSON.parse. Este parser tolerante
+// limpia fences, recorta al objeto exterior y escapa los caracteres de control dentro de strings.
+function parseLooseJson(raw: string): unknown {
+  const clean = raw.trim().replace(/^```(?:json)?/i, "").replace(/```$/, "").trim();
+  try { return JSON.parse(clean); } catch { /* seguimos con la reparación */ }
+
+  const start = clean.search(/[{[]/);
+  const end = Math.max(clean.lastIndexOf("}"), clean.lastIndexOf("]"));
+  const body = start >= 0 && end > start ? clean.slice(start, end + 1) : clean;
+  try { return JSON.parse(body); } catch { /* seguimos con la reparación */ }
+
+  let out = "";
+  let inString = false;
+  let escaped = false;
+  for (const ch of body) {
+    if (escaped) { out += ch; escaped = false; continue; }
+    if (ch === "\\") { out += ch; escaped = true; continue; }
+    if (ch === '"') { inString = !inString; out += ch; continue; }
+    if (inString) {
+      if (ch === "\n") { out += "\\n"; continue; }
+      if (ch === "\r") { out += "\\r"; continue; }
+      if (ch === "\t") { out += "\\t"; continue; }
+      if (ch < " ") continue; // otros caracteres de control: se descartan
+    }
+    out += ch;
+  }
+  return JSON.parse(out);
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
