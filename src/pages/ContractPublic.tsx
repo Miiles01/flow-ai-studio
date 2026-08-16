@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
+import ContractRichText from "@/lib/contractRichText";
 import { PAGE_DIMENSIONS, type ContractPage, type LogoPosition } from "@/lib/contracts";
 
 type Contract = {
@@ -169,9 +170,10 @@ const ContractPublic = () => {
               {i === 0 && (
                 <h1 className="mb-8 text-[26px] font-normal leading-tight text-neutral-900">{contract.title}</h1>
               )}
-              <p className="whitespace-pre-wrap text-[13.5px] font-light leading-[1.85] text-neutral-800">
-                {p.content}
-              </p>
+              <ContractRichText
+                content={p.content}
+                className="text-[13.5px] font-light leading-[1.85] text-neutral-800"
+              />
             </div>
             <div className="absolute bottom-5 left-0 right-0 text-center text-[11px] font-light text-neutral-300">
               Página {i + 1} de {pages.length}

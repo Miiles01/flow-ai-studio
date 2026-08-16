@@ -23,6 +23,8 @@ import {
   type ContractsNodeData,
   type LogoPosition,
 } from "@/lib/contracts";
+import ContractRichText from "@/lib/contractRichText";
+import { repaginate } from "@/lib/contractPagination";
 import { CONTRACT_TEMPLATES, TEMPLATE_CATEGORIES, templatePages, type ContractTemplate } from "@/lib/contractTemplates";
 
 
@@ -62,6 +64,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
   const [activePage, setActivePage] = useState(0);
   const [openMenu, setOpenMenu] = useState<"moneda" | "hoja" | "logo" | null>(null);
   const [dragOver, setDragOver] = useState(false);
+  const [editing, setEditing] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const pageIndex = Math.min(activePage, pages.length - 1);
@@ -79,6 +82,17 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
       )
     );
   }, [dims.width, dims.height, id, setNodes]);
+
+  // Paginación automática: el contenido nunca desborda la hoja.
+  useEffect(() => {
+    if (editing) return;
+    const t = setTimeout(() => {
+      const next = repaginate(pages, dims);
+      if (next) update({ pages: next });
+    }, 120);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(pages), dims.width, dims.height, editing]);
 
   // Sincroniza la versión pública del documento.
   useEffect(() => {
@@ -312,13 +326,31 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
               {d.title?.trim() || "Contratos"}
             </h2>
           )}
-          <textarea
-            value={page?.content ?? ""}
-            onChange={(e) => setPageContent(e.target.value)}
-            onMouseDown={(e) => e.stopPropagation()}
-            placeholder="Escribe aquí el contenido del contrato o pídeselo a la inteligencia artificial."
-            className="nodrag nopan min-h-0 flex-1 resize-none bg-transparent text-[13.5px] font-light leading-[1.85] text-gray-800 outline-none placeholder:text-gray-300"
-          />
+          {editing ? (
+            <textarea
+              autoFocus
+              value={page?.content ?? ""}
+              onChange={(e) => setPageContent(e.target.value)}
+              onBlur={() => setEditing(false)}
+              onMouseDown={(e) => e.stopPropagation()}
+              placeholder="Escribe aquí el contenido del contrato o pídeselo a la inteligencia artificial. Usa **negritas**, - viñetas, 1. listas y [texto](enlace)."
+              className="nodrag nopan min-h-0 flex-1 resize-none bg-transparent text-[13.5px] font-light leading-[1.85] text-gray-800 outline-none placeholder:text-gray-300"
+            />
+          ) : (
+            <div
+              onClick={() => setEditing(true)}
+              onMouseDown={(e) => e.stopPropagation()}
+              className="nodrag nopan min-h-0 flex-1 cursor-text overflow-hidden text-[13.5px] font-light leading-[1.85] text-gray-800"
+            >
+              {page?.content?.trim() ? (
+                <ContractRichText content={page.content} />
+              ) : (
+                <span className="text-gray-300">
+                  Escribe aquí el contenido del contrato o pídeselo a la inteligencia artificial.
+                </span>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="absolute bottom-6 left-0 right-0 text-center text-[11px] font-light text-gray-300">
