@@ -9,7 +9,6 @@
 import { memo, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { type NodeProps, useReactFlow, useViewport } from "@xyflow/react";
-import { AnimatePresence, motion } from "framer-motion";
 import { Trash2, Plus, Upload, ExternalLink, ImageIcon } from "lucide-react";
 import NodeExtendHandles from "@/components/nodes/NodeExtendHandles";
 import WidgetCommentSlot from "@/components/nodes/WidgetCommentSlot";
@@ -32,18 +31,21 @@ const LOGO_POSITIONS: { value: LogoPosition; label: string }[] = [
   { value: "bottom-right", label: "Abajo a la derecha" },
 ];
 
-const logoClass = (pos: LogoPosition) => {
+const cornerClass = (pos: LogoPosition) => {
   switch (pos) {
     case "top-right":
-      return "top-10 right-12";
+      return "top-12 right-12";
     case "bottom-left":
-      return "bottom-12 left-12";
+      return "bottom-14 left-12";
     case "bottom-right":
-      return "bottom-12 right-12";
+      return "bottom-14 right-12";
     default:
-      return "top-10 left-12";
+      return "top-12 left-12";
   }
 };
+
+const PILL =
+  "px-3 py-1.5 rounded-full text-xs font-normal bg-white/90 backdrop-blur-sm border border-gray-100 text-gray-600 hover:text-gray-900 transition-colors";
 
 const ContractsNode = ({ id, data, selected }: NodeProps) => {
   const { setNodes } = useReactFlow();
@@ -60,7 +62,9 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
   const [dragOver, setDragOver] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
-  const page = pages[Math.min(activePage, pages.length - 1)];
+  const pageIndex = Math.min(activePage, pages.length - 1);
+  const page = pages[pageIndex];
+  const logoPosition = d.logoPosition || "top-left";
 
   const update = (patch: Partial<ContractsNodeData>) =>
     setNodes((nds) => nds.map((n) => (n.id === id ? { ...n, data: { ...n.data, ...patch } } : n)));
@@ -84,8 +88,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
   }, [d.title, d.currency, d.pageSize, d.logoUrl, d.logoPosition, JSON.stringify(pages), d.publicId]);
 
   const setPageContent = (value: string) => {
-    const next = pages.map((p, i) => (i === activePage ? { ...p, content: value } : p));
-    update({ pages: next });
+    update({ pages: pages.map((p, i) => (i === pageIndex ? { ...p, content: value } : p)) });
   };
 
   const addPage = () => {
@@ -105,8 +108,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
     if (!file) return;
     if (!/image\/(png|jpeg|jpg|svg\+xml)/.test(file.type)) return;
     try {
-      const url = await readLogoAsDataUrl(file);
-      update({ logoUrl: url });
+      update({ logoUrl: await readLogoAsDataUrl(file) });
     } catch {
       /* imagen no válida */
     }
@@ -116,9 +118,6 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
     await syncContract({ ...d, pages }, { nodeId: id, flowId });
     window.open(`/contrato/${d.publicId}`, "_blank", "noopener");
   };
-
-  const chip =
-    "px-3 py-1.5 rounded-full text-[12px] font-normal text-neutral-600 bg-neutral-100 hover:bg-neutral-200 transition-colors";
 
   return (
     <div
@@ -135,17 +134,13 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
         className="absolute top-0 left-1/2 z-30 h-5 w-28 -translate-x-1/2 cursor-grab rounded-b-xl active:cursor-grabbing"
         title="Mover widget"
       >
-        <div className="mx-auto mt-1.5 h-1.5 w-8 rounded-full bg-black/15 opacity-0 transition-opacity group-hover/widget:opacity-100" />
+        <div className="mx-auto mt-1.5 h-1.5 w-8 rounded-full bg-black/10 opacity-0 transition-opacity group-hover/widget:opacity-100" />
       </div>
 
       {/* Hoja */}
       <div
-        className="relative w-full h-full rounded-[10px] bg-white overflow-hidden flex flex-col"
-        style={{
-          boxShadow: selected
-            ? "0 18px 40px -12px rgba(0,0,0,0.18)"
-            : "0 10px 30px -14px rgba(0,0,0,0.14)",
-        }}
+        className="relative h-full w-full overflow-hidden rounded-2xl bg-white shadow-sm"
+        style={{ boxShadow: selected ? "0 6px 24px -12px rgba(0,0,0,0.16)" : "0 2px 12px -8px rgba(0,0,0,0.12)" }}
         onDragOver={(e) => {
           e.preventDefault();
           setDragOver(true);
@@ -157,120 +152,70 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
           void handleFile(e.dataTransfer.files?.[0]);
         }}
       >
-        {/* Controles dentro de la hoja */}
-        <AnimatePresence>
-          {hovered && (
-            <motion.div
-              initial={{ opacity: 0, y: -6 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -6 }}
-              transition={{ duration: 0.15 }}
-              className="nodrag nopan absolute top-3 left-3 right-3 z-20 flex items-center gap-2 rounded-2xl bg-white/95 px-3 py-2 backdrop-blur"
-              onMouseDown={(e) => e.stopPropagation()}
-              onClick={(e) => e.stopPropagation()}
-            >
-              <input
-                value={d.title ?? "Contratos"}
-                onChange={(e) => update({ title: e.target.value })}
-                placeholder="Contratos"
-                className="min-w-0 flex-1 bg-transparent text-[14px] font-medium text-neutral-900 outline-none placeholder:text-neutral-400"
+        {/* Barra de configuración dentro de la hoja */}
+        <div
+          className={`nodrag nopan absolute left-6 right-6 top-6 z-20 flex items-center gap-2 transition-all duration-200 ${
+            hovered ? "translate-y-0 opacity-100" : "pointer-events-none -translate-y-2 opacity-0"
+          }`}
+          onMouseDown={(e) => e.stopPropagation()}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <input
+            value={d.title ?? "Contratos"}
+            onChange={(e) => update({ title: e.target.value })}
+            placeholder="Contratos"
+            className="min-w-0 flex-1 bg-transparent text-sm font-medium text-gray-900 outline-none placeholder:text-gray-300"
+          />
+          <span className="shrink-0 text-xs font-light text-gray-500">
+            {pages.length} {pages.length === 1 ? "página" : "páginas"}
+          </span>
+
+          <div className="relative shrink-0">
+            <button className={PILL} onClick={() => setOpenMenu(openMenu === "moneda" ? null : "moneda")}>
+              {d.currency || "MXN"}
+            </button>
+            {openMenu === "moneda" && (
+              <Menu
+                items={CURRENCIES}
+                active={d.currency || "MXN"}
+                onPick={(v) => {
+                  update({ currency: v });
+                  setOpenMenu(null);
+                }}
               />
-              <span className="shrink-0 text-[12px] font-light text-neutral-400">
-                {pages.length} {pages.length === 1 ? "página" : "páginas"}
-              </span>
+            )}
+          </div>
 
-              <div className="relative shrink-0">
-                <button className={chip} onClick={() => setOpenMenu(openMenu === "moneda" ? null : "moneda")}>
-                  {d.currency || "MXN"}
-                </button>
-                {openMenu === "moneda" && (
-                  <Menu
-                    items={CURRENCIES}
-                    active={d.currency || "MXN"}
-                    onPick={(v) => {
-                      update({ currency: v });
-                      setOpenMenu(null);
-                    }}
-                  />
-                )}
-              </div>
+          <div className="relative shrink-0">
+            <button className={PILL} onClick={() => setOpenMenu(openMenu === "hoja" ? null : "hoja")}>
+              {d.pageSize || "Carta"}
+            </button>
+            {openMenu === "hoja" && (
+              <Menu
+                items={PAGE_SIZES}
+                active={d.pageSize || "Carta"}
+                onPick={(v) => {
+                  update({ pageSize: v });
+                  setOpenMenu(null);
+                }}
+              />
+            )}
+          </div>
 
-              <div className="relative shrink-0">
-                <button className={chip} onClick={() => setOpenMenu(openMenu === "hoja" ? null : "hoja")}>
-                  {d.pageSize || "Carta"}
-                </button>
-                {openMenu === "hoja" && (
-                  <Menu
-                    items={PAGE_SIZES}
-                    active={d.pageSize || "Carta"}
-                    onPick={(v) => {
-                      update({ pageSize: v });
-                      setOpenMenu(null);
-                    }}
-                  />
-                )}
-              </div>
+          <button onClick={openPublic} className={`${PILL} shrink-0`}>
+            <span className="flex items-center gap-1.5">
+              <ExternalLink size={11} /> Abrir
+            </span>
+          </button>
 
-              <div className="relative shrink-0">
-                <button className={chip} onClick={() => setOpenMenu(openMenu === "logo" ? null : "logo")}>
-                  Logotipo
-                </button>
-                {openMenu === "logo" && (
-                  <div className="absolute right-0 top-full z-30 mt-2 w-[230px] rounded-2xl bg-white p-2 shadow-lg">
-                    <button
-                      onClick={() => fileRef.current?.click()}
-                      className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-[12.5px] text-neutral-700 hover:bg-neutral-100"
-                    >
-                      <Upload size={13} /> Subir imagen
-                    </button>
-                    {LOGO_POSITIONS.map((p) => (
-                      <button
-                        key={p.value}
-                        onClick={() => {
-                          update({ logoPosition: p.value });
-                          setOpenMenu(null);
-                        }}
-                        className={`flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-[12.5px] hover:bg-neutral-100 ${
-                          (d.logoPosition || "top-left") === p.value ? "text-neutral-900" : "text-neutral-500"
-                        }`}
-                      >
-                        <ImageIcon size={13} /> {p.label}
-                      </button>
-                    ))}
-                    {d.logoUrl && (
-                      <button
-                        onClick={() => {
-                          update({ logoUrl: undefined });
-                          setOpenMenu(null);
-                        }}
-                        className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-[12.5px] text-red-500 hover:bg-red-50"
-                      >
-                        <Trash2 size={13} /> Quitar logotipo
-                      </button>
-                    )}
-                  </div>
-                )}
-              </div>
-
-              <button
-                onClick={openPublic}
-                className="shrink-0 rounded-full bg-black px-3 py-1.5 text-[12px] font-normal text-white transition-colors hover:bg-neutral-800"
-              >
-                <span className="flex items-center gap-1.5">
-                  <ExternalLink size={12} /> Abrir
-                </span>
-              </button>
-
-              <button
-                onClick={() => setNodes((nds) => nds.filter((n) => n.id !== id))}
-                className="shrink-0 rounded-lg p-1.5 text-neutral-400 transition-colors hover:bg-red-50 hover:text-red-500"
-                title="Eliminar"
-              >
-                <Trash2 size={13} />
-              </button>
-            </motion.div>
-          )}
-        </AnimatePresence>
+          <button
+            onClick={() => setNodes((nds) => nds.filter((n) => n.id !== id))}
+            className="shrink-0 rounded-full p-1.5 text-gray-400 transition-colors hover:bg-gray-50 hover:text-gray-900"
+            title="Eliminar"
+          >
+            <Trash2 size={12} />
+          </button>
+        </div>
 
         <input
           ref={fileRef}
@@ -284,24 +229,70 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
         />
 
         {/* Logotipo */}
-        {d.logoUrl && (
-          <img
-            src={d.logoUrl}
-            alt="Logotipo del documento"
-            className={`absolute z-10 max-h-16 max-w-[160px] object-contain ${logoClass(d.logoPosition || "top-left")}`}
-          />
-        )}
+        <div className={`nodrag nopan absolute z-10 ${cornerClass(logoPosition)}`} onMouseDown={(e) => e.stopPropagation()}>
+          {d.logoUrl ? (
+            <button onClick={() => setOpenMenu(openMenu === "logo" ? null : "logo")} title="Posición del logotipo">
+              <img src={d.logoUrl} alt="Logotipo del documento" className="max-h-16 max-w-[160px] object-contain" />
+            </button>
+          ) : (
+            <button
+              onClick={() => fileRef.current?.click()}
+              className="flex h-14 w-14 items-center justify-center rounded-xl text-gray-400 opacity-0 transition-opacity duration-200 group-hover/widget:opacity-30"
+              title="Subir logotipo"
+            >
+              <ImageIcon size={20} />
+            </button>
+          )}
+
+          {openMenu === "logo" && (
+            <div
+              className={`absolute z-30 mt-2 w-[220px] rounded-2xl bg-white/95 p-1.5 shadow-sm backdrop-blur-sm ${
+                logoPosition.includes("right") ? "right-0" : "left-0"
+              } ${logoPosition.startsWith("bottom") ? "bottom-full mb-2" : "top-full"}`}
+            >
+              <button
+                onClick={() => fileRef.current?.click()}
+                className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-xs text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+              >
+                <Upload size={12} /> Cambiar imagen
+              </button>
+              {LOGO_POSITIONS.map((p) => (
+                <button
+                  key={p.value}
+                  onClick={() => {
+                    update({ logoPosition: p.value });
+                    setOpenMenu(null);
+                  }}
+                  className={`block w-full rounded-xl px-3 py-2 text-left text-xs hover:bg-gray-50 ${
+                    logoPosition === p.value ? "bg-gray-50 text-gray-900" : "text-gray-500"
+                  }`}
+                >
+                  {p.label}
+                </button>
+              ))}
+              <button
+                onClick={() => {
+                  update({ logoUrl: undefined });
+                  setOpenMenu(null);
+                }}
+                className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-xs text-gray-400 hover:bg-gray-50 hover:text-gray-900"
+              >
+                <Trash2 size={12} /> Quitar logotipo
+              </button>
+            </div>
+          )}
+        </div>
 
         {dragOver && (
-          <div className="absolute inset-4 z-20 flex items-center justify-center rounded-2xl bg-neutral-50/90 text-[13px] font-light text-neutral-500">
+          <div className="pointer-events-none absolute inset-4 z-20 flex items-center justify-center rounded-2xl border border-dashed border-gray-300 bg-black/5 text-xs font-light text-gray-500">
             Suelta aquí tu logotipo
           </div>
         )}
 
         {/* Contenido de la hoja */}
-        <div className="flex-1 overflow-hidden px-12 pb-16 pt-24">
-          {activePage === 0 && (
-            <h2 className="mb-8 text-[26px] font-normal leading-tight text-neutral-900">
+        <div className="flex h-full flex-col px-12 pb-16 pt-24">
+          {pageIndex === 0 && (
+            <h2 className="mb-8 text-[26px] font-medium leading-tight text-gray-900">
               {d.title?.trim() || "Contratos"}
             </h2>
           )}
@@ -310,59 +301,64 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
             onChange={(e) => setPageContent(e.target.value)}
             onMouseDown={(e) => e.stopPropagation()}
             placeholder="Escribe aquí el contenido del contrato o pídeselo a la inteligencia artificial."
-            className="nodrag nopan h-full w-full resize-none bg-transparent text-[13.5px] font-light leading-[1.85] text-neutral-800 outline-none placeholder:text-neutral-300"
+            className="nodrag nopan min-h-0 flex-1 resize-none bg-transparent text-[13.5px] font-light leading-[1.85] text-gray-800 outline-none placeholder:text-gray-300"
           />
         </div>
 
-        <div className="absolute bottom-5 left-0 right-0 text-center text-[11px] font-light text-neutral-300">
-          Página {Math.min(activePage, pages.length - 1) + 1} de {pages.length}
+        <div className="absolute bottom-6 left-0 right-0 text-center text-[11px] font-light text-gray-300">
+          Página {pageIndex + 1} de {pages.length}
         </div>
       </div>
 
       {/* Navegador de páginas */}
-      <AnimatePresence>
-        {hovered && (
-          <motion.div
-            initial={{ opacity: 0, x: -6 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: -6 }}
-            transition={{ duration: 0.15 }}
-            className="nodrag nopan absolute top-0 z-30 flex flex-col gap-2 rounded-2xl bg-white/95 p-2 shadow-lg backdrop-blur"
-            style={{ left: "100%", marginLeft: 12 / zoom, transform: `scale(${1 / zoom})`, transformOrigin: "top left" }}
-            onMouseDown={(e) => e.stopPropagation()}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {pages.map((p, i) => (
-              <div key={p.id} className="group/page relative">
-                <button
-                  onClick={() => setActivePage(i)}
-                  className={`h-14 w-11 rounded-lg text-[11px] font-light transition-colors ${
-                    i === activePage ? "bg-neutral-900 text-white" : "bg-neutral-100 text-neutral-500 hover:bg-neutral-200"
-                  }`}
-                >
-                  {i + 1}
-                </button>
-                {pages.length > 1 && (
-                  <button
-                    onClick={() => removePage(i)}
-                    className="absolute -right-1 -top-1 hidden h-4 w-4 items-center justify-center rounded-full bg-white text-red-500 shadow group-hover/page:flex"
-                    title="Eliminar página"
-                  >
-                    <Trash2 size={9} />
-                  </button>
-                )}
-              </div>
-            ))}
+      <div
+        className={`nodrag nopan absolute top-1/2 z-30 flex flex-col items-center gap-2 rounded-2xl bg-white/90 p-2 shadow-sm backdrop-blur-sm transition-all duration-200 ${
+          hovered ? "translate-x-0 opacity-100" : "pointer-events-none -translate-x-2 opacity-0"
+        }`}
+        style={{
+          left: "100%",
+          marginLeft: 14 / zoom,
+          transform: `translateY(-50%) scale(${1 / zoom})`,
+          transformOrigin: "left center",
+        }}
+        onMouseDown={(e) => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
+      >
+        {pages.map((p, i) => (
+          <div key={p.id} className="group/page relative">
             <button
-              onClick={addPage}
-              className="flex h-9 w-11 items-center justify-center rounded-lg bg-neutral-100 text-neutral-500 transition-colors hover:bg-neutral-200"
-              title="Añadir página"
+              onClick={() => setActivePage(i)}
+              className={`flex h-16 w-12 flex-col justify-between overflow-hidden rounded-lg p-1.5 text-left transition-colors ${
+                i === pageIndex ? "bg-gray-50 ring-1 ring-gray-200" : "bg-white hover:bg-gray-50"
+              }`}
+              title={`Página ${i + 1}`}
             >
-              <Plus size={13} />
+              <span className="line-clamp-3 text-[4.5px] font-light leading-[1.6] text-gray-400">
+                {p.content?.trim() || " "}
+              </span>
+              <span className={`text-[9px] font-light ${i === pageIndex ? "text-gray-900" : "text-gray-400"}`}>
+                {i + 1}
+              </span>
             </button>
-          </motion.div>
-        )}
-      </AnimatePresence>
+            {pages.length > 1 && (
+              <button
+                onClick={() => removePage(i)}
+                className="absolute -right-1 -top-1 hidden h-4 w-4 items-center justify-center rounded-full bg-white text-gray-400 shadow-sm hover:text-gray-900 group-hover/page:flex"
+                title="Eliminar página"
+              >
+                <Trash2 size={8} />
+              </button>
+            )}
+          </div>
+        ))}
+        <button
+          onClick={addPage}
+          className="flex h-8 w-12 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-gray-50 hover:text-gray-900"
+          title="Añadir página"
+        >
+          <Plus size={12} />
+        </button>
+      </div>
 
       <NodeExtendHandles nodeId={id} />
       <WidgetCommentSlot nodeId={id} />
@@ -371,13 +367,13 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
 };
 
 const Menu = ({ items, active, onPick }: { items: string[]; active: string; onPick: (v: string) => void }) => (
-  <div className="absolute right-0 top-full z-30 mt-2 w-[140px] rounded-2xl bg-white p-1.5 shadow-lg">
+  <div className="absolute right-0 top-full z-30 mt-2 w-[140px] rounded-2xl bg-white/95 p-1.5 shadow-sm backdrop-blur-sm">
     {items.map((it) => (
       <button
         key={it}
         onClick={() => onPick(it)}
-        className={`block w-full rounded-xl px-3 py-2 text-left text-[12.5px] hover:bg-neutral-100 ${
-          it === active ? "text-neutral-900" : "text-neutral-500"
+        className={`block w-full rounded-xl px-3 py-2 text-left text-xs hover:bg-gray-50 ${
+          it === active ? "bg-gray-50 text-gray-900" : "text-gray-500"
         }`}
       >
         {it}
