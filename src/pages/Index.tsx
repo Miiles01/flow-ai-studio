@@ -1581,14 +1581,25 @@ const IndexContent = () => {
           { role: "user" as const, content: c.prompt },
           { role: "assistant" as const, content: c.answer },
         ]).flat() ?? [];
+        // Contexto del canvas: data de los demás widgets para que la IA pueda sincronizar info
+        // (p. ej. generar un contrato a partir de una campaña existente).
+        const canvasWidgets = nodes
+          .filter((n) => n.id !== nodeId && n.type && WIDGET_NODE_TYPES.has(n.type))
+          .map((n) => {
+            const { aiComments, _aiFitNonce, ...rest } = (n.data ?? {}) as any;
+            return { nodeId: n.id, widgetType: n.type, data: rest };
+          })
+          .slice(0, 12);
         const result = await runWidgetAI({
           widgetType: node.type ?? "",
           data: node.data,
           prompt,
           history,
+          canvasWidgets,
           flowId: id && id !== "new" ? id : null,
           nodeId,
         });
+
         const pendingJobId = (result as any).jobId as string | undefined;
         setNodes((prev) => prev.map((n) => {
           if (n.id !== nodeId) return n;
