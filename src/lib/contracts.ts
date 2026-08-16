@@ -26,6 +26,21 @@ export const logoPositionClass = (pos: LogoPosition = "top-left") => {
   return `${vertical} ${pos.endsWith("right") ? "right-12" : "left-12"}`;
 };
 
+/** Campo de firma insertado en una página del documento. */
+export type SignatureField = {
+  id: string;
+  pageIndex: number;
+  label?: string;
+};
+
+/** Firma guardada para un campo (la escribe la edge function, nunca el widget). */
+export type FieldSignature = {
+  name: string;
+  email?: string | null;
+  dataUrl: string;
+  signedAt: string;
+};
+
 export type ContractsNodeData = {
   title?: string;
   currency?: string;
@@ -36,6 +51,10 @@ export type ContractsNodeData = {
   logoRepeat?: boolean;
   pages?: ContractPage[];
   publicId?: string;
+  /** Campos de firma que el usuario inserta en el documento. */
+  signatureFields?: SignatureField[];
+  /** Firmas ya guardadas, indexadas por id de campo (solo lectura desde el widget). */
+  fieldSignatures?: Record<string, FieldSignature>;
 };
 
 export const CURRENCIES = ["MXN", "USD", "EUR", "COP", "ARS", "CLP"];
@@ -113,8 +132,24 @@ export async function syncContract(
     logo_position: data.logoPosition || "top-left",
     logo_repeat: !!data.logoRepeat,
     pages: (data.pages ?? []) as any,
+    // Solo se sincroniza la definición de los campos: las firmas las guarda la edge function.
+    signature_fields: (data.signatureFields ?? []) as any,
   };
 
   const { error } = await supabase.from("contracts").upsert(payload, { onConflict: "public_id" });
   return !error;
+}
+
+/** Lee las firmas guardadas del documento público para reflejarlas en el canvas. */
+export async function fetchFieldSignatures(
+  publicId?: string
+): Promise<Record<string, FieldSignature> | null> {
+  if (!publicId) return null;
+  const { data, error } = await supabase
+    .from("contracts")
+    .select("field_signatures")
+    .eq("public_id", publicId)
+    .maybeSingle();
+  if (error || !data) return null;
+  return ((data as any).field_signatures ?? {}) as Record<string, FieldSignature>;
 }

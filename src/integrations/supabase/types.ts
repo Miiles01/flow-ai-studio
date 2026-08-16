@@ -203,6 +203,7 @@ export type Database = {
         Row: {
           created_at: string
           currency: string
+          field_signatures: Json
           flow_id: string | null
           id: string
           logo_position: string
@@ -214,6 +215,7 @@ export type Database = {
           pages: Json
           public_id: string
           signature_data: string | null
+          signature_fields: Json
           signed_at: string | null
           signer_email: string | null
           signer_name: string | null
@@ -223,6 +225,7 @@ export type Database = {
         Insert: {
           created_at?: string
           currency?: string
+          field_signatures?: Json
           flow_id?: string | null
           id?: string
           logo_position?: string
@@ -234,6 +237,7 @@ export type Database = {
           pages?: Json
           public_id: string
           signature_data?: string | null
+          signature_fields?: Json
           signed_at?: string | null
           signer_email?: string | null
           signer_name?: string | null
@@ -243,6 +247,7 @@ export type Database = {
         Update: {
           created_at?: string
           currency?: string
+          field_signatures?: Json
           flow_id?: string | null
           id?: string
           logo_position?: string
@@ -254,6 +259,7 @@ export type Database = {
           pages?: Json
           public_id?: string
           signature_data?: string | null
+          signature_fields?: Json
           signed_at?: string | null
           signer_email?: string | null
           signer_name?: string | null
