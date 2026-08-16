@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { X } from "lucide-react";
+import { X, Lightbulb } from "lucide-react";
+import SuggestionDialog from "@/components/SuggestionDialog";
 import { motion } from "framer-motion";
 import type { Trend } from "@/hooks/useTrends";
 import { ReactFlow, BaseEdge, EdgeLabelRenderer, getSmoothStepPath, type Node, type Edge, type EdgeProps, type ReactFlowInstance } from "@xyflow/react";
@@ -289,6 +290,22 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
           <X size={16} strokeWidth={2.5} />
           Cerrar
         </button>
+
+        {/* Botón flotante para sugerir mejoras a la arquitectura */}
+        <button
+          onClick={() => setSuggestOpen(true)}
+          className="absolute bottom-8 right-8 px-5 py-2.5 rounded-full transition-all hover:bg-gray-50 dark:hover:bg-white/10 text-black dark:text-white z-50 bg-white dark:bg-white/5 shadow-sm border border-black/5 dark:border-white/10 font-medium text-sm cursor-pointer flex items-center gap-2"
+        >
+          <Lightbulb size={16} strokeWidth={2.5} />
+          Sugerir
+        </button>
+
+        <SuggestionDialog
+          open={suggestOpen}
+          network={targetNetwork || null}
+          context="Arquitectura Algorítmica"
+          onClose={() => setSuggestOpen(false)}
+        />
 
         {/* Read-only ReactFlow Diagram — Ocupa todo el fondo para que los videos floten por encima */}
         <div className="absolute inset-0 z-10">
