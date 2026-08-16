@@ -162,6 +162,9 @@ ${scrapedContext}`
           status: 429, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
+      if (response.status === 403) {
+        return new Response(JSON.stringify({ error: "El límite de créditos de IA del workspace se alcanzó. Ajusta el límite en Ajustes → Planes y créditos." }), { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
       if (response.status === 402) {
         return new Response(JSON.stringify({ error: "Créditos de IA agotados." }), {
           status: 402, headers: { ...corsHeaders, "Content-Type": "application/json" },
