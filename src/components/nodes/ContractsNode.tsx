@@ -66,9 +66,9 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
   const [dragOver, setDragOver] = useState(false);
   const [editing, setEditing] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const pageIndex = Math.min(activePage, pages.length - 1);
-  const page = pages[pageIndex];
   const logoPosition = d.logoPosition || "top-left";
 
   const update = (patch: Partial<ContractsNodeData>) =>
@@ -100,8 +100,29 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
       void syncContract({ ...d, pages }, { nodeId: id, flowId });
     }, 900);
     return () => clearTimeout(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [d.title, d.currency, d.pageSize, d.logoUrl, d.logoPosition, JSON.stringify(pages), d.publicId]);
+
+  // Sincroniza la página activa con el scroll.
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const onScroll = () => {
+      const pageH = el.clientHeight;
+      const idx = Math.max(0, Math.min(pages.length - 1, Math.round(el.scrollTop / pageH)));
+      setActivePage(idx);
+    };
+    el.addEventListener("scroll", onScroll, { passive: true });
+    return () => el.removeEventListener("scroll", onScroll);
+  }, [pages.length]);
+
+  // Cuando cambia la página activa desde la sidebar, scrolla suavemente a ella.
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const pageH = el.clientHeight;
+    el.scrollTo({ top: pageH * pageIndex, behavior: "smooth" });
+  }, [pageIndex]);
 
   const setPageContent = (value: string) => {
     update({ pages: pages.map((p, i) => (i === pageIndex ? { ...p, content: value } : p)) });
@@ -319,42 +340,48 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
           </div>
         )}
 
-        {/* Contenido de la hoja */}
-        <div className="flex h-full flex-col px-12 pb-16 pt-24">
-          {pageIndex === 0 && (
-            <h2 className="mb-8 text-[26px] font-medium leading-tight text-gray-900">
-              {d.title?.trim() || "Contratos"}
-            </h2>
-          )}
-          {editing ? (
-            <textarea
-              autoFocus
-              value={page?.content ?? ""}
-              onChange={(e) => setPageContent(e.target.value)}
-              onBlur={() => setEditing(false)}
-              onMouseDown={(e) => e.stopPropagation()}
-              placeholder="Escribe aquí el contenido del contrato o pídeselo a la inteligencia artificial. Usa **negritas**, - viñetas, 1. listas y [texto](enlace)."
-              className="nodrag nopan min-h-0 flex-1 resize-none bg-transparent text-[13.5px] font-light leading-[1.85] text-gray-800 outline-none placeholder:text-gray-300"
-            />
-          ) : (
-            <div
-              onClick={() => setEditing(true)}
-              onMouseDown={(e) => e.stopPropagation()}
-              className="nodrag nopan min-h-0 flex-1 cursor-text overflow-hidden text-[13.5px] font-light leading-[1.85] text-gray-800"
-            >
-              {page?.content?.trim() ? (
-                <ContractRichText content={page.content} />
-              ) : (
-                <span className="text-gray-300">
-                  Escribe aquí el contenido del contrato o pídeselo a la inteligencia artificial.
-                </span>
+        {/* Contenido de la hoja - scroll vertical entre páginas */}
+        <div ref={scrollRef} className="nodrag nopan h-full overflow-y-auto">
+          {pages.map((p, i) => (
+            <div key={p.id} className="relative flex h-full flex-col px-12 pb-16 pt-24">
+              {i === 0 && (
+                <h2 className="mb-8 text-[26px] font-medium leading-tight text-gray-900">
+                  {d.title?.trim() || "Contratos"}
+                </h2>
               )}
+              {editing && pageIndex === i ? (
+                <textarea
+                  autoFocus
+                  value={p.content ?? ""}
+                  onChange={(e) => setPageContent(e.target.value)}
+                  onBlur={() => setEditing(false)}
+                  onMouseDown={(e) => e.stopPropagation()}
+                  placeholder="Escribe aquí el contenido del contrato o pídeselo a la inteligencia artificial. Usa **negritas**, - viñetas, 1. listas y [texto](enlace)."
+                  className="nodrag nopan min-h-0 flex-1 resize-none bg-transparent text-[13.5px] font-light leading-[1.85] text-gray-800 outline-none placeholder:text-gray-300"
+                />
+              ) : (
+                <div
+                  onClick={() => {
+                    setActivePage(i);
+                    setEditing(true);
+                  }}
+                  onMouseDown={(e) => e.stopPropagation()}
+                  className="nodrag nopan min-h-0 flex-1 cursor-text overflow-hidden text-[13.5px] font-light leading-[1.85] text-gray-800"
+                >
+                  {p.content?.trim() ? (
+                    <ContractRichText content={p.content} />
+                  ) : (
+                    <span className="text-gray-300">
+                      Escribe aquí el contenido del contrato o pídeselo a la inteligencia artificial.
+                    </span>
+                  )}
+                </div>
+              )}
+              <div className="absolute bottom-6 left-0 right-0 text-center text-[11px] font-light text-gray-300">
+                Página {i + 1} de {pages.length}
+              </div>
             </div>
-          )}
-        </div>
-
-        <div className="absolute bottom-6 left-0 right-0 text-center text-[11px] font-light text-gray-300">
-          Página {pageIndex + 1} de {pages.length}
+          ))}
         </div>
       </div>
 
