@@ -66,6 +66,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
   const [dragOver, setDragOver] = useState(false);
   const [editing, setEditing] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
 
   const pageIndex = Math.min(activePage, pages.length - 1);
   const page = pages[pageIndex];
