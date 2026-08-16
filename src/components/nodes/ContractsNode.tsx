@@ -23,6 +23,8 @@ import {
   type ContractsNodeData,
   type LogoPosition,
 } from "@/lib/contracts";
+import ContractRichText from "@/lib/contractRichText";
+import { repaginate } from "@/lib/contractPagination";
 import { CONTRACT_TEMPLATES, TEMPLATE_CATEGORIES, templatePages, type ContractTemplate } from "@/lib/contractTemplates";
 
 
@@ -62,6 +64,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
   const [activePage, setActivePage] = useState(0);
   const [openMenu, setOpenMenu] = useState<"moneda" | "hoja" | "logo" | null>(null);
   const [dragOver, setDragOver] = useState(false);
+  const [editing, setEditing] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const pageIndex = Math.min(activePage, pages.length - 1);
@@ -79,6 +82,17 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
       )
     );
   }, [dims.width, dims.height, id, setNodes]);
+
+  // Paginación automática: el contenido nunca desborda la hoja.
+  useEffect(() => {
+    if (editing) return;
+    const t = setTimeout(() => {
+      const next = repaginate(pages, dims);
+      if (next) update({ pages: next });
+    }, 120);
+    return () => clearTimeout(t);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [JSON.stringify(pages), dims.width, dims.height, editing]);
 
   // Sincroniza la versión pública del documento.
   useEffect(() => {
