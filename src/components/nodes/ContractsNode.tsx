@@ -106,7 +106,21 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
     setActivePage((p) => Math.max(0, Math.min(p, next.length - 1)));
   };
 
+  const applyTemplate = (tpl: ContractTemplate, mode: "replace" | "append") => {
+    const nuevas = templatePages(tpl);
+    if (mode === "replace") {
+      update({ title: tpl.title, pages: nuevas });
+      setActivePage(0);
+      return;
+    }
+    const conContenido = pages.filter((p) => p.content.trim().length > 0);
+    const next = [...conContenido, ...nuevas];
+    update({ pages: next });
+    setActivePage(conContenido.length);
+  };
+
   const handleFile = async (file?: File | null) => {
+
     if (!file) return;
     if (!/image\/(png|jpeg|jpg|svg\+xml)/.test(file.type)) return;
     try {
