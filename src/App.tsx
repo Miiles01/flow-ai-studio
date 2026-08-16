@@ -31,6 +31,7 @@ import Onboarding from "./pages/Onboarding";
 import ProgramApplicants from "./pages/ProgramApplicants";
 import PublicApplicants from "./pages/PublicApplicants";
 import NotFound from "./pages/NotFound";
+import ContractPublic from "./pages/ContractPublic";
 import JoinFlow from "./pages/JoinFlow";
 import Admin from "./pages/Admin";
 
@@ -121,6 +122,7 @@ const App = () => (
               <Route path="/boards" element={<DashboardRoute><Boards /></DashboardRoute>} />
               <Route path="/trends" element={<DashboardRoute><Trends /></DashboardRoute>} />
               <Route path="/boards/new" element={<ProtectedRoute><Index /></ProtectedRoute>} />
+              <Route path="/contrato/:publicId" element={<ContractPublic />} />
               <Route path="/boards/join/:token" element={<JoinFlow />} />
               <Route path="/boards/:id" element={<Index />} />
               <Route path="/programs" element={<DashboardRoute><Programs /></DashboardRoute>} />
