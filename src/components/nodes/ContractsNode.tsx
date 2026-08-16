@@ -312,13 +312,31 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
               {d.title?.trim() || "Contratos"}
             </h2>
           )}
-          <textarea
-            value={page?.content ?? ""}
-            onChange={(e) => setPageContent(e.target.value)}
-            onMouseDown={(e) => e.stopPropagation()}
-            placeholder="Escribe aquí el contenido del contrato o pídeselo a la inteligencia artificial."
-            className="nodrag nopan min-h-0 flex-1 resize-none bg-transparent text-[13.5px] font-light leading-[1.85] text-gray-800 outline-none placeholder:text-gray-300"
-          />
+          {editing ? (
+            <textarea
+              autoFocus
+              value={page?.content ?? ""}
+              onChange={(e) => setPageContent(e.target.value)}
+              onBlur={() => setEditing(false)}
+              onMouseDown={(e) => e.stopPropagation()}
+              placeholder="Escribe aquí el contenido del contrato o pídeselo a la inteligencia artificial. Usa **negritas**, - viñetas, 1. listas y [texto](enlace)."
+              className="nodrag nopan min-h-0 flex-1 resize-none bg-transparent text-[13.5px] font-light leading-[1.85] text-gray-800 outline-none placeholder:text-gray-300"
+            />
+          ) : (
+            <div
+              onClick={() => setEditing(true)}
+              onMouseDown={(e) => e.stopPropagation()}
+              className="nodrag nopan min-h-0 flex-1 cursor-text overflow-hidden text-[13.5px] font-light leading-[1.85] text-gray-800"
+            >
+              {page?.content?.trim() ? (
+                <ContractRichText content={page.content} />
+              ) : (
+                <span className="text-gray-300">
+                  Escribe aquí el contenido del contrato o pídeselo a la inteligencia artificial.
+                </span>
+              )}
+            </div>
+          )}
         </div>
 
         <div className="absolute bottom-6 left-0 right-0 text-center text-[11px] font-light text-gray-300">
