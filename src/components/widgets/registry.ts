@@ -134,7 +134,7 @@ export const WIDGETS: WidgetDef[] = [
         ],
       },
     }),
-  },,
+  },
   {
     id: "contracts",
     name: "Contratos",
