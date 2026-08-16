@@ -17,7 +17,7 @@
  * ═══════════════════════════════════════════════════════════════════════════
  */
 
-import { Columns3, UserSquare2, LayoutGrid, LineChart, Globe, type LucideIcon } from "lucide-react";
+import { Columns3, UserSquare2, LayoutGrid, LineChart, Globe, FileSignature, type LucideIcon } from "lucide-react";
 import type { Node } from "@xyflow/react";
 
 export type WidgetDef = {
@@ -132,6 +132,27 @@ export const WIDGETS: WidgetDef[] = [
           { id: uid(), url: "https://app.lizza.ai/", label: "Lizza" },
           { id: uid(), url: "https://www.heycollabify.com/", label: "Collabify" },
         ],
+      },
+    }),
+  },,
+  {
+    id: "contracts",
+    name: "Contratos",
+    description: "Documento con tamaño de hoja, logotipo, páginas y enlace público para firma",
+    icon: FileSignature,
+    createNode: (position) => ({
+      id: `contract-${Date.now()}`,
+      type: "contractsNode",
+      position,
+      style: { width: 816, height: 1056 },
+      draggable: true,
+      data: {
+        title: "Contratos",
+        currency: "MXN",
+        pageSize: "Carta",
+        logoPosition: "top-left",
+        publicId: `${Math.random().toString(36).slice(2, 8)}${Date.now().toString(36).slice(-4)}`,
+        pages: [{ id: uid(), content: "" }],
       },
     }),
   },
