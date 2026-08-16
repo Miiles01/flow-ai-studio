@@ -101,8 +101,29 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
       void syncContract({ ...d, pages }, { nodeId: id, flowId });
     }, 900);
     return () => clearTimeout(t);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [d.title, d.currency, d.pageSize, d.logoUrl, d.logoPosition, JSON.stringify(pages), d.publicId]);
+
+  // Sincroniza la página activa con el scroll.
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const onScroll = () => {
+      const pageH = el.clientHeight;
+      const idx = Math.max(0, Math.min(pages.length - 1, Math.round(el.scrollTop / pageH)));
+      setActivePage(idx);
+    };
+    el.addEventListener("scroll", onScroll, { passive: true });
+    return () => el.removeEventListener("scroll", onScroll);
+  }, [pages.length]);
+
+  // Cuando cambia la página activa desde la sidebar, scrolla suavemente a ella.
+  useEffect(() => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const pageH = el.clientHeight;
+    el.scrollTo({ top: pageH * pageIndex, behavior: "smooth" });
+  }, [pageIndex]);
 
   const setPageContent = (value: string) => {
     update({ pages: pages.map((p, i) => (i === pageIndex ? { ...p, content: value } : p)) });
