@@ -199,6 +199,66 @@ export type Database = {
         }
         Relationships: []
       }
+      contracts: {
+        Row: {
+          created_at: string
+          currency: string
+          flow_id: string | null
+          id: string
+          logo_position: string
+          logo_url: string | null
+          node_id: string | null
+          owner_id: string
+          page_size: string
+          pages: Json
+          public_id: string
+          signature_data: string | null
+          signed_at: string | null
+          signer_email: string | null
+          signer_name: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          currency?: string
+          flow_id?: string | null
+          id?: string
+          logo_position?: string
+          logo_url?: string | null
+          node_id?: string | null
+          owner_id: string
+          page_size?: string
+          pages?: Json
+          public_id: string
+          signature_data?: string | null
+          signed_at?: string | null
+          signer_email?: string | null
+          signer_name?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          currency?: string
+          flow_id?: string | null
+          id?: string
+          logo_position?: string
+          logo_url?: string | null
+          node_id?: string | null
+          owner_id?: string
+          page_size?: string
+          pages?: Json
+          public_id?: string
+          signature_data?: string | null
+          signed_at?: string | null
+          signer_email?: string | null
+          signer_name?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       discovery_flows: {
         Row: {
           created_at: string
