@@ -11,6 +11,9 @@ export async function runWidgetAI(params: {
   data: unknown;
   prompt: string;
   history?: WidgetAIHistoryMsg[];
+  /** Data de los demás widgets del canvas, para sincronizar info entre widgets. */
+  canvasWidgets?: { nodeId: string; widgetType?: string; data: unknown }[];
+
   flowId?: string | null;
   nodeId?: string;
 }): Promise<WidgetAIResult> {
