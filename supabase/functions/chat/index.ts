@@ -163,7 +163,7 @@ ${scrapedContext}`
         });
       }
       if (response.status === 403) {
-        return new Response(JSON.stringify({ error: "El límite de créditos de IA del workspace se alcanzó. Ajusta el límite en Ajustes → Planes y créditos." }), { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+        return new Response(JSON.stringify({ error: "Se agotaron los créditos de IA incluidos. Agrega tu propio modelo en Apps → Modelos para seguir trabajando sin límites." }), { status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" } });
       }
       if (response.status === 402) {
         return new Response(JSON.stringify({ error: "Créditos de IA agotados." }), {
