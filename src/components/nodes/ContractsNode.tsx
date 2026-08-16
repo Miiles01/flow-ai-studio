@@ -23,6 +23,8 @@ import {
   type ContractsNodeData,
   type LogoPosition,
 } from "@/lib/contracts";
+import { CONTRACT_TEMPLATES, TEMPLATE_CATEGORIES, templatePages, type ContractTemplate } from "@/lib/contractTemplates";
+
 
 const LOGO_POSITIONS: { value: LogoPosition; label: string }[] = [
   { value: "top-left", label: "Arriba a la izquierda" },
