@@ -111,6 +111,7 @@ export async function syncContract(
     page_size: data.pageSize || "Carta",
     logo_url: data.logoUrl ?? null,
     logo_position: data.logoPosition || "top-left",
+    logo_repeat: !!data.logoRepeat,
     pages: (data.pages ?? []) as any,
   };
 
