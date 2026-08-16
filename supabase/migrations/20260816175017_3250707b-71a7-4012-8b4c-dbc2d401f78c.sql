@@ -1,0 +1,1 @@
+ALTER TABLE public.contracts ADD COLUMN IF NOT EXISTS logo_repeat boolean NOT NULL DEFAULT false;
