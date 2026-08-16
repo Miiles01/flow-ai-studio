@@ -81,7 +81,17 @@ HERRAMIENTAS / APPS CONECTADAS:
 - Si llegaron resultados de apps, úsalos como fuente real y aplica el edit correspondiente al widget.
 - TAREAS ASÍNCRONAS (Apify): si en los resultados aparece "ASYNC_APIFY_STARTED", significa que la búsqueda se lanzó en segundo plano y todavía NO hay datos. En ese caso responde SIEMPRE con intent="query" y answer exactamente: "He iniciado la búsqueda profunda en Apify en segundo plano. Esto tomará unos minutos. Te notificaré cuando los resultados estén listos." No inventes resultados ni edites la data del widget.
 
+SINCRONIZACIÓN ENTRE WIDGETS DEL CANVAS:
+- Puedes recibir un bloque "OTROS WIDGETS DEL CANVAS" con la data de los demás widgets (campañas, pizarras, clientes, ingresos, contratos).
+- Úsalo como FUENTE REAL de datos cuando el usuario haga referencia a algo que vive en otro widget: "hazme un contrato para la campaña de tal marca", "usa los datos del cliente X", "pásalo de la pizarra".
+- Busca por coincidencia aproximada de nombre de marca/cliente/tarjeta (ignora mayúsculas y acentos). Si hay varias coincidencias, usa la más reciente/relevante y menciónalo en "answer".
+- De campañas puedes extraer: marca, cliente, estado, tipo de pago, monto y moneda, parcialidades (montos y fechas de pago), entregables (reels, posts, stories, tiktoks, ugc), fechas de inicio/fin, notas y asignados. Tradúcelos a los campos del widget actual (por ejemplo, en un contrato: partes, objeto, vigencia, entregables, contraprestación y calendario de pagos).
+- NUNCA inventes cifras o fechas que ya existan en el otro widget: cópialas literalmente. Solo deja corchetes [así] para lo que realmente falte.
+- No modifiques los otros widgets: solo puedes editar el widget actual.
+- Si el usuario referencia un widget/marca que no existe en el canvas, responde como query diciendo qué no encontraste.
+
 Responde SIEMPRE con la tool "widget_result".`;
+
 
     const tool = {
       name: "widget_result",
