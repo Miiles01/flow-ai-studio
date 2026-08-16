@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import ContractRichText from "@/lib/contractRichText";
-import { PAGE_DIMENSIONS, type ContractPage, type LogoPosition } from "@/lib/contracts";
+import { PAGE_DIMENSIONS, logoPositionClass, type ContractPage, type LogoPosition } from "@/lib/contracts";
 
 type Contract = {
   public_id: string;
@@ -10,23 +10,11 @@ type Contract = {
   page_size: string;
   logo_url: string | null;
   logo_position: LogoPosition;
+  logo_repeat: boolean | null;
   pages: ContractPage[];
   signer_name: string | null;
   signature_data: string | null;
   signed_at: string | null;
-};
-
-const logoClass = (pos: LogoPosition) => {
-  switch (pos) {
-    case "top-right":
-      return "top-10 right-12";
-    case "bottom-left":
-      return "bottom-12 left-12";
-    case "bottom-right":
-      return "bottom-12 right-12";
-    default:
-      return "top-10 left-12";
-  }
 };
 
 const ContractPublic = () => {
@@ -48,7 +36,7 @@ const ContractPublic = () => {
     (async () => {
       const { data } = await supabase
         .from("contracts")
-        .select("public_id, title, page_size, logo_url, logo_position, pages, signer_name, signature_data, signed_at")
+        .select("public_id, title, page_size, logo_url, logo_position, logo_repeat, pages, signer_name, signature_data, signed_at")
         .eq("public_id", publicId ?? "")
         .maybeSingle();
       if (!alive) return;
@@ -159,11 +147,11 @@ const ContractPublic = () => {
               boxShadow: "0 10px 30px -14px rgba(0,0,0,0.18)",
             }}
           >
-            {contract.logo_url && (
+            {contract.logo_url && (i === 0 || contract.logo_repeat) && (
               <img
                 src={contract.logo_url}
                 alt="Logotipo del documento"
-                className={`absolute max-h-16 max-w-[160px] object-contain ${logoClass(contract.logo_position)}`}
+                className={`absolute max-h-16 max-w-[160px] object-contain ${logoPositionClass(contract.logo_position)}`}
               />
             )}
             <div className="h-full overflow-hidden px-12 pb-16 pt-24">

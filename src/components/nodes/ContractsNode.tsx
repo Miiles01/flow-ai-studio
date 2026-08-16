@@ -18,6 +18,8 @@ import {
   PAGE_DIMENSIONS,
   readLogoAsDataUrl,
   syncContract,
+  LOGO_POSITIONS,
+  logoPositionClass,
   uid,
   type ContractPage,
   type ContractsNodeData,
@@ -27,26 +29,6 @@ import ContractRichText from "@/lib/contractRichText";
 import { repaginate } from "@/lib/contractPagination";
 import { CONTRACT_TEMPLATES, TEMPLATE_CATEGORIES, templatePages, type ContractTemplate } from "@/lib/contractTemplates";
 
-
-const LOGO_POSITIONS: { value: LogoPosition; label: string }[] = [
-  { value: "top-left", label: "Arriba a la izquierda" },
-  { value: "top-right", label: "Arriba a la derecha" },
-  { value: "bottom-left", label: "Abajo a la izquierda" },
-  { value: "bottom-right", label: "Abajo a la derecha" },
-];
-
-const cornerClass = (pos: LogoPosition) => {
-  switch (pos) {
-    case "top-right":
-      return "top-12 right-12";
-    case "bottom-left":
-      return "bottom-14 left-12";
-    case "bottom-right":
-      return "bottom-14 right-12";
-    default:
-      return "top-12 left-12";
-  }
-};
 
 const PILL =
   "px-3 py-1.5 rounded-full text-xs font-normal bg-white/90 backdrop-blur-sm border border-gray-100 text-gray-600 hover:text-gray-900 transition-colors";
@@ -101,7 +83,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
     }, 900);
     return () => clearTimeout(t);
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [d.title, d.currency, d.pageSize, d.logoUrl, d.logoPosition, JSON.stringify(pages), d.publicId]);
+  }, [d.title, d.currency, d.pageSize, d.logoUrl, d.logoPosition, d.logoRepeat, JSON.stringify(pages), d.publicId]);
 
   // Sincroniza la página activa con el scroll.
   useEffect(() => {
@@ -253,6 +235,62 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
             )}
           </div>
 
+          <div className="relative shrink-0">
+            <button className={PILL} onClick={() => setOpenMenu(openMenu === "logo" ? null : "logo")}>
+              <span className="flex items-center gap-1.5">
+                <ImageIcon size={11} /> Logo
+              </span>
+            </button>
+            {openMenu === "logo" && (
+              <div className="absolute right-0 top-full z-30 mt-2 w-[230px] rounded-2xl bg-white/95 p-1.5 shadow-sm backdrop-blur-sm">
+                <button
+                  onClick={() => fileRef.current?.click()}
+                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-xs text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                >
+                  <Upload size={12} /> {d.logoUrl ? "Cambiar imagen" : "Subir imagen"}
+                </button>
+                <p className="px-3 pb-1 pt-2 text-[10px] font-light text-gray-300">Posición</p>
+                {LOGO_POSITIONS.map((p) => (
+                  <button
+                    key={p.value}
+                    onClick={() => update({ logoPosition: p.value })}
+                    className={`block w-full rounded-xl px-3 py-2 text-left text-xs hover:bg-gray-50 ${
+                      logoPosition === p.value ? "bg-gray-50 text-gray-900" : "text-gray-500"
+                    }`}
+                  >
+                    {p.label}
+                  </button>
+                ))}
+                <p className="px-3 pb-1 pt-2 text-[10px] font-light text-gray-300">Páginas</p>
+                {[
+                  { value: false, label: "Solo la primera hoja" },
+                  { value: true, label: "Repetir en todas" },
+                ].map((o) => (
+                  <button
+                    key={String(o.value)}
+                    onClick={() => update({ logoRepeat: o.value })}
+                    className={`block w-full rounded-xl px-3 py-2 text-left text-xs hover:bg-gray-50 ${
+                      !!d.logoRepeat === o.value ? "bg-gray-50 text-gray-900" : "text-gray-500"
+                    }`}
+                  >
+                    {o.label}
+                  </button>
+                ))}
+                {d.logoUrl && (
+                  <button
+                    onClick={() => {
+                      update({ logoUrl: undefined });
+                      setOpenMenu(null);
+                    }}
+                    className="mt-1 flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-xs text-gray-400 hover:bg-gray-50 hover:text-gray-900"
+                  >
+                    <Trash2 size={12} /> Quitar logotipo
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+
           <button onClick={openPublic} className={`${PILL} shrink-0`}>
             <span className="flex items-center gap-1.5">
               <ExternalLink size={11} /> Abrir
@@ -279,61 +317,6 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
           }}
         />
 
-        {/* Logotipo */}
-        <div className={`nodrag nopan absolute z-10 ${cornerClass(logoPosition)}`} onMouseDown={(e) => e.stopPropagation()}>
-          {d.logoUrl ? (
-            <button onClick={() => setOpenMenu(openMenu === "logo" ? null : "logo")} title="Posición del logotipo">
-              <img src={d.logoUrl} alt="Logotipo del documento" className="max-h-16 max-w-[160px] object-contain" />
-            </button>
-          ) : (
-            <button
-              onClick={() => fileRef.current?.click()}
-              className="flex h-14 w-14 items-center justify-center rounded-xl text-gray-400 opacity-0 transition-opacity duration-200 group-hover/widget:opacity-30"
-              title="Subir logotipo"
-            >
-              <ImageIcon size={20} />
-            </button>
-          )}
-
-          {openMenu === "logo" && (
-            <div
-              className={`absolute z-30 mt-2 w-[220px] rounded-2xl bg-white/95 p-1.5 shadow-sm backdrop-blur-sm ${
-                logoPosition.includes("right") ? "right-0" : "left-0"
-              } ${logoPosition.startsWith("bottom") ? "bottom-full mb-2" : "top-full"}`}
-            >
-              <button
-                onClick={() => fileRef.current?.click()}
-                className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-xs text-gray-600 hover:bg-gray-50 hover:text-gray-900"
-              >
-                <Upload size={12} /> Cambiar imagen
-              </button>
-              {LOGO_POSITIONS.map((p) => (
-                <button
-                  key={p.value}
-                  onClick={() => {
-                    update({ logoPosition: p.value });
-                    setOpenMenu(null);
-                  }}
-                  className={`block w-full rounded-xl px-3 py-2 text-left text-xs hover:bg-gray-50 ${
-                    logoPosition === p.value ? "bg-gray-50 text-gray-900" : "text-gray-500"
-                  }`}
-                >
-                  {p.label}
-                </button>
-              ))}
-              <button
-                onClick={() => {
-                  update({ logoUrl: undefined });
-                  setOpenMenu(null);
-                }}
-                className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-xs text-gray-400 hover:bg-gray-50 hover:text-gray-900"
-              >
-                <Trash2 size={12} /> Quitar logotipo
-              </button>
-            </div>
-          )}
-        </div>
-
         {dragOver && (
           <div className="pointer-events-none absolute inset-4 z-20 flex items-center justify-center rounded-2xl border border-dashed border-gray-300 bg-black/5 text-xs font-light text-gray-500">
             Suelta aquí tu logotipo
@@ -344,6 +327,25 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
         <div ref={scrollRef} className="nodrag nopan h-full overflow-y-auto">
           {pages.map((p, i) => (
             <div key={p.id} className="relative flex h-full flex-col px-12 pb-16 pt-24">
+              {(i === 0 || d.logoRepeat) &&
+                (d.logoUrl ? (
+                  <img
+                    src={d.logoUrl}
+                    alt="Logotipo del documento"
+                    className={`absolute z-10 max-h-16 max-w-[160px] object-contain ${logoPositionClass(logoPosition)}`}
+                  />
+                ) : (
+                  i === 0 && (
+                    <button
+                      onClick={() => fileRef.current?.click()}
+                      onMouseDown={(e) => e.stopPropagation()}
+                      className={`nodrag nopan absolute z-10 flex h-14 w-14 items-center justify-center rounded-xl text-gray-400 opacity-0 transition-opacity duration-200 group-hover/widget:opacity-30 ${logoPositionClass(logoPosition)}`}
+                      title="Subir logotipo (JPG, PNG o SVG)"
+                    >
+                      <ImageIcon size={20} />
+                    </button>
+                  )
+                ))}
               {i === 0 && (
                 <h2 className="mb-8 text-[26px] font-medium leading-tight text-gray-900">
                   {d.title?.trim() || "Contratos"}

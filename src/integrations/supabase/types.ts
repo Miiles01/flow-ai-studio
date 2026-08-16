@@ -206,6 +206,7 @@ export type Database = {
           flow_id: string | null
           id: string
           logo_position: string
+          logo_repeat: boolean
           logo_url: string | null
           node_id: string | null
           owner_id: string
@@ -225,6 +226,7 @@ export type Database = {
           flow_id?: string | null
           id?: string
           logo_position?: string
+          logo_repeat?: boolean
           logo_url?: string | null
           node_id?: string | null
           owner_id: string
@@ -244,6 +246,7 @@ export type Database = {
           flow_id?: string | null
           id?: string
           logo_position?: string
+          logo_repeat?: boolean
           logo_url?: string | null
           node_id?: string | null
           owner_id?: string

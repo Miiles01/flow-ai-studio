@@ -2,7 +2,29 @@ import { supabase } from "@/integrations/supabase/client";
 
 export type ContractPage = { id: string; content: string };
 
-export type LogoPosition = "top-left" | "top-right" | "bottom-left" | "bottom-right";
+export type LogoPosition =
+  | "top-left"
+  | "top-center"
+  | "top-right"
+  | "bottom-left"
+  | "bottom-center"
+  | "bottom-right";
+
+export const LOGO_POSITIONS: { value: LogoPosition; label: string }[] = [
+  { value: "top-left", label: "Arriba izquierda" },
+  { value: "top-center", label: "Arriba centro" },
+  { value: "top-right", label: "Arriba derecha" },
+  { value: "bottom-left", label: "Abajo izquierda" },
+  { value: "bottom-center", label: "Abajo centro" },
+  { value: "bottom-right", label: "Abajo derecha" },
+];
+
+/** Clases de posición del logotipo dentro de la hoja. */
+export const logoPositionClass = (pos: LogoPosition = "top-left") => {
+  const vertical = pos.startsWith("bottom") ? "bottom-12" : "top-10";
+  if (pos.endsWith("center")) return `${vertical} left-1/2 -translate-x-1/2`;
+  return `${vertical} ${pos.endsWith("right") ? "right-12" : "left-12"}`;
+};
 
 export type ContractsNodeData = {
   title?: string;
@@ -10,6 +32,8 @@ export type ContractsNodeData = {
   pageSize?: string;
   logoUrl?: string;
   logoPosition?: LogoPosition;
+  /** Si es true el logotipo aparece en todas las páginas; si no, solo en la primera. */
+  logoRepeat?: boolean;
   pages?: ContractPage[];
   publicId?: string;
 };
@@ -87,6 +111,7 @@ export async function syncContract(
     page_size: data.pageSize || "Carta",
     logo_url: data.logoUrl ?? null,
     logo_position: data.logoPosition || "top-left",
+    logo_repeat: !!data.logoRepeat,
     pages: (data.pages ?? []) as any,
   };
 
