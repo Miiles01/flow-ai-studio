@@ -189,6 +189,16 @@ Responde SIEMPRE con la tool "widget_result".`;
 
 
     if (!res.ok) {
+      if (res.status === 403 && !byok) {
+        return new Response(JSON.stringify({ error: "Se agotaron los créditos de IA incluidos. Agrega tu propio modelo en Apps → Modelos para seguir trabajando sin límites." }), {
+          status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      if (res.status === 403 && byok) {
+        return new Response(JSON.stringify({ error: `Tu API Key de ${byok.provider} fue rechazada. Revísala en Apps → Modelos.` }), {
+          status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
       return new Response(JSON.stringify({ error: `IA (${target.label}) ${res.status}: ${res.errorText ?? ""}` }), {
         status: res.status, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
