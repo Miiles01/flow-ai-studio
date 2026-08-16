@@ -11,6 +11,36 @@ const corsHeaders = {
 
 const FALLBACK_MODEL = "google/gemini-2.5-flash";
 
+// La IA a veces devuelve JSON con saltos de línea o tabs SIN escapar dentro de los strings
+// (típico en contratos con cláusulas largas), lo que rompe JSON.parse. Este parser tolerante
+// limpia fences, recorta al objeto exterior y escapa los caracteres de control dentro de strings.
+function parseLooseJson(raw: string): unknown {
+  const clean = raw.trim().replace(/^```(?:json)?/i, "").replace(/```$/, "").trim();
+  try { return JSON.parse(clean); } catch { /* seguimos con la reparación */ }
+
+  const start = clean.search(/[{[]/);
+  const end = Math.max(clean.lastIndexOf("}"), clean.lastIndexOf("]"));
+  const body = start >= 0 && end > start ? clean.slice(start, end + 1) : clean;
+  try { return JSON.parse(body); } catch { /* seguimos con la reparación */ }
+
+  let out = "";
+  let inString = false;
+  let escaped = false;
+  for (const ch of body) {
+    if (escaped) { out += ch; escaped = false; continue; }
+    if (ch === "\\") { out += ch; escaped = true; continue; }
+    if (ch === '"') { inString = !inString; out += ch; continue; }
+    if (inString) {
+      if (ch === "\n") { out += "\\n"; continue; }
+      if (ch === "\r") { out += "\\r"; continue; }
+      if (ch === "\t") { out += "\\t"; continue; }
+      if (ch < " ") continue; // otros caracteres de control: se descartan
+    }
+    out += ch;
+  }
+  return JSON.parse(out);
+}
+
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
@@ -101,7 +131,7 @@ Responde SIEMPRE con la tool "widget_result".`;
         properties: {
           intent: { type: "string", enum: ["query", "edit"] },
           answer: { type: "string", description: "Respuesta en Markdown si intent=query" },
-          data_json: { type: "string", description: "Si intent=edit, JSON string con el objeto data COMPLETO ya modificado (mismo schema que el data actual)" },
+          data_json: { type: "string", description: "Si intent=edit, JSON string VÁLIDO con el objeto data COMPLETO ya modificado (mismo schema que el data actual). Escapa siempre los saltos de línea como \\n dentro de los strings; nunca uses saltos de línea reales" },
         },
         required: ["intent"],
         additionalProperties: false,
@@ -214,7 +244,7 @@ Responde SIEMPRE con la tool "widget_result".`;
     }
     let parsed: any;
     try {
-      parsed = JSON.parse(rawArgs);
+      parsed = parseLooseJson(rawArgs);
     } catch (e) {
       console.error("widget-ai args no parseables. finish:", finishReason, "len:", rawArgs.length);
       return new Response(JSON.stringify({ error: "IA devolvió respuesta truncada. Intenta con menos data o pide cambios más pequeños." }), {
@@ -233,7 +263,7 @@ Responde SIEMPRE con la tool "widget_result".`;
     }
     if (parsed.intent === "edit" && parsed.data_json) {
       try {
-        out.data = JSON.parse(parsed.data_json);
+        out.data = parseLooseJson(parsed.data_json);
       } catch (e) {
         console.error("data_json inválido. finish:", finishReason, "len:", parsed.data_json.length, "tail:", parsed.data_json.slice(-200));
         out.data = {};
