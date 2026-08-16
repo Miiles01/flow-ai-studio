@@ -131,7 +131,7 @@ Responde SIEMPRE con la tool "widget_result".`;
         properties: {
           intent: { type: "string", enum: ["query", "edit"] },
           answer: { type: "string", description: "Respuesta en Markdown si intent=query" },
-          data_json: { type: "string", description: "Si intent=edit, JSON string con el objeto data COMPLETO ya modificado (mismo schema que el data actual)" },
+          data_json: { type: "string", description: "Si intent=edit, JSON string VÁLIDO con el objeto data COMPLETO ya modificado (mismo schema que el data actual). Escapa siempre los saltos de línea como \\n dentro de los strings; nunca uses saltos de línea reales" },
         },
         required: ["intent"],
         additionalProperties: false,
