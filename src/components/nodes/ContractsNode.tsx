@@ -23,6 +23,8 @@ import {
   type ContractsNodeData,
   type LogoPosition,
 } from "@/lib/contracts";
+import { CONTRACT_TEMPLATES, TEMPLATE_CATEGORIES, templatePages, type ContractTemplate } from "@/lib/contractTemplates";
+
 
 const LOGO_POSITIONS: { value: LogoPosition; label: string }[] = [
   { value: "top-left", label: "Arriba a la izquierda" },
@@ -104,7 +106,21 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
     setActivePage((p) => Math.max(0, Math.min(p, next.length - 1)));
   };
 
+  const applyTemplate = (tpl: ContractTemplate, mode: "replace" | "append") => {
+    const nuevas = templatePages(tpl);
+    if (mode === "replace") {
+      update({ title: tpl.title, pages: nuevas });
+      setActivePage(0);
+      return;
+    }
+    const conContenido = pages.filter((p) => p.content.trim().length > 0);
+    const next = [...conContenido, ...nuevas];
+    update({ pages: next });
+    setActivePage(conContenido.length);
+  };
+
   const handleFile = async (file?: File | null) => {
+
     if (!file) return;
     if (!/image\/(png|jpeg|jpg|svg\+xml)/.test(file.type)) return;
     try {
@@ -310,7 +326,49 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
         </div>
       </div>
 
+      {/* Plantillas */}
+      <div
+        className={`nodrag nopan absolute top-1/2 z-30 w-[230px] max-h-[520px] overflow-y-auto rounded-2xl bg-white/90 p-2 shadow-sm backdrop-blur-sm transition-all duration-200 ${
+          hovered ? "translate-x-0 opacity-100" : "pointer-events-none translate-x-2 opacity-0"
+        }`}
+        style={{
+          right: "100%",
+          marginRight: 14 / zoom,
+          transform: `translateY(-50%) scale(${1 / zoom})`,
+          transformOrigin: "right center",
+        }}
+        onMouseDown={(e) => e.stopPropagation()}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <p className="px-3 pb-1 pt-2 text-xs font-light text-gray-500">Plantillas</p>
+        {TEMPLATE_CATEGORIES.map((cat) => (
+          <div key={cat} className="pb-1">
+            <p className="px-3 py-1 text-[10px] font-light text-gray-300">{cat}</p>
+            {CONTRACT_TEMPLATES.filter((t) => t.category === cat).map((t) => (
+              <div key={t.id} className="group/tpl relative">
+                <button
+                  onClick={() => applyTemplate(t, "replace")}
+                  className="block w-full rounded-xl px-3 py-2 text-left hover:bg-gray-50"
+                  title="Reemplazar el documento con esta plantilla"
+                >
+                  <span className="block text-xs text-gray-700">{t.name}</span>
+                  <span className="mt-0.5 block text-[10px] font-light leading-snug text-gray-400">{t.description}</span>
+                </button>
+                <button
+                  onClick={() => applyTemplate(t, "append")}
+                  className="absolute right-2 top-2 hidden rounded-full p-1 text-gray-400 hover:bg-white hover:text-gray-900 group-hover/tpl:block"
+                  title="Añadir al final del documento"
+                >
+                  <Plus size={11} />
+                </button>
+              </div>
+            ))}
+          </div>
+        ))}
+      </div>
+
       {/* Navegador de páginas */}
+
       <div
         className={`nodrag nopan absolute top-1/2 z-30 flex flex-col items-center gap-2 rounded-2xl bg-white/90 p-2 shadow-sm backdrop-blur-sm transition-all duration-200 ${
           hovered ? "translate-x-0 opacity-100" : "pointer-events-none -translate-x-2 opacity-0"
