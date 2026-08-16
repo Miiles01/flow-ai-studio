@@ -36,6 +36,8 @@ const ContractPublic = () => {
   const [email, setEmail] = useState("");
   const [signed, setSigned] = useState(false);
   const [sending, setSending] = useState(false);
+  const [mode, setMode] = useState<"Dibujar" | "Escribir">("Dibujar");
+  const [typed, setTyped] = useState("");
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const drawing = useRef(false);
   const hasStroke = useRef(false);
@@ -98,12 +100,29 @@ const ContractPublic = () => {
     const ctx = canvas?.getContext("2d");
     if (canvas && ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
     hasStroke.current = false;
+    setTyped("");
   };
 
+  /** Convierte la firma escrita en imagen para guardarla igual que la dibujada. */
+  const typedToDataUrl = () => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 640;
+    canvas.height = 160;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return "";
+    ctx.fillStyle = "#18181b";
+    ctx.font = "italic 54px 'Welth Catritz', cursive";
+    ctx.textBaseline = "middle";
+    ctx.fillText(typed.trim(), 24, 88);
+    return canvas.toDataURL("image/png");
+  };
+
+  const canSign = mode === "Dibujar" ? hasStroke.current : typed.trim().length > 1;
+
   const sign = async () => {
-    if (!name.trim() || !hasStroke.current || sending) return;
+    if (!name.trim() || !canSign || sending) return;
     setSending(true);
-    const signature = canvasRef.current?.toDataURL("image/png") ?? "";
+    const signature = mode === "Escribir" ? typedToDataUrl() : canvasRef.current?.toDataURL("image/png") ?? "";
     await supabase.functions.invoke("sign-contract", {
       body: { publicId, name: name.trim(), email: email.trim() || null, signature },
     });
@@ -173,31 +192,56 @@ const ContractPublic = () => {
             </div>
           ) : (
             <div className="flex flex-col gap-5">
-              <span className="text-[13px] font-normal text-neutral-900">Firma del documento</span>
+              <span className="text-[13px] font-normal text-zinc-900">Firma del documento</span>
               <div className="flex flex-col gap-3 sm:flex-row">
                 <input
                   value={name}
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Nombre completo"
-                  className="flex-1 rounded-xl bg-neutral-100 px-4 py-3 text-[13px] font-light text-neutral-800 outline-none placeholder:text-neutral-400"
+                  className="flex-1 rounded-xl bg-zinc-50 px-4 py-3 text-[13px] font-light text-zinc-900 outline-none placeholder:text-zinc-400"
                 />
                 <input
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Correo electrónico"
-                  className="flex-1 rounded-xl bg-neutral-100 px-4 py-3 text-[13px] font-light text-neutral-800 outline-none placeholder:text-neutral-400"
+                  className="flex-1 rounded-xl bg-zinc-50 px-4 py-3 text-[13px] font-light text-zinc-900 outline-none placeholder:text-zinc-400"
                 />
               </div>
-              <canvas
-                ref={canvasRef}
-                width={640}
-                height={160}
-                onPointerDown={start}
-                onPointerMove={move}
-                onPointerUp={end}
-                onPointerLeave={end}
-                className="w-full touch-none rounded-xl bg-neutral-50"
-              />
+
+              <div className="flex w-fit items-center gap-1 rounded-full bg-zinc-50 p-1">
+                {(["Dibujar", "Escribir"] as const).map((t) => (
+                  <button
+                    key={t}
+                    onClick={() => setMode(t)}
+                    className={`rounded-full px-4 py-1.5 text-[12px] font-light transition-colors ${
+                      mode === t ? "bg-white text-zinc-900 shadow-sm" : "text-zinc-500 hover:text-zinc-900"
+                    }`}
+                  >
+                    {t}
+                  </button>
+                ))}
+              </div>
+
+              {mode === "Dibujar" ? (
+                <canvas
+                  ref={canvasRef}
+                  width={640}
+                  height={160}
+                  onPointerDown={start}
+                  onPointerMove={move}
+                  onPointerUp={end}
+                  onPointerLeave={end}
+                  className="w-full touch-none rounded-xl bg-zinc-50"
+                />
+              ) : (
+                <input
+                  value={typed}
+                  onChange={(e) => setTyped(e.target.value)}
+                  placeholder="Escribe tu nombre"
+                  style={{ fontFamily: "'Welth Catritz', cursive" }}
+                  className="h-[160px] w-full rounded-xl bg-zinc-50 px-6 text-[34px] italic text-zinc-900 outline-none placeholder:text-[18px] placeholder:not-italic placeholder:text-zinc-300"
+                />
+              )}
               <div className="flex items-center gap-3">
                 <button
                   onClick={sign}
