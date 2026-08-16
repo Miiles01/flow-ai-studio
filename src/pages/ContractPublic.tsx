@@ -100,12 +100,29 @@ const ContractPublic = () => {
     const ctx = canvas?.getContext("2d");
     if (canvas && ctx) ctx.clearRect(0, 0, canvas.width, canvas.height);
     hasStroke.current = false;
+    setTyped("");
   };
 
+  /** Convierte la firma escrita en imagen para guardarla igual que la dibujada. */
+  const typedToDataUrl = () => {
+    const canvas = document.createElement("canvas");
+    canvas.width = 640;
+    canvas.height = 160;
+    const ctx = canvas.getContext("2d");
+    if (!ctx) return "";
+    ctx.fillStyle = "#18181b";
+    ctx.font = "italic 54px 'Welth Catritz', cursive";
+    ctx.textBaseline = "middle";
+    ctx.fillText(typed.trim(), 24, 88);
+    return canvas.toDataURL("image/png");
+  };
+
+  const canSign = mode === "Dibujar" ? hasStroke.current : typed.trim().length > 1;
+
   const sign = async () => {
-    if (!name.trim() || !hasStroke.current || sending) return;
+    if (!name.trim() || !canSign || sending) return;
     setSending(true);
-    const signature = canvasRef.current?.toDataURL("image/png") ?? "";
+    const signature = mode === "Escribir" ? typedToDataUrl() : canvasRef.current?.toDataURL("image/png") ?? "";
     await supabase.functions.invoke("sign-contract", {
       body: { publicId, name: name.trim(), email: email.trim() || null, signature },
     });
