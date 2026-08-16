@@ -244,7 +244,7 @@ Responde SIEMPRE con la tool "widget_result".`;
     }
     let parsed: any;
     try {
-      parsed = JSON.parse(rawArgs);
+      parsed = parseLooseJson(rawArgs);
     } catch (e) {
       console.error("widget-ai args no parseables. finish:", finishReason, "len:", rawArgs.length);
       return new Response(JSON.stringify({ error: "IA devolvió respuesta truncada. Intenta con menos data o pide cambios más pequeños." }), {
@@ -263,7 +263,7 @@ Responde SIEMPRE con la tool "widget_result".`;
     }
     if (parsed.intent === "edit" && parsed.data_json) {
       try {
-        out.data = JSON.parse(parsed.data_json);
+        out.data = parseLooseJson(parsed.data_json);
       } catch (e) {
         console.error("data_json inválido. finish:", finishReason, "len:", parsed.data_json.length, "tail:", parsed.data_json.slice(-200));
         out.data = {};
