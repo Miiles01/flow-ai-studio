@@ -58,7 +58,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
   const textSubtle = isDark ? "text-white/40" : "text-gray-400";
   const textMuted = isDark ? "text-white/60" : "text-gray-500";
 const textPrimary = isDark ? "text-white" : "text-gray-900";
-  const pillCls = `px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${isDark ? "text-white/60 hover:bg-white/10 hover:text-white" : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"}`;
+  const pillCls = `px-3 py-1.5 rounded-full border text-[12px] font-medium transition-colors ${isDark ? "bg-white/10 border-white/10 text-white hover:bg-white/20 hover:border-white/20" : "bg-white border-gray-200 text-gray-800 hover:bg-gray-50"}`;
 
   const { setNodes } = useReactFlow();
   const { zoom } = useViewport();
@@ -423,7 +423,7 @@ const textPrimary = isDark ? "text-white" : "text-gray-900";
             </span>
           </button>
 
-          <button onClick={openPublic} className="px-3 py-1.5 rounded-lg text-xs font-medium bg-black text-white hover:bg-gray-800 transition-colors shrink-0">
+          <button onClick={openPublic} className="px-3 py-1.5 rounded-full text-[12px] font-medium bg-[#111827] text-white hover:bg-gray-800 transition-colors shrink-0">
             <span className="flex items-center gap-1.5">
               <ExternalLink size={13} strokeWidth={2} /> Abrir
             </span>
