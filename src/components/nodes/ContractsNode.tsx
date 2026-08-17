@@ -436,7 +436,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
         )}
 
         {/* Contenido de la hoja - scroll vertical entre páginas */}
-        <div ref={scrollRef} className="nodrag nopan h-full overflow-y-auto">
+        <div ref={scrollRef} className="nowheel nodrag nopan h-full overflow-y-auto" onWheelCapture={(e) => e.stopPropagation()}>
           {pages.map((p, i) => (
             <div key={p.id} className="relative flex h-full flex-col px-14 pb-24 pt-32">
               {(i === 0 || d.logoRepeat) &&
@@ -546,7 +546,8 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
-              className="flex flex-col w-[200px] max-h-[520px] overflow-y-auto p-2"
+              className="nowheel flex flex-col w-[200px] max-h-[520px] overflow-y-auto p-2"
+              onWheelCapture={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between px-3 pb-2 pt-1">
                 <p className="text-[11px] font-medium text-gray-500">Plantillas</p>
