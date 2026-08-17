@@ -170,20 +170,32 @@ const ContractPublic = () => {
   return (
     <div className="min-h-screen bg-neutral-100 py-10">
       <div className="mx-auto flex w-full max-w-[860px] flex-col items-center gap-8 px-4">
-        <div className="flex w-full max-w-[816px] items-center justify-between">
+        <div className="flex w-full max-w-[816px] items-center justify-between gap-4">
           <p className="text-[13px] font-light text-neutral-500">
             Documento solo lectura · únicamente puedes firmarlo
           </p>
-          {fields.length > 0 && (
-            <p className="text-[12px] font-light text-neutral-400">
-              {pending === 0 ? "Todas las firmas completadas" : `${pending} firma${pending === 1 ? "" : "s"} pendiente${pending === 1 ? "" : "s"}`}
-            </p>
-          )}
+          <div className="flex items-center gap-3">
+            {fields.length > 0 && (
+              <p className="text-[12px] font-light text-neutral-400">
+                {pending === 0 ? "Todas las firmas completadas" : `${pending} firma${pending === 1 ? "" : "s"} pendiente${pending === 1 ? "" : "s"}`}
+              </p>
+            )}
+            <button
+              onClick={downloadPdf}
+              disabled={downloading}
+              className="flex items-center gap-2 rounded-full bg-black px-4 py-2 text-[12px] font-normal text-white transition-colors hover:bg-neutral-800 disabled:opacity-60"
+            >
+              {downloading ? <Loader2 size={13} className="animate-spin" /> : <Download size={13} />}
+              {downloading ? "Generando…" : "Descargar PDF"}
+            </button>
+          </div>
         </div>
 
+        <div ref={sheetsRef} className="flex w-full flex-col items-center gap-8">
         {pages.map((p, i) => (
           <div
             key={p.id}
+            data-contract-sheet
             className="relative w-full bg-white"
             style={{
               maxWidth: dims.width,
