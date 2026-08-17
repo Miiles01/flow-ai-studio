@@ -540,11 +540,16 @@ const textPrimary = isDark ? "text-white" : "text-gray-900";
         onMouseDown={(e) => e.stopPropagation()}
         onClick={(e) => e.stopPropagation()}
       >
-        <motion.div
-          layout
-          className={`flex flex-col overflow-hidden rounded-2xl ${isDark ? "bg-[#1C1C1E]/95" : "bg-white/95"} shadow-sm backdrop-blur-sm border ${isDark ? "border-white/5" : "border-gray-100/50"}`}
-        >
+        <AnimatePresence mode="wait">
           {!showTemplates ? (
+            <motion.div
+              key="btn"
+              initial={{ opacity: 0, scale: 0.95 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.95 }}
+              transition={{ duration: 0.15 }}
+              className={`flex flex-col overflow-hidden rounded-2xl ${isDark ? "bg-[#1C1C1E]/95" : "bg-white/95"} shadow-sm backdrop-blur-sm border ${isDark ? "border-white/5" : "border-gray-100/50"}`}
+            >
             <button
               onClick={() => setShowTemplates(true)}
               className={`flex flex-col items-center justify-center gap-1.5 p-3 ${isDark ? "text-white/60" : "text-gray-500"} ${isDark ? "hover:text-white" : "hover:text-gray-900"} transition-colors`}
@@ -554,10 +559,17 @@ const textPrimary = isDark ? "text-white" : "text-gray-900";
                 <FileText size={16} strokeWidth={2} />
               </div>
             </button>
+            </motion.div>
           ) : (
             <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
+              key="menu"
+              initial={{ opacity: 0, scale: 0.95, y: -5 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: -5 }}
+              transition={{ duration: 0.15 }}
+              className={`flex flex-col overflow-hidden rounded-2xl ${isDark ? "bg-[#1C1C1E]/95" : "bg-white/95"} shadow-sm backdrop-blur-sm border ${isDark ? "border-white/5" : "border-gray-100/50"}`}
+            >
+            <div
               className="nowheel flex flex-col w-[200px] max-h-[520px] overflow-y-auto p-2"
               onWheelCapture={(e) => e.stopPropagation()}
             >
@@ -593,9 +605,10 @@ const textPrimary = isDark ? "text-white" : "text-gray-900";
                   );
                 })}
               </div>
+            </div>
             </motion.div>
           )}
-        </motion.div>
+        </AnimatePresence>
       </div>
 
       {/* Navegador de páginas */}
