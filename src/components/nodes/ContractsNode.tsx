@@ -37,8 +37,7 @@ import { repaginate } from "@/lib/contractPagination";
 import { CONTRACT_TEMPLATES, TEMPLATE_CATEGORIES, templatePages, type ContractTemplate } from "@/lib/contractTemplates";
 
 
-const PILL =
-  "px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors";
+
 
 const CAT_ICONS: Record<string, any> = {
   "Creadores y marcas": Video,
@@ -58,7 +57,8 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
   const hoverCls = isDark ? "hover:bg-white/10" : "hover:bg-gray-50";
   const textSubtle = isDark ? "text-white/40" : "text-gray-400";
   const textMuted = isDark ? "text-white/60" : "text-gray-500";
-  const textPrimary = isDark ? "text-white" : "text-gray-900";
+const textPrimary = isDark ? "text-white" : "text-gray-900";
+  const pillCls = `px-3 py-1.5 rounded-lg text-xs font-medium transition-colors ${isDark ? "text-white/60 hover:bg-white/10 hover:text-white" : "text-gray-600 hover:bg-gray-100 hover:text-gray-900"}`;
 
   const { setNodes } = useReactFlow();
   const { zoom } = useViewport();
@@ -314,9 +314,9 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
             value={d.title ?? "Contratos"}
             onChange={(e) => update({ title: e.target.value })}
             placeholder="Contratos"
-            className="w-48 bg-transparent text-sm font-semibold text-gray-900 outline-none placeholder:text-gray-300"
+            className={`w-48 bg-transparent text-sm font-semibold ${isDark ? "text-white" : "text-gray-900"} outline-none placeholder:text-gray-300`}
           />
-          <span className="text-[10px] font-medium text-gray-400">
+          <span className={`text-[10px] font-medium ${textSubtle}`}>
             {pages.length} {pages.length === 1 ? "página" : "páginas"}
           </span>
         </div>
@@ -330,7 +330,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
           onClick={(e) => e.stopPropagation()}
         >
           <div className="relative shrink-0">
-            <button className={PILL} onClick={() => setOpenMenu(openMenu === "moneda" ? null : "moneda")}>
+            <button className={pillCls} onClick={() => setOpenMenu(openMenu === "moneda" ? null : "moneda")}>
               {d.currency || "MXN"}
             </button>
             {openMenu === "moneda" && (
@@ -346,7 +346,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
           </div>
 
           <div className="relative shrink-0">
-            <button className={PILL} onClick={() => setOpenMenu(openMenu === "hoja" ? null : "hoja")}>
+            <button className={pillCls} onClick={() => setOpenMenu(openMenu === "hoja" ? null : "hoja")}>
               {d.pageSize || "Carta"}
             </button>
             {openMenu === "hoja" && (
@@ -362,7 +362,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
           </div>
 
           <div className="relative shrink-0">
-            <button className={PILL} onClick={() => setOpenMenu(openMenu === "logo" ? null : "logo")}>
+            <button className={pillCls} onClick={() => setOpenMenu(openMenu === "logo" ? null : "logo")}>
               <span className="flex items-center gap-1.5">
                 <ImageIcon size={13} strokeWidth={2} /> Logo
               </span>
@@ -542,7 +542,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
       >
         <motion.div
           layout
-          className={`flex flex-col overflow-hidden rounded-2xl bg-white/95 shadow-sm backdrop-blur-sm border ${isDark ? "border-white/5" : "border-gray-100/50"}`}
+          className={`flex flex-col overflow-hidden rounded-2xl ${isDark ? "bg-[#1C1C1E]/95" : "bg-white/95"} shadow-sm backdrop-blur-sm border ${isDark ? "border-white/5" : "border-gray-100/50"}`}
         >
           {!showTemplates ? (
             <button
@@ -633,7 +633,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
             {pages.length > 1 && (
               <button
                 onClick={() => removePage(i)}
-                className={`absolute -right-1.5 -top-1.5 hidden h-4 w-4 items-center justify-center rounded-full bg-white ${isDark ? "text-white/60" : "text-gray-500"} shadow-md border ${isDark ? "border-white/10" : "border-gray-100"} hover:text-red-500 group-hover/page:flex transition-colors`}
+                className={`absolute -right-1.5 -top-1.5 hidden h-4 w-4 items-center justify-center rounded-full ${isDark ? "bg-white/10 text-white/60" : "bg-white text-gray-500"} shadow-md border ${isDark ? "border-white/10" : "border-gray-100"} hover:text-red-500 group-hover/page:flex transition-colors`}
                 title="Eliminar página"
               >
                 <Trash2 size={8} />
