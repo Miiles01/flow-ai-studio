@@ -289,7 +289,7 @@ const textPrimary = isDark ? "text-white" : "text-gray-900";
 
       {/* Hoja */}
       <div
-        className="relative h-full w-full overflow-hidden rounded-2xl bg-white shadow-sm"
+        className={`relative h-full w-full overflow-hidden rounded-2xl ${isDark ? "bg-[#1C1C1E]" : "bg-white"} shadow-sm`}
         style={{ boxShadow: selected ? "0 6px 24px -12px rgba(0,0,0,0.16)" : "0 2px 12px -8px rgba(0,0,0,0.12)" }}
         onDragOver={(e) => {
           e.preventDefault();
@@ -492,12 +492,12 @@ const textPrimary = isDark ? "text-white" : "text-gray-900";
                     setEditing(true);
                   }}
                   onMouseDown={(e) => e.stopPropagation()}
-                  className="nodrag nopan min-h-0 flex-1 cursor-text overflow-hidden text-[13.5px] font-light leading-[1.85] text-gray-800"
+                  className={`nodrag nopan min-h-0 flex-1 cursor-text overflow-hidden text-[13.5px] font-light leading-[1.85] ${isDark ? "text-white/90" : "text-gray-800"}`}
                 >
                   {p.content?.trim() ? (
-                    <ContractRichText content={p.content} />
+                    <ContractRichText content={p.content} isDark={isDark} />
                   ) : (
-                    <span className="text-gray-300">
+                    <span className={isDark ? "text-white/30" : "text-gray-300"}>
                       Escribe aquí el contenido
                     </span>
                   )}

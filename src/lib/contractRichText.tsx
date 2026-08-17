@@ -9,7 +9,7 @@ import { Fragment, type ReactNode } from "react";
 const INLINE = /(\[[^\]\n]+\]\((https?:\/\/[^\s)]+)\)|\*\*[^*\n]+\*\*|__[^_\n]+__|\*[^*\n]+\*|_[^_\n]+_|https?:\/\/[^\s)]+|\[[A-ZÁÉÍÓÚÑ0-9][^\]\n]*\])/g;
 
 /** Convierte marcas en línea (negrita, cursiva, enlaces, campos) en nodos React. */
-export function renderInline(text: string, keyPrefix = ""): ReactNode[] {
+export function renderInline(text: string, keyPrefix = "", isDark: boolean = false): ReactNode[] {
   const parts = text.split(INLINE).filter((p) => p !== undefined && p !== "");
   return parts.map((part, i) => {
     const key = `${keyPrefix}-${i}`;
@@ -21,7 +21,7 @@ export function renderInline(text: string, keyPrefix = ""): ReactNode[] {
           href={link[2]}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-gray-900 underline underline-offset-2 hover:opacity-70"
+          className={`${isDark ? "text-white" : "text-gray-900"} underline underline-offset-2 hover:opacity-70`}
         >
           {link[1]}
         </a>
@@ -34,7 +34,7 @@ export function renderInline(text: string, keyPrefix = ""): ReactNode[] {
           href={part}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-gray-900 underline underline-offset-2 hover:opacity-70"
+          className={`${isDark ? "text-white" : "text-gray-900"} underline underline-offset-2 hover:opacity-70`}
         >
           {part}
         </a>
@@ -42,7 +42,7 @@ export function renderInline(text: string, keyPrefix = ""): ReactNode[] {
     }
     if (/^(\*\*|__).+(\*\*|__)$/.test(part)) {
       return (
-        <strong key={key} className="font-medium text-gray-900">
+        <strong key={key} className={`font-medium ${isDark ? "text-white" : "text-gray-900"}`}>
           {part.slice(2, -2)}
         </strong>
       );
@@ -57,7 +57,7 @@ export function renderInline(text: string, keyPrefix = ""): ReactNode[] {
     // Campo por completar: [NOMBRE DE LA MARCA]
     if (/^\[.+\]$/.test(part)) {
       return (
-        <strong key={key} className="font-medium text-gray-900">
+        <strong key={key} className={`font-medium ${isDark ? "text-white" : "text-gray-900"}`}>
           {part}
         </strong>
       );
@@ -66,10 +66,10 @@ export function renderInline(text: string, keyPrefix = ""): ReactNode[] {
   });
 }
 
-type Props = { content: string; className?: string };
+type Props = { content: string; className?: string; isDark?: boolean };
 
 /** Renderiza el contenido de una página con formato. */
-const ContractRichText = ({ content, className = "" }: Props) => {
+const ContractRichText = ({ content, className = "", isDark = false }: Props) => {
   const lines = (content ?? "").split("\n");
 
   return (
@@ -87,8 +87,8 @@ const ContractRichText = ({ content, className = "" }: Props) => {
           const level = heading[1].length;
           const size = level === 1 ? "text-[17px]" : level === 2 ? "text-[15px]" : "text-[13.5px]";
           return (
-            <p key={i} style={style} className={`mb-1 mt-3 font-medium text-gray-900 ${size}`}>
-              {renderInline(heading[2], String(i))}
+            <p key={i} style={style} className={`mb-1 mt-3 font-medium ${isDark ? "text-white" : "text-gray-900"} ${size}`}>
+              {renderInline(heading[2], String(i), isDark)}
             </p>
           );
         }
@@ -98,7 +98,7 @@ const ContractRichText = ({ content, className = "" }: Props) => {
           return (
             <div key={i} style={style} className="flex gap-2">
               <span className="select-none opacity-50">•</span>
-              <span className="flex-1">{renderInline(bullet[1], String(i))}</span>
+              <span className="flex-1">{renderInline(bullet[1], String(i), isDark)}</span>
             </div>
           );
         }
@@ -108,14 +108,14 @@ const ContractRichText = ({ content, className = "" }: Props) => {
           return (
             <div key={i} style={style} className="flex gap-2">
               <span className="select-none opacity-70">{numbered[1]}</span>
-              <span className="flex-1">{renderInline(numbered[2], String(i))}</span>
+              <span className="flex-1">{renderInline(numbered[2], String(i), isDark)}</span>
             </div>
           );
         }
 
         return (
           <p key={i} style={style}>
-            {renderInline(line, String(i))}
+            {renderInline(line, String(i), isDark)}
           </p>
         );
       })}
