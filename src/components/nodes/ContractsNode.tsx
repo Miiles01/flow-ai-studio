@@ -438,7 +438,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
         )}
 
         {/* Contenido de la hoja - scroll vertical entre páginas */}
-        <div ref={scrollRef} className="nowheel nodrag nopan h-full overflow-y-auto" onWheelCapture={(e) => e.stopPropagation()}>
+        <div ref={scrollRef} className="nowheel nodrag nopan h-full overflow-y-auto contract-scrollbar" onWheelCapture={(e) => e.stopPropagation()}>
           {pages.map((p, i) => (
             <div key={p.id} className="relative flex h-full flex-col px-14 pb-24 pt-32">
               {(i === 0 || d.logoRepeat) &&
@@ -591,7 +591,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
       {/* Navegador de páginas */}
 
       <div
-        className={`nodrag nopan nowheel absolute top-1/2 z-30 flex flex-col items-center gap-2.5 rounded-lg bg-white/90 dark:bg-slate-800/90 p-2 shadow-sm backdrop-blur-sm transition-all duration-200 border border-gray-100/50 dark:border-slate-700/50 max-h-[320px] overflow-y-auto ${
+        className={`nodrag nopan nowheel absolute top-1/2 z-30 flex flex-col items-center gap-2.5 rounded-lg bg-white/90 dark:bg-slate-800/90 p-2 shadow-sm backdrop-blur-sm transition-all duration-200 border border-gray-100/50 dark:border-slate-700/50 max-h-[320px] overflow-y-auto contract-scrollbar ${
           hovered ? "translate-x-0 opacity-100" : "pointer-events-none -translate-x-2 opacity-0"
         }`}
         style={{
