@@ -413,7 +413,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
             </span>
           </button>
 
-          <button onClick={openPublic} className={`${PILL} shrink-0`}>
+          <button onClick={openPublic} className="px-3 py-1.5 rounded-lg text-xs font-medium bg-black text-white hover:bg-gray-800 dark:bg-white dark:text-black dark:hover:bg-gray-200 transition-colors shrink-0">
             <span className="flex items-center gap-1.5">
               <ExternalLink size={13} strokeWidth={2} /> Abrir
             </span>
