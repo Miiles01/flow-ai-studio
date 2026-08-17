@@ -229,6 +229,7 @@ const ContractPublic = () => {
                         label={f.label}
                         signature={signatures[f.id]}
                         onClick={signatures[f.id] ? undefined : () => setSigningField(f)}
+                        onRemove={signatures[f.id] ? () => removeSignature(f.id) : undefined}
                       />
                     ))}
                 </div>
