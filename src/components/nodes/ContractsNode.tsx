@@ -244,7 +244,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 4 }}
               transition={{ duration: 0.15 }}
-              className="flex items-center bg-white border border-gray-100 p-1 rounded-2xl shadow-sm"
+              className="flex items-center bg-white dark:bg-slate-800 border border-gray-100 dark:border-slate-700 p-1 rounded-2xl shadow-sm"
             >
               <button
                 onClick={() => setNodes((nds) => nds.filter((n) => n.id !== id))}
@@ -292,7 +292,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
       >
         {/* Píldora Izquierda (Título y Páginas) */}
         <div
-          className={`nodrag nopan absolute left-6 top-6 z-20 flex flex-col gap-0.5 rounded-xl bg-white/95 px-4 py-2.5 shadow-sm backdrop-blur-sm transition-all duration-200 border border-gray-100/50 ${
+          className={`nodrag nopan absolute left-6 top-6 z-20 flex flex-col gap-0.5 rounded-xl bg-white/95 dark:bg-slate-800/95 px-4 py-2.5 shadow-sm backdrop-blur-sm transition-all duration-200 border border-gray-100/50 dark:border-slate-700/50 ${
             hovered ? "translate-y-0 opacity-100" : "pointer-events-none -translate-y-2 opacity-0"
           }`}
           onMouseDown={(e) => e.stopPropagation()}
@@ -311,7 +311,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
 
         {/* Píldora Derecha (Controles) */}
         <div
-          className={`nodrag nopan absolute right-6 top-6 z-20 flex items-center gap-1 rounded-xl bg-white/95 p-1.5 shadow-sm backdrop-blur-sm transition-all duration-200 border border-gray-100/50 ${
+          className={`nodrag nopan absolute right-6 top-6 z-20 flex items-center gap-1 rounded-xl bg-white/95 dark:bg-slate-800/95 p-1.5 shadow-sm backdrop-blur-sm transition-all duration-200 border border-gray-100/50 dark:border-slate-700/50 ${
             hovered ? "translate-y-0 opacity-100" : "pointer-events-none -translate-y-2 opacity-0"
           }`}
           onMouseDown={(e) => e.stopPropagation()}
@@ -356,10 +356,10 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
               </span>
             </button>
             {openMenu === "logo" && (
-              <div className="absolute right-0 top-full z-30 mt-2 w-[230px] rounded-2xl bg-white/95 p-1.5 shadow-sm backdrop-blur-sm border border-gray-100">
+              <div className="absolute right-0 top-full z-30 mt-2 w-[230px] rounded-2xl bg-white/95 dark:bg-slate-800/95 p-1.5 shadow-sm backdrop-blur-sm border border-gray-100 dark:border-slate-700">
                 <button
                   onClick={() => fileRef.current?.click()}
-                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-xs text-gray-600 hover:bg-gray-50 hover:text-gray-900"
+                  className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-xs text-gray-600 dark:text-slate-300 hover:bg-gray-50 dark:hover:bg-slate-700 hover:text-gray-900 dark:hover:text-white"
                 >
                   <Upload size={12} /> {d.logoUrl ? "Cambiar imagen" : "Subir imagen"}
                 </button>
@@ -369,7 +369,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
                     key={p.value}
                     onClick={() => update({ logoPosition: p.value })}
                     className={`block w-full rounded-xl px-3 py-2 text-left text-xs hover:bg-gray-50 ${
-                      logoPosition === p.value ? "bg-gray-50 text-gray-900" : "text-gray-500"
+                      logoPosition === p.value ? "bg-gray-50 text-gray-900 dark:text-white" : "text-gray-500 dark:text-slate-400"
                     }`}
                   >
                     {p.label}
@@ -384,7 +384,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
                     key={String(o.value)}
                     onClick={() => update({ logoRepeat: o.value })}
                     className={`block w-full rounded-xl px-3 py-2 text-left text-xs hover:bg-gray-50 ${
-                      !!d.logoRepeat === o.value ? "bg-gray-50 text-gray-900" : "text-gray-500"
+                      !!d.logoRepeat === o.value ? "bg-gray-50 text-gray-900 dark:text-white" : "text-gray-500 dark:text-slate-400"
                     }`}
                   >
                     {o.label}
@@ -396,7 +396,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
                       update({ logoUrl: undefined });
                       setOpenMenu(null);
                     }}
-                    className="mt-1 flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-xs text-gray-400 hover:bg-gray-50 hover:text-gray-900"
+                    className="mt-1 flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-xs text-gray-400 dark:text-slate-400 hover:bg-gray-50 dark:hover:bg-slate-700 hover:text-gray-900 dark:hover:text-white"
                   >
                     <Trash2 size={12} /> Quitar logotipo
                   </button>
@@ -430,7 +430,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
         />
 
         {dragOver && (
-          <div className="pointer-events-none absolute inset-4 z-20 flex items-center justify-center rounded-2xl border border-dashed border-gray-300 bg-black/5 text-xs font-light text-gray-500">
+          <div className="pointer-events-none absolute inset-4 z-20 flex items-center justify-center rounded-2xl border border-dashed border-gray-300 dark:border-slate-600 bg-black/5 text-xs font-light text-gray-500 dark:text-slate-400">
             Suelta aquí tu logotipo
           </div>
         )}
@@ -459,7 +459,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
                   )
                 ))}
               {i === 0 && (
-                <h2 className="mb-8 text-[26px] font-medium leading-tight text-gray-900">
+                <h2 className="mb-8 text-[26px] font-medium leading-tight text-gray-900 dark:text-white">
                   {d.title?.trim() || "Contratos"}
                 </h2>
               )}
@@ -471,7 +471,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
                   onBlur={() => setEditing(false)}
                   onMouseDown={(e) => e.stopPropagation()}
                   placeholder="Escribe aquí el contenido del contrato o pídeselo a la inteligencia artificial. Usa **negritas**, - viñetas, 1. listas y [texto](enlace)."
-                  className="nodrag nopan min-h-0 flex-1 resize-none bg-transparent text-[13.5px] font-light leading-[1.85] text-gray-800 outline-none placeholder:text-gray-300"
+                  className="nodrag nopan min-h-0 flex-1 resize-none bg-transparent text-[13.5px] font-light leading-[1.85] text-gray-800 dark:text-slate-200 outline-none placeholder:text-gray-300 dark:placeholder:text-slate-600"
                 />
               ) : (
                 <div
@@ -530,15 +530,15 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
       >
         <motion.div
           layout
-          className="flex flex-col overflow-hidden rounded-2xl bg-white/95 shadow-sm backdrop-blur-sm border border-gray-100/50"
+          className="flex flex-col overflow-hidden rounded-2xl bg-white/95 shadow-sm backdrop-blur-sm border border-gray-100/50 dark:border-slate-700/50"
         >
           {!showTemplates ? (
             <button
               onClick={() => setShowTemplates(true)}
-              className="flex flex-col items-center justify-center gap-1.5 p-3 text-gray-500 hover:text-gray-900 transition-colors"
+              className="flex flex-col items-center justify-center gap-1.5 p-3 text-gray-500 dark:text-slate-400 hover:text-gray-900 dark:hover:text-white transition-colors"
             >
-              <span className="text-[10px] font-medium text-gray-600">Plantillas</span>
-              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-50 text-gray-900 hover:bg-gray-100">
+              <span className="text-[10px] font-medium text-gray-600 dark:text-slate-300">Plantillas</span>
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-50 dark:bg-slate-700 text-gray-900 dark:text-white hover:bg-gray-100 dark:hover:bg-slate-600">
                 <Plus size={16} strokeWidth={2} />
               </div>
             </button>
@@ -550,7 +550,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
               onWheelCapture={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between px-3 pb-2 pt-1">
-                <p className="text-[11px] font-medium text-gray-500">Plantillas</p>
+                <p className="text-[11px] font-medium text-gray-500 dark:text-slate-400">Plantillas</p>
               </div>
               <div className="flex flex-col gap-0.5">
                 {CONTRACT_TEMPLATES.map((t) => {
@@ -559,20 +559,20 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
                     <div key={t.id} className="group/tpl relative">
                       <button
                         onClick={() => applyTemplate(t, "replace")}
-                        className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left hover:bg-gray-50 transition-colors"
+                        className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left hover:bg-gray-50 dark:hover:bg-slate-700 transition-colors"
                         title="Reemplazar el documento con esta plantilla"
                       >
-                        <div className="flex shrink-0 items-center justify-center text-gray-400 group-hover/tpl:text-gray-600">
+                        <div className="flex shrink-0 items-center justify-center text-gray-400 dark:text-slate-400 group-hover/tpl:text-gray-600 dark:group-hover/tpl:text-slate-200 dark:text-slate-300">
                           <Icon size={14} strokeWidth={2} />
                         </div>
-                        <span className="block text-xs font-medium text-gray-700">{t.name}</span>
+                        <span className="block text-xs font-medium text-gray-700 dark:text-slate-200">{t.name}</span>
                       </button>
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
                           applyTemplate(t, "append");
                         }}
-                        className="absolute right-2 top-1/2 -translate-y-1/2 hidden rounded-full p-1.5 text-gray-400 hover:bg-white hover:text-gray-900 group-hover/tpl:block shadow-sm border border-gray-100/50"
+                        className="absolute right-2 top-1/2 -translate-y-1/2 hidden rounded-full p-1.5 text-gray-400 hover:bg-white dark:hover:bg-slate-700 hover:text-gray-900 dark:hover:text-white group-hover/tpl:block shadow-sm border border-gray-100/50 dark:border-slate-700/50"
                         title="Añadir al final del documento"
                       >
                         <Plus size={12} strokeWidth={2.5} />
@@ -589,7 +589,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
       {/* Navegador de páginas */}
 
       <div
-        className={`nodrag nopan absolute top-1/2 z-30 flex flex-col items-center gap-2.5 rounded-xl bg-white/90 p-2 shadow-sm backdrop-blur-sm transition-all duration-200 border border-gray-100/50 ${
+        className={`nodrag nopan absolute top-1/2 z-30 flex flex-col items-center gap-2.5 rounded-xl bg-white/90 dark:bg-slate-800/90 p-2 shadow-sm backdrop-blur-sm transition-all duration-200 border border-gray-100/50 dark:border-slate-700/50 ${
           hovered ? "translate-x-0 opacity-100" : "pointer-events-none -translate-x-2 opacity-0"
         }`}
         style={{
@@ -606,21 +606,21 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
             <button
               onClick={() => setActivePage(i)}
               className={`flex h-16 w-12 flex-col justify-between overflow-hidden rounded-sm p-1.5 transition-colors shadow-sm border ${
-                i === pageIndex ? "bg-gray-50 border-gray-900 ring-1 ring-gray-900" : "bg-white border-gray-200 hover:bg-gray-50 hover:border-gray-300"
+                i === pageIndex ? "bg-gray-50 dark:bg-slate-700 border-gray-900 dark:border-slate-400 ring-1 ring-gray-900 dark:ring-slate-400" : "bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 hover:border-gray-300 dark:hover:border-slate-600"
               }`}
               title={`Página ${i + 1}`}
             >
               <span className="line-clamp-3 text-left w-full text-[4px] font-light leading-[1.6] text-gray-400">
                 {p.content?.trim() || " "}
               </span>
-              <span className={`w-full text-center text-[10px] font-bold ${i === pageIndex ? "text-gray-900" : "text-gray-700"}`}>
+              <span className={`w-full text-center text-[10px] font-bold ${i === pageIndex ? "text-gray-900 dark:text-white" : "text-gray-700 dark:text-slate-200"}`}>
                 {i + 1}
               </span>
             </button>
             {pages.length > 1 && (
               <button
                 onClick={() => removePage(i)}
-                className="absolute -right-1.5 -top-1.5 hidden h-4 w-4 items-center justify-center rounded-full bg-white text-gray-500 shadow-md border border-gray-100 hover:text-red-500 group-hover/page:flex transition-colors"
+                className="absolute -right-1.5 -top-1.5 hidden h-4 w-4 items-center justify-center rounded-full bg-white text-gray-500 dark:text-slate-400 shadow-md border border-gray-100 dark:border-slate-700 hover:text-red-500 group-hover/page:flex transition-colors"
                 title="Eliminar página"
               >
                 <Trash2 size={8} />
@@ -630,7 +630,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
         ))}
         <button
           onClick={addPage}
-          className="flex h-8 w-12 items-center justify-center rounded-sm text-gray-400 transition-colors border border-dashed border-gray-300 hover:bg-gray-50 hover:text-gray-900 hover:border-gray-400"
+          className="flex h-8 w-12 items-center justify-center rounded-sm text-gray-400 dark:text-slate-400 transition-colors border border-dashed border-gray-300 dark:border-slate-600 hover:bg-gray-50 hover:text-gray-900 hover:border-gray-400"
           title="Añadir página"
         >
           <Plus size={12} />
@@ -654,13 +654,13 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
 };
 
 const Menu = ({ items, active, onPick }: { items: string[]; active: string; onPick: (v: string) => void }) => (
-  <div className="absolute right-0 top-full z-30 mt-2 w-[140px] rounded-2xl bg-white/95 p-1.5 shadow-sm backdrop-blur-sm">
+  <div className="absolute right-0 top-full z-30 mt-2 w-[140px] rounded-2xl bg-white/95 dark:bg-slate-800/95 p-1.5 shadow-sm backdrop-blur-sm">
     {items.map((it) => (
       <button
         key={it}
         onClick={() => onPick(it)}
         className={`block w-full rounded-xl px-3 py-2 text-left text-xs hover:bg-gray-50 ${
-          it === active ? "bg-gray-50 text-gray-900" : "text-gray-500"
+          it === active ? "bg-gray-50 text-gray-900 dark:text-white" : "text-gray-500 dark:text-slate-400"
         }`}
       >
         {it}
