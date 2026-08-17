@@ -289,7 +289,7 @@ const textPrimary = isDark ? "text-white" : "text-gray-900";
 
       {/* Hoja */}
       <div
-        className={`relative h-full w-full overflow-hidden rounded-2xl ${isDark ? "bg-[#1C1C1E]" : "bg-white"} shadow-sm`}
+        className={`relative h-full w-full overflow-hidden rounded-2xl ${isDark ? "bg-[#111827]" : "bg-white"} shadow-sm`}
         style={{ boxShadow: selected ? "0 6px 24px -12px rgba(0,0,0,0.16)" : "0 2px 12px -8px rgba(0,0,0,0.12)" }}
         onDragOver={(e) => {
           e.preventDefault();
