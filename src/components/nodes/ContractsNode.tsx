@@ -682,6 +682,7 @@ const Menu = ({ items, active, onPick }: { items: string[]; active: string; onPi
       </button>
     ))}
   </div>
-);
+  );
+};
 
 export default memo(ContractsNode);
