@@ -588,7 +588,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
       {/* Navegador de páginas */}
 
       <div
-        className={`nodrag nopan absolute top-1/2 z-30 flex flex-col items-center gap-2 rounded-2xl bg-white/90 p-2 shadow-sm backdrop-blur-sm transition-all duration-200 ${
+        className={`nodrag nopan absolute top-1/2 z-30 flex flex-col items-center gap-2.5 rounded-xl bg-white/90 p-2 shadow-sm backdrop-blur-sm transition-all duration-200 border border-gray-100/50 ${
           hovered ? "translate-x-0 opacity-100" : "pointer-events-none -translate-x-2 opacity-0"
         }`}
         style={{
@@ -604,22 +604,22 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
           <div key={p.id} className="group/page relative">
             <button
               onClick={() => setActivePage(i)}
-              className={`flex h-16 w-12 flex-col justify-between overflow-hidden rounded-lg p-1.5 text-left transition-colors ${
-                i === pageIndex ? "bg-gray-50 ring-1 ring-gray-200" : "bg-white hover:bg-gray-50"
+              className={`flex h-16 w-12 flex-col justify-between overflow-hidden rounded-sm p-1.5 transition-colors shadow-sm border ${
+                i === pageIndex ? "bg-gray-50 border-gray-900 ring-1 ring-gray-900" : "bg-white border-gray-200 hover:bg-gray-50 hover:border-gray-300"
               }`}
               title={`Página ${i + 1}`}
             >
-              <span className="line-clamp-3 text-[4.5px] font-light leading-[1.6] text-gray-400">
+              <span className="line-clamp-3 text-left w-full text-[4px] font-light leading-[1.6] text-gray-400">
                 {p.content?.trim() || " "}
               </span>
-              <span className={`text-[9px] font-light ${i === pageIndex ? "text-gray-900" : "text-gray-400"}`}>
+              <span className={`w-full text-center text-[10px] font-bold ${i === pageIndex ? "text-gray-900" : "text-gray-700"}`}>
                 {i + 1}
               </span>
             </button>
             {pages.length > 1 && (
               <button
                 onClick={() => removePage(i)}
-                className="absolute -right-1 -top-1 hidden h-4 w-4 items-center justify-center rounded-full bg-white text-gray-400 shadow-sm hover:text-gray-900 group-hover/page:flex"
+                className="absolute -right-1.5 -top-1.5 hidden h-4 w-4 items-center justify-center rounded-full bg-white text-gray-500 shadow-md border border-gray-100 hover:text-red-500 group-hover/page:flex transition-colors"
                 title="Eliminar página"
               >
                 <Trash2 size={8} />
@@ -629,7 +629,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
         ))}
         <button
           onClick={addPage}
-          className="flex h-8 w-12 items-center justify-center rounded-lg text-gray-400 transition-colors hover:bg-gray-50 hover:text-gray-900"
+          className="flex h-8 w-12 items-center justify-center rounded-sm text-gray-400 transition-colors border border-dashed border-gray-300 hover:bg-gray-50 hover:text-gray-900 hover:border-gray-400"
           title="Añadir página"
         >
           <Plus size={12} />
