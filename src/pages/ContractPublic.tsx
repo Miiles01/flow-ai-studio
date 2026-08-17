@@ -96,6 +96,63 @@ const ContractPublic = () => {
     else setGlobalSignature(saved);
   };
 
+  /** Quita una firma guardada (campo o firma global). */
+  const removeSignature = async (fieldId?: string) => {
+    setError(null);
+    const { data, error: fnError } = await supabase.functions.invoke("sign-contract", {
+      body: { publicId, fieldId, action: "remove" },
+    });
+    const message = fnError?.message || (data as any)?.error;
+    if (message) {
+      setError("No se pudo quitar la firma. Inténtalo de nuevo.");
+      return;
+    }
+    if (fieldId)
+      setSignatures((prev) => {
+        const next = { ...prev };
+        delete next[fieldId];
+        return next;
+      });
+    else setGlobalSignature(null);
+  };
+
+  /** Descarga el documento como PDF, una hoja por página. */
+  const downloadPdf = async () => {
+    if (!sheetsRef.current || downloading) return;
+    setDownloading(true);
+    setError(null);
+    try {
+      const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
+        import("html2canvas"),
+        import("jspdf"),
+      ]);
+      const sheets = Array.from(
+        sheetsRef.current.querySelectorAll<HTMLElement>("[data-contract-sheet]")
+      );
+      if (!sheets.length) return;
+      let pdf: any = null;
+      for (const sheet of sheets) {
+        const canvas = await html2canvas(sheet, { scale: 2, backgroundColor: "#ffffff", useCORS: true });
+        const img = canvas.toDataURL("image/jpeg", 0.95);
+        const w = sheet.offsetWidth;
+        const h = sheet.offsetHeight;
+        if (!pdf) {
+          pdf = new jsPDF({ unit: "px", format: [w, h], orientation: w > h ? "landscape" : "portrait" });
+        } else {
+          pdf.addPage([w, h], w > h ? "landscape" : "portrait");
+        }
+        pdf.addImage(img, "JPEG", 0, 0, w, h);
+      }
+      const safe = (contract?.title || "documento").replace(/[^\w\s-]/g, "").trim() || "documento";
+      pdf.save(`${safe}.pdf`);
+    } catch {
+      setError("No se pudo generar el PDF. Inténtalo de nuevo.");
+    } finally {
+      setDownloading(false);
+    }
+  };
+
+
   if (loading) return <div className="min-h-screen bg-neutral-100" />;
 
   if (!contract) {
