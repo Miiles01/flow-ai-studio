@@ -142,11 +142,13 @@ const AppsMenu = ({ isDark }: AppsMenuProps) => {
             {/* ─── Herramientas ────────────────────────────────────── */}
             <p className={`${sectionLabel} mt-1`}>Herramientas</p>
 
-            <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl">
-              <GoogleIcon className="w-6 h-6 shrink-0" />
-              <span className={`flex-1 text-sm font-normal ${rowText}`}>Búsqueda en la web</span>
-              <Switch checked={webSearchEnabled} onCheckedChange={toggleWebSearch} />
-            </div>
+            {false && (
+              <div className="flex items-center gap-3 px-3 py-2.5 rounded-xl">
+                <GoogleIcon className="w-6 h-6 shrink-0" />
+                <span className={`flex-1 text-sm font-normal ${rowText}`}>Búsqueda en la web</span>
+                <Switch checked={webSearchEnabled} onCheckedChange={toggleWebSearch} />
+              </div>
+            )}
 
 
 
@@ -183,12 +185,13 @@ const AppsMenu = ({ isDark }: AppsMenuProps) => {
 
           <div className={`mt-1 border-t pt-1 ${isDark ? "border-white/10" : "border-miiles-gray-100"}`}>
             <button
+              disabled
               onClick={() => {
                 setOpen(false);
                 setAddOpen(true);
               }}
-              className={`flex w-full items-center gap-3 px-3 py-2.5 rounded-xl transition-colors ${
-                isDark ? "hover:bg-white/5 text-white" : "hover:bg-miiles-gray-50 text-black"
+              className={`flex w-full items-center gap-3 px-3 py-2.5 rounded-xl transition-colors opacity-50 cursor-not-allowed ${
+                isDark ? "text-white" : "text-black"
               }`}
             >
               <div
@@ -198,7 +201,10 @@ const AppsMenu = ({ isDark }: AppsMenuProps) => {
               >
                 <Plus size={14} strokeWidth={1.5} />
               </div>
-              <span className="text-sm font-normal">Agregar app</span>
+              <span className="text-sm font-normal flex-1 text-left">Agregar app</span>
+              <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${isDark ? 'bg-white/10 text-white/60' : 'bg-gray-100 text-gray-500'}`}>
+                Próximamente
+              </span>
             </button>
           </div>
         </PopoverContent>
