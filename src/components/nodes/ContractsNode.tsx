@@ -551,7 +551,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
             >
               <span className={`text-[10px] font-medium ${isDark ? `}text-white/70" : "text-gray-600"}">Plantillas</span>
               <div className={`flex h-8 w-8 items-center justify-center rounded-full ${isDark ? `}bg-white/10" : "bg-gray-50"} ${isDark ? "text-white" : "text-gray-900"} ${isDark ? "hover:bg-white/20" : "hover:bg-gray-100"}">
-                <Plus size={16} strokeWidth={2} />
+                <FileText size={16} strokeWidth={2} />
               </div>
             </button>
           ) : (
