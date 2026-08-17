@@ -534,7 +534,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
             onClick={() => setShowTemplates(true)}
             className="flex flex-col items-center justify-center gap-1.5 p-3 text-gray-500 hover:text-gray-900 transition-colors"
           >
-            <span className="text-[10px] font-medium tracking-wide uppercase">Plantillas</span>
+            <span className="text-[10px] font-medium text-gray-600">Plantillas</span>
             <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-50 text-gray-900 hover:bg-gray-100">
               <Plus size={16} strokeWidth={2} />
             </div>
@@ -546,7 +546,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
             className="flex flex-col w-[200px] max-h-[520px] overflow-y-auto p-2"
           >
             <div className="flex items-center justify-between px-3 pb-2 pt-1">
-              <p className="text-[11px] font-medium tracking-wide uppercase text-gray-500">Plantillas</p>
+              <p className="text-[11px] font-medium text-gray-500">Plantillas</p>
             </div>
             <div className="flex flex-col gap-0.5">
               {CONTRACT_TEMPLATES.map((t) => {
