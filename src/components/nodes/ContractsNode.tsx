@@ -666,7 +666,9 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
   );
 };
 
-const Menu = ({ items, active, onPick }: { items: string[]; active: string; onPick: (v: string) => void }) => (
+const Menu = ({ items, active, onPick }: { items: string[]; active: string; onPick: (v: string) => void }) => {
+  const { isDark } = useTheme();
+  return (
   <div className={`absolute right-0 top-full z-30 mt-2 w-[140px] rounded-2xl ${isDark ? "bg-[#1C1C1E]/95" : "bg-white/95"} p-1.5 shadow-sm backdrop-blur-sm`}>
     {items.map((it) => (
       <button
