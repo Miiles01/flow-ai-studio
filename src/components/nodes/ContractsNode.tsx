@@ -515,9 +515,8 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
       </div>
 
       {/* Plantillas */}
-      <motion.div
-        layout
-        className={`nodrag nopan absolute top-1/2 z-30 flex flex-col overflow-hidden rounded-2xl bg-white/95 shadow-sm backdrop-blur-sm transition-all duration-200 border border-gray-100/50 ${
+      <div
+        className={`nodrag nopan absolute top-1/2 z-30 flex items-center transition-all duration-200 ${
           hovered ? "translate-x-0 opacity-100" : "pointer-events-none translate-x-2 opacity-0"
         }`}
         style={{
@@ -529,57 +528,62 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
         onMouseDown={(e) => e.stopPropagation()}
         onClick={(e) => e.stopPropagation()}
       >
-        {!showTemplates ? (
-          <button
-            onClick={() => setShowTemplates(true)}
-            className="flex flex-col items-center justify-center gap-1.5 p-3 text-gray-500 hover:text-gray-900 transition-colors"
-          >
-            <span className="text-[10px] font-medium text-gray-600">Plantillas</span>
-            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-50 text-gray-900 hover:bg-gray-100">
-              <Plus size={16} strokeWidth={2} />
-            </div>
-          </button>
-        ) : (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="flex flex-col w-[200px] max-h-[520px] overflow-y-auto p-2"
-          >
-            <div className="flex items-center justify-between px-3 pb-2 pt-1">
-              <p className="text-[11px] font-medium text-gray-500">Plantillas</p>
-            </div>
-            <div className="flex flex-col gap-0.5">
-              {CONTRACT_TEMPLATES.map((t) => {
-                const Icon = CAT_ICONS[t.category] || FileText;
-                return (
-                  <div key={t.id} className="group/tpl relative">
-                    <button
-                      onClick={() => applyTemplate(t, "replace")}
-                      className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left hover:bg-gray-50 transition-colors"
-                      title="Reemplazar el documento con esta plantilla"
-                    >
-                      <div className="flex shrink-0 items-center justify-center text-gray-400 group-hover/tpl:text-gray-600">
-                        <Icon size={14} strokeWidth={2} />
-                      </div>
-                      <span className="block text-xs font-medium text-gray-700">{t.name}</span>
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        applyTemplate(t, "append");
-                      }}
-                      className="absolute right-2 top-1/2 -translate-y-1/2 hidden rounded-full p-1.5 text-gray-400 hover:bg-white hover:text-gray-900 group-hover/tpl:block shadow-sm border border-gray-100/50"
-                      title="Añadir al final del documento"
-                    >
-                      <Plus size={12} strokeWidth={2.5} />
-                    </button>
-                  </div>
-                );
-              })}
-            </div>
-          </motion.div>
-        )}
-      </motion.div>
+        <motion.div
+          layout
+          className="flex flex-col overflow-hidden rounded-2xl bg-white/95 shadow-sm backdrop-blur-sm border border-gray-100/50"
+        >
+          {!showTemplates ? (
+            <button
+              onClick={() => setShowTemplates(true)}
+              className="flex flex-col items-center justify-center gap-1.5 p-3 text-gray-500 hover:text-gray-900 transition-colors"
+            >
+              <span className="text-[10px] font-medium text-gray-600">Plantillas</span>
+              <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-50 text-gray-900 hover:bg-gray-100">
+                <Plus size={16} strokeWidth={2} />
+              </div>
+            </button>
+          ) : (
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              className="flex flex-col w-[200px] max-h-[520px] overflow-y-auto p-2"
+            >
+              <div className="flex items-center justify-between px-3 pb-2 pt-1">
+                <p className="text-[11px] font-medium text-gray-500">Plantillas</p>
+              </div>
+              <div className="flex flex-col gap-0.5">
+                {CONTRACT_TEMPLATES.map((t) => {
+                  const Icon = CAT_ICONS[t.category] || FileText;
+                  return (
+                    <div key={t.id} className="group/tpl relative">
+                      <button
+                        onClick={() => applyTemplate(t, "replace")}
+                        className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left hover:bg-gray-50 transition-colors"
+                        title="Reemplazar el documento con esta plantilla"
+                      >
+                        <div className="flex shrink-0 items-center justify-center text-gray-400 group-hover/tpl:text-gray-600">
+                          <Icon size={14} strokeWidth={2} />
+                        </div>
+                        <span className="block text-xs font-medium text-gray-700">{t.name}</span>
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          applyTemplate(t, "append");
+                        }}
+                        className="absolute right-2 top-1/2 -translate-y-1/2 hidden rounded-full p-1.5 text-gray-400 hover:bg-white hover:text-gray-900 group-hover/tpl:block shadow-sm border border-gray-100/50"
+                        title="Añadir al final del documento"
+                      >
+                        <Plus size={12} strokeWidth={2.5} />
+                      </button>
+                    </div>
+                  );
+                })}
+              </div>
+            </motion.div>
+          )}
+        </motion.div>
+      </div>
 
       {/* Navegador de páginas */}
 
