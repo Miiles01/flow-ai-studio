@@ -240,6 +240,7 @@ const ContractPublic = () => {
             </div>
           </div>
         ))}
+        </div>
 
         {/* Documentos sin campos insertados: firma única al final */}
         {fields.length === 0 && (
@@ -253,6 +254,12 @@ const ContractPublic = () => {
                     Firmado el {new Date(globalSignature.signedAt).toLocaleString("es-MX")}
                   </p>
                 </div>
+                <button
+                  onClick={() => removeSignature()}
+                  className="ml-auto rounded-full border border-neutral-200 px-4 py-2 text-[12px] font-light text-neutral-500 transition-colors hover:text-neutral-900"
+                >
+                  Quitar firma
+                </button>
               </div>
             ) : (
               <div className="flex items-center justify-between gap-4">
