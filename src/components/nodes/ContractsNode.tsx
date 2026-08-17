@@ -381,7 +381,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
                     key={p.value}
                     onClick={() => update({ logoPosition: p.value })}
                     className={`block w-full rounded-xl px-3 py-2 text-left text-xs hover:bg-gray-50 ${
-                      logoPosition === p.value ? "bg-gray-50 ${isDark ? "text-white" : "text-gray-900"}" : "${isDark ? "text-white/60" : "text-gray-500"}"
+                      logoPosition === p.value ? `bg-gray-50 ${isDark ? "text-white" : "text-gray-900"}` : isDark ? "text-white/60" : "text-gray-500"
                     }`}
                   >
                     {p.label}
@@ -396,7 +396,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
                     key={String(o.value)}
                     onClick={() => update({ logoRepeat: o.value })}
                     className={`block w-full rounded-xl px-3 py-2 text-left text-xs hover:bg-gray-50 ${
-                      !!d.logoRepeat === o.value ? "bg-gray-50 ${isDark ? "text-white" : "text-gray-900"}" : "${isDark ? "text-white/60" : "text-gray-500"}"
+                      !!d.logoRepeat === o.value ? `bg-gray-50 ${isDark ? "text-white" : "text-gray-900"}` : isDark ? "text-white/60" : "text-gray-500"
                     }`}
                   >
                     {o.label}
@@ -619,14 +619,14 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
             <button
               onClick={() => scrollToPage(i)}
               className={`flex h-16 w-12 flex-col justify-between overflow-hidden rounded-sm p-1.5 transition-colors border ${
-                i === pageIndex ? "${isDark ? "bg-white/10" : "bg-gray-50"} ${isDark ? "border-white/30" : "border-gray-900"} ${isDark ? "ring-1 ring-white/30" : "ring-1 ring-gray-900"}" : "${isDark ? "bg-[#1C1C1E]" : "bg-white"} ${isDark ? "border-white/10" : "border-gray-100"}/50 ${isDark ? "hover:bg-white/10" : "hover:bg-gray-50"} ${isDark ? "hover:border-white/20" : "hover:border-gray-200"}"
+                i === pageIndex ? `${isDark ? "bg-white/10" : "bg-gray-50"} ${isDark ? "border-white/30" : "border-gray-900"} ${isDark ? "ring-1 ring-white/30" : "ring-1 ring-gray-900"}` : `${isDark ? "bg-[#1C1C1E]" : "bg-white"} ${isDark ? "border-white/10" : "border-gray-100"}/50 ${isDark ? "hover:bg-white/10" : "hover:bg-gray-50"} ${isDark ? "hover:border-white/20" : "hover:border-gray-200"}`
               }`}
               title={`Página ${i + 1}`}
             >
               <span className="line-clamp-3 text-left w-full text-[4px] font-light leading-[1.6] text-gray-400">
                 {p.content?.trim() || " "}
               </span>
-              <span className={`w-full text-center text-[10px] font-bold ${i === pageIndex ? "${isDark ? "text-white" : "text-gray-900"}" : "${isDark ? "text-white/80" : "text-gray-700"}"}`}>
+              <span className={`w-full text-center text-[10px] font-bold ${i === pageIndex ? (isDark ? "text-white" : "text-gray-900") : isDark ? "text-white/80" : "text-gray-700"}`}>
                 {i + 1}
               </span>
             </button>
@@ -673,7 +673,7 @@ const Menu = ({ items, active, onPick }: { items: string[]; active: string; onPi
         key={it}
         onClick={() => onPick(it)}
         className={`block w-full rounded-xl px-3 py-2 text-left text-xs hover:bg-gray-50 ${
-          it === active ? "bg-gray-50 ${isDark ? "text-white" : "text-gray-900"}" : "${isDark ? "text-white/60" : "text-gray-500"}"
+          it === active ? `bg-gray-50 ${isDark ? "text-white" : "text-gray-900"}` : isDark ? "text-white/60" : "text-gray-500"
         }`}
       >
         {it}
