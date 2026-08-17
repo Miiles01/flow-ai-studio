@@ -438,7 +438,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
         {/* Contenido de la hoja - scroll vertical entre páginas */}
         <div ref={scrollRef} className="nodrag nopan h-full overflow-y-auto">
           {pages.map((p, i) => (
-            <div key={p.id} className="relative flex h-full flex-col px-12 pb-16 pt-24">
+            <div key={p.id} className="relative flex h-full flex-col px-14 pb-24 pt-32">
               {(i === 0 || d.logoRepeat) &&
                 (d.logoUrl ? (
                   <img
