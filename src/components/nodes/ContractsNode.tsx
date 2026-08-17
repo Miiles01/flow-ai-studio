@@ -8,7 +8,8 @@
 
 import { memo, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
-import { type NodeProps, useReactFlow, useViewport } from "@xyflow/react";
+import { type NodeProps, useReactFlow, useViewport, NodeResizer, NodeToolbar, Position } from "@xyflow/react";
+import { motion, AnimatePresence } from "framer-motion";
 import { Trash2, Plus, Upload, ExternalLink, ImageIcon, PenLine } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import SignatureDialog from "@/components/contracts/SignatureDialog";
@@ -36,7 +37,7 @@ import { CONTRACT_TEMPLATES, TEMPLATE_CATEGORIES, templatePages, type ContractTe
 
 
 const PILL =
-  "px-3 py-1.5 rounded-full text-xs font-normal bg-white/90 backdrop-blur-sm border border-gray-100 text-gray-600 hover:text-gray-900 transition-colors";
+  "px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors";
 
 const ContractsNode = ({ id, data, selected }: NodeProps) => {
   const { setNodes } = useReactFlow();
@@ -222,7 +223,30 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
   };
 
   return (
-    <div
+    <>
+      <NodeResizer isVisible={!!selected} minWidth={dims.width} minHeight={dims.height} lineStyle={{ border: "none" }} />
+      <AnimatePresence>
+        {selected && (
+          <NodeToolbar isVisible={true} position={Position.Top} offset={15}>
+            <motion.div
+              initial={{ opacity: 0, y: 4 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: 4 }}
+              transition={{ duration: 0.15 }}
+              className="flex items-center bg-white border border-gray-100 p-1 rounded-2xl shadow-sm"
+            >
+              <button
+                onClick={() => setNodes((nds) => nds.filter((n) => n.id !== id))}
+                className="w-8 h-8 flex items-center justify-center rounded-xl text-gray-400 hover:bg-red-50 hover:text-red-500 transition-colors"
+                title="Eliminar widget"
+              >
+                <Trash2 size={14} />
+              </button>
+            </motion.div>
+          </NodeToolbar>
+        )}
+      </AnimatePresence>
+      <div
       className="group/widget"
       style={{ width: "100%", height: "100%", position: "relative" }}
       onMouseEnter={() => setHovered(true)}
@@ -254,9 +278,9 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
           void handleFile(e.dataTransfer.files?.[0]);
         }}
       >
-        {/* Barra de configuración dentro de la hoja */}
+        {/* Píldora Izquierda (Título y Páginas) */}
         <div
-          className={`nodrag nopan absolute left-6 right-6 top-6 z-20 flex items-center gap-2 transition-all duration-200 ${
+          className={`nodrag nopan absolute left-6 top-6 z-20 flex flex-col gap-0.5 rounded-xl bg-white/95 px-4 py-2.5 shadow-sm backdrop-blur-sm transition-all duration-200 border border-gray-100/50 ${
             hovered ? "translate-y-0 opacity-100" : "pointer-events-none -translate-y-2 opacity-0"
           }`}
           onMouseDown={(e) => e.stopPropagation()}
@@ -266,12 +290,21 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
             value={d.title ?? "Contratos"}
             onChange={(e) => update({ title: e.target.value })}
             placeholder="Contratos"
-            className="min-w-0 flex-1 bg-transparent text-sm font-medium text-gray-900 outline-none placeholder:text-gray-300"
+            className="w-48 bg-transparent text-sm font-semibold text-gray-900 outline-none placeholder:text-gray-300"
           />
-          <span className="shrink-0 text-xs font-light text-gray-500">
+          <span className="text-[10px] font-medium text-gray-400">
             {pages.length} {pages.length === 1 ? "página" : "páginas"}
           </span>
+        </div>
 
+        {/* Píldora Derecha (Controles) */}
+        <div
+          className={`nodrag nopan absolute right-6 top-6 z-20 flex items-center gap-1 rounded-xl bg-white/95 p-1.5 shadow-sm backdrop-blur-sm transition-all duration-200 border border-gray-100/50 ${
+            hovered ? "translate-y-0 opacity-100" : "pointer-events-none -translate-y-2 opacity-0"
+          }`}
+          onMouseDown={(e) => e.stopPropagation()}
+          onClick={(e) => e.stopPropagation()}
+        >
           <div className="relative shrink-0">
             <button className={PILL} onClick={() => setOpenMenu(openMenu === "moneda" ? null : "moneda")}>
               {d.currency || "MXN"}
@@ -307,11 +340,11 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
           <div className="relative shrink-0">
             <button className={PILL} onClick={() => setOpenMenu(openMenu === "logo" ? null : "logo")}>
               <span className="flex items-center gap-1.5">
-                <ImageIcon size={11} /> Logo
+                <ImageIcon size={13} strokeWidth={2} /> Logo
               </span>
             </button>
             {openMenu === "logo" && (
-              <div className="absolute right-0 top-full z-30 mt-2 w-[230px] rounded-2xl bg-white/95 p-1.5 shadow-sm backdrop-blur-sm">
+              <div className="absolute right-0 top-full z-30 mt-2 w-[230px] rounded-2xl bg-white/95 p-1.5 shadow-sm backdrop-blur-sm border border-gray-100">
                 <button
                   onClick={() => fileRef.current?.click()}
                   className="flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-xs text-gray-600 hover:bg-gray-50 hover:text-gray-900"
@@ -362,22 +395,14 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
 
           <button onClick={addSignatureField} className={`${PILL} shrink-0`} title="Insertar campo de firma">
             <span className="flex items-center gap-1.5">
-              <PenLine size={11} /> Firma
+              <PenLine size={13} strokeWidth={2} /> Firma
             </span>
           </button>
 
           <button onClick={openPublic} className={`${PILL} shrink-0`}>
             <span className="flex items-center gap-1.5">
-              <ExternalLink size={11} /> Abrir
+              <ExternalLink size={13} strokeWidth={2} /> Abrir
             </span>
-          </button>
-
-          <button
-            onClick={() => setNodes((nds) => nds.filter((n) => n.id !== id))}
-            className="shrink-0 rounded-full p-1.5 text-gray-400 transition-colors hover:bg-gray-50 hover:text-gray-900"
-            title="Eliminar"
-          >
-            <Trash2 size={12} />
           </button>
         </div>
 
@@ -581,6 +606,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
       <NodeExtendHandles nodeId={id} />
       <WidgetCommentSlot nodeId={id} />
     </div>
+    </>
   );
 };
 
