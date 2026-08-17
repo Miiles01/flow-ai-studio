@@ -417,7 +417,7 @@ const textPrimary = isDark ? "text-white" : "text-gray-900";
             )}
           </div>
 
-          <button onClick={addSignatureField} className={`${PILL} shrink-0`} title="Insertar campo de firma">
+          <button onClick={addSignatureField} className={`${pillCls} shrink-0`} title="Insertar campo de firma">
             <span className="flex items-center gap-1.5">
               <PenLine size={13} strokeWidth={2} /> Firma
             </span>
