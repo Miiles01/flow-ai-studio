@@ -10,7 +10,7 @@ import { memo, useEffect, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
 import { type NodeProps, useReactFlow, useViewport, NodeResizer, NodeToolbar, Position } from "@xyflow/react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Trash2, Plus, Upload, ExternalLink, ImageIcon, PenLine } from "lucide-react";
+import { Trash2, Plus, Upload, ExternalLink, ImageIcon, PenLine, FileText, Video, Briefcase, Palette, Code, Shield, LayoutTemplate } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import SignatureDialog from "@/components/contracts/SignatureDialog";
 import SignatureFieldBox from "@/components/contracts/SignatureFieldBox";
@@ -39,6 +39,16 @@ import { CONTRACT_TEMPLATES, TEMPLATE_CATEGORIES, templatePages, type ContractTe
 const PILL =
   "px-3 py-1.5 rounded-lg text-xs font-medium text-gray-600 hover:bg-gray-100 hover:text-gray-900 transition-colors";
 
+const CAT_ICONS: Record<string, any> = {
+  "Creadores y marcas": Video,
+  "Freelance": Briefcase,
+  "Agencia": Briefcase,
+  "Diseño": Palette,
+  "Producto digital": Code,
+  "Servicios": FileText,
+  "Legal": Shield,
+};
+
 const ContractsNode = ({ id, data, selected }: NodeProps) => {
   const { setNodes } = useReactFlow();
   const { zoom } = useViewport();
@@ -51,6 +61,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
   const [hovered, setHovered] = useState(false);
   const [activePage, setActivePage] = useState(0);
   const [openMenu, setOpenMenu] = useState<"moneda" | "hoja" | "logo" | null>(null);
+  const [showTemplates, setShowTemplates] = useState(false);
   const [dragOver, setDragOver] = useState(false);
   const [editing, setEditing] = useState(false);
   const [signingField, setSigningField] = useState<SignatureField | null>(null);
@@ -253,6 +264,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
       onMouseLeave={() => {
         setHovered(false);
         setOpenMenu(null);
+        setShowTemplates(false);
       }}
     >
       {/* Zona para mover el widget */}
@@ -503,8 +515,9 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
       </div>
 
       {/* Plantillas */}
-      <div
-        className={`nodrag nopan absolute top-1/2 z-30 w-[230px] max-h-[520px] overflow-y-auto rounded-2xl bg-white/90 p-2 shadow-sm backdrop-blur-sm transition-all duration-200 ${
+      <motion.div
+        layout
+        className={`nodrag nopan absolute top-1/2 z-30 flex flex-col overflow-hidden rounded-2xl bg-white/95 shadow-sm backdrop-blur-sm transition-all duration-200 border border-gray-100/50 ${
           hovered ? "translate-x-0 opacity-100" : "pointer-events-none translate-x-2 opacity-0"
         }`}
         style={{
@@ -516,32 +529,57 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
         onMouseDown={(e) => e.stopPropagation()}
         onClick={(e) => e.stopPropagation()}
       >
-        <p className="px-3 pb-1 pt-2 text-xs font-light text-gray-500">Plantillas</p>
-        {TEMPLATE_CATEGORIES.map((cat) => (
-          <div key={cat} className="pb-1">
-            <p className="px-3 py-1 text-[10px] font-light text-gray-300">{cat}</p>
-            {CONTRACT_TEMPLATES.filter((t) => t.category === cat).map((t) => (
-              <div key={t.id} className="group/tpl relative">
-                <button
-                  onClick={() => applyTemplate(t, "replace")}
-                  className="block w-full rounded-xl px-3 py-2 text-left hover:bg-gray-50"
-                  title="Reemplazar el documento con esta plantilla"
-                >
-                  <span className="block text-xs text-gray-700">{t.name}</span>
-                  <span className="mt-0.5 block text-[10px] font-light leading-snug text-gray-400">{t.description}</span>
-                </button>
-                <button
-                  onClick={() => applyTemplate(t, "append")}
-                  className="absolute right-2 top-2 hidden rounded-full p-1 text-gray-400 hover:bg-white hover:text-gray-900 group-hover/tpl:block"
-                  title="Añadir al final del documento"
-                >
-                  <Plus size={11} />
-                </button>
-              </div>
-            ))}
-          </div>
-        ))}
-      </div>
+        {!showTemplates ? (
+          <button
+            onClick={() => setShowTemplates(true)}
+            className="flex flex-col items-center justify-center gap-1.5 p-3 text-gray-500 hover:text-gray-900 transition-colors"
+          >
+            <span className="text-[10px] font-medium tracking-wide uppercase">Plantillas</span>
+            <div className="flex h-8 w-8 items-center justify-center rounded-full bg-gray-50 text-gray-900 hover:bg-gray-100">
+              <Plus size={16} strokeWidth={2} />
+            </div>
+          </button>
+        ) : (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            className="flex flex-col w-[200px] max-h-[520px] overflow-y-auto p-2"
+          >
+            <div className="flex items-center justify-between px-3 pb-2 pt-1">
+              <p className="text-[11px] font-medium tracking-wide uppercase text-gray-500">Plantillas</p>
+            </div>
+            <div className="flex flex-col gap-0.5">
+              {CONTRACT_TEMPLATES.map((t) => {
+                const Icon = CAT_ICONS[t.category] || FileText;
+                return (
+                  <div key={t.id} className="group/tpl relative">
+                    <button
+                      onClick={() => applyTemplate(t, "replace")}
+                      className="flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left hover:bg-gray-50 transition-colors"
+                      title="Reemplazar el documento con esta plantilla"
+                    >
+                      <div className="flex shrink-0 items-center justify-center text-gray-400 group-hover/tpl:text-gray-600">
+                        <Icon size={14} strokeWidth={2} />
+                      </div>
+                      <span className="block text-xs font-medium text-gray-700">{t.name}</span>
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        applyTemplate(t, "append");
+                      }}
+                      className="absolute right-2 top-1/2 -translate-y-1/2 hidden rounded-full p-1.5 text-gray-400 hover:bg-white hover:text-gray-900 group-hover/tpl:block shadow-sm border border-gray-100/50"
+                      title="Añadir al final del documento"
+                    >
+                      <Plus size={12} strokeWidth={2.5} />
+                    </button>
+                  </div>
+                );
+              })}
+            </div>
+          </motion.div>
+        )}
+      </motion.div>
 
       {/* Navegador de páginas */}
 
