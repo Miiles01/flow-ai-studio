@@ -60,6 +60,14 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
 
   const [hovered, setHovered] = useState(false);
   const [activePage, setActivePage] = useState(0);
+
+  const scrollToPage = (idx: number) => {
+    setActivePage(idx);
+    const el = scrollRef.current;
+    if (el) {
+      el.scrollTo({ top: el.clientHeight * idx, behavior: "smooth" });
+    }
+  };
   const [openMenu, setOpenMenu] = useState<"moneda" | "hoja" | "logo" | null>(null);
   const [showTemplates, setShowTemplates] = useState(false);
   const [dragOver, setDragOver] = useState(false);
@@ -148,13 +156,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
     return () => el.removeEventListener("scroll", onScroll);
   }, [pages.length]);
 
-  // Cuando cambia la página activa desde la sidebar, scrolla suavemente a ella.
-  useEffect(() => {
-    const el = scrollRef.current;
-    if (!el) return;
-    const pageH = el.clientHeight;
-    el.scrollTo({ top: pageH * pageIndex, behavior: "smooth" });
-  }, [pageIndex]);
+
 
   const setPageContent = (value: string) => {
     update({ pages: pages.map((p, i) => (i === pageIndex ? { ...p, content: value } : p)) });
@@ -163,14 +165,14 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
   const addPage = () => {
     const next = [...pages, { id: uid(), content: "" }];
     update({ pages: next });
-    setActivePage(next.length - 1);
+    setTimeout(() => scrollToPage(next.length - 1), 10);
   };
 
   const removePage = (index: number) => {
     if (pages.length === 1) return;
     const next = pages.filter((_, i) => i !== index);
     update({ pages: next });
-    setActivePage((p) => Math.max(0, Math.min(p, next.length - 1)));
+    setTimeout(() => scrollToPage(Math.max(0, Math.min(pageIndex, next.length - 1))), 10);
   };
 
   const addSignatureField = () => {
@@ -208,13 +210,13 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
     const nuevas = templatePages(tpl);
     if (mode === "replace") {
       update({ title: tpl.title, pages: nuevas });
-      setActivePage(0);
+      setTimeout(() => scrollToPage(0), 10);
       return;
     }
     const conContenido = pages.filter((p) => p.content.trim().length > 0);
     const next = [...conContenido, ...nuevas];
     update({ pages: next });
-    setActivePage(conContenido.length);
+    setTimeout(() => scrollToPage(conContenido.length - 1), 10);
   };
 
   const handleFile = async (file?: File | null) => {
@@ -476,7 +478,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
               ) : (
                 <div
                   onClick={() => {
-                    setActivePage(i);
+                    scrollToPage(i);
                     setEditing(true);
                   }}
                   onMouseDown={(e) => e.stopPropagation()}
@@ -604,7 +606,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
         {pages.map((p, i) => (
           <div key={p.id} className="group/page relative">
             <button
-              onClick={() => setActivePage(i)}
+              onClick={() => scrollToPage(i)}
               className={`flex h-16 w-12 flex-col justify-between overflow-hidden rounded-sm p-1.5 transition-colors border ${
                 i === pageIndex ? "bg-gray-50 dark:bg-slate-700 border-gray-900 dark:border-slate-400 ring-1 ring-gray-900 dark:ring-slate-400" : "bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700/50 hover:bg-gray-50 dark:hover:bg-slate-700 hover:border-gray-200 dark:hover:border-slate-600"
               }`}
