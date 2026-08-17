@@ -38,6 +38,9 @@ const ContractPublic = () => {
   const [globalOpen, setGlobalOpen] = useState(false);
   const [globalSignature, setGlobalSignature] = useState<FieldSignature | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [downloading, setDownloading] = useState(false);
+  const sheetsRef = useRef<HTMLDivElement>(null);
+
 
   useEffect(() => {
     let alive = true;
