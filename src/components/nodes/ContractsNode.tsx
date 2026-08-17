@@ -256,7 +256,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: 4 }}
               transition={{ duration: 0.15 }}
-              className={`flex items-center ${isDark ? `}bg-[#1C1C1E]" : "bg-white"} border ${isDark ? "border-white/10" : "border-gray-100"} p-1 rounded-2xl shadow-sm"
+              className={`flex items-center ${isDark ? "bg-[#1C1C1E]" : "bg-white"} border ${isDark ? "border-white/10" : "border-gray-100"} p-1 rounded-2xl shadow-sm`}
             >
               <button
                 onClick={() => setNodes((nds) => nds.filter((n) => n.id !== id))}
