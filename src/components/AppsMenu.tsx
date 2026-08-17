@@ -202,7 +202,7 @@ const AppsMenu = ({ isDark }: AppsMenuProps) => {
                 <Plus size={14} strokeWidth={1.5} />
               </div>
               <span className="text-sm font-normal flex-1 text-left">Agregar app</span>
-              <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded uppercase tracking-wider ${isDark ? 'bg-white/10 text-white/60' : 'bg-gray-100 text-gray-500'}`}>
+              <span className={`text-[9px] font-medium px-1.5 py-0.5 rounded tracking-normal ${isDark ? 'bg-white/10 text-white/60' : 'bg-gray-100 text-gray-500'}`}>
                 Próximamente
               </span>
             </button>
