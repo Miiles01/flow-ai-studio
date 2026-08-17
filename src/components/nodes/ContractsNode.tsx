@@ -516,14 +516,14 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
 
       {/* Plantillas */}
       <div
-        className={`nodrag nopan absolute top-1/2 z-30 flex items-center transition-all duration-200 ${
+        className={`nodrag nopan absolute top-6 z-30 flex items-start transition-all duration-200 ${
           hovered ? "translate-x-0 opacity-100" : "pointer-events-none translate-x-2 opacity-0"
         }`}
         style={{
           right: "100%",
           marginRight: 14 / zoom,
-          transform: `translateY(-50%) scale(${1 / zoom})`,
-          transformOrigin: "right center",
+          transform: `scale(${1 / zoom})`,
+          transformOrigin: "right top",
         }}
         onMouseDown={(e) => e.stopPropagation()}
         onClick={(e) => e.stopPropagation()}
