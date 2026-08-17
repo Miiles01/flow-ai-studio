@@ -591,7 +591,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
       {/* Navegador de páginas */}
 
       <div
-        className={`nodrag nopan absolute top-1/2 z-30 flex flex-col items-center gap-2.5 rounded-xl bg-white/90 dark:bg-slate-800/90 p-2 shadow-sm backdrop-blur-sm transition-all duration-200 border border-gray-100/50 dark:border-slate-700/50 ${
+        className={`nodrag nopan nowheel absolute top-1/2 z-30 flex flex-col items-center gap-2.5 rounded-lg bg-white/90 dark:bg-slate-800/90 p-2 shadow-sm backdrop-blur-sm transition-all duration-200 border border-gray-100/50 dark:border-slate-700/50 max-h-[320px] overflow-y-auto ${
           hovered ? "translate-x-0 opacity-100" : "pointer-events-none -translate-x-2 opacity-0"
         }`}
         style={{
@@ -602,6 +602,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
         }}
         onMouseDown={(e) => e.stopPropagation()}
         onClick={(e) => e.stopPropagation()}
+        onWheelCapture={(e) => e.stopPropagation()}
       >
         {pages.map((p, i) => (
           <div key={p.id} className="group/page relative">
@@ -632,7 +633,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
         ))}
         <button
           onClick={addPage}
-          className="flex h-8 w-12 items-center justify-center rounded-sm text-gray-400 dark:text-slate-400 transition-colors border border-dashed border-gray-300 dark:border-slate-600 hover:bg-gray-50 hover:text-gray-900 hover:border-gray-400"
+          className="flex h-12 w-12 shrink-0 items-center justify-center rounded-sm text-gray-400 dark:text-slate-400 transition-colors border border-dashed border-gray-300 dark:border-slate-600 hover:bg-gray-50 dark:hover:bg-slate-700 hover:text-gray-900 dark:hover:text-white hover:border-gray-400 dark:hover:border-slate-500"
           title="Añadir página"
         >
           <Plus size={12} />
