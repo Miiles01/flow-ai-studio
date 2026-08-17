@@ -51,7 +51,7 @@ const SignatureFieldBox = ({ label, signature, onClick, onRemove }: Props) => (
         label?.trim() ? null : <p className="text-[10px] font-light text-neutral-300">Nombre y fecha</p>
       )}
     </div>
-    {onRemove && !signature && (
+    {onRemove && (
       <button
         type="button"
         onClick={(e) => {

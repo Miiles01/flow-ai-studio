@@ -1,5 +1,6 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useParams } from "react-router-dom";
+import { Download, Loader2 } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import ContractRichText from "@/lib/contractRichText";
 import SignatureDialog from "@/components/contracts/SignatureDialog";
@@ -37,6 +38,9 @@ const ContractPublic = () => {
   const [globalOpen, setGlobalOpen] = useState(false);
   const [globalSignature, setGlobalSignature] = useState<FieldSignature | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [downloading, setDownloading] = useState(false);
+  const sheetsRef = useRef<HTMLDivElement>(null);
+
 
   useEffect(() => {
     let alive = true;
@@ -92,6 +96,63 @@ const ContractPublic = () => {
     else setGlobalSignature(saved);
   };
 
+  /** Quita una firma guardada (campo o firma global). */
+  const removeSignature = async (fieldId?: string) => {
+    setError(null);
+    const { data, error: fnError } = await supabase.functions.invoke("sign-contract", {
+      body: { publicId, fieldId, action: "remove" },
+    });
+    const message = fnError?.message || (data as any)?.error;
+    if (message) {
+      setError("No se pudo quitar la firma. Inténtalo de nuevo.");
+      return;
+    }
+    if (fieldId)
+      setSignatures((prev) => {
+        const next = { ...prev };
+        delete next[fieldId];
+        return next;
+      });
+    else setGlobalSignature(null);
+  };
+
+  /** Descarga el documento como PDF, una hoja por página. */
+  const downloadPdf = async () => {
+    if (!sheetsRef.current || downloading) return;
+    setDownloading(true);
+    setError(null);
+    try {
+      const [{ default: html2canvas }, { jsPDF }] = await Promise.all([
+        import("html2canvas"),
+        import("jspdf"),
+      ]);
+      const sheets = Array.from(
+        sheetsRef.current.querySelectorAll<HTMLElement>("[data-contract-sheet]")
+      );
+      if (!sheets.length) return;
+      let pdf: any = null;
+      for (const sheet of sheets) {
+        const canvas = await html2canvas(sheet, { scale: 2, backgroundColor: "#ffffff", useCORS: true });
+        const img = canvas.toDataURL("image/jpeg", 0.95);
+        const w = sheet.offsetWidth;
+        const h = sheet.offsetHeight;
+        if (!pdf) {
+          pdf = new jsPDF({ unit: "px", format: [w, h], orientation: w > h ? "landscape" : "portrait" });
+        } else {
+          pdf.addPage([w, h], w > h ? "landscape" : "portrait");
+        }
+        pdf.addImage(img, "JPEG", 0, 0, w, h);
+      }
+      const safe = (contract?.title || "documento").replace(/[^\w\s-]/g, "").trim() || "documento";
+      pdf.save(`${safe}.pdf`);
+    } catch {
+      setError("No se pudo generar el PDF. Inténtalo de nuevo.");
+    } finally {
+      setDownloading(false);
+    }
+  };
+
+
   if (loading) return <div className="min-h-screen bg-neutral-100" />;
 
   if (!contract) {
@@ -109,20 +170,32 @@ const ContractPublic = () => {
   return (
     <div className="min-h-screen bg-neutral-100 py-10">
       <div className="mx-auto flex w-full max-w-[860px] flex-col items-center gap-8 px-4">
-        <div className="flex w-full max-w-[816px] items-center justify-between">
+        <div className="flex w-full max-w-[816px] items-center justify-between gap-4">
           <p className="text-[13px] font-light text-neutral-500">
             Documento solo lectura · únicamente puedes firmarlo
           </p>
-          {fields.length > 0 && (
-            <p className="text-[12px] font-light text-neutral-400">
-              {pending === 0 ? "Todas las firmas completadas" : `${pending} firma${pending === 1 ? "" : "s"} pendiente${pending === 1 ? "" : "s"}`}
-            </p>
-          )}
+          <div className="flex items-center gap-3">
+            {fields.length > 0 && (
+              <p className="text-[12px] font-light text-neutral-400">
+                {pending === 0 ? "Todas las firmas completadas" : `${pending} firma${pending === 1 ? "" : "s"} pendiente${pending === 1 ? "" : "s"}`}
+              </p>
+            )}
+            <button
+              onClick={downloadPdf}
+              disabled={downloading}
+              className="flex items-center gap-2 rounded-full bg-black px-4 py-2 text-[12px] font-normal text-white transition-colors hover:bg-neutral-800 disabled:opacity-60"
+            >
+              {downloading ? <Loader2 size={13} className="animate-spin" /> : <Download size={13} />}
+              {downloading ? "Generando…" : "Descargar PDF"}
+            </button>
+          </div>
         </div>
 
+        <div ref={sheetsRef} className="flex w-full flex-col items-center gap-8">
         {pages.map((p, i) => (
           <div
             key={p.id}
+            data-contract-sheet
             className="relative w-full bg-white"
             style={{
               maxWidth: dims.width,
@@ -156,6 +229,7 @@ const ContractPublic = () => {
                         label={f.label}
                         signature={signatures[f.id]}
                         onClick={signatures[f.id] ? undefined : () => setSigningField(f)}
+                        onRemove={signatures[f.id] ? () => removeSignature(f.id) : undefined}
                       />
                     ))}
                 </div>
@@ -166,6 +240,7 @@ const ContractPublic = () => {
             </div>
           </div>
         ))}
+        </div>
 
         {/* Documentos sin campos insertados: firma única al final */}
         {fields.length === 0 && (
@@ -179,6 +254,12 @@ const ContractPublic = () => {
                     Firmado el {new Date(globalSignature.signedAt).toLocaleString("es-MX")}
                   </p>
                 </div>
+                <button
+                  onClick={() => removeSignature()}
+                  className="ml-auto rounded-full border border-neutral-200 px-4 py-2 text-[12px] font-light text-neutral-500 transition-colors hover:text-neutral-900"
+                >
+                  Quitar firma
+                </button>
               </div>
             ) : (
               <div className="flex items-center justify-between gap-4">
