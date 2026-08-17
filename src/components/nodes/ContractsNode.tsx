@@ -472,7 +472,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
                   onChange={(e) => setPageContent(e.target.value)}
                   onBlur={() => setEditing(false)}
                   onMouseDown={(e) => e.stopPropagation()}
-                  placeholder="Escribe aquí el contenido del contrato o pídeselo a la inteligencia artificial. Usa **negritas**, - viñetas, 1. listas y [texto](enlace)."
+                  placeholder="Escribe aquí el contenido"
                   className="nodrag nopan min-h-0 flex-1 resize-none bg-transparent text-[13.5px] font-light leading-[1.85] text-gray-800 dark:text-slate-200 outline-none placeholder:text-gray-300 dark:placeholder:text-slate-600"
                 />
               ) : (
@@ -488,7 +488,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
                     <ContractRichText content={p.content} />
                   ) : (
                     <span className="text-gray-300">
-                      Escribe aquí el contenido del contrato o pídeselo a la inteligencia artificial.
+                      Escribe aquí el contenido
                     </span>
                   )}
                 </div>
