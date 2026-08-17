@@ -304,7 +304,7 @@ const textPrimary = isDark ? "text-white" : "text-gray-900";
       >
         {/* Píldora Izquierda (Título y Páginas) */}
         <div
-          className={`nodrag nopan absolute left-6 top-6 z-20 flex flex-col gap-0.5 rounded-xl ${isDark ? "bg-[#111827]/95 border-white/8" : "bg-white/95 border-gray-100/50"} border px-4 py-2.5 shadow-sm backdrop-blur-sm transition-all duration-200 ${
+          className={`nodrag nopan absolute left-6 top-6 z-20 flex flex-col gap-0.5 rounded-xl ${isDark ? "bg-black/90 border-white/8" : "bg-white/95 border-gray-100/50"} border px-4 py-2.5 shadow-sm backdrop-blur-sm transition-all duration-200 ${
             hovered ? "translate-y-0 opacity-100" : "pointer-events-none -translate-y-2 opacity-0"
           }`}
           onMouseDown={(e) => e.stopPropagation()}
@@ -323,7 +323,7 @@ const textPrimary = isDark ? "text-white" : "text-gray-900";
 
         {/* Píldora Derecha (Controles) */}
         <div
-          className={`nodrag nopan absolute right-6 top-6 z-20 flex items-center gap-1 rounded-xl ${isDark ? "bg-[#111827]/95 border-white/8" : "bg-white/95 border-gray-100/50"} border p-1.5 shadow-sm backdrop-blur-sm transition-all duration-200 ${
+          className={`nodrag nopan absolute right-6 top-6 z-20 flex items-center gap-1 rounded-xl ${isDark ? "bg-black/90 border-white/8" : "bg-white/95 border-gray-100/50"} border p-1.5 shadow-sm backdrop-blur-sm transition-all duration-200 ${
             hovered ? "translate-y-0 opacity-100" : "pointer-events-none -translate-y-2 opacity-0"
           }`}
           onMouseDown={(e) => e.stopPropagation()}
