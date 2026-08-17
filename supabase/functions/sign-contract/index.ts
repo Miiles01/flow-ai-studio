@@ -16,7 +16,39 @@ Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response(null, { headers: corsHeaders });
 
   try {
-    const { publicId, name, email, signature, fieldId } = await req.json();
+    const { publicId, name, email, signature, fieldId, action } = await req.json();
+
+    // Quitar una firma ya guardada (el documento es público y solo permite firmar/desfirmar).
+    if (action === "remove") {
+      if (!publicId) return json({ error: "Faltan datos" }, 400);
+      const admin = createClient(
+        Deno.env.get("SUPABASE_URL") ?? "",
+        Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") ?? ""
+      );
+      const { data: doc, error: docErr } = await admin
+        .from("contracts")
+        .select("id, field_signatures")
+        .eq("public_id", publicId)
+        .maybeSingle();
+      if (docErr || !doc) return json({ error: "Documento no encontrado" }, 404);
+
+      const patch: Record<string, unknown> = {
+        signed_at: null,
+        signer_name: null,
+        signer_email: null,
+      };
+      if (fieldId) {
+        const current = { ...((doc.field_signatures ?? {}) as Record<string, unknown>) };
+        delete current[fieldId];
+        patch.field_signatures = current;
+      } else {
+        patch.signature_data = null;
+      }
+
+      const { error: rmErr } = await admin.from("contracts").update(patch).eq("id", doc.id);
+      if (rmErr) throw rmErr;
+      return json({ ok: true, removed: true });
+    }
 
     if (!publicId || !name || !signature) {
       return json({ error: "Faltan datos para firmar" }, 400);
