@@ -605,8 +605,8 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
           <div key={p.id} className="group/page relative">
             <button
               onClick={() => setActivePage(i)}
-              className={`flex h-16 w-12 flex-col justify-between overflow-hidden rounded-sm p-1.5 transition-colors shadow-sm border ${
-                i === pageIndex ? "bg-gray-50 dark:bg-slate-700 border-gray-900 dark:border-slate-400 ring-1 ring-gray-900 dark:ring-slate-400" : "bg-white dark:bg-slate-800 border-gray-200 dark:border-slate-700 hover:bg-gray-50 dark:hover:bg-slate-700 hover:border-gray-300 dark:hover:border-slate-600"
+              className={`flex h-16 w-12 flex-col justify-between overflow-hidden rounded-sm p-1.5 transition-colors border ${
+                i === pageIndex ? "bg-gray-50 dark:bg-slate-700 border-gray-900 dark:border-slate-400 ring-1 ring-gray-900 dark:ring-slate-400" : "bg-white dark:bg-slate-800 border-gray-100 dark:border-slate-700/50 hover:bg-gray-50 dark:hover:bg-slate-700 hover:border-gray-200 dark:hover:border-slate-600"
               }`}
               title={`Página ${i + 1}`}
             >
