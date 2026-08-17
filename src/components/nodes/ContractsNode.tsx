@@ -58,7 +58,7 @@ const ContractsNode = ({ id, data, selected }: NodeProps) => {
   const textSubtle = isDark ? "text-white/40" : "text-gray-400";
   const textMuted = isDark ? "text-white/60" : "text-gray-500";
 const textPrimary = isDark ? "text-white" : "text-gray-900";
-  const pillCls = `px-3 py-1.5 rounded-full border text-[12px] font-medium transition-colors ${isDark ? "bg-white/10 border-white/10 text-white hover:bg-white/20 hover:border-white/20" : "bg-white border-gray-200 text-gray-800 hover:bg-gray-50"}`;
+  const pillCls = `px-3 py-1.5 rounded-lg text-[12px] font-medium transition-colors ${isDark ? "text-white/80 hover:bg-white/10 hover:text-white" : "text-gray-700 hover:bg-black/5 hover:text-gray-900"}`;
 
   const { setNodes } = useReactFlow();
   const { zoom } = useViewport();
@@ -304,7 +304,7 @@ const textPrimary = isDark ? "text-white" : "text-gray-900";
       >
         {/* Píldora Izquierda (Título y Páginas) */}
         <div
-          className={`nodrag nopan absolute left-6 top-6 z-20 flex flex-col gap-0.5 rounded-xl ${isDark ? "bg-[#1C1C1E]/95" : "bg-white/95"} px-4 py-2.5 shadow-sm backdrop-blur-sm transition-all duration-200 border ${isDark ? "border-white/5" : "border-gray-100/50"} ${
+          className={`nodrag nopan absolute left-6 top-6 z-20 flex flex-col gap-0.5 rounded-xl ${isDark ? "bg-[#111827]/95 border-white/8" : "bg-white/95 border-gray-100/50"} border px-4 py-2.5 shadow-sm backdrop-blur-sm transition-all duration-200 ${
             hovered ? "translate-y-0 opacity-100" : "pointer-events-none -translate-y-2 opacity-0"
           }`}
           onMouseDown={(e) => e.stopPropagation()}
@@ -323,7 +323,7 @@ const textPrimary = isDark ? "text-white" : "text-gray-900";
 
         {/* Píldora Derecha (Controles) */}
         <div
-          className={`nodrag nopan absolute right-6 top-6 z-20 flex items-center gap-1 rounded-xl ${isDark ? "bg-[#1C1C1E]/95" : "bg-white/95"} p-1.5 shadow-sm backdrop-blur-sm transition-all duration-200 border ${isDark ? "border-white/5" : "border-gray-100/50"} ${
+          className={`nodrag nopan absolute right-6 top-6 z-20 flex items-center gap-1 rounded-xl ${isDark ? "bg-[#111827]/95 border-white/8" : "bg-white/95 border-gray-100/50"} border p-1.5 shadow-sm backdrop-blur-sm transition-all duration-200 ${
             hovered ? "translate-y-0 opacity-100" : "pointer-events-none -translate-y-2 opacity-0"
           }`}
           onMouseDown={(e) => e.stopPropagation()}
@@ -423,7 +423,7 @@ const textPrimary = isDark ? "text-white" : "text-gray-900";
             </span>
           </button>
 
-          <button onClick={openPublic} className="px-3 py-1.5 rounded-full text-[12px] font-medium bg-[#111827] text-white hover:bg-gray-800 transition-colors shrink-0">
+          <button onClick={openPublic} className={`px-3 py-1.5 rounded-lg text-[12px] font-medium transition-colors shrink-0 ${isDark ? "bg-white text-gray-900 hover:bg-gray-100" : "bg-[#111827] text-white hover:bg-gray-800"}`}>
             <span className="flex items-center gap-1.5">
               <ExternalLink size={13} strokeWidth={2} /> Abrir
             </span>
