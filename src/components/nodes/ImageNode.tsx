@@ -217,8 +217,8 @@ const ImageNode = ({ id, data, selected }: NodeProps) => {
           <motion.div
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
-            className={`w-full h-full flex flex-col items-center justify-center gap-3 cursor-pointer border-2 border-dashed rounded-lg transition-all ${
-              isDark ? 'bg-white/5 border-white/10 hover:border-white/20 hover:bg-white/10' : 'bg-[#F9FAFB] border-[#E5E7EB] hover:border-[#4059F1]/40 hover:bg-[#EEF2FF]/20'
+            className={`w-full h-full flex flex-col items-center justify-center gap-3 cursor-pointer rounded-lg transition-all ${
+              isDark ? 'bg-white/5 hover:bg-white/10' : 'bg-[#F9FAFB] hover:bg-[#EEF2FF]/20'
             }`}
             onClick={handleToggleInput}
           >
