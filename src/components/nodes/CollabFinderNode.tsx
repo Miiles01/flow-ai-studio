@@ -112,16 +112,35 @@ const CollabFinderNode = ({ id, data, selected }: NodeProps) => {
     { id: "niche", label: "Nicho" },
   ];
 
-  const filteredLinks = links.filter((l) => {
-    const term = (l.label || l.url).toLowerCase();
-    // Ocultar ConUGC por estar en construcción
-    if (term.includes("conugc")) return false;
+  const getLevel = (link: CollabLink, filterId: string) => {
+    const term = (link.label || link.url).toLowerCase();
+    if (filterId === "latam") {
+      if (term.includes("collabify")) return 1;
+      if (term.includes("hubb") || term.includes("lizza")) return 2;
+      return 3;
+    }
+    if (filterId === "speed") {
+      if (term.includes("hubb")) return 1;
+      if (term.includes("brkaway")) return 2;
+      return 3;
+    }
+    if (filterId === "niche") {
+      if (term.includes("fuel") || term.includes("brands")) return 1;
+      if (term.includes("collabify") || term.includes("lizza")) return 2;
+      return 3;
+    }
+    return 1;
+  };
 
-    if (filter === "latam") return term.includes("collabify") || term.includes("hubb") || term.includes("lizza");
-    if (filter === "speed") return term.includes("hubb") || term.includes("brkaway");
-    if (filter === "niche") return term.includes("fuel") || term.includes("brands");
+  const visibleLinks = links.filter(l => {
+    const term = (l.label || l.url).toLowerCase();
+    if (term.includes("conugc")) return false;
     return true;
   });
+
+  const level1 = visibleLinks.filter(l => getLevel(l, filter) === 1);
+  const level2 = visibleLinks.filter(l => getLevel(l, filter) === 2);
+  const level3 = visibleLinks.filter(l => getLevel(l, filter) === 3);
 
   return (
     <div className="group/widget" style={{ width: "100%", height: "100%", position: "relative" }}>
@@ -208,8 +227,9 @@ const CollabFinderNode = ({ id, data, selected }: NodeProps) => {
         )}
 
         <div ref={scrollRef} className="px-4 pb-4 pt-3 flex-1 overflow-y-auto kanban-scrollbar pointer-events-auto">
-          <div className="grid grid-cols-2 gap-3">
-            {filteredLinks.map((l) => (
+          
+          {(() => {
+            const renderCard = (l: CollabLink) => (
               <a
                 key={l.id}
                 href={l.url.startsWith("http") ? l.url : `https://${l.url}`}
@@ -217,7 +237,7 @@ const CollabFinderNode = ({ id, data, selected }: NodeProps) => {
                 rel="noreferrer"
                 onClick={(e) => e.stopPropagation()}
                 onMouseDown={(e) => e.stopPropagation()}
-                className={`nodrag nopan group/card block rounded-xl overflow-hidden border shadow-sm transition-all ${
+                className={`nodrag nopan group/card shrink-0 flex flex-col w-[200px] rounded-xl overflow-hidden border shadow-sm transition-all ${
                   isEffectiveBgDark ? "border-white/10 bg-white/5 hover:border-white/25" : "border-neutral-200 bg-white hover:border-neutral-300"
                 }`}
                 title={l.url}
@@ -243,19 +263,48 @@ const CollabFinderNode = ({ id, data, selected }: NodeProps) => {
                     </span>
                   </div>
                 </div>
-                <div className="px-2.5 py-2 flex items-center gap-2">
-                  <img src={faviconFor(l.url)} alt="" className="w-4 h-4 rounded-sm shrink-0" loading="lazy" />
-                  <span className="text-[11.5px] font-medium truncate" style={{ color: textColor }}>
+                <div className="px-2.5 py-2.5 flex items-center justify-center text-center">
+                  <span className="text-[12px] font-medium truncate" style={{ color: textColor }}>
                     {l.label || hostOf(l.url)}
                   </span>
                 </div>
               </a>
-            ))}
+            );
 
-          </div>
+            if (filter === "all") {
+              return (
+                <div className="flex flex-wrap gap-3">
+                  {visibleLinks.map(renderCard)}
+                </div>
+              );
+            }
 
-          {filteredLinks.length === 0 && (
-            <p className={`text-[11px] mt-3 ${subtleText}`}>No hay sitios disponibles para este filtro.</p>
+            return (
+              <div className="flex flex-col gap-5">
+                {level1.length > 0 && (
+                  <div>
+                    <h4 className={`text-[12px] font-medium mb-2.5 ${isEffectiveBgDark ? 'text-white/80' : 'text-neutral-600'}`}>Nivel Alto</h4>
+                    <div className="flex flex-wrap gap-3">{level1.map(renderCard)}</div>
+                  </div>
+                )}
+                {level2.length > 0 && (
+                  <div>
+                    <h4 className={`text-[12px] font-medium mb-2.5 ${isEffectiveBgDark ? 'text-white/80' : 'text-neutral-600'}`}>Nivel Medio</h4>
+                    <div className="flex flex-wrap gap-3">{level2.map(renderCard)}</div>
+                  </div>
+                )}
+                {level3.length > 0 && (
+                  <div>
+                    <h4 className={`text-[12px] font-medium mb-2.5 ${isEffectiveBgDark ? 'text-white/80' : 'text-neutral-600'}`}>Nivel Bajo</h4>
+                    <div className="flex flex-wrap gap-3">{level3.map(renderCard)}</div>
+                  </div>
+                )}
+              </div>
+            );
+          })()}
+
+          {visibleLinks.length === 0 && (
+            <p className={`text-[11px] mt-3 ${subtleText}`}>No hay sitios disponibles.</p>
           )}
         </div>
       </div>
