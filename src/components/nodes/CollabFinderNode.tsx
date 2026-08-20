@@ -11,7 +11,7 @@ import { createPortal } from "react-dom";
 import { isColorDark } from "@/lib/utils";
 import { type NodeProps, NodeResizer, useReactFlow, useViewport } from "@xyflow/react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Trash2, Palette, ExternalLink } from "lucide-react";
+import { Trash2, Palette, ExternalLink, ChevronDown, Check } from "lucide-react";
 import { useTheme } from "@/contexts/ThemeContext";
 import NodeExtendHandles from "@/components/nodes/NodeExtendHandles";
 import WidgetCommentSlot from "@/components/nodes/WidgetCommentSlot";
@@ -86,11 +86,29 @@ const CollabFinderNode = ({ id, data, selected }: NodeProps) => {
   useWidgetAutoFit(id, (d as any)._aiFitNonce, scrollRef, anchorRef, { minHeight: 240, maxHeight: 1400 });
 
   const update = (patch: Partial<CollabFinderNodeData>) =>
-    setNodes((nds) => nds.map((n) => (n.id === id ? { ...n, data: { ...n.data, ...patch } } : n)));
+  const [filter, setFilter] = useState("all");
+
+  const categories = [
+    { id: "all", label: "Todos" },
+    { id: "latam", label: "LatAm & MX" },
+    { id: "speed", label: "Velocidad" },
+    { id: "niche", label: "Nicho" },
+  ];
+
+  const filteredLinks = links.filter((l) => {
+    const term = (l.label || l.url).toLowerCase();
+    // Ocultar ConUGC por estar en construcción
+    if (term.includes("conugc")) return false;
+
+    if (filter === "latam") return term.includes("collabify") || term.includes("hubb") || term.includes("lizza");
+    if (filter === "speed") return term.includes("hubb") || term.includes("brkaway");
+    if (filter === "niche") return term.includes("fuel") || term.includes("brands");
+    return true;
+  });
 
   return (
     <div className="group/widget" style={{ width: "100%", height: "100%", position: "relative" }}>
-      <NodeResizer isVisible={!!isSingleSelected} minWidth={300} minHeight={220} lineStyle={{ border: "none" }} />
+      <NodeResizer isVisible={!!isSingleSelected} minWidth={300} minHeight={260} lineStyle={{ border: "none" }} />
 
       <AnimatePresence>
         {isSingleSelected && (
@@ -154,16 +172,27 @@ const CollabFinderNode = ({ id, data, selected }: NodeProps) => {
         }}
       >
         {(d.showTitle ?? true) && (
-          <div className="px-4 pt-4 pb-2 shrink-0">
+          <div className="px-4 pt-4 pb-0 shrink-0">
             <div className="text-[15px] font-semibold" style={{ color: textColor }}>
               {d.title || "Buscador de colaboraciones"}
+            </div>
+            
+            {/* Filters */}
+            <div className="mt-3 mb-1 pointer-events-auto">
+              <FilterSelect
+                label="Filtro"
+                value={filter}
+                options={categories.map(c => ({ value: c.id, label: c.label }))}
+                onChange={setFilter}
+                isDark={isEffectiveBgDark}
+              />
             </div>
           </div>
         )}
 
-        <div ref={scrollRef} className="px-4 pb-4 pt-2 flex-1 overflow-y-auto kanban-scrollbar">
+        <div ref={scrollRef} className="px-4 pb-4 pt-3 flex-1 overflow-y-auto kanban-scrollbar pointer-events-auto">
           <div className="grid grid-cols-2 gap-3">
-            {links.map((l) => (
+            {filteredLinks.map((l) => (
               <a
                 key={l.id}
                 href={l.url.startsWith("http") ? l.url : `https://${l.url}`}
@@ -208,8 +237,8 @@ const CollabFinderNode = ({ id, data, selected }: NodeProps) => {
 
           </div>
 
-          {links.length === 0 && (
-            <p className={`text-[11px] mt-3 ${subtleText}`}>No hay sitios disponibles.</p>
+          {filteredLinks.length === 0 && (
+            <p className={`text-[11px] mt-3 ${subtleText}`}>No hay sitios disponibles para este filtro.</p>
           )}
         </div>
       </div>
@@ -241,3 +270,66 @@ const PickerPopover = ({ colors, onPick, isDark }: { colors: { name: string; val
 );
 
 export default memo(CollabFinderNode);
+
+const FilterSelect = ({
+  label, value, options, onChange, isDark,
+}: {
+  label: string;
+  value: string;
+  options: Array<{ value: string; label: string }>;
+  onChange: (v: string) => void;
+  isDark: boolean;
+}) => {
+  const [open, setOpen] = useState(false);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!open) return;
+    const onDown = (e: MouseEvent) => {
+      if (ref.current && !ref.current.contains(e.target as Node)) setOpen(false);
+    };
+    document.addEventListener("mousedown", onDown);
+    return () => document.removeEventListener("mousedown", onDown);
+  }, [open]);
+
+  const current = options.find((o) => o.value === value)?.label ?? options[0]?.label;
+
+  return (
+    <div ref={ref} className="relative nodrag nopan">
+      <button
+        onClick={() => setOpen((v) => !v)}
+        className="nodrag nopan flex items-center gap-1.5 px-3 py-1.5 rounded-full border text-[11.5px] font-medium transition-colors hover:brightness-110"
+        style={{
+          color: isDark ? "#ffffff" : "#000000",
+          backgroundColor: isDark ? "rgba(255,255,255,0.10)" : "#ffffff",
+          borderColor: isDark ? "rgba(255,255,255,0.15)" : "#E5E7EB",
+        }}
+      >
+        <span className="opacity-60">{label}:</span>
+        <span className="truncate max-w-[140px]">{current}</span>
+        <ChevronDown size={12} style={{ opacity: 0.6 }} />
+      </button>
+
+      {open && (
+        <div
+          className={`absolute top-full mt-1.5 left-0 z-[60] min-w-[200px] rounded-md p-1.5 border shadow-sm ${
+            isDark ? "bg-[#1C1C1E] border-white/10" : "bg-white border-neutral-200"
+          }`}
+        >
+          {options.map((o) => (
+            <button
+              key={o.value}
+              onClick={() => { onChange(o.value); setOpen(false); }}
+              className={`nodrag nopan w-full flex items-center justify-between gap-2 px-2.5 py-1.5 rounded-lg text-left text-[11.5px] ${
+                isDark ? "text-white hover:bg-white/10" : "text-neutral-900 hover:bg-neutral-100"
+              } ${o.value === value ? (isDark ? "bg-white/10" : "bg-neutral-100") : ""}`}
+            >
+              {o.label}
+              {o.value === value && <Check size={13} />}
+            </button>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
