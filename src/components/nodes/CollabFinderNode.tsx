@@ -86,6 +86,10 @@ const CollabFinderNode = ({ id, data, selected }: NodeProps) => {
   useWidgetAutoFit(id, (d as any)._aiFitNonce, scrollRef, anchorRef, { minHeight: 240, maxHeight: 1400 });
 
   const update = (patch: Partial<CollabFinderNodeData>) =>
+    setNodes((nds) =>
+      nds.map((n) => (n.id === id ? { ...n, data: { ...(n.data as any), ...patch } } : n)),
+    );
+
   const [filter, setFilter] = useState("all");
 
   const categories = [
