@@ -18,7 +18,7 @@ import {
   type Edge,
 } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
-import { ArrowLeft, ArrowUp, ArrowDown, Loader2, Check, Cloud, CloudOff, Settings2, EyeOff, Eye, Trash2, Undo2, Redo2, Palette, Square, Type, Baseline, Sparkles, PanelRight, ListChecks, Plus, Minus, Share2, Sun, Moon, EyeIcon, Copy, Download } from "lucide-react";
+import { ArrowLeft, ArrowUp, ArrowDown, Loader2, Check, Cloud, CloudOff, Settings2, EyeOff, Eye, Trash2, Undo2, Redo2, Palette, Square, Type, Baseline, Sparkles, PanelRight, ListChecks, Plus, Minus, Share2, Sun, Moon, EyeIcon, Copy, Download, MonitorPlay } from "lucide-react";
 import { buildTasksInstructions, buildCategorizedTasksInstructions, downloadTextFile, type TodoListLike } from "@/lib/todoInstructions";
 import ShareDialog from "@/components/ShareDialog";
 import PresenceStack from "@/components/PresenceStack";
@@ -2324,15 +2324,14 @@ const IndexContent = () => {
                   <div className="px-3 py-2.5">
                     <p className="text-[10px] text-white/50 font-light tracking-widest mb-1 px-2">Ajustes</p>
                     <button
-                      onClick={() => { setHideTools((v) => !v); setSettingsOpen(false); }}
-                      className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors text-left hover:bg-white/10"
+                      onClick={() => { setHideTools((v) => !v); }}
+                      className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors text-left ${
+                        hideTools ? "bg-white text-black" : "hover:bg-white/10 text-white"
+                      }`}
                     >
-                      {hideTools
-                        ? <Eye size={15} strokeWidth={1.5} className="text-white/70 shrink-0" />
-                        : <EyeOff size={15} strokeWidth={1.5} className="text-white/70 shrink-0" />
-                      }
-                      <span className="text-[13px] font-normal text-white">
-                        {hideTools ? "Mostrar herramientas" : "Ocultar herramientas"}
+                      <MonitorPlay size={15} strokeWidth={1.5} className={`${hideTools ? "text-black" : "text-white/70"} shrink-0`} />
+                      <span className={`text-[13px] font-normal ${hideTools ? "text-black" : "text-white"}`}>
+                        Modo presentación
                       </span>
                     </button>
 
