@@ -32,7 +32,7 @@ export const AI_PROVIDERS: AIProvider[] = [
   {
     id: "google",
     name: "Gemini",
-    models: ["gemini-2.5-flash", "gemini-2.5-pro", "gemini-2.0-flash"],
+    models: ["gemini-3.6-flash", "gemini-3-pro", "gemini-2.5-pro"],
     keyPlaceholder: "AIza...",
     keyHint: "Consíguela en aistudio.google.com → Get API key",
     docsUrl: "https://aistudio.google.com/app/apikey",
