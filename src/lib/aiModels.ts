@@ -32,7 +32,7 @@ export const AI_PROVIDERS: AIProvider[] = [
   {
     id: "google",
     name: "Gemini",
-    models: ["gemini-2.5-flash", "gemini-2.5-pro", "gemini-2.0-flash"],
+    models: ["gemini-3.6-flash", "gemini-3-pro", "gemini-2.5-pro"],
     keyPlaceholder: "AIza...",
     keyHint: "Consíguela en aistudio.google.com → Get API key",
     docsUrl: "https://aistudio.google.com/app/apikey",
@@ -71,13 +71,23 @@ export type UserModel = {
 const STORAGE_KEY = "miiles.byok.models";
 const EVENT = "miiles:byok-changed";
 
+/** Modelos retirados por el proveedor → reemplazo vigente. */
+const DEPRECATED_MODELS: Record<string, string> = {
+  "gemini-2.5-flash": "gemini-3.6-flash",
+  "gemini-2.0-flash": "gemini-3.6-flash",
+  "gemini-1.5-flash": "gemini-3.6-flash",
+  "gemini-1.5-pro": "gemini-3-pro",
+};
+
 export function readUserModels(): UserModel[] {
   try {
     const raw = localStorage.getItem(STORAGE_KEY);
     if (!raw) return [];
     const parsed = JSON.parse(raw);
     if (!Array.isArray(parsed)) return [];
-    return parsed.filter((m) => m && m.provider && m.model && m.apiKey);
+    return parsed
+      .filter((m) => m && m.provider && m.model && m.apiKey)
+      .map((m) => (DEPRECATED_MODELS[m.model] ? { ...m, model: DEPRECATED_MODELS[m.model] } : m));
   } catch {
     return [];
   }
