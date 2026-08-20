@@ -356,7 +356,7 @@ export default function ModelManagerDialog({
 
                     <button
                       type="submit"
-                      className={`mt-auto w-full rounded-full py-2.5 text-sm font-normal transition-colors ${
+                      className={`mt-auto ml-auto w-fit px-6 rounded-full py-2.5 text-[13px] font-normal transition-colors ${
                         isDark
                           ? "bg-white text-black hover:bg-white/90"
                           : "bg-black text-white hover:bg-neutral-800"
