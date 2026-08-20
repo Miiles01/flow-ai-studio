@@ -124,11 +124,12 @@ export default function ModelManagerDialog({
               </div>
               <button
                 onClick={onClose}
-                className={`flex h-8 w-8 items-center justify-center rounded-full transition-colors ${
-                  isDark ? "text-white/50 hover:bg-white/10 hover:text-white" : "text-black/40 hover:bg-black/5 hover:text-black"
+                className={`flex h-8 items-center justify-center gap-1.5 rounded-full px-3 transition-colors ${
+                  isDark ? "bg-white/5 text-white/50 hover:bg-white/10 hover:text-white" : "bg-black/5 text-black/40 hover:bg-black/10 hover:text-black"
                 }`}
               >
-                <X size={15} strokeWidth={1.5} />
+                <span className="text-[11px] font-medium">Cerrar</span>
+                <X size={13} strokeWidth={2} />
               </button>
             </div>
 
