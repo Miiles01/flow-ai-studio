@@ -1,13 +1,14 @@
 import { useState } from "react";
-import { LayoutGrid, Plus, Trash2, Server, Globe, Sparkles } from "lucide-react";
+import { LayoutGrid, Plus, Trash2, Server, Globe } from "lucide-react";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import { Switch } from "@/components/ui/switch";
 import { useTheme } from "@/contexts/ThemeContext";
 import { useUserApps } from "@/hooks/useUserApps";
 import { useUserModels } from "@/hooks/useUserModels";
-import { AI_PROVIDERS, AIProviderId, getProvider, maskKey } from "@/lib/aiModels";
+import { AIProviderId, getProvider, maskKey } from "@/lib/aiModels";
 import AddModelDialog from "@/components/AddModelDialog";
 import AddAppModal from "@/components/AddAppModal";
+import { PROVIDER_LOGOS, PROVIDER_COLORS } from "@/components/ProviderLogos";
 
 
 function GoogleIcon({ className }: { className?: string }) {
@@ -75,14 +76,20 @@ const AppsMenu = ({ isDark }: AppsMenuProps) => {
 
             {models.map((m) => {
               const p = getProvider(m.provider);
+              const Logo = PROVIDER_LOGOS[m.provider];
+              const colors = PROVIDER_COLORS[m.provider];
               return (
                 <div key={m.id} className="group flex items-center gap-3 px-3 py-2.5 rounded-xl">
                   <div
                     className={`flex h-6 w-6 shrink-0 items-center justify-center rounded-md ${
-                      isDark ? "bg-white/10" : "bg-miiles-gray-100"
+                      isDark ? colors?.darkBg ?? "bg-white/10" : colors?.bg ?? "bg-miiles-gray-100"
                     }`}
                   >
-                    <Sparkles size={13} strokeWidth={1.5} className={subText} />
+                    {Logo ? (
+                      <Logo className={`w-3 h-3 ${isDark ? colors?.darkText ?? "text-white" : colors?.text ?? "text-gray-700"}`} />
+                    ) : (
+                      <span className={`text-[10px] font-medium ${subText}`}>{(p?.name ?? m.provider)[0]}</span>
+                    )}
                   </div>
                   <div className="flex-1 min-w-0">
                     <p className={`truncate text-sm font-normal ${rowText}`}>{p?.name ?? m.provider}</p>
@@ -102,22 +109,6 @@ const AppsMenu = ({ isDark }: AppsMenuProps) => {
               );
             })}
 
-            <div className="flex flex-wrap gap-1.5 px-3 pb-1 pt-1">
-              {AI_PROVIDERS.map((p) => (
-                <button
-                  key={p.id}
-                  onClick={() => openModelDialog(p.id)}
-                  className={`rounded-full px-2.5 py-1 text-[11px] font-light transition-colors ${
-                    isDark
-                      ? "bg-white/10 text-white/60 hover:bg-white/20 hover:text-white"
-                      : "bg-miiles-gray-100 text-miiles-gray-600 hover:bg-miiles-gray-200"
-                  }`}
-                >
-                  {p.name}
-                </button>
-              ))}
-            </div>
-
             <button
               onClick={() => openModelDialog(null)}
               className={`flex w-full items-center gap-3 px-3 py-2.5 rounded-xl transition-colors ${
@@ -132,7 +123,7 @@ const AppsMenu = ({ isDark }: AppsMenuProps) => {
                 <Plus size={14} strokeWidth={1.5} />
               </div>
               <div className="flex-1 min-w-0 text-left">
-                <p className="text-sm font-normal">Agregar modelo</p>
+                <p className="text-sm font-normal">Agregar o editar modelos</p>
                 <p className={`text-[11px] font-light ${subText}`}>
                   {models.some((m) => m.enabled) ? "Usando tu propia API Key" : "Usa tu propia API Key"}
                 </p>
@@ -224,6 +215,9 @@ const AppsMenu = ({ isDark }: AppsMenuProps) => {
         onClose={() => setModelOpen(false)}
         initialProvider={presetProvider}
         onSave={addModel}
+        models={models}
+        onDelete={deleteModel}
+        onToggle={toggleModel}
       />
 
     </>
