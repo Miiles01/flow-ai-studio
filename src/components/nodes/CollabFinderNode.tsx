@@ -57,11 +57,22 @@ export const hostOf = (url: string) => {
   }
 };
 
-const previewFor = (l: CollabLink) =>
-  l.imageUrl?.trim() ||
-  `https://api.microlink.io/?url=${encodeURIComponent(
+const BRAND_IMAGES: Record<string, string> = {
+  "hubb.mx": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlHJUOa7k9-l1VyMbmOIaKZCvXIhm59vif-3cqISlLAHjh-Xw51DTneTeW&s=10",
+  "brkaway.co": "https://cdn.prod.website-files.com/6673ffe5c15a5086f8abfb21/667e7309408405f1bafe9291_Frame%201742-3.webp",
+  "fuelyourbrands.com": "https://elreferente.es/wp-content/uploads/2022/02/Logo-2-1.png"
+};
+
+const previewFor = (l: CollabLink) => {
+  if (l.imageUrl?.trim()) return l.imageUrl.trim();
+  const host = hostOf(l.url);
+  for (const [domain, img] of Object.entries(BRAND_IMAGES)) {
+    if (host.includes(domain)) return img;
+  }
+  return `https://api.microlink.io/?url=${encodeURIComponent(
     l.url.startsWith("http") ? l.url : `https://${l.url}`,
   )}&screenshot=true&meta=false&embed=screenshot.url`;
+};
 
 const faviconFor = (url: string) => `https://icons.duckduckgo.com/ip3/${hostOf(url)}.ico`;
 
