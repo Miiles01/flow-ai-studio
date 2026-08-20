@@ -61,7 +61,7 @@ import { generateFlowFromPrompt, type ExtendContext } from "@/lib/generateFlow";
 import { clarifyPrompt, buildEnrichedPrompt, type ClarifyResult } from "@/lib/clarifyFlow";
 import { planFlow, buildPlanContext, type PlanResult } from "@/lib/planFlow";
 import { FlowExtendContext, type ExtendSide, type FlowExtendTarget } from "@/contexts/FlowExtendContext";
-import { runWidgetAI, type WidgetAIComment } from "@/lib/widgetAI";
+import { runWidgetAI, WidgetAIModelError, type WidgetAIComment } from "@/lib/widgetAI";
 
 const WIDGET_NODE_TYPES = new Set(["kanbanNode", "clientCardNode", "campaignsNode", "ingresosNode", "collabFinderNode", "contractsNode"]);
 const uid = () =>
