@@ -215,13 +215,31 @@ Responde SIEMPRE con la tool "widget_result".`;
     });
 
 
-    const res = await callLLM(target, messages, { tool, maxTokens: 16000 });
+    let res = await callLLM(target, messages, { tool, maxTokens: 16000 });
 
+    // Si la API Key propia (BYOK) falla por saldo/cuota/credenciales, caemos al modelo incluido.
+    let usedFallback = false;
+    if (!res.ok && byok && apiKey && [401, 402, 403, 429].includes(res.status)) {
+      console.warn("BYOK falló", target.label, res.status, "→ fallback al modelo incluido");
+      const fallbackTarget = resolveTarget(null, FALLBACK_MODEL, apiKey);
+      const retry = await callLLM(fallbackTarget, messages, { tool, maxTokens: 16000 });
+      if (retry.ok) {
+        res = retry;
+        usedFallback = true;
+      } else if (retry.status !== 429 && retry.status !== 402 && retry.status !== 403) {
+        res = retry;
+      }
+    }
 
     if (!res.ok) {
       if (res.status === 403 && !byok) {
         return new Response(JSON.stringify({ error: "Se agotaron los créditos de IA incluidos. Agrega tu propio modelo en Apps → Modelos para seguir trabajando sin límites." }), {
           status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
+      if (byok && [401, 402, 429].includes(res.status)) {
+        return new Response(JSON.stringify({ error: `Tu API Key de ${byok.provider} no tiene créditos disponibles (${res.status}). Recárgala o desactiva ese modelo en Apps → Modelos para usar el modelo incluido.` }), {
+          status: res.status, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
       if (res.status === 403 && byok) {
@@ -233,6 +251,8 @@ Responde SIEMPRE con la tool "widget_result".`;
         status: res.status, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
+    if (usedFallback) console.log("widget-ai respondido con modelo incluido tras fallo de BYOK");
+
 
     const finishReason = res.finishReason;
     const rawArgs = res.toolArgs;
