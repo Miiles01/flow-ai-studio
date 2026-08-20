@@ -61,7 +61,8 @@ const BRAND_IMAGES: Record<string, string> = {
   "hubb.mx": "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTlHJUOa7k9-l1VyMbmOIaKZCvXIhm59vif-3cqISlLAHjh-Xw51DTneTeW&s=10",
   "brkaway.co": "https://cdn.prod.website-files.com/6673ffe5c15a5086f8abfb21/667e7309408405f1bafe9291_Frame%201742-3.webp",
   "fuelyourbrands.com": "https://elreferente.es/wp-content/uploads/2022/02/Logo-2-1.png",
-  "lizza.ai": "https://lizza.ai/og-image.jpg"
+  "lizza.ai": "https://lizza.ai/og-image.jpg",
+  "collabify.com": "https://startupslatam.com/wp-content/uploads/2025/05/Collabify-768x432.png"
 };
 
 const previewFor = (l: CollabLink) => {
