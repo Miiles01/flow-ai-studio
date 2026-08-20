@@ -693,8 +693,8 @@ const CampaignCard = ({
   return (
     <button
       onClick={onOpen}
-      className={`nodrag nopan flex flex-col shrink-0 w-[240px] text-left rounded-2xl border p-3.5 shadow-sm transition-all hover:${
-        isDark ? "border-white/[0.08] hover:brightness-110 hover:shadow-md" : "bg-white border-[#E8ECFE] hover:border-[#C7CFFD] hover:shadow-md"
+      className={`nodrag nopan flex flex-col shrink-0 w-[240px] text-left rounded-2xl border p-3.5 shadow-sm transition-all ${
+        isDark ? "border-white/[0.08] hover:border-white/[0.15] hover:brightness-110" : "bg-white border-[#E8ECFE] hover:border-[#C7CFFD]"
       }`}
       style={{
         color: cardTextColor,
