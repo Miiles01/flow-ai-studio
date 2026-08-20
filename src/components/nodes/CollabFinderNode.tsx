@@ -279,23 +279,42 @@ const CollabFinderNode = ({ id, data, selected }: NodeProps) => {
               );
             }
 
+            const getLevelTitle = (level: number, filterId: string) => {
+              if (filterId === "latam") {
+                if (level === 1) return "Operación regional nativa";
+                if (level === 2) return "Presencia local (México / LatAm)";
+                return "Enfoque internacional o europeo";
+              }
+              if (filterId === "speed") {
+                if (level === 1) return "Respuesta rápida";
+                if (level === 2) return "En ocasiones hay demoras";
+                return "El proceso suele ser largo";
+              }
+              if (filterId === "niche") {
+                if (level === 1) return "Micro-influencers y nicho";
+                if (level === 2) return "Creadores UGC estándar";
+                return "Enfoque en Ads y automatización";
+              }
+              return level === 1 ? "Recomendadas" : level === 2 ? "Alternativas" : "Otras opciones";
+            };
+
             return (
               <div className="flex flex-col gap-5">
                 {level1.length > 0 && (
                   <div>
-                    <h4 className={`text-[12px] font-medium mb-2.5 ${isEffectiveBgDark ? 'text-white/80' : 'text-neutral-600'}`}>Nivel Alto</h4>
+                    <h4 className={`text-[12px] font-medium mb-2.5 ${isEffectiveBgDark ? 'text-white/80' : 'text-neutral-600'}`}>{getLevelTitle(1, filter)}</h4>
                     <div className="flex flex-wrap gap-3">{level1.map(renderCard)}</div>
                   </div>
                 )}
                 {level2.length > 0 && (
                   <div>
-                    <h4 className={`text-[12px] font-medium mb-2.5 ${isEffectiveBgDark ? 'text-white/80' : 'text-neutral-600'}`}>Nivel Medio</h4>
+                    <h4 className={`text-[12px] font-medium mb-2.5 ${isEffectiveBgDark ? 'text-white/80' : 'text-neutral-600'}`}>{getLevelTitle(2, filter)}</h4>
                     <div className="flex flex-wrap gap-3">{level2.map(renderCard)}</div>
                   </div>
                 )}
                 {level3.length > 0 && (
                   <div>
-                    <h4 className={`text-[12px] font-medium mb-2.5 ${isEffectiveBgDark ? 'text-white/80' : 'text-neutral-600'}`}>Nivel Bajo</h4>
+                    <h4 className={`text-[12px] font-medium mb-2.5 ${isEffectiveBgDark ? 'text-white/80' : 'text-neutral-600'}`}>{getLevelTitle(3, filter)}</h4>
                     <div className="flex flex-wrap gap-3">{level3.map(renderCard)}</div>
                   </div>
                 )}
