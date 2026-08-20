@@ -217,8 +217,8 @@ const CollabFinderNode = ({ id, data, selected }: NodeProps) => {
                 rel="noreferrer"
                 onClick={(e) => e.stopPropagation()}
                 onMouseDown={(e) => e.stopPropagation()}
-                className={`nodrag nopan group/card block rounded-xl overflow-hidden border transition-all hover:-translate-y-0.5 ${
-                  isEffectiveBgDark ? "border-white/10 bg-white/5 hover:border-white/25" : "border-neutral-200 bg-white hover:shadow-md"
+                className={`nodrag nopan group/card block rounded-xl overflow-hidden border shadow-sm transition-all ${
+                  isEffectiveBgDark ? "border-white/10 bg-white/5 hover:border-white/25" : "border-neutral-200 bg-white hover:border-neutral-300"
                 }`}
                 title={l.url}
               >
