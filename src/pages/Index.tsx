@@ -61,7 +61,7 @@ import { generateFlowFromPrompt, type ExtendContext } from "@/lib/generateFlow";
 import { clarifyPrompt, buildEnrichedPrompt, type ClarifyResult } from "@/lib/clarifyFlow";
 import { planFlow, buildPlanContext, type PlanResult } from "@/lib/planFlow";
 import { FlowExtendContext, type ExtendSide, type FlowExtendTarget } from "@/contexts/FlowExtendContext";
-import { runWidgetAI, type WidgetAIComment } from "@/lib/widgetAI";
+import { runWidgetAI, WidgetAIModelError, type WidgetAIComment } from "@/lib/widgetAI";
 
 const WIDGET_NODE_TYPES = new Set(["kanbanNode", "clientCardNode", "campaignsNode", "ingresosNode", "collabFinderNode", "contractsNode"]);
 const uid = () =>
@@ -1647,7 +1647,11 @@ const IndexContent = () => {
           return { ...n, data: { ...(n.data as any), aiComments: [...existingComments, newComment] } };
         }));
       } catch (err) {
-        toast.error(err instanceof Error ? err.message : "Error con la IA del widget");
+        if (err instanceof WidgetAIModelError) {
+          toast.error(err.message, { duration: 8000 });
+        } else {
+          toast.error(err instanceof Error ? err.message : "Error con la IA del widget");
+        }
       } finally {
         setIsGenerating(false);
       }
@@ -1743,11 +1747,16 @@ const IndexContent = () => {
               toast.success("Resultados listos");
             }
           } catch (err) {
+            const errMsg = err instanceof Error ? err.message : String(err);
             resolveComment({
               status: "error",
-              answer: `${job.answer ?? ""}\n\n⚠️ No se pudieron aplicar automáticamente: ${err instanceof Error ? err.message : String(err)}`.trim(),
+              answer: `${job.answer ?? ""}\n\n⚠️ No se pudieron aplicar automáticamente: ${errMsg}`.trim(),
             });
-            toast.error("No se pudieron aplicar los resultados");
+            if (err instanceof WidgetAIModelError) {
+              toast.error(err.message, { duration: 8000 });
+            } else {
+              toast.error("No se pudieron aplicar los resultados");
+            }
           } finally {
             await supabase.from("widget_jobs").update({ status: "applied" }).eq("id", job.id);
           }
