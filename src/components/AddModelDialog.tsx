@@ -89,7 +89,7 @@ export default function ModelManagerDialog({
       ? "bg-white/5 border-white/10 text-white placeholder:text-white/25 focus:border-white/25"
       : "bg-white border-black/10 text-black placeholder:text-black/30 focus:border-black/30"
   }`;
-  const subtle = isDark ? "text-white/40" : "text-black/40";
+  const subtle = isDark ? "text-white/50" : "text-black/50";
   const labelCls = `block mb-1.5 text-xs font-light ${subtle}`;
 
   return createPortal(
@@ -223,8 +223,8 @@ export default function ModelManagerDialog({
 
                 {/* Security note */}
                 <div className={`mx-3 mb-3 flex gap-2 rounded-xl px-3 py-2.5 ${panelBg}`}>
-                  <ShieldCheck size={13} strokeWidth={1.5} className={`${subtle} mt-0.5 shrink-0`} />
-                  <p className={`text-[10.5px] font-light leading-snug ${isDark ? "text-white/35" : "text-black/35"}`}>
+                  <ShieldCheck size={13} strokeWidth={1.5} className={`${isDark ? "text-white/60" : "text-black/70"} mt-0.5 shrink-0`} />
+                  <p className={`text-[10.5px] font-normal leading-snug ${isDark ? "text-white/60" : "text-black/70"}`}>
                     Tus claves se guardan solo en este navegador y se envían cifradas.
                   </p>
                 </div>
