@@ -102,12 +102,23 @@ const WidgetsPicker = ({ open, onClose, onPick }: Props) => {
                             onPick(w);
                             onClose();
                           }}
-                          className={`group text-left p-4 rounded-2xl border transition-all hover:-translate-y-0.5 shadow-sm ${
+                          className={`group relative text-left p-4 rounded-2xl border transition-all hover:-translate-y-0.5 shadow-sm ${
                             isDark
                               ? "bg-white/[0.03] border-white/10 hover:bg-white/[0.06] hover:border-white/20 shadow-black/20"
                               : "bg-white border-neutral-200 hover:border-neutral-300 hover:shadow-md"
                           }`}
                         >
+                          {w.badge && (
+                            <span
+                              className={`absolute -top-2.5 left-3 px-2.5 py-0.5 rounded-full text-[10px] font-medium ${
+                                isDark
+                                  ? "bg-white text-black"
+                                  : "bg-black text-white"
+                              }`}
+                            >
+                              {w.badge}
+                            </span>
+                          )}
                           <div
                             className={`w-10 h-10 rounded-xl flex items-center justify-center mb-3 ${
                               isDark ? "bg-white/10 text-white" : "bg-neutral-100 text-neutral-700"

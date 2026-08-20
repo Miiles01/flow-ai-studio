@@ -25,6 +25,7 @@ export type WidgetDef = {
   name: string;
   description: string;
   icon: LucideIcon;
+  badge?: string;
   createNode: (position: { x: number; y: number }) => Node;
 };
 
@@ -116,6 +117,7 @@ export const WIDGETS: WidgetDef[] = [
     name: "Buscador de colaboraciones",
     description: "Cuadrícula de sitios web donde encontrar colaboraciones: clic en la imagen y abre el enlace",
     icon: Globe,
+    badge: "Creadores",
     createNode: (position) => ({
       id: `collab-${Date.now()}`,
       type: "collabFinderNode",
