@@ -16,12 +16,8 @@ export function DeepSeekLogo({ className }: SVGProps<SVGSVGElement>) {
   return <img src="/logos/deepseek.svg" alt="DeepSeek" className={className} />;
 }
 
-export function PerplexityLogo(props: SVGProps<SVGSVGElement>) {
-  return (
-    <svg viewBox="0 0 24 24" fill="currentColor" {...props}>
-      <path d="M22.638 8.653h-8.01V3.056L8.03 8.653H2.362v2.116h2.092v7.15H2.362v2.025h8.57v-2.025H8.84v-2.42l2.8-2.598v5.018h-1.037v2.025h8.659v-2.025h-2.143v-7.15h2.143V8.653zm-9.51 5.003L9.98 16.065V11.25l3.148-2.597v5.003z" />
-    </svg>
-  );
+export function PerplexityLogo({ className }: SVGProps<SVGSVGElement>) {
+  return <img src="/logos/perplexity.svg" alt="Perplexity" className={className} />;
 }
 
 export const PROVIDER_LOGOS: Record<string, React.ComponentType<any>> = {
