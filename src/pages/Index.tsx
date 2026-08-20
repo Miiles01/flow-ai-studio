@@ -2384,30 +2384,7 @@ const IndexContent = () => {
 
           </div>
 
-          {/* Share button (owner only) */}
-          {!hideTools && isOwner && id && id !== "new" && (
-            <Tooltip>
-              <TooltipTrigger asChild>
-                <button
-                  onClick={() => {
-                    if (!isPro) {
-                      toast.info("Compartir tableros está disponible en el plan Pro");
-                      navigate("/precios");
-                      return;
-                    }
-                    setShareOpen(true);
-                  }}
-                  className={`w-9 h-9 flex items-center justify-center rounded-full transition-all ${isDark ? 'bg-black text-white ring-1 ring-white/10 hover:bg-white/10' : 'bg-white hover:bg-[#F3F4F6] ring-1 ring-gray-200 '}`}
-                  aria-label="Compartir tablero"
-                >
-                  <Share2 size={16} strokeWidth={1.5} className={isDark ? 'text-[#9CA3AF]' : 'text-[#6B7280]'} />
-                </button>
-              </TooltipTrigger>
-              <TooltipContent side="bottom" sideOffset={8} className="text-[12px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
-                Invitar colaboradores
-              </TooltipContent>
-            </Tooltip>
-          )}
+
         </div>
 
         {/* Share dialog */}
@@ -2482,10 +2459,25 @@ const IndexContent = () => {
           {!hideTools && (
             <div className="flex items-center gap-2 z-50">
               {!canEdit && (
-                <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-light pointer-events-auto ${isDark ? 'bg-black text-white/80 ring-1 ring-white/10' : 'bg-white text-[#6B7280] ring-1 ring-gray-200 '}`}>
+                <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-medium pointer-events-auto ${isDark ? 'bg-black text-white/80 ring-1 ring-white/10' : 'bg-white text-[#6B7280] ring-1 ring-gray-200 '}`}>
                   <EyeIcon size={12} strokeWidth={1.5} />
                   Solo lectura
                 </div>
+              )}
+              {isOwner && id && id !== "new" && (
+                <button
+                  onClick={() => {
+                    if (!isPro) {
+                      toast.info("Compartir tableros está disponible en el plan Pro");
+                      navigate("/precios");
+                      return;
+                    }
+                    setShareOpen(true);
+                  }}
+                  className={`flex h-9 items-center justify-center px-4 rounded-full font-medium text-[13px] transition-all pointer-events-auto ${isDark ? 'bg-black text-white ring-1 ring-white/10 hover:bg-white/10' : 'bg-white text-black ring-1 ring-gray-200 hover:bg-gray-50'}`}
+                >
+                  Invitar
+                </button>
               )}
               <div className="pointer-events-auto">
                 <PresenceStack users={activeUsersForPresence} localUserId={identityForPresence.id} />
@@ -2569,12 +2561,27 @@ const IndexContent = () => {
       {!hideTools && (
         <div className="md:hidden absolute bottom-5 right-4 flex flex-col items-end gap-2 pointer-events-none z-50">
           {!canEdit && (
-            <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-light pointer-events-auto ${isDark ? 'bg-black text-white/80 ring-1 ring-white/10' : 'bg-white text-[#6B7280] ring-1 ring-gray-200 '}`}>
+            <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-medium pointer-events-auto ${isDark ? 'bg-black text-white/80 ring-1 ring-white/10' : 'bg-white text-[#6B7280] ring-1 ring-gray-200 '}`}>
               <EyeIcon size={12} strokeWidth={1.5} />
               Lectura
             </div>
           )}
-          <div className="pointer-events-auto">
+          <div className="pointer-events-auto flex gap-2 items-center">
+            {isOwner && id && id !== "new" && (
+              <button
+                onClick={() => {
+                  if (!isPro) {
+                    toast.info("Compartir tableros está disponible en el plan Pro");
+                    navigate("/precios");
+                    return;
+                  }
+                  setShareOpen(true);
+                }}
+                className={`flex h-9 items-center justify-center px-4 rounded-full font-medium text-[13px] transition-all ${isDark ? 'bg-black text-white ring-1 ring-white/10 hover:bg-white/10' : 'bg-white text-black ring-1 ring-gray-200 hover:bg-gray-50'}`}
+              >
+                Invitar
+              </button>
+            )}
             <PresenceStack users={activeUsersForPresence} localUserId={identityForPresence.id} />
           </div>
         </div>
