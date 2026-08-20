@@ -177,7 +177,7 @@ export default function ModelManagerDialog({
                               {prov?.name ?? m.provider}
                             </p>
                             <p className={`text-[10.5px] font-light truncate ${subtle}`}>
-                              {m.model} · {maskKey(m.apiKey)}
+                              {m.model}
                             </p>
                           </div>
                           <Switch

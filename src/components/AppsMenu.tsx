@@ -94,7 +94,7 @@ const AppsMenu = ({ isDark }: AppsMenuProps) => {
                   <div className="flex-1 min-w-0">
                     <p className={`truncate text-sm font-normal ${rowText}`}>{p?.name ?? m.provider}</p>
                     <p className={`truncate text-[11px] font-light ${subText}`}>
-                      {m.model} · {maskKey(m.apiKey)}
+                      {m.model}
                     </p>
                   </div>
                   <button
