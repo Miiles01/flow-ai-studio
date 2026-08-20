@@ -32,7 +32,19 @@ export async function runWidgetAI(params: {
   const { data, error } = await supabase.functions.invoke("widget-ai", {
     body: { ...params, ...userModelPayload() },
   });
-  if (error) throw new Error(error.message || "Error llamando a widget-ai");
+  if (error) {
+    // Los status no-2xx (402/429/…) llegan aquí: el body real está en error.context
+    let body: any = null;
+    try {
+      const res = (error as any)?.context;
+      if (res && typeof res.json === "function") body = await res.clone().json();
+      else if (res && typeof res.text === "function") body = JSON.parse(await res.clone().text());
+    } catch { /* ignore */ }
+    if (body?.switchModel) {
+      throw new WidgetAIModelError(String(body.provider ?? ""), String(body.model ?? ""));
+    }
+    throw new Error(body?.error || error.message || "Error llamando a widget-ai");
+  }
   if ((data as any)?.switchModel) {
     throw new WidgetAIModelError(String((data as any).provider), String((data as any).model));
   }
