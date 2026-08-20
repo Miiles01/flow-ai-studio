@@ -137,7 +137,7 @@ export default function ModelManagerDialog({
             <div className="flex min-h-[360px]">
               {/* ─── LEFT: list of configured models ─── */}
               <div className={`w-[46%] border-r ${borderCls} flex flex-col`}>
-                <p className={`px-4 pt-3 pb-2 text-[11px] font-medium uppercase tracking-wider ${subtle}`}>
+                <p className={`px-4 pt-3 pb-2 text-xs font-medium ${subtle}`}>
                   Tus modelos
                 </p>
                 <div className="flex-1 overflow-y-auto px-2 pb-3">
@@ -235,7 +235,7 @@ export default function ModelManagerDialog({
                 {!provider ? (
                   <>
                     <div className="flex items-center justify-between px-4 pt-3 pb-2">
-                      <p className={`text-[11px] font-medium uppercase tracking-wider ${subtle}`}>
+                      <p className={`text-xs font-medium ${subtle}`}>
                         {editingId ? "Editar modelo" : "Agregar modelo"}
                       </p>
                     </div>
