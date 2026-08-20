@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { X, Eye, EyeOff, ShieldCheck, Pencil, Trash2, Plus, ArrowLeft } from "lucide-react";
-import { useTheme } from "@/components/ThemeContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import { AI_PROVIDERS, type AIProviderId, type UserModel, maskKey } from "@/lib/aiModels";
 import { Switch } from "@/components/ui/switch";
 import { PROVIDER_LOGOS, PROVIDER_COLORS } from "@/components/ProviderLogos";
