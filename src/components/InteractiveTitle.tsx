@@ -26,18 +26,18 @@ const mediaSrcs = [
  *  • A GSAP ticker reads smooth-content's CSS transform every frame and mirrors
  *    the same Y translation to the portal word so it scrolls in perfect sync.
  */
-const InteractiveTitle: React.FC = () => {
+const InteractiveTitleAnimated_SAVED: React.FC = () => {
   const placeholderRef = useRef<HTMLDivElement>(null);
-  const [isMobile, setIsMobile] = React.useState(false);
+  
+  // Detect mobile width immediately
+  const [isMobile, setIsMobile] = React.useState(
+    typeof window !== 'undefined' ? window.innerWidth < 768 : false
+  );
 
-  useEffect(() => {
-    // Check initial screen size
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth <= 1024);
-    };
-    checkMobile();
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
+  React.useEffect(() => {
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
   }, []);
 
   useEffect(() => {
@@ -255,6 +255,22 @@ const InteractiveTitle: React.FC = () => {
       aria-hidden="true"
       style={{ height: 'clamp(80px, 20vw, 260px)' }}
     />
+  );
+};
+
+// ==========================================
+// NUEVO COMPONENTE: TEXTO NORMAL (ESTÁTICO)
+// ==========================================
+const InteractiveTitle = () => {
+  const text = 'Redefínelo';
+  
+  return (
+    <h1
+      className="font-normal leading-[1] tracking-tighter mb-6 text-black flex justify-center whitespace-nowrap"
+      style={{ fontSize: 'clamp(68px, 15vw, 210px)' }}
+    >
+      {text}
+    </h1>
   );
 };
 
