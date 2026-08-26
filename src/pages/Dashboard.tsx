@@ -3,7 +3,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
-import { Bell, Heart, ArrowRight, Loader2, Send, X, Trash2, LayoutDashboard, Instagram, Youtube } from "lucide-react";
+import { Bell, Heart, ArrowRight, Loader2, Send, X, Trash2, LayoutDashboard, Instagram, Youtube, Eye, EyeOff } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -65,6 +65,7 @@ export default function Dashboard() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const [flows, setFlows] = useState<any[]>([]);
   const [savedCount, setSavedCount] = useState(0);
+  const [showDiscoveries, setShowDiscoveries] = useState(true);
   const [applications, setApplications] = useState<UserApplication[]>([]);
   const [appsOpen, setAppsOpen] = useState(false);
   const [loading, setLoading] = useState(true);
@@ -298,20 +299,32 @@ export default function Dashboard() {
 
       {/* Descubrimientos preview */}
       <motion.div variants={sectionVariants}>
-        <div className="mb-6">
-          <h2 className="text-xl md:text-2xl font-medium text-foreground">Descubrimientos</h2>
-          <p className="text-sm font-light text-miiles-gray-400 mt-1">Nuevas actualizaciones estratégicas</p>
+        <div className="mb-6 flex justify-between items-center">
+          <div>
+            <h2 className="text-xl md:text-2xl font-medium text-foreground">Descubrimientos</h2>
+            <p className="text-sm font-light text-miiles-gray-400 mt-1">Nuevas actualizaciones estratégicas</p>
+          </div>
+          <button 
+            onClick={() => setShowDiscoveries(!showDiscoveries)} 
+            className={`w-9 h-9 rounded-full flex items-center justify-center transition-colors ${
+              isDark ? "bg-white/5 hover:bg-white/10 text-white" : "bg-neutral-100 hover:bg-neutral-200 text-black"
+            }`}
+            title={showDiscoveries ? "Ocultar videos" : "Mostrar videos"}
+          >
+            {showDiscoveries ? <EyeOff size={18} strokeWidth={1.5} /> : <Eye size={18} strokeWidth={1.5} />}
+          </button>
         </div>
 
-        <div 
-          className="relative w-full overflow-hidden rounded-[20px] md:rounded-[24px]"
-          style={{ 
-            height: "443px",
-            background: isDark 
-              ? "linear-gradient(180deg, #121212 0%, #0A0A0A 100%)" 
-              : "linear-gradient(180deg, #FDFDFD 0%, #F8F9FD 100%)"
-          }}
-        >
+        {showDiscoveries && (
+          <div 
+            className="relative w-full overflow-hidden rounded-[20px] md:rounded-[24px]"
+            style={{ 
+              height: "443px",
+              background: isDark 
+                ? "linear-gradient(180deg, #121212 0%, #0A0A0A 100%)" 
+                : "linear-gradient(180deg, #FDFDFD 0%, #F8F9FD 100%)"
+            }}
+          >
           {/* Fondo de puntos con gradiente radial (recreando efecto Figma) */}
           <div 
             className="absolute inset-0 pointer-events-none"
@@ -412,6 +425,7 @@ export default function Dashboard() {
             ))}
           </div>
         </div>
+        )}
       </motion.div>
 
       <TrendStoryViewer
