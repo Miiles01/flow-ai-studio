@@ -65,7 +65,7 @@ export default function Dashboard() {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
   const [flows, setFlows] = useState<any[]>([]);
   const [savedCount, setSavedCount] = useState(0);
-  const [showDiscoveries, setShowDiscoveries] = useState(true);
+  const [showDiscoveries, setShowDiscoveries] = useState(typeof window !== "undefined" ? window.innerWidth >= 768 : true);
   const [applications, setApplications] = useState<UserApplication[]>([]);
   const [appsOpen, setAppsOpen] = useState(false);
   const [loading, setLoading] = useState(true);
