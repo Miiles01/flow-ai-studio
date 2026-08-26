@@ -105,7 +105,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
         data: {
           kind: "phase", tag: "Orgánico",
           label: "Contenido Orgánico",
-          sublabel: net === 'youtube' ? "Se distribuye por CTR, retención y búsquedas." : "Entra al Modo Prueba del algoritmo para ser evaluado.",
+          sublabel: "Entra al Modo Prueba del algoritmo para ser evaluado.",
         },
       },
       {
@@ -266,7 +266,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
         data: {
           kind: "phase", tag: "Orgánico",
           label: "Contenido Orgánico",
-          sublabel: net === 'youtube' ? "Se distribuye por CTR, retención y búsquedas." : "Entra al Modo Prueba del algoritmo para ser evaluado.",
+          sublabel: "Entra al Modo Prueba del algoritmo para ser evaluado.",
         },
       },
       {
@@ -417,7 +417,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
         data: {
           kind: "phase", tag: "Orgánico",
           label: "Contenido Orgánico",
-          sublabel: net === 'youtube' ? "Se distribuye por CTR, retención y búsquedas." : "Entra al Modo Prueba del algoritmo para ser evaluado.",
+          sublabel: "Entra al Modo Prueba del algoritmo para ser evaluado.",
         },
       },
       {
