@@ -86,8 +86,26 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
         data: {
           kind: "start", tag: "Inicio",
           image: videoLight, imageDark: videoDark,
-          label: "Subes un video",
-          sublabel: "Empieza el recorrido por el sistema de distribución",
+          label: "Tipo de Publicación",
+          sublabel: "¿Es un anuncio pagado o contenido orgánico?",
+        },
+      },
+      {
+        id: "A_ADS",
+        position: { x: 450, y: 150 },
+        data: {
+          kind: "phase", tag: "Ads",
+          label: "Anuncio Pagado (Ads)",
+          sublabel: "No depende del algoritmo orgánico. Escala mediante presupuesto (CPA / Subastas).",
+        },
+      },
+      {
+        id: "A_ORG",
+        position: { x: 0, y: 180 },
+        data: {
+          kind: "phase", tag: "Orgánico",
+          label: "Contenido Orgánico",
+          sublabel: net === 'youtube' ? "Se distribuye por CTR, retención y búsquedas." : "Entra al Modo Prueba del algoritmo para ser evaluado.",
         },
       },
       {
@@ -196,7 +214,9 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       { id: "eA-OBJ", source: "A", target: "OBJ", sourceHandle: "l-s", targetHandle: "r-t", dashed: true },
       { id: "eA-S", source: "A", target: "S", sourceHandle: "r-s", targetHandle: "l-t", dashed: true },
       { id: "eA-PLUS", source: "A", target: "PLUS", sourceHandle: "l-s", targetHandle: "r-t", dashed: true },
-      { id: "eA-B", source: "A", target: "B" },
+      { id: "eA-ADS", source: "A", target: "A_ADS", label: "Anuncio Pagado", dashed: true },
+      { id: "eA-ORG", source: "A", target: "A_ORG", label: "Orgánico" },
+      { id: "eORG-B", source: "A_ORG", target: "B" },
       { id: "eB-C", source: "B", target: "C" },
       { id: "eC-D", source: "C", target: "D" },
       { id: "eD-E", source: "D", target: "E", label: "No" },
@@ -227,8 +247,26 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
         data: {
           kind: "start", tag: "Inicio",
           image: videoLight, imageDark: videoDark,
-          label: "Subes un Trial Reel",
-          sublabel: "Se prueba sin afectar a tus seguidores",
+          label: "Tipo de Publicación",
+          sublabel: "¿Es un anuncio pagado o contenido orgánico?",
+        },
+      },
+      {
+        id: "A_ADS",
+        position: { x: 450, y: 150 },
+        data: {
+          kind: "phase", tag: "Ads",
+          label: "Anuncio Pagado (Ads)",
+          sublabel: "No depende del algoritmo orgánico. Escala mediante presupuesto (CPA / Subastas).",
+        },
+      },
+      {
+        id: "A_ORG",
+        position: { x: 0, y: 180 },
+        data: {
+          kind: "phase", tag: "Orgánico",
+          label: "Contenido Orgánico",
+          sublabel: net === 'youtube' ? "Se distribuye por CTR, retención y búsquedas." : "Entra al Modo Prueba del algoritmo para ser evaluado.",
         },
       },
       {
@@ -329,7 +367,9 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       { id: "eA-OBJ", source: "A", target: "OBJ", sourceHandle: "l-s", targetHandle: "r-t", dashed: true },
       { id: "eA-S", source: "A", target: "S", sourceHandle: "r-s", targetHandle: "l-t", dashed: true },
       { id: "eA-PLUS", source: "A", target: "PLUS", sourceHandle: "l-s", targetHandle: "r-t", dashed: true },
-      { id: "eA-B", source: "A", target: "B" },
+      { id: "eA-ADS", source: "A", target: "A_ADS", label: "Anuncio Pagado", dashed: true },
+      { id: "eA-ORG", source: "A", target: "A_ORG", label: "Orgánico" },
+      { id: "eORG-B", source: "A_ORG", target: "B" },
       { id: "eB-C", source: "B", target: "C" },
       { id: "eC-D", source: "C", target: "D" },
       { id: "eD-E", source: "D", target: "E", label: "No" },
@@ -358,122 +398,26 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
         data: {
           kind: "start", tag: "Inicio",
           image: videoLight, imageDark: videoDark,
-          label: "Publicas contenido",
-          sublabel: "Entra al inventario disponible para tu comunidad",
+          label: "Tipo de Publicación",
+          sublabel: "¿Es un anuncio pagado o contenido orgánico?",
         },
       },
       {
-        id: "S",
-        position: { x: 560, y: 40 },
+        id: "A_ADS",
+        position: { x: 450, y: 150 },
         data: {
-          kind: "strategy", tag: "Jugadas",
-          label: "Qué está funcionando ahora",
-          sublabel: "Toca el ojo para ver las estrategias vigentes",
-          details: [
-            { id: "s1", dx: 340, dy: -20, side: "right", tag: "Estrategia", label: "Contenido que abre conversación", sublabel: "Las interacciones significativas (comentarios largos) disparan el alcance." },
-            { id: "s2", dx: 340, dy: 135, side: "right", tag: "Estrategia", label: "Video nativo + Reels de FB", sublabel: "Facebook empuja fuerte su propio reproductor frente a links externos." },
-            { id: "s3", dx: 340, dy: 290, side: "right", tag: "Estrategia", label: "Grupos y comunidad", sublabel: "El contenido de grupos activos aparece casi siempre arriba del feed." },
-          ],
+          kind: "phase", tag: "Ads",
+          label: "Anuncio Pagado (Ads)",
+          sublabel: "No depende del algoritmo orgánico. Escala mediante presupuesto (CPA / Subastas).",
         },
       },
       {
-        id: "PLUS",
-        position: { x: -560, y: 370 },
+        id: "A_ORG",
+        position: { x: 0, y: 180 },
         data: {
-          kind: "strategy", tag: "Novedad 2026", confidence: "confirmed",
-          label: "Instagram Plus",
-          sublabel: "Nueva suscripción opcional de $3.99/mes con ventajas exclusivas",
-          details: [
-            { id: "p1", dx: -340, dy: -40, side: "left", tag: "Interacción", label: "Story Spotlight & Super Hearts", sublabel: "Prioridad en historias y corazones animados." },
-            { id: "p2", dx: -340, dy: 115, side: "left", tag: "Visualización", label: "Story Preview en secreto", sublabel: "Mira historias sin que lo sepan y descubre quién repitió las tuyas." },
-            { id: "p3", dx: -340, dy: 270, side: "left", tag: "Personalización", label: "Posts fijados y fuentes", sublabel: "Fija hasta 6 publicaciones y publica sin aparecer en el feed." }
-          ]
-        },
-      },
-      {
-        id: "B",
-        position: { x: 0, y: 370 },
-        data: {
-          kind: "phase", tag: "Fase 1", confidence: "confirmed",
-          label: "Inventario",
-          sublabel: "Todo lo disponible para cada usuario: amigos, páginas, grupos y ads",
-        },
-      },
-      {
-        id: "C",
-        position: { x: 0, y: 560 },
-        data: {
-          kind: "phase", tag: "Fase 2", confidence: "confirmed",
-          label: "Señales",
-          sublabel: "Quién publicó, tipo de contenido, hora y las interacciones previas de cada usuario",
-          details: [
-            { id: "c1", dx: -580, dy: -120, side: "left", tag: "Señal", icon: iconLike, confidence: "confirmed", label: "Señales activas", sublabel: "Comentarios, compartidos y reacciones: las que más pesan." },
-            { id: "c2", dx: -580, dy: 40, side: "left", tag: "Señal", icon: iconPlay, confidence: "confirmed", label: "Señales pasivas", sublabel: "Tiempo de visualización y clics: pesan menos, pero suman." },
-          ],
-        },
-      },
-      {
-        id: "D",
-        position: { x: 0, y: 750 },
-        data: {
-          kind: "phase", tag: "Fase 3", confidence: "confirmed",
-          label: "Predicciones",
-          sublabel: "Probabilidad de que cada usuario comente, comparta o reaccione",
-        },
-      },
-      {
-        id: "E",
-        position: { x: 0, y: 940 },
-        data: {
-          kind: "phase", tag: "Fase 4", confidence: "confirmed",
-          label: "Relevancy Score",
-          sublabel: "Cada publicación recibe un puntaje personalizado por usuario",
-        },
-      },
-      {
-        id: "F",
-        position: { x: 0, y: 1130 },
-        data: {
-          kind: "success", tag: "Resultado", confidence: "confirmed",
-          image: feedLight, imageDark: feedDark,
-          label: "Feed ordenado",
-          sublabel: "De mayor a menor puntaje, mezclado con ads",
-        },
-      },
-    ],
-    edges: [
-      { id: "eA-OBJ", source: "A", target: "OBJ", sourceHandle: "l-s", targetHandle: "r-t", dashed: true },
-      { id: "eA-S", source: "A", target: "S", sourceHandle: "r-s", targetHandle: "l-t", dashed: true },
-      { id: "eA-PLUS", source: "A", target: "PLUS", sourceHandle: "l-s", targetHandle: "r-t", dashed: true },
-      { id: "eA-B", source: "A", target: "B" },
-      { id: "eB-C", source: "B", target: "C" },
-      { id: "eC-D", source: "C", target: "D" },
-      { id: "eD-E", source: "D", target: "E" },
-      { id: "eE-F", source: "E", target: "F" },
-    ],
-  },
-
-  youtube: {
-    network: "youtube",
-    title: "YouTube Shorts",
-    nodes: [
-      {
-        id: "OBJ",
-        position: { x: -560, y: 40 },
-        data: {
-          kind: "phase", tag: "Objetivo", confidence: "confirmed",
-          label: "¿Qué maximiza YouTube?",
-          sublabel: "Satisfacción del espectador: lo mide directamente con encuestas.",
-        },
-      },
-      {
-        id: "A",
-        position: { x: 0, y: 0 },
-        data: {
-          kind: "start", tag: "Inicio",
-          image: videoHorizontalLight, imageDark: videoHorizontalDark,
-          label: "Subes un Short",
-          sublabel: "Sin ventana de tiempo: puede escalar semanas después",
+          kind: "phase", tag: "Orgánico",
+          label: "Contenido Orgánico",
+          sublabel: net === 'youtube' ? "Se distribuye por CTR, retención y búsquedas." : "Entra al Modo Prueba del algoritmo para ser evaluado.",
         },
       },
       {
@@ -570,7 +514,9 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       { id: "eA-OBJ", source: "A", target: "OBJ", sourceHandle: "l-s", targetHandle: "r-t", dashed: true },
       { id: "eA-S", source: "A", target: "S", sourceHandle: "r-s", targetHandle: "l-t", dashed: true },
       { id: "eA-PLUS", source: "A", target: "PLUS", sourceHandle: "l-s", targetHandle: "r-t", dashed: true },
-      { id: "eA-B", source: "A", target: "B" },
+      { id: "eA-ADS", source: "A", target: "A_ADS", label: "Anuncio Pagado", dashed: true },
+      { id: "eA-ORG", source: "A", target: "A_ORG", label: "Orgánico" },
+      { id: "eORG-B", source: "A_ORG", target: "B" },
       { id: "eB-C", source: "B", target: "C" },
       { id: "eC-D", source: "C", target: "D", label: "≥70% desliza" },
       { id: "eC-E", source: "C", target: "E", label: "Retiene" },
