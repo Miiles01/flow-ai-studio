@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { X, Lightbulb } from "lucide-react";
+import { X, Lightbulb, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import SuggestionDialog from "@/components/SuggestionDialog";
 import { motion } from "framer-motion";
 import type { Trend } from "@/hooks/useTrends";
@@ -107,6 +107,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
   const [shuffledTrends, setShuffledTrends] = useState<Trend[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [suggestOpen, setSuggestOpen] = useState(false);
+  const [showVideo, setShowVideo] = useState(true);
 
   useEffect(() => {
     if (open && startIndex !== null) {
@@ -308,14 +309,25 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
           onClose={() => setSuggestOpen(false)}
         />
 
-        {/* Read-only ReactFlow Diagram — Ocupa todo el fondo para que los videos floten por encima */}
         <div className="absolute inset-0 z-10">
           {activeFlow ? (
             <div className="w-full h-full relative">
-              <div className="absolute top-8 left-8 md:left-[38%] z-20 pointer-events-none">
-                <div className="bg-white dark:bg-[#1a1a1a] border border-slate-200 dark:border-[#333] rounded-2xl px-5 py-4">
-                  <h2 className="text-2xl font-normal text-gray-900 dark:text-white">Arquitectura Algorítmica</h2>
-                  <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 capitalize">{targetNetwork || ""}</p>
+              <div 
+                className={`absolute top-8 z-20 transition-all duration-500 ease-in-out pointer-events-none flex items-start gap-4 ${showVideo ? "left-8 md:left-[38%]" : "left-8"}`}
+              >
+                <div className="bg-white dark:bg-[#1a1a1a] border border-slate-200 dark:border-[#333] rounded-2xl px-5 py-4 pointer-events-auto flex items-center gap-4">
+                  <div>
+                    <h2 className="text-2xl font-normal text-gray-900 dark:text-white">Arquitectura Algorítmica</h2>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 capitalize">{targetNetwork || ""}</p>
+                  </div>
+                  <div className="w-[1px] h-10 bg-black/10 dark:bg-white/10 mx-2"></div>
+                  <button
+                    onClick={() => setShowVideo(!showVideo)}
+                    className="w-10 h-10 rounded-full flex items-center justify-center transition-colors hover:bg-black/5 dark:hover:bg-white/10 text-gray-600 dark:text-gray-400"
+                    title={showVideo ? "Ocultar panel de videos" : "Mostrar panel de videos"}
+                  >
+                    {showVideo ? <PanelLeftClose size={20} /> : <PanelLeftOpen size={20} />}
+                  </button>
                 </div>
               </div>
               <ReactFlow
@@ -373,7 +385,9 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
         <div 
           ref={containerRef}
           onScroll={handleScroll}
-          className="absolute left-0 top-0 bottom-0 z-30 w-full md:w-[35%] h-full flex flex-col items-center overflow-y-auto snap-y snap-mandatory scrollbar-hide py-[calc(47.5vh-300px)] pointer-events-auto bg-transparent"
+          className={`absolute left-0 top-0 bottom-0 w-full md:w-[35%] h-full flex flex-col items-center overflow-y-auto snap-y snap-mandatory scrollbar-hide py-[calc(47.5vh-300px)] pointer-events-auto bg-transparent transition-transform duration-500 z-30 ${
+            showVideo ? "translate-x-0" : "-translate-x-full"
+          }`}
         >
           {shuffledTrends.map((trend, i) => (
             <motion.div
