@@ -288,7 +288,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
         {/* Floating Close Button */}
         <button
           onClick={onClose}
-          className="absolute top-8 right-8 px-5 py-2.5 rounded-full transition-all hover:bg-gray-50 dark:hover:bg-white/10 text-black dark:text-white z-50 bg-white dark:bg-white/5 shadow-sm border border-black/5 dark:border-white/10 font-medium text-sm cursor-pointer flex items-center gap-2"
+          className="absolute top-8 right-8 px-5 py-2.5 rounded-full transition-all hover:bg-gray-50 dark:hover:bg-[#2a2a2a] text-black dark:text-white z-50 bg-white dark:bg-[#1a1a1a] shadow-sm border border-slate-200 dark:border-[#333] font-medium text-sm cursor-pointer flex items-center gap-2"
         >
           <X size={16} strokeWidth={2.5} />
           Cerrar
@@ -297,7 +297,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
         {/* Botón flotante para sugerir mejoras a la arquitectura */}
         <button
           onClick={() => setSuggestOpen(true)}
-          className="absolute bottom-8 right-8 px-5 py-2.5 rounded-full transition-all hover:bg-gray-50 dark:hover:bg-white/10 text-black dark:text-white z-50 bg-white dark:bg-white/5 shadow-sm border border-black/5 dark:border-white/10 font-medium text-sm cursor-pointer flex items-center gap-2"
+          className="absolute bottom-8 right-8 px-5 py-2.5 rounded-full transition-all hover:bg-gray-50 dark:hover:bg-[#2a2a2a] text-black dark:text-white z-50 bg-white dark:bg-[#1a1a1a] shadow-sm border border-slate-200 dark:border-[#333] font-medium text-sm cursor-pointer flex items-center gap-2"
         >
           <Lightbulb size={16} strokeWidth={2.5} />
           Sugerir
