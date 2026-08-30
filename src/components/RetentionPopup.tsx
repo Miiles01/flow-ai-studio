@@ -169,9 +169,9 @@ export function RetentionPopup() {
                       <button
                         key={p.id}
                         onClick={() => setSelectedId(p.id)}
-                        className={`text-left w-full p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition-colors flex flex-col gap-3 group border border-transparent hover:border-slate-100 dark:hover:border-white/5 ${p.id === 5 ? 'col-span-2 flex-row items-center' : ''}`}
+                        className={`text-left w-full p-3 rounded-md hover:bg-gray-50 dark:hover:bg-white/5 transition-colors flex flex-col gap-3 group border border-transparent hover:border-slate-100 dark:hover:border-white/5 `}
                       >
-                        <div className={`${p.id === 5 ? 'w-24 h-14' : 'w-full h-16'} shrink-0 bg-white dark:bg-black/20 rounded-lg overflow-hidden flex items-center justify-center p-2 border border-slate-100 dark:border-white/5 shadow-sm group-hover:shadow-md transition-shadow`}>
+                        <div className={`w-full h-16 shrink-0 bg-white dark:bg-black/20 rounded-md overflow-hidden flex items-center justify-center p-2 border border-slate-100 dark:border-white/5 shadow-sm group-hover:shadow-md transition-shadow`}>
                           {p.svg}
                         </div>
                         <div className="flex flex-col items-start gap-1.5">
@@ -188,7 +188,7 @@ export function RetentionPopup() {
                 </div>
               ) : (
                 <div className="p-4 flex flex-col gap-5">
-                  <div className="w-full h-32 bg-gray-50 dark:bg-[#111] rounded-xl p-2 border border-slate-100 dark:border-[#222]">
+                  <div className="w-full h-32 bg-gray-50 dark:bg-[#111] rounded-md p-2 border border-slate-100 dark:border-[#222]">
                     {selectedPattern.svg}
                   </div>
                   
@@ -207,7 +207,7 @@ export function RetentionPopup() {
                       <h4 className="text-xs font-semibold text-gray-400  tracking-wider mb-1">Causa Típica</h4>
                       <p className="text-sm text-gray-900 dark:text-white">{selectedPattern.cause}</p>
                     </div>
-                    <div className="bg-blue-50 dark:bg-blue-900/10 p-3 rounded-lg ">
+                    <div className="bg-blue-50 dark:bg-blue-900/10 p-3 rounded-md ">
                       <h4 className="text-xs font-semibold text-blue-600 dark:text-blue-400  tracking-wider mb-1">Qué hacer</h4>
                       <p className="text-sm text-blue-900 dark:text-blue-100">{selectedPattern.action}</p>
                     </div>
