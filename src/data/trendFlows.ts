@@ -109,7 +109,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
     nodes: [
       {
         id: "A_TRIAL",
-        position: { x: -300, y: 180 },
+        position: { x: -550, y: 180 },
         data: {
           image: resNegLight, imageDark: resNegDark,
           kind: "phase", tag: "Prueba", confidence: "confirmed",
@@ -132,7 +132,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "A_ADS",
-        position: { x: 300, y: 180 },
+        position: { x: 550, y: 180 },
         data: {
           image: adsLight, imageDark: adsDark,
           kind: "phase", tag: "Ads",
@@ -156,7 +156,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "S",
-        position: { x: 650, y: 180 },
+        position: { x: 1100, y: 180 },
         data: {
           kind: "strategy", tag: "Jugadas",
           label: "Qué está funcionando ahora",
@@ -171,7 +171,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "PLUS",
-        position: { x: -650, y: 180 },
+        position: { x: -1100, y: 180 },
         data: {
           kind: "strategy", tag: "Novedad 2026", confidence: "confirmed",
           label: "Instagram Plus",
@@ -213,6 +213,9 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
         data: {
           kind: "decision", tag: "Decisión", confidence: "likely",
           label: "¿La muestra reaccionó mejor que videos similares?",
+          details: [
+            { id: "d1_tk", dx: -450, dy: -40, side: "left", tag: "Concept Drift", label: "Intereses efímeros", sublabel: "TikTok asume que el interés de un usuario cambia en minutos. Si tu video encaja en la tendencia exacta del minuto, escala rápido." }
+          ],
         },
       },
       {
@@ -291,7 +294,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "A_ADS",
-        position: { x: 300, y: 180 },
+        position: { x: 550, y: 180 },
         data: {
           image: adsLight, imageDark: adsDark,
           kind: "phase", tag: "Ads",
@@ -315,7 +318,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "S",
-        position: { x: 650, y: 180 },
+        position: { x: 1100, y: 180 },
         data: {
           kind: "strategy", tag: "Jugadas",
           label: "Qué está funcionando ahora",
@@ -330,7 +333,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "PLUS",
-        position: { x: -650, y: 180 },
+        position: { x: -1100, y: 180 },
         data: {
           kind: "strategy", tag: "Novedad 2026", confidence: "confirmed",
           label: "Instagram Plus",
@@ -436,7 +439,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
     nodes: [
       {
         id: "A_TRIAL",
-        position: { x: -300, y: 180 },
+        position: { x: -550, y: 180 },
         data: {
           image: videoHorizontalLight, imageDark: videoHorizontalDark,
           kind: "phase", tag: "Prueba", confidence: "likely",
@@ -459,7 +462,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "S",
-        position: { x: 650, y: 180 },
+        position: { x: 1100, y: 180 },
         data: {
           kind: "strategy", tag: "Jugadas",
           label: "Qué está funcionando ahora",
@@ -473,7 +476,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "PLUS",
-        position: { x: -650, y: 180 },
+        position: { x: -1100, y: 180 },
         data: {
           kind: "strategy", tag: "Novedad 2026", confidence: "confirmed",
           label: "Instagram Plus",
@@ -566,7 +569,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "A_ADS",
-        position: { x: 300, y: 180 },
+        position: { x: 550, y: 180 },
         data: {
           image: adsLight, imageDark: adsDark,
           kind: "phase", tag: "Ads",
@@ -590,7 +593,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "S",
-        position: { x: 650, y: 180 },
+        position: { x: 1100, y: 180 },
         data: {
           kind: "strategy", tag: "Jugadas",
           label: "Qué está funcionando ahora",
@@ -604,7 +607,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "PLUS",
-        position: { x: -650, y: 180 },
+        position: { x: -1100, y: 180 },
         data: {
           kind: "strategy", tag: "Novedad 2026", confidence: "confirmed",
           label: "Instagram Plus",
@@ -622,8 +625,11 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
         data: {
           kind: "phase", tag: "Fase 1 · Ronda 1", confidence: "likely",
           image: vistasLight, imageDark: vistasDark,
-          label: "Muestra semilla en el feed de Shorts",
-          sublabel: "Se enseña a un grupo de usuarios afines y se mide la reacción",
+          label: "Candidate Generation (Recall)",
+          sublabel: "Red neuronal reduce millones de videos a cientos de candidatos. Usa historial, búsquedas y demografía.",
+          details: [
+            { id: "b1_yt", dx: -450, dy: -40, side: "left", tag: "ML", label: "Nearest Neighbor Search", sublabel: "Encuentra videos similares a ti en un espacio de embeddings gigante y de forma ultra rápida." }
+          ],
         },
       },
       {
@@ -653,8 +659,11 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
         position: { x: 480, y: 910 },
         data: {
           kind: "phase", tag: "Fase 2 · Ronda 2", confidence: "likely",
-          label: "Escala a más feeds y regiones",
-          sublabel: "Se mide el AVD: % del video consumido. Punto dulce: 50-60 segundos.",
+          label: "Deep Ranking (Precision)",
+          sublabel: "Segunda red neuronal rankea los candidatos. No optimiza clicks, sino 'Expected Watch Time' (Tiempo esperado de vista).",
+          details: [
+            { id: "e1_yt", dx: 340, dy: -40, side: "right", tag: "ML", label: "Recompensa de Frescura", sublabel: "El modelo usa la 'edad' del video como feature para no solo recomendar videos viejos con muchas vistas." }
+          ],
         },
       },
       {
