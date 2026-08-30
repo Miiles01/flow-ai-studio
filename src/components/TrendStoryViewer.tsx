@@ -300,7 +300,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
           className="absolute bottom-8 right-8 px-5 py-2.5 rounded-full transition-all hover:bg-gray-50 dark:hover:bg-[#2a2a2a] text-black dark:text-white z-50 bg-white dark:bg-[#1a1a1a] shadow-sm border border-slate-200 dark:border-[#333] font-medium text-sm cursor-pointer flex items-center gap-2"
         >
           <Lightbulb size={16} strokeWidth={2.5} />
-          Sugerir
+          Sugerir ideas
         </button>
 
         <SuggestionDialog

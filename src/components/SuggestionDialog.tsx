@@ -4,7 +4,6 @@
  */
 
 import { useState } from "react";
-import { createPortal } from "react-dom";
 import { Lightbulb, X, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -55,7 +54,7 @@ const SuggestionDialog = ({ open, network, context, onClose }: Props) => {
 
   return (
     <div
-      className="fixed inset-0 z-[999] flex items-center justify-center bg-black/40 p-4"
+      className="absolute inset-0 z-[999] flex items-center justify-center bg-black/40 p-4"
       onPointerDown={(e) => e.stopPropagation()}
       onMouseDown={(e) => e.stopPropagation()}
       onWheel={(e) => e.stopPropagation()}
