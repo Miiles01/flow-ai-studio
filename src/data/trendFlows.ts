@@ -452,12 +452,12 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
         data: {
           image: adsLight, imageDark: adsDark,
           kind: "phase", tag: "Ads",
-          label: "Anuncio Pagado (Ads)",
-          sublabel: "No depende del algoritmo orgánico. Escala mediante presupuesto.",
+          label: "Anuncio Pagado (Meta Ads)",
+          sublabel: "Compite en subastas mediante el algoritmo de Meta, evaluando el Valor Total de cada candidato.",
           details: [
-            { id: "ads1", dx: 340, dy: -60, side: "right", tag: "Métrica", label: "CPA & ROAS", sublabel: "Costo por Adquisición y Retorno de Inversión: las métricas clave para escalar." },
-            { id: "ads2", dx: 340, dy: 80, side: "right", tag: "Métrica", label: "CTR & CPM", sublabel: "Click-Through Rate y Costo por Mil impresiones: definen la eficiencia del anuncio." },
-            { id: "ads3", dx: 340, dy: 220, side: "right", tag: "Tip", label: "Segmentación", sublabel: "El algoritmo de ads busca conversiones, no solo retención como el orgánico." }
+            { id: "ads1", dx: 340, dy: -120, side: "right", tag: "Subasta", label: "Fórmula de Valor Total", sublabel: "Valor Total = (Puja × Tasa de Acción Estimada) + Calidad del Anuncio." },
+            { id: "ads2", dx: 340, dy: 40, side: "right", tag: "IA", label: "Fase de Aprendizaje", sublabel: "El conjunto necesita ~50 eventos de conversión estables en 7 días para optimizarse." },
+            { id: "ads3", dx: 340, dy: 200, side: "right", tag: "Tip", label: "Advantage+ & Liquidez", sublabel: "Meta recomienda audiencias amplias y presupuestos a nivel campaña para dar flexibilidad al ML." }
           ],
         },
       },
@@ -510,8 +510,8 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
         position: { x: 0, y: 960 },
         data: {
           kind: "phase", tag: "Fase 3", confidence: "confirmed",
-          label: "Predicciones Profundas (ML)",
-          sublabel: "Varios modelos de ML predicen acciones: abandonar video, saltar post, hacer clic en ver más, o seguir links.",
+          label: "Ranking Generativo (GEM)",
+          sublabel: "Un modelo fundacional masivo predice el valor exacto de interacción y conversión de esa shortlist.",
         },
       },
       {
