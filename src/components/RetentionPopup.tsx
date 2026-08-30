@@ -164,27 +164,27 @@ export function RetentionPopup() {
                   <p className="px-3 pt-2 pb-3 text-sm text-gray-500 dark:text-gray-400">
                     Selecciona un patrón de gráfica para diagnosticar por qué tu video está perdiendo audiencia.
                   </p>
-                  {RETENTION_PATTERNS.map((p) => (
-                    <button
-                      key={p.id}
-                      onClick={() => setSelectedId(p.id)}
-                      className="text-left w-full p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition-colors flex gap-4 items-center group"
-                    >
-                      <div className="w-16 h-10 shrink-0 bg-gray-100 dark:bg-black/20 rounded-md overflow-hidden flex items-center justify-center p-1">
-                        {p.svg}
-                      </div>
-                      <div>
-                        <div className="flex items-center gap-2 mb-1">
-                          <span className={`text-xs font-semibold px-2 py-0.5 rounded uppercase ${p.bgBadge}`}>
+                  <div className="grid grid-cols-2 gap-2 px-1 pb-1">
+                    {RETENTION_PATTERNS.map((p) => (
+                      <button
+                        key={p.id}
+                        onClick={() => setSelectedId(p.id)}
+                        className={`text-left w-full p-3 rounded-xl hover:bg-gray-50 dark:hover:bg-white/5 transition-colors flex flex-col gap-3 group border border-transparent hover:border-slate-100 dark:hover:border-white/5 ${p.id === 5 ? 'col-span-2 flex-row items-center' : ''}`}
+                      >
+                        <div className={`${p.id === 5 ? 'w-24 h-14' : 'w-full h-16'} shrink-0 bg-white dark:bg-black/20 rounded-lg overflow-hidden flex items-center justify-center p-2 border border-slate-100 dark:border-white/5 shadow-sm group-hover:shadow-md transition-shadow`}>
+                          {p.svg}
+                        </div>
+                        <div className="flex flex-col items-start gap-1.5">
+                          <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded uppercase ${p.bgBadge}`}>
                             {p.badge}
                           </span>
+                          <p className="text-xs font-medium text-gray-900 dark:text-white group-hover:text-[#4059F1] transition-colors leading-snug">
+                            {p.title}
+                          </p>
                         </div>
-                        <p className="text-sm font-medium text-gray-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
-                          {p.title}
-                        </p>
-                      </div>
-                    </button>
-                  ))}
+                      </button>
+                    ))}
+                  </div>
                 </div>
               ) : (
                 <div className="p-4 flex flex-col gap-5">
