@@ -28,7 +28,7 @@ import {
 const mainNav = [
   { title: "Inicio", url: "/dashboard", icon: Home },
   { title: "Tableros", url: "/boards", icon: LayoutDashboard },
-  // { title: "Descubrimientos", url: "/trends", icon: Newspaper },
+  { title: "Descubrimientos", url: "/trends", icon: Newspaper },
 ];
 
 type Conversation = { id: string; title: string; updated_at: string };
