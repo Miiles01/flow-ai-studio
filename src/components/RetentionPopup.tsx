@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 const RETENTION_PATTERNS = [
   {
     id: 1,
-    badge: "Patrón 1",
+    badge: "Caso 1",
     title: "Mal hook",
     desc: "Caída fuerte en los primeros 1–3 segundos y luego la línea se aplana.",
     meaning: "Los que sobrevivieron al inicio ya están enganchados y no se van.",
@@ -24,7 +24,7 @@ const RETENTION_PATTERNS = [
   },
   {
     id: 2,
-    badge: "Patrón 2",
+    badge: "Caso 2",
     title: "Mal hook + mala estructura",
     desc: "Caída fuerte al inicio y la línea sigue bajando después, sin aplanarse.",
     meaning: "Además del gancho débil, el contenido tampoco logra sostener a quienes sí se quedaron.",
@@ -42,7 +42,7 @@ const RETENTION_PATTERNS = [
   },
   {
     id: 3,
-    badge: "Patrón 3",
+    badge: "Caso 3",
     title: "Mal final",
     desc: "Retención estable durante casi todo el video, pero se desploma al terminar.",
     meaning: "El contenido funciona bien hasta cierto punto, pero el cierre decepciona.",
@@ -61,7 +61,7 @@ const RETENTION_PATTERNS = [
   },
   {
     id: 4,
-    badge: "Patrón 4",
+    badge: "Caso 4",
     title: "No cumples expectativas",
     desc: "Declive parejo y constante durante todo el video, sin un tramo plano claro.",
     meaning: "El gancho prometió algo que el resto del contenido no sostiene al mismo nivel.",
@@ -79,7 +79,7 @@ const RETENTION_PATTERNS = [
   },
   {
     id: 5,
-    badge: "Patrón 5",
+    badge: "Caso 5",
     title: "Buen video",
     desc: "Caída pequeña al inicio y una línea casi plana durante el resto del video.",
     meaning: "El gancho funcionó y el contenido mantiene el interés de principio a fin.",
@@ -162,7 +162,7 @@ export function RetentionPopup() {
               {!selectedPattern ? (
                 <div className="flex flex-col gap-1">
                   <p className="px-3 pt-2 pb-3 text-sm text-gray-500 dark:text-gray-400">
-                    Selecciona un patrón de gráfica para diagnosticar por qué tu video está perdiendo audiencia.
+                    Selecciona un caso de gráfica para diagnosticar por qué tu video está perdiendo audiencia.
                   </p>
                   <div className="grid grid-cols-2 gap-2 px-1 pb-1">
                     {RETENTION_PATTERNS.map((p) => (
@@ -175,7 +175,7 @@ export function RetentionPopup() {
                           {p.svg}
                         </div>
                         <div className="flex flex-col items-start gap-1.5">
-                          <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded uppercase ${p.bgBadge}`}>
+                          <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded  ${p.bgBadge}`}>
                             {p.badge}
                           </span>
                           <p className="text-xs font-medium text-gray-900 dark:text-white group-hover:text-[#4059F1] transition-colors leading-snug">
@@ -200,15 +200,15 @@ export function RetentionPopup() {
 
                   <div className="flex flex-col gap-4">
                     <div>
-                      <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Qué significa</h4>
+                      <h4 className="text-xs font-semibold text-gray-400  tracking-wider mb-1">Qué significa</h4>
                       <p className="text-sm text-gray-900 dark:text-white">{selectedPattern.meaning}</p>
                     </div>
                     <div>
-                      <h4 className="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-1">Causa Típica</h4>
+                      <h4 className="text-xs font-semibold text-gray-400  tracking-wider mb-1">Causa Típica</h4>
                       <p className="text-sm text-gray-900 dark:text-white">{selectedPattern.cause}</p>
                     </div>
                     <div className="bg-blue-50 dark:bg-blue-900/10 p-3 rounded-lg ">
-                      <h4 className="text-xs font-semibold text-blue-600 dark:text-blue-400 uppercase tracking-wider mb-1">Qué hacer</h4>
+                      <h4 className="text-xs font-semibold text-blue-600 dark:text-blue-400  tracking-wider mb-1">Qué hacer</h4>
                       <p className="text-sm text-blue-900 dark:text-blue-100">{selectedPattern.action}</p>
                     </div>
                   </div>
