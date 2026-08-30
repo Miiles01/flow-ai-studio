@@ -4,7 +4,6 @@
  */
 
 import { useState } from "react";
-import { createPortal } from "react-dom";
 import { Lightbulb, X, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -53,9 +52,16 @@ const SuggestionDialog = ({ open, network, context, onClose }: Props) => {
     onClose();
   };
 
-  return createPortal(
+  return (
     <div
-      className="fixed inset-0 z-[999] flex items-center justify-center bg-black/40 p-4"
+      className="absolute inset-0 z-[999] flex items-center justify-center bg-black/40 p-4"
+      onPointerDown={(e) => e.stopPropagation()}
+      onMouseDown={(e) => e.stopPropagation()}
+      onWheel={(e) => e.stopPropagation()}
+      onKeyDown={(e) => {
+        e.stopPropagation();
+        if (e.key === "Escape") onClose();
+      }}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
@@ -64,7 +70,7 @@ const SuggestionDialog = ({ open, network, context, onClose }: Props) => {
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="flex items-center gap-2 text-[15px] font-normal text-gray-900 dark:text-white">
-              <Lightbulb size={16} /> Sugerir una mejora
+              <Lightbulb size={16} /> Sugerir ideas
             </p>
             <p className="mt-1 text-[12px] font-light text-gray-500 dark:text-white/50">
               Cuéntanos tu idea o aprendizaje para mejorar la arquitectura algorítmica
@@ -109,8 +115,7 @@ const SuggestionDialog = ({ open, network, context, onClose }: Props) => {
           </button>
         </div>
       </div>
-    </div>,
-    document.body
+    </div>
   );
 };
 
