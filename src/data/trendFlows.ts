@@ -469,7 +469,8 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
           label: "Contenido Orgánico",
           sublabel: "Entra al Modo Prueba del algoritmo para ser evaluado.",
         },
-      },\n      {
+      },
+      {
         id: "S",
         position: { x: 1200, y: 300 },
         data: {
