@@ -4,7 +4,7 @@ import { X, Lightbulb, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import SuggestionDialog from "@/components/SuggestionDialog";
 import { motion } from "framer-motion";
 import type { Trend } from "@/hooks/useTrends";
-import { ReactFlow, BaseEdge, EdgeLabelRenderer, getSmoothStepPath, type Node, type Edge, type EdgeProps, type ReactFlowInstance } from "@xyflow/react";
+import { ReactFlow, BaseEdge, EdgeLabelRenderer, getSmoothStepPath, Background, BackgroundVariant, type Node, type Edge, type EdgeProps, type ReactFlowInstance } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import TrendFlowNode from "@/components/TrendFlowNode";
 import { TREND_FLOWS } from "@/data/trendFlows";
@@ -347,6 +347,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
                 proOptions={{ hideAttribution: true }}
                 className="trends-flow"
               >
+                <Background variant={BackgroundVariant.Dots} gap={32} size={1.5} color={isDark ? "#52525B" : "#9CA3AF"} />
                 <style>{`
                   .trends-flow .react-flow__handle { opacity: 0 !important; pointer-events: none !important; }
                   .trends-flow .react-flow__node { pointer-events: all !important; cursor: default !important; }
