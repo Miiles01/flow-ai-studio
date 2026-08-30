@@ -150,10 +150,10 @@ export function RetentionPopup() {
                   setIsOpen(false);
                   setTimeout(() => setSelectedId(null), 300);
                 }}
-                className="p-1.5 -mr-1.5 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition-colors flex items-center gap-1.5"
+                className="px-4 py-2 rounded-full transition-all hover:bg-gray-50 dark:hover:bg-[#2a2a2a] text-black dark:text-white bg-white dark:bg-[#1a1a1a] shadow-sm border border-slate-200 dark:border-[#333] font-medium text-sm cursor-pointer flex items-center gap-2"
               >
-                <span className="text-sm font-medium text-gray-500 dark:text-gray-400">Cerrar</span>
-                <X size={18} className="text-gray-500" />
+                <X size={16} strokeWidth={2.5} />
+                Cerrar
               </button>
             </div>
 
