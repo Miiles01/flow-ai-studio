@@ -108,6 +108,19 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
     title: "Algoritmo TikTok (FYP)",
     nodes: [
       {
+        id: "A_TRIAL",
+        position: { x: -300, y: 180 },
+        data: {
+          image: resNegLight, imageDark: resNegDark,
+          kind: "phase", tag: "Prueba", confidence: "confirmed",
+          label: "No existe 'Modo Prueba' manual",
+          sublabel: "TikTok prueba TODOS los videos automáticamente en lotes pequeños (Fase 1).",
+          details: [
+            { id: "tr1", dx: -340, dy: 0, side: "left", tag: "Dato", label: "Test Automatizado", sublabel: "No necesitas un botón de prueba; el algoritmo ya trata cada post como un test independiente." }
+          ]
+        },
+      },
+      {
         id: "A",
         position: { x: 0, y: 0 },
         data: {
@@ -119,12 +132,17 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "A_ADS",
-        position: { x: 400, y: 180 },
+        position: { x: 300, y: 180 },
         data: {
           image: adsLight, imageDark: adsDark,
           kind: "phase", tag: "Ads",
           label: "Anuncio Pagado (Ads)",
           sublabel: "No depende del algoritmo orgánico. Escala mediante presupuesto (CPA / Subastas).",
+          details: [
+            { id: "ads1", dx: 340, dy: -60, side: "right", tag: "Métrica", label: "CPA & ROAS", sublabel: "Costo por Adquisición y Retorno de Inversión: las métricas clave para escalar." },
+            { id: "ads2", dx: 340, dy: 80, side: "right", tag: "Métrica", label: "CTR & CPM", sublabel: "Click-Through Rate y Costo por Mil impresiones: definen la eficiencia del anuncio." },
+            { id: "ads3", dx: 340, dy: 220, side: "right", tag: "Tip", label: "Segmentación", sublabel: "El algoritmo de ads busca conversiones, no solo retención como el orgánico." }
+          ],
         },
       },
       {
@@ -138,7 +156,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "S",
-        position: { x: 800, y: 180 },
+        position: { x: 650, y: 180 },
         data: {
           kind: "strategy", tag: "Jugadas",
           label: "Qué está funcionando ahora",
@@ -153,7 +171,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "PLUS",
-        position: { x: -450, y: 180 },
+        position: { x: -650, y: 180 },
         data: {
           kind: "strategy", tag: "Novedad 2026", confidence: "confirmed",
           label: "Instagram Plus",
@@ -243,6 +261,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       { id: "eA-S", source: "A", target: "S", dashed: true },
       { id: "eA-PLUS", source: "A", target: "PLUS", dashed: true },
       { id: "eA-ADS", source: "A", target: "A_ADS", label: "Anuncio Pagado", dashed: true },
+      { id: "eA-TRIAL", source: "A", target: "A_TRIAL", label: "Modo Prueba", dashed: true },
       { id: "eA-ORG", source: "A", target: "A_ORG", label: "Orgánico" },
       { id: "eORG-B", source: "A_ORG", target: "B" },
       { id: "eB-C", source: "B", target: "C" },
@@ -272,12 +291,17 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "A_ADS",
-        position: { x: 400, y: 180 },
+        position: { x: 300, y: 180 },
         data: {
           image: adsLight, imageDark: adsDark,
           kind: "phase", tag: "Ads",
           label: "Anuncio Pagado (Ads)",
           sublabel: "No depende del algoritmo orgánico. Escala mediante presupuesto (CPA / Subastas).",
+          details: [
+            { id: "ads1", dx: 340, dy: -60, side: "right", tag: "Métrica", label: "CPA & ROAS", sublabel: "Costo por Adquisición y Retorno de Inversión: las métricas clave para escalar." },
+            { id: "ads2", dx: 340, dy: 80, side: "right", tag: "Métrica", label: "CTR & CPM", sublabel: "Click-Through Rate y Costo por Mil impresiones: definen la eficiencia del anuncio." },
+            { id: "ads3", dx: 340, dy: 220, side: "right", tag: "Tip", label: "Segmentación", sublabel: "El algoritmo de ads busca conversiones, no solo retención como el orgánico." }
+          ],
         },
       },
       {
@@ -291,7 +315,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "S",
-        position: { x: 800, y: 180 },
+        position: { x: 650, y: 180 },
         data: {
           kind: "strategy", tag: "Jugadas",
           label: "Qué está funcionando ahora",
@@ -306,7 +330,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "PLUS",
-        position: { x: -450, y: 180 },
+        position: { x: -650, y: 180 },
         data: {
           kind: "strategy", tag: "Novedad 2026", confidence: "confirmed",
           label: "Instagram Plus",
@@ -389,6 +413,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       { id: "eA-S", source: "A", target: "S", dashed: true },
       { id: "eA-PLUS", source: "A", target: "PLUS", dashed: true },
       { id: "eA-ADS", source: "A", target: "A_ADS", label: "Anuncio Pagado", dashed: true },
+      { id: "eA-TRIAL", source: "A", target: "A_TRIAL", label: "Modo Prueba", dashed: true },
       { id: "eA-ORG", source: "A", target: "A_ORG", label: "Orgánico" },
       { id: "eORG-B", source: "A_ORG", target: "B" },
       { id: "eB-C", source: "B", target: "C" },
@@ -405,6 +430,19 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
     title: "Facebook EdgeRank",
     nodes: [
       {
+        id: "A_TRIAL",
+        position: { x: -300, y: 180 },
+        data: {
+          image: videoHorizontalLight, imageDark: videoHorizontalDark,
+          kind: "phase", tag: "Prueba", confidence: "likely",
+          label: "A/B Testing de Reels / Posts",
+          sublabel: "Facebook permite probar variaciones (texto, video) a través de Creator Studio.",
+          details: [
+            { id: "tr1", dx: -340, dy: 0, side: "left", tag: "Creator Studio", label: "Pruebas controladas", sublabel: "Puedes lanzar hasta 4 variaciones y FB distribuye la ganadora." }
+          ]
+        },
+      },
+      {
         id: "A",
         position: { x: 0, y: 0 },
         data: {
@@ -416,7 +454,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "S",
-        position: { x: 800, y: 180 },
+        position: { x: 650, y: 180 },
         data: {
           kind: "strategy", tag: "Jugadas",
           label: "Qué está funcionando ahora",
@@ -430,7 +468,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "PLUS",
-        position: { x: -450, y: 180 },
+        position: { x: -650, y: 180 },
         data: {
           kind: "strategy", tag: "Novedad 2026", confidence: "confirmed",
           label: "Instagram Plus",
@@ -497,6 +535,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       { id: "eA-S", source: "A", target: "S", dashed: true },
       { id: "eA-PLUS", source: "A", target: "PLUS", dashed: true },
       { id: "eA-ADS", source: "A", target: "A_ADS", label: "Anuncio Pagado", dashed: true },
+      { id: "eA-TRIAL", source: "A", target: "A_TRIAL", label: "Modo Prueba", dashed: true },
       { id: "eA-ORG", source: "A", target: "A_ORG", label: "Orgánico" },
       { id: "eORG-B", source: "A_ORG", target: "B" },
       { id: "eB-C", source: "B", target: "C" },
@@ -522,12 +561,17 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "A_ADS",
-        position: { x: 400, y: 180 },
+        position: { x: 300, y: 180 },
         data: {
           image: adsLight, imageDark: adsDark,
           kind: "phase", tag: "Ads",
           label: "Anuncio Pagado (Ads)",
           sublabel: "No depende del algoritmo orgánico. Escala mediante presupuesto (CPA / Subastas).",
+          details: [
+            { id: "ads1", dx: 340, dy: -60, side: "right", tag: "Métrica", label: "CPA & ROAS", sublabel: "Costo por Adquisición y Retorno de Inversión: las métricas clave para escalar." },
+            { id: "ads2", dx: 340, dy: 80, side: "right", tag: "Métrica", label: "CTR & CPM", sublabel: "Click-Through Rate y Costo por Mil impresiones: definen la eficiencia del anuncio." },
+            { id: "ads3", dx: 340, dy: 220, side: "right", tag: "Tip", label: "Segmentación", sublabel: "El algoritmo de ads busca conversiones, no solo retención como el orgánico." }
+          ],
         },
       },
       {
@@ -541,7 +585,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "S",
-        position: { x: 800, y: 180 },
+        position: { x: 650, y: 180 },
         data: {
           kind: "strategy", tag: "Jugadas",
           label: "Qué está funcionando ahora",
@@ -555,7 +599,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "PLUS",
-        position: { x: -450, y: 180 },
+        position: { x: -650, y: 180 },
         data: {
           kind: "strategy", tag: "Novedad 2026", confidence: "confirmed",
           label: "Instagram Plus",
@@ -635,6 +679,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       { id: "eA-S", source: "A", target: "S", dashed: true },
       { id: "eA-PLUS", source: "A", target: "PLUS", dashed: true },
       { id: "eA-ADS", source: "A", target: "A_ADS", label: "Anuncio Pagado", dashed: true },
+      { id: "eA-TRIAL", source: "A", target: "A_TRIAL", label: "Modo Prueba", dashed: true },
       { id: "eA-ORG", source: "A", target: "A_ORG", label: "Orgánico" },
       { id: "eORG-B", source: "A_ORG", target: "B" },
       { id: "eB-C", source: "B", target: "C" },
