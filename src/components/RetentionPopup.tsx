@@ -104,7 +104,7 @@ export function RetentionPopup() {
   const selectedPattern = selectedId ? RETENTION_PATTERNS.find(p => p.id === selectedId) : null;
 
   return (
-    <div className="absolute bottom-8 left-8 z-50">
+    <div className="absolute bottom-4 sm:bottom-8 left-4 sm:left-8 z-50 max-w-[calc(100vw-2rem)]">
       <AnimatePresence>
         {!isOpen && (
           <motion.button
@@ -126,7 +126,7 @@ export function RetentionPopup() {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="w-[380px] md:w-[420px] bg-white dark:bg-[#1a1a1a] border border-slate-200 dark:border-[#333] rounded-2xl shadow-sm overflow-hidden flex flex-col max-h-[600px]"
+            className="w-[calc(100vw-2rem)] sm:w-[380px] md:w-[420px] bg-white dark:bg-[#1a1a1a] border border-slate-200 dark:border-[#333] rounded-2xl shadow-sm overflow-hidden flex flex-col max-h-[60vh] sm:max-h-[600px]"
           >
             {/* Header */}
             <div className="px-5 py-4  flex items-center justify-between ">

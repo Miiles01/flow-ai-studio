@@ -318,7 +318,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
               <div 
                 className={`absolute top-8 z-20 transition-all duration-500 ease-in-out pointer-events-none flex items-start gap-4 ${showVideo ? "left-8 md:left-[38%]" : "left-8"}`}
               >
-                <div className="bg-white dark:bg-[#1a1a1a] border border-slate-200 dark:border-[#333] rounded-2xl px-5 py-4 pointer-events-auto flex items-center gap-4">
+                <div className="bg-white dark:bg-[#1a1a1a] border border-slate-200 dark:border-[#333] rounded-full sm:rounded-2xl px-4 py-2.5 sm:px-5 sm:py-4 pointer-events-auto flex items-center gap-3 sm:gap-4">
                   <button
                     onClick={() => setShowVideo(!showVideo)}
                     className="w-10 h-10 rounded-full flex items-center justify-center transition-colors hover:bg-black/5 dark:hover:bg-white/10 text-gray-600 dark:text-gray-400 -ml-2"
@@ -327,11 +327,11 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
                     {showVideo ? <PanelLeftClose size={20} /> : <PanelLeftOpen size={20} />}
                   </button>
                   <div>
-                    <h2 className="text-2xl font-normal text-gray-900 dark:text-white">
+                    <h2 className="text-lg sm:text-2xl font-medium sm:font-normal text-gray-900 dark:text-white leading-none">
                       <span className="hidden sm:inline">Arquitectura Algorítmica</span>
-                      <span className="sm:hidden capitalize">{targetNetwork || ""}</span>
+                      <span className="sm:hidden">{targetNetwork ? targetNetwork.charAt(0).toUpperCase() + targetNetwork.slice(1) : ""}</span>
                     </h2>
-                    <p className="hidden sm:block text-sm text-gray-500 dark:text-gray-400 mt-1 capitalize">{targetNetwork || ""}</p>
+                    <p className="hidden sm:block text-sm text-gray-500 dark:text-gray-400 mt-1">{targetNetwork ? targetNetwork.charAt(0).toUpperCase() + targetNetwork.slice(1) : ""}</p>
                   </div>
                 </div>
               </div>
