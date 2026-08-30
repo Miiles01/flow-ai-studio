@@ -325,8 +325,11 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
                     {showVideo ? <PanelLeftClose size={20} /> : <PanelLeftOpen size={20} />}
                   </button>
                   <div>
-                    <h2 className="text-2xl font-normal text-gray-900 dark:text-white">Arquitectura Algorítmica</h2>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 capitalize">{targetNetwork || ""}</p>
+                    <h2 className="text-2xl font-normal text-gray-900 dark:text-white">
+                      <span className="hidden sm:inline">Arquitectura Algorítmica</span>
+                      <span className="sm:hidden capitalize">{targetNetwork || ""}</span>
+                    </h2>
+                    <p className="hidden sm:block text-sm text-gray-500 dark:text-gray-400 mt-1 capitalize">{targetNetwork || ""}</p>
                   </div>
                 </div>
               </div>
