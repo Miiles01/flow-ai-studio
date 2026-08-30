@@ -12,12 +12,12 @@ const RETENTION_PATTERNS = [
     cause: "Gancho débil, introducción larga, o título confuso.",
     action: "Corta la intro. Entra directo a la acción en el primer segundo.",
     color: "text-red-500",
-    bgBadge: "bg-red-100 dark:bg-red-500/20 text-red-700 dark:text-red-400",
+    bgBadge: "bg-pink-100 dark:bg-pink-500/20 text-pink-700 dark:text-pink-400",
     svg: (
       <svg viewBox="0 0 300 172" className="w-full h-full text-gray-400">
         <line x1="40" y1="10" x2="40" y2="140" stroke="currentColor" strokeWidth="1"/>
         <line x1="40" y1="140" x2="280" y2="140" stroke="currentColor" strokeWidth="1"/>
-        <path d="M42,15 L55,45 L62,75" stroke="#ef4444" strokeWidth="3" fill="none"/>
+        <path d="M42,15 L55,45 L62,75" stroke="#ec4899" strokeWidth="3" fill="none"/>
         <path d="M62,75 L120,82 L200,85 L280,87" stroke="currentColor" strokeWidth="2" strokeDasharray="4" fill="none"/>
       </svg>
     )
@@ -31,12 +31,12 @@ const RETENTION_PATTERNS = [
     cause: "Ritmo lento, tangentes, falta de 'ganchos' intermedios.",
     action: "Corrige primero la apertura y luego reestructura el cuerpo.",
     color: "text-red-500",
-    bgBadge: "bg-red-100 dark:bg-red-500/20 text-red-700 dark:text-red-400",
+    bgBadge: "bg-pink-100 dark:bg-pink-500/20 text-pink-700 dark:text-pink-400",
     svg: (
       <svg viewBox="0 0 300 172" className="w-full h-full text-gray-400">
         <line x1="40" y1="10" x2="40" y2="140" stroke="currentColor" strokeWidth="1"/>
         <line x1="40" y1="140" x2="280" y2="140" stroke="currentColor" strokeWidth="1"/>
-        <path d="M42,15 L55,55 L62,95 L120,105 L200,115 L280,125" stroke="#ef4444" strokeWidth="3" fill="none"/>
+        <path d="M42,15 L55,55 L62,95 L120,105 L200,115 L280,125" stroke="#ec4899" strokeWidth="3" fill="none"/>
       </svg>
     )
   },
@@ -49,13 +49,13 @@ const RETENTION_PATTERNS = [
     cause: "CTA genérico, resumen aburrido, o un remate flojo.",
     action: "Prueba cierres con un gancho hacia el siguiente contenido.",
     color: "text-orange-500",
-    bgBadge: "bg-orange-100 dark:bg-orange-500/20 text-orange-700 dark:text-orange-400",
+    bgBadge: "bg-pink-100 dark:bg-pink-500/20 text-pink-700 dark:text-pink-400",
     svg: (
       <svg viewBox="0 0 300 172" className="w-full h-full text-gray-400">
         <line x1="40" y1="10" x2="40" y2="140" stroke="currentColor" strokeWidth="1"/>
         <line x1="40" y1="140" x2="280" y2="140" stroke="currentColor" strokeWidth="1"/>
         <path d="M42,20 L120,35 L180,45 L210,52" stroke="currentColor" strokeWidth="2" strokeDasharray="4" fill="none"/>
-        <path d="M210,52 L235,75 L260,100 L280,130" stroke="#f97316" strokeWidth="3" fill="none"/>
+        <path d="M210,52 L235,75 L260,100 L280,130" stroke="#ec4899" strokeWidth="3" fill="none"/>
       </svg>
     )
   },
@@ -68,30 +68,30 @@ const RETENTION_PATTERNS = [
     cause: "Brecha entre la expectativa creada por el hook y el valor real.",
     action: "Alinea el hook con lo que realmente vas a entregar.",
     color: "text-orange-500",
-    bgBadge: "bg-orange-100 dark:bg-orange-500/20 text-orange-700 dark:text-orange-400",
+    bgBadge: "bg-pink-100 dark:bg-pink-500/20 text-pink-700 dark:text-pink-400",
     svg: (
       <svg viewBox="0 0 300 172" className="w-full h-full text-gray-400">
         <line x1="40" y1="10" x2="40" y2="140" stroke="currentColor" strokeWidth="1"/>
         <line x1="40" y1="140" x2="280" y2="140" stroke="currentColor" strokeWidth="1"/>
-        <path d="M42,20 L100,45 L160,72 L220,100 L280,128" stroke="#f97316" strokeWidth="3" fill="none"/>
+        <path d="M42,20 L100,45 L160,72 L220,100 L280,128" stroke="#ec4899" strokeWidth="3" fill="none"/>
       </svg>
     )
   },
   {
     id: 5,
     badge: "Patrón 5",
-    title: "Perfecto",
+    title: "Buen video",
     desc: "Caída pequeña al inicio y una línea casi plana durante el resto del video.",
     meaning: "El gancho funcionó y el contenido mantiene el interés de principio a fin.",
     cause: "Promesa clara desde el segundo uno + ritmo y valor consistentes.",
     action: "Identifica exactamente qué hiciste bien y repite la fórmula.",
     color: "text-green-500",
-    bgBadge: "bg-green-100 dark:bg-green-500/20 text-green-700 dark:text-green-400",
+    bgBadge: "bg-[#E8ECFE] dark:bg-[#4059F1]/20 text-[#4059F1] dark:text-[#9DA9F9]",
     svg: (
       <svg viewBox="0 0 300 172" className="w-full h-full text-gray-400">
         <line x1="40" y1="10" x2="40" y2="140" stroke="currentColor" strokeWidth="1"/>
         <line x1="40" y1="140" x2="280" y2="140" stroke="currentColor" strokeWidth="1"/>
-        <path d="M42,18 L55,30 L120,35 L200,40 L280,45" stroke="#22c55e" strokeWidth="3" fill="none"/>
+        <path d="M42,18 L55,30 L120,35 L200,40 L280,45" stroke="#4059F1" strokeWidth="3" fill="none"/>
       </svg>
     )
   }
@@ -126,10 +126,10 @@ export function RetentionPopup() {
             initial={{ opacity: 0, y: 20, scale: 0.95 }}
             animate={{ opacity: 1, y: 0, scale: 1 }}
             exit={{ opacity: 0, y: 20, scale: 0.95 }}
-            className="w-[380px] md:w-[420px] bg-white dark:bg-[#1a1a1a] border border-slate-200 dark:border-[#333] rounded-2xl shadow-xl overflow-hidden flex flex-col max-h-[600px]"
+            className="w-[380px] md:w-[420px] bg-white dark:bg-[#1a1a1a] border border-slate-200 dark:border-[#333] rounded-2xl shadow-sm overflow-hidden flex flex-col max-h-[600px]"
           >
             {/* Header */}
-            <div className="px-5 py-4  flex items-center justify-between bg-gray-50/50 dark:bg-white/[0.02]">
+            <div className="px-5 py-4  flex items-center justify-between ">
               <div className="flex items-center gap-3">
                 {selectedPattern ? (
                   <button 
@@ -150,8 +150,9 @@ export function RetentionPopup() {
                   setIsOpen(false);
                   setTimeout(() => setSelectedId(null), 300);
                 }}
-                className="p-1.5 -mr-1.5 hover:bg-black/5 dark:hover:bg-white/10 rounded-full transition-colors"
+                className="p-1.5 -mr-1.5 hover:bg-black/5 dark:hover:bg-white/10 rounded-lg transition-colors flex items-center gap-1.5"
               >
+                <span className="text-sm font-medium text-gray-500 dark:text-gray-400">Cerrar</span>
                 <X size={18} className="text-gray-500" />
               </button>
             </div>
