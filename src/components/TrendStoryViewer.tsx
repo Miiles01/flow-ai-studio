@@ -316,18 +316,17 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
                 className={`absolute top-8 z-20 transition-all duration-500 ease-in-out pointer-events-none flex items-start gap-4 ${showVideo ? "left-8 md:left-[38%]" : "left-8"}`}
               >
                 <div className="bg-white dark:bg-[#1a1a1a] border border-slate-200 dark:border-[#333] rounded-2xl px-5 py-4 pointer-events-auto flex items-center gap-4">
-                  <div>
-                    <h2 className="text-2xl font-normal text-gray-900 dark:text-white">Arquitectura Algorítmica</h2>
-                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 capitalize">{targetNetwork || ""}</p>
-                  </div>
-                  <div className="w-[1px] h-10 bg-black/10 dark:bg-white/10 mx-2"></div>
                   <button
                     onClick={() => setShowVideo(!showVideo)}
-                    className="w-10 h-10 rounded-full flex items-center justify-center transition-colors hover:bg-black/5 dark:hover:bg-white/10 text-gray-600 dark:text-gray-400"
+                    className="w-10 h-10 rounded-full flex items-center justify-center transition-colors hover:bg-black/5 dark:hover:bg-white/10 text-gray-600 dark:text-gray-400 -ml-2"
                     title={showVideo ? "Ocultar panel de videos" : "Mostrar panel de videos"}
                   >
                     {showVideo ? <PanelLeftClose size={20} /> : <PanelLeftOpen size={20} />}
                   </button>
+                  <div>
+                    <h2 className="text-2xl font-normal text-gray-900 dark:text-white">Arquitectura Algorítmica</h2>
+                    <p className="text-sm text-gray-500 dark:text-gray-400 mt-1 capitalize">{targetNetwork || ""}</p>
+                  </div>
                 </div>
               </div>
               <ReactFlow
