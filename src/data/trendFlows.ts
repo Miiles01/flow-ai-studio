@@ -169,7 +169,6 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
           ],
         },
       },
-      },
       {
         id: "B",
         position: { x: 0, y: 800 },
