@@ -107,10 +107,11 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
   const [shuffledTrends, setShuffledTrends] = useState<Trend[]>([]);
   const [activeIndex, setActiveIndex] = useState(0);
   const [suggestOpen, setSuggestOpen] = useState(false);
-  const [showVideo, setShowVideo] = useState(true);
+  const [showVideo, setShowVideo] = useState(false);
 
   useEffect(() => {
     if (open && startIndex !== null) {
+      setShowVideo(false);
       const clickedTrend = trends[startIndex];
       if (!clickedTrend) return;
 
