@@ -116,8 +116,7 @@ const SuggestionDialog = ({ open, network, context, onClose }: Props) => {
           </button>
         </div>
       </div>
-    </div>,
-    document.body
+    </div>
   );
 };
 
