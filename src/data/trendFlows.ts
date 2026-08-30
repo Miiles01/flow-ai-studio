@@ -109,7 +109,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
     nodes: [
       {
         id: "A_TRIAL",
-        position: { x: -550, y: 180 },
+        position: { x: -550, y: 330 },
         data: {
           image: resNegLight, imageDark: resNegDark,
           kind: "phase", tag: "Prueba", confidence: "confirmed",
@@ -132,7 +132,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "A_ADS",
-        position: { x: 550, y: 180 },
+        position: { x: 550, y: 330 },
         data: {
           image: adsLight, imageDark: adsDark,
           kind: "phase", tag: "Ads",
@@ -147,7 +147,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "A_ORG",
-        position: { x: 0, y: 180 },
+        position: { x: 0, y: 330 },
         data: {
           kind: "phase", tag: "Orgánico",
           label: "Contenido Orgánico",
@@ -156,7 +156,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "S",
-        position: { x: 1100, y: 180 },
+        position: { x: 1100, y: 330 },
         data: {
           kind: "strategy", tag: "Jugadas",
           label: "Qué está funcionando ahora",
@@ -171,7 +171,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "PLUS",
-        position: { x: -1100, y: 180 },
+        position: { x: -1100, y: 330 },
         data: {
           kind: "strategy", tag: "Novedad 2026", confidence: "confirmed",
           label: "Instagram Plus",
@@ -185,7 +185,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "B",
-        position: { x: 0, y: 370 },
+        position: { x: 0, y: 520 },
         data: {
           kind: "phase", tag: "Fase 1", confidence: "confirmed",
           label: "El algoritmo lo etiqueta",
@@ -194,7 +194,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "C",
-        position: { x: 0, y: 560 },
+        position: { x: 0, y: 710 },
         data: {
           kind: "phase", tag: "Fase 2 · Ronda 1", confidence: "likely",
           image: vistasLight, imageDark: vistasDark,
@@ -209,7 +209,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "D",
-        position: { x: 0, y: 880 },
+        position: { x: 0, y: 1030 },
         data: {
           kind: "decision", tag: "Decisión", confidence: "likely",
           label: "¿La muestra reaccionó mejor que videos similares?",
@@ -220,7 +220,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "E",
-        position: { x: -480, y: 1290 },
+        position: { x: -480, y: 1440 },
         data: {
           kind: "fail", tag: "Resultado", confidence: "likely",
           image: resNegLight, imageDark: resNegDark,
@@ -230,7 +230,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "F",
-        position: { x: 480, y: 1100 },
+        position: { x: 480, y: 1250 },
         data: {
           kind: "phase", tag: "Fase 3 · Ronda 2", confidence: "likely",
           label: "Escala a ~1.000-5.000 personas",
@@ -239,7 +239,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "G",
-        position: { x: 480, y: 1290 },
+        position: { x: 480, y: 1440 },
         data: {
           kind: "decision", tag: "Decisión", confidence: "likely",
           label: "¿Mantiene las señales al crecer?",
@@ -251,7 +251,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "H",
-        position: { x: 480, y: 1510 },
+        position: { x: 480, y: 1660 },
         data: {
           kind: "success", tag: "Resultado", confidence: "likely",
           image: feedLight, imageDark: feedDark,
@@ -294,7 +294,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "A_ADS",
-        position: { x: 550, y: 180 },
+        position: { x: 550, y: 330 },
         data: {
           image: adsLight, imageDark: adsDark,
           kind: "phase", tag: "Ads",
@@ -309,7 +309,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "A_ORG",
-        position: { x: 0, y: 180 },
+        position: { x: 0, y: 330 },
         data: {
           kind: "phase", tag: "Orgánico",
           label: "Contenido Orgánico",
@@ -318,7 +318,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "S",
-        position: { x: 1100, y: 180 },
+        position: { x: 1100, y: 330 },
         data: {
           kind: "strategy", tag: "Jugadas",
           label: "Qué está funcionando ahora",
@@ -333,7 +333,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "PLUS",
-        position: { x: -1100, y: 180 },
+        position: { x: -1100, y: 330 },
         data: {
           kind: "strategy", tag: "Novedad 2026", confidence: "confirmed",
           label: "Instagram Plus",
@@ -347,7 +347,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "B",
-        position: { x: 0, y: 370 },
+        position: { x: 0, y: 520 },
         data: {
           kind: "phase", tag: "Fase 1 · Ronda 1", confidence: "confirmed",
           image: vistasLight, imageDark: vistasDark,
@@ -357,7 +357,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "C",
-        position: { x: 0, y: 690 },
+        position: { x: 0, y: 840 },
         data: {
           kind: "phase", tag: "Fase 2", confidence: "hypothesis",
           image: tiempoLight, imageDark: tiempoDark,
@@ -367,7 +367,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "D",
-        position: { x: 0, y: 880 },
+        position: { x: 0, y: 1030 },
         data: {
           kind: "decision", tag: "Decisión", confidence: "likely",
           label: "¿Retiene y genera interacción en la audición?",
@@ -380,7 +380,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "E",
-        position: { x: -480, y: 1290 },
+        position: { x: -480, y: 1440 },
         data: {
           kind: "fail", tag: "Resultado", confidence: "likely",
           image: resNegLight, imageDark: resNegDark,
@@ -390,7 +390,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "F",
-        position: { x: 480, y: 1100 },
+        position: { x: 480, y: 1250 },
         data: {
           kind: "decision", tag: "Decisión · Ronda 2", confidence: "likely",
           label: "¿Genera DMs y compartidos? (dark social)",
@@ -403,7 +403,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "G",
-        position: { x: 480, y: 1320 },
+        position: { x: 480, y: 1470 },
         data: {
           kind: "success", tag: "Resultado", confidence: "confirmed",
           image: feedCuentaLight, imageDark: feedCuentaDark,
@@ -439,7 +439,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
     nodes: [
       {
         id: "A_TRIAL",
-        position: { x: -550, y: 180 },
+        position: { x: -550, y: 330 },
         data: {
           image: videoHorizontalLight, imageDark: videoHorizontalDark,
           kind: "phase", tag: "Prueba", confidence: "likely",
@@ -462,7 +462,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "S",
-        position: { x: 1100, y: 180 },
+        position: { x: 1100, y: 330 },
         data: {
           kind: "strategy", tag: "Jugadas",
           label: "Qué está funcionando ahora",
@@ -476,7 +476,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "PLUS",
-        position: { x: -1100, y: 180 },
+        position: { x: -1100, y: 330 },
         data: {
           kind: "strategy", tag: "Novedad 2026", confidence: "confirmed",
           label: "Instagram Plus",
@@ -490,7 +490,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "B",
-        position: { x: 0, y: 370 },
+        position: { x: 0, y: 520 },
         data: {
           kind: "phase", tag: "Fase 1", confidence: "confirmed",
           label: "Inventario de Red",
@@ -499,7 +499,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "C",
-        position: { x: 0, y: 560 },
+        position: { x: 0, y: 710 },
         data: {
           kind: "phase", tag: "Fase 2", confidence: "confirmed",
           label: "Preselección Liviana (~500 posts)",
@@ -512,7 +512,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "D",
-        position: { x: 0, y: 750 },
+        position: { x: 0, y: 900 },
         data: {
           kind: "phase", tag: "Fase 3", confidence: "confirmed",
           label: "Predicciones Profundas (ML)",
@@ -521,7 +521,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "E",
-        position: { x: 0, y: 940 },
+        position: { x: 0, y: 1090 },
         data: {
           kind: "phase", tag: "Fase 4", confidence: "confirmed",
           label: "Relevancy Score",
@@ -530,7 +530,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "F",
-        position: { x: 0, y: 1130 },
+        position: { x: 0, y: 1280 },
         data: {
           kind: "success", tag: "Resultado", confidence: "confirmed",
           image: feedLight, imageDark: feedDark,
@@ -569,7 +569,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "A_ADS",
-        position: { x: 550, y: 180 },
+        position: { x: 550, y: 330 },
         data: {
           image: adsLight, imageDark: adsDark,
           kind: "phase", tag: "Ads",
@@ -584,7 +584,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "A_ORG",
-        position: { x: 0, y: 180 },
+        position: { x: 0, y: 330 },
         data: {
           kind: "phase", tag: "Orgánico",
           label: "Contenido Orgánico",
@@ -593,7 +593,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "S",
-        position: { x: 1100, y: 180 },
+        position: { x: 1100, y: 330 },
         data: {
           kind: "strategy", tag: "Jugadas",
           label: "Qué está funcionando ahora",
@@ -607,7 +607,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "PLUS",
-        position: { x: -1100, y: 180 },
+        position: { x: -1100, y: 330 },
         data: {
           kind: "strategy", tag: "Novedad 2026", confidence: "confirmed",
           label: "Instagram Plus",
@@ -621,7 +621,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "B",
-        position: { x: 0, y: 370 },
+        position: { x: 0, y: 520 },
         data: {
           kind: "phase", tag: "Fase 1 · Ronda 1", confidence: "likely",
           image: vistasLight, imageDark: vistasDark,
@@ -634,7 +634,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "C",
-        position: { x: 0, y: 690 },
+        position: { x: 0, y: 840 },
         data: {
           kind: "decision", tag: "Decisión", confidence: "confirmed",
           label: "¿Visto o deslizado?",
@@ -646,7 +646,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "D",
-        position: { x: -480, y: 1100 },
+        position: { x: -480, y: 1250 },
         data: {
           kind: "fail", tag: "Resultado", confidence: "likely",
           image: resNegLight, imageDark: resNegDark,
@@ -656,7 +656,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "E",
-        position: { x: 480, y: 910 },
+        position: { x: 480, y: 1060 },
         data: {
           kind: "phase", tag: "Fase 2 · Ronda 2", confidence: "likely",
           label: "Deep Ranking (Precision)",
@@ -668,7 +668,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "F",
-        position: { x: 480, y: 1100 },
+        position: { x: 480, y: 1250 },
         data: {
           kind: "decision", tag: "Decisión", confidence: "confirmed",
           label: "¿Alta satisfacción del espectador?",
@@ -680,7 +680,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "G",
-        position: { x: 480, y: 1320 },
+        position: { x: 480, y: 1470 },
         data: {
           kind: "success", tag: "Resultado", confidence: "likely",
           image: resPosLight, imageDark: resPosDark,
