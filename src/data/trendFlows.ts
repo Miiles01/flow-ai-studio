@@ -108,15 +108,6 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
     title: "Algoritmo TikTok (FYP)",
     nodes: [
       {
-        id: "OBJ",
-        position: { x: -560, y: 40 },
-        data: {
-          kind: "phase", tag: "Objetivo", confidence: "confirmed",
-          label: "¿Qué maximiza TikTok?",
-          sublabel: "Tiempo de sesión y que vuelvas mañana. Cada decisión del algoritmo apunta ahí.",
-        },
-      },
-      {
         id: "A",
         position: { x: 0, y: 0 },
         data: {
@@ -128,7 +119,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "A_ADS",
-        position: { x: 450, y: 150 },
+        position: { x: 400, y: 180 },
         data: {
           image: adsLight, imageDark: adsDark,
           kind: "phase", tag: "Ads",
@@ -147,7 +138,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "S",
-        position: { x: 560, y: 40 },
+        position: { x: 800, y: 180 },
         data: {
           kind: "strategy", tag: "Jugadas",
           label: "Qué está funcionando ahora",
@@ -162,7 +153,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "PLUS",
-        position: { x: -560, y: 370 },
+        position: { x: -450, y: 180 },
         data: {
           kind: "strategy", tag: "Novedad 2026", confidence: "confirmed",
           label: "Instagram Plus",
@@ -249,9 +240,8 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
     ],
     edges: [
-      { id: "eA-OBJ", source: "A", target: "OBJ", sourceHandle: "l-s", targetHandle: "r-t", dashed: true },
-      { id: "eA-S", source: "A", target: "S", sourceHandle: "r-s", targetHandle: "l-t", dashed: true },
-      { id: "eA-PLUS", source: "A", target: "PLUS", sourceHandle: "l-s", targetHandle: "r-t", dashed: true },
+      { id: "eA-S", source: "A", target: "S", dashed: true },
+      { id: "eA-PLUS", source: "A", target: "PLUS", dashed: true },
       { id: "eA-ADS", source: "A", target: "A_ADS", label: "Anuncio Pagado", dashed: true },
       { id: "eA-ORG", source: "A", target: "A_ORG", label: "Orgánico" },
       { id: "eORG-B", source: "A_ORG", target: "B" },
@@ -271,15 +261,6 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
     title: "Trial Reels (Instagram)",
     nodes: [
       {
-        id: "OBJ",
-        position: { x: -560, y: 40 },
-        data: {
-          kind: "phase", tag: "Objetivo", confidence: "likely",
-          label: "¿Qué maximiza Instagram?",
-          sublabel: "Tiempo en la app y conexión entre personas: por eso los DMs pesan tanto.",
-        },
-      },
-      {
         id: "A",
         position: { x: 0, y: 0 },
         data: {
@@ -291,7 +272,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "A_ADS",
-        position: { x: 450, y: 150 },
+        position: { x: 400, y: 180 },
         data: {
           image: adsLight, imageDark: adsDark,
           kind: "phase", tag: "Ads",
@@ -310,7 +291,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "S",
-        position: { x: 560, y: 40 },
+        position: { x: 800, y: 180 },
         data: {
           kind: "strategy", tag: "Jugadas",
           label: "Qué está funcionando ahora",
@@ -325,7 +306,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "PLUS",
-        position: { x: -560, y: 370 },
+        position: { x: -450, y: 180 },
         data: {
           kind: "strategy", tag: "Novedad 2026", confidence: "confirmed",
           label: "Instagram Plus",
@@ -405,9 +386,8 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
     ],
     edges: [
-      { id: "eA-OBJ", source: "A", target: "OBJ", sourceHandle: "l-s", targetHandle: "r-t", dashed: true },
-      { id: "eA-S", source: "A", target: "S", sourceHandle: "r-s", targetHandle: "l-t", dashed: true },
-      { id: "eA-PLUS", source: "A", target: "PLUS", sourceHandle: "l-s", targetHandle: "r-t", dashed: true },
+      { id: "eA-S", source: "A", target: "S", dashed: true },
+      { id: "eA-PLUS", source: "A", target: "PLUS", dashed: true },
       { id: "eA-ADS", source: "A", target: "A_ADS", label: "Anuncio Pagado", dashed: true },
       { id: "eA-ORG", source: "A", target: "A_ORG", label: "Orgánico" },
       { id: "eORG-B", source: "A_ORG", target: "B" },
@@ -425,15 +405,6 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
     title: "Facebook EdgeRank",
     nodes: [
       {
-        id: "OBJ",
-        position: { x: -560, y: 40 },
-        data: {
-          kind: "phase", tag: "Objetivo", confidence: "confirmed",
-          label: "¿Qué maximiza Facebook?",
-          sublabel: "Interacciones significativas: conversaciones reales entre personas.",
-        },
-      },
-      {
         id: "A",
         position: { x: 0, y: 0 },
         data: {
@@ -445,7 +416,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "S",
-        position: { x: 560, y: 40 },
+        position: { x: 800, y: 180 },
         data: {
           kind: "strategy", tag: "Jugadas",
           label: "Qué está funcionando ahora",
@@ -459,7 +430,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "PLUS",
-        position: { x: -560, y: 370 },
+        position: { x: -450, y: 180 },
         data: {
           kind: "strategy", tag: "Novedad 2026", confidence: "confirmed",
           label: "Instagram Plus",
@@ -523,9 +494,8 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
     ],
     edges: [
-      { id: "eA-OBJ", source: "A", target: "OBJ", sourceHandle: "l-s", targetHandle: "r-t", dashed: true },
-      { id: "eA-S", source: "A", target: "S", sourceHandle: "r-s", targetHandle: "l-t", dashed: true },
-      { id: "eA-PLUS", source: "A", target: "PLUS", sourceHandle: "l-s", targetHandle: "r-t", dashed: true },
+      { id: "eA-S", source: "A", target: "S", dashed: true },
+      { id: "eA-PLUS", source: "A", target: "PLUS", dashed: true },
       { id: "eA-ADS", source: "A", target: "A_ADS", label: "Anuncio Pagado", dashed: true },
       { id: "eA-ORG", source: "A", target: "A_ORG", label: "Orgánico" },
       { id: "eORG-B", source: "A_ORG", target: "B" },
@@ -541,15 +511,6 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
     title: "YouTube Shorts",
     nodes: [
       {
-        id: "OBJ",
-        position: { x: -560, y: 40 },
-        data: {
-          kind: "phase", tag: "Objetivo", confidence: "confirmed",
-          label: "¿Qué maximiza YouTube?",
-          sublabel: "Satisfacción del espectador: lo mide directamente con encuestas.",
-        },
-      },
-      {
         id: "A",
         position: { x: 0, y: 0 },
         data: {
@@ -561,7 +522,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "A_ADS",
-        position: { x: 450, y: 150 },
+        position: { x: 400, y: 180 },
         data: {
           image: adsLight, imageDark: adsDark,
           kind: "phase", tag: "Ads",
@@ -580,7 +541,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "S",
-        position: { x: 560, y: 40 },
+        position: { x: 800, y: 180 },
         data: {
           kind: "strategy", tag: "Jugadas",
           label: "Qué está funcionando ahora",
@@ -594,7 +555,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
       {
         id: "PLUS",
-        position: { x: -560, y: 370 },
+        position: { x: -450, y: 180 },
         data: {
           kind: "strategy", tag: "Novedad 2026", confidence: "confirmed",
           label: "Instagram Plus",
@@ -671,9 +632,8 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
     ],
     edges: [
-      { id: "eA-OBJ", source: "A", target: "OBJ", sourceHandle: "l-s", targetHandle: "r-t", dashed: true },
-      { id: "eA-S", source: "A", target: "S", sourceHandle: "r-s", targetHandle: "l-t", dashed: true },
-      { id: "eA-PLUS", source: "A", target: "PLUS", sourceHandle: "l-s", targetHandle: "r-t", dashed: true },
+      { id: "eA-S", source: "A", target: "S", dashed: true },
+      { id: "eA-PLUS", source: "A", target: "PLUS", dashed: true },
       { id: "eA-ADS", source: "A", target: "A_ADS", label: "Anuncio Pagado", dashed: true },
       { id: "eA-ORG", source: "A", target: "A_ORG", label: "Orgánico" },
       { id: "eORG-B", source: "A_ORG", target: "B" },
