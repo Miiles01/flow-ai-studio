@@ -2,6 +2,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { X, Lightbulb, PanelLeftClose, PanelLeftOpen } from "lucide-react";
 import SuggestionDialog from "@/components/SuggestionDialog";
+import { RetentionPopup } from "@/components/RetentionPopup";
 import { motion } from "framer-motion";
 import type { Trend } from "@/hooks/useTrends";
 import { ReactFlow, BaseEdge, EdgeLabelRenderer, getSmoothStepPath, Background, BackgroundVariant, type Node, type Edge, type EdgeProps, type ReactFlowInstance } from "@xyflow/react";
@@ -309,6 +310,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
           context="Arquitectura Algorítmica"
           onClose={() => setSuggestOpen(false)}
         />
+        <RetentionPopup />
 
         <div className="absolute inset-0 z-10">
           {activeFlow ? (
