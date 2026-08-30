@@ -50,22 +50,6 @@ const resPosLight = resPosClaroObj.url;
 const resPosDark = resPosOscuroObj.url;
 const tiempoLight = tiempoClaroObj.url;
 const tiempoDark = tiempoOscuroObj.url;
-import type { TrendNodeKind, TrendConfidence } from "@/components/TrendFlowNode";
-import videoLight from "@/assets/trends/video-light.svg";
-import videoDark from "@/assets/trends/video-dark.svg";
-import videoHorizontalLight from "@/assets/trends/video-horizontal-light.svg";
-import videoHorizontalDark from "@/assets/trends/video-horizontal-dark.svg";
-import vistasLight from "@/assets/trends/vistas-light.svg";
-import vistasDark from "@/assets/trends/vistas-dark.svg";
-import feedLight from "@/assets/trends/feed-light.svg";
-import feedDark from "@/assets/trends/feed-dark.svg";
-import feedCuentaLight from "@/assets/trends/feed-cuenta-light.svg";
-import feedCuentaDark from "@/assets/trends/feed-cuenta-dark.svg";
-import iconPlay from "@/assets/trends/play.svg";
-import iconHeart from "@/assets/trends/heart.svg";
-import iconShare from "@/assets/trends/share.svg";
-import iconLike from "@/assets/trends/like.svg";
-import iconDislike from "@/assets/trends/dislike.svg";
 
 // ── Diagramas de arquitectura algorítmica por red social ──
 // Lógica: objetivo del algoritmo → qué mide (señales) → rondas de prueba → bucle.
