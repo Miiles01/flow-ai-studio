@@ -53,9 +53,16 @@ const SuggestionDialog = ({ open, network, context, onClose }: Props) => {
     onClose();
   };
 
-  return createPortal(
+  return (
     <div
       className="fixed inset-0 z-[999] flex items-center justify-center bg-black/40 p-4"
+      onPointerDown={(e) => e.stopPropagation()}
+      onMouseDown={(e) => e.stopPropagation()}
+      onWheel={(e) => e.stopPropagation()}
+      onKeyDown={(e) => {
+        e.stopPropagation();
+        if (e.key === "Escape") onClose();
+      }}
       onClick={(e) => {
         if (e.target === e.currentTarget) onClose();
       }}
