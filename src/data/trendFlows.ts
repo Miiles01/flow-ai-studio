@@ -460,7 +460,6 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
           ],
         },
       },
-      },
       {
         id: "B",
         position: { x: 0, y: 800 },
@@ -576,7 +575,6 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
             { id: "s3", dx: 460, dy: 290, side: "right", tag: "Estrategia", label: "Títulos como búsqueda", sublabel: "Los Shorts se indexan: usa la frase exacta que buscaría tu audiencia." },
           ],
         },
-      },
       },
       {
         id: "B",
