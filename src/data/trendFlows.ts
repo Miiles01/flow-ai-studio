@@ -404,8 +404,13 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
         data: {
           kind: "success", tag: "Resultado", confidence: "confirmed",
           image: feedCuentaLight, imageDark: feedCuentaDark,
-          label: "Graduación",
-          sublabel: "Explore, feed de Reels y ahora sí: tus seguidores",
+          label: "Explore & Recomendaciones",
+          sublabel: "Entra al sistema masivo de ML: Two-Tower Neural Network (FAISS) + Ranking MTML.",
+          details: [
+            { id: "g1", dx: -450, dy: -100, side: "left", tag: "Arquitectura", label: "Two-Tower Model", sublabel: "Dos redes neuronales (una para ti, otra para el post) mapean el contenido usando embeddings calculados offline." },
+            { id: "g2", dx: -450, dy: 60, side: "left", tag: "Cálculo", label: "Value Model (VM)", sublabel: "Score = W_click × P(click) + W_like × P(like) − W_seeless × P(ver menos)." },
+            { id: "g3", dx: -450, dy: 220, side: "left", tag: "Integridad", label: "Diversidad de Feed", sublabel: "Regla estricta: nunca muestra más de 3 posts seguidos de la misma cuenta." }
+          ],
         },
       },
     ],
@@ -485,8 +490,8 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
         position: { x: 0, y: 370 },
         data: {
           kind: "phase", tag: "Fase 1", confidence: "confirmed",
-          label: "Inventario",
-          sublabel: "Todo lo disponible para cada usuario: amigos, páginas, grupos y ads",
+          label: "Inventario de Red",
+          sublabel: "Posts de amigos, Páginas y Grupos. Excluye contenido que viola normas. Ads y recomendaciones van por separado.",
         },
       },
       {
@@ -494,8 +499,8 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
         position: { x: 0, y: 560 },
         data: {
           kind: "phase", tag: "Fase 2", confidence: "confirmed",
-          label: "Señales",
-          sublabel: "Quién publicó, tipo de contenido, hora y las interacciones previas de cada usuario",
+          label: "Preselección Liviana (~500 posts)",
+          sublabel: "Un modelo rápido filtra miles de posts a los 500 más relevantes usando señales clave.",
           details: [
             { id: "c1", dx: -580, dy: -120, side: "left", tag: "Señal", icon: iconLike, confidence: "confirmed", label: "Señales activas", sublabel: "Comentarios, compartidos y reacciones: las que más pesan." },
             { id: "c2", dx: -580, dy: 40, side: "left", tag: "Señal", icon: iconPlay, confidence: "confirmed", label: "Señales pasivas", sublabel: "Tiempo de visualización y clics: pesan menos, pero suman." },
@@ -507,8 +512,8 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
         position: { x: 0, y: 750 },
         data: {
           kind: "phase", tag: "Fase 3", confidence: "confirmed",
-          label: "Predicciones",
-          sublabel: "Probabilidad de que cada usuario comente, comparta o reaccione",
+          label: "Predicciones Profundas (ML)",
+          sublabel: "Varios modelos de ML predicen acciones: abandonar video, saltar post, hacer clic en ver más, o seguir links.",
         },
       },
       {
