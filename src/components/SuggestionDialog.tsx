@@ -71,7 +71,7 @@ const SuggestionDialog = ({ open, network, context, onClose }: Props) => {
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="flex items-center gap-2 text-[15px] font-normal text-gray-900 dark:text-white">
-              <Lightbulb size={16} /> Sugerir una mejora
+              <Lightbulb size={16} /> Sugerir ideas
             </p>
             <p className="mt-1 text-[12px] font-light text-gray-500 dark:text-white/50">
               Cuéntanos tu idea o aprendizaje para mejorar la arquitectura algorítmica
