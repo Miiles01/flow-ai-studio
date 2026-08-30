@@ -12,12 +12,12 @@ const RETENTION_PATTERNS = [
     cause: "Gancho débil, introducción larga, o título confuso.",
     action: "Corta la intro. Entra directo a la acción en el primer segundo.",
     color: "text-red-500",
-    bgBadge: "bg-pink-100 dark:bg-pink-500/20 text-pink-700 dark:text-pink-400",
+    bgBadge: "bg-[#FEEDED] dark:bg-[#FCB5B9]/10 text-[#E0787E] dark:text-[#FCB5B9]",
     svg: (
       <svg viewBox="0 0 300 172" className="w-full h-full text-gray-400">
         <line x1="40" y1="10" x2="40" y2="140" stroke="currentColor" strokeWidth="1"/>
         <line x1="40" y1="140" x2="280" y2="140" stroke="currentColor" strokeWidth="1"/>
-        <path d="M42,15 Q45,65 62,75" stroke="#ec4899" strokeWidth="3" fill="none"/>
+        <path d="M42,15 Q45,65 62,75" stroke="#FCB5B9" strokeWidth="3" fill="none"/>
         <path d="M62,75 Q100,85 280,87" stroke="currentColor" strokeWidth="2" strokeDasharray="4" fill="none"/>
       </svg>
     )
@@ -31,12 +31,12 @@ const RETENTION_PATTERNS = [
     cause: "Ritmo lento, tangentes, falta de 'ganchos' intermedios.",
     action: "Corrige primero la apertura y luego reestructura el cuerpo.",
     color: "text-red-500",
-    bgBadge: "bg-pink-100 dark:bg-pink-500/20 text-pink-700 dark:text-pink-400",
+    bgBadge: "bg-[#FEEDED] dark:bg-[#FCB5B9]/10 text-[#E0787E] dark:text-[#FCB5B9]",
     svg: (
       <svg viewBox="0 0 300 172" className="w-full h-full text-gray-400">
         <line x1="40" y1="10" x2="40" y2="140" stroke="currentColor" strokeWidth="1"/>
         <line x1="40" y1="140" x2="280" y2="140" stroke="currentColor" strokeWidth="1"/>
-        <path d="M42,15 C45,80 80,100 120,105 S200,120 280,125" stroke="#ec4899" strokeWidth="3" fill="none"/>
+        <path d="M42,15 C45,80 80,100 120,105 S200,120 280,125" stroke="#FCB5B9" strokeWidth="3" fill="none"/>
       </svg>
     )
   },
@@ -49,13 +49,13 @@ const RETENTION_PATTERNS = [
     cause: "CTA genérico, resumen aburrido, o un remate flojo.",
     action: "Prueba cierres con un gancho hacia el siguiente contenido.",
     color: "text-orange-500",
-    bgBadge: "bg-pink-100 dark:bg-pink-500/20 text-pink-700 dark:text-pink-400",
+    bgBadge: "bg-[#FEEDED] dark:bg-[#FCB5B9]/10 text-[#E0787E] dark:text-[#FCB5B9]",
     svg: (
       <svg viewBox="0 0 300 172" className="w-full h-full text-gray-400">
         <line x1="40" y1="10" x2="40" y2="140" stroke="currentColor" strokeWidth="1"/>
         <line x1="40" y1="140" x2="280" y2="140" stroke="currentColor" strokeWidth="1"/>
         <path d="M42,20 Q150,40 210,52" stroke="currentColor" strokeWidth="2" strokeDasharray="4" fill="none"/>
-        <path d="M210,52 Q260,60 280,130" stroke="#ec4899" strokeWidth="3" fill="none"/>
+        <path d="M210,52 Q260,60 280,130" stroke="#FCB5B9" strokeWidth="3" fill="none"/>
       </svg>
     )
   },
@@ -68,12 +68,12 @@ const RETENTION_PATTERNS = [
     cause: "Brecha entre la expectativa creada por el hook y el valor real.",
     action: "Alinea el hook con lo que realmente vas a entregar.",
     color: "text-orange-500",
-    bgBadge: "bg-pink-100 dark:bg-pink-500/20 text-pink-700 dark:text-pink-400",
+    bgBadge: "bg-[#FEEDED] dark:bg-[#FCB5B9]/10 text-[#E0787E] dark:text-[#FCB5B9]",
     svg: (
       <svg viewBox="0 0 300 172" className="w-full h-full text-gray-400">
         <line x1="40" y1="10" x2="40" y2="140" stroke="currentColor" strokeWidth="1"/>
         <line x1="40" y1="140" x2="280" y2="140" stroke="currentColor" strokeWidth="1"/>
-        <path d="M42,20 C100,30 200,110 280,128" stroke="#ec4899" strokeWidth="3" fill="none"/>
+        <path d="M42,20 C100,30 200,110 280,128" stroke="#FCB5B9" strokeWidth="3" fill="none"/>
       </svg>
     )
   },
