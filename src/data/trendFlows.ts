@@ -169,19 +169,6 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
           ],
         },
       },
-      {
-        id: "PLUS",
-        position: { x: -1100, y: 330 },
-        data: {
-          kind: "strategy", tag: "Novedad 2026", confidence: "confirmed",
-          label: "Instagram Plus",
-          sublabel: "Nueva suscripción opcional de $3.99/mes con ventajas exclusivas",
-          details: [
-            { id: "p1", dx: -340, dy: -40, side: "left", tag: "Interacción", label: "Story Spotlight & Super Hearts", sublabel: "Prioridad en historias y corazones animados." },
-            { id: "p2", dx: -340, dy: 115, side: "left", tag: "Visualización", label: "Story Preview en secreto", sublabel: "Mira historias sin que lo sepan y descubre quién repitió las tuyas." },
-            { id: "p3", dx: -340, dy: 270, side: "left", tag: "Personalización", label: "Posts fijados y fuentes", sublabel: "Fija hasta 6 publicaciones y publica sin aparecer en el feed." }
-          ]
-        },
       },
       {
         id: "B",
@@ -262,7 +249,6 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
     ],
     edges: [
       { id: "eA-S", source: "A", target: "S", dashed: true },
-      { id: "eA-PLUS", source: "A", target: "PLUS", dashed: true },
       { id: "eA-ADS", source: "A", target: "A_ADS", label: "Anuncio Pagado", dashed: true },
       { id: "eA-TRIAL", source: "A", target: "A_TRIAL", label: "Modo Prueba", dashed: true },
       { id: "eA-ORG", source: "A", target: "A_ORG", label: "Orgánico" },
@@ -335,13 +321,14 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
         id: "PLUS",
         position: { x: -1100, y: 330 },
         data: {
-          kind: "strategy", tag: "Novedad 2026", confidence: "confirmed",
+          kind: "strategy", tag: "Suscripción", confidence: "confirmed",
           label: "Instagram Plus",
-          sublabel: "Nueva suscripción opcional de $3.99/mes con ventajas exclusivas",
+          sublabel: "Suscripción de pago con herramientas exclusivas de visibilidad y control.",
           details: [
-            { id: "p1", dx: -340, dy: -40, side: "left", tag: "Interacción", label: "Story Spotlight & Super Hearts", sublabel: "Prioridad en historias y corazones animados." },
-            { id: "p2", dx: -340, dy: 115, side: "left", tag: "Visualización", label: "Story Preview en secreto", sublabel: "Mira historias sin que lo sepan y descubre quién repitió las tuyas." },
-            { id: "p3", dx: -340, dy: 270, side: "left", tag: "Personalización", label: "Posts fijados y fuentes", sublabel: "Fija hasta 6 publicaciones y publica sin aparecer en el feed." }
+            { id: "p1", dx: -340, dy: -120, side: "left", tag: "Alcance", label: "Historias Destacadas", sublabel: "Tus historias aparecen primero en el feed y duran 48 horas (24h extra)." },
+            { id: "p2", dx: -340, dy: 35, side: "left", tag: "Privacidad", label: "Vista Previa Secreta", sublabel: "Mira historias de otros sin aparecer en su lista de espectadores." },
+            { id: "p3", dx: -340, dy: 190, side: "left", tag: "Data", label: "Estadísticas Avanzadas", sublabel: "Descubre exactamente cuántas veces y quién repitió tu historia." },
+            { id: "p4", dx: -340, dy: 345, side: "left", tag: "Control", label: "Públicos y Perfil", sublabel: "Listas de público ilimitadas, pines extra y fuentes exclusivas." }
           ]
         },
       },
@@ -474,19 +461,6 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
           ],
         },
       },
-      {
-        id: "PLUS",
-        position: { x: -1100, y: 330 },
-        data: {
-          kind: "strategy", tag: "Novedad 2026", confidence: "confirmed",
-          label: "Instagram Plus",
-          sublabel: "Nueva suscripción opcional de $3.99/mes con ventajas exclusivas",
-          details: [
-            { id: "p1", dx: -340, dy: -40, side: "left", tag: "Interacción", label: "Story Spotlight & Super Hearts", sublabel: "Prioridad en historias y corazones animados." },
-            { id: "p2", dx: -340, dy: 115, side: "left", tag: "Visualización", label: "Story Preview en secreto", sublabel: "Mira historias sin que lo sepan y descubre quién repitió las tuyas." },
-            { id: "p3", dx: -340, dy: 270, side: "left", tag: "Personalización", label: "Posts fijados y fuentes", sublabel: "Fija hasta 6 publicaciones y publica sin aparecer en el feed." }
-          ]
-        },
       },
       {
         id: "B",
@@ -541,7 +515,6 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
     ],
     edges: [
       { id: "eA-S", source: "A", target: "S", dashed: true },
-      { id: "eA-PLUS", source: "A", target: "PLUS", dashed: true },
       { id: "eA-ADS", source: "A", target: "A_ADS", label: "Anuncio Pagado", dashed: true },
       { id: "eA-TRIAL", source: "A", target: "A_TRIAL", label: "Modo Prueba", dashed: true },
       { id: "eA-ORG", source: "A", target: "A_ORG", label: "Orgánico" },
@@ -605,19 +578,6 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
           ],
         },
       },
-      {
-        id: "PLUS",
-        position: { x: -1100, y: 330 },
-        data: {
-          kind: "strategy", tag: "Novedad 2026", confidence: "confirmed",
-          label: "Instagram Plus",
-          sublabel: "Nueva suscripción opcional de $3.99/mes con ventajas exclusivas",
-          details: [
-            { id: "p1", dx: -340, dy: -40, side: "left", tag: "Interacción", label: "Story Spotlight & Super Hearts", sublabel: "Prioridad en historias y corazones animados." },
-            { id: "p2", dx: -340, dy: 115, side: "left", tag: "Visualización", label: "Story Preview en secreto", sublabel: "Mira historias sin que lo sepan y descubre quién repitió las tuyas." },
-            { id: "p3", dx: -340, dy: 270, side: "left", tag: "Personalización", label: "Posts fijados y fuentes", sublabel: "Fija hasta 6 publicaciones y publica sin aparecer en el feed." }
-          ]
-        },
       },
       {
         id: "B",
@@ -691,7 +651,6 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
     ],
     edges: [
       { id: "eA-S", source: "A", target: "S", dashed: true },
-      { id: "eA-PLUS", source: "A", target: "PLUS", dashed: true },
       { id: "eA-ADS", source: "A", target: "A_ADS", label: "Anuncio Pagado", dashed: true },
       { id: "eA-TRIAL", source: "A", target: "A_TRIAL", label: "Modo Prueba", dashed: true },
       { id: "eA-ORG", source: "A", target: "A_ORG", label: "Orgánico" },
