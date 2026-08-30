@@ -321,7 +321,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
                 <div className="bg-white dark:bg-[#1a1a1a] border border-slate-200 dark:border-[#333] rounded-full sm:rounded-2xl px-4 py-2.5 sm:px-5 sm:py-4 pointer-events-auto flex items-center gap-3 sm:gap-4">
                   <button
                     onClick={() => setShowVideo(!showVideo)}
-                    className="w-10 h-10 rounded-full flex items-center justify-center transition-colors hover:bg-black/5 dark:hover:bg-white/10 text-gray-600 dark:text-gray-400 -ml-2"
+                    className="hidden w-10 h-10 rounded-full flex items-center justify-center transition-colors hover:bg-black/5 dark:hover:bg-white/10 text-gray-600 dark:text-gray-400 -ml-2"
                     title={showVideo ? "Ocultar panel de videos" : "Mostrar panel de videos"}
                   >
                     {showVideo ? <PanelLeftClose size={20} /> : <PanelLeftOpen size={20} />}
