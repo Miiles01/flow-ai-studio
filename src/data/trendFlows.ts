@@ -1,3 +1,55 @@
+
+import type { TrendNodeKind, TrendConfidence } from "@/components/TrendFlowNode";
+import iconPlay from "@/assets/trends/play.svg";
+import iconHeart from "@/assets/trends/heart.svg";
+import iconShare from "@/assets/trends/share.svg";
+import iconLike from "@/assets/trends/like.svg";
+import iconDislike from "@/assets/trends/dislike.svg";
+
+import adsClaroObj from "@/assets/elementos-miiles/ads-modo-claro.svg.asset.json";
+import adsOscuroObj from "@/assets/elementos-miiles/ads-modo-oscuro.svg.asset.json";
+import alertaClaroObj from "@/assets/elementos-miiles/alerta-modo-claro.svg.asset.json";
+import feedCuentaClaroObj from "@/assets/elementos-miiles/feed-con-cuenta-modo-claro.svg.asset.json";
+import feedCuentaOscuroObj from "@/assets/elementos-miiles/feed-con-cuenta-modo-oscuro.svg.asset.json";
+import feedNormalClaroObj from "@/assets/elementos-miiles/feed-normal-modo-claro.svg.asset.json";
+import feedNormalOscuroObj from "@/assets/elementos-miiles/feed-normal-modo-oscuro.svg.asset.json";
+import notificacionClaroObj from "@/assets/elementos-miiles/notificacio-n-modo-claro.svg.asset.json";
+import notificacionOscuroObj from "@/assets/elementos-miiles/notificacio-n-modo-oscuro.svg.asset.json";
+import resNegClaroObj from "@/assets/elementos-miiles/resultado-negativo-modo-claro.svg.asset.json";
+import resNegOscuroObj from "@/assets/elementos-miiles/resultado-negativo-modo-oscuro.svg.asset.json";
+import resPosClaroObj from "@/assets/elementos-miiles/resultado-positivo-modo-claro.svg.asset.json";
+import resPosOscuroObj from "@/assets/elementos-miiles/resultado-positivo-modo-oscuro.svg.asset.json";
+import tiempoClaroObj from "@/assets/elementos-miiles/tiempo-modo-claro.svg.asset.json";
+import tiempoOscuroObj from "@/assets/elementos-miiles/tiempo-modo-oscuro.svg.asset.json";
+import videoHorClaroObj from "@/assets/elementos-miiles/video-horizontal-modo-claro.svg.asset.json";
+import videoHorOscuroObj from "@/assets/elementos-miiles/video-horizontal-modo-oscuro.svg.asset.json";
+import videoClaroObj from "@/assets/elementos-miiles/video-modo-claro.svg.asset.json";
+import videoOscuroObj from "@/assets/elementos-miiles/video-modo-oscuro.svg.asset.json";
+import vistasClaroObj from "@/assets/elementos-miiles/vistas-modo-claro.svg.asset.json";
+import vistasOscuroObj from "@/assets/elementos-miiles/vistas-modo-oscuro.svg.asset.json";
+
+const videoLight = videoClaroObj.url;
+const videoDark = videoOscuroObj.url;
+const videoHorizontalLight = videoHorClaroObj.url;
+const videoHorizontalDark = videoHorOscuroObj.url;
+const vistasLight = vistasClaroObj.url;
+const vistasDark = vistasOscuroObj.url;
+const feedLight = feedNormalClaroObj.url;
+const feedDark = feedNormalOscuroObj.url;
+const feedCuentaLight = feedCuentaClaroObj.url;
+const feedCuentaDark = feedCuentaOscuroObj.url;
+const adsLight = adsClaroObj.url;
+const adsDark = adsOscuroObj.url;
+const alertaLight = alertaClaroObj.url;
+const alertaDark = alertaClaroObj.url; // solo subio el claro
+const notificacionLight = notificacionClaroObj.url;
+const notificacionDark = notificacionOscuroObj.url;
+const resNegLight = resNegClaroObj.url;
+const resNegDark = resNegOscuroObj.url;
+const resPosLight = resPosClaroObj.url;
+const resPosDark = resPosOscuroObj.url;
+const tiempoLight = tiempoClaroObj.url;
+const tiempoDark = tiempoOscuroObj.url;
 import type { TrendNodeKind, TrendConfidence } from "@/components/TrendFlowNode";
 import videoLight from "@/assets/trends/video-light.svg";
 import videoDark from "@/assets/trends/video-dark.svg";
@@ -94,6 +146,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
         id: "A_ADS",
         position: { x: 450, y: 150 },
         data: {
+          image: adsLight, imageDark: adsDark,
           kind: "phase", tag: "Ads",
           label: "Anuncio Pagado (Ads)",
           sublabel: "No depende del algoritmo orgánico. Escala mediante presupuesto (CPA / Subastas).",
@@ -174,6 +227,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
         position: { x: -480, y: 1290 },
         data: {
           kind: "fail", tag: "Resultado", confidence: "likely",
+          image: resNegLight, imageDark: resNegDark,
           label: "Se detiene la distribución",
           sublabel: "No castiga tu cuenta: el siguiente video vuelve a empezar de cero",
         },
@@ -255,6 +309,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
         id: "A_ADS",
         position: { x: 450, y: 150 },
         data: {
+          image: adsLight, imageDark: adsDark,
           kind: "phase", tag: "Ads",
           label: "Anuncio Pagado (Ads)",
           sublabel: "No depende del algoritmo orgánico. Escala mediante presupuesto (CPA / Subastas).",
@@ -313,6 +368,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
         position: { x: 0, y: 690 },
         data: {
           kind: "phase", tag: "Fase 2", confidence: "hypothesis",
+          image: tiempoLight, imageDark: tiempoDark,
           label: "Ventana crítica: ~90 minutos",
           sublabel: "El rendimiento inicial define si el reel escala o muere",
         },
@@ -335,6 +391,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
         position: { x: -480, y: 1290 },
         data: {
           kind: "fail", tag: "Resultado", confidence: "likely",
+          image: resNegLight, imageDark: resNegDark,
           label: "Estrangulamiento",
           sublabel: "El reel no sale del grupo de prueba. Ajusta el hook y vuelve a intentar.",
         },
@@ -522,6 +579,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
         id: "A_ADS",
         position: { x: 450, y: 150 },
         data: {
+          image: adsLight, imageDark: adsDark,
           kind: "phase", tag: "Ads",
           label: "Anuncio Pagado (Ads)",
           sublabel: "No depende del algoritmo orgánico. Escala mediante presupuesto (CPA / Subastas).",
@@ -591,6 +649,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
         position: { x: -480, y: 1100 },
         data: {
           kind: "fail", tag: "Resultado", confidence: "likely",
+          image: resNegLight, imageDark: resNegDark,
           label: "Short frenado",
           sublabel: "Alto swipe-away: el feed deja de mostrarlo",
         },
@@ -621,6 +680,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
         position: { x: 480, y: 1320 },
         data: {
           kind: "success", tag: "Resultado", confidence: "likely",
+          image: resPosLight, imageDark: resPosDark,
           label: "Acervo evergreen",
           sublabel: "Resurge en picos estacionales y búsquedas durante meses",
         },
