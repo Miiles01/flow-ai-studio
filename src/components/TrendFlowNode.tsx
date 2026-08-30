@@ -1,6 +1,6 @@
 import { memo } from "react";
 import { Handle, Position, type NodeProps } from "@xyflow/react";
-import { Eye, EyeOff } from "lucide-react";
+import { Lightbulb, LightbulbOff } from "lucide-react";
 import { motion } from "framer-motion";
 
 export type TrendNodeKind = "start" | "phase" | "decision" | "fail" | "success" | "strategy" | "detail";
@@ -117,7 +117,7 @@ const TrendFlowNode = ({ id, data }: NodeProps) => {
               : "bg-white dark:bg-[#1C1C1E] text-[#4059F1] dark:text-[#9DA9F9] border-[#E5E7EB] dark:border-white/15 hover:scale-110"
           }`}
         >
-          {d.expanded ? <EyeOff size={13} strokeWidth={2} /> : <Eye size={13} strokeWidth={2} />}
+          {d.expanded ? <LightbulbOff size={13} strokeWidth={2} /> : <Lightbulb size={13} strokeWidth={2} />}
         </button>
       )}
 
