@@ -17,8 +17,8 @@ const RETENTION_PATTERNS = [
       <svg viewBox="0 0 300 172" className="w-full h-full text-gray-400">
         <line x1="40" y1="10" x2="40" y2="140" stroke="currentColor" strokeWidth="1"/>
         <line x1="40" y1="140" x2="280" y2="140" stroke="currentColor" strokeWidth="1"/>
-        <path d="M42,15 L55,45 L62,75" stroke="#ec4899" strokeWidth="3" fill="none"/>
-        <path d="M62,75 L120,82 L200,85 L280,87" stroke="currentColor" strokeWidth="2" strokeDasharray="4" fill="none"/>
+        <path d="M42,15 Q45,65 62,75" stroke="#ec4899" strokeWidth="3" fill="none"/>
+        <path d="M62,75 Q100,85 280,87" stroke="currentColor" strokeWidth="2" strokeDasharray="4" fill="none"/>
       </svg>
     )
   },
@@ -36,7 +36,7 @@ const RETENTION_PATTERNS = [
       <svg viewBox="0 0 300 172" className="w-full h-full text-gray-400">
         <line x1="40" y1="10" x2="40" y2="140" stroke="currentColor" strokeWidth="1"/>
         <line x1="40" y1="140" x2="280" y2="140" stroke="currentColor" strokeWidth="1"/>
-        <path d="M42,15 L55,55 L62,95 L120,105 L200,115 L280,125" stroke="#ec4899" strokeWidth="3" fill="none"/>
+        <path d="M42,15 C45,80 80,100 120,105 S200,120 280,125" stroke="#ec4899" strokeWidth="3" fill="none"/>
       </svg>
     )
   },
@@ -54,8 +54,8 @@ const RETENTION_PATTERNS = [
       <svg viewBox="0 0 300 172" className="w-full h-full text-gray-400">
         <line x1="40" y1="10" x2="40" y2="140" stroke="currentColor" strokeWidth="1"/>
         <line x1="40" y1="140" x2="280" y2="140" stroke="currentColor" strokeWidth="1"/>
-        <path d="M42,20 L120,35 L180,45 L210,52" stroke="currentColor" strokeWidth="2" strokeDasharray="4" fill="none"/>
-        <path d="M210,52 L235,75 L260,100 L280,130" stroke="#ec4899" strokeWidth="3" fill="none"/>
+        <path d="M42,20 Q150,40 210,52" stroke="currentColor" strokeWidth="2" strokeDasharray="4" fill="none"/>
+        <path d="M210,52 Q260,60 280,130" stroke="#ec4899" strokeWidth="3" fill="none"/>
       </svg>
     )
   },
@@ -73,7 +73,7 @@ const RETENTION_PATTERNS = [
       <svg viewBox="0 0 300 172" className="w-full h-full text-gray-400">
         <line x1="40" y1="10" x2="40" y2="140" stroke="currentColor" strokeWidth="1"/>
         <line x1="40" y1="140" x2="280" y2="140" stroke="currentColor" strokeWidth="1"/>
-        <path d="M42,20 L100,45 L160,72 L220,100 L280,128" stroke="#ec4899" strokeWidth="3" fill="none"/>
+        <path d="M42,20 C100,30 200,110 280,128" stroke="#ec4899" strokeWidth="3" fill="none"/>
       </svg>
     )
   },
@@ -91,7 +91,7 @@ const RETENTION_PATTERNS = [
       <svg viewBox="0 0 300 172" className="w-full h-full text-gray-400">
         <line x1="40" y1="10" x2="40" y2="140" stroke="currentColor" strokeWidth="1"/>
         <line x1="40" y1="140" x2="280" y2="140" stroke="currentColor" strokeWidth="1"/>
-        <path d="M42,18 L55,30 L120,35 L200,40 L280,45" stroke="#4059F1" strokeWidth="3" fill="none"/>
+        <path d="M42,18 Q50,35 100,38 T280,45" stroke="#4059F1" strokeWidth="3" fill="none"/>
       </svg>
     )
   }
