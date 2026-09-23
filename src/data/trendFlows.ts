@@ -113,6 +113,12 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
   tiktok: {
     network: "tiktok",
     title: "Algoritmo TikTok (FYP)",
+    video: {
+      url: "https://www.youtube.com/watch?v=ALk_hMPhC48",
+      title: "Cómo funciona el nuevo algoritmo de TikTok en 2026",
+      ariaLabel: "Reproducir video explicativo del algoritmo de TikTok",
+      position: { x: -500, y: 900 },
+    },
     nodes: [
       {
         id: "A_TRIAL",
@@ -273,6 +279,12 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
   instagram: {
     network: "instagram",
     title: "Trial Reels (Instagram)",
+    video: {
+      url: "https://www.youtube.com/watch?v=yKDiu4bwHUA",
+      title: "La nueva actualización del algoritmo, septiembre 2026",
+      ariaLabel: "Reproducir video explicativo del algoritmo de Instagram",
+      position: { x: -500, y: 900 },
+    },
     nodes: [
       {
         id: "A",
@@ -558,6 +570,12 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
   youtube: {
     network: "youtube",
     title: "YouTube Shorts",
+    video: {
+      url: "https://www.youtube.com/watch?v=3d-cRq7gl90",
+      title: "YouTube cambió el algoritmo en 2026: así funciona ahora (nuevas reglas)",
+      ariaLabel: "Reproducir video explicativo del algoritmo de YouTube",
+      position: { x: -500, y: 600 },
+    },
     nodes: [
       {
         id: "A",
