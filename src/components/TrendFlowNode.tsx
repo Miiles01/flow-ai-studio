@@ -22,6 +22,7 @@ export type TrendNodeData = {
   hasDetails?: boolean;
   expanded?: boolean;
   onToggle?: (id: string) => void;
+  isHighlighted?: boolean;
 };
 
 const KIND_STYLES: Record<TrendNodeKind, { card: string; tag: string }> = {
@@ -72,6 +73,14 @@ const TrendFlowNode = ({ id, data }: NodeProps) => {
         isDetail ? "py-2.5 w-[210px]" : "py-3.5 w-[240px]"
       } ${s.card}`}
     >
+      {d.isHighlighted && (
+        <motion.div
+          initial={{ opacity: 0, scale: 1.05 }}
+          animate={{ opacity: [0, 1, 1, 0], scale: [1.05, 1, 1, 1.05] }}
+          transition={{ duration: 2.8, times: [0, 0.1, 0.8, 1] }}
+          className="absolute -inset-[3px] rounded-[18px] border-[3px] border-black dark:border-white pointer-events-none z-50"
+        />
+      )}
       {d.tag && (
         <span className={`inline-block text-[9px] font-medium uppercase tracking-widest px-2 py-0.5 rounded-full mb-1.5 ${s.tag}`}>
           {d.tag}

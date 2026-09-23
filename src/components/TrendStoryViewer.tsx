@@ -78,14 +78,33 @@ export function TrendStoryViewer({ trends, startIndex, onClose }: Props) {
 
   // ── Expansión de nodos (las "raíces" del diagrama) ──
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
+  const [highlightedNode, setHighlightedNode] = useState<string | null>(null);
   const rfInstanceRef = useRef<ReactFlowInstance | null>(null);
 
-  // Al cambiar de red, el diagrama vuelve a su vista genérica
+  // Al cambiar de red, el diagrama vuelve a su vista genérica enfocada en el Inicio
   useEffect(() => {
     setExpandedIds(new Set());
     setActiveVideo(null);
     setVideoExpanded(false);
-  }, [targetNetwork]);
+    
+    if (open && activeFlow) {
+      setHighlightedNode("A");
+      
+      // Enfocar al inicio después de un pequeñísimo delay para asegurar que React Flow está listo
+      setTimeout(() => {
+        rfInstanceRef.current?.fitView({
+          nodes: [{ id: "A" }],
+          padding: 0.8,
+          duration: 800,
+        });
+      }, 50);
+      
+      // Quitar el highlight después de la animación
+      setTimeout(() => {
+        setHighlightedNode(null);
+      }, 3000);
+    }
+  }, [targetNetwork, open, activeFlow]);
 
   const openVideo = useCallback((trigger: HTMLButtonElement, index = 0) => {
     const video = activeFlow?.videos?.[index];
@@ -150,6 +169,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose }: Props) {
         confidence: n.data.confidence,
         hasDetails: (n.data.details?.length ?? 0) > 0,
         expanded: expandedIds.has(n.id),
+        isHighlighted: n.id === highlightedNode,
         onToggle: toggleNodeDetails,
       },
     }));
