@@ -228,16 +228,18 @@ export function TrendStoryViewer({ trends, startIndex, onClose }: Props) {
           }}
         />
 
-        {/* Floating Close Button */}
-        <Button
-          type="button"
-          variant="ghost"
-          onClick={onClose}
-          className="absolute right-8 top-8 z-[60] rounded-full border border-border bg-card px-5 py-2.5 text-sm font-normal text-card-foreground shadow-sm hover:translate-y-0 hover:bg-muted"
-        >
-          <X size={16} strokeWidth={2.5} />
-          Cerrar
-        </Button>
+        {/* Floating Close Button (oculto mientras el video está ampliado) */}
+        {!(activeVideo && videoExpanded) && (
+          <Button
+            type="button"
+            variant="ghost"
+            onClick={onClose}
+            className="absolute right-8 top-8 z-[60] rounded-full border border-border bg-card px-5 py-2.5 text-sm font-normal text-card-foreground shadow-sm hover:translate-y-0 hover:bg-muted"
+          >
+            <X size={16} strokeWidth={2.5} />
+            Cerrar
+          </Button>
+        )}
 
         {/* Botón flotante para sugerir mejoras a la arquitectura */}
         <Button
