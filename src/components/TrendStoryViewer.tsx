@@ -4,7 +4,7 @@ import { X, Lightbulb } from "lucide-react";
 import SuggestionDialog from "@/components/SuggestionDialog";
 import { RetentionPopup } from "@/components/RetentionPopup";
 import type { Trend } from "@/hooks/useTrends";
-import { ReactFlow, BaseEdge, EdgeLabelRenderer, getSmoothStepPath, Background, BackgroundVariant, type Node, type Edge, type EdgeProps, type ReactFlowInstance } from "@xyflow/react";
+import { ReactFlow, BaseEdge, EdgeLabelRenderer, getSmoothStepPath, getStraightPath, Background, BackgroundVariant, type Node, type Edge, type EdgeProps, type ReactFlowInstance } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import TrendFlowNode from "@/components/TrendFlowNode";
 import TrendVideoCard from "@/components/TrendVideoCard";
@@ -17,11 +17,11 @@ import { getYouTubeExplainerEmbedUrl, getYouTubeThumbnailUrl } from "@/lib/video
 const trendNodeTypes = { trendNode: TrendFlowNode, trendVideo: TrendVideoCard };
 
 // Edge con etiqueta tipo pill (contenedor súper redondo en medio de la línea)
-const TrendEdge = ({ id, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, label }: EdgeProps) => {
-  const [path, labelX, labelY] = getSmoothStepPath({
-    sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition,
-    borderRadius: 14,
-  });
+const TrendEdge = ({ id, source, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, label }: EdgeProps) => {
+  const isVideoEdge = source.startsWith("video-");
+  const [path, labelX, labelY] = isVideoEdge 
+    ? getStraightPath({ sourceX, sourceY, targetX, targetY })
+    : getSmoothStepPath({ sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, borderRadius: 14 });
   return (
     <>
       <BaseEdge id={id} path={path} />
