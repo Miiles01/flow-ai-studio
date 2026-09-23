@@ -22,10 +22,11 @@ export default function TrendVideoPlayer({ title, embedUrl, expanded, onExpanded
   return (
     <>
       {expanded ? (
-        <button
+        <Button
           type="button"
+          variant="ghost"
           aria-label="Cerrar vista ampliada"
-          className="absolute inset-0 z-40 bg-foreground/45"
+          className="absolute inset-0 z-40 h-auto w-auto rounded-none bg-foreground/45 p-0 hover:translate-y-0 hover:bg-foreground/45"
           onClick={() => onExpandedChange(false)}
           onPointerDown={(event) => event.stopPropagation()}
         />
