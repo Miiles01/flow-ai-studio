@@ -120,19 +120,19 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
         url: "https://www.youtube.com/watch?v=_wN0N9UtKls",
         title: "Cómo funciona el algoritmo de redes sociales hoy (Víctor Heras Media)",
         ariaLabel: "Reproducir video: Cómo funciona el algoritmo de redes sociales hoy (Víctor Heras Media)",
-        position: { x: -1150, y: 700 },
+        position: { x: -600, y: 0 },
       },
       {
         url: "https://www.youtube.com/watch?v=ALk_hMPhC48",
         title: "Cómo funciona el nuevo algoritmo de TikTok en 2026 (Alex Arano)",
         ariaLabel: "Reproducir video: Cómo funciona el nuevo algoritmo de TikTok en 2026 (Alex Arano)",
-        position: { x: -1150, y: 1080 },
+        position: { x: -600, y: 900 },
       },
       {
         url: "https://www.youtube.com/watch?v=T9fFTnHuG-E",
         title: "Cómo funciona el algoritmo de TikTok en 2026 (Daniel Aguillón)",
         ariaLabel: "Reproducir video: Cómo funciona el algoritmo de TikTok en 2026 (Daniel Aguillón)",
-        position: { x: -1150, y: 1460 },
+        position: { x: 900, y: 1500 },
       },
     ],
     nodes: [
@@ -276,6 +276,9 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
     ],
     edges: [
+      { id: "evid-0", source: "video-tiktok-0", target: "A", sourceHandle: "r-s", targetHandle: "l-t", dashed: true, animated: true },
+      { id: "evid-1", source: "video-tiktok-1", target: "C", sourceHandle: "r-s", targetHandle: "l-t", dashed: true, animated: true },
+      { id: "evid-2", source: "video-tiktok-2", target: "F", sourceHandle: "l-s", targetHandle: "r-t", dashed: true, animated: true },
       { id: "eA-S", source: "A", target: "S", dashed: true },
       { id: "eA-ADS", source: "A", target: "A_ADS", label: "Anuncio Pagado", dashed: true },
       { id: "eA-TRIAL", source: "A", target: "A_TRIAL", label: "Modo Prueba", dashed: true },
@@ -300,19 +303,19 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
         url: "https://www.youtube.com/watch?v=6XA4kiMJD9I",
         title: "Exponiendo el nuevo algoritmo de Instagram 2026 (Víctor Heras Media)",
         ariaLabel: "Reproducir video: Exponiendo el nuevo algoritmo de Instagram 2026 (Víctor Heras Media)",
-        position: { x: -1150, y: 700 },
+        position: { x: -600, y: 0 },
       },
       {
         url: "https://www.youtube.com/watch?v=P0I2LvSuJo0",
         title: "La única forma de vencer al algoritmo en 2026 (Víctor Heras Media)",
         ariaLabel: "Reproducir video: La única forma de vencer al algoritmo en 2026 (Víctor Heras Media)",
-        position: { x: -1150, y: 1080 },
+        position: { x: -600, y: 900 },
       },
       {
         url: "https://www.youtube.com/watch?v=yKDiu4bwHUA",
         title: "La nueva actualización del algoritmo, septiembre 2026 (Robert Benjamin)",
         ariaLabel: "Reproducir video: La nueva actualización del algoritmo, septiembre 2026 (Robert Benjamin)",
-        position: { x: -1150, y: 1460 },
+        position: { x: -900, y: 300 },
       },
     ],
     nodes: [
@@ -453,6 +456,9 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
     ],
     edges: [
+      { id: "evid-0", source: "video-instagram-0", target: "A", sourceHandle: "r-s", targetHandle: "l-t", dashed: true, animated: true },
+      { id: "evid-1", source: "video-instagram-1", target: "C", sourceHandle: "r-s", targetHandle: "l-t", dashed: true, animated: true },
+      { id: "evid-2", source: "video-instagram-2", target: "A_TRIAL", sourceHandle: "r-s", targetHandle: "l-t", dashed: true, animated: true },
       { id: "eA-S", source: "A", target: "S", dashed: true },
       { id: "eA-PLUS", source: "A", target: "PLUS", dashed: true },
       { id: "eA-ADS", source: "A", target: "A_ADS", label: "Anuncio Pagado", dashed: true },
@@ -476,14 +482,8 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
         url: "https://www.youtube.com/watch?v=_wN0N9UtKls",
         title: "Cómo funciona el algoritmo de redes sociales hoy (Víctor Heras Media)",
         ariaLabel: "Reproducir video: Cómo funciona el algoritmo de redes sociales hoy (Víctor Heras Media)",
-        position: { x: -1150, y: 700 },
-      },
-      {
-        url: "https://www.youtube.com/watch?v=gs5_knk7WRs",
-        title: "Instagram está en modo fácil (Víctor Heras Media)",
-        ariaLabel: "Reproducir video: Instagram está en modo fácil (Víctor Heras Media)",
-        position: { x: -1150, y: 1080 },
-      },
+        position: { x: -600, y: 0 },
+      }
     ],
     nodes: [
       {
@@ -599,6 +599,7 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
     ],
     edges: [
+      { id: "evid-0", source: "video-facebook-0", target: "A", sourceHandle: "r-s", targetHandle: "l-t", dashed: true, animated: true },
       { id: "eA-S", source: "A", target: "S", dashed: true },
       { id: "eA-ADS", source: "A", target: "A_ADS", label: "Anuncio Pagado", dashed: true },
       { id: "eA-TRIAL", source: "A", target: "A_TRIAL", label: "Modo Prueba", dashed: true },
@@ -619,19 +620,19 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
         url: "https://www.youtube.com/watch?v=3d-cRq7gl90",
         title: "YouTube cambió el algoritmo en 2026: así funciona ahora (Edu Serrano)",
         ariaLabel: "Reproducir video: YouTube cambió el algoritmo en 2026: así funciona ahora (Edu Serrano)",
-        position: { x: -1150, y: 700 },
+        position: { x: -600, y: 0 },
       },
       {
         url: "https://www.youtube.com/watch?v=1vmpEzdFDfg",
         title: "Guía completa para entender el algoritmo de YouTube en 2026 (vidIQ)",
         ariaLabel: "Reproducir video: Guía completa para entender el algoritmo de YouTube en 2026 (vidIQ)",
-        position: { x: -1150, y: 1080 },
+        position: { x: -600, y: 600 },
       },
       {
         url: "https://www.youtube.com/watch?v=gNPCoWXJQfc",
         title: "Cómo funciona el nuevo algoritmo de YouTube en 2026 (Pol Tenas)",
         ariaLabel: "Reproducir video: Cómo funciona el nuevo algoritmo de YouTube en 2026 (Pol Tenas)",
-        position: { x: -1150, y: 1460 },
+        position: { x: 900, y: 1200 },
       },
     ],
     nodes: [
@@ -754,6 +755,9 @@ export const TREND_FLOWS: Record<string, TrendFlow> = {
       },
     ],
     edges: [
+      { id: "evid-0", source: "video-youtube-0", target: "A", sourceHandle: "r-s", targetHandle: "l-t", dashed: true, animated: true },
+      { id: "evid-1", source: "video-youtube-1", target: "B", sourceHandle: "r-s", targetHandle: "l-t", dashed: true, animated: true },
+      { id: "evid-2", source: "video-youtube-2", target: "E", sourceHandle: "l-s", targetHandle: "r-t", dashed: true, animated: true },
       { id: "eA-S", source: "A", target: "S", dashed: true },
       { id: "eA-ADS", source: "A", target: "A_ADS", label: "Anuncio Pagado", dashed: true },
       { id: "eA-TRIAL", source: "A", target: "A_TRIAL", label: "Modo Prueba", dashed: true },
