@@ -19,9 +19,20 @@ const trendNodeTypes = { trendNode: TrendFlowNode, trendVideo: TrendVideoCard };
 // Edge con etiqueta tipo pill (contenedor súper redondo en medio de la línea)
 const TrendEdge = ({ id, source, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, label }: EdgeProps) => {
   const isVideoEdge = source.startsWith("video-");
-  const [path, labelX, labelY] = isVideoEdge 
-    ? getStraightPath({ sourceX, sourceY, targetX, targetY })
-    : getSmoothStepPath({ sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, borderRadius: 14 });
+  let path, labelX, labelY;
+  
+  if (isVideoEdge) {
+    // Forzar una línea perfectamente horizontal desde el video hacia el nodo
+    // ignorando la ligera diferencia de altura en el centro (targetY)
+    path = `M ${sourceX},${sourceY} L ${targetX},${sourceY}`;
+    labelX = (sourceX + targetX) / 2;
+    labelY = sourceY;
+  } else {
+    const res = getSmoothStepPath({ sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, borderRadius: 14 });
+    path = res[0];
+    labelX = res[1];
+    labelY = res[2];
+  }
   return (
     <>
       <BaseEdge id={id} path={path} />
