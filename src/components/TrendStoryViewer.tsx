@@ -61,7 +61,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose }: Props) {
   const targetNetwork = startIndex !== null && trends[startIndex] ? trends[startIndex].network : null;
   const [suggestOpen, setSuggestOpen] = useState(false);
   const activeFlow = targetNetwork ? TREND_FLOWS[targetNetwork as string] : null;
-  const [activeVideo, setActiveVideo] = useState<TrendFlow["video"] | null>(null);
+  const [activeVideo, setActiveVideo] = useState<NonNullable<TrendFlow["videos"]>[number] | null>(null);
   const [videoExpanded, setVideoExpanded] = useState(false);
   const videoTriggerRef = useRef<HTMLButtonElement | null>(null);
 
@@ -76,10 +76,11 @@ export function TrendStoryViewer({ trends, startIndex, onClose }: Props) {
     setVideoExpanded(false);
   }, [targetNetwork]);
 
-  const openVideo = useCallback((trigger: HTMLButtonElement) => {
-    if (!activeFlow?.video) return;
+  const openVideo = useCallback((trigger: HTMLButtonElement, index = 0) => {
+    const video = activeFlow?.videos?.[index];
+    if (!video) return;
     videoTriggerRef.current = trigger;
-    setActiveVideo(activeFlow.video);
+    setActiveVideo(video);
     setVideoExpanded(false);
   }, [activeFlow]);
 
@@ -142,21 +143,21 @@ export function TrendStoryViewer({ trends, startIndex, onClose }: Props) {
       },
     }));
 
-    if (activeFlow.video) {
+    (activeFlow.videos ?? []).forEach((video, index) => {
       nodes.push({
-        id: `video-${activeFlow.network}`,
+        id: `video-${activeFlow.network}-${index}`,
         type: "trendVideo",
-        position: activeFlow.video.position,
+        position: video.position,
         draggable: false,
         selectable: false,
         data: {
-          title: activeFlow.video.title,
-          thumbnailUrl: activeFlow.video.thumbnailUrl ?? getYouTubeThumbnailUrl(activeFlow.video.url) ?? undefined,
-          ariaLabel: activeFlow.video.ariaLabel,
-          onPlay: openVideo,
+          title: video.title,
+          thumbnailUrl: video.thumbnailUrl ?? getYouTubeThumbnailUrl(video.url) ?? undefined,
+          ariaLabel: video.ariaLabel,
+          onPlay: (trigger: HTMLButtonElement) => openVideo(trigger, index),
         },
       });
-    }
+    });
 
     const edges: Edge[] = activeFlow.edges.map((e) => ({
       id: e.id,
