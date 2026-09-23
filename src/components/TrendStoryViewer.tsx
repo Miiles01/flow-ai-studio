@@ -1,17 +1,20 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { X, Lightbulb, PanelLeftClose, PanelLeftOpen } from "lucide-react";
+import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
+import { X, Lightbulb } from "lucide-react";
 import SuggestionDialog from "@/components/SuggestionDialog";
 import { RetentionPopup } from "@/components/RetentionPopup";
-import { motion } from "framer-motion";
 import type { Trend } from "@/hooks/useTrends";
 import { ReactFlow, BaseEdge, EdgeLabelRenderer, getSmoothStepPath, Background, BackgroundVariant, type Node, type Edge, type EdgeProps, type ReactFlowInstance } from "@xyflow/react";
 import "@xyflow/react/dist/style.css";
 import TrendFlowNode from "@/components/TrendFlowNode";
-import { TREND_FLOWS } from "@/data/trendFlows";
+import TrendVideoCard from "@/components/TrendVideoCard";
+import TrendVideoPlayer from "@/components/TrendVideoPlayer";
+import { Button } from "@/components/ui/button";
+import { TREND_FLOWS, type TrendFlow } from "@/data/trendFlows";
 import { useTheme } from "@/contexts/ThemeContext";
+import { getYouTubeExplainerEmbedUrl, getYouTubeThumbnailUrl } from "@/lib/videoEmbed";
 
-const trendNodeTypes = { trendNode: TrendFlowNode };
+const trendNodeTypes = { trendNode: TrendFlowNode, trendVideo: TrendVideoCard };
 
 // Edge con etiqueta tipo pill (contenedor súper redondo en medio de la línea)
 const TrendEdge = ({ id, sourceX, sourceY, targetX, targetY, sourcePosition, targetPosition, label }: EdgeProps) => {
@@ -52,119 +55,15 @@ type Props = {
   onView?: (id: string) => void;
 };
 
-function getEmbedUrl(url: string | null, isActive: boolean) {
-  if (!url) return "";
-  const autoPlayParam = isActive ? "1" : "0";
-  let parsed: URL;
-  try {
-    parsed = new URL(url.trim());
-  } catch {
-    return "";
-  }
-  const host = parsed.hostname.toLowerCase().replace(/^(www|m|vt|vm)\./, "");
-
-  if (host === "youtube.com" || host === "youtu.be") {
-    const v =
-      parsed.searchParams.get("v") ||
-      parsed.pathname.split("/").filter(Boolean).pop() ||
-      "";
-    if (v) {
-      return `https://www.youtube.com/embed/${v}?autoplay=${autoPlayParam}&mute=1&controls=0&modestbranding=1&rel=0&loop=1&playlist=${v}&playsinline=1&iv_load_policy=3&fs=0&disablekb=1&cc_load_policy=0`;
-    }
-    return "";
-  }
-
-  if (host.endsWith("instagram.com")) {
-    // Soporta /reel/, /reels/, /p/, /tv/ y descarta query params (?igsh=...)
-    const match = parsed.pathname.match(/\/(?:reels?|p|tv)\/([A-Za-z0-9_-]+)/);
-    if (match) return `https://www.instagram.com/reel/${match[1]}/embed/?hidecaption=true`;
-    return "";
-  }
-
-  if (host.endsWith("tiktok.com")) {
-    const match = parsed.pathname.match(/\/video\/(\d+)/);
-    if (match) {
-      return `https://www.tiktok.com/player/v1/${match[1]}?autoplay=${autoPlayParam}&loop=1&controls=0&progress_bar=0&play_button=0&volume_control=0&fullscreen_button=0&timestamp=0&music_info=0&description=0&rel=0&native_context_menu=0&closed_caption=0`;
-    }
-    return "";
-  }
-
-  if (host.endsWith("facebook.com") || host === "fb.watch") {
-    return `https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false&autoplay=${isActive ? "true" : "false"}`;
-  }
-
-  return url;
-}
-
-
-export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props) {
+export function TrendStoryViewer({ trends, startIndex, onClose }: Props) {
   const { isDark } = useTheme();
   const open = startIndex !== null && trends.length > 0;
-  const containerRef = useRef<HTMLDivElement>(null);
-  
-  // Get all trends for the clicked network
   const targetNetwork = startIndex !== null && trends[startIndex] ? trends[startIndex].network : null;
-  
-  const [shuffledTrends, setShuffledTrends] = useState<Trend[]>([]);
-  const [activeIndex, setActiveIndex] = useState(0);
   const [suggestOpen, setSuggestOpen] = useState(false);
-  const [showVideo, setShowVideo] = useState(false);
-
-  useEffect(() => {
-    if (open && startIndex !== null) {
-      setShowVideo(false);
-      const clickedTrend = trends[startIndex];
-      if (!clickedTrend) return;
-
-      // Filtrar todos los de la misma red (y los marcados como 'all') excepto el que se clickeó
-      const sameNetwork = trends.filter(t => (t.network === targetNetwork || t.network === 'all') && t.id !== clickedTrend.id);
-      
-      // Mezclar aleatoriamente el resto de los videos
-      const shuffled = [...sameNetwork];
-      for (let i = shuffled.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-      }
-      
-      // El video clickeado siempre va primero
-      setShuffledTrends([clickedTrend, ...shuffled]);
-      setActiveIndex(0);
-      
-      setTimeout(() => {
-        const el = containerRef.current;
-        if (!el) return;
-        el.scrollTop = 0;
-      }, 50);
-    } else {
-      setShuffledTrends([]);
-    }
-  }, [open, startIndex, targetNetwork, trends]);
-
-  const handleScroll = (e: React.UIEvent<HTMLDivElement>) => {
-    const el = e.currentTarget;
-    const center = el.scrollTop + el.clientHeight / 2;
-    const items = el.querySelectorAll('.carousel-item');
-    let closestIdx = 0;
-    let minDistance = Infinity;
-
-    items.forEach((item, idx) => {
-      const itemEl = item as HTMLElement;
-      const itemCenter = itemEl.offsetTop + itemEl.clientHeight / 2;
-      const distance = Math.abs(center - itemCenter);
-      if (distance < minDistance) {
-        minDistance = distance;
-        closestIdx = idx;
-      }
-    });
-
-    if (closestIdx !== activeIndex) {
-      setActiveIndex(closestIdx);
-      const trend = shuffledTrends[closestIdx];
-      if (trend && onView) onView(trend.id);
-    }
-  };
-
   const activeFlow = targetNetwork ? TREND_FLOWS[targetNetwork as string] : null;
+  const [activeVideo, setActiveVideo] = useState<TrendFlow["video"] | null>(null);
+  const [videoExpanded, setVideoExpanded] = useState(false);
+  const videoTriggerRef = useRef<HTMLButtonElement | null>(null);
 
   // ── Expansión de nodos (las "raíces" del diagrama) ──
   const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
@@ -173,7 +72,22 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
   // Al cambiar de red, el diagrama vuelve a su vista genérica
   useEffect(() => {
     setExpandedIds(new Set());
+    setActiveVideo(null);
+    setVideoExpanded(false);
   }, [targetNetwork]);
+
+  const openVideo = useCallback((trigger: HTMLButtonElement) => {
+    if (!activeFlow?.video) return;
+    videoTriggerRef.current = trigger;
+    setActiveVideo(activeFlow.video);
+    setVideoExpanded(false);
+  }, [activeFlow]);
+
+  const closeVideo = useCallback(() => {
+    setActiveVideo(null);
+    setVideoExpanded(false);
+    window.requestAnimationFrame(() => videoTriggerRef.current?.focus());
+  }, []);
 
   const toggleNodeDetails = useCallback(
     (nodeId: string) => {
@@ -228,6 +142,22 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
       },
     }));
 
+    if (activeFlow.video) {
+      nodes.push({
+        id: `video-${activeFlow.network}`,
+        type: "trendVideo",
+        position: activeFlow.video.position,
+        draggable: false,
+        selectable: false,
+        data: {
+          title: activeFlow.video.title,
+          thumbnailUrl: activeFlow.video.thumbnailUrl ?? getYouTubeThumbnailUrl(activeFlow.video.url) ?? undefined,
+          ariaLabel: activeFlow.video.ariaLabel,
+          onPlay: openVideo,
+        },
+      });
+    }
+
     const edges: Edge[] = activeFlow.edges.map((e) => ({
       id: e.id,
       source: e.source,
@@ -267,13 +197,25 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
     }
 
     return { visibleNodes: nodes, visibleEdges: edges };
-  }, [activeFlow, expandedIds, toggleNodeDetails, isDark]);
+  }, [activeFlow, expandedIds, toggleNodeDetails, openVideo]);
+
+  const activeEmbedUrl = activeVideo ? getYouTubeExplainerEmbedUrl(activeVideo.url) : null;
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && onClose()}>
       <DialogContent
+        hideClose
+        onEscapeKeyDown={(event) => {
+          if (!activeVideo) return;
+          event.preventDefault();
+          closeVideo();
+        }}
         className="p-0 overflow-hidden border-none max-w-[95vw] w-[95vw] h-[95vh] rounded-[32px] shadow-2xl bg-white dark:bg-[#0f0f11] [&>button.absolute.right-4]:hidden"
       >
+        <DialogTitle className="sr-only">Arquitectura Algorítmica</DialogTitle>
+        <DialogDescription className="sr-only">
+          Esquema interactivo que explica cómo funciona el algoritmo de {targetNetwork ?? "la red seleccionada"}.
+        </DialogDescription>
         {/* Full Dotted pattern Background across the ENTIRE modal */}
         <div 
           className="absolute inset-0 pointer-events-none opacity-40 z-0"
@@ -287,22 +229,26 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
         />
 
         {/* Floating Close Button */}
-        <button
+        <Button
+          type="button"
+          variant="ghost"
           onClick={onClose}
-          className="absolute top-8 right-8 px-5 py-2.5 rounded-full transition-all hover:bg-gray-50 dark:hover:bg-[#2a2a2a] text-black dark:text-white z-50 bg-white dark:bg-[#1a1a1a] shadow-sm border border-slate-200 dark:border-[#333] font-medium text-sm cursor-pointer flex items-center gap-2"
+          className="absolute right-8 top-8 z-[60] rounded-full border border-border bg-card px-5 py-2.5 text-sm font-normal text-card-foreground shadow-sm hover:translate-y-0 hover:bg-muted"
         >
           <X size={16} strokeWidth={2.5} />
           Cerrar
-        </button>
+        </Button>
 
         {/* Botón flotante para sugerir mejoras a la arquitectura */}
-        <button
+        <Button
+          type="button"
+          variant="ghost"
           onClick={() => setSuggestOpen(true)}
-          className="absolute bottom-8 right-8 px-5 py-2.5 rounded-full transition-all hover:bg-gray-50 dark:hover:bg-[#2a2a2a] text-black dark:text-white z-50 bg-white dark:bg-[#1a1a1a] shadow-sm border border-slate-200 dark:border-[#333] font-medium text-sm cursor-pointer flex items-center gap-2"
+          className="absolute bottom-8 right-8 z-[60] rounded-full border border-border bg-card px-5 py-2.5 text-sm font-normal text-card-foreground shadow-sm hover:translate-y-0 hover:bg-muted"
         >
           <Lightbulb size={16} strokeWidth={2.5} />
           Sugerir ideas
-        </button>
+        </Button>
 
         <SuggestionDialog
           open={suggestOpen}
@@ -315,23 +261,14 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
         <div className="absolute inset-0 z-10">
           {activeFlow ? (
             <div className="w-full h-full relative">
-              <div 
-                className={`absolute top-8 z-20 transition-all duration-500 ease-in-out pointer-events-none flex items-start gap-4 ${showVideo ? "left-8 md:left-[38%]" : "left-8"}`}
-              >
-                <div className="bg-white dark:bg-[#1a1a1a] border border-slate-200 dark:border-[#333] rounded-full sm:rounded-2xl px-4 py-2.5 sm:px-5 sm:py-4 pointer-events-auto flex items-center gap-3 sm:gap-4">
-                  <button
-                    onClick={() => setShowVideo(!showVideo)}
-                    className="hidden w-10 h-10 rounded-full flex items-center justify-center transition-colors hover:bg-black/5 dark:hover:bg-white/10 text-gray-600 dark:text-gray-400 -ml-2"
-                    title={showVideo ? "Ocultar panel de videos" : "Mostrar panel de videos"}
-                  >
-                    {showVideo ? <PanelLeftClose size={20} /> : <PanelLeftOpen size={20} />}
-                  </button>
+              <div className="pointer-events-none absolute left-8 top-8 z-20 flex items-start gap-4">
+                <div className="pointer-events-auto flex items-center gap-3 rounded-full border border-border bg-card px-4 py-2.5 text-card-foreground sm:rounded-2xl sm:px-5 sm:py-4">
                   <div>
-                    <h2 className="text-lg sm:text-2xl font-medium sm:font-normal text-gray-900 dark:text-white leading-none">
+                    <h2 className="text-lg font-normal leading-none text-foreground sm:text-2xl">
                       <span className="hidden sm:inline">Arquitectura Algorítmica</span>
                       <span className="sm:hidden">{targetNetwork ? targetNetwork.charAt(0).toUpperCase() + targetNetwork.slice(1) : ""}</span>
                     </h2>
-                    <p className="hidden sm:block text-sm text-gray-500 dark:text-gray-400 mt-1">{targetNetwork ? targetNetwork.charAt(0).toUpperCase() + targetNetwork.slice(1) : ""}</p>
+                    <p className="mt-1 hidden text-sm font-light text-muted-foreground sm:block">{targetNetwork ? targetNetwork.charAt(0).toUpperCase() + targetNetwork.slice(1) : ""}</p>
                   </div>
                 </div>
               </div>
@@ -387,54 +324,15 @@ export function TrendStoryViewer({ trends, startIndex, onClose, onView }: Props)
           )}
         </div>
 
-        {/* Left Side: Floating Vertical Carousel (Over the diagram) */}
-        <div 
-          ref={containerRef}
-          onScroll={handleScroll}
-          className={`absolute left-0 top-0 bottom-0 w-full md:w-[35%] h-full flex flex-col items-center overflow-y-auto snap-y snap-mandatory scrollbar-hide py-[calc(47.5vh-300px)] pointer-events-auto bg-transparent transition-transform duration-500 z-30 ${
-            showVideo ? "translate-x-0" : "-translate-x-full"
-          }`}
-        >
-          {shuffledTrends.map((trend, i) => (
-            <motion.div
-              key={trend.id}
-              className="carousel-item w-[85%] max-w-[360px] shrink-0 snap-center flex flex-col my-8 relative transition-all duration-300"
-              initial={{ opacity: 0.6, scale: 0.95 }}
-              animate={{ opacity: activeIndex === i ? 1 : 0.6, scale: activeIndex === i ? 1 : 0.95 }}
-              transition={{ duration: 0.3 }}
-            >
-              {/* Actual Embedded Video with CSS Crop for UI */}
-              <div className="w-full aspect-[9/16] bg-black rounded-[24px] overflow-hidden relative border-none">
-                <iframe
-                  src={getEmbedUrl(trend.media_url, activeIndex === i)}
-                  className="absolute border-0"
-                  style={
-                    (trend.media_url || '').includes('instagram.com')
-                      ? {
-                          // Recorte sin zoom: el iframe es más alto que el contenedor y se desplaza
-                          // hacia arriba para ocultar el header (~54px) y el footer (~48px) del embed.
-                          top: '-54px',
-                          left: '-1px',
-                          width: 'calc(100% + 2px)',
-                          height: 'calc(100% + 102px)',
-                          pointerEvents: 'auto',
-                        }
-                      : {
-                          top: '0',
-                          left: '0',
-                          width: '100%',
-                          height: '100%',
-                          pointerEvents: 'auto',
-                        }
-                  }
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                  allowFullScreen
-                  loading="lazy"
-                />
-              </div>
-            </motion.div>
-          ))}
-        </div>
+        {activeVideo && activeEmbedUrl ? (
+          <TrendVideoPlayer
+            title={activeVideo.title}
+            embedUrl={activeEmbedUrl}
+            expanded={videoExpanded}
+            onExpandedChange={setVideoExpanded}
+            onClose={closeVideo}
+          />
+        ) : null}
 
       </DialogContent>
     </Dialog>
