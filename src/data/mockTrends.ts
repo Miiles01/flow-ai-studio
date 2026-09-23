@@ -2,6 +2,24 @@ import type { Trend } from "@/hooks/useTrends";
 
 export const MOCK_TRENDS: Trend[] = [
   {
+    "id": "meta_one_1",
+    "network": "all",
+    "media_url": "https://about.fb.com/news/2026/09/introducing-meta-one-subscription-service/",
+    "title": "Meta One: la nueva suscripción de Meta",
+    "summary": "Meta lanza Meta One, un servicio de suscripción con más de 50 funciones de IA y expresión en Instagram, Facebook, WhatsApp y Meta AI. La experiencia principal sigue siendo gratuita.",
+    "bullets": [
+      "Planes individuales desde $2.99/mes: Instagram Plus, Facebook Plus y WhatsApp Plus.",
+      "Bundles Core ($7.99/mes) y Premium ($19.99/mes) con más generación de imágenes y video con Meta AI.",
+      "Planes para creadores y negocios desde $14.99/mes: perfil mejorado, insignia verificada y Meta Business Agent 24/7.",
+      "Más de 15 millones de suscripciones y pruebas hasta la fecha; llegará también a Edits y a los lentes de IA."
+    ],
+    "links": [
+      { "label": "Anuncio oficial de Meta", "url": "https://about.fb.com/news/2026/09/introducing-meta-one-subscription-service/" }
+    ],
+    "source": "Meta",
+    "published_at": "2026-09-15"
+  },
+  {
     "id": "instagram_new_6",
     "network": "instagram",
     "media_url": "https://www.instagram.com/reel/DcKntdiqfOv/?igsh=MWdrNGF5eXlyMGtiYQ==",
