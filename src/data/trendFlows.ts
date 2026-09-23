@@ -98,6 +98,13 @@ export type TrendFlowEdgeDef = {
 export type TrendFlow = {
   network: string;
   title: string;
+  video?: {
+    url: string;
+    title: string;
+    thumbnailUrl?: string;
+    ariaLabel?: string;
+    position: { x: number; y: number };
+  };
   nodes: TrendFlowNodeDef[];
   edges: TrendFlowEdgeDef[];
 };

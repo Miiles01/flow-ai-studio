@@ -17,7 +17,7 @@ function cleanHostname(hostname: string): string {
   return hostname.toLowerCase().replace(/^www\./, "").replace(/^m\./, "");
 }
 
-function extractYouTubeId(url: URL): string | null {
+export function extractYouTubeId(url: URL): string | null {
   const hostname = cleanHostname(url.hostname);
 
   if (hostname === "youtu.be") {
@@ -106,4 +106,30 @@ export function getVideoEmbedUrl(input: string): string | null {
   if (loomId) return `https://www.loom.com/embed/${loomId}`;
 
   return null;
+}
+
+export function getYouTubeExplainerEmbedUrl(input: string): string | null {
+  const url = parseUrl(input);
+  if (!url) return null;
+
+  const videoId = extractYouTubeId(url);
+  if (!videoId) return null;
+
+  const params = new URLSearchParams({
+    autoplay: "1",
+    controls: "1",
+    modestbranding: "1",
+    playsinline: "1",
+    rel: "0",
+  });
+
+  return `https://www.youtube.com/embed/${videoId}?${params.toString()}`;
+}
+
+export function getYouTubeThumbnailUrl(input: string): string | null {
+  const url = parseUrl(input);
+  if (!url) return null;
+
+  const videoId = extractYouTubeId(url);
+  return videoId ? `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg` : null;
 }
