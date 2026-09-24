@@ -11,7 +11,6 @@ import LandingNavbar from "@/components/LandingNavbar";
 import LandingFooter from "@/components/LandingFooter";
 import logoImg from "@/assets/logo.webp";
 import creadoresHeroImg from "@/assets/creadores-hero.webp";
-<<<<<<< HEAD
 import brand1 from "@/assets/miiles/brands/brand1.svg";
 import brand2 from "@/assets/miiles/brands/brand2.svg";
 import brand3 from "@/assets/miiles/brands/brand3.svg";
@@ -21,9 +20,6 @@ import brand6 from "@/assets/miiles/brands/brand6.svg";
 import { MousePointer, Hand, Square, Type, ListTodo, Image as ImageIcon, SquareDashed, ArrowLeft, Settings2, Share2, Undo2, Redo2, PanelRight, Plus, Minus, Gift, Link2, Percent, Users, Check } from "lucide-react";
 
 const brandLogos = [brand1, brand2, brand3, brand4, brand5, brand6];
-=======
-import { MousePointer, Hand, Square, Type, ListTodo, Image as ImageIcon, SquareDashed, ArrowLeft, ArrowRight, Settings2, Share2, Undo2, Redo2, PanelRight, Plus, Minus } from "lucide-react";
->>>>>>> ae02ad5 (Update Crear cuenta button: white background, centered alignment, minimalist arrow icon)
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText, CustomEase, MorphSVGPlugin);
 if (!CustomEase.get("osmo-ease")) {
@@ -1693,16 +1689,18 @@ const Afiliados = () => {
 
           {/* ── MOBILE CTA SECTION ─────────────────────────── */}
           <div className="block md:hidden py-20 px-6 text-center bg-white border-t border-black/5">
-            <div className="max-w-md mx-auto flex flex-col items-center justify-center">
+            <div className="max-w-md mx-auto flex flex-col items-center">
               <h2 className="text-3xl font-normal leading-tight tracking-tight mb-8">
                 Empieza hoy <span style={{ fontFamily: "'Welth Catritz', serif", overflow: 'visible' }} className="pr-1 italic tracking-normal font-light">mismo</span>
               </h2>
               <Link
                 to="/register"
-                className="px-8 py-4 rounded-full bg-white text-black border border-black/15 shadow-sm text-[15px] font-normal inline-flex items-center justify-center gap-2.5 mx-auto hover:-translate-y-1 transition-transform duration-300"
+                className="px-8 py-4 rounded-full bg-black text-white text-[15px] font-normal inline-flex items-center justify-center gap-2 hover:-translate-y-1 transition-transform duration-300"
               >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M12 0C12.3 8.8 15.2 11.7 24 12C15.2 12.3 12.3 15.2 12 24C11.7 15.2 8.8 12.3 0 12C8.8 11.7 11.7 8.8 12 0Z" />
+                </svg>
                 Crear cuenta
-                <ArrowRight className="w-4 h-4" />
               </Link>
             </div>
           </div>
