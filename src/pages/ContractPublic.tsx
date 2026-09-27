@@ -45,15 +45,12 @@ const ContractPublic = () => {
   useEffect(() => {
     let alive = true;
     (async () => {
-      const { data } = await supabase
-        .from("contracts")
-        .select(
-          "public_id, title, page_size, logo_url, logo_position, logo_repeat, pages, signature_fields, field_signatures, signer_name, signature_data, signed_at"
-        )
-        .eq("public_id", publicId ?? "")
-        .maybeSingle();
+      const { data } = await (supabase.rpc as any)("get_public_contract", {
+        p_public_id: publicId ?? "",
+      });
       if (!alive) return;
-      const c = (data as unknown as Contract) ?? null;
+      const row = Array.isArray(data) ? data[0] : data;
+      const c = (row as unknown as Contract) ?? null;
       setContract(c);
       setSignatures(c?.field_signatures ?? {});
       if (c?.signature_data && c.signed_at) {
@@ -94,26 +91,6 @@ const ContractPublic = () => {
     };
     if (fieldId) setSignatures((prev) => ({ ...prev, [fieldId]: saved }));
     else setGlobalSignature(saved);
-  };
-
-  /** Quita una firma guardada (campo o firma global). */
-  const removeSignature = async (fieldId?: string) => {
-    setError(null);
-    const { data, error: fnError } = await supabase.functions.invoke("sign-contract", {
-      body: { publicId, fieldId, action: "remove" },
-    });
-    const message = fnError?.message || (data as any)?.error;
-    if (message) {
-      setError("No se pudo quitar la firma. Inténtalo de nuevo.");
-      return;
-    }
-    if (fieldId)
-      setSignatures((prev) => {
-        const next = { ...prev };
-        delete next[fieldId];
-        return next;
-      });
-    else setGlobalSignature(null);
   };
 
   /** Descarga el documento como PDF, una hoja por página. */
@@ -229,7 +206,6 @@ const ContractPublic = () => {
                         label={f.label}
                         signature={signatures[f.id]}
                         onClick={signatures[f.id] ? undefined : () => setSigningField(f)}
-                        onRemove={signatures[f.id] ? () => removeSignature(f.id) : undefined}
                       />
                     ))}
                 </div>
@@ -254,12 +230,6 @@ const ContractPublic = () => {
                     Firmado el {new Date(globalSignature.signedAt).toLocaleString("es-MX")}
                   </p>
                 </div>
-                <button
-                  onClick={() => removeSignature()}
-                  className="ml-auto rounded-full border border-neutral-200 px-4 py-2 text-[12px] font-light text-neutral-500 transition-colors hover:text-neutral-900"
-                >
-                  Quitar firma
-                </button>
               </div>
             ) : (
               <div className="flex items-center justify-between gap-4">

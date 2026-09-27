@@ -153,7 +153,7 @@ export const WIDGETS: WidgetDef[] = [
         currency: "MXN",
         pageSize: "Carta",
         logoPosition: "top-left",
-        publicId: `${Math.random().toString(36).slice(2, 8)}${Date.now().toString(36).slice(-4)}`,
+        publicId: crypto.randomUUID(),
         pages: [{ id: uid(), content: "" }],
       },
     }),

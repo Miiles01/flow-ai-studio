@@ -922,6 +922,23 @@ export type Database = {
           youtube_handle: string
         }[]
       }
+      get_public_contract: {
+        Args: { p_public_id: string }
+        Returns: {
+          field_signatures: Json
+          logo_position: string
+          logo_repeat: boolean
+          logo_url: string
+          page_size: string
+          pages: Json
+          public_id: string
+          signature_data: string
+          signature_fields: Json
+          signed_at: string
+          signer_name: string
+          title: string
+        }[]
+      }
       get_public_flow: {
         Args: { p_token: string }
         Returns: {

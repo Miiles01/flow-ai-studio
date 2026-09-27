@@ -20,6 +20,9 @@ Deno.serve(async (req) => {
 
     // Quitar una firma ya guardada (el documento es público y solo permite firmar/desfirmar).
     if (action === "remove") {
+      return json({ error: "No permitido" }, 403);
+    }
+    if (false) {
       if (!publicId) return json({ error: "Faltan datos" }, 400);
       const admin = createClient(
         Deno.env.get("SUPABASE_URL") ?? "",
