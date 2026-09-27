@@ -1,4 +1,5 @@
 import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
+import { createClient } from "npm:@supabase/supabase-js@2";
 import { type StripeEnv, createStripeClient, getStripeErrorMessage } from "../_shared/stripe.ts";
 
 async function resolveOrCreateCustomer(
@@ -80,7 +81,25 @@ Deno.serve(async (req) => {
     return new Response("Method not allowed", { status: 405, headers: corsHeaders });
   }
   try {
-    const { priceId, customerEmail, userId, returnUrl, environment } = await req.json();
+    const authHeader = req.headers.get("Authorization");
+    if (!authHeader?.startsWith("Bearer ")) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    const supabase = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_ANON_KEY")!, {
+      global: { headers: { Authorization: authHeader } },
+    });
+    const { data: claimsData, error: claimsError } = await supabase.auth.getClaims(authHeader.replace("Bearer ", ""));
+    const userId = claimsData?.claims?.sub as string | undefined;
+    const customerEmail = claimsData?.claims?.email as string | undefined;
+    if (claimsError || !userId) {
+      return new Response(JSON.stringify({ error: "Unauthorized" }), {
+        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+      });
+    }
+    // userId / customerEmail from the body are intentionally ignored.
+    const { priceId, returnUrl, environment } = await req.json();
     if (environment !== "sandbox" && environment !== "live") {
       throw new Error("Invalid environment");
     }
