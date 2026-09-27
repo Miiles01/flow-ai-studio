@@ -54,6 +54,7 @@ export function useFlowRealtime({
 
     const channel = supabase.channel(`flow:${flowId}`, {
       config: {
+        private: true,
         broadcast: { self: false, ack: false },
         presence: { key: clientIdRef.current },
       },

@@ -890,6 +890,7 @@ export type Database = {
     }
     Functions: {
       can_access_flow: { Args: { _flow_id: string }; Returns: boolean }
+      can_access_flow_topic: { Args: { _topic: string }; Returns: boolean }
       can_edit_flow: { Args: { _flow_id: string }; Returns: boolean }
       find_user_by_email: {
         Args: { p_email: string }
@@ -969,6 +970,7 @@ export type Database = {
         Returns: boolean
       }
       is_flow_owner: { Args: { _flow_id: string }; Returns: boolean }
+      is_pro: { Args: { _user_id: string }; Returns: boolean }
       join_flow_by_token: { Args: { p_token: string }; Returns: string }
       mark_referral_purchased: {
         Args: { p_user_id: string }
