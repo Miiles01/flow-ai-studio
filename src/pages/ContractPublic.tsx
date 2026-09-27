@@ -45,15 +45,12 @@ const ContractPublic = () => {
   useEffect(() => {
     let alive = true;
     (async () => {
-      const { data } = await supabase
-        .from("contracts")
-        .select(
-          "public_id, title, page_size, logo_url, logo_position, logo_repeat, pages, signature_fields, field_signatures, signer_name, signature_data, signed_at"
-        )
-        .eq("public_id", publicId ?? "")
-        .maybeSingle();
+      const { data } = await (supabase.rpc as any)("get_public_contract", {
+        p_public_id: publicId ?? "",
+      });
       if (!alive) return;
-      const c = (data as unknown as Contract) ?? null;
+      const row = Array.isArray(data) ? data[0] : data;
+      const c = (row as unknown as Contract) ?? null;
       setContract(c);
       setSignatures(c?.field_signatures ?? {});
       if (c?.signature_data && c.signed_at) {
