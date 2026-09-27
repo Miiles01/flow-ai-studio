@@ -93,26 +93,6 @@ const ContractPublic = () => {
     else setGlobalSignature(saved);
   };
 
-  /** Quita una firma guardada (campo o firma global). */
-  const removeSignature = async (fieldId?: string) => {
-    setError(null);
-    const { data, error: fnError } = await supabase.functions.invoke("sign-contract", {
-      body: { publicId, fieldId, action: "remove" },
-    });
-    const message = fnError?.message || (data as any)?.error;
-    if (message) {
-      setError("No se pudo quitar la firma. Inténtalo de nuevo.");
-      return;
-    }
-    if (fieldId)
-      setSignatures((prev) => {
-        const next = { ...prev };
-        delete next[fieldId];
-        return next;
-      });
-    else setGlobalSignature(null);
-  };
-
   /** Descarga el documento como PDF, una hoja por página. */
   const downloadPdf = async () => {
     if (!sheetsRef.current || downloading) return;
@@ -226,7 +206,6 @@ const ContractPublic = () => {
                         label={f.label}
                         signature={signatures[f.id]}
                         onClick={signatures[f.id] ? undefined : () => setSigningField(f)}
-                        onRemove={signatures[f.id] ? () => removeSignature(f.id) : undefined}
                       />
                     ))}
                 </div>
@@ -251,12 +230,6 @@ const ContractPublic = () => {
                     Firmado el {new Date(globalSignature.signedAt).toLocaleString("es-MX")}
                   </p>
                 </div>
-                <button
-                  onClick={() => removeSignature()}
-                  className="ml-auto rounded-full border border-neutral-200 px-4 py-2 text-[12px] font-light text-neutral-500 transition-colors hover:text-neutral-900"
-                >
-                  Quitar firma
-                </button>
               </div>
             ) : (
               <div className="flex items-center justify-between gap-4">
