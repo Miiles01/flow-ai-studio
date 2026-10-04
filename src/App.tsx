@@ -17,6 +17,7 @@ import BusinessInquiryThanks from "./pages/BusinessInquiryThanks";
 import Features from "./pages/Features";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
+import ShopifyTutorial from "./pages/ShopifyTutorial";
 import Dashboard from "./pages/Dashboard";
 import Boards from "./pages/Boards";
 import Programs from "./pages/Programs";
