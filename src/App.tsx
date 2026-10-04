@@ -17,6 +17,7 @@ import BusinessInquiryThanks from "./pages/BusinessInquiryThanks";
 import Features from "./pages/Features";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
+import ShopifyTutorial from "./pages/ShopifyTutorial";
 import Dashboard from "./pages/Dashboard";
 import Boards from "./pages/Boards";
 import Programs from "./pages/Programs";
@@ -141,6 +142,7 @@ const App = () => (
               </Route>
 
               <Route path="/admin" element={<Admin />} />
+              <Route path="/shopify-tutorial" element={<ShopifyTutorial />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </AuthProvider>
