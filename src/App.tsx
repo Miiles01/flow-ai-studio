@@ -142,6 +142,7 @@ const App = () => (
               </Route>
 
               <Route path="/admin" element={<Admin />} />
+              <Route path="/shopify-tutorial" element={<ShopifyTutorial />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </AuthProvider>
