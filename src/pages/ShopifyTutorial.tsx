@@ -60,7 +60,7 @@ const ShopifyTutorial = () => {
   };
 
   return (
-    <div className="min-h-screen bg-white text-black font-poppins">
+    <div className="min-h-screen bg-white text-black">
       {/* Header */}
       <header className="fixed top-6 left-1/2 -translate-x-1/2 w-[95vw] md:w-max z-[100]">
         <nav className="flex items-center justify-between gap-10 px-6 md:px-8 py-2.5 rounded-full backdrop-blur-md bg-white/80 border border-neutral-200/50 shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
