@@ -352,7 +352,7 @@ const Agentes = () => {
                   {/* Header Card */}
                   <div className="flex items-start justify-between gap-4">
                     <div className="flex items-center gap-3">
-                      <div className="w-14 h-14 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center font-normal text-2xl shadow-sm">
+                      <div className="w-14 h-14 rounded-2xl bg-miiles-pink-light text-black flex items-center justify-center font-normal text-2xl shadow-sm">
                         <Palette className="w-7 h-7" />
                       </div>
                       <div>
@@ -369,7 +369,7 @@ const Agentes = () => {
                   </div>
 
                   {/* Subtítulo persuasivo */}
-                  <p className="text-sm font-normal text-amber-700">
+                  <p className="text-sm font-normal text-miiles-gray-800">
                     Todo lo que necesites visualmente para que tu negocio venda con autoridad.
                   </p>
 
@@ -387,19 +387,19 @@ const Agentes = () => {
                     </p>
                     <ul className="space-y-2.5">
                       <li className="flex items-start gap-2.5 text-xs sm:text-sm font-light text-miiles-gray-800">
-                        <CheckCircle2 className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                        <CheckCircle2 className="w-4 h-4 text-black shrink-0 mt-0.5" />
                         <span><strong>Refinamiento de marca:</strong> Identidad, logotipo, tipografías y paleta.</span>
                       </li>
                       <li className="flex items-start gap-2.5 text-xs sm:text-sm font-light text-miiles-gray-800">
-                        <CheckCircle2 className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                        <CheckCircle2 className="w-4 h-4 text-black shrink-0 mt-0.5" />
                         <span><strong>Publicaciones para redes:</strong> Diseños para Instagram, TikTok y campañas de venta.</span>
                       </li>
                       <li className="flex items-start gap-2.5 text-xs sm:text-sm font-light text-miiles-gray-800">
-                        <CheckCircle2 className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                        <CheckCircle2 className="w-4 h-4 text-black shrink-0 mt-0.5" />
                         <span><strong>Empaques & Mockups:</strong> Etiquetas, packaging y presentación física de producto.</span>
                       </li>
                       <li className="flex items-start gap-2.5 text-xs sm:text-sm font-light text-miiles-gray-800">
-                        <CheckCircle2 className="w-4 h-4 text-amber-600 shrink-0 mt-0.5" />
+                        <CheckCircle2 className="w-4 h-4 text-black shrink-0 mt-0.5" />
                         <span><strong>Anuncios y letreros:</strong> Banners, material publicitario y papel personalizado.</span>
                       </li>
                     </ul>
