@@ -1,7 +1,7 @@
 import { useEffect, useRef } from "react";
 import SlideArrowButton from "@/components/SlideArrowButton";
 
-// Botón fijo abajo que sigue el scroll; al llegar al footer sube con él y se desvanece.
+// Botón fijo abajo que sigue el scroll; al acercarse el footer se desvanece y desaparece.
 // Debe renderizarse fuera del wrapper de ScrollSmoother para que quede fijo.
 const StickyCta = ({ label, onClick }: { label: string; onClick: () => void }) => {
   const ctaRef = useRef<HTMLDivElement>(null);
@@ -13,9 +13,10 @@ const StickyCta = ({ label, onClick }: { label: string; onClick: () => void }) =
       if (cta) {
         const dockedTop = window.innerHeight - cta.offsetHeight - 24;
         const footerTop = document.querySelector("footer")?.getBoundingClientRect().top ?? Infinity;
-        const y = Math.min(dockedTop, footerTop - cta.offsetHeight - 24);
-        cta.style.transform = `translate3d(0, ${y}px, 0)`;
-        const o = Math.max(0, Math.min(1, y / 120));
+        // Se queda fijo abajo y se desvanece conforme el footer se acerca; con el footer a la vista desaparece
+        const distanceToFooter = footerTop - (dockedTop + cta.offsetHeight);
+        const o = Math.max(0, Math.min(1, distanceToFooter / 80));
+        cta.style.transform = `translate3d(0, ${dockedTop}px, 0)`;
         cta.style.opacity = String(o);
         cta.style.visibility = o < 0.02 ? "hidden" : "visible";
       }

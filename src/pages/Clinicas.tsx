@@ -32,6 +32,7 @@ import {
 } from "lucide-react";
 import LandingNavbar from "@/components/LandingNavbar";
 import LandingFooter from "@/components/LandingFooter";
+import BrandCarousel from "@/components/BrandCarousel";
 import SlideArrowButton from "@/components/SlideArrowButton";
 import StickyCta from "@/components/StickyCta";
 import { openWhatsApp } from "@/lib/whatsapp";
@@ -342,7 +343,7 @@ const Clinicas = () => {
         <div id="smooth-content-clinicas" className="bg-white dark:bg-black text-black dark:text-white font-sans pb-0 transition-colors duration-300">
           {/* ─── HERO SECTION: PROBLEMA DE AGENDA Y ATENCIÓN EN CLÍNICAS ─── */}
           <section className="relative overflow-hidden">
-          <header className="relative pt-28 md:pt-48 pb-12 md:pb-24 px-6 md:px-12 max-w-5xl mx-auto text-center">
+          <header className="relative pt-32 md:pt-48 pb-12 md:pb-24 px-6 md:px-12 max-w-5xl mx-auto text-center">
             {/* Badge Eyebrow */}
             <motion.div
               initial={{ opacity: 0, y: -8 }}
@@ -361,7 +362,7 @@ const Clinicas = () => {
               initial="hidden"
               animate="visible"
               variants={fadeUp}
-              className="text-balance text-[2.75rem] sm:text-5xl md:text-6xl lg:text-7xl font-normal tracking-tight text-black dark:text-white leading-[1.08] max-w-4xl mx-auto mb-10 md:mb-20"
+              className="text-balance text-[2.75rem] sm:text-5xl md:text-6xl lg:text-7xl font-normal tracking-tight text-black dark:text-white leading-[1.08] max-w-4xl mx-auto mb-12 md:mb-14"
             >
               El asistente{" "}
               <span
@@ -386,6 +387,11 @@ const Clinicas = () => {
                 — 24 horas al día
               </span>
             </motion.h1>
+
+            {/* Carrusel "Elegido por" */}
+            <div className="mb-14 md:mb-16">
+              <BrandCarousel />
+            </div>
 
             {/* Video debajo del título */}
             <motion.div
