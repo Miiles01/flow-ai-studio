@@ -89,7 +89,7 @@ const ClinicVideo = ({ src }: { src: string }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const boxRef = useRef<HTMLDivElement>(null);
   const [playing, setPlaying] = useState(false);
-  const [muted, setMuted] = useState(true);
+  const [muted, setMuted] = useState(false);
   const [volume, setVolume] = useState(1);
   const [time, setTime] = useState(0);
   const [duration, setDuration] = useState(0);
@@ -142,8 +142,6 @@ const ClinicVideo = ({ src }: { src: string }) => {
         ref={videoRef}
         src={src}
         className="w-full h-auto block cursor-pointer"
-        autoPlay
-        muted
         loop
         playsInline
         preload="metadata"
