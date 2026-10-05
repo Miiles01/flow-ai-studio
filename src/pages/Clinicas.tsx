@@ -85,7 +85,7 @@ const formatTime = (t: number) => {
   return `${m}:${sec}`;
 };
 
-const ClinicVideo = ({ src }: { src: string }) => {
+const ClinicVideo = ({ src, poster }: { src: string; poster?: string }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const boxRef = useRef<HTMLDivElement>(null);
   const [playing, setPlaying] = useState(false);
@@ -141,6 +141,7 @@ const ClinicVideo = ({ src }: { src: string }) => {
       <video
         ref={videoRef}
         src={src}
+        poster={poster}
         className="w-full h-auto block cursor-pointer"
         loop
         playsInline
@@ -394,7 +395,7 @@ const Clinicas = () => {
               transition={{ delay: 0.1 }}
               className="max-w-full md:max-w-md mx-auto mb-6 md:mb-8 rounded-[32px] overflow-hidden bg-black"
             >
-              <ClinicVideo src="/videos/clinicas-ad.mp4" />
+              <ClinicVideo src="/videos/clinicas-ad.mp4" poster="/videos/clinicas-poster.jpg" />
             </motion.div>
 
             {/* Solicitar demo, debajo del video */}
