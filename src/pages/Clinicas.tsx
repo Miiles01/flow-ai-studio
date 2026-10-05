@@ -1,0 +1,708 @@
+import { useState, useEffect } from "react";
+import { Link } from "react-router-dom";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  Stethoscope,
+  Calendar,
+  Clock,
+  CheckCircle2,
+  ArrowRight,
+  Sparkles,
+  ShieldCheck,
+  MessageSquare,
+  Users,
+  ChevronDown,
+  Globe,
+  BellRing,
+  Award,
+  Zap,
+  Check,
+  X,
+  Send,
+  Building2,
+  HeartPulse,
+} from "lucide-react";
+import LandingNavbar from "@/components/LandingNavbar";
+import LandingFooter from "@/components/LandingFooter";
+
+const CLINIC_FAQS = [
+  {
+    question: "¿Cómo funciona el Asistente para Clínicas por $500 MXN al mes?",
+    answer:
+      "Es una suscripción mensual completa que dota a tu clínica o consultorio de un asistente inteligente 24/7 y una página web médica profesional. El asistente atiende pacientes por WhatsApp y web, responde dudas frecuentes, agenda citas en tu calendario y envía recordatorios automáticos para que ningún paciente falte a su consulta.",
+  },
+  {
+    question: "¿Qué pasa si un paciente tiene una duda médica delicada o una emergencia?",
+    answer:
+      "El asistente está entrenado para reconocer límites éticos y médicos. Resuelve dudas operativas (costos de consulta, ubicación, preparación para estudios, horarios) y, ante cualquier síntoma crítico o solicitud médica específica, canaliza inmediatamente al paciente a la línea directa de emergencias o al WhatsApp del médico responsable.",
+  },
+  {
+    question: "¿Cómo se gestiona el dominio .com de la página web?",
+    answer:
+      "La página web de tu clínica está 100% incluida y alojada dentro del servicio. Si deseas que tu web funcione bajo tu propio nombre de dominio personalizado (por ejemplo www.tucapaclinicamedica.com o .mx), este registro tiene un costo anual adicional opcional que podemos gestionar y conectar por ti.",
+  },
+  {
+    question: "¿Hay plazos forzosos o penalizaciones por cancelación?",
+    answer:
+      "No. La suscripción es mensual y puedes cancelarla en cualquier momento sin penalizaciones. Estamos convencidos del valor que aporta a tu consulta: con una sola cita que el asistente rescate fuera de horario, la mensualidad de $500 MXN se paga sola múltiples veces.",
+  },
+  {
+    question: "¿Para qué tipo de clínicas o consultorios está pensado?",
+    answer:
+      "Está optimizado para clínicas dentales, consultorios dermatológicos, clínicas de fisioterapia, consultorios de ginecología, nutrición, psicología, pediatría, medicina estética y policlínicas que buscan orden y mayor captación de pacientes.",
+  },
+];
+
+const fadeUp = {
+  hidden: { opacity: 0, y: 22 },
+  visible: {
+    opacity: 1,
+    y: 0,
+    transition: { duration: 0.55, ease: [0.25, 0.1, 0.25, 1] as const },
+  },
+};
+
+const Clinicas = () => {
+  const [openFaq, setOpenFaq] = useState<number | null>(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    clinicName: "",
+    specialty: "dental",
+    contact: "",
+    includeDomain: false,
+    estimatedDoctors: "1-3",
+  });
+  const [isSubmitted, setIsSubmitted] = useState(false);
+
+  useEffect(() => {
+    document.title =
+      "Asistente Inteligente para Clínicas y Consultorios Médicos | Miiles";
+
+    const metaDesc = document.querySelector('meta[name="description"]');
+    if (metaDesc) {
+      metaDesc.setAttribute(
+        "content",
+        "Llena la agenda de tu clínica o consultorio con el Asistente de IA de Miiles. Citas 24/7, recordatorios automáticos por WhatsApp y web médica por solo $500 MXN al mes."
+      );
+    }
+
+    const schemaScript = document.createElement("script");
+    schemaScript.type = "application/ld+json";
+    schemaScript.id = "schema-clinicas-asistente";
+    schemaScript.textContent = JSON.stringify({
+      "@context": "https://schema.org",
+      "@graph": [
+        {
+          "@type": "Product",
+          name: "Asistente Inteligente para Clínicas y Consultorios",
+          description:
+            "Asistente de IA para agendamiento de pacientes 24/7, recordatorios por WhatsApp y portal web médico.",
+          offers: {
+            "@type": "Offer",
+            price: "500",
+            priceCurrency: "MXN",
+            priceSpecification: {
+              "@type": "UnitPriceSpecification",
+              price: "500",
+              priceCurrency: "MXN",
+              unitCode: "MON",
+            },
+            availability: "https://schema.org/InStock",
+          },
+        },
+        {
+          "@type": "FAQPage",
+          mainEntity: CLINIC_FAQS.map((faq) => ({
+            "@type": "Question",
+            name: faq.question,
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: faq.answer,
+            },
+          })),
+        },
+      ],
+    });
+
+    document.head.appendChild(schemaScript);
+    return () => {
+      const existing = document.getElementById("schema-clinicas-asistente");
+      if (existing) existing.remove();
+    };
+  }, []);
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitted(true);
+  };
+
+  return (
+    <div className="min-h-screen bg-white text-black font-sans selection:bg-miiles-pink-light selection:text-black">
+      {/* Navbar Oficial de Miiles */}
+      <LandingNavbar
+        cta={
+          <button
+            onClick={() => {
+              setIsSubmitted(false);
+              setIsModalOpen(true);
+            }}
+            className="flex items-center gap-1.5 text-xs font-normal px-5 py-2.5 rounded-full bg-blue-600 text-white hover:bg-black transition-all duration-300 hover:scale-105"
+          >
+            <span>Activar clínica ($500/mes)</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+        }
+      />
+
+      {/* ─── HERO SECTION: PROBLEMA DE AGENDA Y ATENCIÓN EN CLÍNICAS ─── */}
+      <header className="relative pt-36 md:pt-48 pb-16 md:pb-24 px-6 md:px-12 max-w-5xl mx-auto text-center">
+        {/* Badge Eyebrow */}
+        <motion.div
+          initial={{ opacity: 0, y: -8 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.5 }}
+          className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 border border-blue-200/80 mb-6"
+        >
+          <Stethoscope className="w-4 h-4 text-blue-600" />
+          <span className="text-[11px] font-normal tracking-wide text-blue-900">
+            Especializado para Clínicas, Consultorios y Profesionales de la Salud
+          </span>
+        </motion.div>
+
+        {/* H1 Principal con acento editorial */}
+        <motion.h1
+          initial="hidden"
+          animate="visible"
+          variants={fadeUp}
+          className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-normal tracking-tight text-black leading-[1.08] max-w-4xl mx-auto mb-6"
+        >
+          El asistente inteligente que llena la agenda de tu clínica.{" "}
+          <span
+            style={{
+              fontFamily: "'Welth Catritz', serif",
+              fontStyle: "italic",
+            }}
+            className="font-normal block sm:inline text-black"
+          >
+            24 horas al día, 7 días a la semana.
+          </span>
+        </motion.h1>
+
+        {/* Párrafo Direct Answer AEO */}
+        <motion.p
+          initial="hidden"
+          animate="visible"
+          variants={fadeUp}
+          transition={{ delay: 0.1 }}
+          className="text-base sm:text-lg md:text-xl font-light text-miiles-gray-600 max-w-3xl mx-auto leading-relaxed mb-10"
+        >
+          No dejes que los pacientes se vayan con otra clínica por no responder a tiempo. Tu
+          asistente responde al instante por WhatsApp y web, confirma citas en tu calendario oficial,
+          resuelve dudas de tratamientos y envía recordatorios para eliminar los pacientes que no
+          asisten.
+        </motion.p>
+
+        {/* Precio y CTA Principal */}
+        <motion.div
+          initial="hidden"
+          animate="visible"
+          variants={fadeUp}
+          transition={{ delay: 0.2 }}
+          className="flex flex-col sm:flex-row items-center justify-center gap-4"
+        >
+          <button
+            onClick={() => {
+              setIsSubmitted(false);
+              setIsModalOpen(true);
+            }}
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full px-8 py-4 text-sm font-normal bg-blue-600 text-white hover:bg-black transition-all duration-300 hover:scale-105 shadow-md"
+          >
+            <Sparkles className="w-4 h-4" />
+            <span>Activar asistente para mi clínica ($500 MXN / mes)</span>
+          </button>
+          <Link
+            to="/agentes"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full px-7 py-4 text-sm font-normal bg-miiles-gray-50 text-black border border-miiles-gray-200 hover:bg-miiles-gray-100 transition-all duration-300"
+          >
+            <span>Ver agentes de diseño y ventas</span>
+            <ArrowRight className="w-3.5 h-3.5 text-miiles-gray-600" />
+          </Link>
+        </motion.div>
+
+        {/* Resumen de Condiciones Claras */}
+        <motion.div
+          initial={{ opacity: 0, y: 16 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.35, duration: 0.5 }}
+          className="flex flex-wrap items-center justify-center gap-6 md:gap-10 mt-14 pt-10 border-t border-miiles-gray-100 text-xs font-light text-miiles-gray-600"
+        >
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0" />
+            <span>Suscripción de $500 MXN al mes</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0" />
+            <span>Sin contratos forzosos (cancela cuando quieras)</span>
+          </div>
+          <div className="flex items-center gap-2">
+            <CheckCircle2 className="w-4 h-4 text-blue-600 shrink-0" />
+            <span>Página web de clínica incluida (dominio .com opcional)</span>
+          </div>
+        </motion.div>
+      </header>
+
+      {/* ─── LOS 3 DOLORES QUE RESUELVE EN CONSULTORIOS Y CLÍNICAS ─── */}
+      <section className="py-20 px-6 md:px-12 bg-blue-50/40 border-y border-blue-100">
+        <div className="max-w-5xl mx-auto">
+          <div className="text-center max-w-2xl mx-auto mb-14 space-y-3">
+            <span className="text-xs font-normal tracking-widest uppercase text-blue-700">
+              El Reto Diario en Clínicas
+            </span>
+            <h2 className="text-3xl md:text-5xl font-normal tracking-tight text-black">
+              El 40% de los pacientes potenciales se pierde por lentitud en la atención.
+            </h2>
+            <p className="text-sm md:text-base font-light text-miiles-gray-600">
+              Un consultorio con recepción ocupada o que no atiende noches ni fines de semana regala
+              citas a clínicas competidoras todos los días.
+            </p>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="rounded-[24px] bg-white border border-blue-100 p-7 space-y-3.5 shadow-sm">
+              <div className="w-12 h-12 rounded-2xl bg-red-50 text-red-600 flex items-center justify-center">
+                <Clock className="w-6 h-6" />
+              </div>
+              <h3 className="text-lg font-normal text-black">
+                Consultas fuera de horario laboral
+              </h3>
+              <p className="text-xs sm:text-sm font-light text-miiles-gray-600 leading-relaxed">
+                El 45% de los pacientes busca agendar citas entre 8:00 PM y 11:00 PM o los domingos.
+                Si nadie contesta, buscan la siguiente clínica en Google o redes.
+              </p>
+            </div>
+
+            <div className="rounded-[24px] bg-white border border-blue-100 p-7 space-y-3.5 shadow-sm">
+              <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center">
+                <BellRing className="w-6 h-6" />
+              </div>
+              <h3 className="text-lg font-normal text-black">
+                Pacientes que no asisten (No-Shows)
+              </h3>
+              <p className="text-xs sm:text-sm font-light text-miiles-gray-600 leading-relaxed">
+                Horas muertas en el consultorio por pacientes que olvidaron su cita. Cada inasistencia
+                es dinero y tiempo de tus médicos que nunca se recupera.
+              </p>
+            </div>
+
+            <div className="rounded-[24px] bg-white border border-blue-100 p-7 space-y-3.5 shadow-sm">
+              <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center">
+                <MessageSquare className="w-6 h-6" />
+              </div>
+              <h3 className="text-lg font-normal text-black">
+                Recepción saturada y llamadas perdidas
+              </h3>
+              <p className="text-xs sm:text-sm font-light text-miiles-gray-600 leading-relaxed">
+                Tu recepcionista no puede cobrar en mostrador, atender a un paciente presente y
+                contestar 5 mensajes de WhatsApp al mismo tiempo.
+              </p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── QUÉ INCLUYE LA SUSCRIPCIÓN DE $500 MXN/MES ─── */}
+      <section className="py-24 px-6 md:px-12 max-w-6xl mx-auto">
+        <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
+          <span className="text-xs font-normal tracking-widest uppercase text-blue-600">
+            Todo en Uno por $500 MXN / mes
+          </span>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-normal tracking-tight text-black">
+            Lo que tu clínica recibe desde el primer día.
+          </h2>
+          <p className="text-base font-light text-miiles-gray-600">
+            Una solución completa que profesionaliza la comunicación de tu clínica y llena tus
+            consultorios.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+          <div className="rounded-[24px] border border-miiles-gray-200 bg-white p-8 space-y-4 hover:border-blue-400 transition-all shadow-sm">
+            <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center">
+              <Calendar className="w-6 h-6" />
+            </div>
+            <h3 className="text-xl font-normal text-black">
+              1. Agendamiento de Citas Automatizado 24/7
+            </h3>
+            <p className="text-sm font-light text-miiles-gray-600 leading-relaxed">
+              El paciente elige fecha, hora y doctor disponible según las reglas de tu clínica. El
+              asistente sincroniza la cita directamente en tu calendario oficial y confirma al
+              paciente en segundos.
+            </p>
+          </div>
+
+          <div className="rounded-[24px] border border-miiles-gray-200 bg-white p-8 space-y-4 hover:border-blue-400 transition-all shadow-sm">
+            <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center">
+              <BellRing className="w-6 h-6" />
+            </div>
+            <h3 className="text-xl font-normal text-black">
+              2. Recordatorios Inteligentes por WhatsApp
+            </h3>
+            <p className="text-sm font-light text-miiles-gray-600 leading-relaxed">
+              El asistente envía recordatorios automáticos 24 horas y 2 horas antes de la consulta. El
+              paciente puede confirmar con un toque o reagendar, liberando el espacio para otro
+              paciente a tiempo.
+            </p>
+          </div>
+
+          <div className="rounded-[24px] border border-miiles-gray-200 bg-white p-8 space-y-4 hover:border-blue-400 transition-all shadow-sm">
+            <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center">
+              <Globe className="w-6 h-6" />
+            </div>
+            <h3 className="text-xl font-normal text-black">
+              3. Página Web Oficial de tu Clínica
+            </h3>
+            <p className="text-sm font-light text-miiles-gray-600 leading-relaxed">
+              Diseñamos el sitio web de tu clínica: presentación de tus médicos, especialidades,
+              testimonios, ubicación y botón de agendamiento instantáneo. (Puedes usar nuestro enlace
+              o contratar tu propio dominio .com adicional).
+            </p>
+          </div>
+
+          <div className="rounded-[24px] border border-miiles-gray-200 bg-white p-8 space-y-4 hover:border-blue-400 transition-all shadow-sm">
+            <div className="w-12 h-12 rounded-2xl bg-blue-50 text-blue-600 flex items-center justify-center">
+              <ShieldCheck className="w-6 h-6" />
+            </div>
+            <h3 className="text-xl font-normal text-black">
+              4. Respuestas a Dudas Operativas Frecuentes
+            </h3>
+            <p className="text-sm font-light text-miiles-gray-600 leading-relaxed">
+              Resuelve de inmediato dudas de precios de consulta, ubicación con mapa en Google Maps,
+              preparación para estudios o análisis y formas de pago aceptadas (efectivo, tarjetas,
+              transferencia).
+            </p>
+          </div>
+        </div>
+
+        {/* Cuadro de ROI Matemático */}
+        <div className="mt-12 rounded-[28px] bg-gradient-to-br from-blue-900 to-black text-white p-8 sm:p-12 text-center md:text-left flex flex-col md:flex-row items-center justify-between gap-8">
+          <div className="space-y-3 max-w-xl">
+            <span className="text-xs uppercase tracking-widest text-blue-300 font-normal">
+              Retorno de Inversión Inmediato
+            </span>
+            <h3 className="text-2xl sm:text-3xl font-normal">
+              Con 1 sola cita adicional al mes, tu asistente se paga solo.
+            </h3>
+            <p className="text-xs sm:text-sm font-light text-neutral-300 leading-relaxed">
+              El costo de la suscripción es de apenas $500 MXN mensuales. Si el asistente rescata
+              una sola consulta médica que se hubiera perdido en la noche o fin de semana, ya
+              triplicaste la inversión de tu clínica.
+            </p>
+          </div>
+          <button
+            onClick={() => {
+              setIsSubmitted(false);
+              setIsModalOpen(true);
+            }}
+            className="shrink-0 rounded-full bg-white text-black hover:bg-miiles-pink transition-all px-8 py-4 text-xs font-normal hover:scale-105 shadow-xl"
+          >
+            Comenzar con mi clínica
+          </button>
+        </div>
+      </section>
+
+      {/* ─── ESPECIALIDADES MÉDICAS QUE LO UTILIZAN ─── */}
+      <section className="py-20 px-6 md:px-12 bg-miiles-gray-50 border-t border-miiles-gray-200/60">
+        <div className="max-w-5xl mx-auto space-y-12">
+          <div className="text-center space-y-3">
+            <span className="text-xs font-normal tracking-widest uppercase text-blue-600">
+              Especialidades
+            </span>
+            <h2 className="text-3xl md:text-4xl font-normal tracking-tight text-black">
+              Adaptado a la dinámica de cada área de la salud.
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
+            <div className="p-5 rounded-2xl bg-white border border-miiles-gray-200 text-center space-y-2">
+              <div className="text-2xl">🦷</div>
+              <h4 className="text-sm font-normal text-black">Dentales & Ortodoncia</h4>
+              <p className="text-[11px] font-light text-miiles-gray-400">Limpiezas, brackets y urgencias</p>
+            </div>
+            <div className="p-5 rounded-2xl bg-white border border-miiles-gray-200 text-center space-y-2">
+              <div className="text-2xl">✨</div>
+              <h4 className="text-sm font-normal text-black">Dermo & Estética</h4>
+              <p className="text-[11px] font-light text-miiles-gray-400">Tratamientos y valoración</p>
+            </div>
+            <div className="p-5 rounded-2xl bg-white border border-miiles-gray-200 text-center space-y-2">
+              <div className="text-2xl">🏃</div>
+              <h4 className="text-sm font-normal text-black">Fisioterapia</h4>
+              <p className="text-[11px] font-light text-miiles-gray-400">Rehabilitación y sesiones</p>
+            </div>
+            <div className="p-5 rounded-2xl bg-white border border-miiles-gray-200 text-center space-y-2">
+              <div className="text-2xl">🩺</div>
+              <h4 className="text-sm font-normal text-black">Consultorios Médicos</h4>
+              <p className="text-[11px] font-light text-miiles-gray-400">Pediatría, gineco y especialistas</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ─── PREGUNTAS FRECUENTES (AEO / PAA) ─── */}
+      <section className="py-20 px-6 md:px-12 max-w-4xl mx-auto space-y-12">
+        <div className="text-center space-y-3">
+          <span className="text-xs font-normal tracking-widest uppercase text-blue-600">
+            Preguntas Frecuentes
+          </span>
+          <h2 className="text-3xl md:text-4xl font-normal tracking-tight text-black">
+            Todo lo que necesitas saber antes de activar tu clínica.
+          </h2>
+        </div>
+
+        <div className="space-y-4">
+          {CLINIC_FAQS.map((faq, idx) => {
+            const isOpen = openFaq === idx;
+            return (
+              <div
+                key={idx}
+                className="rounded-[20px] border border-miiles-gray-200 bg-white p-6 transition-all shadow-sm"
+              >
+                <button
+                  onClick={() => setOpenFaq(isOpen ? null : idx)}
+                  className="w-full flex items-center justify-between text-left gap-4 text-sm md:text-base font-normal text-black"
+                >
+                  <span>{faq.question}</span>
+                  <ChevronDown
+                    className={`w-4 h-4 text-miiles-gray-400 shrink-0 transition-transform duration-200 ${
+                      isOpen ? "rotate-180 text-black" : ""
+                    }`}
+                  />
+                </button>
+                <AnimatePresence>
+                  {isOpen && (
+                    <motion.div
+                      initial={{ opacity: 0, height: 0 }}
+                      animate={{ opacity: 1, height: "auto" }}
+                      exit={{ opacity: 0, height: 0 }}
+                      transition={{ duration: 0.2 }}
+                    >
+                      <p className="mt-4 pt-4 border-t border-miiles-gray-100 text-xs md:text-sm font-light text-miiles-gray-600 leading-relaxed">
+                        {faq.answer}
+                      </p>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* ─── CALL TO ACTION FINAL ─── */}
+      <section className="py-24 px-6 md:px-12 max-w-5xl mx-auto text-center space-y-6">
+        <h2 className="text-3xl sm:text-4xl md:text-6xl font-normal text-black tracking-tight leading-tight">
+          Moderniza la atención de tus pacientes hoy mismo.
+        </h2>
+        <p className="text-base sm:text-lg font-light text-miiles-gray-600 max-w-xl mx-auto">
+          Por solo $500 MXN al mes tendrás el asistente que tu clínica necesita para nunca más perder
+          una consulta.
+        </p>
+        <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
+          <button
+            onClick={() => {
+              setIsSubmitted(false);
+              setIsModalOpen(true);
+            }}
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full px-9 py-4 text-sm font-normal bg-blue-600 text-white hover:bg-black transition-all duration-300 hover:scale-105 shadow-md"
+          >
+            <span>Activar clínica por $500 MXN / mes</span>
+            <ArrowRight className="w-4 h-4" />
+          </button>
+          <Link
+            to="/agentes"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full px-8 py-4 text-sm font-normal bg-white text-black border border-miiles-gray-200 hover:bg-miiles-gray-50 transition-all duration-300"
+          >
+            Ver agentes para otros negocios
+          </Link>
+        </div>
+      </section>
+
+      {/* ─── MODAL DE CONTRATACIÓN ASISTENTE PARA CLÍNICAS ─── */}
+      <AnimatePresence>
+        {isModalOpen && (
+          <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 sm:p-6">
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setIsModalOpen(false)}
+              className="absolute inset-0 bg-black/40 backdrop-blur-sm"
+            />
+
+            <motion.div
+              initial={{ opacity: 0, scale: 0.95, y: 16 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.95, y: 16 }}
+              transition={{ duration: 0.25, ease: "easeOut" }}
+              className="relative w-full max-w-lg bg-white rounded-[28px] border border-blue-200 shadow-2xl p-6 sm:p-8 max-h-[90vh] overflow-y-auto z-10"
+            >
+              <button
+                onClick={() => setIsModalOpen(false)}
+                className="absolute top-6 right-6 p-2 rounded-full hover:bg-miiles-gray-100 transition-colors text-miiles-gray-600"
+              >
+                <X className="w-5 h-5" />
+              </button>
+
+              {isSubmitted ? (
+                <div className="text-center py-10 space-y-4">
+                  <div className="w-16 h-16 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center mx-auto">
+                    <Check className="w-8 h-8" />
+                  </div>
+                  <h3 className="text-2xl font-normal text-black">
+                    ¡Solicitud de Clínica Recibida!
+                  </h3>
+                  <p className="text-sm font-light text-miiles-gray-600 max-w-md mx-auto">
+                    Nos pondremos en contacto vía WhatsApp de inmediato para conectar los horarios de
+                    tu consultorio y dejar activo tu asistente en menos de 48 horas.
+                  </p>
+                  <button
+                    onClick={() => setIsModalOpen(false)}
+                    className="inline-flex items-center gap-2 rounded-full px-8 py-3 text-xs font-normal bg-blue-600 text-white hover:bg-black transition-all"
+                  >
+                    Entendido
+                  </button>
+                </div>
+              ) : (
+                <form onSubmit={handleSubmit} className="space-y-5">
+                  <div>
+                    <span className="text-[10px] font-normal uppercase tracking-wider text-blue-600">
+                      Suscripción Mensual — $500 MXN / mes
+                    </span>
+                    <h3 className="text-2xl font-normal text-black mt-1">
+                      Activar Asistente para tu Clínica
+                    </h3>
+                    <p className="text-xs font-light text-miiles-gray-600 mt-1">
+                      Comienza a agendar pacientes 24/7 sin plazos forzosos.
+                    </p>
+                  </div>
+
+                  {/* Nombre de la clínica */}
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-normal text-black">
+                      Nombre de la Clínica o Consultorio:
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="Ej. Clínica Dental Sonrisas, Dr. Garza..."
+                      value={formData.clinicName}
+                      onChange={(e) =>
+                        setFormData({ ...formData, clinicName: e.target.value })
+                      }
+                      className="w-full text-xs font-light rounded-xl border border-miiles-gray-200 p-3 focus:outline-none focus:border-blue-600"
+                    />
+                  </div>
+
+                  {/* Especialidad */}
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-normal text-black">
+                      Especialidad Médica Principal:
+                    </label>
+                    <select
+                      value={formData.specialty}
+                      onChange={(e) =>
+                        setFormData({ ...formData, specialty: e.target.value })
+                      }
+                      className="w-full text-xs font-light rounded-xl border border-miiles-gray-200 p-3 bg-white focus:outline-none focus:border-blue-600"
+                    >
+                      <option value="dental">Dental / Odontología</option>
+                      <option value="dermo">Dermatología / Medicina Estética</option>
+                      <option value="fisio">Fisioterapia / Rehabilitación</option>
+                      <option value="psico">Psicología / Psiquiatría</option>
+                      <option value="nutri">Nutrición</option>
+                      <option value="pediatria">Pediatría / Medicina General</option>
+                      <option value="otra">Otra Especialidad</option>
+                    </select>
+                  </div>
+
+                  {/* Número de médicos */}
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-normal text-black">
+                      ¿Cuántos doctores o consultorios atienden?
+                    </label>
+                    <select
+                      value={formData.estimatedDoctors}
+                      onChange={(e) =>
+                        setFormData({ ...formData, estimatedDoctors: e.target.value })
+                      }
+                      className="w-full text-xs font-light rounded-xl border border-miiles-gray-200 p-3 bg-white focus:outline-none focus:border-blue-600"
+                    >
+                      <option value="1">1 doctor / consultorio individual</option>
+                      <option value="2-3">2 a 3 doctores</option>
+                      <option value="4+">4 o más especialistas</option>
+                    </select>
+                  </div>
+
+                  {/* Checkbox Dominio .com adicional */}
+                  <div className="flex items-start gap-2.5 p-3 rounded-xl bg-blue-50/60 border border-blue-100">
+                    <input
+                      type="checkbox"
+                      id="includeClinicDomain"
+                      checked={formData.includeDomain}
+                      onChange={(e) =>
+                        setFormData({ ...formData, includeDomain: e.target.checked })
+                      }
+                      className="mt-0.5 rounded border-gray-300 text-blue-600 focus:ring-blue-600"
+                    />
+                    <label htmlFor="includeClinicDomain" className="text-xs font-light text-miiles-gray-800">
+                      <strong>Deseo dominio .com o .mx propio (adicional opcional):</strong> Ayúdenme a
+                      registrar y conectar el dominio web oficial de mi clínica.
+                    </label>
+                  </div>
+
+                  {/* Contacto */}
+                  <div className="space-y-1.5">
+                    <label className="text-xs font-normal text-black">
+                      WhatsApp o teléfono para contactarte:
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="+52 55... (o tu correo)"
+                      value={formData.contact}
+                      onChange={(e) =>
+                        setFormData({ ...formData, contact: e.target.value })
+                      }
+                      className="w-full text-xs font-light rounded-xl border border-miiles-gray-200 p-3 focus:outline-none focus:border-blue-600"
+                    />
+                  </div>
+
+                  <div className="pt-2 flex items-center justify-end gap-3">
+                    <button
+                      type="button"
+                      onClick={() => setIsModalOpen(false)}
+                      className="px-5 py-2.5 rounded-full text-xs font-normal text-miiles-gray-600 hover:text-black transition-colors"
+                    >
+                      Cancelar
+                    </button>
+                    <button
+                      type="submit"
+                      className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-blue-600 text-white text-xs font-normal hover:bg-black transition-all duration-300 hover:scale-105"
+                    >
+                      <span>Activar Clínica</span>
+                      <Send className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </form>
+              )}
+            </motion.div>
+          </div>
+        )}
+      </AnimatePresence>
+
+      {/* Footer Oficial Miiles */}
+      <LandingFooter />
+    </div>
+  );
+};
+
+export default Clinicas;
