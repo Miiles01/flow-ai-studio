@@ -198,15 +198,16 @@ const Clinicas = () => {
               >
                 inteligente
               </span>{" "}
-              que llena la agenda de tu{" "}
+              que llena la{" "}
               <span
                 style={{
                   fontFamily: "'Welth Catritz', serif",
                   fontStyle: "italic",
                 }}
               >
-                clínica.
-              </span>
+                agenda
+              </span>{" "}
+              de tu clínica.
               <span className="block mt-4 text-xl sm:text-2xl md:text-3xl text-miiles-gray-400 font-light tracking-wide">
                 - 24 horas al día
               </span>
