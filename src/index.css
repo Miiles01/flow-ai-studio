@@ -89,7 +89,7 @@
     --secondary-foreground: 0 0% 95%;
 
     --muted: 0 0% 14%;
-    --muted-foreground: 0 0% 60%;
+    --muted-foreground: 0 0% 80%;
 
     --accent: 231 87% 60%;
     --accent-foreground: 0 0% 100%;
@@ -1021,3 +1021,8 @@
 .dark .contract-scrollbar {
   scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
 }
+
+/* Dark mode del dashboard: los grises se apagan sobre negro, así que se aclaran */
+.dark .dashboard-scope .text-miiles-gray-400 { color: rgb(255 255 255 / 0.75); }
+.dark .dashboard-scope .text-miiles-gray-600 { color: rgb(255 255 255 / 0.85); }
+.dark .dashboard-scope .text-muted-foreground\/50 { color: rgb(255 255 255 / 0.6); }

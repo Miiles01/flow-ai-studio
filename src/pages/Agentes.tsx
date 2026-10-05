@@ -1,25 +1,62 @@
 import { useState, useEffect, useRef } from "react";
-import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { ScrollSmoother } from "gsap/ScrollSmoother";
+import { SplitText } from "gsap/SplitText";
 import {
-  Sparkles,
-  ArrowRight,
-  Check,
   CheckCircle2,
   ChevronDown,
-  Globe,
-  Send,
   Palette,
-  Stethoscope,
-  X,
+  Globe,
+  PenTool,
+  Share2,
+  Package,
+  Megaphone,
+  Filter,
+  FolderOpen,
+  Clock,
+  AtSign,
+  Layers,
 } from "lucide-react";
 import LandingNavbar from "@/components/LandingNavbar";
 import LandingFooter from "@/components/LandingFooter";
+import SlideArrowButton from "@/components/SlideArrowButton";
+import StickyCta from "@/components/StickyCta";
+import { openWhatsApp } from "@/lib/whatsapp";
 
-gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
+gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText);
+
+const WHATSAPP_MESSAGE = "Hola, quiero activar un agente para mi negocio.";
+const WHATSAPP_DEMO_MESSAGE = "Hola, quiero solicitar una demo de los agentes para mi negocio.";
+
+const AGENTS = [
+  {
+    key: "disenador",
+    icon: Palette,
+    name: "Agente Diseñador",
+    tagline: "Identidad y recursos visuales para vender con autoridad",
+    features: [
+      { icon: PenTool, text: "Refinamiento de marca: logotipo, tipografías y paleta" },
+      { icon: Share2, text: "Publicaciones para Instagram, TikTok y campañas de venta" },
+      { icon: Package, text: "Empaques, etiquetas y mockups de producto" },
+      { icon: Megaphone, text: "Anuncios, letreros y papelería personalizada" },
+    ],
+  },
+  {
+    key: "embudo",
+    icon: Globe,
+    name: "Agente de Embudo Comercial",
+    tagline: "Tu vendedor incansable y tu plataforma web",
+    features: [
+      { icon: Globe, text: "Sitio web completo, rápido y responsive" },
+      { icon: Filter, text: "Embudo de conversión para agendar llamadas o pedir cotizaciones" },
+      { icon: FolderOpen, text: "Catálogo y portafolio de tus servicios" },
+      { icon: Clock, text: "Automatizaciones que atienden a tus clientes 24/7" },
+      { icon: AtSign, text: "Incluye espacio para dominio" },
+    ],
+  },
+];
 
 const FAQS = [
   {
@@ -45,7 +82,7 @@ const FAQS = [
   {
     question: "¿Tengo una clínica o consultorio, qué servicio me corresponde?",
     answer:
-      "Para el sector salud contamos con el Asistente para Clínicas: una solución especializada bajo suscripción de $500 MXN/mes que automatiza la agenda de pacientes 24/7, responde dudas médicas frecuentes y reduce el ausentismo.",
+      "Para el sector salud contamos con el Asistente para Clínicas: una solución especializada bajo suscripción de $500 MXN/mes que automatiza la agenda de pacientes 24/7, responde dudas frecuentes y reduce el ausentismo.",
   },
 ];
 
@@ -60,20 +97,9 @@ const fadeUp = {
 
 const Agentes = () => {
   const [openFaq, setOpenFaq] = useState<number | null>(0);
-  const [isModalOpen, setIsModalOpen] = useState(false);
-  const [selectedAgent, setSelectedAgent] = useState<string>("disenador");
-  const [formData, setFormData] = useState({
-    businessName: "",
-    contact: "",
-    needs: "",
-    includeDomain: false,
-  });
-  const [isSubmitted, setIsSubmitted] = useState(false);
-
   const smootherRef = useRef<ScrollSmoother | null>(null);
 
   useEffect(() => {
-    // Inicializar ScrollSmoother oficial de Miiles
     smootherRef.current = ScrollSmoother.create({
       wrapper: "#smooth-wrapper-agentes",
       content: "#smooth-content-agentes",
@@ -81,14 +107,40 @@ const Agentes = () => {
       effects: true,
     });
 
+    // Entrada de los títulos h2 palabra por palabra y de los párrafos con subida
+    const animCtx = gsap.context(() => {
+      gsap.utils.toArray<HTMLElement>("h2[data-split-title]").forEach((el) => {
+        if (el.querySelector('[style*="Welth"]')) return;
+        const split = SplitText.create(el, { type: "words" });
+        gsap.from(split.words, {
+          opacity: 0,
+          y: 15,
+          stagger: 0.06,
+          duration: 0.5,
+          ease: "power2.out",
+          scrollTrigger: { trigger: el, start: "top 85%", once: true },
+        });
+      });
+
+      gsap.utils.toArray<HTMLElement>("p[data-fade-p]").forEach((el) => {
+        gsap.from(el, {
+          y: 30,
+          opacity: 0,
+          duration: 0.8,
+          ease: "power2.out",
+          scrollTrigger: { trigger: el, start: "top 88%", once: true },
+        });
+      });
+    });
+
     document.title =
-      "Agentes de IA para Escalar tu Negocio | Diseñador & Embudo Comercial | Miiles";
+      "Agentes de IA para Escalar tu Negocio | Diseñador y Embudo Comercial | Miiles";
 
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) {
       metaDesc.setAttribute(
         "content",
-        "Escala tu negocio con los agentes de Miiles: Tu Diseñador personal de marca y recursos visuales ($2,000 MXN) y tu Agente Vendedor de embudo comercial y web ($2,000 MXN). Soluciones llave en mano."
+        "Escala tu negocio con los agentes de Miiles: tu Diseñador de marca y recursos visuales ($2,000 MXN) y tu Agente de Embudo Comercial con web incluida ($2,000 MXN). Pago único, soluciones llave en mano."
       );
     }
 
@@ -108,7 +160,7 @@ const Agentes = () => {
         },
         {
           "@type": "Product",
-          name: "Agente Diseñador — Identidad & Recursos Visuales",
+          name: "Agente Diseñador — Identidad y Recursos Visuales",
           description:
             "Agente dedicado para refinar tu marca, crear logotipos, publicaciones para redes sociales, empaques, letreros y anuncios.",
           offers: {
@@ -120,7 +172,7 @@ const Agentes = () => {
         },
         {
           "@type": "Product",
-          name: "Agente de Embudo Comercial — Web & Captación",
+          name: "Agente de Embudo Comercial — Web y Captación",
           description:
             "Agente vendedor que monta tu sitio web, automatiza la captación de prospectos y agenda de citas.",
           offers: {
@@ -147,6 +199,7 @@ const Agentes = () => {
     document.head.appendChild(schemaScript);
 
     return () => {
+      animCtx.revert();
       smootherRef.current?.kill();
       ScrollTrigger.getAll().forEach((t) => t.kill());
       const existing = document.getElementById("schema-agentes-comerciales");
@@ -154,29 +207,8 @@ const Agentes = () => {
     };
   }, []);
 
-  const handleOpenModal = (agentType?: string) => {
-    if (agentType) setSelectedAgent(agentType);
-    setIsSubmitted(false);
-    setIsModalOpen(true);
-  };
-
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSubmitted(true);
-  };
-
-  const scrollToSection = (id: string) => {
-    if (smootherRef.current) {
-      smootherRef.current.scrollTo(id, true);
-    } else {
-      const el = document.querySelector(id);
-      if (el) el.scrollIntoView({ behavior: "smooth" });
-    }
-  };
-
   return (
     <>
-      {/* Navbar Oficial de Miiles (Limpio y estándar) */}
       <LandingNavbar />
 
       {/* Smooth Scroll Wrapper */}
@@ -191,575 +223,252 @@ const Agentes = () => {
           left: 0,
         }}
       >
-        <div id="smooth-content-agentes" className="bg-white text-black font-sans pb-0">
-          {/* ─── HERO SECTION: EL PROBLEMA REAL PARA ESCALAR UN NEGOCIO ─── */}
-          <header className="relative pt-36 md:pt-48 pb-16 md:pb-24 px-6 md:px-12 max-w-5xl mx-auto text-center">
-            {/* Badge Eyebrow */}
+        <div
+          id="smooth-content-agentes"
+          className="bg-white dark:bg-black text-black dark:text-white font-sans pb-0 transition-colors duration-300"
+        >
+          {/* ─── HERO ─── */}
+          <header className="relative pt-28 md:pt-48 pb-12 md:pb-24 px-6 md:px-12 max-w-5xl mx-auto text-center">
             <motion.div
               initial={{ opacity: 0, y: -8 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.5 }}
-              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-miiles-gray-50 border border-miiles-gray-200 mb-6"
+              className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-blue-50 dark:bg-blue-500/10 border border-blue-200/80 dark:border-blue-400/20 mb-6"
             >
-              <span className="w-2 h-2 rounded-full bg-miiles-blue animate-pulse" />
-              <span className="text-[11px] font-normal tracking-wide text-miiles-gray-600">
-                Escalamiento Empresarial: Automatización & Presencia
+              <Layers className="w-4 h-4 text-blue-600 dark:text-blue-300" />
+              <span className="text-[11px] font-normal tracking-wide text-blue-900 dark:text-blue-200">
+                Especializado para negocios
               </span>
             </motion.div>
 
-            {/* H1 Principal con acento editorial */}
             <motion.h1
               initial="hidden"
               animate="visible"
               variants={fadeUp}
-              className="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-normal tracking-tight text-black leading-[1.08] max-w-4xl mx-auto mb-6"
+              className="text-balance text-[2.75rem] sm:text-5xl md:text-6xl lg:text-7xl font-normal tracking-tight text-black dark:text-white leading-[1.08] max-w-4xl mx-auto mb-10 md:mb-20"
             >
-              ¿Cómo escalar mi negocio?{" "}
+              Un diseñador y un vendedor que hacen crecer tu{" "}
               <span
                 style={{
                   fontFamily: "'Welth Catritz', serif",
                   fontStyle: "italic",
                 }}
-                className="font-normal block sm:inline text-black"
               >
-                Automatiza tu venta y luce profesional.
+                negocio
+              </span>
+              <span className="block mt-4 text-2xl sm:text-3xl md:text-4xl text-blue-600 dark:text-blue-300 font-normal tracking-tight">
+                — pago único, sin mensualidades
               </span>
             </motion.h1>
 
-            {/* Párrafo Directo del Problema (AEO Optimizado) */}
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              variants={fadeUp}
+              transition={{ delay: 0.15 }}
+              className="flex justify-center mb-8 md:mb-10"
+            >
+              <SlideArrowButton onClick={() => openWhatsApp(WHATSAPP_DEMO_MESSAGE)}>
+                Solicitar demo
+              </SlideArrowButton>
+            </motion.div>
+
             <motion.p
               initial="hidden"
               animate="visible"
               variants={fadeUp}
               transition={{ delay: 0.1 }}
-              className="text-base sm:text-lg md:text-xl font-light text-miiles-gray-600 max-w-3xl mx-auto leading-relaxed mb-10"
+              className="text-base sm:text-lg md:text-xl font-light text-miiles-gray-600 dark:text-white/85 max-w-3xl mx-auto leading-relaxed mb-10"
             >
-              Para que un negocio escale de verdad necesita romper dos grandes barreras:{" "}
-              <strong>automatizar las tareas comerciales repetitivas</strong> para no perder tiempo
-              persiguiendo clientes a mano, y contar con el respaldo de{" "}
-              <strong>recursos visuales de alto nivel y una web impecable</strong> que justifique tus
-              precios y proyecte autoridad indiscutible.
+              Para escalar de verdad necesitas dos cosas: <strong>recursos visuales de alto nivel</strong>{" "}
+              que justifiquen tus precios y <strong>una web con embudo automatizado</strong> que venda
+              por ti mientras atiendes tu negocio.
             </motion.p>
 
-            {/* CTAs Principales */}
-            <motion.div
-              initial="hidden"
-              animate="visible"
-              variants={fadeUp}
-              transition={{ delay: 0.2 }}
-              className="flex flex-col sm:flex-row items-center justify-center gap-4"
-            >
-              <button
-                onClick={() => handleOpenModal("disenador")}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full px-8 py-4 text-sm font-normal bg-black text-white hover:bg-miiles-pink hover:text-black transition-all duration-300 hover:scale-105 shadow-md"
-              >
-                <Sparkles className="w-4 h-4" />
-                <span>Escalar mi negocio hoy</span>
-              </button>
-              <button
-                onClick={() => scrollToSection("#agentes-catalogo")}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full px-7 py-4 text-sm font-normal bg-miiles-gray-50 text-black border border-miiles-gray-200 hover:bg-miiles-gray-100 transition-all duration-300"
-              >
-                <span>Ver nuestros 2 agentes clave</span>
-                <ChevronDown className="w-4 h-4 text-miiles-gray-600" />
-              </button>
-            </motion.div>
-
-            {/* Badges de Confianza */}
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.35, duration: 0.5 }}
-              className="flex flex-wrap items-center justify-center gap-6 md:gap-10 mt-14 pt-10 border-t border-miiles-gray-100 text-xs font-light text-miiles-gray-600"
+              className="flex flex-wrap items-center justify-center gap-6 md:gap-10 mt-10 md:mt-14 pt-8 md:pt-10 border-t border-miiles-gray-100 dark:border-white/10"
             >
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-miiles-blue shrink-0" />
-                <span>Pago único de $2,000 MXN por agente</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-miiles-blue shrink-0" />
-                <span>Sin contratos forzosos ni comisiones</span>
-              </div>
-              <div className="flex items-center gap-2">
-                <CheckCircle2 className="w-4 h-4 text-miiles-blue shrink-0" />
-                <span>Entrega ágil lista para operar</span>
+              <div className="flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-blue-50 dark:bg-blue-500/10 border border-blue-200/80 dark:border-blue-400/20">
+                <CheckCircle2 className="w-5 h-5 text-blue-600 dark:text-blue-300 shrink-0" />
+                <span className="text-base md:text-lg font-normal text-blue-900 dark:text-blue-200">
+                  Sin contratos forzosos ni comisiones
+                </span>
               </div>
             </motion.div>
           </header>
 
-          {/* ─── BANNER DESTACADO PARA CLÍNICAS (SOLUCIÓN ESPECIALIZADA) ─── */}
-          <section className="px-6 md:px-12 max-w-5xl mx-auto mb-16">
-            <div className="rounded-[24px] bg-gradient-to-r from-blue-50/80 via-white to-blue-50/50 border border-blue-200/70 p-6 sm:p-8 flex flex-col md:flex-row items-center justify-between gap-6 shadow-sm">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-2xl bg-blue-600 text-white flex items-center justify-center shrink-0 shadow-sm">
-                  <Stethoscope className="w-6 h-6" />
-                </div>
-                <div>
-                  <div className="flex items-center gap-2">
-                    <span className="text-[10px] uppercase font-normal tracking-wider px-2.5 py-0.5 rounded-full bg-blue-100 text-blue-800">
-                      Servicio Especializado
-                    </span>
-                    <span className="text-xs font-normal text-blue-700">$500 MXN / mes</span>
-                  </div>
-                  <h3 className="text-lg font-normal text-black mt-1">
-                    ¿Tienes un consultorio o clínica de salud?
-                  </h3>
-                  <p className="text-xs md:text-sm font-light text-miiles-gray-600 max-w-xl">
-                    Automatiza tu agenda de pacientes las 24 horas, responde dudas sobre tratamientos y
-                    reduce cancelaciones con nuestro Asistente especializado para Clínicas.
-                  </p>
-                </div>
-              </div>
-              <Link
-                to="/clinicas"
-                className="shrink-0 inline-flex items-center gap-1.5 px-6 py-3 rounded-full bg-blue-600 text-white text-xs font-normal hover:bg-black transition-all duration-300 hover:scale-105"
-              >
-                <span>Ver Asistente para Clínicas</span>
-                <ArrowRight className="w-3.5 h-3.5" />
-              </Link>
-            </div>
-          </section>
-
-          {/* ─── SECCIÓN: LOS 2 AGENTES COMERCIALES ─── */}
-          <section
-            id="agentes-catalogo"
-            className="py-20 px-6 md:px-12 max-w-6xl mx-auto border-t border-miiles-gray-100"
-          >
-            <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
-              <span className="text-xs font-normal tracking-widest uppercase text-miiles-blue">
-                Nuestros Agentes Principales
+          {/* ─── EL RETO (con fondo punteado) ─── */}
+          <section className="relative overflow-hidden md:min-h-[80vh] flex items-center justify-center py-14 md:py-20 px-6 md:px-12">
+            <div
+              className="absolute inset-0 pointer-events-none z-0 dark:hidden"
+              style={{
+                background:
+                  "radial-gradient(circle at center, #FFFFFF 0%, rgba(140, 134, 162, 0.15) 59%, #FFFFFF 100%)",
+                maskImage: "radial-gradient(circle, black 1px, transparent 1.5px)",
+                WebkitMaskImage: "radial-gradient(circle, black 1px, transparent 1.5px)",
+                maskSize: "16px 16px",
+                WebkitMaskSize: "16px 16px",
+              }}
+            />
+            <div
+              className="absolute inset-0 pointer-events-none z-0 hidden dark:block"
+              style={{
+                background:
+                  "radial-gradient(circle at center, #000000 0%, rgba(255, 255, 255, 0.22) 59%, #000000 100%)",
+                maskImage: "radial-gradient(circle, black 1px, transparent 1.5px)",
+                WebkitMaskImage: "radial-gradient(circle, black 1px, transparent 1.5px)",
+                maskSize: "16px 16px",
+                WebkitMaskSize: "16px 16px",
+              }}
+            />
+            <div className="relative z-10 max-w-5xl mx-auto text-center space-y-6">
+              <span className="text-sm font-normal text-blue-600 dark:text-blue-300">
+                El reto de escalar un negocio
               </span>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl font-normal tracking-tight text-black">
-                El equipo que tu negocio necesita para vender sin frenos.
+              <h2
+                data-split-title
+                className="text-balance text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-normal tracking-tight leading-[1.08] text-black dark:text-white"
+              >
+                Si tu marca no inspira confianza y tu web no vende, el cliente se va con otro
               </h2>
-              <p className="text-base font-light text-miiles-gray-600">
-                Un diseñador dedicado para que tu marca luzca impecable y un vendedor experto que monta
-                tu web y embudo automatizado.
+              <p
+                data-fade-p
+                className="text-sm md:text-base font-light text-miiles-gray-600 dark:text-white/85 max-w-2xl mx-auto"
+              >
+                Sin recursos visuales de alto nivel ni un embudo que atienda por ti, pasas el día
+                persiguiendo clientes a mano y perdiendo ventas que ya tenías cerca.
               </p>
             </div>
+          </section>
 
-            {/* Tarjetas de los 2 Agentes */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-              {/* AGENTE 1: TU DISEÑADOR */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{ duration: 0.5 }}
-                className="rounded-[28px] border border-miiles-gray-200 bg-white p-8 sm:p-10 flex flex-col justify-between hover:border-black/30 hover:shadow-[0_24px_60px_rgba(0,0,0,0.06)] transition-all duration-300 relative overflow-hidden"
+          {/* ─── LOS AGENTES ─── */}
+          <section className="py-14 md:py-24 px-6 md:px-12 max-w-6xl mx-auto">
+            <div className="text-center max-w-3xl mx-auto mb-10 md:mb-16 space-y-3">
+              <span className="text-xs font-normal tracking-widest text-blue-600 dark:text-blue-300">
+                Los agentes
+              </span>
+              <h2
+                data-split-title
+                className="text-balance text-3xl sm:text-4xl md:text-5xl font-normal tracking-tight text-black dark:text-white"
               >
-                <div className="space-y-6">
-                  {/* Header Card */}
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-14 h-14 rounded-2xl bg-miiles-pink-light text-black flex items-center justify-center font-normal text-2xl shadow-sm">
-                        <Palette className="w-7 h-7" />
-                      </div>
-                      <div>
-                        <h3 className="text-2xl font-normal text-black">Tu Diseñador</h3>
-                        <p className="text-xs font-light text-miiles-gray-400">
-                          Identidad, Posicionamiento & Recursos Visuales
-                        </p>
-                      </div>
+                Elige el agente que tu negocio necesita
+              </h2>
+            </div>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+              {AGENTS.map(({ key, icon: AgentIcon, name, tagline, features }) => (
+                <div
+                  key={key}
+                  className="flex flex-col rounded-[2.5rem] bg-black dark:bg-neutral-900 text-white p-8 sm:p-10 shadow-[0_40px_80px_rgba(0,0,0,0.2)] dark:shadow-none transition-all duration-500 hover:-translate-y-2"
+                >
+                  <div className="flex flex-col items-start gap-4 mb-2">
+                    <div className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center shrink-0">
+                      <AgentIcon className="w-5 h-5 text-white" strokeWidth={1.5} />
                     </div>
-                    <div className="text-right">
-                      <span className="text-2xl font-normal text-black">$2,000</span>
-                      <span className="text-xs text-miiles-gray-400 block font-light">MXN / Pago único</span>
-                    </div>
+                    <h3 className="text-2xl font-normal">{name}</h3>
+                  </div>
+                  <p className="text-xs font-light text-white/70 mb-6">{tagline}</p>
+
+                  <div className="flex items-baseline gap-1 mb-8">
+                    <span className="text-5xl font-normal tracking-tight">$2,000</span>
+                    <span className="text-xs font-light text-white/70">MXN / pago único</span>
                   </div>
 
-                  {/* Subtítulo persuasivo */}
-                  <p className="text-sm font-normal text-miiles-gray-800">
-                    Todo lo que necesites visualmente para que tu negocio venda con autoridad.
-                  </p>
-
-                  <p className="text-sm font-light text-miiles-gray-600 leading-relaxed">
-                    Este agente se encarga de ayudarte a refinar tu marca, crear una imagen sólida y darte
-                    todos los recursos visuales necesarios para competir en grande. Desde el logotipo y
-                    publicaciones para redes sociales, hasta empaque, papelería personalizada, letreros o
-                    anuncios de alto impacto.
-                  </p>
-
-                  {/* Qué hace por ti */}
-                  <div className="space-y-3 pt-2">
-                    <p className="text-xs font-normal uppercase tracking-wider text-miiles-gray-400">
-                      Lo que diseña y entrega para tu marca:
-                    </p>
-                    <ul className="space-y-2.5">
-                      <li className="flex items-start gap-2.5 text-xs sm:text-sm font-light text-miiles-gray-800">
-                        <CheckCircle2 className="w-4 h-4 text-black shrink-0 mt-0.5" />
-                        <span><strong>Refinamiento de marca:</strong> Identidad, logotipo, tipografías y paleta.</span>
+                  <ul className="space-y-4">
+                    {features.map(({ icon: Icon, text }) => (
+                      <li key={text} className="flex items-start gap-3">
+                        <Icon className="w-5 h-5 text-white shrink-0 mt-0.5" strokeWidth={1.5} />
+                        <span className="text-sm font-medium">{text}</span>
                       </li>
-                      <li className="flex items-start gap-2.5 text-xs sm:text-sm font-light text-miiles-gray-800">
-                        <CheckCircle2 className="w-4 h-4 text-black shrink-0 mt-0.5" />
-                        <span><strong>Publicaciones para redes:</strong> Diseños para Instagram, TikTok y campañas de venta.</span>
-                      </li>
-                      <li className="flex items-start gap-2.5 text-xs sm:text-sm font-light text-miiles-gray-800">
-                        <CheckCircle2 className="w-4 h-4 text-black shrink-0 mt-0.5" />
-                        <span><strong>Empaques & Mockups:</strong> Etiquetas, packaging y presentación física de producto.</span>
-                      </li>
-                      <li className="flex items-start gap-2.5 text-xs sm:text-sm font-light text-miiles-gray-800">
-                        <CheckCircle2 className="w-4 h-4 text-black shrink-0 mt-0.5" />
-                        <span><strong>Anuncios y letreros:</strong> Banners, material publicitario y papel personalizado.</span>
-                      </li>
-                    </ul>
-                  </div>
+                    ))}
+                  </ul>
                 </div>
-
-                {/* CTA Card */}
-                <div className="pt-8 mt-6 border-t border-miiles-gray-100 flex items-center justify-between">
-                  <span className="text-xs font-light text-miiles-gray-400">
-                    Soporte visual continuo
-                  </span>
-                  <button
-                    onClick={() => handleOpenModal("disenador")}
-                    className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-xs font-normal bg-black text-white hover:bg-miiles-pink hover:text-black transition-all duration-300 hover:scale-105"
-                  >
-                    <span>Contratar Diseñador</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </motion.div>
-
-              {/* AGENTE 2: AGENTE DE EMBUDO COMERCIAL */}
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true, margin: "-40px" }}
-                transition={{ duration: 0.5, delay: 0.1 }}
-                className="rounded-[28px] border border-miiles-blue/40 bg-white p-8 sm:p-10 flex flex-col justify-between hover:border-miiles-blue hover:shadow-[0_24px_60px_rgba(64,89,241,0.08)] transition-all duration-300 relative overflow-hidden"
-              >
-                <div className="space-y-6">
-                  {/* Header Card */}
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex items-center gap-3">
-                      <div className="w-14 h-14 rounded-2xl bg-miiles-blue-light text-miiles-blue flex items-center justify-center font-normal text-2xl shadow-sm">
-                        <Globe className="w-7 h-7" />
-                      </div>
-                      <div>
-                        <h3 className="text-2xl font-normal text-black">Agente de Embudo</h3>
-                        <p className="text-xs font-light text-miiles-gray-400">
-                          Tu Agente Vendedor & Plataforma Web
-                        </p>
-                      </div>
-                    </div>
-                    <div className="text-right">
-                      <span className="text-2xl font-normal text-black">$2,000</span>
-                      <span className="text-xs text-miiles-gray-400 block font-light">MXN / Pago único</span>
-                    </div>
-                  </div>
-
-                  {/* Subtítulo persuasivo */}
-                  <p className="text-sm font-normal text-miiles-blue">
-                    Monta tu página web, automatiza la captación y aterriza tu modelo de negocio.
-                  </p>
-
-                  <p className="text-sm font-light text-miiles-gray-600 leading-relaxed">
-                    Este es tu vendedor incansable: se encarga de pulir tu propuesta comercial, montar tu
-                    sitio web oficial y estructurar el embudo para que los clientes vean tus servicios,
-                    revisen tu portafolio y agenden directamente contigo sin fricciones. Trabaja de la mano
-                    con el diseñador para que tu presencia digital cierre ventas todos los días.
-                  </p>
-
-                  {/* Qué hace por ti */}
-                  <div className="space-y-3 pt-2">
-                    <p className="text-xs font-normal uppercase tracking-wider text-miiles-gray-400">
-                      Lo que construye e implementa para ti:
-                    </p>
-                    <ul className="space-y-2.5">
-                      <li className="flex items-start gap-2.5 text-xs sm:text-sm font-light text-miiles-gray-800">
-                        <CheckCircle2 className="w-4 h-4 text-miiles-blue shrink-0 mt-0.5" />
-                        <span><strong>Tu sitio web completo:</strong> Rápido, responsive y enfocado en captación.</span>
-                      </li>
-                      <li className="flex items-start gap-2.5 text-xs sm:text-sm font-light text-miiles-gray-800">
-                        <CheckCircle2 className="w-4 h-4 text-miiles-blue shrink-0 mt-0.5" />
-                        <span><strong>Embudo de conversión:</strong> Flujos para agendar llamadas o solicitar cotizaciones.</span>
-                      </li>
-                      <li className="flex items-start gap-2.5 text-xs sm:text-sm font-light text-miiles-gray-800">
-                        <CheckCircle2 className="w-4 h-4 text-miiles-blue shrink-0 mt-0.5" />
-                        <span><strong>Catálogo y portafolio:</strong> Muestra tus casos de éxito y soluciones de forma convincente.</span>
-                      </li>
-                      <li className="flex items-start gap-2.5 text-xs sm:text-sm font-light text-miiles-gray-800">
-                        <CheckCircle2 className="w-4 h-4 text-miiles-blue shrink-0 mt-0.5" />
-                        <span><strong>Dominio .com listo:</strong> Soporte de integración con tu dominio propio (costo de dominio .com adicional opcional).</span>
-                      </li>
-                    </ul>
-                  </div>
-                </div>
-
-                {/* CTA Card */}
-                <div className="pt-8 mt-6 border-t border-miiles-gray-100 flex items-center justify-between">
-                  <span className="text-xs font-light text-miiles-gray-400">
-                    Tu máquina de ventas lista
-                  </span>
-                  <button
-                    onClick={() => handleOpenModal("embudo")}
-                    className="inline-flex items-center gap-2 rounded-full px-6 py-3 text-xs font-normal bg-miiles-blue text-white hover:bg-black transition-all duration-300 hover:scale-105"
-                  >
-                    <span>Contratar Agente Vendedor</span>
-                    <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </motion.div>
+              ))}
             </div>
           </section>
 
-          {/* ─── PREGUNTAS FRECUENTES (AEO / PAA OPTIMIZADO) ─── */}
-          <section className="py-20 px-6 md:px-12 bg-miiles-gray-50 border-t border-miiles-gray-200/60">
-            <div className="max-w-4xl mx-auto space-y-12">
-              <div className="text-center space-y-3">
-                <span className="text-xs font-normal tracking-widest uppercase text-miiles-blue">
-                  Preguntas Frecuentes
-                </span>
-                <h2 className="text-3xl md:text-4xl font-normal tracking-tight text-black">
-                  Claridad total sobre cómo operan nuestros agentes.
-                </h2>
-                <p className="text-sm font-light text-miiles-gray-600">
-                  Respuestas concretas para que comiences hoy mismo con total tranquilidad.
-                </p>
-              </div>
+          {/* ─── PREGUNTAS FRECUENTES ─── */}
+          <section className="py-14 md:py-20 px-6 md:px-12 max-w-4xl mx-auto space-y-8 md:space-y-12">
+            <div className="text-center space-y-3">
+              <span className="text-xs font-normal tracking-widest text-blue-600 dark:text-blue-300">
+                Preguntas frecuentes
+              </span>
+              <h2
+                data-split-title
+                className="text-balance text-3xl md:text-4xl font-normal tracking-tight text-black dark:text-white"
+              >
+                Claridad total sobre cómo operan nuestros agentes
+              </h2>
+            </div>
 
-              <div className="space-y-4">
-                {FAQS.map((faq, idx) => {
-                  const isOpen = openFaq === idx;
-                  return (
-                    <div
-                      key={idx}
-                      className="rounded-[20px] border border-miiles-gray-200 bg-white p-6 transition-all shadow-sm"
+            <div className="space-y-4">
+              {FAQS.map((faq, idx) => {
+                const isOpen = openFaq === idx;
+                return (
+                  <div
+                    key={idx}
+                    className="rounded-[20px] bg-[#F5F5F8] dark:bg-white/5 p-6 transition-all"
+                  >
+                    <button
+                      onClick={() => setOpenFaq(isOpen ? null : idx)}
+                      className="w-full flex items-center justify-between text-left gap-4 text-sm md:text-base font-normal text-black dark:text-white"
                     >
-                      <button
-                        onClick={() => setOpenFaq(isOpen ? null : idx)}
-                        className="w-full flex items-center justify-between text-left gap-4 text-sm md:text-base font-normal text-black"
-                      >
-                        <span>{faq.question}</span>
-                        <ChevronDown
-                          className={`w-4 h-4 text-miiles-gray-400 shrink-0 transition-transform duration-200 ${
-                            isOpen ? "rotate-180 text-black" : ""
-                          }`}
-                        />
-                      </button>
-                      <AnimatePresence>
-                        {isOpen && (
-                          <motion.div
-                            initial={{ opacity: 0, height: 0 }}
-                            animate={{ opacity: 1, height: "auto" }}
-                            exit={{ opacity: 0, height: 0 }}
-                            transition={{ duration: 0.2 }}
-                          >
-                            <p className="mt-4 pt-4 border-t border-miiles-gray-100 text-xs md:text-sm font-light text-miiles-gray-600 leading-relaxed">
-                              {faq.answer}
-                            </p>
-                          </motion.div>
-                        )}
-                      </AnimatePresence>
-                    </div>
-                  );
-                })}
-              </div>
+                      <span>{faq.question}</span>
+                      <ChevronDown
+                        className={`w-4 h-4 text-miiles-gray-400 dark:text-white/70 shrink-0 transition-transform duration-200 ${
+                          isOpen ? "rotate-180 text-black dark:text-white" : ""
+                        }`}
+                      />
+                    </button>
+                    <AnimatePresence>
+                      {isOpen && (
+                        <motion.div
+                          initial={{ opacity: 0, height: 0 }}
+                          animate={{ opacity: 1, height: "auto" }}
+                          exit={{ opacity: 0, height: 0 }}
+                          transition={{ duration: 0.2 }}
+                          className="overflow-hidden"
+                        >
+                          <p className="mt-4 pt-4 border-t border-miiles-gray-100 dark:border-white/10 text-xs md:text-sm font-light text-miiles-gray-600 dark:text-white/85 leading-relaxed">
+                            {faq.answer}
+                          </p>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                );
+              })}
             </div>
           </section>
 
-          {/* ─── CALL TO ACTION FINAL ─── */}
-          <section className="py-24 px-6 md:px-12 max-w-5xl mx-auto text-center space-y-6">
-            <h2 className="text-3xl sm:text-4xl md:text-6xl font-normal text-black tracking-tight leading-tight">
-              Deja de postergar la profesionalización de tu empresa.
+          {/* ─── CIERRE ─── */}
+          <section className="py-14 md:py-24 px-6 md:px-12 max-w-5xl mx-auto text-center space-y-4 md:space-y-6">
+            <h2
+              data-split-title
+              className="text-balance text-3xl sm:text-4xl md:text-6xl font-normal text-black dark:text-white tracking-tight leading-tight"
+            >
+              Escala tu negocio con tu diseñador y tu vendedor
             </h2>
-            <p className="text-base sm:text-lg font-light text-miiles-gray-600 max-w-xl mx-auto">
-              Por solo $2,000 MXN obtienes el respaldo visual o comercial que tardarías meses en construir
-              por tu cuenta.
+            <p
+              data-fade-p
+              className="text-base sm:text-lg font-light text-miiles-gray-600 dark:text-white/85 max-w-xl mx-auto"
+            >
+              Por $2,000 MXN de pago único por agente, tu marca y tu web quedan listas para vender.
             </p>
-            <div className="pt-4 flex flex-col sm:flex-row items-center justify-center gap-4">
-              <button
-                onClick={() => handleOpenModal("disenador")}
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full px-9 py-4 text-sm font-normal bg-black text-white hover:bg-miiles-pink hover:text-black transition-all duration-300 hover:scale-105 shadow-md"
-              >
-                <span>Activar mi agente ahora</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-              <Link
-                to="/clinicas"
-                className="w-full sm:w-auto inline-flex items-center justify-center gap-2 rounded-full px-8 py-4 text-sm font-normal bg-white text-black border border-miiles-gray-200 hover:bg-miiles-gray-50 transition-all duration-300"
-              >
-                Ver Asistente para Clínicas ($500/mes)
-              </Link>
-            </div>
           </section>
 
-          {/* Footer Oficial Miiles */}
-          <LandingFooter />
+          {/* En oscuro se invierte el footer compartido (blanco fijo) sin tocar otras páginas */}
+          <div className="dark:[filter:invert(1)_brightness(2)]">
+            <LandingFooter />
+          </div>
         </div>
       </div>
 
-      {/* ─── MODAL DE CONTRATACIÓN Y CONTACTO DIRECTO (FUERA DE SMOOTH WRAPPER) ─── */}
-      <AnimatePresence>
-        {isModalOpen && (
-          <div className="fixed inset-0 z-[120] flex items-center justify-center p-4 sm:p-6">
-            <motion.div
-              initial={{ opacity: 0 }}
-              animate={{ opacity: 1 }}
-              exit={{ opacity: 0 }}
-              onClick={() => setIsModalOpen(false)}
-              className="absolute inset-0 bg-black/40 backdrop-blur-sm"
-            />
-
-            <motion.div
-              initial={{ opacity: 0, scale: 0.95, y: 16 }}
-              animate={{ opacity: 1, scale: 1, y: 0 }}
-              exit={{ opacity: 0, scale: 0.95, y: 16 }}
-              transition={{ duration: 0.25, ease: "easeOut" }}
-              className="relative w-full max-w-xl bg-white rounded-[28px] border border-miiles-gray-200 shadow-2xl p-6 sm:p-8 max-h-[90vh] overflow-y-auto z-10"
-            >
-              <button
-                onClick={() => setIsModalOpen(false)}
-                className="absolute top-6 right-6 p-2 rounded-full hover:bg-miiles-gray-100 transition-colors text-miiles-gray-600"
-              >
-                <X className="w-5 h-5" />
-              </button>
-
-              {isSubmitted ? (
-                <div className="text-center py-10 space-y-4">
-                  <div className="w-16 h-16 rounded-full bg-emerald-50 text-emerald-600 flex items-center justify-center mx-auto">
-                    <Check className="w-8 h-8" />
-                  </div>
-                  <h3 className="text-2xl font-normal text-black">
-                    ¡Solicitud de Agente Recibida!
-                  </h3>
-                  <p className="text-sm font-light text-miiles-gray-600 max-w-md mx-auto">
-                    Te contactaremos inmediatamente por WhatsApp para afinar los detalles de tu
-                    marca y comenzar a trabajar en tus entregables sin demoras.
-                  </p>
-                  <button
-                    onClick={() => setIsModalOpen(false)}
-                    className="inline-flex items-center gap-2 rounded-full px-8 py-3 text-xs font-normal bg-black text-white hover:bg-miiles-pink hover:text-black transition-all"
-                  >
-                    Cerrar
-                  </button>
-                </div>
-              ) : (
-                <form onSubmit={handleSubmit} className="space-y-6">
-                  <div>
-                    <span className="text-[10px] font-normal uppercase tracking-wider text-miiles-blue">
-                      Activación Inmediata
-                    </span>
-                    <h3 className="text-2xl font-normal text-black mt-1">
-                      Contratar tus Agentes Miiles
-                    </h3>
-                    <p className="text-xs font-light text-miiles-gray-600 mt-1">
-                      Paga solo lo que necesitas: $2,000 MXN pago único por agente.
-                    </p>
-                  </div>
-
-                  {/* Selección de agente */}
-                  <div className="space-y-2">
-                    <label className="text-xs font-normal text-black">
-                      ¿Qué agente deseas activar?
-                    </label>
-                    <select
-                      value={selectedAgent}
-                      onChange={(e) => setSelectedAgent(e.target.value)}
-                      className="w-full text-xs font-light rounded-xl border border-miiles-gray-200 p-3 bg-white focus:outline-none focus:border-black"
-                    >
-                      <option value="disenador">
-                        Tu Diseñador — Identidad y Recursos Visuales ($2,000 MXN)
-                      </option>
-                      <option value="embudo">
-                        Agente de Embudo Comercial — Web & Captación ($2,000 MXN)
-                      </option>
-                    </select>
-                  </div>
-
-                  {/* Nombre del negocio */}
-                  <div className="space-y-2">
-                    <label className="text-xs font-normal text-black">
-                      Nombre de tu negocio o proyecto:
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="Ej. Estudio Dental, Tienda de Ropa, Consultoría..."
-                      value={formData.businessName}
-                      onChange={(e) =>
-                        setFormData({ ...formData, businessName: e.target.value })
-                      }
-                      className="w-full text-xs font-light rounded-xl border border-miiles-gray-200 p-3 focus:outline-none focus:border-black"
-                    />
-                  </div>
-
-                  {/* Qué necesitas específicamente */}
-                  <div className="space-y-2">
-                    <label className="text-xs font-normal text-black">
-                      ¿Qué necesitas principalmente?
-                    </label>
-                    <textarea
-                      rows={3}
-                      required
-                      placeholder="Ej. Necesito el logotipo, empaque para mis productos y una web para que agenden citas..."
-                      value={formData.needs}
-                      onChange={(e) =>
-                        setFormData({ ...formData, needs: e.target.value })
-                      }
-                      className="w-full text-xs font-light rounded-xl border border-miiles-gray-200 p-3 focus:outline-none focus:border-black resize-none"
-                    />
-                  </div>
-
-                  {/* Checkbox Dominio .com */}
-                  {selectedAgent !== "disenador" && (
-                    <div className="flex items-start gap-2.5 p-3 rounded-xl bg-miiles-gray-50 border border-miiles-gray-200">
-                      <input
-                        type="checkbox"
-                        id="includeDomain"
-                        checked={formData.includeDomain}
-                        onChange={(e) =>
-                          setFormData({ ...formData, includeDomain: e.target.checked })
-                        }
-                        className="mt-0.5 rounded border-gray-300 text-miiles-blue focus:ring-miiles-blue"
-                      />
-                      <label htmlFor="includeDomain" className="text-xs font-light text-miiles-gray-800">
-                        <strong>Incluir gestión de dominio .com adicional:</strong> Deseo que me
-                        ayuden a tramitar y conectar mi propio dominio personalizado (.com o .mx).
-                      </label>
-                    </div>
-                  )}
-
-                  {/* Contacto */}
-                  <div className="space-y-2">
-                    <label className="text-xs font-normal text-black">
-                      WhatsApp o Teléfono para contactarte:
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="+52 55... (o tu correo)"
-                      value={formData.contact}
-                      onChange={(e) =>
-                        setFormData({ ...formData, contact: e.target.value })
-                      }
-                      className="w-full text-xs font-light rounded-xl border border-miiles-gray-200 p-3 focus:outline-none focus:border-black"
-                    />
-                  </div>
-
-                  <div className="pt-2 flex items-center justify-end gap-3">
-                    <button
-                      type="button"
-                      onClick={() => setIsModalOpen(false)}
-                      className="px-5 py-2.5 rounded-full text-xs font-normal text-miiles-gray-600 hover:text-black transition-colors"
-                    >
-                      Cancelar
-                    </button>
-                    <button
-                      type="submit"
-                      className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-black text-white text-xs font-normal hover:bg-miiles-pink hover:text-black transition-all duration-300 hover:scale-105"
-                    >
-                      <span>Confirmar y Comenzar</span>
-                      <Send className="w-3.5 h-3.5" />
-                    </button>
-                  </div>
-                </form>
-              )}
-            </motion.div>
-          </div>
-        )}
-      </AnimatePresence>
+      {/* CTA pegado (fuera del smooth wrapper para que quede fijo) */}
+      <StickyCta label="Activar agente" onClick={() => openWhatsApp(WHATSAPP_MESSAGE)} />
     </>
   );
 };

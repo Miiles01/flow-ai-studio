@@ -32,20 +32,14 @@ import {
 } from "lucide-react";
 import LandingNavbar from "@/components/LandingNavbar";
 import LandingFooter from "@/components/LandingFooter";
+import SlideArrowButton from "@/components/SlideArrowButton";
+import StickyCta from "@/components/StickyCta";
+import { openWhatsApp } from "@/lib/whatsapp";
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText);
 
-// Número de WhatsApp en formato internacional sin "+" (ej. "5215512345678").
-// Vacío: wa.me abre WhatsApp para elegir contacto, con el mensaje ya escrito.
-const WHATSAPP_NUMBER = "";
 const WHATSAPP_MESSAGE = "Hola, quiero activar el asistente para mi clínica.";
-const openWhatsApp = () => {
-  window.open(
-    `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(WHATSAPP_MESSAGE)}`,
-    "_blank",
-    "noopener,noreferrer"
-  );
-};
+const WHATSAPP_DEMO_MESSAGE = "Hola, quiero solicitar una demo del asistente para mi clínica.";
 
 const CLINIC_FAQS = [
   {
@@ -82,43 +76,6 @@ const fadeUp = {
     y: 0,
     transition: { duration: 0.55, ease: [0.25, 0.1, 0.25, 1] as const },
   },
-};
-
-const SlideArrowButton = ({
-  onClick,
-  children,
-}: {
-  onClick: () => void;
-  children: React.ReactNode;
-}) => {
-  const [isHovered, setIsHovered] = useState(false);
-
-  return (
-    <motion.button
-      onClick={onClick}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.96 }}
-      className="relative flex items-center justify-center px-8 py-4 rounded-full text-sm font-normal bg-black text-white border-2 border-white shadow-[0_8px_30px_rgba(0,0,0,0.18)] dark:shadow-[0_8px_30px_rgba(255,255,255,0.1)] cursor-pointer transition-colors duration-150"
-    >
-      <span className="tracking-tight">{children}</span>
-      <AnimatePresence mode="popLayout">
-        {isHovered && (
-          <motion.div
-            key="arrow"
-            initial={{ opacity: 0, x: 10 }}
-            animate={{ opacity: 1, x: 0 }}
-            exit={{ opacity: 0, x: 10 }}
-            transition={{ type: "spring", stiffness: 600, damping: 25 }}
-            className="flex items-center shrink-0 ml-2.5"
-          >
-            <ArrowRight className="w-4 h-4" />
-          </motion.div>
-        )}
-      </AnimatePresence>
-    </motion.button>
-  );
 };
 
 const formatTime = (t: number) => {
@@ -265,30 +222,6 @@ const Clinicas = () => {
   const [cycle, setCycle] = useState<"monthly" | "annually">("monthly");
 
   const smootherRef = useRef<ScrollSmoother | null>(null);
-  const heroSlotRef = useRef<HTMLDivElement>(null);
-  const ctaRef = useRef<HTMLDivElement>(null);
-
-  // El botón nace bajo el párrafo del hero; al llegar ahí se pega abajo, y en el footer sube con él y se desvanece
-  useEffect(() => {
-    let raf = 0;
-    const tick = () => {
-      const cta = ctaRef.current;
-      if (cta) {
-        const dockedTop = window.innerHeight - cta.offsetHeight - 24;
-        const footerTop = document.querySelector("footer")?.getBoundingClientRect().top ?? Infinity;
-        // Antes de llegar al hueco del hero va con la página; al alcanzarlo se pega abajo
-        const slotTop = heroSlotRef.current?.getBoundingClientRect().top ?? dockedTop;
-        const y = Math.min(Math.max(slotTop, dockedTop), footerTop - cta.offsetHeight - 24);
-        cta.style.transform = `translate3d(0, ${y}px, 0)`;
-        const o = Math.max(0, Math.min(1, y / 120));
-        cta.style.opacity = String(o);
-        cta.style.visibility = o < 0.02 ? "hidden" : "visible";
-      }
-      raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, []);
 
   useEffect(() => {
     // Inicializar ScrollSmoother oficial de Miiles
@@ -410,7 +343,7 @@ const Clinicas = () => {
         <div id="smooth-content-clinicas" className="bg-white dark:bg-black text-black dark:text-white font-sans pb-0 transition-colors duration-300">
           {/* ─── HERO SECTION: PROBLEMA DE AGENDA Y ATENCIÓN EN CLÍNICAS ─── */}
           <section className="relative overflow-hidden">
-          <header className="relative pt-36 md:pt-48 pb-16 md:pb-24 px-6 md:px-12 max-w-5xl mx-auto text-center">
+          <header className="relative pt-28 md:pt-48 pb-12 md:pb-24 px-6 md:px-12 max-w-5xl mx-auto text-center">
             {/* Badge Eyebrow */}
             <motion.div
               initial={{ opacity: 0, y: -8 }}
@@ -429,7 +362,7 @@ const Clinicas = () => {
               initial="hidden"
               animate="visible"
               variants={fadeUp}
-              className="text-balance text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-normal tracking-tight text-black dark:text-white leading-[1.08] max-w-4xl mx-auto mb-14 md:mb-20"
+              className="text-balance text-[2.75rem] sm:text-5xl md:text-6xl lg:text-7xl font-normal tracking-tight text-black dark:text-white leading-[1.08] max-w-4xl mx-auto mb-10 md:mb-20"
             >
               El asistente{" "}
               <span
@@ -461,9 +394,22 @@ const Clinicas = () => {
               animate="visible"
               variants={fadeUp}
               transition={{ delay: 0.1 }}
-              className="max-w-full md:max-w-md mx-auto mb-10 rounded-[32px] overflow-hidden bg-black"
+              className="max-w-full md:max-w-md mx-auto mb-6 md:mb-8 rounded-[32px] overflow-hidden bg-black"
             >
               <ClinicVideo src="/videos/clinicas-ad.mp4" />
+            </motion.div>
+
+            {/* Solicitar demo, debajo del video */}
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              variants={fadeUp}
+              transition={{ delay: 0.15 }}
+              className="flex justify-center mb-8 md:mb-10"
+            >
+              <SlideArrowButton onClick={() => openWhatsApp(WHATSAPP_DEMO_MESSAGE)}>
+                Solicitar demo
+              </SlideArrowButton>
             </motion.div>
 
             {/* Párrafo Direct Answer AEO */}
@@ -472,7 +418,7 @@ const Clinicas = () => {
               animate="visible"
               variants={fadeUp}
               transition={{ delay: 0.1 }}
-              className="text-base sm:text-lg md:text-xl font-light text-miiles-gray-600 dark:text-white/60 max-w-3xl mx-auto leading-relaxed mb-10"
+              className="text-base sm:text-lg md:text-xl font-light text-miiles-gray-600 dark:text-white/85 max-w-3xl mx-auto leading-relaxed mb-10"
             >
               No dejes que los pacientes se vayan con otra clínica por no responder a tiempo. Tu
               asistente responde al instante, confirma citas en tu calendario oficial,
@@ -480,15 +426,12 @@ const Clinicas = () => {
               asisten.
             </motion.p>
 
-            {/* Lugar original del botón: al llegar aquí, el botón se pega y baja con el scroll */}
-            <div ref={heroSlotRef} className="h-14" aria-hidden="true" />
-
             {/* Resumen de Condiciones Claras */}
             <motion.div
               initial={{ opacity: 0, y: 16 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.35, duration: 0.5 }}
-              className="flex flex-wrap items-center justify-center gap-6 md:gap-10 mt-14 pt-10 border-t border-miiles-gray-100 dark:border-white/10"
+              className="flex flex-wrap items-center justify-center gap-6 md:gap-10 mt-10 md:mt-14 pt-8 md:pt-10 border-t border-miiles-gray-100 dark:border-white/10"
             >
               <div className="flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-blue-50 dark:bg-blue-500/10 border border-blue-200/80 dark:border-blue-400/20">
                 <CheckCircle2 className="w-5 h-5 text-blue-600 dark:text-blue-300 shrink-0" />
@@ -499,7 +442,7 @@ const Clinicas = () => {
           </section>
 
           {/* ─── LOS 3 DOLORES QUE RESUELVE EN CONSULTORIOS Y CLÍNICAS ─── */}
-          <section className="relative overflow-hidden min-h-[80vh] flex items-center justify-center py-20 px-6 md:px-12">
+          <section className="relative overflow-hidden md:min-h-[80vh] flex items-center justify-center py-14 md:py-20 px-6 md:px-12">
             {/* Fondo punteado (igual que el home de miiles.app) */}
             <div
               className="absolute inset-0 pointer-events-none z-0 dark:hidden"
@@ -530,7 +473,7 @@ const Clinicas = () => {
               <h2 data-split-title className="text-balance text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-normal tracking-tight leading-[1.08] text-black dark:text-white">
                 El 40% de los pacientes potenciales se pierde por lentitud en la atención
               </h2>
-              <p data-fade-p className="text-sm md:text-base font-light text-miiles-gray-600 dark:text-white/60 max-w-2xl mx-auto">
+              <p data-fade-p className="text-sm md:text-base font-light text-miiles-gray-600 dark:text-white/85 max-w-2xl mx-auto">
                 Un consultorio con recepción ocupada o que no atiende noches ni fines de semana regala
                 citas a clínicas competidoras todos los días.
               </p>
@@ -538,8 +481,8 @@ const Clinicas = () => {
           </section>
 
           {/* ─── EL PLAN ─── */}
-          <section className="py-24 px-6 md:px-12 max-w-6xl mx-auto">
-            <div className="text-center max-w-3xl mx-auto mb-16 space-y-3">
+          <section className="py-14 md:py-24 px-6 md:px-12 max-w-6xl mx-auto">
+            <div className="text-center max-w-3xl mx-auto mb-10 md:mb-16 space-y-3">
               <span className="text-xs font-normal tracking-widest text-blue-600 dark:text-blue-300">
                 El plan
               </span>
@@ -549,7 +492,7 @@ const Clinicas = () => {
             </div>
 
             {/* Selector mensual / anual */}
-            <div className="flex justify-center mb-10">
+            <div className="flex justify-center mb-8 md:mb-10">
               <div className="relative flex w-64 p-1 bg-[#F5F5F8] dark:bg-white/10 rounded-full cursor-pointer border border-gray-100 dark:border-white/10">
                 <motion.div
                   className="absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] bg-black dark:bg-white rounded-full"
@@ -558,13 +501,13 @@ const Clinicas = () => {
                 />
                 <button
                   onClick={() => setCycle("monthly")}
-                  className={`relative z-10 flex-1 py-2.5 text-xs font-normal transition-colors duration-300 ${cycle === "monthly" ? "text-white dark:text-black" : "text-gray-400"}`}
+                  className={`relative z-10 flex-1 py-2.5 text-xs font-normal transition-colors duration-300 ${cycle === "monthly" ? "text-white dark:text-black" : "text-gray-500 dark:text-white/80"}`}
                 >
                   Mensual
                 </button>
                 <button
                   onClick={() => setCycle("annually")}
-                  className={`relative z-10 flex-1 py-2.5 text-xs font-normal transition-colors duration-300 ${cycle === "annually" ? "text-white dark:text-black" : "text-gray-400"}`}
+                  className={`relative z-10 flex-1 py-2.5 text-xs font-normal transition-colors duration-300 ${cycle === "annually" ? "text-white dark:text-black" : "text-gray-500 dark:text-white/80"}`}
                 >
                   <span className="inline-flex items-center justify-center gap-1.5">
                     Anual
@@ -592,7 +535,7 @@ const Clinicas = () => {
                   <span className="text-5xl font-normal tracking-tight">
                     {cycle === "monthly" ? "$500" : "$5,400"}
                   </span>
-                  <span className="text-xs font-light text-gray-500">
+                  <span className="text-xs font-light text-white/70">
                     MXN {cycle === "monthly" ? "/ mes" : "/ año"}
                   </span>
                 </div>
@@ -625,7 +568,7 @@ const Clinicas = () => {
           </section>
 
           {/* ─── PREGUNTAS FRECUENTES (AEO / PAA) ─── */}
-          <section className="py-20 px-6 md:px-12 max-w-4xl mx-auto space-y-12">
+          <section className="py-14 md:py-20 px-6 md:px-12 max-w-4xl mx-auto space-y-8 md:space-y-12">
             <div className="text-center space-y-3">
               <span className="text-xs font-normal tracking-widest text-blue-600 dark:text-blue-300">
                 Preguntas frecuentes
@@ -649,7 +592,7 @@ const Clinicas = () => {
                     >
                       <span>{faq.question}</span>
                       <ChevronDown
-                        className={`w-4 h-4 text-miiles-gray-400 dark:text-white/40 shrink-0 transition-transform duration-200 ${
+                        className={`w-4 h-4 text-miiles-gray-400 dark:text-white/70 shrink-0 transition-transform duration-200 ${
                           isOpen ? "rotate-180 text-black dark:text-white" : ""
                         }`}
                       />
@@ -662,7 +605,7 @@ const Clinicas = () => {
                           exit={{ opacity: 0, height: 0 }}
                           transition={{ duration: 0.2 }}
                         >
-                          <p className="mt-4 pt-4 border-t border-miiles-gray-100 dark:border-white/10 text-xs md:text-sm font-light text-miiles-gray-600 dark:text-white/60 leading-relaxed">
+                          <p className="mt-4 pt-4 border-t border-miiles-gray-100 dark:border-white/10 text-xs md:text-sm font-light text-miiles-gray-600 dark:text-white/85 leading-relaxed">
                             {faq.answer}
                           </p>
                         </motion.div>
@@ -675,30 +618,26 @@ const Clinicas = () => {
           </section>
 
           {/* ─── CALL TO ACTION FINAL ─── */}
-          <section className="py-24 px-6 md:px-12 max-w-5xl mx-auto text-center space-y-6">
+          <section className="py-14 md:py-24 px-6 md:px-12 max-w-5xl mx-auto text-center space-y-4 md:space-y-6">
             <h2 data-split-title className="text-balance text-3xl sm:text-4xl md:text-6xl font-normal text-black dark:text-white tracking-tight leading-tight">
               Moderniza la atención de tus pacientes hoy mismo
             </h2>
-            <p data-fade-p className="text-base sm:text-lg font-light text-miiles-gray-600 dark:text-white/60 max-w-xl mx-auto">
+            <p data-fade-p className="text-base sm:text-lg font-light text-miiles-gray-600 dark:text-white/85 max-w-xl mx-auto">
               Por solo $500 MXN al mes tendrás el asistente que tu clínica necesita para nunca más perder
               una consulta.
             </p>
           </section>
 
           {/* Footer Oficial Miiles */}
-          <LandingFooter />
+          {/* En oscuro se invierte el footer compartido (blanco fijo) sin tocar otras páginas */}
+          <div className="dark:[filter:invert(1)_brightness(2)]">
+            <LandingFooter />
+          </div>
         </div>
       </div>
 
-      {/* ─── CTA PEGADO (fuera del smooth wrapper para que quede fijo) ─── */}
-      <div
-        ref={ctaRef}
-        className="fixed top-0 inset-x-0 z-[100] flex justify-center px-6 pointer-events-none will-change-transform"
-      >
-        <div className="pointer-events-auto">
-          <SlideArrowButton onClick={openWhatsApp}>Activar agente</SlideArrowButton>
-        </div>
-      </div>
+      {/* CTA pegado (fuera del smooth wrapper para que quede fijo) */}
+      <StickyCta label="Activar agente" onClick={() => openWhatsApp(WHATSAPP_MESSAGE)} />
 
       {/* ─── MODAL DE CONTRATACIÓN ASISTENTE PARA CLÍNICAS (FUERA DEL SMOOTH WRAPPER) ─── */}
       <AnimatePresence>
@@ -721,7 +660,7 @@ const Clinicas = () => {
             >
               <button
                 onClick={() => setIsModalOpen(false)}
-                className="absolute top-6 right-6 p-2 rounded-full hover:bg-miiles-gray-100 dark:hover:bg-white/10 transition-colors text-miiles-gray-600 dark:text-white/60"
+                className="absolute top-6 right-6 p-2 rounded-full hover:bg-miiles-gray-100 dark:hover:bg-white/10 transition-colors text-miiles-gray-600 dark:text-white/85"
               >
                 <X className="w-5 h-5" />
               </button>
@@ -734,7 +673,7 @@ const Clinicas = () => {
                   <h3 className="text-2xl font-normal text-black dark:text-white">
                     ¡Solicitud de Clínica Recibida!
                   </h3>
-                  <p className="text-sm font-light text-miiles-gray-600 dark:text-white/60 max-w-md mx-auto">
+                  <p className="text-sm font-light text-miiles-gray-600 dark:text-white/85 max-w-md mx-auto">
                     Nos pondremos en contacto de inmediato para conectar los horarios de
                     tu consultorio y dejar activo tu asistente en menos de 48 horas.
                   </p>
@@ -754,7 +693,7 @@ const Clinicas = () => {
                     <h3 className="text-2xl font-normal text-black dark:text-white mt-1">
                       Activar Asistente para tu Clínica
                     </h3>
-                    <p className="text-xs font-light text-miiles-gray-600 dark:text-white/60 mt-1">
+                    <p className="text-xs font-light text-miiles-gray-600 dark:text-white/85 mt-1">
                       Comienza a agendar pacientes 24/7 sin plazos forzosos.
                     </p>
                   </div>
@@ -854,7 +793,7 @@ const Clinicas = () => {
                     <button
                       type="button"
                       onClick={() => setIsModalOpen(false)}
-                      className="px-5 py-2.5 rounded-full text-xs font-normal text-miiles-gray-600 dark:text-white/60 hover:text-black dark:text-white transition-colors"
+                      className="px-5 py-2.5 rounded-full text-xs font-normal text-miiles-gray-600 dark:text-white/85 hover:text-black dark:text-white transition-colors"
                     >
                       Cancelar
                     </button>

@@ -255,7 +255,7 @@ function DashboardContent({ children }: { children: ReactNode }) {
           <div className="fixed top-5 right-6 z-50">
             <QuickSettings />
           </div>
-          <main className="flex-1 overflow-y-auto">
+          <main className="dashboard-scope flex-1 overflow-y-auto">
             <InstallAppBanner />
             {children}
           </main>
