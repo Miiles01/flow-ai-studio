@@ -18,6 +18,7 @@ import Features from "./pages/Features";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
 import ShopifyTutorial from "./pages/ShopifyTutorial";
+import Agentes from "./pages/Agentes";
 import Dashboard from "./pages/Dashboard";
 import Boards from "./pages/Boards";
 import Programs from "./pages/Programs";
@@ -143,6 +144,7 @@ const App = () => (
 
               <Route path="/admin" element={<Admin />} />
               <Route path="/shopify-tutorial" element={<ShopifyTutorial />} />
+              <Route path="/agentes" element={<Agentes />} />
               <Route path="*" element={<NotFound />} />
             </Routes>
           </AuthProvider>
