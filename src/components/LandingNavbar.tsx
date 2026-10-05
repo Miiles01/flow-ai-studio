@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { useTranslation } from "react-i18next";
+import { useLocalePath } from "@/hooks/useLocalePath";
 
 interface LandingNavbarProps {
   onMenuAction?: (id: string) => void;
@@ -14,6 +15,8 @@ const LandingNavbar = ({ onMenuAction, cta, isLanding }: LandingNavbarProps) => 
   const [menuKey, setMenuKey] = useState(0);
   const [isLangMenuOpen, setIsLangMenuOpen] = useState(false);
   const { t, i18n } = useTranslation();
+  const localePath = useLocalePath();
+  const navigate = useNavigate();
   
   const [scrolled, setScrolled] = useState(false);
 
@@ -35,16 +38,25 @@ const LandingNavbar = ({ onMenuAction, cta, isLanding }: LandingNavbarProps) => 
   };
 
   const changeLanguage = (lng: string) => {
+    // Navegar a la misma página pero con el nuevo prefijo de idioma
+    const currentPath = window.location.pathname;
+    const segments = currentPath.split('/').filter(Boolean);
+    // Quitar el prefijo de idioma actual si existe
+    if (segments[0] === 'es' || segments[0] === 'en') {
+      segments.shift();
+    }
+    const newPath = `/${lng}/${segments.join('/')}`;
     i18n.changeLanguage(lng);
+    navigate(newPath);
     setIsLangMenuOpen(false);
     setIsMenuOpen(false);
   };
 
   const menuItems = [
-    { label: t("navbar.home"), href: "/" },
-    { label: t("navbar.about"), href: "/acerca-de" },
-    { label: t("navbar.functions"), href: "/funciones" },
-    { label: t("navbar.pricing"), href: "/precios" },
+    { label: t("navbar.home"), href: localePath("/") },
+    { label: t("navbar.about"), href: localePath("/acerca-de") },
+    { label: t("navbar.functions"), href: localePath("/funciones") },
+    { label: t("navbar.pricing"), href: localePath("/precios") },
   ];
 
   const socialLinks = [

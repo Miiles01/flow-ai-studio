@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { useLocalePath } from "@/hooks/useLocalePath";
 
 const LandingFooter = () => {
   const { t } = useTranslation();
+  const localePath = useLocalePath();
   return (
     <footer className="pt-24 pb-16 bg-white border-t border-gray-50">
       <div className="max-w-7xl mx-auto px-10">
@@ -22,8 +24,8 @@ const LandingFooter = () => {
             <div className="space-y-6">
               <h4 className="text-[10px] font-normal text-gray-400 tracking-widest">{t("footer.company")}</h4>
               <div className="flex flex-col gap-4 text-sm font-light text-black">
-                <Link to="/terminos" className="hover:opacity-50 transition-opacity">{t("footer.terms")}</Link>
-                <Link to="/privacidad" className="hover:opacity-50 transition-opacity">{t("footer.privacy")}</Link>
+                <Link to={localePath("/terminos")} className="hover:opacity-50 transition-opacity">{t("footer.terms")}</Link>
+                <Link to={localePath("/privacidad")} className="hover:opacity-50 transition-opacity">{t("footer.privacy")}</Link>
               </div>
             </div>
             <div className="space-y-6">
