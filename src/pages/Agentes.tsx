@@ -261,7 +261,7 @@ const Agentes = () => {
                 negocio
               </span>
               <span className="block mt-4 text-2xl sm:text-3xl md:text-4xl text-blue-600 dark:text-blue-300 font-normal tracking-tight">
-                — pago único, sin mensualidades
+                — 24 horas al día
               </span>
             </motion.h1>
 
@@ -394,7 +394,7 @@ const Agentes = () => {
 
                   <div className="flex items-baseline gap-1 mb-8">
                     <span className="text-5xl font-normal tracking-tight">$2,000</span>
-                    <span className="text-xs font-light text-white/70">MXN / pago único</span>
+                    <span className="text-xs font-light text-white/70">MXN</span>
                   </div>
 
                   <ul className="space-y-4">
