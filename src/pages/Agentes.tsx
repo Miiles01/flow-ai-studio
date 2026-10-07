@@ -18,43 +18,46 @@ import {
   Clock,
   AtSign,
   Layers,
+  Bot,
 } from "lucide-react";
 import LandingNavbar from "@/components/LandingNavbar";
 import LandingFooter from "@/components/LandingFooter";
 import BrandCarousel from "@/components/BrandCarousel";
 import SlideArrowButton from "@/components/SlideArrowButton";
+import AdVideo from "@/components/AdVideo";
 import StickyCta from "@/components/StickyCta";
 import { openWhatsApp } from "@/lib/whatsapp";
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText);
 
-const WHATSAPP_MESSAGE = "Hola, quiero activar un agente para mi negocio.";
-const WHATSAPP_DEMO_MESSAGE = "Hola, quiero solicitar una demo de los agentes para mi negocio.";
+const WHATSAPP_MESSAGE = "Hola, quiero activar el diseñador y el embudo de ventas para mi negocio.";
+const WHATSAPP_DEMO_MESSAGE = "Hola, quiero solicitar una demo del diseñador y el embudo de ventas para mi negocio.";
 
 const AGENTS = [
   {
     key: "disenador",
     icon: Palette,
     name: "Agente Diseñador",
-    tagline: "Identidad y recursos visuales para vender con autoridad",
+    tagline: "Tu marca y tu web completa, listas para vender con autoridad",
     features: [
       { icon: PenTool, text: "Refinamiento de marca: logotipo, tipografías y paleta" },
+      { icon: Globe, text: "Sitio web completo, rápido y responsive" },
       { icon: Share2, text: "Publicaciones para Instagram, TikTok y campañas de venta" },
       { icon: Package, text: "Empaques, etiquetas y mockups de producto" },
       { icon: Megaphone, text: "Anuncios, letreros y papelería personalizada" },
+      { icon: AtSign, text: "Incluye espacio para dominio" },
     ],
   },
   {
     key: "embudo",
-    icon: Globe,
-    name: "Agente de Embudo Comercial",
-    tagline: "Tu vendedor incansable y tu plataforma web",
+    icon: Filter,
+    name: "Embudo de ventas",
+    tagline: "Un sistema que capta y atiende clientes por ti",
     features: [
-      { icon: Globe, text: "Sitio web completo, rápido y responsive" },
       { icon: Filter, text: "Embudo de conversión para agendar llamadas o pedir cotizaciones" },
+      { icon: Bot, text: "Asistente de ventas con inteligencia artificial" },
       { icon: FolderOpen, text: "Catálogo y portafolio de tus servicios" },
       { icon: Clock, text: "Automatizaciones que atienden a tus clientes 24/7" },
-      { icon: AtSign, text: "Incluye espacio para dominio" },
     ],
   },
 ];
@@ -63,22 +66,22 @@ const FAQS = [
   {
     question: "¿Qué incluye exactamente el Agente Diseñador por $2,000 MXN?",
     answer:
-      "Incluye todo el soporte visual que tu negocio necesita para vender: diseño o refinamiento de tu identidad de marca, logotipo oficial, aplicaciones para redes sociales (posts, carruseles, portadas), diseño de empaques, letreros, anuncios publicitarios y papelería personalizada. Es un pago único sin mensualidades sorpresa.",
+      "Incluye todo lo visual que tu negocio necesita para vender: diseño o refinamiento de tu identidad de marca, logotipo oficial, tu sitio web completo, aplicaciones para redes sociales (posts, carruseles, portadas), diseño de empaques, letreros, anuncios publicitarios y papelería personalizada. Es un pago único sin mensualidades sorpresa.",
   },
   {
-    question: "¿Qué hace el Agente de Embudo Comercial y por qué necesito una web?",
+    question: "¿Qué es el embudo de ventas y cómo funciona?",
     answer:
-      "Tu Agente Vendedor aterriza tu modelo de negocio en internet: monta tu sitio web de alta conversión, estructura tu embudo comercial, configura automatizaciones para que tus clientes agenden citas o compren directo y presenta tu portafolio. Funciona 24/7 para que no pierdas ventas ni dependas de responder mensajes manualmente.",
+      "Es un sistema que recibe a tus prospectos, los guía y los convierte en clientes sin que tengas que perseguirlos a mano. Incluye un embudo de conversión para agendar llamadas o pedir cotizaciones, tu catálogo y portafolio, automatizaciones que funcionan 24/7 y un asistente de ventas con inteligencia artificial que atiende a tus clientes cuando tú no puedes.",
   },
   {
     question: "¿Cómo funciona el pago del dominio .com?",
     answer:
-      "El desarrollo y configuración de tu sitio web y embudo está 100% cubierto por el pago único de $2,000 MXN. El nombre de dominio personalizado (.com o .mx) es un costo anual independiente que puedes adquirir tú mismo o solicitar que lo gestionemos como un adicional para dejarlo enlazado.",
+      "El desarrollo de tu sitio web está 100% cubierto por el pago único de $2,000 MXN y ya incluye el espacio para tu dominio. El nombre de dominio personalizado (.com o .mx) es un costo anual independiente que puedes adquirir tú mismo o solicitar que lo gestionemos como un adicional para dejarlo enlazado.",
   },
   {
-    question: "¿Por qué trabajar con ambos agentes?",
+    question: "¿Por qué trabajar con el diseñador y el embudo juntos?",
     answer:
-      "El Diseñador crea los activos visuales con estética de marca sólida y el Vendedor los integra en una página web y embudo que convierte visitantes en clientes. Tu negocio queda listo para competir con los líderes de tu industria en cuestión de días.",
+      "El Diseñador crea tu marca y tu web con una estética sólida, y el embudo de ventas la convierte en un sistema que capta prospectos y cierra clientes todos los días. Tu negocio queda listo para competir con los líderes de tu industria en cuestión de días.",
   },
   {
     question: "¿Tengo una clínica o consultorio, qué servicio me corresponde?",
@@ -135,13 +138,13 @@ const Agentes = () => {
     });
 
     document.title =
-      "Agentes de IA para Escalar tu Negocio | Diseñador y Embudo Comercial | Miiles";
+      "Diseñador y Embudo de Ventas para Escalar tu Negocio | Miiles";
 
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) {
       metaDesc.setAttribute(
         "content",
-        "Escala tu negocio con los agentes de Miiles: tu Diseñador de marca y recursos visuales ($2,000 MXN) y tu Agente de Embudo Comercial con web incluida ($2,000 MXN). Pago único, soluciones llave en mano."
+        "Escala tu negocio con Miiles: tu Agente Diseñador de marca y web completa ($2,000 MXN) y tu embudo de ventas con asistente de IA ($2,000 MXN). Pago único, soluciones llave en mano."
       );
     }
 
@@ -157,13 +160,13 @@ const Agentes = () => {
           url: "https://miiles.app/",
           logo: "https://miiles.app/favicon.png",
           description:
-            "Agentes de inteligencia artificial para diseño de marca, automatización de ventas y escalabilidad de negocios.",
+            "Diseño de marca, sitios web y sistemas de ventas automatizados con inteligencia artificial para escalar negocios.",
         },
         {
           "@type": "Product",
-          name: "Agente Diseñador — Identidad y Recursos Visuales",
+          name: "Agente Diseñador — Marca y Web",
           description:
-            "Agente dedicado para refinar tu marca, crear logotipos, publicaciones para redes sociales, empaques, letreros y anuncios.",
+            "Diseño de marca, sitio web completo, logotipos, publicaciones para redes sociales, empaques, letreros y anuncios.",
           offers: {
             "@type": "Offer",
             price: "2000",
@@ -173,9 +176,9 @@ const Agentes = () => {
         },
         {
           "@type": "Product",
-          name: "Agente de Embudo Comercial — Web y Captación",
+          name: "Embudo de ventas — Captación y Atención Automatizada",
           description:
-            "Agente vendedor que monta tu sitio web, automatiza la captación de prospectos y agenda de citas.",
+            "Sistema de embudo de ventas con asistente de ventas con inteligencia artificial, automatizaciones 24/7, catálogo y agendado de llamadas o cotizaciones.",
           offers: {
             "@type": "Offer",
             price: "2000",
@@ -248,7 +251,7 @@ const Agentes = () => {
               variants={fadeUp}
               className="text-balance text-[2.75rem] sm:text-5xl md:text-6xl lg:text-7xl font-normal tracking-tight text-black dark:text-white leading-[1.08] max-w-4xl mx-auto mb-12 md:mb-14"
             >
-              Un diseñador y un vendedor que hacen crecer tu{" "}
+              Un diseñador y un embudo de ventas que hacen crecer tu{" "}
               <span
                 style={{
                   fontFamily: "'Welth Catritz', serif",
@@ -266,6 +269,17 @@ const Agentes = () => {
             <div className="mb-14 md:mb-16">
               <BrandCarousel />
             </div>
+
+            {/* Video debajo del título */}
+            <motion.div
+              initial="hidden"
+              animate="visible"
+              variants={fadeUp}
+              transition={{ delay: 0.1 }}
+              className="max-w-full md:max-w-md mx-auto mb-6 md:mb-8 rounded-[32px] overflow-hidden bg-black"
+            >
+              <AdVideo src="/videos/agentes-ad.mp4" poster="/videos/agentes-poster.jpg" />
+            </motion.div>
 
             <motion.div
               initial="hidden"
@@ -286,9 +300,9 @@ const Agentes = () => {
               transition={{ delay: 0.1 }}
               className="text-base sm:text-lg md:text-xl font-light text-miiles-gray-600 dark:text-white/85 max-w-3xl mx-auto leading-relaxed mb-10"
             >
-              Para escalar de verdad necesitas dos cosas: <strong>recursos visuales de alto nivel</strong>{" "}
-              que justifiquen tus precios y <strong>una web con embudo automatizado</strong> que venda
-              por ti mientras atiendes tu negocio.
+              Para escalar de verdad necesitas dos cosas: <strong>una marca y una web de alto nivel</strong>{" "}
+              que justifiquen tus precios y <strong>un embudo de ventas automatizado</strong> que capte
+              y atienda clientes por ti mientras atiendes tu negocio.
             </motion.p>
 
             <motion.div
@@ -344,23 +358,23 @@ const Agentes = () => {
                 data-fade-p
                 className="text-sm md:text-base font-light text-miiles-gray-600 dark:text-white/85 max-w-2xl mx-auto"
               >
-                Sin recursos visuales de alto nivel ni un embudo que atienda por ti, pasas el día
+                Sin una marca y una web de alto nivel ni un embudo que atienda por ti, pasas el día
                 persiguiendo clientes a mano y perdiendo ventas que ya tenías cerca.
               </p>
             </div>
           </section>
 
-          {/* ─── LOS AGENTES ─── */}
+          {/* ─── QUÉ INCLUYE ─── */}
           <section className="py-14 md:py-24 px-6 md:px-12 max-w-6xl mx-auto">
             <div className="text-center max-w-3xl mx-auto mb-10 md:mb-16 space-y-3">
               <span className="text-xs font-normal tracking-widest text-blue-600 dark:text-blue-300">
-                Los agentes
+                Lo que incluye
               </span>
               <h2
                 data-split-title
                 className="text-balance text-3xl sm:text-4xl md:text-5xl font-normal tracking-tight text-black dark:text-white"
               >
-                Elige el agente que tu negocio necesita
+                Elige lo que tu negocio necesita
               </h2>
             </div>
 
@@ -406,7 +420,7 @@ const Agentes = () => {
                 data-split-title
                 className="text-balance text-3xl md:text-4xl font-normal tracking-tight text-black dark:text-white"
               >
-                Claridad total sobre cómo operan nuestros agentes
+                Claridad total sobre cómo funciona todo
               </h2>
             </div>
 
@@ -456,13 +470,13 @@ const Agentes = () => {
               data-split-title
               className="text-balance text-3xl sm:text-4xl md:text-6xl font-normal text-black dark:text-white tracking-tight leading-tight"
             >
-              Escala tu negocio con tu diseñador y tu vendedor
+              Escala tu negocio con tu diseñador y tu embudo de ventas
             </h2>
             <p
               data-fade-p
               className="text-base sm:text-lg font-light text-miiles-gray-600 dark:text-white/85 max-w-xl mx-auto"
             >
-              Por $2,000 MXN de pago único por agente, tu marca y tu web quedan listas para vender.
+              Por $2,000 MXN de pago único por servicio, tu marca, tu web y tu embudo quedan listos para vender.
             </p>
           </section>
 
