@@ -86,7 +86,7 @@ const HomeSections = ({ beforeFaq }: { beforeFaq?: ReactNode }) => {
               <article
                 key={card.title}
                 data-anim-heading
-                className="flex flex-col rounded-[24px] bg-[#F7F7F8] overflow-hidden"
+                className="flex flex-col rounded-[24px] bg-gradient-to-b from-[#FDFDFD] to-[#F8F9FD] overflow-hidden"
               >
                 <div className="px-7 pt-7">
                   <h3 className="text-3xl md:text-[34px] font-normal tracking-tight leading-tight text-black">{card.title}</h3>
@@ -110,7 +110,6 @@ const HomeSections = ({ beforeFaq }: { beforeFaq?: ReactNode }) => {
                     {card.cta}
                   </Link>
                 </div>
-                <div aria-hidden className="h-1.5 bg-miiles-blue" />
               </article>
             ))}
           </div>
