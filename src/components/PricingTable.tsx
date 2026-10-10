@@ -184,7 +184,7 @@ export default function PricingTable({ onPlanSelect, isModal }: PricingTableProp
               className={`flex flex-col rounded-[2.5rem] p-10 transition-all duration-500 hover:-translate-y-2 ${
                 plan.highlighted
                   ? "bg-black text-white shadow-[0_40px_80px_rgba(0,0,0,0.2)]"
-                  : "bg-white text-black border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
+                  : "bg-white text-black border border-gray-200 shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
               }`}
             >
               <h3 className="text-2xl font-normal mb-2">{plan.name}</h3>
