@@ -167,6 +167,12 @@
 }
 .todo-scrollbar { scrollbar-width: thin; scrollbar-color: #4059F1 transparent; }
 
+/* H1 del home: la máscara de SplitText mide 1em y recorta las colas (g, p, y) */
+.hero-title .line-mask {
+  padding-bottom: 0.16em;
+  margin-bottom: -0.16em;
+}
+
 /* Panel scrollbar (adapts to light/dark) */
 .panel-scrollbar::-webkit-scrollbar {
   width: 4px;

@@ -24,9 +24,11 @@ function GoogleIcon({ className }: { className?: string }) {
 
 type AppsMenuProps = {
   isDark: boolean;
+  /** Solo muestra el menú (home): sus opciones no abren ventanas. */
+  menuOnly?: boolean;
 };
 
-const AppsMenu = ({ isDark }: AppsMenuProps) => {
+const AppsMenu = ({ isDark, menuOnly = false }: AppsMenuProps) => {
   const [open, setOpen] = useState(false);
   const [addOpen, setAddOpen] = useState(false);
   const [modelOpen, setModelOpen] = useState(false);
@@ -42,6 +44,7 @@ const AppsMenu = ({ isDark }: AppsMenuProps) => {
   }`;
 
   const openModelDialog = (p: AIProviderId | null) => {
+    if (menuOnly) return;
     setPresetProvider(p);
     setOpen(false);
     setModelOpen(true);
@@ -201,25 +204,28 @@ const AppsMenu = ({ isDark }: AppsMenuProps) => {
         </PopoverContent>
       </Popover>
 
-      <AddAppModal
-        open={addOpen}
-        onClose={() => setAddOpen(false)}
-        onCreate={createApp}
-        customApps={customApps}
-        onToggle={toggleApp}
-        onDelete={deleteApp}
-      />
+      {!menuOnly && (
+        <>
+          <AddAppModal
+            open={addOpen}
+            onClose={() => setAddOpen(false)}
+            onCreate={createApp}
+            customApps={customApps}
+            onToggle={toggleApp}
+            onDelete={deleteApp}
+          />
 
-      <AddModelDialog
-        open={modelOpen}
-        onClose={() => setModelOpen(false)}
-        initialProvider={presetProvider}
-        onSave={addModel}
-        models={models}
-        onDelete={deleteModel}
-        onToggle={toggleModel}
-      />
-
+          <AddModelDialog
+            open={modelOpen}
+            onClose={() => setModelOpen(false)}
+            initialProvider={presetProvider}
+            onSave={addModel}
+            models={models}
+            onDelete={deleteModel}
+            onToggle={toggleModel}
+          />
+        </>
+      )}
     </>
   );
 };

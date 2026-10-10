@@ -28,7 +28,7 @@ import { useHistory } from "@/hooks/useHistory";
 import { useIsMobile } from "@/hooks/use-mobile";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { toast } from "sonner";
-import { useNavigate, useParams } from "react-router-dom";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme, ThemeContext } from "@/contexts/ThemeContext";
 import { supabase } from "@/integrations/supabase/client";
@@ -336,6 +336,7 @@ const ZoomStepper = ({ isDark }: { isDark: boolean }) => {
 
 const IndexContent = () => {
   const { id } = useParams();
+  const location = useLocation();
   const navigate = useNavigate();
   const { user } = useAuth();
   const { isDark, toggleTheme } = useTheme();
@@ -1830,6 +1831,16 @@ const IndexContent = () => {
     },
     [proceedToPlanning, extendTarget, extendTargetIsWidget, runExtendGenerate, runWidgetEdit]
   );
+
+  // Idea escrita en el input del home: se genera una sola vez al abrir el tablero nuevo
+  const initialPromptHandledRef = useRef(false);
+  useEffect(() => {
+    const initialPrompt = (location.state as { initialPrompt?: string } | null)?.initialPrompt;
+    if (!initialPrompt || loading || !canEdit || initialPromptHandledRef.current) return;
+    initialPromptHandledRef.current = true;
+    navigate(location.pathname, { replace: true, state: null });
+    handleAIGenerate(initialPrompt);
+  }, [location.state, location.pathname, loading, canEdit, navigate, handleAIGenerate]);
 
   const handleClarifyConfirm = useCallback(
     async (answers: Record<string, string[]>) => {

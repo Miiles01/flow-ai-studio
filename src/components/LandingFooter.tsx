@@ -22,14 +22,14 @@ const LandingFooter = () => {
           {/* Right side */}
           <div className="flex gap-20 md:gap-40">
             <div className="space-y-6">
-              <h4 className="text-[10px] font-normal text-gray-400 tracking-widest">{t("footer.company")}</h4>
+              <h3 className="text-[10px] font-normal text-gray-400 tracking-widest">{t("footer.company")}</h3>
               <div className="flex flex-col gap-4 text-sm font-light text-black">
                 <Link to={localePath("/terminos")} className="hover:opacity-50 transition-opacity">{t("footer.terms")}</Link>
                 <Link to={localePath("/privacidad")} className="hover:opacity-50 transition-opacity">{t("footer.privacy")}</Link>
               </div>
             </div>
             <div className="space-y-6">
-              <h4 className="text-[10px] font-normal text-gray-400 tracking-widest">{t("footer.social")}</h4>
+              <h3 className="text-[10px] font-normal text-gray-400 tracking-widest">{t("footer.social")}</h3>
               <div className="flex flex-col gap-4 text-sm font-light text-black">
                 <a href="https://www.instagram.com/miiles.studio/" target="_blank" rel="noopener noreferrer" className="hover:opacity-50 transition-opacity">Instagram</a>
                 <a href="https://www.tiktok.com/@miiles.studio" target="_blank" rel="noopener noreferrer" className="hover:opacity-50 transition-opacity">Tiktok</a>

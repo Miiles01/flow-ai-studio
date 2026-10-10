@@ -21,6 +21,11 @@ type AIPromptBarProps = {
   extendLabel?: string | null;
   onCancelExtend?: () => void;
   onAddWidget?: (widget: WidgetDef) => void;
+  /** Siempre expandida y en el flujo normal de la página (home), sin colapsar ni ocultar. */
+  inline?: boolean;
+  placeholder?: string;
+  /** Texto que se inserta desde fuera (ejemplos del home); `key` cambia para reaplicarlo. */
+  seedPrompt?: { text: string; key: number } | null;
 };
 
 /* Spring physics ultra-fluido y orgánico */
@@ -38,9 +43,12 @@ const AIPromptBar = ({
   extendLabel,
   onCancelExtend,
   onAddWidget,
+  inline = false,
+  placeholder,
+  seedPrompt,
 }: AIPromptBarProps) => {
   const [prompt, setPrompt] = useState("");
-  const [isExpanded, setIsExpanded] = useState(false);
+  const [isExpanded, setIsExpanded] = useState(inline);
   const [isHovered, setIsHovered] = useState(false);
   const [isFocused, setIsFocused] = useState(false);
   const [widgetsOpen, setWidgetsOpen] = useState(false);
@@ -201,9 +209,20 @@ const AIPromptBar = ({
     }
   }, [forceOpen]);
 
+  useEffect(() => {
+    if (!seedPrompt) return;
+    setPrompt(seedPrompt.text);
+    requestAnimationFrame(() => {
+      const el = textareaRef.current;
+      if (!el) return;
+      el.focus();
+      el.setSelectionRange(el.value.length, el.value.length);
+    });
+  }, [seedPrompt?.key]);
+
   /* Colapso fluido al hacer clic fuera de la barra */
   useEffect(() => {
-    if (!isExpanded) return;
+    if (!isExpanded || inline) return;
     const onPointerDown = (e: MouseEvent) => {
       const target = e.target as HTMLElement | null;
       if (!target) return;
@@ -241,7 +260,7 @@ const AIPromptBar = ({
     setIsHovered(false);
     textareaRef.current?.blur();
     // Contracción fluida de vuelta al squircle
-    setTimeout(() => setIsExpanded(false), 120);
+    if (!inline) setTimeout(() => setIsExpanded(false), 120);
   };
 
 
@@ -274,10 +293,16 @@ const AIPromptBar = ({
   };
 
   const hasText = prompt.trim().length > 0;
-  const showHideButton = isHovered || isFocused;
+  const showHideButton = !inline && (isHovered || isFocused);
 
   return (
-    <div className="absolute bottom-12 inset-x-0 flex flex-col items-center justify-end z-10 pointer-events-none">
+    <div
+      className={
+        inline
+          ? "relative w-full flex flex-col items-center"
+          : "absolute bottom-12 inset-x-0 flex flex-col items-center justify-end z-10 pointer-events-none"
+      }
+    >
       <AnimatePresence mode="wait">
         {!isExpanded ? (
           /* Estado 1: Botón colapsado */
@@ -313,7 +338,7 @@ const AIPromptBar = ({
             animate={{ y: 0, opacity: 1, scale: 1 }}
             exit={{ y: 40, opacity: 0, scale: 0.95 }}
             transition={{ type: "spring", bounce: 0.3, duration: 0.45 }}
-            className="relative w-full max-w-[calc(100vw-130px)] md:max-w-2xl pointer-events-auto flex flex-col"
+            className={`relative w-full ${inline ? "" : "max-w-[calc(100vw-130px)]"} md:max-w-2xl pointer-events-auto flex flex-col`}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
           >
@@ -467,7 +492,8 @@ const AIPromptBar = ({
                     setIsFocused(false);
                     setTimeout(() => setSuggestions([]), 120);
                   }}
-                  placeholder={extendLabel ? "¿Qué quieres generar a partir de aquí?" : "Describe tu flujo o idea..."}
+                  aria-label={placeholder ?? "Describe tu flujo o idea"}
+                  placeholder={extendLabel ? "¿Qué quieres generar a partir de aquí?" : placeholder ?? "Describe tu flujo o idea..."}
                   className="relative z-[1] w-full bg-transparent font-light text-[15px] text-white placeholder:text-white/40 outline-none resize-none overflow-y-auto max-h-[160px] min-h-[44px] leading-relaxed text-center placeholder:text-center panel-scrollbar select-text"
                   disabled={isGenerating}
                 />
@@ -515,7 +541,7 @@ const AIPromptBar = ({
               {/* Controles inferiores */}
               <div className="flex items-center justify-between mt-2 pt-1">
                 <div className="flex items-center gap-2">
-                  <AppsMenu isDark={isDark} />
+                  <AppsMenu isDark={isDark} menuOnly={inline} />
                   {onAddWidget && (
                     <button
                       type="button"

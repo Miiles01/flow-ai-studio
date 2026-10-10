@@ -23,6 +23,16 @@
     "hero_title_crear": "create",
     "hero_subtitle": "Imagine a project. Make it reality.",
     "hero_cta": "Join now",
+    "seo_title": "Creative AI tools to organize your projects | Miiles",
+    "seo_description": "Miiles is the creative AI tool to organize ideas, projects and tasks. Describe what you need and turn it into a visual board, flow or to-do list in seconds.",
+    "hero_h1": "Organize your ideas with AI",
+    "hero_desc": "Stop getting lost in scattered ideas and to-dos. Describe your project and Miiles' AI turns it into a clear plan.",
+    "hero_examples": [
+      { "label": "Boards", "prompt": "A launch plan for my clothing brand" },
+      { "label": "Flows", "prompt": "My business sales process, step by step" },
+      { "label": "Tasks", "prompt": "The tasks to open my coffee shop this month" },
+      { "label": "Content", "prompt": "My content calendar for TikTok and Instagram" }
+    ],
     "orbit_title_1": "Discover",
     "orbit_title_2": "connections",
     "scroll_text_1_1": "Unify your ideas",

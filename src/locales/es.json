@@ -23,6 +23,16 @@
     "hero_title_crear": "crear",
     "hero_subtitle": "Imagina un proyecto. Hazlo realidad.",
     "hero_cta": "Unirse ahora",
+    "seo_title": "Herramientas creativas con IA para organizar | Miiles",
+    "seo_description": "Miiles es la herramienta creativa con IA para organizar ideas, proyectos y tareas. Describe lo que necesitas y conviértelo en un tablero visual en segundos.",
+    "hero_h1": "Organiza tus ideas con IA",
+    "hero_desc": "Deja de perderte entre ideas sueltas y pendientes. Escribe tu proyecto y la IA de Miiles lo ordena en un plan claro.",
+    "hero_examples": [
+      { "label": "Tableros", "prompt": "Un plan de lanzamiento para mi marca de ropa" },
+      { "label": "Flujos", "prompt": "El proceso de ventas de mi negocio, paso a paso" },
+      { "label": "Tareas", "prompt": "Las tareas para abrir mi cafetería este mes" },
+      { "label": "Contenido", "prompt": "Mi calendario de contenido para TikTok e Instagram" }
+    ],
     "orbit_title_1": "Descubre",
     "orbit_title_2": "conexiones",
     "scroll_text_1_1": "Unifica tus ideas",

@@ -1,5 +1,6 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { hasPendingHomePrompt, takePendingHomePrompt } from "@/lib/homePrompt";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
 import { Loader2, Plus, LayoutDashboard, Trash2, Users, LogOut } from "lucide-react";
@@ -86,7 +87,7 @@ export default function Boards() {
   const isPro = plan === "pro";
   const atLimit = !isPro && flows.length >= FREE_BOARD_LIMIT;
 
-  const handleCreate = async () => {
+  const handleCreate = async (initialPrompt?: string) => {
     if (!user) return;
     if (atLimit) {
       toast.error(`Has alcanzado el límite de ${FREE_BOARD_LIMIT} tableros del plan gratuito. Actualiza a Pro para tableros ilimitados.`);
@@ -101,8 +102,18 @@ export default function Boards() {
       toast.error("No se pudo crear el tablero");
       return;
     }
-    navigate(`/boards/${data.id}`);
+    navigate(`/boards/${data.id}`, initialPrompt ? { state: { initialPrompt } } : undefined);
   };
+
+  // Idea escrita en el home: crea el tablero y la manda a generar
+  const autoCreatedRef = useRef(false);
+  useEffect(() => {
+    if (loading || autoCreatedRef.current || !hasPendingHomePrompt()) return;
+    autoCreatedRef.current = true;
+    const prompt = takePendingHomePrompt();
+    if (prompt) handleCreate(prompt);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [loading]);
 
   const handleDelete = async (e: React.MouseEvent, id: string) => {
     e.stopPropagation();
@@ -152,7 +163,7 @@ export default function Boards() {
               ? "bg-black text-white border border-white/10 hover:bg-zinc-900"
               : "bg-black text-white hover:bg-miiles-pink"
           }`}
-          onClick={handleCreate}
+          onClick={() => handleCreate()}
         >
           <Plus size={16} />
           Nuevo tablero

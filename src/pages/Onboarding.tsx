@@ -12,6 +12,7 @@ import AvatarUpload from "@/components/AvatarUpload";
 import onboardingHero from "@/assets/onboarding-hero.webp";
 import onboardingDone from "@/assets/onboarding-done.webp";
 import { getVideoEmbedUrl } from "@/lib/videoEmbed";
+import { hasPendingHomePrompt } from "@/lib/homePrompt";
 
 const TOTAL_STEPS = 7;
 
@@ -261,7 +262,7 @@ const Onboarding = () => {
   };
 
   const handleFinish = () => {
-    navigate("/", { replace: true });
+    navigate(hasPendingHomePrompt() ? "/boards" : "/", { replace: true });
   };
 
   const progress = ((step + 1) / TOTAL_STEPS) * 100;
