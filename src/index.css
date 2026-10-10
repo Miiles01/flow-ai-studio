@@ -179,10 +179,11 @@
   transition-timing-function: cubic-bezier(0.65, 0, 0, 1);
 }
 
-/* H1 del home: la máscara de SplitText mide 1em y recorta las colas (g, p, y) */
+/* H1 del home: la máscara de SplitText mide 1em y recorta las colas (g, p, y)
+   y lo que sobresale de la itálica de Welth Catritz a los lados */
 .hero-title .line-mask {
-  padding-bottom: 0.16em;
-  margin-bottom: -0.16em;
+  padding: 0 0.15em 0.16em;
+  margin: 0 -0.15em -0.16em;
 }
 
 /* Panel scrollbar (adapts to light/dark) */

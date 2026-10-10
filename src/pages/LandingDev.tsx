@@ -442,7 +442,11 @@ const LandingDev = () => {
               />
 
               <h1 className="hero-title text-[44px] leading-[1.08] sm:text-6xl md:text-7xl lg:text-[84px] font-normal tracking-[-0.035em] text-black max-w-6xl [text-wrap:balance]">
-                {t("landing.hero_h1")}
+                {t("landing.hero_h1_before")}{" "}
+                <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic", letterSpacing: "-0.01em" }}>
+                  {t("landing.hero_h1_accent")}
+                </span>{" "}
+                {t("landing.hero_h1_after")}
               </h1>
 
               <p
