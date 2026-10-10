@@ -8,14 +8,14 @@ import { useLocalePath } from "@/hooks/useLocalePath";
    ensancha y su cuerpo crece de 0 a su alto real (0.5s, cubic-bezier(.4,0,.2,1));
    cada opción sube desde el borde recortado con dos desplazamientos encadenados
    (30px + 50px, 0.6s, cubic-bezier(.65,0,0,1)) escalonados cada 40ms, sin fades.
-   Las curvas van literales en las clases: Tailwind solo genera lo que lee. */
+   Las curvas viven en index.css (.ease-nav-morph, .nav-item-rise). */
 const ITEM_STAGGER_MS = 40;
 const OPEN_MAX_WIDTH = 1024;
 const MOBILE_BREAKPOINT = 768;
 
 function MenuItem({ open, index, children }: { open: boolean; index: number; children: React.ReactNode }) {
   const delay = { transitionDelay: open ? `${index * ITEM_STAGGER_MS}ms` : "0ms" };
-  const move = "transition-transform duration-[600ms] ease-[cubic-bezier(0.65,0,0,1)]";
+  const move = "nav-item-rise";
   return (
     <div className={`${move} ${open ? "translate-y-0" : "translate-y-[30px]"}`} style={delay}>
       <div className={`${move} ${open ? "translate-y-0" : "translate-y-[50px]"}`} style={delay}>
@@ -119,7 +119,7 @@ const MorphNavbar = ({ isLanding }: MorphNavbarProps) => {
   const dark = open || (isLanding && !scrolled && !isMobile);
   const ink = dark ? "text-white" : "text-black";
 
-  const morph = "duration-500 ease-[cubic-bezier(0.4,0,0.2,1)]";
+  const morph = "duration-500 ease-nav-morph";
 
   // Cualquier clic en el navbar fuera de un botón o enlace equivale a Menú / Cerrar
   const handleSurfaceClick = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -185,9 +185,12 @@ const MorphNavbar = ({ isLanding }: MorphNavbarProps) => {
             {...(!open ? { inert: "" as unknown as boolean } : {})}
           >
             <div className="min-h-0 overflow-hidden">
+              {/* Ancho final fijo y centrado: la caja crece y lo va descubriendo, pero el
+                  contenido no se reacomoda; las opciones solo suben, como en el portafolio. */}
               <nav
                 aria-label={t("navbar.menu")}
-                className="flex flex-col md:flex-row gap-10 md:gap-0 px-8 md:px-16 pt-8 md:pt-12 pb-10 md:pb-14 max-h-[calc(100vh-140px)] overflow-y-auto"
+                style={{ width: openWidth }}
+                className="relative left-1/2 -translate-x-1/2 flex flex-col md:flex-row gap-10 md:gap-0 px-8 md:px-16 pt-8 md:pt-12 pb-10 md:pb-14 max-h-[calc(100vh-140px)] overflow-y-auto"
               >
                 {/* Principal: enlaces grandes */}
                 <ul className="flex flex-col gap-3 md:gap-4 md:w-2/3 md:order-2 md:pl-16 md:border-l border-white/10">

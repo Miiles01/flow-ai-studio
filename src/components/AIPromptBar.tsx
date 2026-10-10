@@ -338,7 +338,7 @@ const AIPromptBar = ({
             animate={{ y: 0, opacity: 1, scale: 1 }}
             exit={{ y: 40, opacity: 0, scale: 0.95 }}
             transition={{ type: "spring", bounce: 0.3, duration: 0.45 }}
-            className={`relative w-full ${inline ? "" : "max-w-[calc(100vw-130px)]"} md:max-w-2xl pointer-events-auto flex flex-col`}
+            className={`relative w-full ${inline ? "md:max-w-[560px]" : "max-w-[calc(100vw-130px)] md:max-w-2xl"} pointer-events-auto flex flex-col`}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
           >

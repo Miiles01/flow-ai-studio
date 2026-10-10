@@ -441,7 +441,7 @@ const LandingDev = () => {
                 className="w-12 h-12 mx-auto mb-8 logo-spin"
               />
 
-              <h1 className="hero-title text-[44px] leading-[1.08] sm:text-6xl md:text-7xl lg:text-[104px] font-normal tracking-[-0.035em] text-black max-w-5xl [text-wrap:balance]">
+              <h1 className="hero-title text-[44px] leading-[1.08] sm:text-6xl md:text-7xl lg:text-[84px] font-normal tracking-[-0.035em] text-black max-w-6xl [text-wrap:balance]">
                 {t("landing.hero_h1")}
               </h1>
 

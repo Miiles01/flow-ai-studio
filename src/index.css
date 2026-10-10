@@ -167,6 +167,18 @@
 }
 .todo-scrollbar { scrollbar-width: thin; scrollbar-color: #4059F1 transparent; }
 
+/* MorphNavbar: curvas del portafolio. Clases propias porque tailwindcss-animate
+   también define las utilidades duration y ease, y Tailwind no genera sus valores
+   arbitrarios (duration-[600ms], ease-[cubic-bezier(...)]) por ambigüedad. */
+.ease-nav-morph {
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+.nav-item-rise {
+  transition-property: transform;
+  transition-duration: 600ms;
+  transition-timing-function: cubic-bezier(0.65, 0, 0, 1);
+}
+
 /* H1 del home: la máscara de SplitText mide 1em y recorta las colas (g, p, y) */
 .hero-title .line-mask {
   padding-bottom: 0.16em;
