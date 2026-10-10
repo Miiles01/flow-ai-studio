@@ -29,7 +29,7 @@
     "hero_h1_before": "Every",
     "hero_h1_accent": "business",
     "hero_h1_after": "model needs a base",
-    "hero_desc": "Have an idea but don't know where to start? Write it down and Miiles' artificial intelligence turns it into a Business Model Canvas ready to validate.",
+    "hero_desc": "Discover how the world's top strategists build businesses that work. Use their methods, like the Business Model Canvas, and let AI structure and validate your idea.",
     "hero_examples": [
       { "label": "Boards", "prompt": "A launch plan for my clothing brand" },
       { "label": "Flows", "prompt": "My business sales process, step by step" },
