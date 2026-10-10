@@ -1,8 +1,6 @@
 import { useEffect, useRef } from "react";
 import videoHomeAsset from "@/assets/miiles/videohome.mp4.asset.json";
 const videoHome = videoHomeAsset.url;
-import { Link } from "react-router-dom";
-import { motion, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useTranslation } from "react-i18next";
@@ -74,7 +72,6 @@ const LandingDev = () => {
   });
   const smootherRef = useRef<ScrollSmoother | null>(null);
   const videoWrapRef = useRef<HTMLDivElement>(null);
-  const section059Ref = useRef<HTMLElement>(null);
   const orbitSectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -164,112 +161,6 @@ const LandingDev = () => {
   // Removed Hero Title Entrance Animation (mwg_effect046 style) since we are using a simple fade now
 
   // Removed Drifting Notes Hero Animation logic
-
-  // Curve Text Animation (mwg_effect059)
-  useEffect(() => {
-    const root = section059Ref.current;
-    if (!root) return;
-
-    const mm = gsap.matchMedia();
-
-    mm.add("(min-width: 768px)", () => {
-      let scrollTriggerInstance: ScrollTrigger | null = null;
-
-      const initAnimation = () => {
-        const pinHeight = root.querySelector(".pin-height") as HTMLElement;
-        const container = root.querySelector(".mwg-container") as HTMLElement;
-        const svg = root.querySelector("#mysvg") as SVGSVGElement;
-        const path = root.querySelector("#mypath") as SVGPathElement;
-        const tp = root.querySelector("#textpath") as SVGTextPathElement;
-
-        if (!pinHeight || !container || !svg || !path || !tp) return;
-
-        const vbW = 3898;
-        const vbH = 891;
-        svg.style.aspectRatio = `${vbW} / ${vbH}`;
-
-        const position = { x: 0, y: 0 };
-        const updateViewBox = () => {
-          svg.setAttribute('viewBox', `${position.x} ${position.y} ${vbW} ${vbH}`);
-        };
-
-        const tweenOpts = { duration: 0.2, ease: 'power1', onUpdate: updateViewBox };
-        const xTo = gsap.quickTo(position, "x", tweenOpts);
-        const yTo = gsap.quickTo(position, "y", tweenOpts);
-
-        const str = tp.getAttribute('data-text')?.trim() || "Es horaaaaaa de crearrrrrrrrr";
-        const chars = str.split('');
-        const totalChars = chars.length;
-
-        tp.textContent = str;
-        const textLen = tp.getComputedTextLength() || 1500;
-        tp.textContent = '';
-
-        const stepCount = 1000;
-        const points: { x: number; y: number }[] = [];
-        for (let i = 0; i < stepCount; i++) {
-          const u = i / (stepCount - 1);
-          const len = u * textLen;
-          const p = path.getPointAtLength(len);
-          points.push({ x: p.x, y: p.y });
-        }
-
-        // Initial placement to avoid jumping
-        if (points.length > 0) {
-          const rect = container.getBoundingClientRect();
-          const svgRect = svg.getBoundingClientRect();
-          const scaleFactor = svgRect.width > 0 ? rect.width / svgRect.width : 0.33;
-          const p0 = points[0];
-          if (p0) {
-            position.x = p0.x - (vbW * scaleFactor) / 2;
-            position.y = p0.y - vbH / 2 - 60;
-            updateViewBox();
-          }
-        }
-
-        scrollTriggerInstance = ScrollTrigger.create({
-          trigger: pinHeight,
-          start: 'top top',
-          end: 'bottom bottom',
-          pin: container,
-          scrub: true,
-          onUpdate: self => {
-            const rect = container.getBoundingClientRect();
-            const svgRect = svg.getBoundingClientRect();
-            const scaleFactor = svgRect.width > 0 ? rect.width / svgRect.width : 0.33;
-
-            const idx = Math.floor(self.progress * (points.length - 1));
-            const p = points[idx];
-            if (p) {
-              xTo(p.x - (vbW * scaleFactor) / 2);
-              yTo(p.y - vbH / 2 - 60);
-            }
-
-            const next = chars.slice(0, Math.floor(self.progress * totalChars)).join('');
-            if (tp.textContent !== next) {
-              tp.textContent = next;
-            }
-          }
-        });
-      };
-
-      const fontsReady = (document as Document & { fonts?: { ready: Promise<unknown> } }).fonts?.ready;
-      if (fontsReady) {
-        fontsReady.then(initAnimation);
-      } else {
-        const timer = setTimeout(initAnimation, 100);
-        return () => clearTimeout(timer);
-      }
-
-      return () => {
-        if (scrollTriggerInstance) scrollTriggerInstance.kill();
-      };
-    });
-
-    return () => {
-      mm.revert();
-    };
-  }, []);
 
   // Swirling Images Animation (mwg_effect016 exact)
   useEffect(() => {
@@ -441,51 +332,6 @@ const LandingDev = () => {
                 className="w-full h-full object-cover"
               />
             </div>
-          </section>
-
-          <section ref={section059Ref} className="mwg_effect059 bg-white">
-            <div className="pin-height">
-              <div className="mwg-container">
-                <svg id="mysvg" fill="none" width="3898" height="891" viewBox="0 0 3898 891" xmlns="http://www.w3.org/2000/svg">
-                  <path id="mypath" d="M0.398438 611.016C175.398 377.517 857.398 -285.484 1461.4 139.638C1911.53 456.46 2114.4 805.516 2679.4 611.016C3088.4 470.219 3704.54 -33.3124 4354.9 781.516C4700.9 1215.02 5305.6 1466.52 6108.4 328.516" />
-                  <text id="text">
-                    <textPath id="textpath" href="#mypath" textAnchor="start" fontSize="260" data-text={t("landing.curve_text")}>
-                      {t("landing.curve_text")}
-                    </textPath>
-                  </text>
-                </svg>
-              </div>
-            </div>
-          </section>
-
-          {/* MOBILE CTA */}
-          <section className="block md:hidden py-24 px-6 bg-white text-center">
-            <h2 className="text-4xl sm:text-5xl font-normal leading-tight tracking-tight mb-8 text-black">
-              {t("landing.cta_title")}
-            </h2>
-            <Link
-              to="/register"
-              className="inline-flex items-center gap-2 px-10 py-5 rounded-full bg-black text-white text-base font-light hover:-translate-y-2 transition-transform duration-300"
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 0C12.3 8.8 15.2 11.7 24 12C15.2 12.3 12.3 15.2 12 24C11.7 15.2 8.8 12.3 0 12C8.8 11.7 11.7 8.8 12 0Z" />
-              </svg>
-              {t("landing.cta_button")}
-            </Link>
-          </section>
-
-          {/* DESKTOP CTA */}
-          <section className="hidden md:flex pb-32 px-6 bg-white flex-col items-center justify-center pt-8">
-            <p className="text-gray-500 mb-6 font-light">{t("landing.cta_subtitle")}</p>
-            <Link
-              to="/register"
-              className="inline-flex items-center gap-2 px-10 py-5 rounded-full bg-black text-white text-base font-light hover:-translate-y-2 transition-transform duration-300"
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                <path d="M12 0C12.3 8.8 15.2 11.7 24 12C15.2 12.3 12.3 15.2 12 24C11.7 15.2 8.8 12.3 0 12C8.8 11.7 11.7 8.8 12 0Z" />
-              </svg>
-              {t("landing.cta_button")}
-            </Link>
           </section>
 
           <LandingFooter />

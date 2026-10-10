@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
+import { ChevronDown } from "lucide-react";
 import { useLocalePath } from "@/hooks/useLocalePath";
 
 type BuildCard = { title: string; desc: string; cta: string; image: string; alt: string; href: string };
@@ -11,24 +12,6 @@ const CheckIcon = () => (
   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" aria-hidden className="shrink-0">
     <circle cx="12" cy="12" r="9" />
     <path d="M8.5 12.5l2.3 2.3 4.7-5" />
-  </svg>
-);
-
-const CircleArrow = ({ open }: { open: boolean }) => (
-  <svg
-    width="34"
-    height="34"
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.6"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    aria-hidden
-    className={`shrink-0 transition-transform duration-300 ${open ? "rotate-180" : ""}`}
-  >
-    <circle cx="12" cy="12" r="10" />
-    <path d="M12 7v10M7.5 12.5L12 17l4.5-4.5" />
   </svg>
 );
 
@@ -121,7 +104,7 @@ const HomeSections = ({ beforeFaq }: { beforeFaq?: ReactNode }) => {
                   key={plan.name}
                   data-anim-heading
                   className={`rounded-[24px] p-8 md:p-10 grid grid-cols-1 md:grid-cols-2 gap-8 ${
-                    featured ? "bg-miiles-blue text-white" : "bg-white text-black shadow-[0_20px_60px_rgba(0,0,0,0.06)] ring-1 ring-black/5"
+                    featured ? "bg-black text-white" : "bg-white text-black shadow-[0_20px_60px_rgba(0,0,0,0.06)] ring-1 ring-black/5"
                   }`}
                 >
                   <div className="flex flex-col">
@@ -136,7 +119,7 @@ const HomeSections = ({ beforeFaq }: { beforeFaq?: ReactNode }) => {
                     <Link
                       to={i === 0 ? "/register?next=/boards" : localePath("/precios")}
                       className={`mt-8 self-start inline-flex items-center px-6 py-3 rounded-full text-sm font-normal transition-colors duration-300 ${
-                        featured ? "bg-black text-white hover:bg-white hover:text-black" : "bg-black text-white hover:bg-miiles-pink hover:text-black"
+                        featured ? "bg-white text-black hover:bg-miiles-pink" : "bg-black text-white hover:bg-miiles-pink hover:text-black"
                       }`}
                     >
                       {plan.cta}
@@ -169,12 +152,12 @@ const HomeSections = ({ beforeFaq }: { beforeFaq?: ReactNode }) => {
             {t("landing.faq_title")}
           </h2>
 
-          <div className="border-t border-solid border-black">
+          <div>
             {faqs.map((faq, i) => {
               const open = openFaq === i;
               const panelId = `faq-panel-${i}`;
               return (
-                <div key={faq.q} className="border-b border-solid border-black">
+                <div key={faq.q}>
                   <h3 className="no-split">
                     <button
                       type="button"
@@ -184,7 +167,12 @@ const HomeSections = ({ beforeFaq }: { beforeFaq?: ReactNode }) => {
                       className="w-full flex items-center justify-between gap-6 py-7 text-left text-2xl md:text-[28px] font-normal tracking-tight text-black"
                     >
                       {faq.q}
-                      <CircleArrow open={open} />
+                      <ChevronDown
+                        size={22}
+                        strokeWidth={1.5}
+                        aria-hidden
+                        className={`shrink-0 transition-transform duration-300 ${open ? "rotate-180 text-black" : "text-miiles-gray-400"}`}
+                      />
                     </button>
                   </h3>
                   <div
