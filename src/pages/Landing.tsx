@@ -6,7 +6,6 @@ import { ScrollSmoother } from "gsap/ScrollSmoother";
 import { SplitText } from "gsap/SplitText";
 import { CustomEase } from "gsap/CustomEase";
 import { InertiaPlugin } from "gsap/InertiaPlugin";
-import logoImg from "@/assets/logo.webp";
 import brand1 from "@/assets/miiles/brands/brand1.svg";
 import brand2 from "@/assets/miiles/brands/brand2.svg";
 import brand3 from "@/assets/miiles/brands/brand3.svg";
@@ -216,13 +215,6 @@ const Landing = () => {
             />
             
             <div className="relative z-10 w-full max-w-6xl flex flex-col items-center justify-center">
-              <img
-                data-anim-heading
-                src={logoImg}
-                alt=""
-                aria-hidden
-                className="w-12 h-12 mx-auto mb-8 logo-spin"
-              />
 
               <h1 className="hero-title text-[44px] leading-[1.08] sm:text-6xl md:text-7xl lg:text-[84px] font-normal tracking-[-0.035em] text-black max-w-6xl [text-wrap:balance]">
                 {t("landing.hero_h1_before")}{" "}
