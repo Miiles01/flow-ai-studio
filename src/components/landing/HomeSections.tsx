@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { useLocalePath } from "@/hooks/useLocalePath";
@@ -32,8 +32,9 @@ const CircleArrow = ({ open }: { open: boolean }) => (
   </svg>
 );
 
-/** Secciones del home debajo del hero: qué puedes crear, planes y preguntas frecuentes. */
-const HomeSections = () => {
+/** Secciones del home debajo del hero: qué puedes crear, planes y preguntas frecuentes.
+ *  `beforeFaq` se muestra entre los planes y las preguntas. */
+const HomeSections = ({ beforeFaq }: { beforeFaq?: ReactNode }) => {
   const { t } = useTranslation();
   const localePath = useLocalePath();
   const [openFaq, setOpenFaq] = useState(0);
@@ -158,6 +159,8 @@ const HomeSections = () => {
           </div>
         </div>
       </section>
+
+      {beforeFaq}
 
       {/* PREGUNTAS FRECUENTES */}
       <section aria-labelledby="faq-title" className="px-6 py-24 md:py-32">

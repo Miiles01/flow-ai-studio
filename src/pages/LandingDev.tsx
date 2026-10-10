@@ -74,7 +74,6 @@ const LandingDev = () => {
   });
   const smootherRef = useRef<ScrollSmoother | null>(null);
   const videoWrapRef = useRef<HTMLDivElement>(null);
-  const scrollTextSectionRef = useRef<HTMLDivElement>(null);
   const section059Ref = useRef<HTMLElement>(null);
   const orbitSectionRef = useRef<HTMLDivElement>(null);
 
@@ -165,86 +164,6 @@ const LandingDev = () => {
   // Removed Hero Title Entrance Animation (mwg_effect046 style) since we are using a simple fade now
 
   // Removed Drifting Notes Hero Animation logic
-
-  // 3D Scroll Perspective Text Animation (mwg_effect053)
-  useEffect(() => {
-    const root = scrollTextSectionRef.current;
-    if (!root) return;
-
-    let mm = gsap.matchMedia();
-
-    mm.add("(min-width: 768px)", () => {
-      const pinHeight = root.querySelector(".pin-height") as HTMLElement;
-      const container = root.querySelector(".container") as HTMLElement;
-      const paragraphs = root.querySelectorAll(".paragraphs");
-
-      if (!pinHeight || !container || paragraphs.length === 0) return;
-
-      // Create SplitText lines
-      const splits = Array.from(paragraphs).map((p) => {
-        const split = SplitText.create(p as HTMLElement, { type: "lines", linesClass: "line" });
-        split.lines.forEach((line) => {
-          line.innerHTML = `<div class="line-inner">${line.innerHTML}</div>`;
-        });
-        return split;
-      });
-
-      // Initial state: hide paragraphs after the first one
-      splits.forEach((split, i) => {
-        if (i > 0) {
-          gsap.set(split.lines, { rotationY: 90 });
-        }
-      });
-
-      // Pin the container
-      ScrollTrigger.create({
-        trigger: pinHeight,
-        start: "top top",
-        end: "bottom bottom",
-        pin: container,
-        pinType: "transform",
-      });
-
-      // Create rotation timeline
-      const tl = gsap.timeline({
-        scrollTrigger: {
-          trigger: pinHeight,
-          start: "top top",
-          end: "bottom bottom",
-          scrub: true,
-        },
-      });
-
-      splits.forEach((split, i) => {
-        if (splits[i + 1]) {
-          const currentLines = split.lines;
-          const nextLines = splits[i + 1].lines;
-
-          tl.to(currentLines, {
-            rotationY: -90,
-            stagger: 0.07,
-            duration: 1,
-            ease: "back.inOut(1.5)",
-          });
-
-          tl.to(
-            nextLines,
-            {
-              rotationY: 0,
-              stagger: 0.07,
-              duration: 1,
-              ease: "back.inOut(1.5)",
-            },
-            "<"
-          );
-        }
-      });
-    });
-
-    return () => {
-      mm.revert();
-    };
-  }, []);
 
   // Curve Text Animation (mwg_effect059)
   useEffect(() => {
@@ -481,56 +400,31 @@ const LandingDev = () => {
           </section>
 
           {/* QUÉ VAS A CREAR · PLANES · PREGUNTAS FRECUENTES */}
-          <HomeSections />
-
-          {/* SWIRLING IMAGES (mwg_effect016) */}
-          <section ref={orbitSectionRef} className="mwg_effect016 relative z-10 w-full hidden md:block">
-            <div className="pin-height">
-              <div className="container">
-                <h2 className="scroll-text text-black text-4xl md:text-7xl lg:text-[90px] font-normal tracking-tight">
-                  {t("landing.orbit_title_1")}<br />{t("landing.orbit_title_2")}
-                </h2>
-                {swirlImages.slice(0, 8).map((src, idx) => (
-                  <div 
-                    key={idx} 
-                    className="media-wrapper"
-                    style={{ zIndex: idx === 0 ? 10 : 1 }}
-                  >
-                    <img src={src} alt="" className="media" />
+          <HomeSections
+            beforeFaq={
+              /* DESCUBRE CONEXIONES (mwg_effect016) */
+              <section ref={orbitSectionRef} className="mwg_effect016 relative z-10 w-full hidden md:block">
+                <div className="pin-height">
+                  <div className="container">
+                    <h2 className="scroll-text text-black text-4xl md:text-7xl lg:text-[90px] font-normal tracking-tight">
+                      {t("landing.orbit_title_1")}<br />{t("landing.orbit_title_2")}
+                    </h2>
+                    {swirlImages.slice(0, 8).map((src, idx) => (
+                      <div 
+                        key={idx} 
+                        className="media-wrapper"
+                        style={{ zIndex: idx === 0 ? 10 : 1 }}
+                      >
+                        <img src={src} alt="" className="media" />
+                      </div>
+                    ))}
                   </div>
-                ))}
-              </div>
-            </div>
-          </section>
+                </div>
+              </section>
+            }
+          />
 
 
-          {/* 3D SCROLL TEXT PERSPECTIVE (mwg_effect053) - DESKTOP ONLY */}
-          <section ref={scrollTextSectionRef} className="mwg_effect053 bg-white text-black relative z-10 hidden md:block">
-            <div className="pin-height">
-              <div className="container">
-                <p className="paragraphs">
-                  {t("landing.scroll_text_1_1")}<br />
-                  {t("landing.scroll_text_1_2")}<br />
-                  {t("landing.scroll_text_1_3")}
-                </p>
-                <p className="paragraphs">
-                  {t("landing.scroll_text_2_1")}<br />
-                  {t("landing.scroll_text_2_2")}<br />
-                  {t("landing.scroll_text_2_3")}
-                </p>
-              </div>
-            </div>
-          </section>
-
-          {/* SIMPLE TITLE TEXT - MOBILE ONLY */}
-          <section className="bg-white text-black relative z-10 block md:hidden pt-20 pb-4 px-6 text-center">
-            <h2 className="text-5xl font-normal leading-tight tracking-tight text-black">
-              <span className="block">{t("landing.mobile_title_1")}</span>
-              <span className="block">
-                {t("landing.mobile_title_2")} <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>{t("landing.mobile_title_3")}</span>
-              </span>
-            </h2>
-          </section>
 
           {/* VIDEO */}
           <section className="pt-0 pb-24 md:py-24 flex justify-center items-center overflow-hidden">
@@ -547,72 +441,6 @@ const LandingDev = () => {
                 className="w-full h-full object-cover"
               />
             </div>
-          </section>
-
-          {/* VALUE PROP + 2 COLUMNS (FUNCIONES) */}
-          <section className="py-32 px-6 scroll-mt-24">
-            <div className="max-w-6xl mx-auto">
-              <h2 className="text-5xl md:text-7xl font-normal leading-tight tracking-tight text-center mb-20">
-                <span className="block">{t("landing.system_title_1")}</span>
-                <span className="block">
-                  {t("landing.system_title_2")}&nbsp;<span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>{t("landing.system_title_3")}</span>
-                </span>
-              </h2>
-
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                {/* COL 1 — Encuentra colaboraciones */}
-                <div data-anim-heading className="flex flex-col bg-white rounded-3xl p-6 cursor-pointer transition-all duration-300 hover:-translate-y-3 hover:shadow-[0_20px_60px_rgba(0,0,0,0.08)] group">
-                  <div className="rounded-2xl overflow-hidden bg-[#F5F5F8] mb-8">
-                    <img
-                      src="https://wearemiiles.com/wp-content/uploads/2026/01/3232-932x1024.png"
-                      alt="Encuentra colaboraciones"
-                      className="w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                  </div>
-                  <h3 className="text-3xl md:text-4xl font-normal text-center mb-4 leading-tight">
-                    {t("landing.colab_title")}
-                  </h3>
-                  <p data-split className="text-sm font-light text-gray-500 text-center leading-relaxed max-w-sm mx-auto">
-                    {t("landing.colab_desc")}
-                  </p>
-                </div>
-
-                {/* COL 2 — Haz que tu idea suene */}
-                <div data-anim-heading className="flex flex-col bg-white rounded-3xl p-6 cursor-pointer transition-all duration-300 hover:-translate-y-3 hover:shadow-[0_20px_60px_rgba(0,0,0,0.08)] group">
-                  <div className="rounded-2xl overflow-hidden bg-[#F5F5F8] mb-8">
-                    <img
-                      src="https://wearemiiles.com/wp-content/uploads/2026/01/new233-933x1024.png"
-                      alt="Haz que tu idea suene"
-                      className="w-full object-cover transition-transform duration-700 group-hover:scale-105"
-                    />
-                  </div>
-                  <h3 className="text-3xl md:text-4xl font-normal text-center mb-4 leading-tight">
-                    {t("landing.sales_title")}
-                  </h3>
-                  <p data-split className="text-sm font-light text-gray-500 text-center leading-relaxed max-w-sm mx-auto">
-                    {t("landing.sales_desc")}
-                  </p>
-                </div>
-              </div>
-            </div>
-          </section>
-          {/* TESTIMONIO */}
-          <section className="py-40 px-6">
-            <figure className="max-w-4xl mx-auto text-center flex flex-col items-center">
-              <span aria-hidden className="text-6xl md:text-8xl font-serif leading-none mb-4 text-black">“</span>
-              <blockquote data-anim-heading className="text-4xl md:text-6xl font-normal leading-tight tracking-tight mb-12">
-                <p>{t("landing.testim_quote")}</p>
-              </blockquote>
-              <img
-                src="https://wearemiiles.com/wp-content/uploads/2025/03/Frame-2085662063.png"
-                alt={t("landing.testim_name")}
-                className="h-14 w-auto object-contain mb-4"
-              />
-              <figcaption className="flex flex-col items-center">
-                <span className="text-sm font-normal text-black">{t("landing.testim_name")}</span>
-                <span className="text-[10px] text-gray-400 font-light mt-1">{t("landing.testim_role")}</span>
-              </figcaption>
-            </figure>
           </section>
 
           <section ref={section059Ref} className="mwg_effect059 bg-white">
