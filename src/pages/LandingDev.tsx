@@ -1,4 +1,4 @@
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import videoHomeAsset from "@/assets/miiles/videohome.mp4.asset.json";
 const videoHome = videoHomeAsset.url;
 import gsap from "gsap";
@@ -72,6 +72,8 @@ const LandingDev = () => {
   });
   const smootherRef = useRef<ScrollSmoother | null>(null);
   const videoWrapRef = useRef<HTMLDivElement>(null);
+  // Si el video no carga (en local no existe: lo sirve el hosting de Lovable), no deja hueco
+  const [videoFailed, setVideoFailed] = useState(false);
   const orbitSectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -318,21 +320,24 @@ const LandingDev = () => {
 
 
           {/* VIDEO */}
-          <section className="pt-0 pb-24 md:py-24 flex justify-center items-center overflow-hidden">
-            <div
-              ref={videoWrapRef}
-              className="w-full md:w-[65%] rounded-2xl overflow-hidden"
-            >
-              <video
-                src={videoHome}
-                autoPlay
-                muted
-                loop
-                playsInline
-                className="w-full h-full object-cover"
-              />
-            </div>
-          </section>
+          {!videoFailed && (
+            <section className="pt-0 pb-16 md:pb-20 flex justify-center items-center overflow-hidden">
+              <div
+                ref={videoWrapRef}
+                className="w-full md:w-[65%] rounded-2xl overflow-hidden"
+              >
+                <video
+                  src={videoHome}
+                  autoPlay
+                  muted
+                  loop
+                  playsInline
+                  onError={() => setVideoFailed(true)}
+                  className="w-full h-full object-cover"
+                />
+              </div>
+            </section>
+          )}
 
           <LandingFooter />
         </div>

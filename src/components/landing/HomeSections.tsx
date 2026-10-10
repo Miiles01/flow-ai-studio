@@ -1,4 +1,6 @@
-import { useState, type ReactNode } from "react";
+import { useEffect, useRef, useState, type ReactNode } from "react";
+import gsap from "gsap";
+import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { Link } from "react-router-dom";
 import { useTranslation } from "react-i18next";
 import { ChevronDown } from "lucide-react";
@@ -21,6 +23,37 @@ const HomeSections = ({ beforeFaq }: { beforeFaq?: ReactNode }) => {
   const { t } = useTranslation();
   const localePath = useLocalePath();
   const [openFaq, setOpenFaq] = useState(0);
+  const faqGridRef = useRef<HTMLDivElement>(null);
+  const faqTitleRef = useRef<HTMLHeadingElement>(null);
+
+  // Título de las preguntas fijo mientras se recorren (tablet y escritorio). Con
+  // ScrollSmoother, position: sticky no funciona: se fija con un pin de ScrollTrigger.
+  useEffect(() => {
+    const mm = gsap.matchMedia();
+    mm.add("(min-width: 768px)", () => {
+      const grid = faqGridRef.current;
+      const title = faqTitleRef.current;
+      if (!grid || !title) return;
+      const st = ScrollTrigger.create({
+        trigger: grid,
+        start: "top 120px",
+        end: () => `bottom ${120 + title.offsetHeight}px`,
+        pin: title,
+        // El home usa ScrollSmoother, que se crea después de este efecto
+        pinType: "transform",
+        pinSpacing: false,
+        invalidateOnRefresh: true,
+      });
+      return () => st.kill();
+    });
+    return () => mm.revert();
+  }, []);
+
+  // Abrir o cerrar una pregunta cambia el alto de la lista: recalcula el pin al terminar.
+  useEffect(() => {
+    const id = setTimeout(() => ScrollTrigger.refresh(), 550);
+    return () => clearTimeout(id);
+  }, [openFaq]);
 
   const cards = t("landing.build_cards", { returnObjects: true }) as BuildCard[];
   const plans = t("landing.plans", { returnObjects: true }) as Plan[];
@@ -146,9 +179,9 @@ const HomeSections = ({ beforeFaq }: { beforeFaq?: ReactNode }) => {
       {beforeFaq}
 
       {/* PREGUNTAS FRECUENTES */}
-      <section aria-labelledby="faq-title" className="px-6 py-24 md:py-32">
-        <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_1.35fr] gap-12 lg:gap-16 items-start">
-          <h2 id="faq-title" className="text-5xl md:text-7xl font-normal tracking-tight leading-[1.02] text-black">
+      <section aria-labelledby="faq-title" className="px-6 pt-24 pb-16 md:pt-32 md:pb-20">
+        <div ref={faqGridRef} className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-[1fr_1.35fr] gap-12 lg:gap-16 items-start">
+          <h2 ref={faqTitleRef} id="faq-title" className="text-5xl lg:text-7xl font-normal tracking-tight leading-[1.02] text-black">
             {t("landing.faq_title")}
           </h2>
 
