@@ -9,19 +9,10 @@ gsap.registerPlugin(SplitText);
 // Checkbox Icon Component
 const CheckIcon = ({ highlighted }: { highlighted?: boolean }) => {
   return (
-    <div 
-      className={`
-        w-4 h-4 rounded flex items-center justify-center border shrink-0
-        ${highlighted 
-          ? "border-white bg-white/20 text-white" 
-          : "border-black bg-black/5 text-black"
-        }
-      `}
-    >
-      <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
-        <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
-      </svg>
-    </div>
+    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="shrink-0 mt-[2px]">
+      <circle cx="12" cy="12" r="10" stroke={highlighted ? "white" : "black"} strokeWidth="1.5"/>
+      <path d="M8 12.5L10.5 15L16 9" stroke={highlighted ? "white" : "black"} strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+    </svg>
   );
 };
 
@@ -193,7 +184,7 @@ export default function PricingTable({ onPlanSelect, isModal }: PricingTableProp
               className={`flex flex-col rounded-[2.5rem] p-10 transition-all duration-500 hover:-translate-y-2 ${
                 plan.highlighted
                   ? "bg-black text-white shadow-[0_40px_80px_rgba(0,0,0,0.2)]"
-                  : "bg-[#F5F5F8] text-black"
+                  : "bg-white text-black border border-gray-100 shadow-[0_8px_30px_rgb(0,0,0,0.04)]"
               }`}
             >
               <h3 className="text-2xl font-normal mb-2">{plan.name}</h3>
