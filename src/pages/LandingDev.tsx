@@ -21,6 +21,7 @@ import brand6 from "@/assets/miiles/brands/brand6.svg";
 import MorphNavbar from "@/components/MorphNavbar";
 import LandingFooter from "@/components/LandingFooter";
 import HeroPrompt from "@/components/landing/HeroPrompt";
+import HomeSections from "@/components/landing/HomeSections";
 import { usePageSeo } from "@/hooks/usePageSeo";
 // Graphic assets copied from Downloads
 
@@ -132,7 +133,7 @@ const LandingDev = () => {
     // SplitText line reveal en h1/h2/h3
     const splits: SplitText[] = [];
     const runSplit = () => {
-      document.querySelectorAll<HTMLElement>("#smooth-content h1:not(.no-split), #smooth-content h2, #smooth-content h3").forEach((el) => {
+      document.querySelectorAll<HTMLElement>("#smooth-content h1:not(.no-split), #smooth-content h2:not(.no-split), #smooth-content h3:not(.no-split)").forEach((el) => {
         const split = SplitText.create(el, { type: "lines", mask: "lines", linesClass: "line" });
         splits.push(split);
         gsap.fromTo(
@@ -417,7 +418,7 @@ const LandingDev = () => {
           <MorphNavbar isLanding />
 
       <div id="smooth-wrapper" style={{ overflow: "hidden", position: "fixed", width: "100%", height: "100%", top: 0, left: 0 }}>
-        <div id="smooth-content" className="bg-white text-black font-sans">
+        <div id="smooth-content" className="split-safe bg-white text-black font-sans">
 
           <section className="min-h-[85vh] md:min-h-screen bg-white flex flex-col items-center justify-center text-center px-6 pt-32 pb-16 md:pb-32 relative z-10">
             {/* Dotted Radial Gradient Background */}
@@ -478,6 +479,9 @@ const LandingDev = () => {
 
             </div>
           </section>
+
+          {/* QUÉ VAS A CREAR · PLANES · PREGUNTAS FRECUENTES */}
+          <HomeSections />
 
           {/* SWIRLING IMAGES (mwg_effect016) */}
           <section ref={orbitSectionRef} className="mwg_effect016 relative z-10 w-full hidden md:block">

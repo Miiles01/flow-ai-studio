@@ -31,10 +31,22 @@
     "hero_h1_after": "model needs a base",
     "hero_desc": "Discover how global strategists build businesses that work.",
     "hero_examples": [
-      { "label": "Boards", "prompt": "A launch plan for my clothing brand" },
-      { "label": "Flows", "prompt": "My business sales process, step by step" },
-      { "label": "Tasks", "prompt": "The tasks to open my coffee shop this month" },
-      { "label": "Content", "prompt": "My content calendar for TikTok and Instagram" }
+      {
+        "label": "Boards",
+        "prompt": "A launch plan for my clothing brand"
+      },
+      {
+        "label": "Flows",
+        "prompt": "My business sales process, step by step"
+      },
+      {
+        "label": "Tasks",
+        "prompt": "The tasks to open my coffee shop this month"
+      },
+      {
+        "label": "Content",
+        "prompt": "My content calendar for TikTok and Instagram"
+      }
     ],
     "orbit_title_1": "Discover",
     "orbit_title_2": "connections",
@@ -61,7 +73,110 @@
     "curve_text": "It's tiiiime to creeeeeate",
     "cta_title": "It's time to create",
     "cta_subtitle": "Create your account today",
-    "cta_button": "Try Miiles"
+    "cta_button": "Try Miiles",
+    "build_title": "What will you create?",
+    "build_subtitle": "Whatever you imagine for your business, Miiles' artificial intelligence helps you structure it.",
+    "build_cards": [
+      {
+        "title": "Business models",
+        "desc": "Describe your idea and AI builds your Business Model Canvas on a visual board: value proposition, customers, channels and revenue, ready to edit.",
+        "cta": "Create my model",
+        "image": "/Control.webp",
+        "alt": "Miiles AI bar creating a business model on the board",
+        "href": "/register?next=/boards"
+      },
+      {
+        "title": "Clients and campaigns",
+        "desc": "Organize clients, campaigns, contracts and revenue with widgets on the same board. Your whole business in view, without switching tools.",
+        "cta": "Organize my business",
+        "image": "/Creatividad.webp",
+        "alt": "Client and campaign widgets on a Miiles board",
+        "href": "/register?next=/boards"
+      },
+      {
+        "title": "Social algorithms",
+        "desc": "Understand how TikTok, Instagram, YouTube and Facebook decide what to show, and which strategies growing creators are using.",
+        "cta": "See discoveries",
+        "image": "/Algoritmo.webp",
+        "alt": "Diagram of how a social media algorithm works",
+        "href": "/register?next=/trends"
+      }
+    ],
+    "plans_title": "Choose your plan",
+    "plans_subtitle": "Built for where you are, and where you're going.",
+    "plans": [
+      {
+        "name": "Start for free",
+        "price": "$0",
+        "unit": "MXN/mo",
+        "intro": "Includes:",
+        "features": [
+          "1 project",
+          "Up to 10 collaborations",
+          "Email support"
+        ],
+        "cta": "Start for free"
+      },
+      {
+        "name": "Pro plan from",
+        "price": "$309",
+        "unit": "MXN/mo",
+        "note": "*Billed annually (MXN 3,712 per year)",
+        "intro": "Grow without limits, with more features and more support.",
+        "features": [
+          "Unlimited projects",
+          "Unlimited collaborations",
+          "Advanced analytics",
+          "Priority support"
+        ],
+        "cta": "See all plans"
+      }
+    ],
+    "faq_title": "Frequently asked questions",
+    "faq_items": [
+      {
+        "q": "What is Miiles?",
+        "a": [
+          "Miiles is an artificial intelligence platform for entrepreneurs that turns ideas into business models. Describe your idea and Miiles generates your Business Model Canvas, flows and to-do lists on a visual board you can edit with your team.",
+          "In Discoveries you also learn how the TikTok, Instagram, YouTube and Facebook algorithms work, and which strategies growing creators are using."
+        ]
+      },
+      {
+        "q": "How does Miiles work?",
+        "a": [
+          "You write your idea the way you'd tell it to someone. If needed, the AI asks a few questions to understand your goal, proposes a strategic plan and, once you approve it, builds the board with your business structure.",
+          "Then you can edit, move and expand each part, or ask the AI to develop a section from what you already have."
+        ]
+      },
+      {
+        "q": "What is a Business Model Canvas?",
+        "a": [
+          "It's a strategy tool created by Alexander Osterwalder that sums up a business in nine blocks: customer segments, value proposition, channels, customer relationships, revenue streams, key resources, key activities, key partners and cost structure.",
+          "Miiles generates it from your idea so you can review, adjust and share it in minutes."
+        ]
+      },
+      {
+        "q": "Can I validate my business idea with AI?",
+        "a": [
+          "Miiles helps you structure your idea and see clearly what you need to test: who your customer is, what problem you solve, which channel reaches them and how you make money.",
+          "Real validation happens when you talk to your customers; Miiles gives you the map to do it in order."
+        ]
+      },
+      {
+        "q": "Do I need to know strategy or write prompts?",
+        "a": [
+          "No. You don't need to master business strategy prompts: you write in plain language and Miiles takes care of the questions and the structure.",
+          "If you already know strategy, you can ask for specific frameworks, like the Business Model Canvas, and adjust each block your way."
+        ]
+      },
+      {
+        "q": "How much does it cost?",
+        "a": [
+          "You can start for free. The Pro plan costs MXN 386 per month or MXN 3,712 per year (save 20%) and includes unlimited projects and collaborations, advanced analytics and priority support.",
+          "For teams and companies there's a custom Business plan."
+        ]
+      }
+    ]
   },
   "footer": {
     "slogan": "Designed for creative minds",
