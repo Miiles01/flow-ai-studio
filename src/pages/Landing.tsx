@@ -1,6 +1,4 @@
-import { useEffect, useRef, useState } from "react";
-import videoHomeAsset from "@/assets/miiles/videohome.mp4.asset.json";
-const videoHome = videoHomeAsset.url;
+import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useTranslation } from "react-i18next";
@@ -70,9 +68,6 @@ const Landing = () => {
     robots: "index, follow",
   });
   const smootherRef = useRef<ScrollSmoother | null>(null);
-  const videoWrapRef = useRef<HTMLDivElement>(null);
-  // Si el video no carga (en local no existe: lo sirve el hosting de Lovable), no deja hueco
-  const [videoFailed, setVideoFailed] = useState(false);
   const orbitSectionRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -82,30 +77,6 @@ const Landing = () => {
       smooth: 1.4,
       effects: true,
     });
-
-    // Video expand on scroll
-    if (videoWrapRef.current) {
-      let mm = gsap.matchMedia();
-      mm.add("(min-width: 768px)", () => {
-        gsap.fromTo(
-          videoWrapRef.current,
-          { width: "65%" },
-          {
-            width: "80%",
-            ease: "none",
-            scrollTrigger: {
-              trigger: videoWrapRef.current,
-              start: "top 80%",
-              end: "top 20%",
-              scrub: true,
-            },
-          }
-        );
-      });
-      // mm will be reverted in the main cleanup? Since we are adding it inside a useEffect, 
-      // we don't have a variable to revert it globally, but wait! We can just define `let mainMm = gsap.matchMedia()` at the top of useEffect,
-      // and revert it in cleanup.
-    }
 
     // Animaciones para descripciones (no headings)
     const animated: HTMLElement[] = [];
@@ -315,28 +286,6 @@ const Landing = () => {
               </section>
             }
           />
-
-
-
-          {/* VIDEO */}
-          {!videoFailed && (
-            <section className="pt-0 pb-16 md:pb-20 flex justify-center items-center overflow-hidden">
-              <div
-                ref={videoWrapRef}
-                className="w-full md:w-[65%] rounded-2xl overflow-hidden"
-              >
-                <video
-                  src={videoHome}
-                  autoPlay
-                  muted
-                  loop
-                  playsInline
-                  onError={() => setVideoFailed(true)}
-                  className="w-full h-full object-cover"
-                />
-              </div>
-            </section>
-          )}
 
           <LandingFooter />
         </div>
