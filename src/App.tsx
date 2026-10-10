@@ -39,6 +39,7 @@ import JoinFlow from "./pages/JoinFlow";
 import Admin from "./pages/Admin";
 
 import AuthLayout from "./components/AuthLayout";
+import LanguageLayout from "./components/LanguageLayout";
 import { useEffect, useState } from "react";
 import { capturePendingReferral, registerPendingReferral } from "@/lib/referral";
 
@@ -148,6 +149,24 @@ const App = () => (
               <Route path="/agentes" element={<Agentes />} />
               <Route path="/servicios" element={<Agentes />} />
               <Route path="/clinicas" element={<Clinicas />} />
+
+              {/* Rutas con prefijo de idioma (/es/..., /en/...) para las páginas públicas */}
+              <Route path="/:lang" element={<LanguageLayout />}>
+                <Route index element={<Landing />} />
+                <Route path="acerca-de" element={<About />} />
+                <Route path="afiliados" element={<Afiliados />} />
+                <Route path="precios" element={<Pricing />} />
+                <Route path="precios/negocios" element={<BusinessInquiry />} />
+                <Route path="precios/negocios/gracias" element={<BusinessInquiryThanks />} />
+                <Route path="funciones" element={<Features />} />
+                <Route path="terminos" element={<Terms />} />
+                <Route path="privacidad" element={<Privacy />} />
+                <Route path="agentes" element={<Agentes />} />
+                <Route path="servicios" element={<Agentes />} />
+                <Route path="clinicas" element={<Clinicas />} />
+                <Route path="shopify-tutorial" element={<ShopifyTutorial />} />
+              </Route>
+
               <Route path="*" element={<NotFound />} />
             </Routes>
           </AuthProvider>
