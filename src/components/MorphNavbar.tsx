@@ -145,7 +145,8 @@ const MorphNavbar = ({ isLanding }: MorphNavbarProps) => {
           {/* Barra: siempre visible, es la parte superior del menú abierto */}
           <div
             ref={barContentRef}
-            className={`flex items-center justify-between gap-4 md:gap-16 px-6 md:px-8 py-2.5 ${isMobile ? "w-full" : "w-full min-w-max"}`}
+            // Abierto: mismo margen lateral que las opciones del menú (px-8 / md:px-16)
+            className={`flex items-center justify-between gap-4 md:gap-16 py-2.5 transition-[padding] ${morph} ${open ? "px-8 md:px-16" : "px-6 md:px-8"} ${isMobile ? "w-full" : "w-full min-w-max"}`}
           >
             <Link to={localePath("/")} onClick={close} className="flex items-center shrink-0" aria-label="Miiles">
               <img
