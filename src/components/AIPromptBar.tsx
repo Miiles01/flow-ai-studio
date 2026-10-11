@@ -294,6 +294,8 @@ const AIPromptBar = ({
 
   const hasText = prompt.trim().length > 0;
   const showHideButton = !inline && (isHovered || isFocused);
+  // En el home (inline) Widgets solo muestra el catálogo, igual que Apps: elegir no agrega nada
+  const showWidgets = !!onAddWidget || inline;
 
   return (
     <div
@@ -542,7 +544,7 @@ const AIPromptBar = ({
               <div className="flex items-center justify-between mt-2 pt-1">
                 <div className="flex items-center gap-2">
                   <AppsMenu isDark={isDark} menuOnly={inline} />
-                  {onAddWidget && (
+                  {showWidgets && (
                     <button
                       type="button"
                       onClick={() => setWidgetsOpen(true)}
@@ -604,8 +606,8 @@ const AIPromptBar = ({
         )}
       </AnimatePresence>
 
-      {onAddWidget && (
-        <WidgetsPicker open={widgetsOpen} onClose={() => setWidgetsOpen(false)} onPick={onAddWidget} />
+      {showWidgets && (
+        <WidgetsPicker open={widgetsOpen} onClose={() => setWidgetsOpen(false)} onPick={onAddWidget ?? (() => {})} />
       )}
     </div>
   );
