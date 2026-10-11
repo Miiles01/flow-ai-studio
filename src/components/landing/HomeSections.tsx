@@ -91,14 +91,14 @@ const HomeSections = ({ beforeFaq }: { beforeFaq?: ReactNode }) => {
                 <div className="px-7 pt-7">
                   <h3 className="text-3xl md:text-[34px] font-normal tracking-tight leading-tight text-black">{card.title}</h3>
                 </div>
-                <div className="flex-1 flex items-center justify-center px-7 py-6">
+                <div className="flex-1 flex items-center justify-center py-6">
                   <img
                     src={card.image}
                     alt={card.alt}
                     loading="lazy"
                     width={1324}
                     height={1664}
-                    className="w-full max-w-[260px] h-auto object-contain"
+                    className="w-full h-auto object-contain"
                   />
                 </div>
                 <div className="px-7 pb-7">
