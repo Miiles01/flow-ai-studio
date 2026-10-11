@@ -86,13 +86,13 @@
       {
         "title": "Clientes y campañas",
         "desc": "Organiza clientes, campañas, contratos e ingresos con widgets dentro del mismo tablero. Todo tu negocio a la vista, sin cambiar de herramienta.",
-        "image": "/home-clientes.png",
+        "image": "/home-clientes.webp",
         "alt": "Widgets de clientes y campañas en un tablero de Miiles"
       },
       {
         "title": "Algoritmos de redes",
         "desc": "Entiende cómo deciden TikTok, Instagram, YouTube y Facebook qué mostrar, y qué estrategias usan los creadores que están creciendo.",
-        "image": "/home-algoritmos.png",
+        "image": "/home-algoritmos.webp",
         "alt": "Diagrama de cómo funciona el algoritmo de una red social"
       }
     ],

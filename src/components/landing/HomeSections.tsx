@@ -98,8 +98,8 @@ const HomeSections = ({ beforeFaq }: { beforeFaq?: ReactNode }) => {
                     src={card.image}
                     alt={card.alt}
                     loading="lazy"
-                    width={331}
-                    height={416}
+                    width={993}
+                    height={1248}
                     className="block w-full h-auto object-contain"
                   />
                 </div>
