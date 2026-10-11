@@ -80,19 +80,19 @@
       {
         "title": "Business models",
         "desc": "Describe your idea and AI builds your Business Model Canvas on a visual board: value proposition, customers, channels and revenue, ready to edit.",
-        "image": "/Control.webp",
+        "image": "/home-modelos.png",
         "alt": "Miiles AI bar creating a business model on the board"
       },
       {
         "title": "Clients and campaigns",
         "desc": "Organize clients, campaigns, contracts and revenue with widgets on the same board. Your whole business in view, without switching tools.",
-        "image": "/Creatividad.webp",
+        "image": "/home-clientes.png",
         "alt": "Client and campaign widgets on a Miiles board"
       },
       {
         "title": "Social algorithms",
         "desc": "Understand how TikTok, Instagram, YouTube and Facebook decide what to show, and which strategies growing creators are using.",
-        "image": "/Algoritmo.webp",
+        "image": "/home-algoritmos.png",
         "alt": "Diagram of how a social media algorithm works"
       }
     ],

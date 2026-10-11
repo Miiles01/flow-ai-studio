@@ -88,21 +88,20 @@ const HomeSections = ({ beforeFaq }: { beforeFaq?: ReactNode }) => {
                 data-anim-heading
                 className="flex flex-col rounded-[24px] bg-gradient-to-b from-[#FDFDFD] to-[#F8F9FD] overflow-hidden"
               >
+                {/* Orden: título, descripción y la imagen abajo, a todo el ancho */}
                 <div className="px-7 pt-7">
                   <h3 className="text-3xl md:text-[34px] font-normal tracking-tight leading-tight text-black">{card.title}</h3>
+                  <p className="mt-4 text-[15px] font-light leading-relaxed text-black/75">{card.desc}</p>
                 </div>
-                <div className="flex-1 flex items-center justify-center py-6">
+                <div className="mt-auto pt-6">
                   <img
                     src={card.image}
                     alt={card.alt}
                     loading="lazy"
-                    width={1324}
-                    height={1664}
-                    className="w-full h-auto object-contain"
+                    width={331}
+                    height={416}
+                    className="block w-full h-auto object-contain"
                   />
-                </div>
-                <div className="px-7 pb-7">
-                  <p className="text-[15px] font-light leading-relaxed text-black/75">{card.desc}</p>
                 </div>
               </article>
             ))}

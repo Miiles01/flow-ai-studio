@@ -80,19 +80,19 @@
       {
         "title": "Modelos de negocio",
         "desc": "Describe tu idea y la IA arma tu Business Model Canvas en un tablero visual: propuesta de valor, clientes, canales e ingresos, listo para editar.",
-        "image": "/Control.webp",
+        "image": "/home-modelos.png",
         "alt": "Barra de IA de Miiles creando un modelo de negocio en el tablero"
       },
       {
         "title": "Clientes y campañas",
         "desc": "Organiza clientes, campañas, contratos e ingresos con widgets dentro del mismo tablero. Todo tu negocio a la vista, sin cambiar de herramienta.",
-        "image": "/Creatividad.webp",
+        "image": "/home-clientes.png",
         "alt": "Widgets de clientes y campañas en un tablero de Miiles"
       },
       {
         "title": "Algoritmos de redes",
         "desc": "Entiende cómo deciden TikTok, Instagram, YouTube y Facebook qué mostrar, y qué estrategias usan los creadores que están creciendo.",
-        "image": "/Algoritmo.webp",
+        "image": "/home-algoritmos.png",
         "alt": "Diagrama de cómo funciona el algoritmo de una red social"
       }
     ],
