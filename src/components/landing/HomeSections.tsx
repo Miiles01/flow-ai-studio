@@ -6,7 +6,7 @@ import { useTranslation } from "react-i18next";
 import { ChevronDown } from "lucide-react";
 import { useLocalePath } from "@/hooks/useLocalePath";
 
-type BuildCard = { title: string; desc: string; cta: string; image: string; alt: string; href: string };
+type BuildCard = { title: string; desc: string; image: string; alt: string };
 type Plan = { name: string; price: string; unit: string; note?: string; intro: string; features: string[]; cta: string };
 type Faq = { q: string; a: string[] };
 
@@ -103,12 +103,6 @@ const HomeSections = ({ beforeFaq }: { beforeFaq?: ReactNode }) => {
                 </div>
                 <div className="px-7 pb-7">
                   <p className="text-[15px] font-light leading-relaxed text-black/75">{card.desc}</p>
-                  <Link
-                    to={card.href}
-                    className="mt-6 inline-flex items-center px-6 py-3 rounded-full bg-black text-white text-sm font-normal hover:bg-miiles-pink hover:text-black transition-colors duration-300"
-                  >
-                    {card.cta}
-                  </Link>
                 </div>
               </article>
             ))}
