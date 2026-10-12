@@ -10,6 +10,7 @@ import { Copy, Phone, Plus, Trash2, Loader2, Lock, Upload, FileSpreadsheet } fro
 type Lead = { id: string; name: string; phone: string | null; status: string; service: string | null; created_at: string };
 
 const SERVICES = ["Diseño de marca", "Embudo de ventas", "Sistema de clínicas"];
+const COMMISSION: Record<string, number> = { "Diseño de marca": 1000, "Embudo de ventas": 1000, "Sistema de clínicas": 500 };
 
 const COLUMNS = [
   { key: "new", label: "Nuevo", dot: "bg-miiles-blue" },
@@ -208,7 +209,10 @@ export default function Ventas() {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl md:text-3xl font-normal text-black">Ventas</h1>
-            <p className="hidden md:block text-xs text-miiles-gray-400 font-light">{leads.length} leads · se actualiza en vivo</p>
+            <p className="text-xs text-miiles-gray-400 font-light">{visible.length} leads · se actualiza en vivo</p>
+            <p className="text-sm text-black font-light mt-0.5">
+              Valor del portafolio: <span className="font-normal text-miiles-blue">${visible.filter((l) => l.status !== "lost").reduce((t, l) => t + (COMMISSION[l.service ?? SERVICES[0]] ?? 0), 0).toLocaleString("es-MX")}</span>
+            </p>
           </div>
           <Button onClick={() => setShowAdd(true)} className="rounded-full bg-black text-white hover:bg-miiles-pink">
             <Plus className="h-4 w-4 mr-1" /> Lead
