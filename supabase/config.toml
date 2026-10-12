@@ -12,3 +12,6 @@ verify_jwt = false
 [functions.sign-contract]
 verify_jwt = false
 
+
+[functions.sales-leads]
+verify_jwt = false
