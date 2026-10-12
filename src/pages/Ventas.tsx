@@ -17,9 +17,9 @@ const COLUMNS = [
   { key: "lost", label: "Perdido", dot: "bg-red-400" },
 ];
 
-const channel = supabase.channel("ventas-board");
+let channel: ReturnType<typeof supabase.channel> | null = null;
 let subscribed = false;
-const ping = () => { if (subscribed) channel.send({ type: "broadcast", event: "changed", payload: {} }); };
+const ping = () => { if (subscribed && channel) channel.send({ type: "broadcast", event: "changed", payload: {} }); };
 
 const call = (pin: string, payload: Record<string, unknown>) =>
   supabase.functions.invoke("sales-leads", { body: { pin, ...payload } });
@@ -49,11 +49,12 @@ export default function Ventas() {
       const { data } = await call(pin, { action: "list" });
       if (data?.leads) setLeads(data.leads);
     };
+    channel = supabase.channel("ventas-board");
     channel.on("broadcast", { event: "changed" }, refresh).subscribe((st) => { subscribed = st === "SUBSCRIBED"; });
     const onFocus = () => document.visibilityState === "visible" && refresh();
     document.addEventListener("visibilitychange", onFocus);
     const iv = setInterval(refresh, 30000);
-    return () => { document.removeEventListener("visibilitychange", onFocus); clearInterval(iv); supabase.removeChannel(channel); subscribed = false; };
+    return () => { document.removeEventListener("visibilitychange", onFocus); clearInterval(iv); if (channel) supabase.removeChannel(channel); channel = null; subscribed = false; };
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [unlocked]);
 
