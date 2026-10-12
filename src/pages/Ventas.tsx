@@ -5,7 +5,9 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Copy, Phone, Plus, Trash2, Loader2, Lock } from "lucide-react";
 
-type Lead = { id: string; name: string; phone: string | null; status: string; created_at: string };
+type Lead = { id: string; name: string; phone: string | null; status: string; service: string | null; created_at: string };
+
+const SERVICES = ["Diseño de marca", "Embudo de ventas", "Sistema de clínicas"];
 
 const COLUMNS = [
   { key: "new", label: "Nuevo", dot: "bg-miiles-blue" },
@@ -25,6 +27,7 @@ export default function Ventas() {
   const [tab, setTab] = useState("new");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [service, setService] = useState(SERVICES[0]);
   const [showAdd, setShowAdd] = useState(false);
 
   useEffect(() => {
@@ -49,7 +52,7 @@ export default function Ventas() {
 
   const add = async () => {
     if (!name.trim()) return;
-    const { data, error } = await call(pin, { action: "create", name, phone });
+    const { data, error } = await call(pin, { action: "create", name, phone, service });
     if (error || data?.error) return toast.error("No se pudo guardar");
     setLeads((l) => [data.lead, ...l]);
     setName(""); setPhone(""); setShowAdd(false); setTab("new");
@@ -58,6 +61,12 @@ export default function Ventas() {
   const move = async (id: string, status: string) => {
     setLeads((l) => l.map((x) => (x.id === id ? { ...x, status } : x)));
     const { error, data } = await call(pin, { action: "status", id, status });
+    if (error || data?.error) toast.error("No se pudo actualizar");
+  };
+
+  const changeService = async (id: string, service: string) => {
+    setLeads((l) => l.map((x) => (x.id === id ? { ...x, service } : x)));
+    const { error, data } = await call(pin, { action: "service", id, service });
     if (error || data?.error) toast.error("No se pudo actualizar");
   };
 
@@ -102,6 +111,13 @@ export default function Ventas() {
         <div className="min-w-0">
           <p className="text-sm font-normal text-black capitalize truncate">{lead.name.toLowerCase()}</p>
           <p className="text-xs text-miiles-gray-400 font-light">{lead.phone || "Sin teléfono"}</p>
+          <select
+            value={lead.service ?? SERVICES[0]}
+            onChange={(e) => changeService(lead.id, e.target.value)}
+            className="mt-1.5 rounded-full bg-miiles-blue-light text-miiles-blue text-[10px] px-2 py-0.5 outline-none cursor-pointer"
+          >
+            {SERVICES.map((s) => <option key={s} value={s}>{s}</option>)}
+          </select>
         </div>
         <button onClick={() => remove(lead.id)} className="text-miiles-gray-400 hover:text-red-500 p-1" aria-label="Eliminar">
           <Trash2 className="h-3.5 w-3.5" />
@@ -145,6 +161,12 @@ export default function Ventas() {
           <form onSubmit={(e) => { e.preventDefault(); add(); }} className="bg-white rounded-2xl shadow-sm p-3 flex flex-col sm:flex-row gap-2">
             <Input placeholder="Nombre" value={name} onChange={(e) => setName(e.target.value)} autoFocus />
             <Input placeholder="Teléfono" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} />
+            <select
+              value={service} onChange={(e) => setService(e.target.value)}
+              className="rounded-md border border-input bg-background px-3 h-10 text-sm outline-none text-black sm:w-44"
+            >
+              {SERVICES.map((s) => <option key={s} value={s}>{s}</option>)}
+            </select>
             <Button type="submit" className="rounded-full bg-black text-white hover:bg-miiles-pink">Guardar</Button>
           </form>
         )}

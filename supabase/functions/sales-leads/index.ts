@@ -7,6 +7,7 @@ const cors = {
 };
 const PIN = "6464";
 const STATUSES = ["new", "contacted", "won", "lost"];
+const SERVICES = ["Diseño de marca", "Embudo de ventas", "Sistema de clínicas"];
 const json = (b: unknown, s = 200) =>
   new Response(JSON.stringify(b), { status: s, headers: { ...cors, "Content-Type": "application/json" } });
 
@@ -26,10 +27,17 @@ Deno.serve(async (req) => {
     if (action === "create") {
       const name = String(body.name ?? "").trim().slice(0, 200);
       const phone = String(body.phone ?? "").trim().slice(0, 50);
+      const service = SERVICES.includes(body.service) ? body.service : SERVICES[0];
       if (!name) return json({ error: "Nombre requerido" }, 400);
-      const { data, error } = await sb.from("sales_leads").insert({ name, phone }).select().single();
+      const { data, error } = await sb.from("sales_leads").insert({ name, phone, service }).select().single();
       if (error) throw error;
       return json({ lead: data });
+    }
+    if (action === "service") {
+      if (!SERVICES.includes(body.service)) return json({ error: "Servicio inválido" }, 400);
+      const { error } = await sb.from("sales_leads").update({ service: body.service, updated_at: new Date().toISOString() }).eq("id", body.id);
+      if (error) throw error;
+      return json({ ok: true });
     }
     if (action === "status") {
       if (!STATUSES.includes(body.status)) return json({ error: "Estado inválido" }, 400);

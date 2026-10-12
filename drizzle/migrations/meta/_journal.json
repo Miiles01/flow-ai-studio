@@ -8,6 +8,13 @@
       "when": 1791818989445,
       "tag": "0000_sales_leads",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1791819111353,
+      "tag": "0001_add_service_to_sales_leads",
+      "breakpoints": true
     }
   ]
 }
