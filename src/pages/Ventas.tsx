@@ -3,8 +3,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import * as XLSX from "xlsx";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Copy, Phone, Plus, Trash2, Loader2, Lock } from "lucide-react";
+import { Copy, Phone, Plus, Trash2, Loader2, Lock, Upload, FileSpreadsheet } from "lucide-react";
 
 type Lead = { id: string; name: string; phone: string | null; status: string; service: string | null; created_at: string };
 
@@ -34,6 +35,11 @@ export default function Ventas() {
   const [phone, setPhone] = useState("");
   const [service, setService] = useState(SERVICES[0]);
   const [showAdd, setShowAdd] = useState(false);
+  const [mode, setMode] = useState<"one" | "bulk">("one");
+  const [parsed, setParsed] = useState<{ name: string; phone: string }[]>([]);
+  const [fileName, setFileName] = useState("");
+  const [dragOver, setDragOver] = useState(false);
+  const [uploading, setUploading] = useState(false);
   const [filter, setFilter] = useState<string | null>(null);
   const visible = filter ? leads.filter((l) => (l.service ?? SERVICES[0]) === filter) : leads;
 
@@ -78,6 +84,32 @@ export default function Ventas() {
     if (error || data?.error) return toast.error("No se pudo guardar");
     setLeads((l) => [data.lead, ...l]); ping();
     setName(""); setPhone(""); setShowAdd(false); setTab("new");
+  };
+
+  const readFile = async (f: File) => {
+    try {
+      const wb = XLSX.read(await f.arrayBuffer());
+      const rows = XLSX.utils.sheet_to_json<Record<string, unknown>>(wb.Sheets[wb.SheetNames[0]], { defval: "" });
+      const keys = Object.keys(rows[0] ?? {});
+      const find = (re: RegExp) => keys.find((k) => re.test(k.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase()));
+      const nk = find(/nombre completo|full.?name/) ?? find(/nombre|name/);
+      const pk = find(/telefono|phone|celular|whats|movil|numero/);
+      if (!nk) { toast.error("No encontré una columna de nombre"); return; }
+      const out = rows.map((r) => ({ name: String(r[nk] ?? "").trim().toLowerCase().replace(/\b\p{L}/gu, (c) => c.toUpperCase()), phone: pk ? String(r[pk] ?? "").trim() : "" })).filter((r) => r.name);
+      setParsed(out); setFileName(f.name);
+      if (!out.length) toast.error("El archivo no tiene leads");
+    } catch { toast.error("No pude leer el archivo"); }
+  };
+
+  const uploadBulk = async () => {
+    if (!parsed.length) return;
+    setUploading(true);
+    const { data, error } = await call(pin, { action: "bulk", leads: parsed, service });
+    setUploading(false);
+    if (error || data?.error) return toast.error("No se pudieron subir");
+    setLeads((l) => [...(data.leads ?? []), ...l]); ping();
+    toast.success(`${data.leads.length} leads agregados${data.skipped ? ` · ${data.skipped} repetidos omitidos` : ""}`);
+    setParsed([]); setFileName(""); setShowAdd(false); setTab("new");
   };
 
   const move = async (id: string, status: string) => {
@@ -185,20 +217,67 @@ export default function Ventas() {
         <Dialog open={showAdd} onOpenChange={setShowAdd}>
           <DialogContent className="max-w-[calc(100%-2rem)] sm:max-w-md rounded-[24px] bg-white">
             <DialogHeader><DialogTitle className="font-normal text-black">Nuevo lead</DialogTitle></DialogHeader>
+            <div className="grid grid-cols-2 gap-1 p-1 rounded-full bg-miiles-gray-100">
+              {([["one", "Un lead"], ["bulk", "Subir varios leads"]] as const).map(([k, l]) => (
+                <button key={k} type="button" onClick={() => setMode(k)}
+                  className={`rounded-full h-9 text-xs ${mode === k ? "bg-white text-black shadow-sm" : "text-miiles-gray-400"}`}>{l}</button>
+              ))}
+            </div>
+            {mode === "one" ? (
             <form onSubmit={(e) => { e.preventDefault(); add(); }} className="space-y-3">
               <Input placeholder="Nombre" value={name} onChange={(e) => setName(e.target.value)} autoFocus className="h-11" />
               <Input placeholder="Teléfono" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} className="h-11" />
-              <div className="flex flex-wrap gap-2">
-                {SERVICES.map((s) => (
-                  <button type="button" key={s} onClick={() => setService(s)}
-                    className={`rounded-full px-3 h-8 text-xs ${service === s ? "bg-black text-white" : "bg-miiles-gray-100 text-miiles-gray-600"}`}>{s}</button>
-                ))}
+              <div>
+                <p className="text-xs text-miiles-gray-400 font-light mb-2">Le interesa</p>
+                <div className="flex flex-wrap gap-2">
+                  {SERVICES.map((s) => (
+                    <button type="button" key={s} onClick={() => setService(s)}
+                      className={`rounded-full px-3 h-8 text-xs ${service === s ? "bg-black text-white" : "bg-miiles-gray-100 text-miiles-gray-600"}`}>{s}</button>
+                  ))}
+                </div>
               </div>
               <div className="flex gap-2 pt-2">
                 <Button type="button" variant="secondary" onClick={() => setShowAdd(false)} className="rounded-full flex-1 h-11">Cancelar</Button>
                 <Button type="submit" disabled={!name.trim()} className="rounded-full flex-1 h-11 bg-black text-white hover:bg-miiles-pink">Guardar</Button>
               </div>
             </form>
+            ) : (
+            <div className="space-y-3">
+              <label
+                onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+                onDragLeave={() => setDragOver(false)}
+                onDrop={(e) => { e.preventDefault(); setDragOver(false); const f = e.dataTransfer.files[0]; if (f) readFile(f); }}
+                className={`flex flex-col items-center justify-center gap-2 rounded-2xl border-2 border-dashed p-6 text-center cursor-pointer transition-colors ${dragOver ? "border-miiles-blue bg-miiles-blue-light" : "border-miiles-gray-200 bg-miiles-gray-50"}`}
+              >
+                <input type="file" accept=".xlsx,.xls,.csv" className="hidden" onChange={(e) => { const f = e.target.files?.[0]; if (f) readFile(f); e.target.value = ""; }} />
+                {fileName ? <FileSpreadsheet className="h-6 w-6 text-miiles-blue" /> : <Upload className="h-6 w-6 text-miiles-gray-400" />}
+                <p className="text-sm text-black font-light">{fileName || "Arrastra tu archivo o toca para elegir"}</p>
+                <p className="text-[10px] text-miiles-gray-400 font-light">{fileName ? `${parsed.length} leads encontrados` : "Excel o CSV con nombre y teléfono"}</p>
+              </label>
+              {parsed.length > 0 && (
+                <div className="max-h-32 overflow-y-auto rounded-xl border border-miiles-gray-200 divide-y divide-miiles-gray-100">
+                  {parsed.slice(0, 50).map((r, i) => (
+                    <div key={i} className="flex justify-between gap-2 px-3 py-1.5 text-xs"><span className="truncate text-black">{r.name}</span><span className="text-miiles-gray-400 shrink-0">{r.phone}</span></div>
+                  ))}
+                </div>
+              )}
+              <div>
+                <p className="text-xs text-miiles-gray-400 font-light mb-2">Le interesa</p>
+                <div className="flex flex-wrap gap-2">
+                  {SERVICES.map((s) => (
+                    <button type="button" key={s} onClick={() => setService(s)}
+                      className={`rounded-full px-3 h-8 text-xs ${service === s ? "bg-black text-white" : "bg-miiles-gray-100 text-miiles-gray-600"}`}>{s}</button>
+                  ))}
+                </div>
+              </div>
+              <div className="flex gap-2 pt-2">
+                <Button type="button" variant="secondary" onClick={() => setShowAdd(false)} className="rounded-full flex-1 h-11">Cancelar</Button>
+                <Button onClick={uploadBulk} disabled={!parsed.length || uploading} className="rounded-full flex-1 h-11 bg-black text-white hover:bg-miiles-pink">
+                  {uploading ? <Loader2 className="h-4 w-4 animate-spin" /> : `Subir ${parsed.length || ""} leads`}
+                </Button>
+              </div>
+            </div>
+            )}
           </DialogContent>
         </Dialog>
         <div className="flex gap-2 overflow-x-auto scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
