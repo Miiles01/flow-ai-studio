@@ -16,6 +16,10 @@ const COLUMNS = [
   { key: "lost", label: "Perdido", dot: "bg-red-400" },
 ];
 
+const channel = supabase.channel("ventas-board");
+let subscribed = false;
+const ping = () => { if (subscribed) channel.send({ type: "broadcast", event: "changed", payload: {} }); };
+
 const call = (pin: string, payload: Record<string, unknown>) =>
   supabase.functions.invoke("sales-leads", { body: { pin, ...payload } });
 
@@ -36,6 +40,20 @@ export default function Ventas() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  useEffect(() => {
+    if (!unlocked) return;
+    const refresh = async () => {
+      const { data } = await call(pin, { action: "list" });
+      if (data?.leads) setLeads(data.leads);
+    };
+    channel.on("broadcast", { event: "changed" }, refresh).subscribe((st) => { subscribed = st === "SUBSCRIBED"; });
+    const onFocus = () => document.visibilityState === "visible" && refresh();
+    document.addEventListener("visibilitychange", onFocus);
+    const iv = setInterval(refresh, 30000);
+    return () => { document.removeEventListener("visibilitychange", onFocus); clearInterval(iv); supabase.removeChannel(channel); subscribed = false; };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [unlocked]);
+
   const unlock = async (p: string) => {
     setLoading(true);
     const { data, error } = await call(p, { action: "list" });
@@ -54,26 +72,26 @@ export default function Ventas() {
     if (!name.trim()) return;
     const { data, error } = await call(pin, { action: "create", name, phone, service });
     if (error || data?.error) return toast.error("No se pudo guardar");
-    setLeads((l) => [data.lead, ...l]);
+    setLeads((l) => [data.lead, ...l]); ping();
     setName(""); setPhone(""); setShowAdd(false); setTab("new");
   };
 
   const move = async (id: string, status: string) => {
     setLeads((l) => l.map((x) => (x.id === id ? { ...x, status } : x)));
     const { error, data } = await call(pin, { action: "status", id, status });
-    if (error || data?.error) toast.error("No se pudo actualizar");
+    if (error || data?.error) toast.error("No se pudo actualizar"); else ping();
   };
 
   const changeService = async (id: string, service: string) => {
     setLeads((l) => l.map((x) => (x.id === id ? { ...x, service } : x)));
     const { error, data } = await call(pin, { action: "service", id, service });
-    if (error || data?.error) toast.error("No se pudo actualizar");
+    if (error || data?.error) toast.error("No se pudo actualizar"); else ping();
   };
 
   const remove = async (id: string) => {
     if (!confirm("¿Eliminar lead?")) return;
     setLeads((l) => l.filter((x) => x.id !== id));
-    await call(pin, { action: "delete", id });
+    await call(pin, { action: "delete", id }); ping();
   };
 
   const copy = (text: string, what: string) => {
@@ -150,9 +168,12 @@ export default function Ventas() {
 
   return (
     <div className="min-h-screen bg-miiles-gray-50">
-      <header className="sticky top-0 z-10 bg-miiles-gray-50/90 backdrop-blur px-4 md:px-8 pt-5 pb-3 space-y-3">
+      <header className="sticky top-0 z-10 bg-miiles-gray-50/90 backdrop-blur px-4 md:px-8 pt-5 md:pt-8 pb-3 md:pb-5 space-y-3 max-w-[1400px] mx-auto">
         <div className="flex items-center justify-between">
-          <h1 className="text-2xl font-normal text-black">Ventas</h1>
+          <div>
+            <h1 className="text-2xl md:text-3xl font-normal text-black">Ventas</h1>
+            <p className="hidden md:block text-xs text-miiles-gray-400 font-light">{leads.length} leads · se actualiza en vivo</p>
+          </div>
           <Button onClick={() => setShowAdd((s) => !s)} className="rounded-full bg-black text-white hover:bg-miiles-pink">
             <Plus className="h-4 w-4 mr-1" /> Lead
           </Button>
@@ -195,17 +216,20 @@ export default function Ventas() {
       </div>
 
       {/* Desktop: board */}
-      <div className="hidden md:grid grid-cols-4 gap-4 px-8 pb-10">
+      <div className="hidden md:flex lg:grid lg:grid-cols-4 gap-4 px-8 pb-10 overflow-x-auto snap-x max-w-[1400px] mx-auto">
         {COLUMNS.map((c) => {
           const items = leads.filter((l) => l.status === c.key);
           return (
-            <div key={c.key} className="bg-miiles-gray-100 rounded-2xl p-3 space-y-3 min-h-[60vh]">
-              <div className="flex items-center gap-2 px-1">
+            <div key={c.key} className="w-[320px] shrink-0 lg:w-auto snap-start bg-miiles-gray-100 rounded-2xl p-3 flex flex-col h-[calc(100vh-150px)]">
+              <div className="flex items-center gap-2 px-1 pb-3">
                 <span className={`h-2 w-2 rounded-full ${c.dot}`} />
                 <span className="text-sm font-normal text-black">{c.label}</span>
                 <span className="text-xs text-miiles-gray-400 ml-auto">{items.length}</span>
               </div>
-              {items.map((l) => <LeadCard key={l.id} lead={l} />)}
+              <div className="flex-1 overflow-y-auto space-y-3 -mx-1 px-1 pb-1">
+                {items.map((l) => <LeadCard key={l.id} lead={l} />)}
+                {items.length === 0 && <p className="text-center text-xs text-miiles-gray-400 py-10 font-light">Sin leads</p>}
+              </div>
             </div>
           );
         })}
