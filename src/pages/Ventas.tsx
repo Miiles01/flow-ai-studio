@@ -240,7 +240,7 @@ export default function Ventas() {
         {COLUMNS.map((c) => {
           const items = visible.filter((l) => l.status === c.key);
           return (
-            <div key={c.key} className="w-[320px] shrink-0 lg:w-auto snap-start bg-miiles-gray-100 rounded-2xl p-3 flex flex-col h-[calc(100vh-150px)]">
+            <div key={c.key} className="w-[320px] shrink-0 lg:w-auto snap-start bg-miiles-gray-100 rounded-2xl p-3 flex flex-col h-[calc(100vh-200px)]">
               <div className="flex items-center gap-2 px-1 pb-3">
                 <span className={`h-2 w-2 rounded-full ${c.dot}`} />
                 <span className="text-sm font-normal text-black">{c.label}</span>
