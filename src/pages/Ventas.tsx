@@ -95,7 +95,7 @@ export default function Ventas() {
       const nk = find(/nombre completo|full.?name/) ?? find(/nombre|name/);
       const pk = find(/telefono|phone|celular|whats|movil|numero/);
       if (!nk) { toast.error("No encontré una columna de nombre"); return; }
-      const out = rows.map((r) => ({ name: String(r[nk] ?? "").trim().toLowerCase().replace(/\b\p{L}/gu, (c) => c.toUpperCase()), phone: pk ? String(r[pk] ?? "").trim() : "" })).filter((r) => r.name);
+      const out = rows.map((r) => ({ name: String(r[nk] ?? "").trim().toLowerCase().replace(/(^|\s)(\p{L})/gu, (_m, a, c) => a + c.toUpperCase()), phone: pk ? String(r[pk] ?? "").trim() : "" })).filter((r) => r.name);
       setParsed(out); setFileName(f.name);
       if (!out.length) toast.error("El archivo no tiene leads");
     } catch { toast.error("No pude leer el archivo"); }
