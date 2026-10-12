@@ -5,7 +5,9 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Copy, Phone, Plus, Trash2, Loader2, Lock } from "lucide-react";
 
-type Lead = { id: string; name: string; phone: string | null; status: string; created_at: string };
+type Lead = { id: string; name: string; phone: string | null; status: string; service: string | null; created_at: string };
+
+const SERVICES = ["Diseño de marca", "Embudo de ventas", "Sistema de clínicas"];
 
 const COLUMNS = [
   { key: "new", label: "Nuevo", dot: "bg-miiles-blue" },
@@ -25,6 +27,7 @@ export default function Ventas() {
   const [tab, setTab] = useState("new");
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
+  const [service, setService] = useState(SERVICES[0]);
   const [showAdd, setShowAdd] = useState(false);
 
   useEffect(() => {
@@ -49,7 +52,7 @@ export default function Ventas() {
 
   const add = async () => {
     if (!name.trim()) return;
-    const { data, error } = await call(pin, { action: "create", name, phone });
+    const { data, error } = await call(pin, { action: "create", name, phone, service });
     if (error || data?.error) return toast.error("No se pudo guardar");
     setLeads((l) => [data.lead, ...l]);
     setName(""); setPhone(""); setShowAdd(false); setTab("new");
