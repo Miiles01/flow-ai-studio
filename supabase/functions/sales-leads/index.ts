@@ -33,6 +33,20 @@ Deno.serve(async (req) => {
       if (error) throw error;
       return json({ lead: data });
     }
+    if (action === "bulk") {
+      const service = SERVICES.includes(body.service) ? body.service : SERVICES[0];
+      const rows = (Array.isArray(body.leads) ? body.leads : []).slice(0, 2000)
+        .map((r: any) => ({ name: String(r?.name ?? "").trim().slice(0, 200), phone: String(r?.phone ?? "").trim().slice(0, 50), service }))
+        .filter((r: any) => r.name);
+      const { data: existing } = await sb.from("sales_leads").select("phone");
+      const norm = (p: string) => p.replace(/\D/g, "");
+      const seen = new Set((existing ?? []).map((e: any) => norm(e.phone ?? "")).filter(Boolean));
+      const fresh = rows.filter((r: any) => { const n = norm(r.phone); if (!n) return true; if (seen.has(n)) return false; seen.add(n); return true; });
+      if (!fresh.length) return json({ leads: [], skipped: rows.length });
+      const { data, error } = await sb.from("sales_leads").insert(fresh).select();
+      if (error) throw error;
+      return json({ leads: data, skipped: rows.length - fresh.length });
+    }
     if (action === "service") {
       if (!SERVICES.includes(body.service)) return json({ error: "Servicio inválido" }, 400);
       const { error } = await sb.from("sales_leads").update({ service: body.service, updated_at: new Date().toISOString() }).eq("id", body.id);
