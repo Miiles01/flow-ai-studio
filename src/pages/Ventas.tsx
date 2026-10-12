@@ -3,6 +3,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Copy, Phone, Plus, Trash2, Loader2, Lock } from "lucide-react";
 
 type Lead = { id: string; name: string; phone: string | null; status: string; service: string | null; created_at: string };
@@ -33,6 +34,8 @@ export default function Ventas() {
   const [phone, setPhone] = useState("");
   const [service, setService] = useState(SERVICES[0]);
   const [showAdd, setShowAdd] = useState(false);
+  const [filter, setFilter] = useState<string | null>(null);
+  const visible = filter ? leads.filter((l) => (l.service ?? SERVICES[0]) === filter) : leads;
 
   useEffect(() => {
     document.title = "Ventas · Miiles";
@@ -174,27 +177,44 @@ export default function Ventas() {
             <h1 className="text-2xl md:text-3xl font-normal text-black">Ventas</h1>
             <p className="hidden md:block text-xs text-miiles-gray-400 font-light">{leads.length} leads · se actualiza en vivo</p>
           </div>
-          <Button onClick={() => setShowAdd((s) => !s)} className="rounded-full bg-black text-white hover:bg-miiles-pink">
+          <Button onClick={() => setShowAdd(true)} className="rounded-full bg-black text-white hover:bg-miiles-pink">
             <Plus className="h-4 w-4 mr-1" /> Lead
           </Button>
         </div>
-        {showAdd && (
-          <form onSubmit={(e) => { e.preventDefault(); add(); }} className="bg-white rounded-2xl shadow-sm p-3 flex flex-col sm:flex-row gap-2">
-            <Input placeholder="Nombre" value={name} onChange={(e) => setName(e.target.value)} autoFocus />
-            <Input placeholder="Teléfono" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} />
-            <select
-              value={service} onChange={(e) => setService(e.target.value)}
-              className="rounded-md border border-input bg-background px-3 h-10 text-sm outline-none text-black sm:w-44"
-            >
-              {SERVICES.map((s) => <option key={s} value={s}>{s}</option>)}
-            </select>
-            <Button type="submit" className="rounded-full bg-black text-white hover:bg-miiles-pink">Guardar</Button>
-          </form>
-        )}
+        <Dialog open={showAdd} onOpenChange={setShowAdd}>
+          <DialogContent className="max-w-[calc(100%-2rem)] sm:max-w-md rounded-[24px] bg-white">
+            <DialogHeader><DialogTitle className="font-normal text-black">Nuevo lead</DialogTitle></DialogHeader>
+            <form onSubmit={(e) => { e.preventDefault(); add(); }} className="space-y-3">
+              <Input placeholder="Nombre" value={name} onChange={(e) => setName(e.target.value)} autoFocus className="h-11" />
+              <Input placeholder="Teléfono" type="tel" value={phone} onChange={(e) => setPhone(e.target.value)} className="h-11" />
+              <div className="flex flex-wrap gap-2">
+                {SERVICES.map((s) => (
+                  <button type="button" key={s} onClick={() => setService(s)}
+                    className={`rounded-full px-3 h-8 text-xs ${service === s ? "bg-black text-white" : "bg-miiles-gray-100 text-miiles-gray-600"}`}>{s}</button>
+                ))}
+              </div>
+              <div className="flex gap-2 pt-2">
+                <Button type="button" variant="secondary" onClick={() => setShowAdd(false)} className="rounded-full flex-1 h-11">Cancelar</Button>
+                <Button type="submit" disabled={!name.trim()} className="rounded-full flex-1 h-11 bg-black text-white hover:bg-miiles-pink">Guardar</Button>
+              </div>
+            </form>
+          </DialogContent>
+        </Dialog>
+        <div className="flex gap-2 overflow-x-auto scrollbar-hide -mx-4 px-4 md:mx-0 md:px-0">
+          {[null, ...SERVICES].map((s) => {
+            const n = s ? leads.filter((l) => (l.service ?? SERVICES[0]) === s).length : leads.length;
+            return (
+              <button key={s ?? "all"} onClick={() => setFilter(s)}
+                className={`shrink-0 rounded-full px-3 h-8 text-xs border ${filter === s ? "bg-miiles-blue text-white border-miiles-blue" : "bg-white text-miiles-gray-600 border-miiles-gray-200"}`}>
+                {s ?? "Todos"} · {n}
+              </button>
+            );
+          })}
+        </div>
         {/* Tabs mobile */}
         <div className="flex gap-2 overflow-x-auto scrollbar-hide md:hidden -mx-4 px-4">
           {COLUMNS.map((c) => {
-            const n = leads.filter((l) => l.status === c.key).length;
+            const n = visible.filter((l) => l.status === c.key).length;
             return (
               <button
                 key={c.key} onClick={() => setTab(c.key)}
@@ -209,8 +229,8 @@ export default function Ventas() {
 
       {/* Mobile: una columna */}
       <div className="md:hidden px-4 pb-10 space-y-3">
-        {leads.filter((l) => l.status === tab).map((l) => <LeadCard key={l.id} lead={l} />)}
-        {leads.filter((l) => l.status === tab).length === 0 && (
+        {visible.filter((l) => l.status === tab).map((l) => <LeadCard key={l.id} lead={l} />)}
+        {visible.filter((l) => l.status === tab).length === 0 && (
           <p className="text-center text-xs text-miiles-gray-400 py-10 font-light">Sin leads aquí</p>
         )}
       </div>
@@ -218,7 +238,7 @@ export default function Ventas() {
       {/* Desktop: board */}
       <div className="hidden md:flex lg:grid lg:grid-cols-4 gap-4 px-8 pb-10 overflow-x-auto snap-x max-w-[1400px] mx-auto">
         {COLUMNS.map((c) => {
-          const items = leads.filter((l) => l.status === c.key);
+          const items = visible.filter((l) => l.status === c.key);
           return (
             <div key={c.key} className="w-[320px] shrink-0 lg:w-auto snap-start bg-miiles-gray-100 rounded-2xl p-3 flex flex-col h-[calc(100vh-150px)]">
               <div className="flex items-center gap-2 px-1 pb-3">
