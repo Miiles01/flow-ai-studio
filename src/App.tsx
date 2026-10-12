@@ -37,6 +37,7 @@ import NotFound from "./pages/NotFound";
 import ContractPublic from "./pages/ContractPublic";
 import JoinFlow from "./pages/JoinFlow";
 import Admin from "./pages/Admin";
+import Ventas from "./pages/Ventas";
 
 import AuthLayout from "./components/AuthLayout";
 import LanguageLayout from "./components/LanguageLayout";
@@ -145,6 +146,7 @@ const App = () => (
               </Route>
 
               <Route path="/admin" element={<Admin />} />
+              <Route path="/ventas" element={<Ventas />} />
               <Route path="/shopify-tutorial" element={<ShopifyTutorial />} />
               <Route path="/agentes" element={<Agentes />} />
               <Route path="/servicios" element={<Agentes />} />
