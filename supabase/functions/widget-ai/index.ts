@@ -1,6 +1,6 @@
 // Widget AI — clasifica intención (query/edit) y aplica cambios o responde con un comentario.
 import { createClient } from "npm:@supabase/supabase-js@2";
-import { callLLM, parseUserModel, resolveTarget } from "../_shared/llm.ts";
+import { callLLM, overloadedMessage, parseUserModel, resolveTarget } from "../_shared/llm.ts";
 import { appsCatalogText, loadUserApps, maybeUseApps } from "../_shared/userApps.ts";
 
 
@@ -241,6 +241,11 @@ Responde SIEMPRE con la tool "widget_result".`;
           status: 403, headers: { ...corsHeaders, "Content-Type": "application/json" },
         });
       }
+      if ([500, 502, 503, 504, 529].includes(res.status)) {
+        return new Response(JSON.stringify({ error: overloadedMessage(target), switchModel: !!byok, provider: byok?.provider, model: byok?.model }), {
+          status: 503, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        });
+      }
       return new Response(JSON.stringify({ error: `IA (${target.label}) ${res.status}: ${res.errorText ?? ""}` }), {
         status: res.status, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
@@ -265,7 +270,7 @@ Responde SIEMPRE con la tool "widget_result".`;
       });
     }
     console.log("widget-ai parsed intent:", parsed.intent, "finish:", finishReason);
-    const out: Record<string, unknown> = { intent: parsed.intent, answer: parsed.answer };
+    const out: Record<string, unknown> = { intent: parsed.intent, answer: parsed.answer, ...(res.fallbackUsed ? { fallbackUsed: true } : {}) };
     if (startedJobId) {
       // Tarea en segundo plano: el canvas muestra un loader hasta que llegue el webhook.
       out.jobId = startedJobId;

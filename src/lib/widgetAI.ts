@@ -1,4 +1,5 @@
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 import { userModelPayload, getProvider } from "@/lib/aiModels";
 
 export type WidgetAIHistoryMsg = { role: "user" | "assistant"; content: string };
@@ -40,7 +41,7 @@ export async function runWidgetAI(params: {
       if (res && typeof res.json === "function") body = await res.clone().json();
       else if (res && typeof res.text === "function") body = JSON.parse(await res.clone().text());
     } catch { /* ignore */ }
-    if (body?.switchModel) {
+    if (body?.switchModel && (error as any)?.context?.status !== 503) {
       throw new WidgetAIModelError(String(body.provider ?? ""), String(body.model ?? ""));
     }
     throw new Error(body?.error || error.message || "Error llamando a widget-ai");
@@ -49,6 +50,7 @@ export async function runWidgetAI(params: {
     throw new WidgetAIModelError(String((data as any).provider), String((data as any).model));
   }
   if ((data as any)?.error) throw new Error((data as any).error);
+  if ((data as any)?.fallbackUsed) toast.info("Tu modelo estaba saturado, usamos el de Miiles.");
   return data as WidgetAIResult;
 }
 
