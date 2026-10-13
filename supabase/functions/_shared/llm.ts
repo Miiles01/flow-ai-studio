@@ -15,6 +15,8 @@ export type LLMTarget = {
   endpoint: string;
   headers: Record<string, string>;
   model: string;
+  /** Lovable AI Gateway target to use when the user's provider stays overloaded */
+  fallback?: LLMTarget;
 };
 
 const OPENAI_COMPATIBLE: Record<string, string> = {
@@ -40,6 +42,12 @@ export function parseUserModel(raw: unknown): UserModel | null {
 
 /** Resuelve a dónde y con qué credenciales se dispara el prompt final. */
 export function resolveTarget(userModel: UserModel | null, fallbackModel: string, lovableKey: string): LLMTarget {
+  const t = resolveTargetInner(userModel, fallbackModel, lovableKey);
+  if (userModel && lovableKey) t.fallback = resolveTargetInner(null, fallbackModel, lovableKey);
+  return t;
+}
+
+function resolveTargetInner(userModel: UserModel | null, fallbackModel: string, lovableKey: string): LLMTarget {
   if (!userModel) {
     return {
       label: `lovable:${fallbackModel}`,
@@ -90,13 +98,45 @@ export type LLMResult = {
   toolArgs: string | null;
   finishReason: string | null;
   errorText?: string;
+  /** True when the user's model was overloaded and the included model answered instead */
+  fallbackUsed?: boolean;
 };
 
+const RETRYABLE = new Set([429, 500, 502, 503, 504, 529]);
+const OVERLOADED = new Set([500, 502, 503, 504, 529]);
+
+/** Retries transient provider errors with backoff; if the user's model stays overloaded, uses the included model. */
+export async function callLLM(
+  target: LLMTarget,
+  messages: ChatMessage[],
+  opts: { tool?: ToolDef; maxTokens?: number } = {},
+): Promise<LLMResult> {
+  const delays = [1000, 2000, 4000];
+  let res = await callLLMOnce(target, messages, opts);
+  for (let i = 0; !res.ok && RETRYABLE.has(res.status) && i < delays.length; i++) {
+    await new Promise((r) => setTimeout(r, delays[i] + Math.random() * 300));
+    res = await callLLMOnce(target, messages, opts);
+  }
+  if (!res.ok && OVERLOADED.has(res.status) && target.fallback) {
+    console.warn("callLLM: provider overloaded, using included model", target.label);
+    const fb = await callLLMOnce(target.fallback, messages, opts);
+    if (fb.ok) return { ...fb, fallbackUsed: true };
+  }
+  return res;
+}
+
+/** Human message for an overloaded provider. */
+export function overloadedMessage(target: LLMTarget): string {
+  const provider = target.label.split(":")[0];
+  const name = provider === "google" ? "Google" : provider === "openai" ? "OpenAI" : provider === "anthropic" ? "Anthropic" : provider;
+  return `${name} está saturado ahora mismo. Intenta en un minuto o cambia de modelo en Apps → Modelos.`;
+}
+
 /**
- * Llamada unificada. Adapta automáticamente el formato Anthropic (system separado,
+ * Llamada unificada (un solo intento). Adapta automáticamente el formato Anthropic (system separado,
  * tools con input_schema y tool_choice por nombre) frente al formato OpenAI-compatible.
  */
-export async function callLLM(
+async function callLLMOnce(
   target: LLMTarget,
   messages: ChatMessage[],
   opts: { tool?: ToolDef; maxTokens?: number } = {},
