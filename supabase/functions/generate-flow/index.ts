@@ -1,7 +1,7 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "npm:@supabase/supabase-js@2";
 import { loadInstructions, loadInstruction } from "../_shared/flow-instructions.ts";
-import { callLLM, parseUserModel, resolveTarget, type LLMTarget } from "../_shared/llm.ts";
+import { callLLM, overloadedMessage, parseUserModel, resolveTarget, type LLMTarget } from "../_shared/llm.ts";
 import { loadUserApps, maybeUseApps } from "../_shared/userApps.ts";
 
 
@@ -448,6 +448,9 @@ El usuario quiere contexto conceptual + acción. Empieza el esquema con nodos co
           { status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" } }
         );
       }
+      if ([500, 502, 503, 504, 529].includes(response.status)) {
+        return new Response(JSON.stringify({ error: overloadedMessage(target) }), { status: 503, headers: { ...corsHeaders, "Content-Type": "application/json" } });
+      }
       console.error("AI error:", target.label, response.status, response.errorText?.slice(0, 300));
       throw new Error(`AI error (${target.label}): ${response.status}`);
     }
@@ -478,6 +481,7 @@ El usuario quiere contexto conceptual + acción. Empieza el esquema con nodos co
     }
 
     return new Response(JSON.stringify({
+      ...(response.fallbackUsed ? { fallbackUsed: true } : {}),
       nodes,
       edges,
       steps: nodes,
