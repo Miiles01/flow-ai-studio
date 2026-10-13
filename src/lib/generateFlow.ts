@@ -1,6 +1,7 @@
 import type { Node, Edge } from "@xyflow/react";
 import type { FlowNodeData } from "@/components/nodes/FlowNode";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
 import { userModelPayload } from "@/lib/aiModels";
 import { buildAppsContext } from "@/lib/appsContext";
 
@@ -165,8 +166,15 @@ Respond ONLY with valid JSON: {"nodes": [...], "edges": [...]}`;
 
   if (error) {
     console.error("Edge function error:", error);
-    throw new Error(error.message || "Error al generar el flujo");
+    let body: any = null;
+    try {
+      const res = (error as any)?.context;
+      if (res && typeof res.json === "function") body = await res.clone().json();
+    } catch { /* ignore */ }
+    throw new Error(body?.error || error.message || "Error al generar el flujo");
   }
+
+  if (data?.fallbackUsed) toast.info("Tu modelo estaba saturado, usamos el de Miiles.");
 
   if (data?.error) {
     throw new Error(data.error);
