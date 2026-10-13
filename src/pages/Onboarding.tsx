@@ -1,4 +1,4 @@
-import { forwardRef, useState } from "react";
+import { forwardRef, useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -179,6 +179,13 @@ const COUNTRY_CODES = [
 const Onboarding = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
+
+  // Users who already finished onboarding never see it again (protects their saved photo/data)
+  useEffect(() => {
+    if (!user) return;
+    supabase.from("profiles").select("onboarding_completed").eq("user_id", user.id).maybeSingle()
+      .then(({ data }) => { if (data?.onboarding_completed) navigate("/dashboard", { replace: true }); });
+  }, [user?.id, navigate]);
   const [step, setStep] = useState(0);
   const [dir, setDir] = useState(1);
   const [saving, setSaving] = useState(false);
