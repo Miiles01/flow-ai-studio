@@ -63,15 +63,28 @@ const ProtectedRoute = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     if (!user) return;
-    supabase
-      .from("profiles")
-      .select("onboarding_completed")
-      .eq("user_id", user.id)
-      .single()
-      .then(({ data }) => {
-        setOnboardingDone((data as any)?.onboarding_completed ?? false);
-      });
-  }, [user]);
+    let cancelled = false;
+    const check = async (attempt = 0): Promise<void> => {
+      const { data, error } = await supabase
+        .from("profiles")
+        .select("onboarding_completed")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      if (cancelled) return;
+      if (error) {
+        // Network/session hiccup: retry, and never force an existing user into onboarding by mistake
+        if (attempt < 2) return check(attempt + 1);
+        setOnboardingDone(true);
+        return;
+      }
+      if (data?.onboarding_completed) { setOnboardingDone(true); return; }
+      // Existing users with boards are not new — skip onboarding
+      const { count } = await supabase.from("flows").select("id", { count: "exact", head: true }).eq("user_id", user.id);
+      if (!cancelled) setOnboardingDone((count ?? 0) > 0);
+    };
+    check();
+    return () => { cancelled = true; };
+  }, [user?.id]);
 
   if (loading || (user && onboardingDone === null)) return null;
   if (!user) return <Navigate to="/login" replace />;
