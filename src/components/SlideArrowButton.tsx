@@ -4,22 +4,17 @@ import { ArrowRight } from "lucide-react";
 
 const SlideArrowButton = ({
   onClick,
+  href,
   children,
 }: {
-  onClick: () => void;
+  onClick?: () => void;
+  href?: string;
   children: React.ReactNode;
 }) => {
   const [isHovered, setIsHovered] = useState(false);
 
-  return (
-    <motion.button
-      onClick={onClick}
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.96 }}
-      className="relative flex items-center justify-center px-8 py-4 rounded-full text-sm font-normal bg-black text-white border-2 border-white shadow-[0_8px_30px_rgba(0,0,0,0.18)] dark:shadow-[0_8px_30px_rgba(255,255,255,0.1)] cursor-pointer transition-colors duration-150"
-    >
+  const content = (
+    <>
       <span className="tracking-tight">{children}</span>
       <AnimatePresence mode="popLayout">
         {isHovered && (
@@ -35,6 +30,40 @@ const SlideArrowButton = ({
           </motion.div>
         )}
       </AnimatePresence>
+    </>
+  );
+
+  const className =
+    "relative flex items-center justify-center px-8 py-4 rounded-full text-sm font-normal bg-black text-white border-2 border-white shadow-[0_8px_30px_rgba(0,0,0,0.18)] dark:shadow-[0_8px_30px_rgba(255,255,255,0.1)] cursor-pointer transition-colors duration-150 inline-flex";
+
+  if (href) {
+    return (
+      <motion.a
+        href={href}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={onClick}
+        onMouseEnter={() => setIsHovered(true)}
+        onMouseLeave={() => setIsHovered(false)}
+        whileHover={{ scale: 1.02 }}
+        whileTap={{ scale: 0.96 }}
+        className={className}
+      >
+        {content}
+      </motion.a>
+    );
+  }
+
+  return (
+    <motion.button
+      onClick={onClick}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      whileHover={{ scale: 1.02 }}
+      whileTap={{ scale: 0.96 }}
+      className={className}
+    >
+      {content}
     </motion.button>
   );
 };

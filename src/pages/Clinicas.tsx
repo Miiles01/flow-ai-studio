@@ -273,10 +273,10 @@ const Clinicas = () => {
               transition={{ delay: 0.1 }}
               className="max-w-full md:max-w-md mx-auto mb-6 md:mb-8 rounded-[32px] overflow-hidden bg-black"
             >
-              <AdVideo src="/videos/clinicas-ad.mp4" poster="/videos/clinicas-poster.jpg" />
+              <AdVideo src="/videos/clinicas-final-2.mp4" poster="/videos/clinicas-final-2-poster.jpg" />
             </motion.div>
 
-            {/* Solicitar demo, debajo del video */}
+            {/* Ver demo, debajo del video */}
             <motion.div
               initial="hidden"
               animate="visible"
@@ -284,8 +284,8 @@ const Clinicas = () => {
               transition={{ delay: 0.15 }}
               className="flex justify-center mb-8 md:mb-10"
             >
-              <SlideArrowButton onClick={() => openWhatsApp(WHATSAPP_DEMO_MESSAGE)}>
-                Solicitar demo
+              <SlideArrowButton href="https://tupaginanueva.com/">
+                Ver demo
               </SlideArrowButton>
             </motion.div>
 
