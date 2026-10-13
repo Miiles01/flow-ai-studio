@@ -46,8 +46,8 @@ const Login = () => {
     <motion.div
       initial={{ y: 20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      className="bg-white w-full lg:w-1/2 py-8 px-4 md:py-14 md:px-8 rounded-[32px] flex flex-col justify-center"
-      style={{ minHeight: "680px" }}
+      className="bg-white w-full py-8 px-4 md:py-14 md:px-8 rounded-[32px] flex flex-col justify-center shadow-[0_10px_40px_-15px_rgba(28,30,42,0.15)]"
+
     >
       <div className="text-center mb-10">
         <Link to="/" className="inline-block mb-8 hover:opacity-80 transition-opacity">
