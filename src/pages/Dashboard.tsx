@@ -1,4 +1,5 @@
 import { DashboardSkeleton } from "@/components/PageSkeletons";
+import { pageCache } from "@/lib/pageCache";
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -60,18 +61,19 @@ type UserApplication = {
 export default function Dashboard() {
   const { user } = useAuth();
   const { isDark } = useTheme();
-  const [displayName, setDisplayName] = useState("");
-  const [flows, setFlows] = useState<any[]>([]);
-  const [savedCount, setSavedCount] = useState(0);
+  const cached = pageCache.get<any>(`dashboard:${user?.id}`);
+  const [displayName, setDisplayName] = useState(cached?.displayName ?? "");
+  const [flows, setFlows] = useState<any[]>(cached?.flows ?? []);
+  const [savedCount, setSavedCount] = useState(cached?.savedCount ?? 0);
   const showDiscoveries = true;
-  const [applications, setApplications] = useState<UserApplication[]>([]);
+  const [applications, setApplications] = useState<UserApplication[]>(cached?.applications ?? []);
   const [appsOpen, setAppsOpen] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(!cached);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [notifications, setNotifications] = useState<Notification[]>([]);
+  const [notifications, setNotifications] = useState<Notification[]>(cached?.notifications ?? []);
   const [notifOpen, setNotifOpen] = useState(false);
   const [selectedNotif, setSelectedNotif] = useState<Notification | null>(null);
-  const [isAdmin, setIsAdmin] = useState(false);
+  const [isAdmin, setIsAdmin] = useState<boolean>(cached?.isAdmin ?? false);
   const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [tutorialTrigger, setTutorialTrigger] = useState(0);
 
@@ -105,11 +107,19 @@ export default function Dashboard() {
       supabase.from("notifications").select("*").eq("recipient_id", user.id).order("created_at", { ascending: false }).limit(50),
       supabase.from("user_roles").select("role").eq("user_id", user.id).eq("role", "admin").maybeSingle(),
     ]).then(async ([profileRes, flowsRes, appsRes, notifRes, roleRes]) => {
-      setDisplayName(profileRes.data?.display_name || user.email?.split("@")[0] || "");
-      setFlows(flowsRes.data || []);
-      setSavedCount(appsRes.count || 0);
-      setNotifications((notifRes.data as Notification[]) || []);
-      setIsAdmin(!!roleRes.data);
+      const snap: any = {
+        displayName: profileRes.data?.display_name || user.email?.split("@")[0] || "",
+        flows: flowsRes.data || [],
+        savedCount: appsRes.count || 0,
+        notifications: (notifRes.data as Notification[]) || [],
+        isAdmin: !!roleRes.data,
+        applications: [],
+      };
+      setDisplayName(snap.displayName);
+      setFlows(snap.flows);
+      setSavedCount(snap.savedCount);
+      setNotifications(snap.notifications);
+      setIsAdmin(snap.isAdmin);
 
       // Load applications with program names
       const { data: appsData } = await supabase
@@ -130,8 +140,10 @@ export default function Dashboard() {
           return { ...a, program_name: p?.name || "", brand_name: p?.brand_name || "" };
         });
         setApplications(merged);
+        snap.applications = merged;
       }
 
+      pageCache.set(`dashboard:${user.id}`, snap);
       setLoading(false);
     });
   }, [user]);
