@@ -14,7 +14,6 @@ import { toast } from "sonner";
 import TutorialModal from "@/components/TutorialModal";
 import tutorialBanner from "@/assets/tablero-banner.webp.asset.json";
 import { useTrends } from "@/hooks/useTrends";
-import StudioPreview from "@/components/studio/StudioPreview";
 import { TrendStoryViewer } from "@/components/TrendStoryViewer";
 import { UpgradeProDialog } from "@/components/UpgradeProDialog";
 
@@ -417,9 +416,6 @@ export default function Dashboard() {
         )}
       </motion.div>
 
-      <motion.div variants={sectionVariants}>
-        <StudioPreview />
-      </motion.div>
 
       <TrendStoryViewer
         trends={trends}
