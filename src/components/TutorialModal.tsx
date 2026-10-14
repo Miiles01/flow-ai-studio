@@ -84,15 +84,17 @@ export default function TutorialModal({ userId, triggerOpen, isNewUser }: Props)
   const storageKey = userId ? `${STORAGE_PREFIX}:${userId}` : STORAGE_PREFIX;
 
   useEffect(() => {
-    // Wait until we know which user we are dealing with
-    if (userId === undefined) return;
+    // Wait until we know which user we are dealing with and whether they are new
+    if (userId === undefined || isNewUser === undefined) return;
+    // Only auto-show to brand-new users with no boards
+    if (!isNewUser) return;
     try {
       const seen = localStorage.getItem(storageKey);
       if (!seen) setOpen(true);
     } catch {
       setOpen(true);
     }
-  }, [userId, storageKey]);
+  }, [userId, storageKey, isNewUser]);
 
   // Allow opening the modal on demand (banner click)
   useEffect(() => {
