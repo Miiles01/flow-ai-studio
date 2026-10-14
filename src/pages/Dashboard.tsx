@@ -1,3 +1,4 @@
+import { DashboardSkeleton } from "@/components/PageSkeletons";
 import { useEffect, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -230,11 +231,7 @@ export default function Dashboard() {
   }
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        <Loader2 size={24} className="animate-spin text-miiles-gray-400" />
-      </div>
-    );
+    return <DashboardSkeleton />;
   }
 
   const containerVariants = {

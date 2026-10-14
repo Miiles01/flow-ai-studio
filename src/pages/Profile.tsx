@@ -1,3 +1,4 @@
+import { ProfileSkeleton } from "@/components/PageSkeletons";
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -245,11 +246,7 @@ const Profile = () => {
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-full">
-        <Loader2 size={24} className="animate-spin text-muted-foreground" />
-      </div>
-    );
+    return <ProfileSkeleton />;
   }
 
   const initials = displayName

@@ -1,3 +1,4 @@
+import { BoardsSkeleton } from "@/components/PageSkeletons";
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { hasPendingHomePrompt, takePendingHomePrompt } from "@/lib/homePrompt";
@@ -143,11 +144,7 @@ export default function Boards() {
   };
 
   if (loading) {
-    return (
-      <div className="flex items-center justify-center h-full py-20">
-        <Loader2 size={24} className="animate-spin text-miiles-gray-400" />
-      </div>
-    );
+    return <BoardsSkeleton />;
   }
 
   return (
