@@ -111,8 +111,9 @@ export default function StudioTemplate() {
       <div className={`flex-1 flex justify-center overflow-hidden ${activeDevice === "desktop" ? "" : `pt-20 pb-4 ${isDark ? "bg-[hsl(222,20%,8%)]" : "bg-miiles-gray-50"}`}`}>
         <iframe
           title={t.title}
-          srcDoc={`<style>html,body{scrollbar-width:none;-ms-overflow-style:none}html::-webkit-scrollbar,body::-webkit-scrollbar,*::-webkit-scrollbar{display:none}</style>${t.html}`}
-          sandbox="allow-scripts"
+          {...(t.preview_url ? { src: t.preview_url } : {})}
+          srcDoc={t.preview_url ? undefined : `<style>html,body{scrollbar-width:none;-ms-overflow-style:none}html::-webkit-scrollbar,body::-webkit-scrollbar,*::-webkit-scrollbar{display:none}</style>${t.html}`}
+          sandbox={t.preview_url ? "allow-scripts allow-same-origin" : "allow-scripts"}
           style={{ width: frameWidth, maxWidth: "100%" }}
           className={`h-full bg-white border-0 transition-[width] duration-300 ${activeDevice === "desktop" ? "" : "rounded-2xl shadow-md"}`}
         />
