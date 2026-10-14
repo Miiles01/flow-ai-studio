@@ -11,14 +11,21 @@ export default function StudioCard({ t, className = "" }: { t: StudioTemplate; c
   // corre su propia animación; en la miniatura quedaría tapando la página.
   const clearIntro = (e: { currentTarget: HTMLIFrameElement }) => {
     if (!t.preview_url) return;
-    try {
-      const doc = e.currentTarget.contentDocument;
-      if (!doc) return;
-      doc.querySelectorAll(".intro-curtain").forEach((el) => el.remove());
-      doc.body.style.overflow = "";
-    } catch {
-      /* sin acceso al frame — se deja como está */
-    }
+    const frame = e.currentTarget;
+    let tries = 0;
+    const step = () => {
+      try {
+        const doc = frame.contentDocument;
+        if (doc) {
+          doc.querySelectorAll(".intro-curtain").forEach((el) => el.remove());
+          if (doc.body) doc.body.style.overflow = "";
+        }
+      } catch {
+        /* sin acceso al frame — se deja como está */
+      }
+      if (++tries < 20) setTimeout(step, 150);
+    };
+    step();
   };
 
   return (
