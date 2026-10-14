@@ -20,7 +20,7 @@ export default function StudioCard({ t, className = "" }: { t: StudioTemplate; c
             title={t.title}
             srcDoc={t.html}
             sandbox=""
-            className="absolute top-0 left-0 w-[400%] h-[400%] origin-top-left scale-25 pointer-events-none border-0"
+            className="absolute top-0 left-0 w-[400%] h-[400%] origin-top-left pointer-events-none border-0"
             style={{ transform: "scale(0.25)" }}
           />
         )}
