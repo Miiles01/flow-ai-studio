@@ -6,6 +6,21 @@ import { type StudioTemplate } from "@/lib/studio";
 export default function StudioCard({ t, className = "" }: { t: StudioTemplate; className?: string }) {
   const navigate = useNavigate();
   const { isDark } = useTheme();
+
+  // Algunas plantillas abren con una cortina blanca que solo se levanta cuando
+  // corre su propia animación; en la miniatura quedaría tapando la página.
+  const clearIntro = (e: { currentTarget: HTMLIFrameElement }) => {
+    if (!t.preview_url) return;
+    try {
+      const doc = e.currentTarget.contentDocument;
+      if (!doc) return;
+      doc.querySelectorAll(".intro-curtain").forEach((el) => el.remove());
+      doc.body.style.overflow = "";
+    } catch {
+      /* sin acceso al frame — se deja como está */
+    }
+  };
+
   return (
     <motion.button
       whileHover={{ y: -6, transition: { duration: 0.2 } }}
