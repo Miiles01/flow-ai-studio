@@ -8,7 +8,7 @@ export function useStudioTemplates() {
   useEffect(() => {
     supabase
       .from("studio_templates")
-      .select("id,slug,title,kind,description,thumbnail_url,html")
+      .select("id,slug,title,kind,description,thumbnail_url,html,preview_url,download_url,is_published")
       .order("sort_order")
       .order("created_at", { ascending: false })
       .then(({ data }) => {

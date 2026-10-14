@@ -6,6 +6,28 @@ import { type StudioTemplate } from "@/lib/studio";
 export default function StudioCard({ t, className = "" }: { t: StudioTemplate; className?: string }) {
   const navigate = useNavigate();
   const { isDark } = useTheme();
+
+  // Algunas plantillas abren con una cortina blanca que solo se levanta cuando
+  // corre su propia animación; en la miniatura quedaría tapando la página.
+  const clearIntro = (e: { currentTarget: HTMLIFrameElement }) => {
+    if (!t.preview_url) return;
+    const frame = e.currentTarget;
+    let tries = 0;
+    const step = () => {
+      try {
+        const doc = frame.contentDocument;
+        if (doc) {
+          doc.querySelectorAll(".intro-curtain").forEach((el) => el.remove());
+          if (doc.body) doc.body.style.overflow = "";
+        }
+      } catch {
+        /* sin acceso al frame — se deja como está */
+      }
+      if (++tries < 20) setTimeout(step, 150);
+    };
+    step();
+  };
+
   return (
     <motion.button
       whileHover={{ y: -6, transition: { duration: 0.2 } }}
@@ -27,13 +49,14 @@ export default function StudioCard({ t, className = "" }: { t: StudioTemplate; c
           <div className={`flex-1 h-3.5 rounded-full ml-1.5 ${isDark ? "bg-white/10" : "bg-miiles-gray-100"}`} />
         </div>
         {/* Página adentro: solo se ve la mitad superior */}
-        <div className="aspect-[5/2] overflow-hidden relative bg-white">
+        <div className="aspect-[4/3] overflow-hidden relative bg-white">
           {t.thumbnail_url ? (
-            <img src={t.thumbnail_url} alt={t.title} className="w-full object-cover object-top" loading="lazy" />
+            <img src={t.thumbnail_url} alt={t.title} className="absolute inset-0 w-full h-full object-cover object-top" loading="lazy" />
           ) : (
             <iframe
               title={t.title}
               {...(t.preview_url ? { src: t.preview_url, sandbox: "allow-scripts allow-same-origin" } : { srcDoc: t.html, sandbox: "" })}
+              onLoad={clearIntro}
               className="absolute top-0 left-0 w-[400%] h-[800%] origin-top-left pointer-events-none border-0"
               style={{ transform: "scale(0.25)" }}
             />
