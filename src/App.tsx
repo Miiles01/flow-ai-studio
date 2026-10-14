@@ -146,7 +146,7 @@ const App = () => (
               <Route path="/boards/join/:token" element={<JoinFlow />} />
               <Route path="/boards/:id" element={<Index />} />
               <Route path="/studio" element={<DashboardRoute><Studio /></DashboardRoute>} />
-              <Route path="/studio/:slug" element={<DashboardRoute><StudioTemplate /></DashboardRoute>} />
+              <Route path="/studio/:slug" element={<ProtectedRoute><StudioTemplate /></ProtectedRoute>} />
               <Route path="/programs" element={<DashboardRoute><Programs /></DashboardRoute>} />
               <Route path="/programs/:id" element={<ProgramDetail />} />
               <Route path="/p/:slug" element={<ProgramDetail />} />
