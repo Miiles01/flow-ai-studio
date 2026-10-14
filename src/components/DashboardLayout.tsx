@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useState, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Home, ShoppingBag, User, Bot, Plus, MessageSquare, Trash2, LayoutDashboard, Gift, Newspaper, Palette } from "lucide-react";
+import { Home, ShoppingBag, User, Bot, MessageSquare, Trash2, LayoutDashboard, Gift, Newspaper, Palette } from "lucide-react";
 import logoImg from "@/assets/logo.webp";
 import { AffiliatePopup } from "@/components/AffiliatePopup";
 import { useAuth } from "@/contexts/AuthContext";
@@ -85,9 +85,9 @@ function SidebarBody() {
         className="flex flex-col h-full rounded-[50px] overflow-hidden w-full transition-colors duration-300"
         style={{ background: sidebarBg }}
       >
-        <SidebarContent className="flex flex-col h-full py-4 bg-transparent relative">
+        <SidebarContent className="flex flex-col h-full min-h-0 py-4 bg-transparent relative overflow-hidden">
         {/* Toggle & Logo */}
-        <div className={`pt-2 pb-8 flex flex-col ${collapsed ? "items-center px-2" : "px-8"}`}>
+        <div className={`pt-2 pb-8 shrink-0 flex flex-col ${collapsed ? "items-center px-2" : "px-8"}`}>
           <div className={`hidden md:flex w-full ${collapsed ? "justify-center" : "justify-start"} mb-4`}>
             <SidebarTrigger className={isDark ? "text-white hover:bg-white/10" : ""} />
           </div>
@@ -101,26 +101,9 @@ function SidebarBody() {
           </div>
         </div>
 
-        {/* Nuevo Tablero Button */}
-        <div className={`mb-8 flex ${collapsed ? "justify-center px-2" : "px-6"}`}>
-          <button
-            onClick={() => { closeMobile(); navigate("/boards/new"); }}
-            className={`flex items-center justify-center transition-all hover:scale-[1.02] ${
-              isDark
-                ? "bg-black text-white border border-white/10 hover:bg-zinc-900"
-                : "bg-black text-white hover:bg-black/90"
-            } ${
-              collapsed
-                ? "w-10 h-10 rounded-full"
-                : "w-full gap-2 rounded-full py-3.5 text-sm font-light"
-            }`}
-            title={collapsed ? "Nuevo tablero" : undefined}
-          >
-            <Plus size={16} />
-            {!collapsed && "Nuevo tablero"}
-          </button>
-        </div>
 
+        {/* Scrollable area: navigation + affiliates */}
+        <div className="flex-1 min-h-0 overflow-y-auto scrollbar-hide flex flex-col">
         {/* Main navigation */}
         <SidebarGroup className={collapsed ? "px-2" : "px-6"}>
           <SidebarGroupContent>
@@ -192,9 +175,10 @@ function SidebarBody() {
             </button>
           )}
         </AffiliatePopup>
+        </div>
 
-        {/* User profile card at bottom */}
-
+        {/* User profile card at bottom — fixed */}
+        <div className="shrink-0">
         {collapsed ? (
           <div
             className="mb-6 mt-3 flex justify-center cursor-pointer hover:opacity-80 transition-opacity"
@@ -229,6 +213,7 @@ function SidebarBody() {
             </div>
           </div>
         )}
+        </div>
         </SidebarContent>
       </div>
     </Sidebar>
