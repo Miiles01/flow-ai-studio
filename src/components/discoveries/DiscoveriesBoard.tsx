@@ -43,10 +43,71 @@ const NETWORKS = [
   },
 ];
 
-export function DiscoveriesBoard() {
+export function DiscoveriesBoard({ bare = false }: { bare?: boolean }) {
   const { isDark } = useTheme();
   const { trends } = useTrends();
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+
+  const cards = (
+    <div
+      className={`relative z-10 w-full flex items-center overflow-x-auto snap-x snap-mandatory scrollbar-hide gap-6 ${
+        bare ? "-mx-8 px-8 md:mx-0 md:px-0" : "h-full px-8 md:px-12"
+      }`}
+    >
+      {NETWORKS.map((item) => (
+        <div
+          key={item.id}
+          onClick={() => {
+            const targetNetwork = item.title.toLowerCase();
+            const idx = trends.findIndex((t) => t.network === targetNetwork);
+            if (idx !== -1) setOpenIndex(idx);
+          }}
+          className={`w-[368px] h-[299px] shrink-0 rounded-[24px] flex flex-col overflow-hidden snap-center border cursor-pointer hover:shadow-md transition-shadow relative ${
+            isDark ? "bg-[#1A1A1A] border-white/5" : "bg-white border-black/5"
+          }`}
+        >
+          <div className="p-6 pb-2 z-10">
+            <div className="flex items-center gap-3">
+              {item.icon}
+              <h3 className="text-lg font-normal text-foreground">{item.title}</h3>
+            </div>
+          </div>
+          <div className="flex-1 w-full mt-2 relative flex items-end justify-center z-0 overflow-hidden">
+            <img
+              src={item.image}
+              alt={item.title}
+              className={`absolute inset-0 w-full h-full object-contain object-bottom transition-opacity duration-500 ${isDark ? "opacity-0" : "opacity-100"}`}
+            />
+            {item.darkImage && (
+              <img
+                src={item.darkImage}
+                alt={`${item.title} Dark`}
+                className={`absolute inset-0 w-full h-full object-contain object-bottom transition-opacity duration-500 ${isDark ? "opacity-100" : "opacity-0"}`}
+              />
+            )}
+          </div>
+          {/* Gradient Overlay */}
+          <div
+            className="absolute bottom-0 left-0 w-full h-[48px] z-20 pointer-events-none"
+            style={{
+              background: isDark
+                ? "linear-gradient(to bottom, rgba(26,26,26,0) 0%, rgba(26,26,26,1) 100%)"
+                : "linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%)",
+            }}
+          />
+        </div>
+      ))}
+    </div>
+  );
+
+  if (bare) {
+    return (
+      <div>
+        {cards}
+        <TrendStoryViewer trends={trends} startIndex={openIndex} onClose={() => setOpenIndex(null)} />
+      </div>
+    );
+  }
 
   return (
     <div>
@@ -74,51 +135,7 @@ export function DiscoveriesBoard() {
         />
 
         {/* Contenido de descubrimientos irá aquí */}
-        <div className="relative z-10 w-full h-full flex items-center overflow-x-auto snap-x snap-mandatory scrollbar-hide px-8 md:px-12 gap-6">
-          {NETWORKS.map((item) => (
-            <div
-              key={item.id}
-              onClick={() => {
-                const targetNetwork = item.title.toLowerCase();
-                const idx = trends.findIndex((t) => t.network === targetNetwork);
-                if (idx !== -1) setOpenIndex(idx);
-              }}
-              className={`w-[368px] h-[299px] shrink-0 rounded-[24px] flex flex-col overflow-hidden snap-center border cursor-pointer hover:shadow-md transition-shadow relative ${
-                isDark ? "bg-[#1A1A1A] border-white/5" : "bg-white border-black/5"
-              }`}
-            >
-              <div className="p-6 pb-2 z-10">
-                <div className="flex items-center gap-3">
-                  {item.icon}
-                  <h3 className="text-lg font-normal text-foreground">{item.title}</h3>
-                </div>
-              </div>
-              <div className="flex-1 w-full mt-2 relative flex items-end justify-center z-0 overflow-hidden">
-                <img
-                  src={item.image}
-                  alt={item.title}
-                  className={`absolute inset-0 w-full h-full object-contain object-bottom transition-opacity duration-500 ${isDark ? "opacity-0" : "opacity-100"}`}
-                />
-                {item.darkImage && (
-                  <img
-                    src={item.darkImage}
-                    alt={`${item.title} Dark`}
-                    className={`absolute inset-0 w-full h-full object-contain object-bottom transition-opacity duration-500 ${isDark ? "opacity-100" : "opacity-0"}`}
-                  />
-                )}
-              </div>
-              {/* Gradient Overlay */}
-              <div
-                className="absolute bottom-0 left-0 w-full h-[48px] z-20 pointer-events-none"
-                style={{
-                  background: isDark
-                    ? "linear-gradient(to bottom, rgba(26,26,26,0) 0%, rgba(26,26,26,1) 100%)"
-                    : "linear-gradient(to bottom, rgba(255,255,255,0) 0%, rgba(255,255,255,1) 100%)",
-                }}
-              />
-            </div>
-          ))}
-        </div>
+        {cards}
       </div>
 
       <TrendStoryViewer trends={trends} startIndex={openIndex} onClose={() => setOpenIndex(null)} />
