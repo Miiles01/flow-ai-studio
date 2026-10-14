@@ -31,7 +31,7 @@ export default function Studio() {
             Aprende sobre los logaritmos de cada red y cómo eligen qué mostrar.
           </p>
         </div>
-        <DiscoveriesBoard />
+        <DiscoveriesBoard bare />
       </section>
 
       {/* Librería */}
