@@ -1045,3 +1045,20 @@
 .dark .dashboard-scope .text-miiles-gray-400 { color: rgb(255 255 255 / 0.75); }
 .dark .dashboard-scope .text-miiles-gray-600 { color: rgb(255 255 255 / 0.85); }
 .dark .dashboard-scope .text-muted-foreground\/50 { color: rgb(255 255 255 / 0.6); }
+
+/* Skeleton wave (estilo MUI) */
+.skeleton-wave::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  transform: translateX(-100%);
+  background: linear-gradient(90deg, transparent, hsl(var(--background) / 0.55), transparent);
+  animation: skeleton-wave 1.6s linear 0.5s infinite;
+}
+.dark .skeleton-wave::after {
+  background: linear-gradient(90deg, transparent, hsl(0 0% 100% / 0.06), transparent);
+}
+@keyframes skeleton-wave {
+  0% { transform: translateX(-100%); }
+  60%, 100% { transform: translateX(100%); }
+}

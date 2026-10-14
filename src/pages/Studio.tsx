@@ -1,3 +1,4 @@
+import { StudioGridSkeleton } from "@/components/PageSkeletons";
 import { useState } from "react";
 import { useStudioTemplates } from "@/hooks/useStudioTemplates";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -37,7 +38,7 @@ export default function Studio() {
         ))}
       </div>
       {loading ? (
-        <p className="text-sm text-muted-foreground">Cargando…</p>
+        <StudioGridSkeleton />
       ) : list.length === 0 ? (
         <p className="text-sm text-muted-foreground py-12 text-center">Aún no hay plantillas aquí.</p>
       ) : (
