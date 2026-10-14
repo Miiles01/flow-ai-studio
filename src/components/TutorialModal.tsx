@@ -64,9 +64,11 @@ type Props = {
   userId?: string | null;
   /** Increment this number to force-open the modal (e.g. from a banner click). */
   triggerOpen?: number;
+  /** Only auto-open for brand-new users (no boards yet). Undefined = still loading. */
+  isNewUser?: boolean;
 };
 
-export default function TutorialModal({ userId, triggerOpen }: Props) {
+export default function TutorialModal({ userId, triggerOpen, isNewUser }: Props) {
   const { isDark } = useTheme();
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(0);
