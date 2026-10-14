@@ -772,7 +772,7 @@ export default function Dashboard() {
     </motion.div>
 
       {/* Tutorial modal */}
-      <TutorialModal userId={user?.id} triggerOpen={tutorialTrigger} />
+      <TutorialModal userId={user?.id} triggerOpen={tutorialTrigger} isNewUser={loading ? undefined : flows.length === 0} />
 
       {/* Upgrade Pro popup */}
       <UpgradeProDialog open={upgradeOpen} onOpenChange={setUpgradeOpen} />

@@ -64,9 +64,11 @@ type Props = {
   userId?: string | null;
   /** Increment this number to force-open the modal (e.g. from a banner click). */
   triggerOpen?: number;
+  /** Only auto-open for brand-new users (no boards yet). Undefined = still loading. */
+  isNewUser?: boolean;
 };
 
-export default function TutorialModal({ userId, triggerOpen }: Props) {
+export default function TutorialModal({ userId, triggerOpen, isNewUser }: Props) {
   const { isDark } = useTheme();
   const [open, setOpen] = useState(false);
   const [active, setActive] = useState(0);
@@ -82,15 +84,17 @@ export default function TutorialModal({ userId, triggerOpen }: Props) {
   const storageKey = userId ? `${STORAGE_PREFIX}:${userId}` : STORAGE_PREFIX;
 
   useEffect(() => {
-    // Wait until we know which user we are dealing with
-    if (userId === undefined) return;
+    // Wait until we know which user we are dealing with and whether they are new
+    if (userId === undefined || isNewUser === undefined) return;
+    // Only auto-show to brand-new users with no boards
+    if (!isNewUser) return;
     try {
       const seen = localStorage.getItem(storageKey);
       if (!seen) setOpen(true);
     } catch {
       setOpen(true);
     }
-  }, [userId, storageKey]);
+  }, [userId, storageKey, isNewUser]);
 
   // Allow opening the modal on demand (banner click)
   useEffect(() => {
