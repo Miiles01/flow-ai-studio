@@ -1,21 +1,12 @@
 import { StudioGridSkeleton } from "@/components/PageSkeletons";
-import { useState } from "react";
 import { useStudioTemplates } from "@/hooks/useStudioTemplates";
-import { useTheme } from "@/contexts/ThemeContext";
 import { DiscoveriesBoard } from "@/components/discoveries/DiscoveriesBoard";
 import StudioCard from "@/components/studio/StudioCard";
 
-const FILTERS = [
-  { key: "all", label: "Todas" },
-  { key: "portfolio", label: "Portafolios" },
-  { key: "website", label: "Páginas web" },
-];
 
 export default function Studio() {
   const { templates, loading } = useStudioTemplates();
-  const { isDark } = useTheme();
-  const [filter, setFilter] = useState("all");
-  const list = filter === "all" ? templates : templates.filter((t) => t.kind === filter);
+  const list = templates;
 
   return (
     <div className="p-8 md:px-12 md:pb-12 md:pt-48 max-w-5xl mx-auto space-y-12">
@@ -31,7 +22,7 @@ export default function Studio() {
             Aprende sobre los logaritmos de cada red y cómo eligen qué mostrar.
           </p>
         </div>
-        <DiscoveriesBoard bare />
+        <DiscoveriesBoard />
       </section>
 
       {/* Librería */}
@@ -42,23 +33,6 @@ export default function Studio() {
             <p className="text-sm font-light text-miiles-gray-400 mt-1">
               Plantillas para tu portafolio o embudo de ventas.
             </p>
-          </div>
-          <div className="flex gap-2 flex-wrap">
-            {FILTERS.map((f) => (
-              <button
-                key={f.key}
-                onClick={() => setFilter(f.key)}
-                className={`px-4 py-1.5 rounded-full text-sm font-light transition-colors ${
-                  filter === f.key
-                    ? "bg-foreground text-background"
-                    : isDark
-                      ? "bg-white/10 text-white/60"
-                      : "bg-background text-miiles-gray-400 shadow-sm"
-                }`}
-              >
-                {f.label}
-              </button>
-            ))}
           </div>
         </div>
 

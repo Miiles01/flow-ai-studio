@@ -113,7 +113,7 @@ export default function StudioTemplate() {
           title={t.title}
           {...(t.preview_url ? { src: t.preview_url } : {})}
           srcDoc={t.preview_url ? undefined : `<style>html,body{scrollbar-width:none;-ms-overflow-style:none}html::-webkit-scrollbar,body::-webkit-scrollbar,*::-webkit-scrollbar{display:none}</style>${t.html}`}
-          sandbox={t.preview_url ? "allow-scripts allow-same-origin" : "allow-scripts"}
+          sandbox="allow-scripts"
           style={{ width: frameWidth, maxWidth: "100%" }}
           className={`h-full bg-white border-0 transition-[width] duration-300 ${activeDevice === "desktop" ? "" : "rounded-2xl shadow-md"}`}
         />
