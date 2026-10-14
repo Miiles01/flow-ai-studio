@@ -1,4 +1,5 @@
 import { ProfileSkeleton } from "@/components/PageSkeletons";
+import { pageCache } from "@/lib/pageCache";
 import { useEffect, useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -82,7 +83,7 @@ const Profile = () => {
   const [videoUrl2, setVideoUrl2] = useState("");
   const [videoUrl3, setVideoUrl3] = useState("");
   const [editingVideo, setEditingVideo] = useState<number | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(() => !pageCache.get(`profile:${user?.id}`));
   const [saving, setSaving] = useState(false);
   const [savedSuccess, setSavedSuccess] = useState(false);
   const [originalData, setOriginalData] = useState<any>(null);
@@ -95,12 +96,7 @@ const Profile = () => {
 
   useEffect(() => {
     if (!user) return;
-    supabase
-      .from("profiles")
-      .select("*")
-      .eq("user_id", user.id)
-      .single()
-      .then(({ data }) => {
+    const apply = (data: any) => {
         if (data) {
           setDisplayName(data.display_name || "");
           setUsername((data as any).username || "");
@@ -136,6 +132,17 @@ const Profile = () => {
           });
         }
         setLoading(false);
+    };
+    const cachedProfile = pageCache.get<any>(`profile:${user.id}`);
+    if (cachedProfile) apply(cachedProfile);
+    supabase
+      .from("profiles")
+      .select("*")
+      .eq("user_id", user.id)
+      .single()
+      .then(({ data }) => {
+        if (data) pageCache.set(`profile:${user.id}`, data);
+        apply(data);
       });
   }, [user]);
 

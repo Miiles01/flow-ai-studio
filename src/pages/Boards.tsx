@@ -1,4 +1,5 @@
 import { BoardsSkeleton } from "@/components/PageSkeletons";
+import { pageCache } from "@/lib/pageCache";
 import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { hasPendingHomePrompt, takePendingHomePrompt } from "@/lib/homePrompt";
@@ -18,10 +19,11 @@ export default function Boards() {
   const { user } = useAuth();
   const { isDark } = useTheme();
   const navigate = useNavigate();
-  const [flows, setFlows] = useState<FlowRow[]>([]);
-  const [shared, setShared] = useState<SharedFlow[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [plan, setPlan] = useState<"free" | "pro">("free");
+  const cached = pageCache.get<{ flows: FlowRow[]; shared: SharedFlow[]; plan: "free" | "pro" }>(`boards:${user?.id}`);
+  const [flows, setFlows] = useState<FlowRow[]>(cached?.flows ?? []);
+  const [shared, setShared] = useState<SharedFlow[]>(cached?.shared ?? []);
+  const [loading, setLoading] = useState(!cached);
+  const [plan, setPlan] = useState<"free" | "pro">(cached?.plan ?? "free");
 
   const fetchData = async () => {
     if (!user) return;
@@ -42,8 +44,11 @@ export default function Boards() {
         .eq("user_id", user.id),
     ]);
     if (flowsErr) toast.error("Error al cargar tableros");
-    setFlows((flowsData as FlowRow[]) || []);
-    setPlan(((profileData?.plan as "free" | "pro") || "free"));
+    const nextFlows = (flowsData as FlowRow[]) || [];
+    const nextPlan = (profileData?.plan as "free" | "pro") || "free";
+    let nextShared: SharedFlow[] = [];
+    setFlows(nextFlows);
+    setPlan(nextPlan);
 
     const collabList = (collabRows as { flow_id: string; role: "editor" | "viewer" }[]) || [];
     if (collabList.length > 0) {
@@ -54,12 +59,12 @@ export default function Boards() {
         .in("id", ids)
         .order("updated_at", { ascending: false });
       const roleById = new Map(collabList.map((c) => [c.flow_id, c.role] as const));
-      setShared(
-        ((sharedFlows as FlowRow[]) || []).map((f) => ({ ...f, role: roleById.get(f.id) || "viewer" }))
-      );
+      nextShared = ((sharedFlows as FlowRow[]) || []).map((f) => ({ ...f, role: roleById.get(f.id) || "viewer" }));
+      setShared(nextShared);
     } else {
       setShared([]);
     }
+    pageCache.set(`boards:${user.id}`, { flows: nextFlows, shared: nextShared, plan: nextPlan });
     setLoading(false);
   };
 
