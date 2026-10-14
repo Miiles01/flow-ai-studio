@@ -1,6 +1,6 @@
 import { ReactNode, useEffect, useState, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { Home, ShoppingBag, User, Bot, Plus, MessageSquare, Trash2, LayoutDashboard, Gift, Newspaper } from "lucide-react";
+import { Home, ShoppingBag, User, Bot, Plus, MessageSquare, Trash2, LayoutDashboard, Gift, Newspaper, Palette } from "lucide-react";
 import logoImg from "@/assets/logo.webp";
 import { AffiliatePopup } from "@/components/AffiliatePopup";
 import { useAuth } from "@/contexts/AuthContext";
@@ -28,6 +28,7 @@ import {
 const mainNav = [
   { title: "Inicio", url: "/dashboard", icon: Home },
   { title: "Tableros", url: "/boards", icon: LayoutDashboard },
+  { title: "Estudio", url: "/studio", icon: Palette },
 ];
 
 type Conversation = { id: string; title: string; updated_at: string };

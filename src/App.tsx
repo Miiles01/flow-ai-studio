@@ -38,6 +38,8 @@ import ContractPublic from "./pages/ContractPublic";
 import JoinFlow from "./pages/JoinFlow";
 import Admin from "./pages/Admin";
 import Ventas from "./pages/Ventas";
+import Studio from "./pages/Studio";
+import StudioTemplate from "./pages/StudioTemplate";
 
 import AuthLayout from "./components/AuthLayout";
 import LanguageLayout from "./components/LanguageLayout";
@@ -143,6 +145,8 @@ const App = () => (
               <Route path="/contrato/:publicId" element={<ContractPublic />} />
               <Route path="/boards/join/:token" element={<JoinFlow />} />
               <Route path="/boards/:id" element={<Index />} />
+              <Route path="/studio" element={<DashboardRoute><Studio /></DashboardRoute>} />
+              <Route path="/studio/:slug" element={<DashboardRoute><StudioTemplate /></DashboardRoute>} />
               <Route path="/programs" element={<DashboardRoute><Programs /></DashboardRoute>} />
               <Route path="/programs/:id" element={<ProgramDetail />} />
               <Route path="/p/:slug" element={<ProgramDetail />} />

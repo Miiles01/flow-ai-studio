@@ -15,6 +15,13 @@
       "when": 1791819111353,
       "tag": "0001_add_service_to_sales_leads",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1791999470388,
+      "tag": "0002_create_studio_templates",
+      "breakpoints": true
     }
   ]
 }
