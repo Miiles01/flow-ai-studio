@@ -27,9 +27,9 @@ export default function StudioCard({ t, className = "" }: { t: StudioTemplate; c
           <div className={`flex-1 h-3.5 rounded-full ml-1.5 ${isDark ? "bg-white/10" : "bg-miiles-gray-100"}`} />
         </div>
         {/* Página adentro: solo se ve la mitad superior */}
-        <div className="aspect-[5/2] overflow-hidden relative bg-white">
+        <div className="aspect-[4/3] overflow-hidden relative bg-white">
           {t.thumbnail_url ? (
-            <img src={t.thumbnail_url} alt={t.title} className="w-full object-cover object-top" loading="lazy" />
+            <img src={t.thumbnail_url} alt={t.title} className="absolute inset-0 w-full h-full object-cover object-top" loading="lazy" />
           ) : (
             <iframe
               title={t.title}
