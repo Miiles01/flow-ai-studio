@@ -15,3 +15,6 @@ verify_jwt = false
 
 [functions.sales-leads]
 verify_jwt = false
+
+[functions.studio-assets]
+verify_jwt = false

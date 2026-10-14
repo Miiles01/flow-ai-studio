@@ -1,7 +1,8 @@
-import { corsHeaders } from "npm:@supabase/supabase-js@2/cors";
+import { corsHeaders as defaultCorsHeaders } from "npm:@supabase/supabase-js@2/cors";
 import { createClient } from "npm:@supabase/supabase-js@2";
 
 const enc = new TextEncoder();
+const corsHeaders = { ...defaultCorsHeaders, "Access-Control-Allow-Headers": `${defaultCorsHeaders["Access-Control-Allow-Headers"]}, x-admin-token` };
 async function verifyToken(token: string | null, secret: string) {
   if (!token) return false;
   const [payload, sig] = token.split(".");
@@ -23,10 +24,27 @@ const slugify = (s: string) =>
 Deno.serve(async (req) => {
   if (req.method === "OPTIONS") return new Response("ok", { headers: corsHeaders });
   try {
-    if (!(await verifyToken(req.headers.get("x-admin-token"), Deno.env.get("ADMIN_PASSWORD")!))) return json({ error: "Unauthorized" }, 401);
-    const sb = createClient(Deno.env.get("SUPABASE_URL")!, Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!);
+    const secret = Deno.env.get("ADMIN_PASSWORD");
+    const url = Deno.env.get("SUPABASE_URL");
+    const key = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY");
+    if (!secret || !url || !key) throw new Error("Configuración no disponible");
+    if (!(await verifyToken(req.headers.get("x-admin-token"), secret))) return json({ error: "Unauthorized" }, 401);
+    const sb = createClient(url, key);
     const body = await req.json().catch(() => ({}));
     const action = body.action ?? "list";
+
+    if (action === "prepare-upload") {
+      const paths = body.paths;
+      if (!Array.isArray(paths) || paths.length > 1001 || !paths.length || paths.some((p) => typeof p !== "string" || p.length > 500 || p.startsWith("/") || p.includes("\\") || p.split("/").some((part) => part === ".." || part.startsWith(".")))) return json({ error: "Rutas no válidas" }, 400);
+      const project = crypto.randomUUID();
+      const uploads = [];
+      for (const path of paths) {
+        const { data, error } = await sb.storage.from("studio-projects").createSignedUploadUrl(`${project}/${path}`);
+        if (error) throw error;
+        uploads.push({ path, token: data.token });
+      }
+      return json({ project, uploads });
+    }
 
     if (action === "list") {
       const { data, error } = await sb.from("studio_templates").select("*").order("sort_order").order("created_at", { ascending: false });
@@ -47,6 +65,8 @@ Deno.serve(async (req) => {
         description: String(t.description ?? "").slice(0, 2000),
         is_published: t.is_published !== false,
         slug: slugify(String(t.slug || title)) || crypto.randomUUID(),
+        ...(t.preview_url !== undefined ? { preview_url: t.preview_url || null } : {}),
+        ...(t.download_url !== undefined ? { download_url: t.download_url || null } : {}),
       };
       const q = t.id
         ? sb.from("studio_templates").update(row).eq("id", String(t.id))
