@@ -21,6 +21,7 @@ export default function StudioTab() {
   const [entry, setEntry] = useState("index.html");
   const [progress, setProgress] = useState("");
   const [loadError, setLoadError] = useState("");
+  const [saveError, setSaveError] = useState("");
   const fileInput = useRef<HTMLInputElement>(null);
   const load = async () => {
     setLoading(true);
@@ -30,11 +31,12 @@ export default function StudioTab() {
     setLoadError(""); setList(data.templates ?? []);
   };
   useEffect(() => { void load(); }, []);
-  const edit = (template: Partial<StudioTemplate>) => { setFile(null); setEntry("index.html"); setProgress(""); setForm({ ...template }); };
+  const edit = (template: Partial<StudioTemplate>) => { setFile(null); setEntry("index.html"); setProgress(""); setSaveError(""); setForm({ ...template }); };
   const save = async () => {
     if (!form?.title?.trim()) return toast.error("Escribe un nombre");
     if (!form.thumbnail_url) return toast.error("Sube una miniatura para la Librería");
     setSaving(true);
+    setSaveError("");
     try {
       const project = file ? await uploadStudioProject(file, entry, setProgress) : {};
       const template = { ...form, ...project };
@@ -43,7 +45,7 @@ export default function StudioTab() {
       const { data, error } = await adminFetch("admin-studio-templates", { action: "upsert", template });
       if (error || data?.error) throw new Error(data?.error ?? error?.message);
       toast.success("Plantilla guardada"); setForm(null); setFile(null); await load();
-    } catch (err) { toast.error(err instanceof Error ? err.message : "No se pudo guardar"); }
+    } catch (err) { const message = err instanceof Error ? err.message : "No se pudo guardar"; setSaveError(message); toast.error(message); }
     finally { setSaving(false); setProgress(""); }
   };
   const remove = async (id: string) => {
@@ -92,6 +94,7 @@ export default function StudioTab() {
           </div></details>
           <div className="flex items-center gap-3"><Switch id="studio-published" checked={form.is_published !== false} onCheckedChange={(checked) => setForm({ ...form, is_published: checked })} /><Label htmlFor="studio-published">Visible en la Librería</Label></div>
         </fieldset>
+        {saveError && <p role="alert" className="text-sm text-destructive-foreground">{saveError}</p>}
         <div className="flex flex-wrap items-center justify-end gap-3"><span role="status" className="text-xs text-muted-foreground">{progress}</span><Button type="button" variant="ghost" disabled={saving} onClick={() => setForm(null)}>Cancelar</Button><Button type="submit" disabled={saving}>{saving && <Loader2 className="animate-spin" />}{saving ? "Guardando…" : "Guardar plantilla"}</Button></div>
       </form>}
       {loading && <Loader2 className="animate-spin text-muted-foreground" />}
