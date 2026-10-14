@@ -21,9 +21,6 @@ export default function Studio() {
     <div className="p-8 md:px-12 md:pb-12 md:pt-48 max-w-5xl mx-auto space-y-12">
       <div>
         <h1 className="text-2xl md:text-3xl font-normal text-foreground">Estudio</h1>
-        <p className="text-sm font-light text-muted-foreground mt-1">
-          Aprende cómo deciden los algoritmos y arma tu presentación con plantillas de portafolio o embudo de ventas.
-        </p>
       </div>
 
       {/* Arquitectura logarítmica */}
@@ -34,7 +31,7 @@ export default function Studio() {
             Aprende sobre los logaritmos de cada red y cómo eligen qué mostrar.
           </p>
         </div>
-        <DiscoveriesBoard />
+        <DiscoveriesBoard bare />
       </section>
 
       {/* Librería */}
