@@ -9,11 +9,22 @@ export type StudioTemplate = {
   thumbnail_url: string | null;
   html: string;
   is_published?: boolean;
+  preview_url?: string | null;
+  download_url?: string | null;
 };
 
 export const KIND_LABEL: Record<string, string> = { portfolio: "Portafolio", website: "Página web" };
 
 export async function downloadTemplateZip(t: StudioTemplate) {
+  if (t.download_url) {
+    const a = document.createElement("a");
+    a.href = t.download_url;
+    a.download = `${t.slug}.zip`;
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    return;
+  }
   const zip = new JSZip();
   zip.file("index.html", t.html);
   zip.file(

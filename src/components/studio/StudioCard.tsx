@@ -33,8 +33,7 @@ export default function StudioCard({ t, className = "" }: { t: StudioTemplate; c
           ) : (
             <iframe
               title={t.title}
-              srcDoc={t.html}
-              sandbox=""
+              {...(t.preview_url ? { src: t.preview_url, sandbox: "allow-scripts allow-same-origin" } : { srcDoc: t.html, sandbox: "" })}
               className="absolute top-0 left-0 w-[400%] h-[800%] origin-top-left pointer-events-none border-0"
               style={{ transform: "scale(0.25)" }}
             />
