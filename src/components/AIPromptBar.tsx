@@ -14,6 +14,9 @@ type MentionApp = { id: string; name: string; logo: string | null };
 const escapeRe = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
 
+/** Input v1 (generar/editar/preguntar con IA en el tablero). Desactivado para ahorrar créditos; poner true para reactivarlo. */
+const AI_INPUT_V1_ENABLED = false;
+
 type AIPromptBarProps = {
   onGenerate: (prompt: string) => void;
   isGenerating: boolean;
@@ -203,7 +206,7 @@ const AIPromptBar = ({
   }, []);
 
   useEffect(() => {
-    if (forceOpen) {
+    if (forceOpen && (AI_INPUT_V1_ENABLED || inline)) {
       setIsExpanded(true);
       setTimeout(() => textareaRef.current?.focus(), 80);
     }
@@ -288,6 +291,11 @@ const AIPromptBar = ({
 
 
   const expand = () => {
+    // Input v2: en el tablero la estrella solo abre el catálogo de widgets (IA desactivada)
+    if (!AI_INPUT_V1_ENABLED && !inline) {
+      setWidgetsOpen(true);
+      return;
+    }
     setIsExpanded(true);
     setTimeout(() => textareaRef.current?.focus(), 80);
   };
