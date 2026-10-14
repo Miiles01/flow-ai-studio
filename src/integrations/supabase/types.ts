@@ -634,10 +634,12 @@ export type Database = {
         Row: {
           created_at: string
           description: string
+          download_url: string | null
           html: string
           id: string
           is_published: boolean
           kind: string
+          preview_url: string | null
           slug: string
           sort_order: number
           thumbnail_url: string | null
@@ -647,10 +649,12 @@ export type Database = {
         Insert: {
           created_at?: string
           description?: string
+          download_url?: string | null
           html?: string
           id?: string
           is_published?: boolean
           kind?: string
+          preview_url?: string | null
           slug: string
           sort_order?: number
           thumbnail_url?: string | null
@@ -660,10 +664,12 @@ export type Database = {
         Update: {
           created_at?: string
           description?: string
+          download_url?: string | null
           html?: string
           id?: string
           is_published?: boolean
           kind?: string
+          preview_url?: string | null
           slug?: string
           sort_order?: number
           thumbnail_url?: string | null
