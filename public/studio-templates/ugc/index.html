@@ -12,6 +12,20 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500&display=swap" rel="stylesheet">
+    <script>
+      // Isolated previews retain preferences in memory, never in the host application's storage.
+      try { window.localStorage.getItem("studio-preview"); } catch {
+        const values = new Map();
+        Object.defineProperty(window, "localStorage", { value: {
+          getItem: (key) => values.get(String(key)) ?? null,
+          setItem: (key, value) => values.set(String(key), String(value)),
+          removeItem: (key) => values.delete(String(key)),
+          clear: () => values.clear(),
+          key: (index) => Array.from(values.keys())[index] ?? null,
+          get length() { return values.size; }
+        } });
+      }
+    </script>
     <script defer src="/studio-templates/ugc/assets/index-DAYhyFGZ.js"></script>
     <link rel="stylesheet" href="/studio-templates/ugc/assets/index-Bp_T4tRg.css">
   <style>html,body{scrollbar-width:none}html::-webkit-scrollbar,body::-webkit-scrollbar{display:none}</style></head>
