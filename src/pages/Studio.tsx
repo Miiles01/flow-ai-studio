@@ -41,8 +41,8 @@ export default function Studio() {
         ) : list.length === 0 ? (
           <p className="text-sm text-muted-foreground py-12 text-center">Aún no hay plantillas aquí.</p>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pt-2">
-            {list.map((t) => <StudioCard key={t.id} t={t} />)}
+          <div className="flex flex-wrap gap-6 pt-2">
+            {list.map((t) => <StudioCard key={t.id} t={t} className="w-[280px] md:w-[320px]" />)}
           </div>
         )}
       </section>
