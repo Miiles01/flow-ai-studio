@@ -1,5 +1,7 @@
 # Objetivo actual
 
+- [x] Añadir vista intermedia de plantillas con preview desktop, descripción y Obtener; verificar entrada y regreso desde pantalla completa.
+
 - [x] Restaurar contenedor punteado en Estudio y tarjetas de Librería solo con imagen 16:9, sin filtros.
 - [x] Mejorar administración de miniaturas y proyectos ZIP de GitHub; verificar subida, vista y descarga.
 
