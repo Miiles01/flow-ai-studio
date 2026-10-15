@@ -95,6 +95,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose }: Props) {
         rfInstanceRef.current?.fitView({
           nodes: [{ id: "A" }],
           padding: 0.8,
+          maxZoom: 0.9,
           duration: 800,
         });
       }, 50);
