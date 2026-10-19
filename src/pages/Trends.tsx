@@ -20,7 +20,7 @@ export default function Trends() {
   } as const;
 
   return (
-    <div className="p-8 md:px-12 md:pb-12 md:pt-48 max-w-5xl mx-auto space-y-8">
+    <div className="p-8 md:px-12 md:pb-12 md:pt-24 max-w-5xl mx-auto space-y-8">
       <div>
         <h1 className={`text-2xl md:text-3xl font-normal leading-tight ${isDark ? "text-white" : "text-black"}`}>
           Descubrimientos

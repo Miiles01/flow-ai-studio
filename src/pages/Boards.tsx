@@ -153,7 +153,7 @@ export default function Boards() {
   }
 
   return (
-    <div className="p-8 md:px-12 md:pb-12 md:pt-48 max-w-5xl mx-auto space-y-12">
+    <div className="p-8 md:px-12 md:pb-12 md:pt-24 max-w-5xl mx-auto space-y-12">
       <div className="flex items-center justify-between flex-wrap gap-4">
         <h1 className={`text-2xl md:text-3xl font-normal ${isDark ? 'text-white' : 'text-black'}`}>Mis Tableros</h1>
         <button
