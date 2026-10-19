@@ -1578,7 +1578,7 @@ const Afiliados = () => {
                     className="flex flex-col rounded-[24px] bg-gradient-to-b from-[#FDFDFD] to-[#F8F9FD] overflow-hidden"
                   >
                     <div className="px-7 pt-7">
-                      <h3 className="text-3xl md:text-[34px] font-normal tracking-tight leading-tight text-black whitespace-pre-line">{item.title}</h3>
+                      <h3 className="text-3xl md:text-[34px] font-normal tracking-tight leading-tight text-black">{item.title}</h3>
                       <p className="mt-4 text-[15px] font-light leading-relaxed text-black/75">{item.desc}</p>
                     </div>
                     <div className="mt-auto pt-6">
