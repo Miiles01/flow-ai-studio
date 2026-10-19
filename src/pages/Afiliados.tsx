@@ -1578,7 +1578,7 @@ const Afiliados = () => {
                     className="flex flex-col bg-gradient-to-b from-[#FDFDFD] to-[#F8F9FD] rounded-[25px] overflow-hidden border border-black/[0.04] min-h-[550px]"
                   >
                     <div className="p-10 pb-6 flex-shrink-0">
-                      <h3 className="text-[22px] font-medium mb-3 tracking-tight">{item.title}</h3>
+                      <h3 className="text-[22px] font-medium mb-3 tracking-tight whitespace-pre-line">{item.title}</h3>
                       <p className="text-black font-normal leading-relaxed text-[15px]">
                         {item.desc}
                       </p>
