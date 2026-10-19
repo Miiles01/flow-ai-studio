@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
@@ -1204,6 +1205,7 @@ const STEPS = [
 /* ─── Page ──────────────────────────────────────────────────────────────── */
 const Afiliados = () => {
   const smootherRef = useRef<ScrollSmoother | null>(null);
+  const { t } = useTranslation();
 
   useEffect(() => {
     if (window.location.search.includes("nosmooth")) {
@@ -1563,11 +1565,14 @@ const Afiliados = () => {
           <section className="pt-8 pb-24 md:pt-12 md:pb-24 px-6 bg-white">
             <div className="max-w-[1200px] mx-auto">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-                {[
-                  { title: "Creatividad", desc: "Con Miiles puedes encontrar clientes, diseñar modelos de negocio y preparar campañas", image: "/Creatividad.webp" },
-                  { title: "Algoritmo", desc: "Aprende cómo funciona el algoritmo de las redes sociales y mejora tu contenido.", image: "/Algoritmo.webp" },
-                  { title: "Control", desc: "Lleva el control de tus ingresos, proyectos y mucho más, todo en un solo lugar sin límites.", image: "/Control.webp" }
-                ].map((item, i) => (
+                {(
+                  t("landing.build_cards", { returnObjects: true }) as {
+                    title: string;
+                    desc: string;
+                    image: string;
+                    alt: string;
+                  }[]
+                ).map((item, i) => (
                   <div 
                     key={i} 
                     className="flex flex-col bg-gradient-to-b from-[#FDFDFD] to-[#F8F9FD] rounded-[25px] overflow-hidden border border-black/[0.04] min-h-[550px]"
@@ -1582,7 +1587,7 @@ const Afiliados = () => {
                     <div className="mt-auto w-full pt-8 flex justify-center items-end">
                       <img 
                         src={item.image} 
-                        alt={item.title} 
+                        alt={item.alt} 
                         className="w-full h-auto object-cover object-bottom"
                       />
                     </div>
