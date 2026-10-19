@@ -90,7 +90,13 @@ const HomeSections = ({ beforeFaq }: { beforeFaq?: ReactNode }) => {
               >
                 {/* Orden: título, descripción y la imagen abajo, a todo el ancho */}
                 <div className="px-7 pt-7">
-                  <h3 className="text-3xl md:text-[34px] font-normal tracking-tight leading-tight text-black whitespace-pre-line">{card.title}</h3>
+                  <h3 className="text-3xl md:text-[34px] font-normal tracking-tight leading-tight text-black">
+                    {card.title.split("\n").map((line, li) => (
+                      <span key={li} className="block">
+                        {line}
+                      </span>
+                    ))}
+                  </h3>
                   <p className="mt-4 text-[15px] font-light leading-relaxed text-black/75">{card.desc}</p>
                 </div>
                 <div className="mt-auto pt-6">
