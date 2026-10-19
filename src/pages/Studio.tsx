@@ -9,7 +9,7 @@ export default function Studio() {
   const list = templates;
 
   return (
-    <div className="p-8 md:px-12 md:pb-12 md:pt-48 max-w-5xl mx-auto space-y-12">
+    <div className="p-8 md:px-12 md:pb-12 md:pt-24 max-w-5xl mx-auto space-y-12">
       <div>
         <h1 className="text-2xl md:text-3xl font-normal text-foreground">Estudio</h1>
       </div>

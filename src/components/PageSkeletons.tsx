@@ -1,6 +1,6 @@
 import { Skeleton } from "@/components/ui/skeleton";
 
-const wrap = "p-8 md:px-12 md:pb-12 md:pt-48 max-w-5xl mx-auto space-y-8";
+const wrap = "p-8 md:px-12 md:pb-12 md:pt-24 max-w-5xl mx-auto space-y-8";
 
 export function DashboardSkeleton() {
   return (
@@ -62,7 +62,7 @@ export function StudioGridSkeleton() {
 
 export function ProfileSkeleton() {
   return (
-    <div className="p-8 md:px-12 md:pb-12 md:pt-48 max-w-2xl mx-auto space-y-8" aria-busy="true">
+    <div className="p-8 md:px-12 md:pb-12 md:pt-24 max-w-2xl mx-auto space-y-8" aria-busy="true">
       <div className="flex items-center gap-4">
         <Skeleton variant="circular" className="h-20 w-20" />
         <div className="flex-1 space-y-2">
