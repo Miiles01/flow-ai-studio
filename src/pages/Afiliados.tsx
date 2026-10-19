@@ -1563,7 +1563,7 @@ const Afiliados = () => {
 
           {/* ── 3 COLUMNAS CON IMAGEN AL FONDO ───────────────────────────── */}
           <section className="pt-8 pb-24 md:pt-12 md:pb-24 px-6 bg-white">
-            <div className="max-w-[1200px] mx-auto">
+            <div className="max-w-6xl mx-auto">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {(
                   t("landing.build_cards", { returnObjects: true }) as {
@@ -1572,26 +1572,26 @@ const Afiliados = () => {
                     image: string;
                     alt: string;
                   }[]
-                ).map((item, i) => (
-                  <div 
-                    key={i} 
-                    className="flex flex-col bg-gradient-to-b from-[#FDFDFD] to-[#F8F9FD] rounded-[25px] overflow-hidden border border-black/[0.04] min-h-[550px]"
+                ).map((item) => (
+                  <article
+                    key={item.title}
+                    className="flex flex-col rounded-[24px] bg-gradient-to-b from-[#FDFDFD] to-[#F8F9FD] overflow-hidden"
                   >
-                    <div className="p-10 pb-6 flex-shrink-0">
-                      <h3 className="text-[22px] font-medium mb-3 tracking-tight whitespace-pre-line">{item.title}</h3>
-                      <p className="text-black font-normal leading-relaxed text-[15px]">
-                        {item.desc}
-                      </p>
+                    <div className="px-7 pt-7">
+                      <h3 className="text-3xl md:text-[34px] font-normal tracking-tight leading-tight text-black whitespace-pre-line">{item.title}</h3>
+                      <p className="mt-4 text-[15px] font-light leading-relaxed text-black/75">{item.desc}</p>
                     </div>
-                    {/* Contenedor de la imagen (mt-auto empuja hacia abajo) */}
-                    <div className="mt-auto w-full pt-8 flex justify-center items-end">
-                      <img 
-                        src={item.image} 
-                        alt={item.alt} 
-                        className="w-full h-auto object-cover object-bottom"
+                    <div className="mt-auto pt-6">
+                      <img
+                        src={item.image}
+                        alt={item.alt}
+                        loading="lazy"
+                        width={1194}
+                        height={1500}
+                        className="block w-full h-auto object-contain"
                       />
                     </div>
-                  </div>
+                  </article>
                 ))}
               </div>
             </div>
