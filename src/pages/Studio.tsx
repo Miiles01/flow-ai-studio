@@ -41,8 +41,10 @@ export default function Studio() {
         ) : list.length === 0 ? (
           <p className="text-sm text-muted-foreground py-12 text-center">Aún no hay plantillas aquí.</p>
         ) : (
-          <div className="flex flex-wrap gap-6 pt-2">
-            {list.map((t) => <StudioCard key={t.id} t={t} className="w-[280px] md:w-[320px]" />)}
+          // Columnas según el ancho disponible (no el viewport), con un máximo de 3: 3 en desktop, 2 en tablet, 1 en móvil,
+          // y se reacomodan solas al abrir o cerrar el sidebar
+          <div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,max(220px,calc((100%-3rem)/3))),1fr))] gap-6 pt-2">
+            {list.map((t) => <StudioCard key={t.id} t={t} className="w-full" />)}
           </div>
         )}
       </section>
