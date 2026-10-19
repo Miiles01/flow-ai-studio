@@ -1,4 +1,5 @@
 import JSZip from "jszip";
+import repoTemplates from "@/data/studio-templates.json";
 
 export type StudioTemplate = {
   id: string;
@@ -12,6 +13,10 @@ export type StudioTemplate = {
   preview_url?: string | null;
   download_url?: string | null;
 };
+
+// Plantillas de la Librería: viven en src/data/studio-templates.json. La página completa,
+// la miniatura y el .zip se sirven desde wearemiiles.com para que miiles.app no cargue su peso.
+export const STUDIO_TEMPLATES: StudioTemplate[] = repoTemplates.map((t) => ({ ...t, id: t.slug, html: "" }));
 
 export const KIND_LABEL: Record<string, string> = { portfolio: "Portafolio", website: "Página web" };
 

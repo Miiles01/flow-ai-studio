@@ -1,11 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { ArrowLeft, Download, Maximize2, Monitor, Tablet, Smartphone } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
 import { useTheme } from "@/contexts/ThemeContext";
 import { Button } from "@/components/ui/button";
 import { usePageSeo } from "@/hooks/usePageSeo";
-import { downloadTemplateZip, KIND_LABEL, type StudioTemplate as T } from "@/lib/studio";
+import { downloadTemplateZip, KIND_LABEL, STUDIO_TEMPLATES } from "@/lib/studio";
 
 type Device = "desktop" | "tablet" | "mobile";
 const DEVICE_ICON = { desktop: Monitor, tablet: Tablet, mobile: Smartphone };
@@ -19,8 +18,8 @@ export default function StudioTemplate() {
   const [searchParams, setSearchParams] = useSearchParams();
   const fullscreen = searchParams.get("view") === "fullscreen";
   const { isDark } = useTheme();
-  const [t, setT] = useState<T | null>(null);
-  const [loading, setLoading] = useState(true);
+  const t = STUDIO_TEMPLATES.find((x) => x.slug === slug) ?? null;
+  const loading = false;
   const [vw, setVw] = useState(window.innerWidth);
   const [device, setDevice] = useState<Device>("desktop");
   const [previewWidth, setPreviewWidth] = useState(0);
@@ -40,17 +39,6 @@ export default function StudioTemplate() {
   }, []);
 
   useEffect(() => {
-    let cancelled = false;
-    setLoading(true);
-    supabase.from("studio_templates").select("*").eq("slug", slug ?? "").maybeSingle().then(({ data }) => {
-      if (cancelled) return;
-      setT(data as T | null);
-      setLoading(false);
-    });
-    return () => { cancelled = true; };
-  }, [slug]);
-
-  useEffect(() => {
     const container = previewRef.current;
     if (!container) return;
     const observer = new ResizeObserver(([entry]) => {
@@ -58,7 +46,7 @@ export default function StudioTemplate() {
     });
     observer.observe(container);
     return () => observer.disconnect();
-  }, [loading, fullscreen]);
+  }, [fullscreen]);
 
   const devices: Device[] = vw >= 1024 ? ["desktop", "tablet", "mobile"] : vw >= 640 ? ["tablet", "mobile"] : ["mobile"];
   const activeDevice = devices.includes(device) ? device : devices[0];
@@ -130,10 +118,18 @@ export default function StudioTemplate() {
               <p className="mb-2 text-xs font-light text-muted-foreground">{KIND_LABEL[t.kind] ?? t.kind}</p>
               <h1 className="break-words text-2xl font-normal text-foreground md:text-3xl">{t.title}</h1>
             </div>
-            <Button onClick={() => setFullscreen(true)} className="max-w-full hover:translate-y-0"><Maximize2 /> Ver en pantalla completa</Button>
+            {t.preview_url ? (
+              <Button asChild className="max-w-full hover:translate-y-0">
+                <a href={t.preview_url} target="_blank" rel="noopener noreferrer"><Maximize2 /> Ver en pantalla completa</a>
+              </Button>
+            ) : (
+              <Button onClick={() => setFullscreen(true)} className="max-w-full hover:translate-y-0"><Maximize2 /> Ver en pantalla completa</Button>
+            )}
           </div>
           <div ref={previewRef} className="relative aspect-[8/5] w-full overflow-hidden rounded-lg border border-border bg-muted">
-            <iframe {...frameProps} tabIndex={-1} style={{ width: DESKTOP_WIDTH, height: DESKTOP_HEIGHT, transform: `scale(${previewWidth / DESKTOP_WIDTH})`, transformOrigin: "top left", visibility: previewWidth > 0 ? "visible" : "hidden" }} className="absolute left-0 top-0 border-0 bg-background" />
+            {t.thumbnail_url ? (
+              <img src={t.thumbnail_url} alt={t.title} className="absolute inset-0 h-full w-full object-cover object-top" />
+            ) : <iframe {...frameProps} tabIndex={-1} style={{ width: DESKTOP_WIDTH, height: DESKTOP_HEIGHT, transform: `scale(${previewWidth / DESKTOP_WIDTH})`, transformOrigin: "top left", visibility: previewWidth > 0 ? "visible" : "hidden" }} className="absolute left-0 top-0 border-0 bg-background" />}
           </div>
           <section className="mt-7 flex flex-col items-start justify-between gap-6 sm:flex-row">
             <p className="max-w-3xl whitespace-pre-line text-sm font-light leading-7 text-muted-foreground">{t.description || `Plantilla de ${KIND_LABEL[t.kind]?.toLowerCase() ?? "página web"} disponible en Miiles Estudio.`}</p>
