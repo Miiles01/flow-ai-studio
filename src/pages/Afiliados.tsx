@@ -1587,7 +1587,7 @@ const Afiliados = () => {
                     <div className="mt-auto w-full pt-8 flex justify-center items-end">
                       <img 
                         src={item.image} 
-                        alt={item.title} 
+                        alt={item.alt} 
                         className="w-full h-auto object-cover object-bottom"
                       />
                     </div>
