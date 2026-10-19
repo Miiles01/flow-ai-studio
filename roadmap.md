@@ -1,6 +1,6 @@
 # Objetivo actual
 
-- [ ] Usar la imagen PNG original de "Portafolio" (sin convertirla) en la tarjeta de Inicio y verificar que cargue.
+- [x] Usar la imagen PNG original de "Portafolio" (sin convertirla) en la tarjeta de Inicio y verificar que cargue.
 
 - [x] Añadir vista intermedia de plantillas con preview desktop, descripción y Obtener; verificar entrada y regreso desde pantalla completa.
 
