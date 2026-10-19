@@ -78,10 +78,10 @@
     "build_subtitle": "Lo que imagines para tu negocio, la inteligencia artificial de Miiles te ayuda a estructurarlo.",
     "build_cards": [
       {
-        "title": "Modelos de negocio",
-        "desc": "Describe tu idea y la IA arma tu Business Model Canvas en un tablero visual: propuesta de valor, clientes, canales e ingresos, listo para editar.",
-        "image": "/home-modelos.webp",
-        "alt": "Barra de IA de Miiles creando un modelo de negocio en el tablero"
+        "title": "Portafolio",
+        "desc": "Crea un portafolio profesional con un solo prompt: muestra quién eres, qué vendes y cómo lo vendes, listo para compartir.",
+        "image": "/home-portafolio.webp",
+        "alt": "Portafolio generado por la IA de Miiles con la foto y el nombre de la creadora"
       },
       {
         "title": "Clientes y campañas",
