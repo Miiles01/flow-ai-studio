@@ -2,6 +2,7 @@
 
 - [x] Usar la imagen PNG original de "Portafolio" (sin convertirla) en la tarjeta de Inicio y verificar que cargue.
 - [x] Intercambiar las tres cards de la página de afiliados por las mismas de Inicio (Portafolio, Clientes y campañas, Algoritmos de redes).
+- [x] Título de la card de Portafolio en dos líneas ("Diseña un" arriba, "portafolio" abajo), en Inicio y afiliados.
 
 - [x] Añadir vista intermedia de plantillas con preview desktop, descripción y Obtener; verificar entrada y regreso desde pantalla completa.
 
