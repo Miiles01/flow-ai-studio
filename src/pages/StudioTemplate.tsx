@@ -5,12 +5,39 @@ import { useTheme } from "@/contexts/ThemeContext";
 import { Button } from "@/components/ui/button";
 import { usePageSeo } from "@/hooks/usePageSeo";
 import { downloadTemplateZip, KIND_LABEL, STUDIO_TEMPLATES } from "@/lib/studio";
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import antigravityLogo from "@/assets/ai-logos/antigravity.png.asset.json";
+import codexLogo from "@/assets/ai-logos/codex.png.asset.json";
+import cursorLogo from "@/assets/ai-logos/cursor.png.asset.json";
 
 type Device = "desktop" | "tablet" | "mobile";
 const DEVICE_ICON = { desktop: Monitor, tablet: Tablet, mobile: Smartphone };
 const DEVICE_LABEL = { desktop: "Escritorio", tablet: "Tablet", mobile: "Móvil" };
 const DESKTOP_WIDTH = 1440;
 const DESKTOP_HEIGHT = 900;
+
+const AI_TOOLS = [
+  { name: "Claude", logo: "/logos/claude.svg" },
+  { name: "Codex", logo: codexLogo.url },
+  { name: "Cursor", logo: cursorLogo.url },
+  { name: "Antigravity", logo: antigravityLogo.url },
+  { name: "DeepSeek", logo: "/logos/deepseek.svg" },
+];
+
+const STEPS = [
+  "Descarga la plantilla y descomprime el archivo.",
+  "Abre la carpeta en tu IA favorita (Claude, Codex, Cursor, Antigravity…).",
+  "Pídele los cambios: tu nombre, textos, fotos, colores y datos de contacto.",
+  "Publícala y comparte tu nueva presentación.",
+];
+
+const FAQ = [
+  { q: "¿Qué puedo editar?", a: "Realmente todo: textos, imágenes, colores, tipografías, secciones, animaciones y enlaces. La plantilla es tuya para adaptarla a tu marca." },
+  { q: "¿Necesito saber programar?", a: "No. Basta con abrir la carpeta en una IA agéntica y describirle con tus palabras lo que quieres cambiar." },
+  { q: "¿Qué incluye la descarga?", a: "Un archivo ZIP con la página completa (HTML, estilos, imágenes y efectos) lista para que una IA la lea y la modifique." },
+  { q: "¿Funciona en celular y tablet?", a: "Sí. Puedes revisarlo en \"Ver en pantalla completa\" cambiando entre escritorio, tablet y móvil." },
+  { q: "¿Dónde la publico?", a: "En cualquier hosting de páginas estáticas, o pídele a tu IA que la publique por ti." },
+];
 
 export default function StudioTemplate() {
   const { slug } = useParams();
@@ -111,31 +138,70 @@ export default function StudioTemplate() {
           {downloadError && <p role="alert" className="absolute bottom-4 left-4 right-4 bg-card p-3 text-sm text-destructive">{downloadError}</p>}
         </div>
       ) : (
-        <main className="mx-auto max-w-6xl px-5 pb-12 pt-6 md:px-10 md:pt-8">
-          <Button variant="ghost" onClick={() => navigate("/studio")} className="mb-7 -ml-3 text-muted-foreground hover:text-foreground"><ArrowLeft /> Estudio</Button>
-          <div className="mb-6 flex flex-wrap items-end justify-between gap-5">
-            <div className="min-w-0">
-              <p className="mb-2 text-xs font-light text-muted-foreground">{KIND_LABEL[t.kind] ?? t.kind}</p>
-              <h1 className="break-words text-2xl font-normal text-foreground md:text-3xl">{t.title}</h1>
+        <main className="mx-auto max-w-7xl px-5 pb-12 pt-6 md:px-8 md:pt-8">
+          <Button variant="ghost" onClick={() => navigate("/studio")} className="mb-5 -ml-3 text-muted-foreground hover:text-foreground"><ArrowLeft /> Estudio</Button>
+          <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
+            {/* Página + preguntas */}
+            <div className="min-w-0 space-y-6">
+              <div ref={previewRef} className="relative aspect-[8/5] w-full overflow-hidden rounded-[24px] border border-border bg-muted shadow-sm">
+                {t.thumbnail_url ? (
+                  <img src={t.thumbnail_url} alt={t.title} className="absolute inset-0 h-full w-full object-cover object-top" />
+                ) : <iframe {...frameProps} tabIndex={-1} style={{ width: DESKTOP_WIDTH, height: DESKTOP_HEIGHT, transform: `scale(${previewWidth / DESKTOP_WIDTH})`, transformOrigin: "top left", visibility: previewWidth > 0 ? "visible" : "hidden" }} className="absolute left-0 top-0 border-0 bg-background" />}
+              </div>
+              <section className="rounded-[24px] border border-border bg-card p-6">
+                <h2 className="mb-2 text-lg font-normal text-foreground">Preguntas frecuentes</h2>
+                <Accordion type="single" collapsible defaultValue="q0">
+                  {FAQ.map((f, i) => (
+                    <AccordionItem key={i} value={`q${i}`} className="border-border">
+                      <AccordionTrigger className="text-left text-sm font-normal text-foreground hover:no-underline">{f.q}</AccordionTrigger>
+                      <AccordionContent className="text-sm font-light leading-6 text-muted-foreground">{f.a}</AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
+              </section>
             </div>
-            {t.preview_url ? (
-              <Button asChild className="max-w-full hover:translate-y-0">
-                <a href={t.preview_url} target="_blank" rel="noopener noreferrer"><Maximize2 /> Ver en pantalla completa</a>
-              </Button>
-            ) : (
-              <Button onClick={() => setFullscreen(true)} className="max-w-full hover:translate-y-0"><Maximize2 /> Ver en pantalla completa</Button>
-            )}
+
+            {/* Información */}
+            <aside className="h-fit space-y-6 rounded-[24px] border border-border bg-card p-6 lg:sticky lg:top-6">
+              <span className="inline-block rounded-full border border-border px-3 py-1 text-xs font-light text-muted-foreground">{KIND_LABEL[t.kind] ?? t.kind}</span>
+              <div>
+                <h1 className="break-words text-2xl font-normal text-foreground md:text-3xl">{t.title}</h1>
+                <p className="mt-3 whitespace-pre-line text-sm font-light leading-6 text-muted-foreground">{t.description || `Plantilla de ${KIND_LABEL[t.kind]?.toLowerCase() ?? "página web"} disponible en Miiles Estudio.`}</p>
+              </div>
+              <div className="flex flex-col gap-3">
+                {t.preview_url ? (
+                  <Button asChild size="lg" className="w-full rounded-full hover:translate-y-0">
+                    <a href={t.preview_url} target="_blank" rel="noopener noreferrer"><Maximize2 /> Ver en pantalla completa</a>
+                  </Button>
+                ) : (
+                  <Button size="lg" onClick={() => setFullscreen(true)} className="w-full rounded-full hover:translate-y-0"><Maximize2 /> Ver en pantalla completa</Button>
+                )}
+                <Button size="lg" variant="outline" onClick={obtain} disabled={downloading} className="w-full rounded-full hover:translate-y-0">
+                  <Download /> {downloading ? "Descargando…" : "Descargar"}
+                </Button>
+                {downloadError && <p role="alert" className="text-sm text-destructive">{downloadError}</p>}
+              </div>
+              <div className="border-t border-border pt-5">
+                <p className="text-sm font-normal text-foreground">Disponible para tus IAs</p>
+                <p className="mt-1 text-xs font-light text-muted-foreground">Funciona con todas las plataformas agénticas.</p>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {AI_TOOLS.map((a) => (
+                    <span key={a.name} className="flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1.5 text-xs font-light text-foreground">
+                      <img src={a.logo} alt="" className="h-4 w-4 rounded-sm object-contain" /> {a.name}
+                    </span>
+                  ))}
+                </div>
+              </div>
+              <div className="border-t border-border pt-5">
+                <p className="mb-3 text-sm font-normal text-foreground">Cómo usarla</p>
+                <ol className="space-y-2 text-sm font-light leading-6 text-muted-foreground">
+                  {STEPS.map((s, i) => (
+                    <li key={i} className="flex gap-3"><span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-muted text-xs text-foreground">{i + 1}</span>{s}</li>
+                  ))}
+                </ol>
+              </div>
+            </aside>
           </div>
-          <div ref={previewRef} className="relative aspect-[8/5] w-full overflow-hidden rounded-lg border border-border bg-muted">
-            {t.thumbnail_url ? (
-              <img src={t.thumbnail_url} alt={t.title} className="absolute inset-0 h-full w-full object-cover object-top" />
-            ) : <iframe {...frameProps} tabIndex={-1} style={{ width: DESKTOP_WIDTH, height: DESKTOP_HEIGHT, transform: `scale(${previewWidth / DESKTOP_WIDTH})`, transformOrigin: "top left", visibility: previewWidth > 0 ? "visible" : "hidden" }} className="absolute left-0 top-0 border-0 bg-background" />}
-          </div>
-          <section className="mt-7 flex flex-col items-start justify-between gap-6 sm:flex-row">
-            <p className="max-w-3xl whitespace-pre-line text-sm font-light leading-7 text-muted-foreground">{t.description || `Plantilla de ${KIND_LABEL[t.kind]?.toLowerCase() ?? "página web"} disponible en Miiles Estudio.`}</p>
-            <div className="shrink-0">{getButton}</div>
-          </section>
-          {downloadError && <p role="alert" className="mt-4 text-sm text-destructive">{downloadError}</p>}
         </main>
       )}
     </div>
