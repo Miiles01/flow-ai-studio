@@ -682,10 +682,10 @@ const Afiliados = () => {
       });
     });
 
-    // La foto de los creadores crece de ~50% a 100% mientras haces scroll
+    // La foto de los creadores crece de ~75% a 100% mientras haces scroll
     const heroGrow = document.querySelector<HTMLElement>("#aff-content .hero-grow");
     if (heroGrow) {
-      gsap.fromTo(heroGrow, { scale: 0.5 }, {
+      gsap.fromTo(heroGrow, { scale: 0.75 }, {
         scale: 1, ease: "none",
         scrollTrigger: { trigger: heroGrow, start: "top 96%", end: "top 40%", scrub: 0.4 },
       });
