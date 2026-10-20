@@ -36,7 +36,7 @@ export default function UseTemplateDialog({ template, open, onOpenChange }: { te
   return <Dialog open={open} onOpenChange={onOpenChange}>
     <DialogContent className={`${isDark ? "dark" : ""} max-h-[90dvh] w-[calc(100%-2rem)] max-w-xl overflow-y-auto bg-background text-foreground p-6 sm:p-8`}>
       <DialogHeader className="text-left space-y-3">
-        <Sparkles className="h-7 w-7 text-primary" />
+        <MiilesStar className="h-7 w-7 text-primary" />
         <DialogTitle className="text-2xl font-normal tracking-normal">Conecta tu IA a Miiles</DialogTitle>
         <DialogDescription className="font-light">{template.title} · Solo la primera vez, toma 1 minuto.</DialogDescription>
       </DialogHeader>

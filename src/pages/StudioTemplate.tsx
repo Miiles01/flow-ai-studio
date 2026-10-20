@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { ArrowLeft, Download, Maximize2, Monitor, Tablet, Smartphone } from "lucide-react";
+import MiilesStar from "@/components/MiilesStar";
 import UseTemplateDialog from "@/components/studio/UseTemplateDialog";
 import { useTheme } from "@/contexts/ThemeContext";
 import { Button } from "@/components/ui/button";
@@ -176,7 +177,7 @@ export default function StudioTemplate() {
                 <p className="mt-3 whitespace-pre-line text-sm font-light leading-6 text-muted-foreground">{t.description || `Plantilla de ${KIND_LABEL[t.kind]?.toLowerCase() ?? "página web"} disponible en Miiles Estudio.`}</p>
               </div>
               <div className="flex flex-col gap-3">
-                <Button size="lg" onClick={() => setUseTemplateOpen(true)} className="h-12 w-full rounded-full hover:translate-y-0"><Sparkles /> Usar esta plantilla</Button>
+                <Button size="lg" onClick={() => setUseTemplateOpen(true)} className="h-12 w-full rounded-full hover:translate-y-0"><MiilesStar className="h-4 w-4" /> Usar esta plantilla</Button>
                 {t.preview_url ? (
                   <Button asChild variant="outline" size="lg" className="w-full rounded-full hover:translate-y-0">
                     <a href={t.preview_url} target="_blank" rel="noopener noreferrer"><Maximize2 /> Ver en pantalla completa</a>
