@@ -682,14 +682,20 @@ const Afiliados = () => {
       });
     });
 
-    // La foto de los creadores crece de ~75% a 100% mientras haces scroll
+    // La foto de los creadores crece de ~75% a 100% mientras haces scroll.
+    // Solo en tablet y desktop; en móvil la foto se muestra siempre al 100%.
     const heroGrow = document.querySelector<HTMLElement>("#aff-content .hero-grow");
+    const growMm = gsap.matchMedia();
     if (heroGrow) {
-      gsap.fromTo(heroGrow, { scale: 0.75 }, {
-        scale: 1, ease: "none",
-        scrollTrigger: { trigger: heroGrow, start: "top 96%", end: "top 40%", scrub: 0.4 },
+      growMm.add("(min-width: 768px)", () => {
+        gsap.fromTo(heroGrow, { scale: 0.75 }, {
+          scale: 1, ease: "none",
+          scrollTrigger: { trigger: heroGrow, start: "top 96%", end: "top 40%", scrub: 0.4 },
+        });
+        return () => gsap.set(heroGrow, { clearProps: "transform" });
       });
     }
+
 
     // ── EFFECT046 WORD TRANSITION CSS ─────────────────────────────
     const e046Style = document.createElement('style');
@@ -938,7 +944,9 @@ const Afiliados = () => {
       splits.forEach((s) => { try { s.revert(); } catch { /* noop */ } });
       smootherRef.current?.kill();
       ScrollTrigger.getAll().forEach((t) => t.kill());
+      growMm.revert();
       gsap.set(animated, { clearProps: "all" });
+
       document.getElementById('e046-css')?.remove();
       document.getElementById('h104-css')?.remove();
     };
