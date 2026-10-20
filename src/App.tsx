@@ -127,6 +127,7 @@ const App = () => (
         <BrowserRouter>
           <AuthProvider>
             <ReferralTracker />
+            <LandingCursor />
             <Routes>
               <Route path="/" element={<Landing />} />
               <Route path="/home-dev" element={<LandingDev />} />
