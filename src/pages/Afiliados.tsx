@@ -922,14 +922,6 @@ const AnimatedDashboardMockup = () => {
             <span className="text-[20px] font-normal text-black tracking-tight">miiles</span>
           </div>
 
-          {/* nuevo tablero */}
-          <div className="mb-5">
-            <div className="flex items-center justify-center gap-1.5 bg-black text-white rounded-full py-3 text-[11px] font-light cursor-pointer w-full">
-              <svg width="11" height="11" viewBox="0 0 24 24" fill="currentColor"><path d="M12 5v14M5 12h14"/></svg>
-              Nuevo tablero
-            </div>
-          </div>
-
           {/* nav */}
           <div className="flex flex-col gap-1">
             {[
