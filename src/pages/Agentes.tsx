@@ -27,6 +27,8 @@ import SlideArrowButton from "@/components/SlideArrowButton";
 import AdVideo from "@/components/AdVideo";
 import StickyCta from "@/components/StickyCta";
 import { openWhatsApp } from "@/lib/whatsapp";
+import agenteDisenoVideo from "@/assets/agente-diseno.mp4.asset.json";
+import agenteDisenoPoster from "@/assets/agente-diseno-poster.jpg.asset.json";
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText);
 
@@ -278,7 +280,7 @@ const Agentes = () => {
               transition={{ delay: 0.1 }}
               className="max-w-full md:max-w-md mx-auto mb-6 md:mb-8 rounded-[32px] overflow-hidden bg-black"
             >
-              <AdVideo src="/videos/agentes-ad.mp4" poster="/videos/agentes-poster.jpg" />
+              <AdVideo src={agenteDisenoVideo.url} poster={agenteDisenoPoster.url} />
             </motion.div>
 
             <motion.div

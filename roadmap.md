@@ -13,3 +13,4 @@
 - [x] Sustituir definitivamente el carrusel lateral de videos por videos explicativos integrados en cada esquema.
 - [x] Incorporar una tarjeta de video dentro del esquema, un reproductor flotante y una vista ampliada.
 - [x] Incorporar los videos reales proporcionados en Arquitectura logarítmica.
+- [x] Cambiar el video de la página de agentes por "Agente de diseño Final" y verificar que cargue.
