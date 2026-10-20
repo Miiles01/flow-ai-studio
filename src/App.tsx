@@ -18,6 +18,7 @@ import BusinessInquiryThanks from "./pages/BusinessInquiryThanks";
 import Features from "./pages/Features";
 import Terms from "./pages/Terms";
 import Privacy from "./pages/Privacy";
+import ConectaIA from "./pages/ConectaIA";
 import ShopifyTutorial from "./pages/ShopifyTutorial";
 import Agentes from "./pages/Agentes";
 import Clinicas from "./pages/Clinicas";
@@ -170,6 +171,7 @@ const App = () => (
               <Route path="/admin" element={<Admin />} />
               <Route path="/ventas" element={<Ventas />} />
               <Route path="/shopify-tutorial" element={<ShopifyTutorial />} />
+              <Route path="/conecta-tu-ia" element={<ConectaIA />} />
               <Route path="/agentes" element={<Agentes />} />
               <Route path="/servicios" element={<Agentes />} />
               <Route path="/clinicas" element={<Clinicas />} />
