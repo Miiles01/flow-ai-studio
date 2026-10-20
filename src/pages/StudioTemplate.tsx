@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { ArrowLeft, Download, Maximize2, Monitor, Tablet, Smartphone, Sparkles } from "lucide-react";
+import { ArrowLeft, Download, Maximize2, Monitor, Tablet, Smartphone } from "lucide-react";
 import UseTemplateDialog from "@/components/studio/UseTemplateDialog";
 import { useTheme } from "@/contexts/ThemeContext";
 import { Button } from "@/components/ui/button";
