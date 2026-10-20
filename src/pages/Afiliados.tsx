@@ -1336,8 +1336,10 @@ const Afiliados = () => {
         let scrollProg = 0;
         let progStart = 0;
         let progEnd = 1;
-        let prevScroll: number | null = null;
-        let wheelTimeout: ReturnType<typeof setTimeout>;
+        // Largo de la línea recta. Las posiciones se calculan sobre este largo fijo:
+        // si dependieran del largo actual (que crece con la onda), todo se
+        // deslizaría solo cada vez que la onda se curva o se aplana.
+        let baseLen = 0;
 
         const morphTl = gsap.timeline({ paused: true })
           .to(svgLine, { morphSVG: '#h104-wave', duration: 1, ease: 'none' } as gsap.TweenVars);
@@ -1389,6 +1391,7 @@ const Afiliados = () => {
             return { type: 'text' as const, el: el as SVGElement, textPath: tp as SVGTextPathElement, size: measureTw(el, tp.textContent || '') };
           });
           totalLen = segs.reduce((s, seg, i) => s + seg.size + (i < segs.length - 1 ? GAP : 0), 0);
+          baseLen = svgLine.getTotalLength();
         };
 
         // Convierte las posiciones deseadas en pantalla al progreso del recorrido.
@@ -1398,7 +1401,7 @@ const Afiliados = () => {
           const rect = svgEl.getBoundingClientRect();
           const vbWidth = svgEl.viewBox.baseVal.width || rect.width;
           const toPath = (fraction: number) => ((window.innerWidth * fraction - rect.left) / rect.width) * vbWidth;
-          const pl = svgLine.getTotalLength();
+          const pl = baseLen;
           const span = pl + totalLen;
           let offset = 0;
           let lastTextOffset = 0;
@@ -1414,36 +1417,45 @@ const Afiliados = () => {
           const pl = svgLine.getTotalLength();
           if (len < -width || len > pl + width) { el.style.opacity = '0'; return; }
           el.style.opacity = '1';
+          // Fuera de los extremos de la línea, la imagen sigue en la dirección del
+          // extremo en lugar de quedarse frenada en la orilla.
           const clamped = gsap.utils.clamp(0, pl, len);
-          const pt   = svgLine.getPointAtLength(clamped);
-          const next = svgLine.getPointAtLength(gsap.utils.clamp(0, pl, clamped + 1));
-          const angle = Math.atan2(next.y - pt.y, next.x - pt.x) * 180 / Math.PI;
-          el.setAttribute('x', String(pt.x - width / 2));
-          el.setAttribute('y', String(pt.y - height));
-          el.setAttribute('transform', `rotate(${angle} ${pt.x} ${pt.y})`);
+          const a = svgLine.getPointAtLength(clamped === pl ? pl - 1 : clamped);
+          const b = svgLine.getPointAtLength(clamped === pl ? pl : clamped + 1);
+          const dx = b.x - a.x;
+          const dy = b.y - a.y;
+          const norm = Math.hypot(dx, dy) || 1;
+          const base = svgLine.getPointAtLength(clamped);
+          const extra = len - clamped;
+          const x = base.x + (dx / norm) * extra;
+          const y = base.y + (dy / norm) * extra;
+          const angle = Math.atan2(dy, dx) * 180 / Math.PI;
+          el.setAttribute('x', String(x - width / 2));
+          el.setAttribute('y', String(y - height));
+          el.setAttribute('transform', `rotate(${angle} ${x} ${y})`);
         };
 
         const h104Update = () => {
           const pl = svgLine.getTotalLength();
           const prog = progStart + scrollProg * (progEnd - progStart);
-          let cursor = pl + totalLen - prog * (pl + totalLen);
+          let cursor = baseLen + totalLen - prog * (baseLen + totalLen);
           for (let i = segs.length - 1; i >= 0; i--) {
             const seg = segs[i];
             cursor -= seg.size;
             if (seg.type === 'image') {
               placeImageOnPath(seg.el, cursor + seg.size / 2, seg.width, seg.height);
             } else {
-              seg.textPath.setAttribute('startOffset', `${(cursor / pl) * 100}%`);
+              seg.textPath.setAttribute('startOffset', String(cursor));
               seg.el.style.opacity = (cursor >= pl || cursor + seg.size <= 0) ? '0' : '1';
             }
             cursor -= GAP;
           }
         };
 
-        const bumpAmplitude = (amount: number) => {
-          amplitudeTo(Math.abs(amount));
-          clearTimeout(wheelTimeout);
-          wheelTimeout = setTimeout(() => amplitudeTo(0), 66);
+        // La onda depende solo de la velocidad del scroll: a 3000 px/s llega a la
+        // curva completa y vuelve a recta sola al detenerse.
+        const setAmplitudeFromVelocity = (velocity: number) => {
+          amplitudeTo(gsap.utils.clamp(0, 50, Math.abs(velocity) / 60));
         };
 
         sizeImages().then(() => {
@@ -1457,19 +1469,16 @@ const Afiliados = () => {
             end: 'bottom bottom',
             pin: containerEl,
             scrub: 1,
-            anticipatePin: 1,
             invalidateOnRefresh: true,
             onRefresh: () => { computeRange(); h104Update(); },
             onUpdate: self => {
-              const scroll = self.scroll();
-              if (prevScroll != null) bumpAmplitude(scroll - prevScroll);
-              prevScroll = scroll;
+              setAmplitudeFromVelocity(self.getVelocity());
               scrollProg = self.progress;
               h104Update();
             },
+            onScrubComplete: () => amplitudeTo(0),
           });
 
-          h104Root.addEventListener('wheel', (e: Event) => bumpAmplitude((e as WheelEvent).deltaY), { passive: true });
           ScrollTrigger.refresh();
         });
       };
