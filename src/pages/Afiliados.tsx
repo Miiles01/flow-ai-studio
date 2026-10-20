@@ -682,6 +682,15 @@ const Afiliados = () => {
       });
     });
 
+    // La foto de los creadores crece de ~50% a 100% mientras haces scroll
+    const heroGrow = document.querySelector<HTMLElement>("#aff-content .hero-grow");
+    if (heroGrow) {
+      gsap.fromTo(heroGrow, { scale: 0.5 }, {
+        scale: 1, ease: "none",
+        scrollTrigger: { trigger: heroGrow, start: "top 96%", end: "top 40%", scrub: 0.4 },
+      });
+    }
+
     // ── EFFECT046 WORD TRANSITION CSS ─────────────────────────────
     const e046Style = document.createElement('style');
     e046Style.id = 'e046-css';
@@ -994,7 +1003,7 @@ const Afiliados = () => {
 
             {/* Hero Image */}
             <div data-fade className="mt-16 w-full max-w-[85vw]">
-              <div className="rounded-3xl overflow-hidden border border-black/8 shadow-[0_24px_80px_rgba(0,0,0,0.08)] bg-zinc-50 aspect-[16/9] w-full max-w-full">
+              <div className="hero-grow rounded-3xl overflow-hidden border border-black/8 shadow-[0_24px_80px_rgba(0,0,0,0.08)] bg-zinc-50 aspect-[16/9] w-full max-w-full">
                 <img
                   src={creadoresHeroImg}
                   alt="Tres creadores de contenido sonriendo juntos"
