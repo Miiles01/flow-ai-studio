@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Check, Copy, ArrowUpRight, ShieldCheck, Sparkles } from "lucide-react";
+import { Check, Copy, ShieldCheck, Sparkles } from "lucide-react";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
