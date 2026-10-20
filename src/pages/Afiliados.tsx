@@ -11,7 +11,7 @@ import { MorphSVGPlugin } from "gsap/MorphSVGPlugin";
 import LandingNavbar from "@/components/LandingNavbar";
 import LandingFooter from "@/components/LandingFooter";
 import logoImg from "@/assets/logo.webp";
-import creadoresHeroImg from "@/assets/creadores-hero.webp";
+import creadoresHeroImg from "@/assets/creadores-hero-grupo.jpg";
 import brand1 from "@/assets/miiles/brands/brand1.svg";
 import brand2 from "@/assets/miiles/brands/brand2.svg";
 import brand3 from "@/assets/miiles/brands/brand3.svg";
@@ -46,687 +46,85 @@ const ChecklistItem = ({ checked, label, isPlaceholder = false }: { checked: boo
 );
 
 /* ─── Mockup: Tablero con flujo — UI fiel al app real ──────────────────── */
-const BoardMockup = () => {
-  const [scale, setScale] = useState(1);
-  const [isMobile, setIsMobile] = useState(false);
-  const containerRef = useRef<HTMLDivElement>(null);
-  const isHoveredRef = useRef(false);
-  const [phase, setPhase] = useState<'idle' | 'move_to_input' | 'click_input' | 'expand_input' | 'typing' | 'move_to_submit' | 'click_submit' | 'show_skeleton_1' | 'show_skeleton_2' | 'show_skeleton_3' | 'show_flow' | 'reset'>('idle');
-  const [typedText, setTypedText] = useState('');
-  const [flowGenerated, setFlowGenerated] = useState(false);
+/* ─── Demo: portafolio generado con Miiles ─────────────────────────────────
+   Muestra la plantilla UGC V4 (public/demos/portafolio-ale) dentro de una ventana
+   de navegador, a escala de escritorio: loader "Hola, soy Ale", la sección de
+   inicio y un scroll automático hasta "Marcas que confiaron en mí". Se carga al
+   llegar a la sección y se repite cada vez que vuelves a ella. */
+const PORTFOLIO_DEMO_SRC = "/demos/portafolio-ale/index.html";
+const DEMO_WIDTH = 1440;
+const DEMO_HEIGHT = 900;
 
-  const isInputActive = ['expand_input', 'typing', 'move_to_submit', 'click_submit'].includes(phase);
+const PortfolioDemo = () => {
+  const frameRef = useRef<HTMLDivElement>(null);
+  const [scale, setScale] = useState(0.6);
+  // 0 = todavía no se ha visto; cada valor nuevo monta otro iframe y la animación empieza de cero
+  const [run, setRun] = useState(0);
 
   useEffect(() => {
-    const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
-      if (!containerRef.current) return;
-      const width = containerRef.current.getBoundingClientRect().width;
-      const newScale = Math.min(1, (width - 64) / 960);
-      setScale(newScale);
-    };
-    handleResize();
-    window.addEventListener("resize", handleResize);
-    return () => window.removeEventListener("resize", handleResize);
+    const el = frameRef.current;
+    if (!el) return;
+    const resize = () => setScale(el.getBoundingClientRect().width / DEMO_WIDTH);
+    resize();
+    const ro = new ResizeObserver(resize);
+    ro.observe(el);
+    return () => ro.disconnect();
   }, []);
 
-  // Pause animation when not in viewport to optimize resources
   useEffect(() => {
-    const observer = new IntersectionObserver(
+    const el = frameRef.current;
+    if (!el) return;
+    let outOfView = true;
+    const io = new IntersectionObserver(
       ([entry]) => {
-        isHoveredRef.current = entry.isIntersecting;
-      },
-      { threshold: 0.1 }
-    );
-    if (containerRef.current) observer.observe(containerRef.current);
-    return () => observer.disconnect();
-  }, []);
-
-  // Main linear animation loop orchestrator
-  useEffect(() => {
-    let active = true;
-    const timers: ReturnType<typeof setTimeout>[] = [];
-    
-    const delay = async (ms: number) => {
-      await new Promise<void>(resolve => {
-        const t = setTimeout(resolve, ms);
-        timers.push(t);
-      });
-      // Pause loop if not hovered
-      while (active && !isHoveredRef.current) {
-        await new Promise<void>(resolve => {
-          const t = setTimeout(resolve, 100);
-          timers.push(t);
-        });
-      }
-    };
-
-    const runSequence = async () => {
-      // Don't start until hovered
-      while (active && !isHoveredRef.current) {
-        await new Promise<void>(r => { const t = setTimeout(r, 100); timers.push(t); });
-      }
-
-      while (active) {
-        // 1. Idle
-        setPhase('idle');
-        setTypedText('');
-        await delay(1000);
-        if (!active) break;
-
-        // 2. Move to input — hide old flow
-        setFlowGenerated(false);
-        setPhase('move_to_input');
-        await delay(1200);
-        if (!active) break;
-
-        // 3. Click input
-        setPhase('click_input');
-        await delay(300);
-        if (!active) break;
-
-        // 4. Expand input
-        setPhase('expand_input');
-        await delay(600);
-        if (!active) break;
-
-        // 5. Typing
-        setPhase('typing');
-        const promptText = "Diseña un plan para la nueva campaña de skincare";
-        for (let i = 1; i <= promptText.length; i++) {
-          setTypedText(promptText.slice(0, i));
-          await delay(60);
-          if (!active) break;
+        if (entry.intersectionRatio >= 0.5 && outOfView) {
+          outOfView = false;
+          setRun((n) => n + 1);
+        } else if (!entry.isIntersecting) {
+          outOfView = true;
         }
-        if (!active) break;
-        await delay(500);
-
-        // 6. Move to submit
-        setPhase('move_to_submit');
-        await delay(800);
-        if (!active) break;
-
-        // 7. Click submit
-        setPhase('click_submit');
-        await delay(300);
-        if (!active) break;
-
-        // 8. Stage 1 skeleton
-        setPhase('show_skeleton_1');
-        await delay(1500);
-        if (!active) break;
-
-        // 9. Stage 2 skeleton
-        setPhase('show_skeleton_2');
-        await delay(1500);
-        if (!active) break;
-
-        // 10. Stage 3 skeleton
-        setPhase('show_skeleton_3');
-        await delay(1500);
-        if (!active) break;
-
-        // 11. Show flowchart campaign nodes
-        setFlowGenerated(true);
-        setPhase('show_flow');
-        await delay(6000);
-        if (!active) break;
-
-        // 12. Reset
-        setPhase('reset');
-        await delay(500);
-      }
-    };
-
-    runSequence();
-
-    return () => {
-      active = false;
-      timers.forEach(clearTimeout);
-    };
+      },
+      { threshold: [0, 0.5] }
+    );
+    io.observe(el);
+    return () => io.disconnect();
   }, []);
-
-  const getCursorPos = () => {
-    switch (phase) {
-      case 'idle':
-      case 'reset':
-        // Fuera de pantalla por abajo, opacity siempre 1 (lo oculta el overflow-hidden del canvas)
-        return { x: 480, y: 700, opacity: 1, scale: 1 };
-
-      case 'move_to_input':
-        // Canvas height = ~568px. bottom-6 = 24px. Botón alto = 52px.
-        // Centro Y = 568 - 24 - (52/2) = 518
-        return { x: 480, y: 518, opacity: 1, scale: 1 };
-
-      case 'click_input':
-        return { x: 480, y: 518, opacity: 1, scale: 0.8 };
-
-      case 'expand_input':
-        return { x: 480, y: 518, opacity: 1, scale: 1 };
-
-      case 'typing':
-        // Área de texto centrada
-        return { x: 430, y: 450, opacity: 1, scale: 1 };
-
-      case 'move_to_submit':
-        // Barra expandida: px-6(24px), w-10(40px) submit button a la derecha
-        // pb-4(16px). Centro Y = 568 - 24 (bottom-6) - 16 (pb-4) - 20 (h/2) = 508
-        // Centro X = 480 + 290 (mitad ancho) - 24 (px-6) - 20 (w/2) = 726
-        return { x: 726, y: 508, opacity: 1, scale: 1 };
-
-      case 'click_submit':
-        return { x: 726, y: 508, opacity: 1, scale: 0.8 };
-
-      case 'show_skeleton_1':
-      case 'show_skeleton_2':
-      case 'show_skeleton_3':
-      case 'show_flow':
-        // Espera quieto donde hizo click, sin opacarse
-        return { x: 726, y: 508, opacity: 1, scale: 1 };
-
-      default:
-        // 'reset' u otra fase oculta por debajo
-        return { x: 480, y: 700, opacity: 1, scale: 1 };
-    }
-  };
 
   return (
-    <div 
-      ref={containerRef} 
-      className="w-full flex justify-center p-8" 
-      style={{ height: (610 * scale) + 64 }}
-    >
+    <div className="w-full rounded-3xl overflow-hidden border border-black/8 shadow-[0_24px_80px_rgba(0,0,0,0.10)] bg-white flex flex-col">
+      {/* window chrome */}
+      <div className="flex items-center gap-2 px-4 py-3 bg-white border-b border-black/6 flex-shrink-0">
+        <div className="flex gap-1.5">
+          <div className="w-3 h-3 rounded-full bg-[#FF5F57]" />
+          <div className="w-3 h-3 rounded-full bg-[#FEBC2E]" />
+          <div className="w-3 h-3 rounded-full bg-[#28C840]" />
+        </div>
+        <div className="flex-1 flex justify-center">
+          <div className="bg-black/5 rounded-md px-6 py-1 text-[9px] text-black/30 font-light">miiles.app/ale</div>
+        </div>
+      </div>
       <div
-        style={{
-          width: 960,
-          height: 610,
-          transform: `scale(${scale})`,
-          transformOrigin: "top center",
-          flexShrink: 0,
-          overflow: "hidden",
-          borderRadius: "24px",
-        }}
+        ref={frameRef}
+        className="relative w-full overflow-hidden bg-[#4059F1]"
+        style={{ height: DEMO_HEIGHT * scale }}
       >
-        <motion.div
-          animate={{
-            scale: isMobile && isInputActive ? 1.6 : 1,
-            y: 0,
-          }}
-          transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-          className="w-full h-full"
-          style={{ transformOrigin: "bottom center" }}
-        >
-          <div className="w-full h-full rounded-3xl overflow-hidden border border-black/8 shadow-[0_24px_80px_rgba(0,0,0,0.10)] bg-white flex flex-col">
-          {/* window chrome */}
-          <div className="flex items-center gap-2 px-4 py-3 bg-white border-b border-black/6 flex-shrink-0">
-            <div className="flex gap-1.5">
-              <div className="w-3 h-3 rounded-full bg-[#FF5F57]" />
-              <div className="w-3 h-3 rounded-full bg-[#FEBC2E]" />
-              <div className="w-3 h-3 rounded-full bg-[#28C840]" />
-            </div>
-            <div className="flex-1 flex justify-center">
-              <div className="bg-black/5 rounded-md px-6 py-1 text-[9px] text-black/30 font-light">miiles.app/boards/1</div>
-            </div>
-          </div>
-
-          {/* Canvas area (relative to float tools and header) */}
-          <div 
-            className="relative overflow-hidden bg-white flex-1" 
-            style={{ 
-              backgroundImage: "radial-gradient(#E5E7EB 1px, transparent 1px)", 
-              backgroundSize: "32px 32px" 
-            }}
-          >
-            {/* Header del tablero (floating over canvas) */}
-            <div className="absolute top-0 left-0 right-0 h-20 flex items-center justify-between px-6 z-20 pointer-events-none">
-              {/* Left: back + name pill + settings + share */}
-              <div className="flex items-center gap-2 pointer-events-auto">
-                <div className="flex items-center gap-1 pl-2 pr-4 py-1.5 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.06)] bg-white text-black">
-                  <button className="p-2 rounded-full transition-colors hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black">
-                    <ArrowLeft size={18} strokeWidth={1.5} />
-                  </button>
-                  <div className="w-[1px] h-5 mx-1 bg-[#E5E7EB]" />
-                  <span className="text-[14px] font-normal tracking-tight px-2 py-1 select-none">Lanzamientos</span>
-                </div>
-
-                {/* Settings button */}
-                <button className="w-9 h-9 flex items-center justify-center rounded-full bg-white shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black transition-colors">
-                  <Settings2 size={16} strokeWidth={1.5} />
-                </button>
-
-                {/* Share button */}
-                <button className="w-9 h-9 flex items-center justify-center rounded-full bg-white shadow-[0_8px_30px_rgb(0,0,0,0.06)] hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black transition-colors">
-                  <Share2 size={16} strokeWidth={1.5} />
-                </button>
-              </div>
-
-              {/* Right: user profile picture + undo/redo/panel */}
-              <div className="flex items-center gap-4 pointer-events-auto">
-                {/* User profile picture - Ariana */}
-                <img
-                  src="https://i.pravatar.cc/80?img=47"
-                  alt="Ariana"
-                  className="w-9 h-9 rounded-full object-cover border border-black/10"
-                />
-
-                {/* History controls pill */}
-                <div className="flex items-center gap-1 px-1.5 py-1.5 rounded-full shadow-[0_8px_30px_rgb(0,0,0,0.06)] bg-white">
-                  <button className="w-9 h-9 flex items-center justify-center rounded-full text-[#6B7280] hover:bg-[#F3F4F6] hover:text-black transition-colors">
-                    <Undo2 size={16} strokeWidth={1.5} />
-                  </button>
-                  <button className="w-9 h-9 flex items-center justify-center rounded-full text-[#D1D5DB] cursor-not-allowed">
-                    <Redo2 size={16} strokeWidth={1.5} />
-                  </button>
-                  <div className="w-[1px] h-4 mx-0.5 bg-[#E5E7EB]" />
-                  <button className="w-9 h-9 flex items-center justify-center rounded-full text-[#6B7280] hover:bg-[#F3F4F6] hover:text-black transition-colors">
-                    <PanelRight size={16} strokeWidth={1.5} />
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            {/* Floating Toolbar Left */}
-            <div className="absolute inset-y-0 my-auto h-fit left-6 z-10 flex flex-col items-center gap-1.5 px-2 py-3 rounded-[30px] shadow-[0_8px_30px_rgb(0,0,0,0.06)] bg-white" style={{ top: '50%', transform: 'translateY(-50%)' }}>
-              {/* Selection cursor — active */}
-              <div className="w-10 h-10 flex items-center justify-center rounded-full bg-black text-white shadow-md cursor-pointer">
-                <MousePointer size={18} strokeWidth={1.5} />
-              </div>
-              {/* Grab hand */}
-              <div className="w-10 h-10 flex items-center justify-center rounded-full text-black/55 hover:bg-black/5 cursor-pointer">
-                <Hand size={18} strokeWidth={1.5} />
-              </div>
-              
-              <div className="w-6 h-[1px] bg-[#E5E7EB] my-1" />
-              
-              {/* Rectangle shape */}
-              <div className="w-10 h-10 flex items-center justify-center rounded-full text-black/55 hover:bg-black/5 cursor-pointer">
-                <Square size={18} strokeWidth={1.5} />
-              </div>
-              {/* Text tool */}
-              <div className="w-10 h-10 flex items-center justify-center rounded-full text-black/55 hover:bg-black/5 cursor-pointer">
-                <Type size={18} strokeWidth={1.5} />
-              </div>
-              {/* List tool */}
-              <div className="w-10 h-10 flex items-center justify-center rounded-full text-black/55 hover:bg-black/5 cursor-pointer">
-                <ListTodo size={18} strokeWidth={1.5} />
-              </div>
-              {/* Image tool */}
-              <div className="w-10 h-10 flex items-center justify-center rounded-full text-black/55 hover:bg-black/5 cursor-pointer">
-                <ImageIcon size={18} strokeWidth={1.5} />
-              </div>
-              {/* Frame tool */}
-              <div className="w-10 h-10 flex items-center justify-center rounded-full text-black/55 hover:bg-black/5 cursor-pointer">
-                <SquareDashed size={18} strokeWidth={1.5} />
-              </div>
-            </div>
-
-            {/* Floating Zoom Controls Left Bottom */}
-            <div className="absolute bottom-6 left-6 z-10 flex flex-col gap-1 p-1 bg-white rounded-[10px] shadow-[8px_6px_30px_rgba(24,2,56,0.06)] border border-black/[0.03]">
-              <button
-                type="button"
-                className="w-7 h-7 flex items-center justify-center text-black hover:bg-[#EEEFF2] rounded-[6px] transition-colors"
-              >
-                <Plus size={14} strokeWidth={2} />
-              </button>
-              <button
-                type="button"
-                className="w-7 h-7 flex items-center justify-center text-black hover:bg-[#EEEFF2] rounded-[6px] transition-colors"
-              >
-                <Minus size={14} strokeWidth={2} />
-              </button>
-              <button
-                type="button"
-                className="w-7 h-7 flex items-center justify-center text-black hover:bg-[#EEEFF2] rounded-[6px] transition-colors"
-              >
-                <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
-                  <path d="M3 7V5a2 2 0 0 1 2-2h2" />
-                  <path d="M17 3h2a2 2 0 0 1 2 2v2" />
-                  <path d="M21 17v2a2 2 0 0 1-2 2h-2" />
-                  <path d="M7 21H5a2 2 0 0 1-2-2v-2" />
-                </svg>
-              </button>
-            </div>
-
-            {/* Generated Skincare Campaign Flowchart */}
-            <AnimatePresence>
-              {(phase === 'show_flow' || flowGenerated) && (
-                <>
-                  {/* SVG Connecting Paths */}
-                  <motion.svg 
-                    className="absolute inset-0 w-full h-full pointer-events-none z-0" 
-                    style={{ overflow: 'visible' }}
-                    exit={{ opacity: 0 }}
-                    transition={{ duration: 0.3 }}
-                  >
-                    {/* Circle → TodoNode 1 */}
-                    <motion.path
-                      d="M 275,242 L 310,242"
-                      stroke="#D1D5DB" strokeWidth={1.5} fill="none" strokeLinecap="round"
-                      initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
-                      transition={{ duration: 0.5, delay: 0.1, ease: "easeInOut" }}
-                    />
-                    {/* TodoNode 1 → Diamond */}
-                    <motion.path
-                      d="M 525,242 L 558,242"
-                      stroke="#D1D5DB" strokeWidth={1.5} fill="none" strokeLinecap="round"
-                      initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
-                      transition={{ duration: 0.5, delay: 0.35, ease: "easeInOut" }}
-                    />
-                    {/* Diamond → Yes (top) */}
-                    <motion.path
-                      d="M 668,242 C 688,242 688,175 710,175"
-                      stroke="#D1D5DB" strokeWidth={1.5} fill="none" strokeLinecap="round"
-                      initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
-                      transition={{ duration: 0.6, delay: 0.55, ease: "easeInOut" }}
-                    />
-                    {/* Diamond → No (bottom) */}
-                    <motion.path
-                      d="M 668,242 C 688,242 688,380 710,380"
-                      stroke="#D1D5DB" strokeWidth={1.5} fill="none" strokeLinecap="round"
-                      initial={{ pathLength: 0 }} animate={{ pathLength: 1 }}
-                      transition={{ duration: 0.6, delay: 0.55, ease: "easeInOut" }}
-                    />
-                    {/* Sí label */}
-                    <foreignObject x="676" y="192" width="26" height="16" className="overflow-visible">
-                      <motion.div
-                        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.0 }}
-                        className="bg-white text-[#6B7280] rounded-full px-1.5 py-0.5 text-[8px] font-medium text-center select-none border border-[#E5E7EB] shadow-sm leading-none"
-                      >Sí</motion.div>
-                    </foreignObject>
-                    {/* No label */}
-                    <foreignObject x="676" y="272" width="26" height="16" className="overflow-visible">
-                      <motion.div
-                        initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 1.0 }}
-                        className="bg-white text-[#6B7280] rounded-full px-1.5 py-0.5 text-[8px] font-medium text-center select-none border border-[#E5E7EB] shadow-sm leading-none"
-                      >No</motion.div>
-                    </foreignObject>
-                  </motion.svg>
-
-                  {/* Node 1 — Circle ShapeNode: "Inicio" */}
-                  <motion.div
-                    initial={{ scale: 0.85, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    exit={{ scale: 0.85, opacity: 0 }}
-                    transition={{ type: "spring", stiffness: 200, damping: 20, delay: 0 }}
-                    className="absolute z-10"
-                    style={{ left: 160, top: 187, width: 110, height: 110 }}
-                  >
-                    <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 drop-shadow-md">
-                      <ellipse cx="50" cy="50" rx="49" ry="49" vectorEffect="non-scaling-stroke"
-                        fill="#4059F1" stroke="#3348d4" strokeWidth="1.5" />
-                    </svg>
-                    <div className="absolute inset-0 flex items-center justify-center px-3">
-                      <span className="text-center text-white font-semibold text-[11px] leading-snug select-none">
-                        Inicio{"\n"}Campaña
-                      </span>
-                    </div>
-                  </motion.div>
-
-                  {/* Node 2 — TodoNode: "Fase 1: Preparación" */}
-                  <motion.div
-                    initial={{ scale: 0.85, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    exit={{ scale: 0.85, opacity: 0 }}
-                    transition={{ type: "spring", stiffness: 200, damping: 20, delay: 0.2 }}
-                    className="absolute z-10"
-                    style={{ left: 310, top: 132, width: 215, height: 220 }}
-                  >
-                    <div className="w-full h-full rounded-2xl flex flex-col p-5 bg-white border border-[#E5E7EB] select-none"
-                      style={{ boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.02)' }}>
-                      {/* Header */}
-                      <div className="flex flex-col gap-1 mb-4">
-                        <span className="font-semibold text-[#1F2937] text-[13px] leading-tight">Fase 1: Preparación</span>
-                        <span className="text-[10px] font-light text-[#9CA3AF] leading-tight">Estudio y definición de bases</span>
-                      </div>
-                      {/* Tasks */}
-                      <div className="flex flex-col flex-1 overflow-hidden">
-                        {/* completed */}
-                        <div className="flex items-center gap-3 py-1.5 px-2 rounded-xl">
-                          <div className="w-5 h-5 rounded-md flex items-center justify-center border-[1.5px] shrink-0" style={{ backgroundColor: '#4059F1', borderColor: '#4059F1' }}>
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                          </div>
-                          <span className="text-[11px] text-[#9CA3AF] line-through font-light leading-tight truncate">Definir público objetivo</span>
-                        </div>
-                        <div className="flex items-center gap-3 py-1.5 px-2 rounded-xl">
-                          <div className="w-5 h-5 rounded-md flex items-center justify-center border-[1.5px] shrink-0" style={{ backgroundColor: '#4059F1', borderColor: '#4059F1' }}>
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                          </div>
-                          <span className="text-[11px] text-[#9CA3AF] line-through font-light leading-tight truncate">Fijar presupuesto</span>
-                        </div>
-                        {/* pending */}
-                        <div className="flex items-center gap-3 py-1.5 px-2 rounded-xl">
-                          <div className="w-5 h-5 rounded-md border-[1.5px] border-black/15 bg-black/[0.03] shrink-0" />
-                          <span className="text-[11px] text-[#374151] font-light leading-tight truncate">Diseñar moodboard</span>
-                        </div>
-                      </div>
-                      {/* Add task */}
-                      <div className="mt-2 flex items-center gap-1.5 border border-dashed border-[#E5E7EB] rounded-xl px-2 py-1.5 text-[#9CA3AF] text-[10px]">
-                        <Plus size={9} />
-                        <span>Nueva tarea...</span>
-                      </div>
-                    </div>
-                  </motion.div>
-
-                  {/* Node 3 — Diamond ShapeNode: "¿Aprobado?" */}
-                  <motion.div
-                    initial={{ scale: 0.85, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    exit={{ scale: 0.85, opacity: 0 }}
-                    transition={{ type: "spring", stiffness: 200, damping: 20, delay: 0.4 }}
-                    className="absolute z-10"
-                    style={{ left: 558, top: 187, width: 110, height: 110 }}
-                  >
-                    <svg width="100%" height="100%" viewBox="0 0 100 100" preserveAspectRatio="none" className="absolute inset-0 drop-shadow-md">
-                      <polygon points="50,1 99,50 50,99 1,50" vectorEffect="non-scaling-stroke"
-                        fill="#F59E0B" stroke="#d97706" strokeWidth="1.5" />
-                    </svg>
-                    <div className="absolute inset-0 flex items-center justify-center px-3">
-                      <span className="text-center text-white font-semibold text-[10px] leading-snug select-none whitespace-pre-line">
-                        {"¿Presupuesto\nAprobado?"}
-                      </span>
-                    </div>
-                  </motion.div>
-
-                  {/* Node 4 — TodoNode: "Fase 2: Ejecución" (Sí branch) */}
-                  <motion.div
-                    initial={{ scale: 0.85, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    exit={{ scale: 0.85, opacity: 0 }}
-                    transition={{ type: "spring", stiffness: 200, damping: 20, delay: 0.6 }}
-                    className="absolute z-10"
-                    style={{ left: 710, top: 65, width: 220, height: 220 }}
-                  >
-                    <div className="w-full h-full rounded-2xl flex flex-col p-5 bg-white border border-[#E5E7EB] select-none"
-                      style={{ boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.02)' }}>
-                      <div className="flex flex-col gap-1 mb-4">
-                        <span className="font-semibold text-[#1F2937] text-[13px] leading-tight">Fase 2: Ejecución UGC</span>
-                        <span className="text-[10px] font-light text-[#9CA3AF] leading-tight">Creación de contenido y pauta</span>
-                      </div>
-                      <div className="flex flex-col flex-1 overflow-hidden">
-                        <div className="flex items-center gap-3 py-1.5 px-2 rounded-xl">
-                          <div className="w-5 h-5 rounded-md flex items-center justify-center border-[1.5px] shrink-0" style={{ backgroundColor: '#10B981', borderColor: '#10B981' }}>
-                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
-                          </div>
-                          <span className="text-[11px] text-[#9CA3AF] line-through font-light leading-tight truncate">Buscar creadores de belleza</span>
-                        </div>
-                        <div className="flex items-center gap-3 py-1.5 px-2 rounded-xl">
-                          <div className="w-5 h-5 rounded-md border-[1.5px] border-black/15 bg-black/[0.03] shrink-0" />
-                          <span className="text-[11px] text-[#374151] font-light leading-tight truncate">Enviar muestras de producto</span>
-                        </div>
-                        <div className="flex items-center gap-3 py-1.5 px-2 rounded-xl">
-                          <div className="w-5 h-5 rounded-md border-[1.5px] border-black/15 bg-black/[0.03] shrink-0" />
-                          <span className="text-[11px] text-[#374151] font-light leading-tight truncate">Aprobar guiones y videos</span>
-                        </div>
-                      </div>
-                      <div className="mt-2 flex items-center gap-1.5 border border-dashed border-[#E5E7EB] rounded-xl px-2 py-1.5 text-[#9CA3AF] text-[10px]">
-                        <Plus size={9} />
-                        <span>Nueva tarea...</span>
-                      </div>
-                    </div>
-                  </motion.div>
-
-                  {/* Node 5 — TodoNode: "Ajustar Estrategia" (No branch) */}
-                  <motion.div
-                    initial={{ scale: 0.85, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    exit={{ scale: 0.85, opacity: 0 }}
-                    transition={{ type: "spring", stiffness: 200, damping: 20, delay: 0.65 }}
-                    className="absolute z-10"
-                    style={{ left: 710, top: 295, width: 220, height: 185 }}
-                  >
-                    <div className="w-full h-full rounded-2xl flex flex-col p-5 bg-white border border-[#E5E7EB] select-none"
-                      style={{ boxShadow: '0 4px 6px -1px rgba(0,0,0,0.05), 0 2px 4px -1px rgba(0,0,0,0.02)' }}>
-                      <div className="flex flex-col gap-1 mb-4">
-                        <span className="font-semibold text-[#1F2937] text-[13px] leading-tight">Ajustar Estrategia</span>
-                        <span className="text-[10px] font-light text-[#9CA3AF] leading-tight">Optimización de costos</span>
-                      </div>
-                      <div className="flex flex-col flex-1 overflow-hidden">
-                        <div className="flex items-center gap-3 py-1.5 px-2 rounded-xl">
-                          <div className="w-5 h-5 rounded-md border-[1.5px] border-black/15 bg-black/[0.03] shrink-0" />
-                          <span className="text-[11px] text-[#374151] font-light leading-tight truncate">Buscar nano-influencers</span>
-                        </div>
-                        <div className="flex items-center gap-3 py-1.5 px-2 rounded-xl">
-                          <div className="w-5 h-5 rounded-md border-[1.5px] border-black/15 bg-black/[0.03] shrink-0" />
-                          <span className="text-[11px] text-[#374151] font-light leading-tight truncate">Negociar comisión afiliados</span>
-                        </div>
-                      </div>
-                      <div className="mt-2 flex items-center gap-1.5 border border-dashed border-[#E5E7EB] rounded-xl px-2 py-1.5 text-[#9CA3AF] text-[10px]">
-                        <Plus size={9} />
-                        <span>Nueva tarea...</span>
-                      </div>
-                    </div>
-                  </motion.div>
-                </>
-              )}
-            </AnimatePresence>
-
-
-            {/* Skeleton — cuadro con shimmer + texto GENERANDO */}
-            <AnimatePresence>
-              {['show_skeleton_1', 'show_skeleton_2', 'show_skeleton_3'].includes(phase) && (() => {
-                const stage = phase === 'show_skeleton_1' ? 1 : phase === 'show_skeleton_2' ? 2 : 3;
-                const width = stage === 1 ? 280 : stage === 2 ? 460 : 700;
-                const height = stage === 1 ? 160 : stage === 2 ? 240 : 360;
-                return (
-                  <div
-                    key="skeleton-wrapper"
-                    className="absolute z-20"
-                    style={{ top: '50%', left: '50%', transform: 'translate(-50%, -50%)' }}
-                  >
-                    <motion.div
-                      initial={{ opacity: 0, width: 200, height: 120 }}
-                      animate={{ opacity: 1, width, height }}
-                      exit={{ opacity: 0 }}
-                      transition={{ type: 'spring', stiffness: 120, damping: 18 }}
-                      className="rounded-2xl flex items-center justify-center shadow-xl border border-gray-100 bg-white overflow-hidden relative"
-                    >
-                      {/* Shimmer */}
-                      <div className="absolute inset-0 pointer-events-none">
-                        <div className="absolute inset-0 animate-pulse opacity-30 bg-gradient-to-r from-transparent via-gray-200 to-transparent" />
-                      </div>
-                      {/* Texto centrado */}
-                      <motion.span
-                        animate={{ color: ['#9CA3AF', '#4059F1', '#9CA3AF'] }}
-                        transition={{ duration: 1.8, repeat: Infinity, ease: 'easeInOut' }}
-                        className="relative text-[11px] font-semibold uppercase tracking-wider select-none"
-                      >
-                        Generando...
-                      </motion.span>
-                    </motion.div>
-                  </div>
-                );
-              })()}
-            </AnimatePresence>
-
-            {/* Morphing AI Prompt Bar */}
-
-            <motion.div
-              animate={{
-                width: ['typing', 'move_to_submit', 'click_submit', 'expand_input'].includes(phase) ? 580 : 52,
-                height: ['typing', 'move_to_submit', 'click_submit', 'expand_input'].includes(phase) ? 150 : 52,
-                borderRadius: ['typing', 'move_to_submit', 'click_submit', 'expand_input'].includes(phase) ? 40 : 18,
-              }}
-              transition={{ type: "spring", stiffness: 150, damping: 20 }}
-              className="absolute bottom-6 left-1/2 -translate-x-1/2 z-10 bg-black flex items-center justify-center shadow-[0_8px_30px_rgba(0,0,0,0.12)] overflow-hidden cursor-pointer"
-            >
-              <AnimatePresence mode="wait">
-                {!['typing', 'move_to_submit', 'click_submit', 'expand_input'].includes(phase) ? (
-                  <motion.div
-                    key="collapsed-icon"
-                    initial={{ scale: 0.8, opacity: 0 }}
-                    animate={{ scale: 1, opacity: 1 }}
-                    exit={{ scale: 0.8, opacity: 0 }}
-                    className="flex items-center justify-center w-full h-full"
-                  >
-                    <img src={logoImg} alt="AI" className="w-7 h-7 object-contain" />
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="expanded-bar"
-                    initial={{ opacity: 0 }}
-                    animate={{ opacity: 1 }}
-                    exit={{ opacity: 0 }}
-                    className="w-full h-full flex flex-col justify-between pt-8 pb-4 px-6 text-white relative font-sans"
-                  >
-                    {/* Text Area */}
-                    <div className="w-full text-center text-[15px] font-light text-white leading-relaxed px-4 pt-1 select-none min-h-[44px]">
-                      {typedText}
-                      {phase === 'typing' && (
-                        <span className="w-[1.5px] h-[15px] bg-white inline-block ml-0.5 animate-pulse" />
-                      )}
-                    </div>
-
-                    {/* Bottom Row */}
-                    <div className="flex items-center justify-between mt-auto">
-                      <div className="flex items-center gap-2 bg-white/10 h-10 px-4 rounded-full text-white/70 select-none cursor-pointer hover:bg-white/20 transition-all">
-                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" className="text-white/70">
-                          <rect x="3" y="3" width="7" height="7" rx="1"/>
-                          <rect x="14" y="3" width="7" height="7" rx="1"/>
-                          <rect x="14" y="14" width="7" height="7" rx="1"/>
-                          <rect x="3" y="14" width="7" height="7" rx="1"/>
-                        </svg>
-                        <span className="text-[13px] font-light tracking-wider text-white/70">Apps</span>
-                      </div>
-
-                      <motion.div
-                        animate={{
-                          scale: phase === 'click_submit' ? 0.85 : 1,
-                        }}
-                        className="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/70 hover:bg-white/20 hover:text-white transition-all duration-300"
-                      >
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
-                          <line x1="12" y1="19" x2="12" y2="5" />
-                          <polyline points="5 12 12 5 19 12" />
-                        </svg>
-                      </motion.div>
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </motion.div>
-
-            {/* Floating Animated Cursor */}
-            <motion.div
-              className="absolute pointer-events-none z-30"
-              style={{ top: 0, left: 0 }}
-              initial={false}
-              animate={getCursorPos()}
-              transition={{ duration: ['idle', 'reset'].includes(phase) ? 0 : 0.65, ease: [0.25, 0.1, 0.25, 1] }}
-            >
-              <svg width="20" height="24" viewBox="0 0 20 24" fill="none">
-                <path d="M0 0L0 20L5.5 14.5L9 22L11.5 21L8 13.5L15 13.5L0 0Z" fill="#111" stroke="white" strokeWidth="1.5" strokeLinejoin="round"/>
-              </svg>
-            </motion.div>
-
-          </div>
-          </div>
-        </motion.div>
+        {run > 0 && (
+          <iframe
+            key={run}
+            src={PORTFOLIO_DEMO_SRC}
+            title="Portafolio de Ale creado con Miiles"
+            tabIndex={-1}
+            aria-hidden="true"
+            scrolling="no"
+            className="absolute top-0 left-0 border-0 pointer-events-none"
+            style={{ width: DEMO_WIDTH, height: DEMO_HEIGHT, transform: `scale(${scale})`, transformOrigin: "top left" }}
+          />
+        )}
       </div>
     </div>
   );
 };
 
-/* ─── Mockup: Dashboard animado con popup de afiliados ─────────────────── */
 const AnimatedDashboardMockup = () => {
   const [scale, setScale] = useState(1);
   const [isMobile, setIsMobile] = useState(false);
@@ -1563,7 +961,7 @@ const Afiliados = () => {
               <div className="rounded-3xl overflow-hidden border border-black/8 shadow-[0_24px_80px_rgba(0,0,0,0.08)] bg-zinc-50 aspect-[16/9] w-full max-w-full">
                 <img
                   src={creadoresHeroImg}
-                  alt="Creadora utilizando Miiles"
+                  alt="Tres creadores de contenido sonriendo juntos"
                   className="w-full h-full object-cover"
                   loading="eager"
                 />
@@ -1640,11 +1038,11 @@ const Afiliados = () => {
             </div>
           </section>
 
-          {/* ── BOARD MOCKUP ───────────────────────────────────────────── */}
+          {/* ── DEMO: PORTAFOLIO CREADO CON MIILES ─────────────────────── */}
           <section className="py-12 md:py-32 px-6 bg-white">
             <div className="max-w-5xl mx-auto">
               <div data-fade>
-                <BoardMockup />
+                <PortfolioDemo />
               </div>
             </div>
           </section>
