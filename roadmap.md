@@ -15,3 +15,4 @@
 - [x] Incorporar los videos reales proporcionados en Arquitectura logarítmica.
 - [x] Cambiar el video de la página de agentes por "Agente de diseño Final" y verificar que cargue.
 - [x] Ajustar la animación de crecimiento de la foto en afiliados para que arranque al 75%.
+- [x] Desactivar el crecimiento de la foto en afiliados en móvil: siempre al 100%.
