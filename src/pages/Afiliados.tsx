@@ -1321,6 +1321,11 @@ const Afiliados = () => {
 
         const GAP = 90;
         const IMG_HEIGHT = 300;
+        // Tramo visible del recorrido, en fracción del ancho de pantalla: al entrar,
+        // el primer elemento (la flecha) ya está a la vista y "Empieza" casi completa;
+        // al salir, la última palabra ("hoy") queda cerca del borde izquierdo.
+        const START_SCREEN_X = 0.225;
+        const END_SCREEN_X = 0.075;
 
         type TextSeg = { type: 'text'; el: SVGElement; textPath: SVGTextPathElement; size: number };
         type ImgSeg  = { type: 'image'; el: SVGImageElement; size: number; width: number; height: number };
@@ -1329,6 +1334,8 @@ const Afiliados = () => {
         let segs: Seg[] = [];
         let totalLen = 0;
         let scrollProg = 0;
+        let progStart = 0;
+        let progEnd = 1;
         let prevScroll: number | null = null;
         let wheelTimeout: ReturnType<typeof setTimeout>;
 
@@ -1384,6 +1391,25 @@ const Afiliados = () => {
           totalLen = segs.reduce((s, seg, i) => s + seg.size + (i < segs.length - 1 ? GAP : 0), 0);
         };
 
+        // Convierte las posiciones deseadas en pantalla al progreso del recorrido.
+        const computeRange = () => {
+          const svgEl = containerEl.querySelector<SVGSVGElement>('svg');
+          if (!svgEl) return;
+          const rect = svgEl.getBoundingClientRect();
+          const vbWidth = svgEl.viewBox.baseVal.width || rect.width;
+          const toPath = (fraction: number) => ((window.innerWidth * fraction - rect.left) / rect.width) * vbWidth;
+          const pl = svgLine.getTotalLength();
+          const span = pl + totalLen;
+          let offset = 0;
+          let lastTextOffset = 0;
+          segs.forEach((seg) => {
+            if (seg.type === 'text') lastTextOffset = offset;
+            offset += seg.size + GAP;
+          });
+          progStart = gsap.utils.clamp(0, 1, (pl - toPath(START_SCREEN_X)) / span);
+          progEnd = gsap.utils.clamp(progStart, 1, (pl + lastTextOffset - toPath(END_SCREEN_X)) / span);
+        };
+
         const placeImageOnPath = (el: SVGImageElement, len: number, width: number, height: number) => {
           const pl = svgLine.getTotalLength();
           if (len < -width || len > pl + width) { el.style.opacity = '0'; return; }
@@ -1399,7 +1425,8 @@ const Afiliados = () => {
 
         const h104Update = () => {
           const pl = svgLine.getTotalLength();
-          let cursor = pl + totalLen - scrollProg * (pl + totalLen);
+          const prog = progStart + scrollProg * (progEnd - progStart);
+          let cursor = pl + totalLen - prog * (pl + totalLen);
           for (let i = segs.length - 1; i >= 0; i--) {
             const seg = segs[i];
             cursor -= seg.size;
@@ -1421,6 +1448,7 @@ const Afiliados = () => {
 
         sizeImages().then(() => {
           measureSegs();
+          computeRange();
           h104Update();
 
           ScrollTrigger.create({
@@ -1431,6 +1459,7 @@ const Afiliados = () => {
             scrub: 1,
             anticipatePin: 1,
             invalidateOnRefresh: true,
+            onRefresh: () => { computeRange(); h104Update(); },
             onUpdate: self => {
               const scroll = self.scroll();
               if (prevScroll != null) bumpAmplitude(scroll - prevScroll);

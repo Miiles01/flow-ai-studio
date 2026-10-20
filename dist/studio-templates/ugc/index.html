@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/png" href="/studio-templates/ugc/favicon.png" />
+    <link rel="icon" type="image/x-icon" href="/studio-templates/ugc/favicon.ico" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Miiles — Client Briefs & Strategy</title>
+    <meta name="description" content="Portal interactivo de briefs y experiencias estratégicas de marca de Miiles." />
+    
+    <!-- Google Fonts: Manrope (300, 400, 500) only -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@300;400;500&display=swap" rel="stylesheet">
+    <script>
+      // Isolated previews retain preferences in memory, never in the host application's storage.
+      try { window.localStorage.getItem("studio-preview"); } catch {
+        const values = new Map();
+        Object.defineProperty(window, "localStorage", { value: {
+          getItem: (key) => values.get(String(key)) ?? null,
+          setItem: (key, value) => values.set(String(key), String(value)),
+          removeItem: (key) => values.delete(String(key)),
+          clear: () => values.clear(),
+          key: (index) => Array.from(values.keys())[index] ?? null,
+          get length() { return values.size; }
+        } });
+      }
+    </script>
+    <script defer src="/studio-templates/ugc/assets/index-DAYhyFGZ.js"></script>
+    <link rel="stylesheet" href="/studio-templates/ugc/assets/index-Bp_T4tRg.css">
+  <style>html,body{scrollbar-width:none}html::-webkit-scrollbar,body::-webkit-scrollbar{display:none}</style></head>
+  <body class="bg-white text-black dark:bg-[#08080a] dark:text-white selection:bg-neutral-900 selection:text-white dark:selection:bg-white dark:selection:text-black antialiased overflow-x-hidden">
+    <div id="root"></div>
+  </body>
+</html>
