@@ -102,7 +102,7 @@ export default function StudioTab() {
       {!loading && !loadError && !list.length && <p className="text-sm text-muted-foreground">Aún no hay plantillas.</p>}
       <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">{list.map((t) => <article key={t.id} className="overflow-hidden rounded-lg bg-card">
         {t.thumbnail_url ? <img src={t.thumbnail_url} alt={t.title} className="aspect-video w-full object-cover" /> : <div className="aspect-video bg-muted" />}
-        <div className="space-y-3 p-4"><div><h3 className="text-sm font-normal">{t.title}</h3><p className="text-xs text-muted-foreground">{KIND_LABEL[t.kind]} · {t.is_published ? "Visible" : "Oculta"}</p></div>
+        <div className="space-y-3 p-4"><div><h3 className="text-sm font-normal text-foreground">{t.title}</h3><p className="text-xs text-muted-foreground">{t.template_number !== undefined ? `#${t.template_number} · ` : ""}{KIND_LABEL[t.kind]} · {t.is_published ? "Visible" : "Oculta"}</p></div>
         <div className="flex gap-1">
           <Button size="icon" variant="ghost" title="Publicar u ocultar" aria-label={`Publicar u ocultar ${t.title}`} onClick={() => togglePub(t)}>{t.is_published ? <Eye /> : <EyeOff />}</Button>
           <Button size="icon" variant="ghost" title="Editar" aria-label={`Editar ${t.title}`} onClick={() => edit(t)}><Pencil /></Button>

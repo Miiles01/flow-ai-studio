@@ -139,7 +139,7 @@ var list_studio_templates_default = defineTool({
   description: "Lista las plantillas disponibles en Miiles Estudio con su identificador y enlaces de vista previa.",
   inputSchema: {},
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
-  handler: () => ({ content: [{ type: "text", text: JSON.stringify(studio_templates_default.map(({ slug, title, kind, description, preview_url }) => ({ slug, title, kind, description, preview_url }))) }] })
+  handler: () => ({ content: [{ type: "text", text: JSON.stringify(studio_templates_default.map(({ template_number, slug, title, kind, description, preview_url }) => ({ template_number, slug, title, kind, description, preview_url }))) }] })
 });
 
 // src/lib/mcp/tools/get-studio-template.ts
