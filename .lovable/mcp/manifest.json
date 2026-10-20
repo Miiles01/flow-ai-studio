@@ -1,0 +1,66 @@
+{
+  "version": 1,
+  "sdk_version": "3.1.1",
+  "path": "/functions/v1/mcp",
+  "auth": {
+    "type": "oauth",
+    "issuer": "https://iobgtqomewcnhayoyzhb.supabase.co/auth/v1",
+    "require_oauth_client_claim": true,
+    "accepted_audiences": [
+      "authenticated"
+    ]
+  },
+  "mcp": {
+    "server": {
+      "name": "miiles",
+      "version": "0.1.0",
+      "title": "Miiles"
+    },
+    "tools": [
+      {
+        "name": "list_studio_templates",
+        "title": "Consultar plantillas de Estudio",
+        "description": "Lista las plantillas disponibles en Miiles Estudio con su identificador y enlaces de vista previa.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {},
+          "additionalProperties": false
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "get_studio_template",
+        "title": "Obtener una plantilla de Estudio",
+        "description": "Obtiene información y enlaces de una plantilla del catálogo; no crea ni publica páginas de usuario.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "slug": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 120,
+              "description": "Identificador de una plantilla devuelto por list_studio_templates."
+            }
+          },
+          "required": [
+            "slug"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      }
+    ]
+  }
+}

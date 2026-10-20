@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import { ArrowLeft, Download, Maximize2, Monitor, Tablet, Smartphone } from "lucide-react";
+import { ArrowLeft, Download, Maximize2, Monitor, Tablet, Smartphone, Sparkles } from "lucide-react";
+import UseTemplateDialog from "@/components/studio/UseTemplateDialog";
 import { useTheme } from "@/contexts/ThemeContext";
 import { Button } from "@/components/ui/button";
 import { usePageSeo } from "@/hooks/usePageSeo";
@@ -52,6 +53,7 @@ export default function StudioTemplate() {
   const [previewWidth, setPreviewWidth] = useState(0);
   const [downloading, setDownloading] = useState(false);
   const [downloadError, setDownloadError] = useState("");
+  const [useTemplateOpen, setUseTemplateOpen] = useState(false);
   const previewRef = useRef<HTMLDivElement>(null);
 
   usePageSeo({
@@ -108,6 +110,7 @@ export default function StudioTemplate() {
 
   return (
     <div className={`${isDark ? "dark" : ""} min-h-screen bg-background text-foreground`}>
+      {t && <UseTemplateDialog template={t} open={useTemplateOpen} onOpenChange={setUseTemplateOpen} />}
       {loading ? (
         <div className="flex h-screen items-center justify-center"><p className="text-sm font-light text-muted-foreground">Cargando…</p></div>
       ) : !t ? (
@@ -169,17 +172,14 @@ export default function StudioTemplate() {
                 <p className="mt-3 whitespace-pre-line text-sm font-light leading-6 text-muted-foreground">{t.description || `Plantilla de ${KIND_LABEL[t.kind]?.toLowerCase() ?? "página web"} disponible en Miiles Estudio.`}</p>
               </div>
               <div className="flex flex-col gap-3">
+                <Button size="lg" onClick={() => setUseTemplateOpen(true)} className="h-12 w-full rounded-full hover:translate-y-0"><Sparkles /> Usar esta plantilla</Button>
                 {t.preview_url ? (
-                  <Button asChild size="lg" className="w-full rounded-full hover:translate-y-0">
+                  <Button asChild variant="outline" size="lg" className="w-full rounded-full hover:translate-y-0">
                     <a href={t.preview_url} target="_blank" rel="noopener noreferrer"><Maximize2 /> Ver en pantalla completa</a>
                   </Button>
                 ) : (
-                  <Button size="lg" onClick={() => setFullscreen(true)} className="w-full rounded-full hover:translate-y-0"><Maximize2 /> Ver en pantalla completa</Button>
+                  <Button variant="outline" size="lg" onClick={() => setFullscreen(true)} className="w-full rounded-full hover:translate-y-0"><Maximize2 /> Ver en pantalla completa</Button>
                 )}
-                <Button size="lg" variant="outline" onClick={obtain} disabled={downloading} className="w-full rounded-full hover:translate-y-0">
-                  <Download /> {downloading ? "Descargando…" : "Descargar"}
-                </Button>
-                {downloadError && <p role="alert" className="text-sm text-destructive">{downloadError}</p>}
               </div>
               <div className="border-t border-border pt-5">
                 <p className="text-sm font-normal text-foreground">Disponible para tus IAs</p>
@@ -199,6 +199,10 @@ export default function StudioTemplate() {
                     <li key={i} className="flex gap-3"><span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-muted text-xs text-foreground">{i + 1}</span>{s}</li>
                   ))}
                 </ol>
+              </div>
+              <div className="border-t border-border pt-3">
+                <Button variant="ghost" onClick={obtain} disabled={downloading} className="-ml-3 text-muted-foreground hover:text-foreground"><Download /> {downloading ? "Descargando…" : "Descargar archivo ZIP"}</Button>
+                {downloadError && <p role="alert" className="text-sm text-destructive">{downloadError}</p>}
               </div>
             </aside>
           </div>

@@ -8,6 +8,7 @@ import { Mail, Lock, Loader2, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import logotipoSvg from "@/assets/miiles/logotipo.svg";
+import { oauthReturnPath } from "@/lib/oauth-return-path";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -16,7 +17,7 @@ const Login = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const next = searchParams.get("next") || "/dashboard";
+  const next = oauthReturnPath(searchParams.get("next") || "/dashboard");
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -33,7 +34,7 @@ const Login = () => {
 
   const handleGoogleLogin = async () => {
     const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: `${window.location.origin}${next}`,
+      redirect_uri: next.startsWith("/.lovable/oauth/consent") ? new URL(next, window.location.origin).href : new URL(`/login?next=${encodeURIComponent(next)}`, window.location.origin).href,
     });
     if (result.error) {
       toast.error("Error al iniciar sesión con Google");

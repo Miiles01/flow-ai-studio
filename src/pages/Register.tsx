@@ -8,6 +8,7 @@ import { Mail, Lock, User, Loader2, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import logotipoSvg from "@/assets/miiles/logotipo.svg";
+import { oauthReturnPath } from "@/lib/oauth-return-path";
 
 const Register = () => {
   const [email, setEmail] = useState("");
@@ -17,7 +18,7 @@ const Register = () => {
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [searchParams] = useSearchParams();
-  const next = searchParams.get("next") || "/onboarding";
+  const next = oauthReturnPath(searchParams.get("next") || "/onboarding");
 
   const handleRegister = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,7 +28,7 @@ const Register = () => {
       password,
       options: {
         data: { full_name: displayName },
-        emailRedirectTo: window.location.origin,
+        emailRedirectTo: new URL(next, window.location.origin).href,
       },
     });
     if (error) {
@@ -41,7 +42,7 @@ const Register = () => {
 
   const handleGoogleLogin = async () => {
     const result = await lovable.auth.signInWithOAuth("google", {
-      redirect_uri: `${window.location.origin}${next === "/onboarding" ? "/dashboard" : next}`,
+      redirect_uri: next.startsWith("/.lovable/oauth/consent") ? new URL(next, window.location.origin).href : new URL(`/register?next=${encodeURIComponent(next)}`, window.location.origin).href,
     });
     if (result.error) {
       toast.error("Error al registrarse con Google");
