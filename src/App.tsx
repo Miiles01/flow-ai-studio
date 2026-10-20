@@ -41,6 +41,8 @@ import Admin from "./pages/Admin";
 import Ventas from "./pages/Ventas";
 import Studio from "./pages/Studio";
 import StudioTemplate from "./pages/StudioTemplate";
+import OAuthConsent from "./pages/OAuthConsent";
+import { oauthReturnPath } from "@/lib/oauth-return-path";
 
 import AuthLayout from "./components/AuthLayout";
 import LanguageLayout from "./components/LanguageLayout";
@@ -100,7 +102,7 @@ const PublicRoute = ({ children }: { children: React.ReactNode }) => {
   if (loading) return null;
   if (user) {
     const params = new URLSearchParams(window.location.search);
-    const next = params.get("next") || "/dashboard";
+    const next = oauthReturnPath(params.get("next") || "/dashboard");
     return <Navigate to={next} replace />;
   }
   return <>{children}</>;
@@ -130,6 +132,7 @@ const App = () => (
             <ReferralTracker />
             <LandingCursor />
             <Routes>
+              <Route path="/.lovable/oauth/consent" element={<OAuthConsent />} />
               <Route path="/" element={<Landing />} />
               <Route path="/home-dev" element={<LandingDev />} />
               <Route path="/acerca-de" element={<About />} />
