@@ -142,7 +142,11 @@ export default function StudioTemplate() {
         </div>
       ) : (
         <main className="mx-auto max-w-7xl px-5 pb-12 pt-6 md:px-8 md:pt-8">
-          <Button variant="ghost" onClick={() => navigate("/studio")} className="mb-5 -ml-3 text-muted-foreground hover:text-foreground"><ArrowLeft /> Estudio</Button>
+          <div className="mb-5 flex items-center justify-between gap-3">
+            <Button variant="ghost" onClick={() => navigate("/studio")} className="-ml-3 text-muted-foreground hover:text-foreground"><ArrowLeft /> Estudio</Button>
+            <Button variant="outline" onClick={obtain} disabled={downloading} className="shrink-0 rounded-full hover:translate-y-0"><Download /> {downloading ? "Descargando…" : "Descargar"}</Button>
+          </div>
+          {downloadError && <p role="alert" className="mb-5 text-sm text-destructive">{downloadError}</p>}
           <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">
             {/* Página + preguntas */}
             <div className="min-w-0 space-y-6">
@@ -199,10 +203,6 @@ export default function StudioTemplate() {
                     <li key={i} className="flex gap-3"><span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-muted text-xs text-foreground">{i + 1}</span>{s}</li>
                   ))}
                 </ol>
-              </div>
-              <div className="border-t border-border pt-3">
-                <Button variant="ghost" onClick={obtain} disabled={downloading} className="-ml-3 text-muted-foreground hover:text-foreground"><Download /> {downloading ? "Descargando…" : "Descargar archivo ZIP"}</Button>
-                {downloadError && <p role="alert" className="text-sm text-destructive">{downloadError}</p>}
               </div>
             </aside>
           </div>

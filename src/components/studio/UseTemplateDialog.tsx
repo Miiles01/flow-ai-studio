@@ -33,7 +33,7 @@ export default function UseTemplateDialog({ template, open, onOpenChange }: { te
       <label htmlFor="template-agent-prompt" className="text-sm font-normal">Tu punto de partida para {agent}</label>
       <textarea id="template-agent-prompt" readOnly value={prompt} className="min-h-36 w-full resize-none rounded-md border border-border bg-muted p-3 text-xs font-light leading-5 text-foreground" />
       <Button onClick={copyPrompt} className="w-full hover:translate-y-0">{copied ? <Check /> : <Copy />}{copied ? "Prompt copiado" : "Copiar prompt para mi agente"}</Button>
-      {agent !== "Otro agente" && <Button variant="ghost" asChild className="text-muted-foreground"><a href={agent === "Claude" ? "https://claude.ai/" : "https://cursor.com/"} target="_blank" rel="noopener noreferrer">Abrir {agent}<ArrowUpRight /></a></Button>}
+      {agent === "Cursor" && <Button variant="ghost" asChild className="text-muted-foreground"><a href="https://cursor.com/" target="_blank" rel="noopener noreferrer">Abrir Cursor<ArrowUpRight /></a></Button>}
     </DialogContent>
   </Dialog>;
 }
