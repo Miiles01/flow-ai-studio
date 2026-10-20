@@ -17,6 +17,7 @@
 - [x] Ajustar la animación de crecimiento de la foto en afiliados para que arranque al 75%.
 - [x] Desactivar el crecimiento de la foto en afiliados en móvil: siempre al 100%.
 - [x] Cambiar el título de afiliados a "Todo creador necesita una base".
-- [ ] Destacar Usar esta plantilla y reubicar Descargar; verificar el diálogo para agentes.
-- [ ] Preparar MCP protegido con OAuth y catálogo de plantillas; verificar configuración y consentimiento.
-- [ ] Activar creación, edición y publicación de páginas propias (Free: una; Pro: ilimitadas) cuando se conecte el alojamiento de wearemiiles.com.
+- [x] Destacar Usar esta plantilla y reubicar Descargar; diálogo y copia verificados con sesión en escritorio y móvil.
+- [x] Preparar MCP protegido con OAuth y catálogo de plantillas; configuración extraída y ruta de consentimiento creada.
+- [ ] Verificar autorización y rechazo reales desde un agente externo; requiere republicar esta revisión e iniciar una solicitud OAuth real.
+- [ ] Activar creación, edición y publicación de páginas propias (Free: una; Pro: ilimitadas); falta conectar un servicio de publicación autorizado para wearemiiles.com.
