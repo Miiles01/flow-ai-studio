@@ -935,6 +935,7 @@ const AnimatedDashboardMockup = () => {
             {[
               { label: 'Inicio', active: false },
               { label: 'Tableros', active: true },
+              { label: 'Estudio', active: false },
             ].map((item) => (
               <div key={item.label}
                 className={`flex items-center gap-3 px-4 py-3 rounded-[22px] text-[13px] cursor-pointer ${
@@ -944,6 +945,8 @@ const AnimatedDashboardMockup = () => {
                 }`}>
                 {item.label === 'Inicio'
                   ? <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
+                  : item.label === 'Estudio'
+                  ? <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 21a9 9 0 1 1 9-9c0 1.657-1.343 3-3 3h-1.5a1.5 1.5 0 0 0-1.06 2.56l.06.06a1.5 1.5 0 0 1-1.06 2.56A9 9 0 0 1 12 21z"/><circle cx="8" cy="10" r="0.75"/><circle cx="12" cy="7.5" r="0.75"/><circle cx="16" cy="10" r="0.75"/></svg>
                   : <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
                 }
                 {item.label}
