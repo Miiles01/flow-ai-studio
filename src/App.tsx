@@ -1,3 +1,4 @@
+import LandingCursor from "@/components/LandingCursor";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
@@ -127,6 +128,7 @@ const App = () => (
         <BrowserRouter>
           <AuthProvider>
             <ReferralTracker />
+            <LandingCursor />
             <Routes>
               <Route path="/" element={<Landing />} />
               <Route path="/home-dev" element={<LandingDev />} />
