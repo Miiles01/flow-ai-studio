@@ -1,5 +1,5 @@
 # Objetivo actual
-- [ ] Asignar números internos estables y nombres creativos a las plantillas, conservando enlaces.
+- [x] Asignar números internos estables y nombres creativos a las plantillas, conservando enlaces; catálogo, diálogo y números únicos verificados.
 
 - [x] Usar la imagen PNG original de "Portafolio" (sin convertirla) en la tarjeta de Inicio y verificar que cargue.
 - [x] Intercambiar las tres cards de la página de afiliados por las mismas de Inicio (Portafolio, Clientes y campañas, Algoritmos de redes).
