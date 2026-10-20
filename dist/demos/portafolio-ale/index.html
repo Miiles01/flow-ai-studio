@@ -480,14 +480,38 @@
             ScrollTrigger.refresh();
           });
 
-      // Demo para la landing de afiliados: tras la entrada del hero, baja sola hasta las marcas
-      setTimeout(function () {
-        var target = document.getElementById("marcas");
-        if (!target) return;
-        var to = smoother.offset(target, "top " + (header.offsetHeight + 12) + "px");
+      // Demo para la landing de afiliados: recorrido en bucle. Tras la entrada del hero,
+      // baja en dos pasos hasta "Marcas que confiaron en mí", vuelve arriba y avisa
+      // para que la página lo reinicie. En cada paso indica a dónde va el cursor
+      // (coordenadas de esta ventana, 1440 × 900); la página dibuja el cursor encima.
+      var post = function (msg) {
+        msg.type = "miiles-demo";
+        if (window.parent !== window) window.parent.postMessage(msg, "*");
+      };
+      var cursor = function (x, y, dur, show) { post({ cursor: { x: x, y: y, dur: dur, show: show !== false } }); };
+      var scrollTo = function (y, dur, ease) {
         var pos = { y: smoother.scrollTop() };
-        gsap.to(pos, { y: to, duration: 2.6, ease: "power2.inOut", onUpdate: function () { smoother.scrollTop(pos.y); } });
-      }, (wait + 3.9) * 1000);
+        gsap.to(pos, { y: y, duration: dur, ease: ease || "power2.inOut", onUpdate: function () { smoother.scrollTop(pos.y); } });
+      };
+      var marcasY = function () {
+        var target = document.getElementById("marcas");
+        return target ? smoother.offset(target, "top " + (header.offsetHeight + 12) + "px") : 0;
+      };
+      var at = function (sec, fn) { setTimeout(fn, (wait + sec) * 1000); };
+      // Entrada del hero lista: el cursor aparece y explora
+      at(2.9, function () { cursor(1120, 780, 0, true); });
+      at(3.1, function () { cursor(560, 270, 1.1); });                 // sobre "Portafolio"
+      at(4.4, function () { cursor(1020, 600, 1.0); });                // sobre la foto
+      // Primer paso de scroll: la presentación y el nombre
+      at(5.6, function () { scrollTo(marcasY() * 0.5, 1.5); cursor(760, 640, 1.4); });
+      at(7.4, function () { cursor(420, 700, 0.9); });                 // sobre la presentación
+      // Segundo paso: hasta las marcas
+      at(8.6, function () { scrollTo(marcasY(), 1.6); cursor(1040, 380, 1.5); });
+      at(10.4, function () { cursor(1260, 470, 0.8); });               // recorre los logos
+      at(11.4, function () { cursor(880, 560, 0.8); });
+      // De regreso arriba
+      at(12.6, function () { scrollTo(0, 1.9, "power3.inOut"); cursor(720, 470, 1.8); });
+      at(15.0, function () { cursor(720, 470, 0.3, false); post({ done: true }); });
 
       // Entrada del hero (después del loader)
       var intro = gsap.timeline({ defaults: { ease: "power4.out" }, delay: wait + 0.45 });

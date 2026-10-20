@@ -48,9 +48,11 @@ const ChecklistItem = ({ checked, label, isPlaceholder = false }: { checked: boo
 /* ─── Mockup: Tablero con flujo — UI fiel al app real ──────────────────── */
 /* ─── Demo: portafolio generado con Miiles ─────────────────────────────────
    Muestra la plantilla UGC V4 (public/demos/portafolio-ale) dentro de una ventana
-   de navegador, a escala de escritorio: loader "Hola, soy Ale", la sección de
-   inicio y un scroll automático hasta "Marcas que confiaron en mí". Se carga al
-   llegar a la sección y se repite cada vez que vuelves a ella. */
+   de navegador, a escala de escritorio, en bucle: loader "Hola, soy Ale", la sección
+   de inicio, dos pasos de scroll hasta "Marcas que confiaron en mí" y de regreso
+   arriba. El demo avisa por postMessage a dónde va el cursor (en coordenadas de su
+   ventana de 1440 × 900) y cuándo termina; aquí se dibuja el cursor encima y se
+   reinicia. Solo corre mientras la sección está a la vista. */
 const PORTFOLIO_DEMO_SRC = "/demos/portafolio-ale/index.html";
 const DEMO_WIDTH = 1440;
 const DEMO_HEIGHT = 900;
@@ -60,6 +62,25 @@ const PortfolioDemo = () => {
   const [scale, setScale] = useState(0.6);
   // 0 = todavía no se ha visto; cada valor nuevo monta otro iframe y la animación empieza de cero
   const [run, setRun] = useState(0);
+  const iframeRef = useRef<HTMLIFrameElement>(null);
+  const inViewRef = useRef(false);
+  const [cursor, setCursor] = useState({ x: 0, y: 0, dur: 0, show: false });
+
+  // Cursor y reinicio, según los avisos del demo
+  useEffect(() => {
+    const onMessage = (e: MessageEvent) => {
+      if (e.source !== iframeRef.current?.contentWindow) return;
+      const data = e.data as { type?: string; cursor?: { x: number; y: number; dur: number; show: boolean }; done?: boolean };
+      if (data?.type !== "miiles-demo") return;
+      if (data.cursor) setCursor(data.cursor);
+      if (data.done) {
+        setCursor((c) => ({ ...c, show: false }));
+        if (inViewRef.current) setRun((n) => n + 1);
+      }
+    };
+    window.addEventListener("message", onMessage);
+    return () => window.removeEventListener("message", onMessage);
+  }, []);
 
   useEffect(() => {
     const el = frameRef.current;
@@ -77,11 +98,13 @@ const PortfolioDemo = () => {
     let outOfView = true;
     const io = new IntersectionObserver(
       ([entry]) => {
+        inViewRef.current = entry.isIntersecting;
         if (entry.intersectionRatio >= 0.5 && outOfView) {
           outOfView = false;
           setRun((n) => n + 1);
         } else if (!entry.isIntersecting) {
           outOfView = true;
+          setCursor((c) => ({ ...c, show: false }));
         }
       },
       { threshold: [0, 0.5] }
@@ -111,6 +134,7 @@ const PortfolioDemo = () => {
         {run > 0 && (
           <iframe
             key={run}
+            ref={iframeRef}
             src={PORTFOLIO_DEMO_SRC}
             title="Portafolio de Ale creado con Miiles"
             tabIndex={-1}
@@ -120,6 +144,18 @@ const PortfolioDemo = () => {
             style={{ width: DEMO_WIDTH, height: DEMO_HEIGHT, transform: `scale(${scale})`, transformOrigin: "top left" }}
           />
         )}
+        {/* Cursor que explora el portafolio (el mismo del mockup de Tableros) */}
+        <motion.div
+          className="absolute pointer-events-none z-10"
+          style={{ top: 0, left: 0 }}
+          initial={false}
+          animate={{ x: cursor.x * scale, y: cursor.y * scale, opacity: cursor.show ? 1 : 0 }}
+          transition={{ x: { duration: cursor.dur, ease: [0.25, 0.1, 0.25, 1] }, y: { duration: cursor.dur, ease: [0.25, 0.1, 0.25, 1] }, opacity: { duration: 0.3 } }}
+        >
+          <svg width="20" height="24" viewBox="0 0 20 24" fill="none">
+            <path d="M0 0L0 20L5.5 14.5L9 22L11.5 21L8 13.5L15 13.5L0 0Z" fill="#111" stroke="white" strokeWidth="1.5" strokeLinejoin="round"/>
+          </svg>
+        </motion.div>
       </div>
     </div>
   );
