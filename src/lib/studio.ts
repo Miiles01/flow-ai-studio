@@ -3,6 +3,7 @@ import repoTemplates from "@/data/studio-templates.json";
 
 export type StudioTemplate = {
   id: string;
+  template_number?: number;
   slug: string;
   title: string;
   kind: "portfolio" | "website" | string;

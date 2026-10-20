@@ -642,6 +642,7 @@ export type Database = {
           preview_url: string | null
           slug: string
           sort_order: number
+          template_number: number
           thumbnail_url: string | null
           title: string
           updated_at: string
@@ -657,6 +658,7 @@ export type Database = {
           preview_url?: string | null
           slug: string
           sort_order?: number
+          template_number?: number
           thumbnail_url?: string | null
           title: string
           updated_at?: string
@@ -672,6 +674,7 @@ export type Database = {
           preview_url?: string | null
           slug?: string
           sort_order?: number
+          template_number?: number
           thumbnail_url?: string | null
           title?: string
           updated_at?: string

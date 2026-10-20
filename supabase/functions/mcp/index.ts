@@ -12,111 +12,123 @@ import { defineTool } from "npm:@lovable.dev/mcp-js@3.1.1";
 var studio_templates_default = [
   {
     slug: "portafolio-ugc-v13",
-    title: "Portafolio UGC \xB7 V13",
+    title: "Aura",
     kind: "portfolio",
     description: "Entrada animada estilo Osmo: \u201CLaura [fotos] UGC\u201D se abre y crece hasta convertirse en el hero. El nombre tiene efecto de capa sobre la foto, la navbar es de vidrio y se oculta al bajar, y contacto y footer van unidos en una sola secci\xF3n.",
     thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v13.jpg",
     preview_url: "https://wearemiiles.com/ugc-v13/",
-    download_url: "https://wearemiiles.com/studio/descargas/ugc-v13.zip"
+    download_url: "https://wearemiiles.com/studio/descargas/ugc-v13.zip",
+    template_number: 13
   },
   {
     slug: "portafolio-ugc-v12",
-    title: "Portafolio UGC \xB7 V12",
+    title: "Pearl",
     kind: "portfolio",
     description: "Blanco a gris con degradado suave y tipograf\xEDa serif elegante. Tarjetas de nichos con n\xFAmero y flecha, secci\xF3n Sobre m\xED solo con texto grande y centrado, y t\xEDtulos centrados en toda la p\xE1gina.",
     thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v12.jpg",
     preview_url: "https://ugc12.lovable.app/",
-    download_url: "https://wearemiiles.com/studio/descargas/ugc-v12.zip"
+    download_url: "https://wearemiiles.com/studio/descargas/ugc-v12.zip",
+    template_number: 12
   },
   {
     slug: "portafolio-ugc-v11",
-    title: "Portafolio UGC \xB7 V11",
+    title: "Botanica",
     kind: "portfolio",
     description: "Crema y verde lima con \u201CLaura\u201D en serif y foto en \xF3valo. Logos de marcas en fila, navbar fija que se oculta al bajar y men\xFA en panel lateral con bot\xF3n Cerrar.",
     thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v11.jpg",
     preview_url: "https://ugc11.lovable.app/",
-    download_url: "https://wearemiiles.com/studio/descargas/ugc-v11.zip"
+    download_url: "https://wearemiiles.com/studio/descargas/ugc-v11.zip",
+    template_number: 11
   },
   {
     slug: "portafolio-ugc-v10",
-    title: "Portafolio UGC \xB7 V10",
+    title: "Noir",
     kind: "portfolio",
     description: "Caf\xE9 oscuro con \u201CLaura\u201D gigante en grotesca y foto a todo lo ancho que entra con fade y escala. Acentos crema en botones y t\xEDtulos, y men\xFA en panel lateral.",
     thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v10.jpg",
     preview_url: "https://ugc10.lovable.app/",
-    download_url: "https://wearemiiles.com/studio/descargas/ugc-v10.zip"
+    download_url: "https://wearemiiles.com/studio/descargas/ugc-v10.zip",
+    template_number: 10
   },
   {
     slug: "portafolio-ugc-v9",
-    title: "Portafolio UGC \xB7 V9",
+    title: "Muse",
     kind: "portfolio",
     description: "Crema con acento rosa y titular condensado \u201CCreadora de contenido UGC\u201D. C\xFApula de fotos en blanco y negro, columnas de nichos que se llenan desde abajo y navbar de texto que cambia de color con cada secci\xF3n.",
     thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v9.jpg",
     preview_url: "https://wearemiiles.com/ugc-v9/",
-    download_url: "https://wearemiiles.com/studio/descargas/ugc-v9.zip"
+    download_url: "https://wearemiiles.com/studio/descargas/ugc-v9.zip",
+    template_number: 9
   },
   {
     slug: "portafolio-ugc-v8",
-    title: "Portafolio UGC \xB7 V8",
+    title: "Signature",
     kind: "portfolio",
     description: "Crema y verde con \u201Claura\u201D en letra script gigante y la foto encima del nombre. Los textos se reparten por la pantalla y la intro escribe la firma de Laura.",
     thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v8.jpg",
     preview_url: "https://wearemiiles.com/ugc-v8/",
-    download_url: "https://wearemiiles.com/studio/descargas/ugc-v8.zip"
+    download_url: "https://wearemiiles.com/studio/descargas/ugc-v8.zip",
+    template_number: 8
   },
   {
     slug: "portafolio-ugc-v7",
-    title: "Portafolio UGC \xB7 V7",
+    title: "Manifesto",
     kind: "portfolio",
     description: "Fondo oscuro con una frase de tres l\xEDneas que se mueven al hacer scroll, palabras clave en serif it\xE1lica y p\xEDldoras con fotos dentro del texto. Intro con la palabra \u201CPortafolio\u201D en verde.",
     thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v7.jpg",
     preview_url: "https://wearemiiles.com/ugc-v7/",
-    download_url: "https://wearemiiles.com/studio/descargas/ugc-v7.zip"
+    download_url: "https://wearemiiles.com/studio/descargas/ugc-v7.zip",
+    template_number: 7
   },
   {
     slug: "portafolio-ugc-v6",
-    title: "Portafolio UGC \xB7 V6",
+    title: "Cobalt",
     kind: "portfolio",
     description: "Azul y blanco con colores s\xF3lidos y \u201CLaura, creadora UGC\u201D en grotesca bold. Cinta de nichos en movimiento, testimonios en tarjetas grises y men\xFA hamburguesa en panel lateral.",
     thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v6.jpg",
     preview_url: "https://wearemiiles.com/ugc-v6/",
-    download_url: "https://wearemiiles.com/studio/descargas/ugc-v6.zip"
+    download_url: "https://wearemiiles.com/studio/descargas/ugc-v6.zip",
+    template_number: 6
   },
   {
     slug: "portafolio-ugc-v5",
-    title: "Portafolio UGC \xB7 V5",
+    title: "Stella",
     kind: "portfolio",
     description: "Morado con intro de estrella que gira y se encoge. Nombre gigante \u201CLaura \u2726 UGC\u201D sobre la foto y navbar de vidrio flotante.",
     thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v5.jpg",
     preview_url: "https://wearemiiles.com/ugc-v5/",
-    download_url: "https://wearemiiles.com/studio/descargas/ugc-v5.zip"
+    download_url: "https://wearemiiles.com/studio/descargas/ugc-v5.zip",
+    template_number: 5
   },
   {
     slug: "portafolio-ugc-v4",
-    title: "Portafolio UGC \xB7 V4",
+    title: "Scarlet",
     kind: "portfolio",
     description: "Rojo y crema: intro \u201CHola, soy Laura\u201D con transici\xF3n de cortina y \u201CPortafolio\u201D gigante en serif roja junto a la foto.",
     thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v4.jpg",
     preview_url: "https://wearemiiles.com/ugc-v4/",
-    download_url: "https://wearemiiles.com/studio/descargas/ugc-v4.zip"
+    download_url: "https://wearemiiles.com/studio/descargas/ugc-v4.zip",
+    template_number: 4
   },
   {
     slug: "portafolio-ugc-v3",
-    title: "Portafolio UGC \xB7 V3",
+    title: "Gallery",
     kind: "portfolio",
     description: "Blanco limpio con \u201CLaura\u201D enorme y centrado en serif Boska, foto de estudio y galer\xEDa de contenido en blanco y negro que se colorea al pasar el cursor.",
     thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v3.jpg",
     preview_url: "https://wearemiiles.com/ugc-v3/",
-    download_url: "https://wearemiiles.com/studio/descargas/ugc-v3.zip"
+    download_url: "https://wearemiiles.com/studio/descargas/ugc-v3.zip",
+    template_number: 3
   },
   {
     slug: "portafolio-ugc-v2",
-    title: "Portafolio UGC \xB7 V2",
+    title: "Minimalist",
     kind: "portfolio",
     description: "Editorial minimalista en blanco con el titular \u201CContenido que se siente real y vende\u201D, foto en el hero, datos r\xE1pidos de la creadora y footer con el logo de Laura en letra script.",
     thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v2.jpg",
     preview_url: "https://wearemiiles.com/ugc-v2/",
-    download_url: "https://wearemiiles.com/studio/descargas/ugc-v2.zip"
+    download_url: "https://wearemiiles.com/studio/descargas/ugc-v2.zip",
+    template_number: 2
   }
 ];
 
@@ -127,7 +139,7 @@ var list_studio_templates_default = defineTool({
   description: "Lista las plantillas disponibles en Miiles Estudio con su identificador y enlaces de vista previa.",
   inputSchema: {},
   annotations: { readOnlyHint: true, idempotentHint: true, openWorldHint: false },
-  handler: () => ({ content: [{ type: "text", text: JSON.stringify(studio_templates_default.map(({ slug, title, kind, description, preview_url }) => ({ slug, title, kind, description, preview_url }))) }] })
+  handler: () => ({ content: [{ type: "text", text: JSON.stringify(studio_templates_default.map(({ template_number, slug, title, kind, description, preview_url }) => ({ template_number, slug, title, kind, description, preview_url }))) }] })
 });
 
 // src/lib/mcp/tools/get-studio-template.ts
