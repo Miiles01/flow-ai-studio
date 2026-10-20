@@ -20,5 +20,6 @@
 - [x] Cambiar el título de afiliados a "Todo creador necesita una base".
 - [x] Destacar Usar esta plantilla y reubicar Descargar; diálogo y copia verificados con sesión en escritorio y móvil.
 - [x] Preparar MCP protegido con OAuth y catálogo de plantillas; configuración extraída y ruta de consentimiento creada.
+- [x] Sustituir el ícono de IA del botón y del pop-up por la estrella de Miiles; verificado en escritorio.
 - [ ] Verificar autorización y rechazo reales desde un agente externo; requiere republicar esta revisión e iniciar una solicitud OAuth real.
 - [ ] Activar creación, edición y publicación de páginas propias (Free: una; Pro: ilimitadas); falta conectar un servicio de publicación autorizado para wearemiiles.com.
