@@ -25,7 +25,8 @@ export function UpgradeProDialog({ open, onOpenChange }: UpgradeProDialogProps) 
   const [cycle, setCycle] = useState<"monthly" | "yearly">("monthly");
   const [started, setStarted] = useState(false);
 
-  const priceId = cycle === "monthly" ? "pro_monthly" : "pro_yearly";
+  const usd = (dashboardI18n.language || "es").startsWith("en");
+  const priceId = (cycle === "monthly" ? "pro_monthly" : "pro_yearly") + (usd ? "_usd" : "");
 
   const handleClose = (v: boolean) => {
     if (!v) setStarted(false);
