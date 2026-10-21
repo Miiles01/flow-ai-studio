@@ -1,3 +1,6 @@
+import { useTranslation } from "react-i18next";
+import dashboardI18n from "@/i18n";
+const dt = (key: string, options?: Record<string, unknown>): string => dashboardI18n.t(key, options) as string;
 import { DashboardSkeleton } from "@/components/PageSkeletons";
 import { pageCache } from "@/lib/pageCache";
 import { useEffect, useState } from "react";
@@ -44,9 +47,9 @@ type ProfileOption = {
 
 function getGreeting() {
   const h = new Date().getHours();
-  if (h < 12) return "Buenos días";
-  if (h < 18) return "Buenas tardes";
-  return "Buenas noches";
+  if (h < 12) return dt("dashboard.text0");
+  if (h < 18) return dt("dashboard.text1");
+  return dt("dashboard.text2");
 }
 
 type UserApplication = {
@@ -59,6 +62,7 @@ type UserApplication = {
 };
 
 export default function Dashboard() {
+  useTranslation();
   const { user } = useAuth();
   const { isDark } = useTheme();
   const cached = pageCache.get<any>(`dashboard:${user?.id}`);
@@ -171,7 +175,7 @@ export default function Dashboard() {
     const recipients = sendTo === "all" ? profiles.map((p) => p.user_id) : Array.from(selectedUsers);
 
     if (recipients.length === 0) {
-      toast.error("Selecciona al menos un destinatario");
+      toast.error(dt("dashboard.text3"));
       setSending(false);
       return;
     }
@@ -185,7 +189,7 @@ export default function Dashboard() {
 
     const { error } = await supabase.from("notifications").insert(rows);
     if (error) {
-      toast.error("Error al enviar notificación");
+      toast.error(dt("dashboard.text4"));
     } else {
       toast.success(`Notificación enviada a ${recipients.length} usuario(s)`);
       setSendOpen(false);
@@ -208,14 +212,14 @@ export default function Dashboard() {
     if (!user) return;
     setLoading(true);
     const testNodes = [
-      { id: "title", type: "TextNode", position: { x: 0, y: -100 }, data: { text: "Business Model Canvas", fontSize: 48, fontWeight: "600" } },
+      { id: "title", type: "TextNode", position: { x: 0, y: -100 }, data: { text: dt("dashboard.text5"), fontSize: 48, fontWeight: "600" } },
       { id: "frame-problem", type: "FrameNode", position: { x: 0, y: 0 }, style: { width: 300, height: 400 }, data: { label: "1. Problema" } },
-      { id: "text-problem", type: "TextNode", position: { x: 20, y: 60 }, parentId: "frame-problem", extent: "parent", data: { text: "• Tiempos largos de desarrollo\n• Costos altos de diseño\n• Falta de validación rápida", fontSize: 16 } },
+      { id: "text-problem", type: "TextNode", position: { x: 20, y: 60 }, parentId: "frame-problem", extent: "parent", data: { text: dt("dashboard.text6"), fontSize: 16 } },
       { id: "frame-value", type: "FrameNode", position: { x: 350, y: 0 }, style: { width: 300, height: 400 }, data: { label: "2. Propuesta de Valor" } },
-      { id: "text-value", type: "TextNode", position: { x: 20, y: 60 }, parentId: "frame-value", extent: "parent", data: { text: "Plataforma SaaS que genera modelos de negocio y prototipos visuales usando IA en minutos.", fontSize: 16 } },
+      { id: "text-value", type: "TextNode", position: { x: 20, y: 60 }, parentId: "frame-value", extent: "parent", data: { text: dt("dashboard.text7"), fontSize: 16 } },
       { id: "frame-segments", type: "FrameNode", position: { x: 700, y: 0 }, style: { width: 300, height: 400 }, data: { label: "3. Segmentos de Clientes" } },
-      { id: "text-segments", type: "TextNode", position: { x: 20, y: 60 }, parentId: "frame-segments", extent: "parent", data: { text: "• Emprendedores\n• Agencias de diseño\n• Consultoras de negocio", fontSize: 16 } },
-      { id: "todo-next", type: "TodoNode", position: { x: 0, y: 450 }, data: { title: "Próximos Pasos", tasks: [{ id: "1", text: "Validar con 10 usuarios", completed: false }, { id: "2", text: "Definir pricing", completed: false }] } }
+      { id: "text-segments", type: "TextNode", position: { x: 20, y: 60 }, parentId: "frame-segments", extent: "parent", data: { text: dt("dashboard.text8"), fontSize: 16 } },
+      { id: "todo-next", type: "TodoNode", position: { x: 0, y: 450 }, data: { title: dt("dashboard.text9"), tasks: [{ id: "1", text: dt("dashboard.text10"), completed: false }, { id: "2", text: dt("dashboard.text11"), completed: false }] } }
     ];
     const testEdges = [
       { id: "e1", source: "frame-problem", target: "frame-value", type: "smoothstep", animated: true },
@@ -224,16 +228,16 @@ export default function Dashboard() {
     
     const { data, error } = await supabase.from("flows").insert({
       user_id: user.id,
-      name: "Lean Canvas Generado por IA",
+      name: dt("dashboard.text12"),
       nodes: testNodes,
       edges: testEdges
     }).select().single();
     
     setLoading(false);
     if (error) {
-      toast.error("Error al generar el tablero de prueba.");
+      toast.error(dt("dashboard.text13"));
     } else {
-      toast.success("¡Tablero generado! Revisa 'Mis tableros'.");
+      toast.success(dt("dashboard.text14"));
       setFlows(prev => [data, ...prev]);
     }
   }
@@ -267,8 +271,7 @@ export default function Dashboard() {
           <span className={`font-medium ${isDark ? 'text-white' : 'text-black'}`}>{displayName}</span>
         </h1>
         <p className="text-miiles-gray-400 mt-2 text-sm font-light">
-          ¿Qué vamos hacer hoy?
-        </p>
+           {dt("dashboard.text15")} </p>
       </motion.div>
       {/* Stats */}
       <motion.div variants={sectionVariants} className="grid grid-cols-2 gap-5">
@@ -287,7 +290,7 @@ export default function Dashboard() {
             )}
           </div>
           <p className="text-2xl font-normal text-foreground">{unreadCount}</p>
-          <p className="text-xs text-miiles-gray-400 font-light mt-1">Notificaciones</p>
+          <p className="text-xs text-miiles-gray-400 font-light mt-1">{dt("dashboard.text16")}</p>
         </motion.div>
 
         <motion.div
@@ -299,7 +302,7 @@ export default function Dashboard() {
             <Heart size={16} className={isDark ? "text-white" : "text-black"} />
           </div>
           <p className="text-2xl font-normal text-foreground">{savedCount}</p>
-          <p className="text-xs text-miiles-gray-400 font-light mt-1">Proyectos</p>
+          <p className="text-xs text-miiles-gray-400 font-light mt-1">{dt("dashboard.text17")}</p>
         </motion.div>
       </motion.div>
 
@@ -307,8 +310,8 @@ export default function Dashboard() {
       <motion.div variants={sectionVariants}>
         <div className="mb-6 flex justify-between items-center">
           <div>
-            <h2 className="text-xl md:text-2xl font-medium text-foreground">Descubrimientos</h2>
-            <p className="text-sm font-light text-miiles-gray-400 mt-1">Nuevas actualizaciones estratégicas</p>
+            <h2 className="text-xl md:text-2xl font-medium text-foreground">{dt("dashboard.text18")}</h2>
+            <p className="text-sm font-light text-miiles-gray-400 mt-1">{dt("dashboard.text19")}</p>
           </div>
         </div>
 
@@ -329,16 +332,14 @@ export default function Dashboard() {
             }}
           >
             <Send size={14} />
-            Enviar notificación
-          </Button>
+             {dt("dashboard.text20")} </Button>
         </motion.div>
       )}
 
       {user?.email === "contmanuel@gmail.com" && (
         <motion.div variants={sectionVariants}>
           <Button onClick={generateTestBoard} className="bg-miiles-blue text-white w-full md:w-auto">
-            🪄 Generar Tablero de Prueba (IA)
-          </Button>
+             {dt("dashboard.text21")} </Button>
         </motion.div>
       )}
 
@@ -346,7 +347,7 @@ export default function Dashboard() {
       <Dialog open={notifOpen} onOpenChange={setNotifOpen}>
         <DialogContent className="sm:max-w-md max-h-[70vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="font-normal">Notificaciones</DialogTitle>
+            <DialogTitle className="font-normal">{dt("dashboard.text16")}</DialogTitle>
           </DialogHeader>
           {selectedNotif ? (
             <div className="space-y-4">
@@ -354,14 +355,13 @@ export default function Dashboard() {
                 onClick={() => setSelectedNotif(null)}
                 className="text-xs text-miiles-gray-400 hover:text-foreground font-light flex items-center gap-1"
               >
-                ← Volver
-              </button>
+                 {dt("dashboard.text22")} </button>
               <h3 className="font-normal text-sm">{selectedNotif.title}</h3>
               <p className="text-sm text-miiles-gray-600 font-light leading-relaxed whitespace-pre-wrap">
                 {selectedNotif.body}
               </p>
               <p className="text-[10px] text-miiles-gray-400 font-light">
-                {new Date(selectedNotif.created_at).toLocaleDateString("es-ES", {
+                {new Date(selectedNotif.created_at).toLocaleDateString(dashboardI18n.language, {
                   day: "numeric",
                   month: "short",
                   year: "numeric",
@@ -371,7 +371,7 @@ export default function Dashboard() {
               </p>
             </div>
           ) : notifications.length === 0 ? (
-            <p className="text-sm text-miiles-gray-400 font-light py-8 text-center">Sin notificaciones</p>
+            <p className="text-sm text-miiles-gray-400 font-light py-8 text-center">{dt("dashboard.text23")}</p>
           ) : (
             <div className="space-y-1">
               {notifications.map((n) => (
@@ -387,7 +387,7 @@ export default function Dashboard() {
                     {!n.read && <span className="w-2 h-2 rounded-full bg-miiles-blue flex-shrink-0 mt-1.5" />}
                   </div>
                   <p className="text-[10px] text-miiles-gray-400 font-light mt-1">
-                    {new Date(n.created_at).toLocaleDateString("es-ES", { day: "numeric", month: "short" })}
+                    {new Date(n.created_at).toLocaleDateString(dashboardI18n.language, { day: "numeric", month: "short" })}
                   </p>
                 </button>
               ))}
@@ -400,10 +400,10 @@ export default function Dashboard() {
       <Dialog open={appsOpen} onOpenChange={setAppsOpen}>
         <DialogContent className="sm:max-w-md max-h-[70vh] overflow-y-auto">
           <DialogHeader>
-            <DialogTitle className="font-normal">Mis proyectos</DialogTitle>
+            <DialogTitle className="font-normal">{dt("dashboard.text24")}</DialogTitle>
           </DialogHeader>
           {applications.length === 0 ? (
-            <p className="text-sm text-miiles-gray-400 font-light py-8 text-center">No tienes postulaciones aún</p>
+            <p className="text-sm text-miiles-gray-400 font-light py-8 text-center">{dt("dashboard.text25")}</p>
           ) : (
             <div className="space-y-2">
               {applications.map((app) => (
@@ -427,7 +427,7 @@ export default function Dashboard() {
                         {app.status === "applied" ? "Postulado" : "Guardado"}
                       </span>
                       <span className="text-[10px] text-miiles-gray-400 font-light">
-                        {new Date(app.created_at).toLocaleDateString("es-ES", { day: "numeric", month: "short" })}
+                        {new Date(app.created_at).toLocaleDateString(dashboardI18n.language, { day: "numeric", month: "short" })}
                       </span>
                     </div>
                   </Link>
@@ -448,19 +448,17 @@ export default function Dashboard() {
       <Dialog open={!!confirmDeleteId} onOpenChange={(v) => !v && setConfirmDeleteId(null)}>
         <DialogContent className="sm:max-w-sm">
           <DialogHeader>
-            <DialogTitle className="font-normal text-center">Cancelar postulación</DialogTitle>
+            <DialogTitle className="font-normal text-center">{dt("dashboard.text26")}</DialogTitle>
           </DialogHeader>
           <p className="text-sm text-muted-foreground font-light text-center py-2">
-            ¿Estás seguro que quieres cancelar esta postulación?
-          </p>
+             {dt("dashboard.text27")} </p>
           <div className="flex gap-3 mt-2">
             <Button
               variant="outline"
               className="flex-1"
               onClick={() => setConfirmDeleteId(null)}
             >
-              No, volver
-            </Button>
+               {dt("dashboard.text28")} </Button>
             <Button
               variant="destructive"
               className="flex-1"
@@ -473,15 +471,14 @@ export default function Dashboard() {
                 if (!error) {
                   setApplications((prev) => prev.filter((a) => a.id !== confirmDeleteId));
                   setSavedCount((c) => Math.max(0, c - 1));
-                  toast.success("Postulación cancelada");
+                  toast.success(dt("dashboard.text29"));
                 } else {
-                  toast.error("Error al cancelar");
+                  toast.error(dt("dashboard.text30"));
                 }
                 setConfirmDeleteId(null);
               }}
             >
-              Sí, cancelar
-            </Button>
+               {dt("dashboard.text31")} </Button>
           </div>
         </DialogContent>
       </Dialog>
@@ -489,15 +486,15 @@ export default function Dashboard() {
       <Dialog open={sendOpen} onOpenChange={setSendOpen}>
         <DialogContent className="sm:max-w-md">
           <DialogHeader>
-            <DialogTitle className="font-normal">Enviar notificación</DialogTitle>
+            <DialogTitle className="font-normal">{dt("dashboard.text20")}</DialogTitle>
           </DialogHeader>
           <form onSubmit={handleSendNotification} className="space-y-4 mt-2">
             <div className="space-y-2">
-              <Label className="font-light">Título</Label>
+              <Label className="font-light">{dt("dashboard.text32")}</Label>
               <Input value={sendTitle} onChange={(e) => setSendTitle(e.target.value)} required />
             </div>
             <div className="space-y-2">
-              <Label className="font-light">Mensaje</Label>
+              <Label className="font-light">{dt("dashboard.text33")}</Label>
               <textarea
                 value={sendBody}
                 onChange={(e) => setSendBody(e.target.value)}
@@ -506,7 +503,7 @@ export default function Dashboard() {
               />
             </div>
             <div className="space-y-2">
-              <Label className="font-light">Destinatarios</Label>
+              <Label className="font-light">{dt("dashboard.text34")}</Label>
               <div className="flex gap-2">
                 <button
                   type="button"
@@ -515,8 +512,7 @@ export default function Dashboard() {
                     sendTo === "all" ? "bg-foreground text-background" : "bg-background shadow-sm text-miiles-gray-400"
                   }`}
                 >
-                  Todos
-                </button>
+                   {dt("dashboard.text35")} </button>
                 <button
                   type="button"
                   onClick={() => setSendTo("specific")}
@@ -524,8 +520,7 @@ export default function Dashboard() {
                     sendTo === "specific" ? "bg-foreground text-background" : "bg-background shadow-sm text-miiles-gray-400"
                   }`}
                 >
-                  Específicos
-                </button>
+                   {dt("dashboard.text36")} </button>
               </div>
             </div>
             {sendTo === "specific" && (
@@ -548,8 +543,7 @@ export default function Dashboard() {
             )}
             <Button type="submit" className="w-full" disabled={sending}>
               {sending ? <Loader2 size={14} className="animate-spin mr-2" /> : null}
-              Enviar
-            </Button>
+               {dt("dashboard.text37")} </Button>
           </form>
         </DialogContent>
       </Dialog>
@@ -566,19 +560,17 @@ export default function Dashboard() {
       >
         <img
           src={tutorialBanner.url}
-          alt="Descubre cómo funciona Miiles"
+          alt={dt("dashboard.text38")}
           loading="lazy"
           className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
         />
         {/* Texto flotante — alineado a la izquierda en mobile, a la derecha en desktop */}
         <div className="absolute top-[8%] left-[6%] right-auto md:left-auto md:right-[4%] flex flex-col gap-2 md:gap-3 items-start max-w-[70%] md:max-w-[38%]">
           <span className="inline-flex items-center bg-white text-black text-[10px] md:text-[11px] font-normal px-3 md:px-4 py-1 md:py-1.5 rounded-full">
-            Novedades
-          </span>
+             {dt("dashboard.text39")} </span>
           <div>
             <p className="text-white font-normal leading-[1.15]" style={{ fontSize: "clamp(18px, 3.2vw, 44px)" }}>
-              Primeros
-            </p>
+               {dt("dashboard.text40")} </p>
             <p
               className="text-white"
               style={{
@@ -589,8 +581,7 @@ export default function Dashboard() {
                 lineHeight: 1.05,
               }}
             >
-              pasos
-            </p>
+               {dt("dashboard.text41")} </p>
           </div>
         </div>
       </motion.button>
@@ -599,20 +590,19 @@ export default function Dashboard() {
 
       <motion.div variants={sectionVariants}>
         <div className="flex items-center justify-between mb-5">
-          <h2 className="text-lg font-normal text-foreground">Mis tableros</h2>
+          <h2 className="text-lg font-normal text-foreground">{dt("dashboard.text42")}</h2>
           <Link to="/boards" className="text-xs text-foreground/60 hover:text-foreground flex items-center gap-1 font-light">
-            Ver todos <ArrowRight size={12} />
+             {dt("dashboard.text43")} <ArrowRight size={12} />
           </Link>
         </div>
         
         {flows.length === 0 ? (
           <div className={`text-center py-16 rounded-xl border border-dashed border-muted ${isDark ? 'bg-white/5' : 'bg-background'}`}>
             <LayoutDashboard size={40} className="mx-auto text-muted-foreground/50 mb-3" />
-            <p className="text-sm font-normal mb-1 text-foreground">Sin tableros recientes</p>
-            <p className="text-xs font-light text-muted-foreground">Crea uno nuevo para organizar tus ideas.</p>
+            <p className="text-sm font-normal mb-1 text-foreground">{dt("dashboard.text44")}</p>
+            <p className="text-xs font-light text-muted-foreground">{dt("dashboard.text45")}</p>
             <Link to="/boards" className={`mt-4 inline-block px-4 py-2 text-xs rounded-full ${isDark ? 'bg-black text-white border border-white/10 hover:bg-zinc-900' : 'bg-foreground text-background'}`}>
-              Crear tablero
-            </Link>
+               {dt("dashboard.text46")} </Link>
           </div>
         ) : (
           <div className="relative -mx-8 md:-mx-12">
@@ -652,7 +642,7 @@ export default function Dashboard() {
                   <div className="w-10 h-10 rounded-full bg-muted flex items-center justify-center">
                     <ArrowRight size={16} />
                   </div>
-                  <span className="text-xs font-light">Ver todos</span>
+                  <span className="text-xs font-light">{dt("dashboard.text43")}</span>
                 </Link>
               </motion.div>
             )}

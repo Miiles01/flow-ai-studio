@@ -1,3 +1,6 @@
+import { useTranslation } from "react-i18next";
+import dashboardI18n from "@/i18n";
+const dt = (key: string, options?: Record<string, unknown>): string => dashboardI18n.t(key, options) as string;
 import { useEffect, useState } from "react";
 import { Gift, Copy, Check, Loader2, Link2 } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
@@ -11,6 +14,7 @@ import { toast } from "sonner";
 const BASE = "https://miiles.app";
 
 export function AffiliatePopup({ children }: { children: React.ReactNode }) {
+  useTranslation();
   const { user } = useAuth();
   const { isDark } = useTheme();
   const [open, setOpen] = useState(false);
@@ -46,26 +50,26 @@ export function AffiliatePopup({ children }: { children: React.ReactNode }) {
     if (!user) return;
     const value = usernameDraft.trim();
     if (!isValidUsername(value)) {
-      toast.error("Usa 3-30 letras, números, guion o guion bajo");
+      toast.error(dt("dashboard.text200"));
       return;
     }
     setSavingUsername(true);
     const { error } = await supabase.from("profiles").update({ username: value } as any).eq("user_id", user.id);
     setSavingUsername(false);
     if (error) {
-      toast.error("Ese nombre de usuario ya está en uso");
+      toast.error(dt("dashboard.text131"));
       return;
     }
     setUsername(value);
     setLink(`${BASE}/?ref=${value}`);
-    toast.success("Nombre de usuario guardado");
+    toast.success(dt("dashboard.text201"));
   };
 
   const copyLink = async () => {
     if (!link) return;
     await navigator.clipboard.writeText(link);
     setCopied(true);
-    toast.success("¡Link copiado con éxito!");
+    toast.success(dt("dashboard.text202"));
     setTimeout(() => setCopied(false), 1800);
   };
 
@@ -83,8 +87,8 @@ export function AffiliatePopup({ children }: { children: React.ReactNode }) {
               <Gift size={18} className={isDark ? "text-white" : "text-black"} strokeWidth={1.7} />
             </div>
             <div>
-              <p className="text-[15px] font-normal">Afiliados</p>
-              <p className="text-[11px] text-muted-foreground font-light">Comparte tu link y recibe comisiones</p>
+              <p className="text-[15px] font-normal">{dt("dashboard.text185")}</p>
+              <p className="text-[11px] text-muted-foreground font-light">{dt("dashboard.text186")}</p>
             </div>
           </div>
 
@@ -96,7 +100,7 @@ export function AffiliatePopup({ children }: { children: React.ReactNode }) {
             <>
               {!username ? (
                 <div className="space-y-2">
-                  <label className="text-xs text-muted-foreground font-light">Crea tu nombre de usuario</label>
+                  <label className="text-xs text-muted-foreground font-light">{dt("dashboard.text203")}</label>
                   <Input
                     value={usernameDraft}
                     onChange={(e) => setUsernameDraft(e.target.value)}
@@ -109,7 +113,7 @@ export function AffiliatePopup({ children }: { children: React.ReactNode }) {
                     disabled={savingUsername}
                     className="w-full rounded-full py-2.5 text-sm font-normal bg-black text-white border border-white/10 hover:opacity-90 disabled:opacity-50 transition-opacity"
                   >
-                    {savingUsername ? <Loader2 size={16} className="animate-spin mx-auto" /> : "Guardar"}
+                    {savingUsername ? <Loader2 size={16} className="animate-spin mx-auto" /> : dt("dashboard.text121")}
                   </button>
                 </div>
               ) : (
@@ -128,7 +132,7 @@ export function AffiliatePopup({ children }: { children: React.ReactNode }) {
                     </button>
                   </div>
                   <p className="text-[11px] text-muted-foreground font-light text-center">
-                    {copied ? "¡Copiado!" : "Compártelo y empieza a ganar"}
+                    {copied ? dt("dashboard.text204") : dt("dashboard.text205")}
                   </p>
                 </div>
               )}
@@ -137,11 +141,11 @@ export function AffiliatePopup({ children }: { children: React.ReactNode }) {
               <div className={`flex items-center justify-around pt-3 border-t ${isDark ? "border-white/10" : "border-gray-100"}`}>
                 <div className="text-center">
                   <p className="text-lg font-normal">{stats.total}</p>
-                  <p className="text-[10px] text-muted-foreground font-light">Usaron tu link</p>
+                  <p className="text-[10px] text-muted-foreground font-light">{dt("dashboard.usedLink")}</p>
                 </div>
                 <div className="text-center">
                   <p className="text-lg font-normal">{stats.purchased}</p>
-                  <p className="text-[10px] text-muted-foreground font-light">Compraron un plan</p>
+                  <p className="text-[10px] text-muted-foreground font-light">{dt("dashboard.boughtPlan")}</p>
                 </div>
               </div>
               */}

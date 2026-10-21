@@ -1,3 +1,6 @@
+import { useTranslation } from "react-i18next";
+import dashboardI18n from "@/i18n";
+const dt = (key: string, options?: Record<string, unknown>): string => dashboardI18n.t(key, options) as string;
 import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { ArrowLeft, Download, Maximize2, Monitor, Tablet, Smartphone } from "lucide-react";
@@ -14,7 +17,7 @@ import cursorLogo from "@/assets/ai-logos/cursor.png.asset.json";
 
 type Device = "desktop" | "tablet" | "mobile";
 const DEVICE_ICON = { desktop: Monitor, tablet: Tablet, mobile: Smartphone };
-const DEVICE_LABEL = { desktop: "Escritorio", tablet: "Tablet", mobile: "Móvil" };
+
 const DESKTOP_WIDTH = 1440;
 const DESKTOP_HEIGHT = 900;
 
@@ -27,22 +30,26 @@ const AI_TOOLS: { name: string; logo: string; rounded?: boolean }[] = [
   { name: "DeepSeek", logo: "/logos/deepseek.svg" },
 ];
 
-const STEPS = [
-  "Descarga la plantilla y descomprime el archivo ZIP.",
-  "Ábrela en tu herramienta de IA: Claude, Codex, Cursor, Antigravity o DeepSeek.",
-  "Indica los cambios que necesitas: nombre, textos, fotografías, colores y datos de contacto.",
-  "Publica tu página y compártela con marcas y clientes.",
-];
 
-const FAQ = [
-  { q: "¿Qué elementos puedo personalizar?", a: "Todos. Puedes modificar textos, imágenes, colores, tipografías, secciones, animaciones y enlaces para adaptar la plantilla a tu marca personal." },
-  { q: "¿Necesito conocimientos de programación?", a: "No. Tu asistente de IA interpreta lo que le pides en lenguaje natural y aplica los cambios directamente en la página." },
-  { q: "¿Qué incluye la descarga?", a: "Un archivo ZIP con la página completa (HTML, estilos, imágenes y animaciones), organizado para que cualquier herramienta de IA pueda leerlo y editarlo." },
-  { q: "¿Se adapta a celulares y tablets?", a: "Sí, el diseño es responsivo. Puedes comprobarlo en «Ver en pantalla completa», alternando entre escritorio, tablet y móvil." },
-  { q: "¿Dónde puedo publicarla?", a: "En wearemiiles.com/tu-usuario, directamente desde tu asistente conectado a Miiles, o en cualquier servicio de hosting para sitios estáticos." },
-];
+
+
 
 export default function StudioTemplate() {
+const FAQ = [
+  { q: dt("dashboard.text75"), a: dt("dashboard.text76") },
+  { q: dt("dashboard.text77"), a: dt("dashboard.text78") },
+  { q: dt("dashboard.text79"), a: dt("dashboard.text80") },
+  { q: dt("dashboard.text81"), a: dt("dashboard.text82") },
+  { q: dt("dashboard.text83"), a: dt("dashboard.text84") },
+];
+const STEPS = [
+  dt("dashboard.text72"),
+  dt("dashboard.openAi"),
+  dt("dashboard.text73"),
+  dt("dashboard.text74"),
+];
+const DEVICE_LABEL = { desktop: dt("dashboard.text69"), tablet: dt("dashboard.text70"), mobile: dt("dashboard.text71") };
+  useTranslation();
   const { slug } = useParams();
   const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
@@ -60,7 +67,7 @@ export default function StudioTemplate() {
 
   usePageSeo({
     title: t ? `${t.title} — Miiles Estudio` : "Plantillas — Miiles Estudio",
-    description: t?.description || "Plantillas de portafolios y páginas web de Miiles Estudio.",
+    description: t?.description || dt("dashboard.text85"),
   });
 
   useEffect(() => {
@@ -93,7 +100,7 @@ export default function StudioTemplate() {
     setDownloading(true);
     setDownloadError("");
     try { await downloadTemplateZip(t); }
-    catch { setDownloadError("No se pudo descargar la plantilla. Intenta de nuevo."); }
+    catch { setDownloadError(dt("dashboard.text86")); }
     finally { setDownloading(false); }
   };
   const pill = "rounded-full bg-card text-card-foreground border border-border shadow-sm";
@@ -114,16 +121,16 @@ export default function StudioTemplate() {
     <div className={`${isDark ? "dark" : ""} min-h-screen bg-background text-foreground`}>
       {t && <UseTemplateDialog template={t} open={useTemplateOpen} onOpenChange={setUseTemplateOpen} />}
       {loading ? (
-        <div className="flex h-screen items-center justify-center"><p className="text-sm font-light text-muted-foreground">Cargando…</p></div>
+        <div className="flex h-screen items-center justify-center"><p className="text-sm font-light text-muted-foreground">{dt("dashboard.text87")}</p></div>
       ) : !t ? (
         <div className="flex h-screen flex-col items-center justify-center gap-4">
-          <p className="text-sm font-light text-foreground">No encontramos esta plantilla.</p>
-          <Button onClick={() => navigate("/studio")}>Volver al Estudio</Button>
+          <p className="text-sm font-light text-foreground">{dt("dashboard.text88")}</p>
+          <Button onClick={() => navigate("/studio")}>{dt("dashboard.text89")}</Button>
         </div>
       ) : fullscreen ? (
         <div className="fixed inset-0 flex flex-col overflow-hidden bg-background">
           <div className={`fixed left-4 top-4 z-20 p-1.5 ${pill}`}>
-            <Button variant="ghost" size="icon" onClick={() => setFullscreen(false)} aria-label="Volver a la plantilla" title="Volver a la plantilla" className={iconBtn}>
+            <Button variant="ghost" size="icon" onClick={() => setFullscreen(false)} aria-label={dt("dashboard.text90")} title={dt("dashboard.text90")} className={iconBtn}>
               <ArrowLeft size={18} strokeWidth={1.5} />
             </Button>
           </div>
@@ -145,7 +152,7 @@ export default function StudioTemplate() {
       ) : (
         <main className="mx-auto max-w-7xl px-5 pb-12 pt-6 md:px-8 md:pt-8">
           <div className="mb-5 flex items-center justify-between gap-3">
-            <Button variant="ghost" onClick={() => navigate("/studio")} className="-ml-3 text-muted-foreground hover:text-foreground"><ArrowLeft /> Estudio</Button>
+            <Button variant="ghost" onClick={() => navigate("/studio")} className="-ml-3 text-muted-foreground hover:text-foreground"><ArrowLeft />  {dt("dashboard.text65")}</Button>
             <Button variant="outline" onClick={obtain} disabled={downloading} className="shrink-0 rounded-full hover:translate-y-0"><Download /> {downloading ? "Descargando…" : "Descargar"}</Button>
           </div>
           {downloadError && <p role="alert" className="mb-5 text-sm text-destructive">{downloadError}</p>}
@@ -158,7 +165,7 @@ export default function StudioTemplate() {
                 ) : <iframe {...frameProps} tabIndex={-1} style={{ width: DESKTOP_WIDTH, height: DESKTOP_HEIGHT, transform: `scale(${previewWidth / DESKTOP_WIDTH})`, transformOrigin: "top left", visibility: previewWidth > 0 ? "visible" : "hidden" }} className="absolute left-0 top-0 border-0 bg-background" />}
               </div>
               <section className="rounded-[24px] border border-border bg-card p-6">
-                <h2 className="mb-2 text-lg font-normal text-foreground">Preguntas frecuentes</h2>
+                <h2 className="mb-2 text-lg font-normal text-foreground">{dt("dashboard.text91")}</h2>
                 <Accordion type="single" collapsible defaultValue="q0">
                   {FAQ.map((f, i) => (
                     <AccordionItem key={i} value={`q${i}`} className="border-border">
@@ -175,21 +182,21 @@ export default function StudioTemplate() {
               <span className="inline-block rounded-full border border-border px-3 py-1 text-xs font-light text-muted-foreground">{KIND_LABEL[t.kind] ?? t.kind}</span>
               <div>
                 <h1 className="break-words text-2xl font-normal text-foreground md:text-3xl">{t.title}</h1>
-                <p className="mt-3 whitespace-pre-line text-sm font-light leading-6 text-muted-foreground">{t.description || `Plantilla de ${KIND_LABEL[t.kind]?.toLowerCase() ?? "página web"} disponible en Miiles Estudio.`}</p>
+                <p className="mt-3 whitespace-pre-line text-sm font-light leading-6 text-muted-foreground">{t.description || `Plantilla de ${KIND_LABEL[t.kind]?.toLowerCase() ?? dt("dashboard.text92")} disponible en Miiles Estudio.`}</p>
               </div>
               <div className="flex flex-col gap-3">
-                <Button size="lg" onClick={() => setUseTemplateOpen(true)} className="h-12 w-full rounded-full hover:translate-y-0"><MiilesStar className="h-4 w-4" /> Usar esta plantilla</Button>
+                <Button size="lg" onClick={() => setUseTemplateOpen(true)} className="h-12 w-full rounded-full hover:translate-y-0"><MiilesStar className="h-4 w-4" />  {dt("dashboard.text93")}</Button>
                 {t.preview_url ? (
                   <Button asChild variant="outline" size="lg" className="w-full rounded-full hover:translate-y-0">
-                    <a href={t.preview_url} target="_blank" rel="noopener noreferrer"><Maximize2 /> Ver en pantalla completa</a>
+                    <a href={t.preview_url} target="_blank" rel="noopener noreferrer"><Maximize2 />  {dt("dashboard.text94")}</a>
                   </Button>
                 ) : (
-                  <Button variant="outline" size="lg" onClick={() => setFullscreen(true)} className="w-full rounded-full hover:translate-y-0"><Maximize2 /> Ver en pantalla completa</Button>
+                  <Button variant="outline" size="lg" onClick={() => setFullscreen(true)} className="w-full rounded-full hover:translate-y-0"><Maximize2 />  {dt("dashboard.text94")}</Button>
                 )}
               </div>
               <div className="border-t border-border pt-5">
-                <p className="text-sm font-normal text-foreground">Compatible con tu asistente de IA</p>
-                <p className="mt-1 text-xs font-light text-muted-foreground">Edítala desde las principales herramientas de IA agéntica.</p>
+                <p className="text-sm font-normal text-foreground">{dt("dashboard.text95")}</p>
+                <p className="mt-1 text-xs font-light text-muted-foreground">{dt("dashboard.text96")}</p>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {AI_TOOLS.map((a) => (
                     <span key={a.name} className="flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1.5 text-xs font-light text-foreground">
@@ -199,7 +206,7 @@ export default function StudioTemplate() {
                 </div>
               </div>
               <div className="border-t border-border pt-5">
-                <p className="mb-3 text-sm font-normal text-foreground">Cómo personalizarla</p>
+                <p className="mb-3 text-sm font-normal text-foreground">{dt("dashboard.text97")}</p>
                 <ol className="space-y-2 text-sm font-light leading-6 text-muted-foreground">
                   {STEPS.map((s, i) => (
                     <li key={i} className="flex gap-3"><span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-muted text-xs text-foreground">{i + 1}</span>{s}</li>

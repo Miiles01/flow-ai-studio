@@ -1,3 +1,6 @@
+import { useTranslation } from "react-i18next";
+import dashboardI18n from "@/i18n";
+const dt = (key: string, options?: Record<string, unknown>): string => dashboardI18n.t(key, options) as string;
 import { ReactNode, useEffect, useState, useCallback } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Home, ShoppingBag, User, Bot, MessageSquare, Trash2, LayoutDashboard, Gift, Newspaper, Palette } from "lucide-react";
@@ -25,15 +28,17 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 
-const mainNav = [
-  { title: "Inicio", url: "/dashboard", icon: Home },
-  { title: "Tableros", url: "/boards", icon: LayoutDashboard },
-  { title: "Estudio", url: "/studio", icon: Palette },
-];
+
 
 type Conversation = { id: string; title: string; updated_at: string };
 
 function SidebarBody() {
+const mainNav = [
+  { title: dt("dashboard.text181"), url: "/dashboard", icon: Home },
+  { title: dt("dashboard.text182"), url: "/boards", icon: LayoutDashboard },
+  { title: dt("dashboard.text65"), url: "/studio", icon: Palette },
+];
+  useTranslation();
   const { state, setOpenMobile } = useSidebar();
   const collapsed = state === "collapsed";
   const closeMobile = () => setOpenMobile(false);
@@ -47,12 +52,12 @@ function SidebarBody() {
   const location = useLocation();
 
   const planNames: Record<string, string> = {
-    free: "Plan Gratis",
-    pro: "Plan Pro",
-    business: "Plan Negocios",
-    negocios: "Plan Negocios"
+    free: dt("dashboard.text142"),
+    pro: dt("dashboard.text140"),
+    business: dt("dashboard.text141"),
+    negocios: dt("dashboard.text141")
   };
-  const displayPlan = planNames[plan?.toLowerCase() || "free"] || `Plan ${plan ? plan.charAt(0).toUpperCase() + plan.slice(1) : "Gratis"}`;
+  const displayPlan = planNames[plan?.toLowerCase() || "free"] || `Plan ${plan ? plan.charAt(0).toUpperCase() + plan.slice(1) : dt("dashboard.text183")}`;
 
   useEffect(() => {
     if (!user) return;
@@ -92,11 +97,10 @@ function SidebarBody() {
             <SidebarTrigger className={isDark ? "text-white hover:bg-white/10" : ""} />
           </div>
           <div className="flex items-center gap-3">
-            <img src={logoImg} alt="miiles" className={collapsed ? "h-6 w-6" : "h-8 w-8"} />
+            <img src={logoImg} alt={dt("dashboard.text184")} className={collapsed ? "h-6 w-6" : "h-8 w-8"} />
             {!collapsed && (
               <span className={`text-3xl font-normal tracking-tight transition-colors duration-300 ${isDark ? "text-white" : "text-black"}`}>
-                miiles
-              </span>
+                 {dt("dashboard.text184")} </span>
             )}
           </div>
         </div>
@@ -147,7 +151,7 @@ function SidebarBody() {
           {collapsed ? (
             <button
               type="button"
-              title="Afiliados"
+              title={dt("dashboard.text185")}
               className={`mb-2 mx-auto w-10 h-10 rounded-full flex items-center justify-center transition-all hover:scale-[1.04] ${
                 isDark ? "bg-white/10 text-white hover:bg-white/15" : "bg-zinc-100 text-black hover:bg-zinc-200"
               }`}
@@ -166,11 +170,9 @@ function SidebarBody() {
               </div>
               <div className="min-w-0">
                 <p className={`text-[13px] font-normal leading-tight ${isDark ? "text-white" : "text-black"}`}>
-                  Afiliados
-                </p>
+                   {dt("dashboard.text185")} </p>
                 <p className="text-[11px] text-muted-foreground font-light leading-tight mt-0.5">
-                  Comparte tu link y recibe comisiones
-                </p>
+                   {dt("dashboard.text186")} </p>
               </div>
             </button>
           )}
@@ -183,11 +185,11 @@ function SidebarBody() {
           <div
             className="mb-6 mt-3 flex justify-center cursor-pointer hover:opacity-80 transition-opacity"
             onClick={() => { closeMobile(); navigate("/profile"); }}
-            title="Perfil"
+            title={dt("dashboard.text187")}
           >
             <div className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden ring-2 ${isDark ? "ring-black/60" : "ring-white shadow-sm"} ${isDark ? "bg-white/20" : "bg-black"}`}>
               {avatarUrl ? (
-                <img src={avatarUrl} alt={displayName || "Usuario"} className="w-full h-full object-cover" />
+                <img src={avatarUrl} alt={displayName || dt("dashboard.text137")} className="w-full h-full object-cover" />
               ) : (
                 <span className={`text-sm font-normal ${isDark ? "text-white" : "text-white"}`}>{initials}</span>
               )}
@@ -200,14 +202,14 @@ function SidebarBody() {
           >
             <div className={`w-11 h-11 rounded-full flex items-center justify-center flex-shrink-0 overflow-hidden ring-2 ${isDark ? "ring-black/60" : "ring-white shadow-sm"} ${isDark ? "bg-white/20" : "bg-black"}`}>
               {avatarUrl ? (
-                <img src={avatarUrl} alt={displayName || "Usuario"} className="w-full h-full object-cover" />
+                <img src={avatarUrl} alt={displayName || dt("dashboard.text137")} className="w-full h-full object-cover" />
               ) : (
                 <span className="text-white text-sm font-normal">{initials}</span>
               )}
             </div>
             <div className="min-w-0">
               <p className={`text-[15px] font-normal truncate ${isDark ? "text-white" : "text-black"}`}>
-                {displayName ? displayName.split(" ")[0] : "Usuario"}
+                {displayName ? displayName.split(" ")[0] : dt("dashboard.text137")}
               </p>
               <p className="text-[13px] text-muted-foreground font-light">{displayPlan}</p>
             </div>
@@ -221,12 +223,14 @@ function SidebarBody() {
 }
 
 export default function DashboardLayout({ children }: { children: ReactNode }) {
+  useTranslation();
   return (
     <DashboardContent>{children}</DashboardContent>
   );
 }
 
 function DashboardContent({ children }: { children: ReactNode }) {
+  useTranslation();
   const { isDark } = useTheme();
 
   return (

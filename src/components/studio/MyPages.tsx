@@ -1,3 +1,6 @@
+import { useTranslation } from "react-i18next";
+import dashboardI18n from "@/i18n";
+const dt = (key: string, options?: Record<string, unknown>): string => dashboardI18n.t(key, options) as string;
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Check, Copy, Eye, EyeOff, Loader2, Trash2 } from "lucide-react";
@@ -11,6 +14,7 @@ import { publicSiteUrl } from "@/lib/userSites";
 type Site = { id: string; title: string; path: string; status: string; template_slug: string | null; published_at: string | null };
 
 export default function MyPages() {
+  useTranslation();
   const { user } = useAuth();
   const { isDark } = useTheme();
   const { toast } = useToast();
@@ -22,7 +26,7 @@ export default function MyPages() {
   async function load() {
     if (!user) return;
     const { data, error } = await supabase.from("user_sites").select("id, title, path, status, template_slug, published_at").eq("owner_id", user.id).order("created_at");
-    if (error) { toast({ title: "No se pudieron cargar tus páginas", description: error.message, variant: "destructive" }); setSites([]); return; }
+    if (error) { toast({ title: dt("dashboard.text228"), description: error.message, variant: "destructive" }); setSites([]); return; }
     setSites(data ?? []);
   }
   useEffect(() => { load(); }, [user?.id]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -33,7 +37,7 @@ export default function MyPages() {
       ? await supabase.from("user_sites").delete().eq("id", site.id)
       : await supabase.from("user_sites").update({ status: kind === "publish" ? "published" : "draft" }).eq("id", site.id);
     setBusy("");
-    if (error) { toast({ title: "No se pudo completar", description: error.message, variant: "destructive" }); return false; }
+    if (error) { toast({ title: dt("dashboard.text229"), description: error.message, variant: "destructive" }); return false; }
     await load();
     return true;
   }
@@ -44,7 +48,7 @@ export default function MyPages() {
       setCopiedId(site.id);
       setTimeout(() => setCopiedId((id) => (id === site.id ? "" : id)), 1600);
     } catch {
-      toast({ title: "No pudimos copiar el enlace", description: url, variant: "destructive" });
+      toast({ title: dt("dashboard.text230"), description: url, variant: "destructive" });
     }
   }
 
@@ -57,11 +61,10 @@ export default function MyPages() {
 
   return (
     <section className="space-y-6">
-      <h2 className="text-xl md:text-2xl font-medium text-foreground">Mis páginas</h2>
+      <h2 className="text-xl md:text-2xl font-medium text-foreground">{dt("dashboard.text231")}</h2>
       {sites.length === 0 ? (
         <p className="rounded-2xl border border-dashed border-border p-6 text-sm font-light text-muted-foreground">
-          Aún no tienes páginas. Elige una plantilla abajo, pulsa «Usar esta plantilla» y, cuando tu agente termine, dile «Publica mi página en Miiles».
-        </p>
+           {dt("dashboard.text232")} </p>
       ) : (
         <div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,max(220px,calc((100%-3rem)/3))),1fr))] gap-6 pt-2">
           {sites.map((s) => {
@@ -88,7 +91,7 @@ export default function MyPages() {
                   ) : (
                     <div className="flex h-full w-full flex-col items-center justify-center gap-2 text-muted-foreground">
                       <EyeOff className="h-6 w-6" />
-                      <span className="text-xs font-light">Página oculta</span>
+                      <span className="text-xs font-light">{dt("dashboard.text233")}</span>
                     </div>
                   )}
 
@@ -98,7 +101,7 @@ export default function MyPages() {
                     onClick={() => setToDelete(s)}
                     disabled={isBusy}
                     aria-label={`Eliminar ${s.title}`}
-                    title="Eliminar"
+                    title={dt("dashboard.text60")}
                     className="absolute left-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white text-black shadow-sm transition-opacity duration-200 hover:bg-white/90 focus-visible:opacity-100 disabled:opacity-50 md:opacity-0 md:group-hover:opacity-100"
                   >
                     <Trash2 size={15} strokeWidth={1.5} />
@@ -160,7 +163,7 @@ export default function MyPages() {
                       type="button"
                       onClick={() => copyLink(s, url)}
                       aria-label={`Copiar enlace de ${s.title}`}
-                      title="Copiar enlace"
+                      title={dt("dashboard.text234")}
                       className="shrink-0 rounded-full p-1 text-muted-foreground transition-opacity hover:text-foreground focus-visible:opacity-100 md:opacity-0 md:group-hover/link:opacity-100"
                     >
                       {copiedId === s.id ? <Check size={13} strokeWidth={1.8} /> : <Copy size={13} strokeWidth={1.5} />}
@@ -194,19 +197,17 @@ export default function MyPages() {
               className={`relative z-10 w-full max-w-sm rounded-3xl p-6 ${isDark ? "bg-[#1C1C1E] border border-white/10 text-white" : "bg-white text-black border border-gray-200"}`}
             >
               <h3 id="delete-page-title" className={`text-base font-normal ${isDark ? "text-white" : "text-black"}`}>
-                ¿Seguro que quieres eliminar «{toDelete.title}»?
+                 {dt("dashboard.text235")}{toDelete.title}»?
               </h3>
               <p className={`mt-1 text-[13px] font-light ${isDark ? "text-white/50" : "text-[#6B7280]"}`}>
-                Se borran la página y sus archivos, y su enlace dejará de abrir. No se puede deshacer.
-              </p>
+                 {dt("dashboard.text236")} </p>
               <div className="mt-5 flex items-center justify-end gap-2">
                 <button
                   onClick={() => setToDelete(null)}
                   disabled={!!busy}
                   className={`rounded-full px-4 py-2.5 text-[13px] font-normal transition-colors disabled:opacity-50 ${isDark ? "hover:bg-white/10 text-white" : "hover:bg-[#F3F4F6] text-black"}`}
                 >
-                  Cancelar
-                </button>
+                   {dt("dashboard.text129")} </button>
                 <button
                   onClick={confirmDelete}
                   disabled={!!busy}
@@ -214,8 +215,7 @@ export default function MyPages() {
                   className={`flex items-center gap-2 rounded-full px-5 py-2.5 text-[13px] font-medium transition-colors disabled:opacity-50 ${isDark ? "bg-white text-black hover:bg-white/90" : "bg-black text-white hover:bg-miiles-pink"}`}
                 >
                   {busy ? <Loader2 size={15} className="animate-spin" /> : <Trash2 size={15} strokeWidth={1.5} />}
-                  Eliminar
-                </button>
+                   {dt("dashboard.text60")} </button>
               </div>
             </motion.div>
           </motion.div>

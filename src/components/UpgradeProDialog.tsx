@@ -1,3 +1,6 @@
+import { useTranslation } from "react-i18next";
+import dashboardI18n from "@/i18n";
+const dt = (key: string, options?: Record<string, unknown>): string => dashboardI18n.t(key, options) as string;
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { X } from "lucide-react";
@@ -15,6 +18,7 @@ interface UpgradeProDialogProps {
 }
 
 export function UpgradeProDialog({ open, onOpenChange }: UpgradeProDialogProps) {
+  useTranslation();
   const { user } = useAuth();
   const { isDark } = useTheme();
   const navigate = useNavigate();
@@ -29,14 +33,14 @@ export function UpgradeProDialog({ open, onOpenChange }: UpgradeProDialogProps) 
   };
 
   const handlePlanSelect = (planName: string, selectedCycle: "monthly" | "annually") => {
-    if (planName === "Gratis") {
+    if (planName === dt("dashboard.text183")) {
       handleClose(false);
     } else if (planName === "Pro") {
       setCycle(selectedCycle === "monthly" ? "monthly" : "yearly");
       if (isPaymentsConfigured()) {
         setStarted(true);
       } else {
-        alert("Los pagos aún no están configurados para este entorno.");
+        alert(dt("dashboard.text225"));
       }
     } else if (planName === "Negocios") {
       handleClose(false);
@@ -53,9 +57,9 @@ export function UpgradeProDialog({ open, onOpenChange }: UpgradeProDialogProps) 
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-colors text-sm font-medium shadow-sm ${
               isDark ? "bg-white/10 hover:bg-white/20 text-white backdrop-blur-md" : "bg-white/80 hover:bg-black/5 text-black border border-black/5 backdrop-blur-md"
             }`}
-            aria-label="Cerrar"
+            aria-label={dt("dashboard.text226")}
           >
-            <span>Cerrar</span>
+            <span>{dt("dashboard.text226")}</span>
             <X size={14} />
           </button>
         </div>
@@ -65,7 +69,7 @@ export function UpgradeProDialog({ open, onOpenChange }: UpgradeProDialogProps) 
           {!started ? (
             <>
               <DialogHeader className="px-6 pt-10 pb-2 text-center shrink-0">
-                <DialogTitle className="text-2xl font-normal text-center w-full">Elige tu plan</DialogTitle>
+                <DialogTitle className="text-2xl font-normal text-center w-full">{dt("dashboard.text227")}</DialogTitle>
               </DialogHeader>
               <div className="shrink-0">
                 <PricingTable onPlanSelect={handlePlanSelect} isModal />

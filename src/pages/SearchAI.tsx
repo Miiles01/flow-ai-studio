@@ -1,3 +1,6 @@
+import { useTranslation } from "react-i18next";
+import dashboardI18n from "@/i18n";
+const dt = (key: string, options?: Record<string, unknown>): string => dashboardI18n.t(key, options) as string;
 import { useState, useRef, useEffect, useCallback } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { Send, Bot, User, Loader2, Search } from "lucide-react";
@@ -47,6 +50,7 @@ async function readStream(
 }
 
 export default function SearchAI() {
+  useTranslation();
   const { conversationId: urlConvId } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -76,7 +80,7 @@ export default function SearchAI() {
         .eq("conversation_id", urlConvId)
         .order("created_at", { ascending: true });
       if (error) {
-        toast.error("No se pudo cargar la conversación");
+        toast.error(dt("dashboard.text170"));
         return;
       }
       setMessages((data ?? []).map((m) => ({ role: m.role as Msg["role"], content: m.content })));
@@ -94,7 +98,7 @@ export default function SearchAI() {
         .select("id")
         .single();
       if (error || !data) {
-        toast.error("No se pudo crear la conversación");
+        toast.error(dt("dashboard.text171"));
         return null;
       }
       setConversationId(data.id);
@@ -154,7 +158,7 @@ export default function SearchAI() {
         body: JSON.stringify({ messages: [...messages, userMsg] }),
       });
       if (!resp.ok || !resp.body) {
-        const err = await resp.json().catch(() => ({ error: "Error desconocido" }));
+        const err = await resp.json().catch(() => ({ error: dt("dashboard.text172") }));
         throw new Error(err.error || `Error ${resp.status}`);
       }
       await readStream(resp.body, upsertAssistant(ref), () => setIsLoading(false));
@@ -181,7 +185,7 @@ export default function SearchAI() {
     const userText = isUsername ? `🔍 Analizando @${cleanUsername}...` : `🔍 Buscando: ${raw}`;
     const convId = await ensureConversation(userText);
     const userMsg: Msg = { role: "user", content: userText };
-    setMessages((prev) => [...prev, userMsg, { role: "assistant", content: prefix + "⏳ Buscando información..." }]);
+    setMessages((prev) => [...prev, userMsg, { role: "assistant", content: prefix + dt("dashboard.text173") }]);
     setIsLoading(true);
     if (convId) await persistMessage(convId, "user", userText);
 
@@ -196,7 +200,7 @@ export default function SearchAI() {
         body: JSON.stringify({ username: raw }),
       });
       if (!resp.ok || !resp.body) {
-        const err = await resp.json().catch(() => ({ error: "Error desconocido" }));
+        const err = await resp.json().catch(() => ({ error: dt("dashboard.text172") }));
         throw new Error(err.error || `Error ${resp.status}`);
       }
       await readStream(resp.body, upsertAssistant(ref), () => setIsLoading(false));
@@ -208,13 +212,13 @@ export default function SearchAI() {
   };
 
   const send = tab === "chat" ? sendChat : sendInstagram;
-  const placeholder = tab === "chat" ? "Escribe un mensaje..." : "Usuario o búsqueda (ej: nike, moda afiliados)";
+  const placeholder = tab === "chat" ? dt("dashboard.text174") : dt("dashboard.text175");
 
   return (
     <div className="flex flex-col h-[calc(100vh-3rem)] bg-background text-foreground">
       <div className="flex items-center gap-3 px-6 py-4">
         <Bot size={20} className="text-miiles-blue" />
-        <span className="text-sm font-normal">Búsqueda IA</span>
+        <span className="text-sm font-normal">{dt("dashboard.text176")}</span>
         <div className="ml-auto flex gap-1 bg-background shadow-sm rounded-full p-1">
           <button
             onClick={() => setTab("chat")}
@@ -222,16 +226,14 @@ export default function SearchAI() {
               tab === "chat" ? "bg-foreground text-background" : "text-miiles-gray-400 hover:text-foreground"
             }`}
           >
-            <Bot size={14} /> Chat
-          </button>
+            <Bot size={14} />  {dt("dashboard.text177")} </button>
           <button
             onClick={() => setTab("instagram")}
             className={`flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-light transition-all duration-200 ${
               tab === "instagram" ? "bg-foreground text-background" : "text-miiles-gray-400 hover:text-foreground"
             }`}
           >
-            <Search size={14} /> Búsqueda
-          </button>
+            <Search size={14} />  {dt("dashboard.text178")} </button>
         </div>
       </div>
 
@@ -241,14 +243,13 @@ export default function SearchAI() {
             {tab === "chat" ? (
               <>
                 <Bot size={48} className="text-miiles-gray-200" />
-                <p className="text-sm font-light">Escribe algo para comenzar a hablar con la IA</p>
+                <p className="text-sm font-light">{dt("dashboard.text179")}</p>
               </>
             ) : (
               <>
                 <Search size={48} className="text-miiles-gray-200" />
                 <p className="text-sm text-center max-w-md font-light">
-                  Busca un perfil de Instagram o cualquier tema relacionado con afiliados
-                </p>
+                   {dt("dashboard.text180")} </p>
               </>
             )}
           </div>

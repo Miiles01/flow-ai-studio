@@ -1,36 +1,10 @@
+import { useTranslation } from "react-i18next";
+import { useLocalePath } from "@/hooks/useLocalePath";
 import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ArrowLeft, Check, Copy } from "lucide-react";
 import videoAsset from "@/assets/shopify-ai.mp4.asset.json";
-
-const PROMPT = `Hola, necesito que te conectes a mi tienda de Shopify para editarla desde aquí.
-
-Datos:
-
-•  Sitio:
-
-•  Tema publicado:
-
-•  Carpeta de trabajo:
-
-Quiero que hagas esto paso a paso, explicando brevemente cada paso:
-
-1.  Revisa si Shopify CLI está instalado (shopify version). Si no lo está o falla la actualización por permisos, dime el comando con sudo para que yo lo corra.
-
-2.  Descarga el tema con shopify theme pull a la carpeta de trabajo. Yo inicio sesión en el navegador; tú nunca escribas credenciales.
-
-3.  Dime qué secciones tiene la página de inicio (templates/index.json).
-
-4.  Haz este cambio: en el título del hero, cambia "hecho para ti" por "hecho para todos".
-
-5.  Corre shopify theme dev para que yo vea la vista previa, sin tocar la tienda publicada.
-
-6.  Cuando yo te lo confirme, sube SOLO el archivo modificado al tema publicado con:
-
-   shopify theme push --only templates/index.json --allow-live --nodelete
-
-7.  No hagas push sin mi confirmación explícita. Consulta https://shopify.dev/docs/api/shopify-cli para mayor entendimiento`;
 
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
@@ -38,6 +12,13 @@ const fadeUp = {
 };
 
 const ShopifyTutorial = () => {
+  const { t } = useTranslation();
+  const localePath = useLocalePath();
+  const copy = t("shopify.copy", { returnObjects: true }) as string[];
+
+const PROMPT = copy[0];
+
+
   const [copied, setCopied] = useState(false);
   const timerRef = useRef<number | null>(null);
 
@@ -64,15 +45,15 @@ const ShopifyTutorial = () => {
       {/* Header */}
       <header className="fixed top-6 left-1/2 -translate-x-1/2 w-[95vw] md:w-max z-[100]">
         <nav className="flex items-center justify-between gap-10 px-6 md:px-8 py-2.5 rounded-full backdrop-blur-md bg-white/80 border border-neutral-200/50 shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
-          <Link to="/" className="flex items-center shrink-0">
-            <img src="/logotipo.svg" alt="Miiles" className="h-5 w-auto" />
+          <Link to={localePath("/")} className="flex items-center shrink-0">
+            <img src="/logotipo.svg" alt={copy[10]} className="h-5 w-auto" />
           </Link>
           <Link
-            to="/"
+            to={localePath("/")}
             className="flex items-center gap-1.5 text-xs font-normal px-5 py-2.5 rounded-full bg-black text-white transition-all duration-300 hover:scale-105"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            Inicio
+            {copy[1]}
           </Link>
         </nav>
       </header>
@@ -89,15 +70,13 @@ const ShopifyTutorial = () => {
             variants={fadeUp}
             className="text-3xl md:text-5xl font-normal tracking-tight text-black"
           >
-            Conecta Shopify con tu asistente
+            {copy[2]}
           </motion.h1>
           <motion.p
             variants={fadeUp}
             className="text-sm md:text-base font-light text-miiles-gray-600 max-w-2xl mx-auto leading-relaxed"
           >
-            Gestiona tu tienda en línea más fácil: este asistente te ayuda a
-            editarla y hacer cualquier cambio. Ya no necesitas hacer cambios
-            manuales, simplemente le das tu instrucción y se ejecuta.
+            {copy[3]}
           </motion.p>
         </motion.section>
 
@@ -118,7 +97,7 @@ const ShopifyTutorial = () => {
             />
           </div>
           <p className="mt-4 text-xs font-light text-miiles-gray-400 text-center">
-            Tutorial: cómo conectar Shopify con tu asistente de Miiles
+            {copy[4]}
           </p>
         </motion.section>
 
@@ -133,11 +112,10 @@ const ShopifyTutorial = () => {
           <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4">
             <div className="space-y-1.5">
               <h2 className="text-xl md:text-2xl font-normal text-black">
-                Prompt para copiar
+                {copy[5]}
               </h2>
               <p className="text-sm font-light text-miiles-gray-600">
-                Copia este prompt, completa tus datos (sitio, tema y carpeta) y
-                pégalo en tu asistente.
+                {copy[6]}
               </p>
             </div>
             <button
@@ -149,7 +127,7 @@ const ShopifyTutorial = () => {
               }`}
             >
               {copied ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-              {copied ? "¡Copiado!" : "Copiar prompt"}
+              {copied ? copy[7] : copy[8]}
             </button>
           </div>
 
@@ -163,7 +141,7 @@ const ShopifyTutorial = () => {
 
       <footer className="pb-10 px-6">
         <p className="text-center text-xs font-light text-miiles-gray-400">
-          © {new Date().getFullYear()} Miiles
+          {copy[9]} {new Date().getFullYear()} {copy[10]}
         </p>
       </footer>
     </div>

@@ -1,3 +1,6 @@
+import { useTranslation } from "react-i18next";
+import dashboardI18n from "@/i18n";
+const dt = (key: string, options?: Record<string, unknown>): string => dashboardI18n.t(key, options) as string;
 import { ProfileSkeleton } from "@/components/PageSkeletons";
 import { pageCache } from "@/lib/pageCache";
 import { useEffect, useState, useRef } from "react";
@@ -26,6 +29,7 @@ import { getVideoEmbedUrl } from "@/lib/videoEmbed";
 import { isValidUsername } from "@/lib/referral";
 
 function VideoLinkPopover({ value, onSave, onCancel }: { value: string; onSave: (v: string) => void; onCancel: () => void }) {
+  useTranslation();
   const [draft, setDraft] = useState(value);
   return (
     <div className="fixed inset-0 z-50 flex items-end sm:items-center justify-center bg-black/40" onClick={onCancel}>
@@ -36,7 +40,7 @@ function VideoLinkPopover({ value, onSave, onCancel }: { value: string; onSave: 
         onClick={(e) => e.stopPropagation()}
         className="w-full max-w-md mx-4 mb-4 sm:mb-0 p-5 rounded-2xl bg-foreground space-y-4"
       >
-        <p className="text-background text-sm font-medium">Pega el link del video</p>
+        <p className="text-background text-sm font-medium">{dt("dashboard.text127")}</p>
         <Input
           autoFocus
           value={draft}
@@ -45,21 +49,19 @@ function VideoLinkPopover({ value, onSave, onCancel }: { value: string; onSave: 
           className="bg-background/10 border-none shadow-none text-background placeholder:text-background/40 text-base h-12"
         />
         <p className="text-xs text-background/60">
-          Acepta links públicos de YouTube, TikTok, Instagram, Facebook, Vimeo y Loom.
-        </p>
+           {dt("dashboard.text128")} </p>
         <div className="flex gap-3">
           <button type="button" onClick={() => onSave(draft.trim())} className="flex-1 text-sm py-2.5 rounded-xl bg-background text-foreground font-medium">
-            Guardar
-          </button>
+             {dt("dashboard.text121")} </button>
           <button type="button" onClick={onCancel} className="text-sm py-2.5 px-5 rounded-xl text-background/70 hover:text-background">
-            Cancelar
-          </button>
+             {dt("dashboard.text129")} </button>
         </div>
       </motion.div>
     </div>
   );
 }
 const Profile = () => {
+  useTranslation();
   const { user, signOut } = useAuth();
   const { isDark } = useTheme();
   const navigate = useNavigate();
@@ -177,7 +179,7 @@ const Profile = () => {
     if (!user) return;
     const trimmedUsername = username.trim();
     if (trimmedUsername && !isValidUsername(trimmedUsername)) {
-      toast.error("Nombre de usuario inválido: usa 3-30 letras, números, guion o guion bajo");
+      toast.error(dt("dashboard.text130"));
       return;
     }
     setSaving(true);
@@ -202,10 +204,10 @@ const Profile = () => {
       .eq("user_id", user.id);
     if (error) {
       const isUnique = (error as any).code === "23505" || /duplicate|unique/i.test(error.message || "");
-      toast.error(isUnique ? "Ese nombre de usuario ya está en uso" : "Error al guardar");
+      toast.error(isUnique ? dt("dashboard.text131") : dt("dashboard.text132"));
       setSaving(false);
     } else {
-      toast.success("Perfil actualizado");
+      toast.success(dt("dashboard.text133"));
       setSaving(false);
       setSavedSuccess(true);
       setOriginalData(currentData);
@@ -224,7 +226,7 @@ const Profile = () => {
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     if (params.get("checkout") === "success") {
-      toast.success("¡Pago recibido! Tu plan Pro se activará en unos segundos.");
+      toast.success(dt("dashboard.text134"));
       window.history.replaceState({}, "", "/profile#plan");
     }
     if (params.get("upgrade") === "true") {
@@ -243,10 +245,10 @@ const Profile = () => {
           environment: getStripeEnvironment(),
         },
       });
-      if (error || !data?.url) throw new Error(error?.message || data?.error || "No se pudo abrir el portal");
+      if (error || !data?.url) throw new Error(error?.message || data?.error || dt("dashboard.text135"));
       window.open(data.url, "_blank");
     } catch (e) {
-      toast.error(e instanceof Error ? e.message : "No se pudo abrir el portal de suscripción");
+      toast.error(e instanceof Error ? e.message : dt("dashboard.text136"));
     } finally {
       setOpeningPortal(false);
     }
@@ -282,7 +284,7 @@ const Profile = () => {
             />
           )}
           <div className="min-w-0">
-            <h1 className="text-xl font-normal truncate text-foreground">{displayName || "Usuario"}</h1>
+            <h1 className="text-xl font-normal truncate text-foreground">{displayName || dt("dashboard.text137")}</h1>
             <p className="text-xs text-muted-foreground font-light">{user?.email}</p>
             {niche && (
               <Badge variant="secondary" className="mt-2 text-xs font-light">
@@ -297,7 +299,7 @@ const Profile = () => {
           <div ref={planRef} className="scroll-mt-6">
             <Card className="border border-border">
               <CardHeader className="pb-4">
-                <CardTitle className="text-base">Tu plan</CardTitle>
+                <CardTitle className="text-base">{dt("dashboard.text138")}</CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
                 <div 
@@ -310,18 +312,18 @@ const Profile = () => {
                   `}
                 >
                   <div className="space-y-1">
-                    <span className="text-xs font-normal opacity-60 block">Membresía activa</span>
+                    <span className="text-xs font-normal opacity-60 block">{dt("dashboard.text139")}</span>
                     <span className="text-base font-semibold block">
-                      {plan === "pro" ? "Plan Pro" : plan === "business" || plan === "negocios" ? "Plan Negocios" : "Plan Gratis"}
+                      {plan === "pro" ? dt("dashboard.text140") : plan === "business" || plan === "negocios" ? dt("dashboard.text141") : dt("dashboard.text142")}
                     </span>
                     <span className="text-xs font-light text-muted-foreground block">
                       {plan === "free"
-                        ? "Gratis para siempre"
+                        ? dt("dashboard.text143")
                         : subscription?.cancel_at_period_end && subscription?.current_period_end
-                          ? `Se cancela el ${new Date(subscription.current_period_end).toLocaleDateString("es-MX")}`
+                          ? dt("dashboard.dynamic265", { value1: new Date(subscription.current_period_end).toLocaleDateString(dashboardI18n.language) })
                           : subscription?.current_period_end
-                            ? `Se renueva el ${new Date(subscription.current_period_end).toLocaleDateString("es-MX")}`
-                            : "Ciclo activo"}
+                            ? dt("dashboard.dynamic266", { value1: new Date(subscription.current_period_end).toLocaleDateString(dashboardI18n.language) })
+                            : dt("dashboard.text144")}
                     </span>
                   </div>
                   
@@ -333,10 +335,10 @@ const Profile = () => {
                     </span>
                     <span className="text-[10px] font-light text-muted-foreground block">
                       {plan === "free"
-                        ? "Gratis para siempre"
+                        ? dt("dashboard.text143")
                         : plan === "pro"
-                          ? (subscription?.price_id === "pro_yearly" ? "MXN / año" : "MXN / mes")
-                          : "Plan a medida"}
+                          ? (subscription?.price_id === "pro_yearly" ? dt("dashboard.text145") : "MXN / mes")
+                          : dt("dashboard.text146")}
                     </span>
                   </div>
                 </div>
@@ -347,8 +349,7 @@ const Profile = () => {
                     onClick={() => setUpgradeOpen(true)}
                     className={`w-full rounded-full ${isDark ? "bg-white text-black hover:bg-gray-100" : "bg-black text-white hover:bg-miiles-pink"}`}
                   >
-                    Mejorar a Pro
-                  </Button>
+                     {dt("dashboard.text147")} </Button>
                 ) : isActive && subscription ? (
                   <Button
                     type="button"
@@ -358,28 +359,28 @@ const Profile = () => {
                     className="w-full rounded-full"
                   >
                     {openingPortal ? <Loader2 size={16} className="mr-2 animate-spin" /> : null}
-                    Gestionar suscripción
-                  </Button>
+                     {dt("dashboard.text148")} </Button>
                 ) : null}
               </CardContent>
             </Card>
           </div>
 
+          <label>{dt("dashboard.language")} <select aria-label={dt("dashboard.language")} value={dashboardI18n.language.startsWith("en") ? "en" : "es"} onChange={(event) => { void dashboardI18n.changeLanguage(event.target.value); }}><option value="es">Español</option><option value="en">English</option></select></label>
           {/* Información personal */}
           <Card>
             <CardHeader className="pb-4">
-              <CardTitle className="text-base">Información personal</CardTitle>
+              <CardTitle className="text-base">{dt("dashboard.text149")}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <label className="text-xs text-muted-foreground mb-1.5 block font-light">Nombre</label>
+                <label className="text-xs text-muted-foreground mb-1.5 block font-light">{dt("dashboard.text150")}</label>
                 <div className="relative">
                   <User size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                   <Input value={displayName} onChange={(e) => setDisplayName(e.target.value)} className="pl-9" />
                 </div>
               </div>
               <div>
-                <label className="text-xs text-muted-foreground mb-1.5 block font-light">Nombre de usuario</label>
+                <label className="text-xs text-muted-foreground mb-1.5 block font-light">{dt("dashboard.text151")}</label>
                 <div className="relative">
                   <span className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground text-sm">@</span>
                   <Input
@@ -389,25 +390,25 @@ const Profile = () => {
                     className="pl-8"
                   />
                 </div>
-                <p className="text-[11px] text-muted-foreground font-light mt-1">Tu link de afiliado: miiles.app/?ref={username || "tunombre"}</p>
+                <p className="text-[11px] text-muted-foreground font-light mt-1">{dt("dashboard.text152")}{username || "tunombre"}</p>
               </div>
               <div>
-                <label className="text-xs text-muted-foreground mb-1.5 block font-light">Nicho</label>
+                <label className="text-xs text-muted-foreground mb-1.5 block font-light">{dt("dashboard.text153")}</label>
                 <div className="relative">
                   <Tag size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                   <Input value={niche} onChange={(e) => setNiche(e.target.value)} placeholder="Moda, Fitness, Tech..." className="pl-9" />
                 </div>
               </div>
               <div>
-                <label className="text-xs text-muted-foreground mb-1.5 block font-light">Teléfono</label>
+                <label className="text-xs text-muted-foreground mb-1.5 block font-light">{dt("dashboard.text154")}</label>
                 <div className="relative">
                   <Phone size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                   <Input value={phone} onChange={(e) => setPhone(e.target.value)} placeholder="+34 600 000 000" className="pl-9" />
                 </div>
               </div>
               <div>
-                <label className="text-xs text-muted-foreground mb-1.5 block font-light">Bio</label>
-                <Textarea value={bio} onChange={(e) => setBio(e.target.value)} placeholder="Cuéntanos sobre ti..." className="min-h-[80px] font-light" />
+                <label className="text-xs text-muted-foreground mb-1.5 block font-light">{dt("dashboard.text155")}</label>
+                <Textarea value={bio} onChange={(e) => setBio(e.target.value)} placeholder={dt("dashboard.text156")} className="min-h-[80px] font-light" />
               </div>
             </CardContent>
           </Card>
@@ -415,32 +416,32 @@ const Profile = () => {
           {/* Redes sociales */}
           <Card>
             <CardHeader className="pb-4">
-              <CardTitle className="text-base">Redes sociales</CardTitle>
+              <CardTitle className="text-base">{dt("dashboard.text157")}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <label className="text-xs text-muted-foreground mb-1.5 block font-light">Instagram</label>
+                <label className="text-xs text-muted-foreground mb-1.5 block font-light">{dt("dashboard.text158")}</label>
                 <div className="relative">
                   <Instagram size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                   <Input value={instagramHandle} onChange={(e) => setInstagramHandle(e.target.value)} placeholder="@tuusuario" className="pl-9" />
                 </div>
               </div>
               <div>
-                <label className="text-xs text-muted-foreground mb-1.5 block font-light">TikTok</label>
+                <label className="text-xs text-muted-foreground mb-1.5 block font-light">{dt("dashboard.text159")}</label>
                 <div className="relative">
                   <Video size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                   <Input value={tiktokHandle} onChange={(e) => setTiktokHandle(e.target.value)} placeholder="@tuusuario" className="pl-9" />
                 </div>
               </div>
               <div>
-                <label className="text-xs text-muted-foreground mb-1.5 block font-light">Twitter / X</label>
+                <label className="text-xs text-muted-foreground mb-1.5 block font-light">{dt("dashboard.text160")}</label>
                 <div className="relative">
                   <Twitter size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                   <Input value={twitterHandle} onChange={(e) => setTwitterHandle(e.target.value)} placeholder="@tuusuario" className="pl-9" />
                 </div>
               </div>
               <div>
-                <label className="text-xs text-muted-foreground mb-1.5 block font-light">YouTube</label>
+                <label className="text-xs text-muted-foreground mb-1.5 block font-light">{dt("dashboard.text161")}</label>
                 <div className="relative">
                   <Youtube size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                   <Input value={youtubeHandle} onChange={(e) => setYoutubeHandle(e.target.value)} placeholder="@tucanal" className="pl-9" />
@@ -452,8 +453,8 @@ const Profile = () => {
           {/* Portafolio de videos */}
           <Card>
             <CardHeader className="pb-4">
-              <CardTitle className="text-base">Portafolio de videos</CardTitle>
-              <p className="text-xs text-muted-foreground font-light mt-1">Agrega hasta 3 videos que representen tu mejor trabajo.</p>
+              <CardTitle className="text-base">{dt("dashboard.text162")}</CardTitle>
+              <p className="text-xs text-muted-foreground font-light mt-1">{dt("dashboard.text163")}</p>
             </CardHeader>
             <CardContent>
               <div className="grid grid-cols-3 gap-3">
@@ -479,8 +480,8 @@ const Profile = () => {
                             className="flex h-full w-full flex-col items-center justify-center gap-2 px-4 text-center text-muted-foreground hover:text-foreground transition-colors"
                           >
                             <Pencil size={18} />
-                            <span className="text-xs font-light">No se pudo generar el preview</span>
-                            <span className="text-[10px] font-light opacity-80">Edita el link o usa un enlace público.</span>
+                            <span className="text-xs font-light">{dt("dashboard.text164")}</span>
+                            <span className="text-[10px] font-light opacity-80">{dt("dashboard.text165")}</span>
                           </button>
                         ) : (
                           <button
@@ -489,7 +490,7 @@ const Profile = () => {
                             className="flex flex-col items-center justify-center w-full h-full text-muted-foreground hover:text-foreground transition-colors"
                           >
                             <Plus size={20} />
-                            <span className="text-[10px] font-light mt-1">Video {i + 1}</span>
+                            <span className="text-[10px] font-light mt-1">{dt("dashboard.text166")} {i + 1}</span>
                           </button>
                         )}
 
@@ -522,11 +523,11 @@ const Profile = () => {
 
           <Card>
             <CardHeader className="pb-4">
-              <CardTitle className="text-base">Links</CardTitle>
+              <CardTitle className="text-base">{dt("dashboard.text167")}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <label className="text-xs text-muted-foreground mb-1.5 block font-light">URL de portafolio</label>
+                <label className="text-xs text-muted-foreground mb-1.5 block font-light">{dt("dashboard.text168")}</label>
                 <div className="relative">
                   <Globe size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                   <Input value={portfolioUrl} onChange={(e) => setPortfolioUrl(e.target.value)} placeholder="https://miportafolio.com" className="pl-9" />
@@ -545,8 +546,7 @@ const Profile = () => {
         <div className="flex justify-center">
           <Button variant="destructive" className={`w-auto px-10 rounded-full border-none shadow-none ${isDark ? 'bg-red-950/40 text-red-400 hover:bg-red-950/60' : 'bg-red-50 text-red-500 hover:bg-red-100'}`} onClick={handleSignOut}>
             <LogOut size={16} className="mr-2" />
-            Cerrar sesión
-          </Button>
+             {dt("dashboard.text169")} </Button>
         </div>
       </motion.div>
 
@@ -574,7 +574,7 @@ const Profile = () => {
                   ) : (
                     <Save size={18} className="mr-2" />
                   )}
-                  {savedSuccess ? "Guardado" : "Guardar cambios"}
+                  {savedSuccess ? "Guardado" : dt("dashboard.text126")}
                 </Button>
               </div>
             </motion.div>
