@@ -179,8 +179,8 @@ export default function PricingTable({ onPlanSelect, isModal }: PricingTableProp
                       <span>$</span>
                       <RotatingPrice value={cycle === "monthly" ? plan.monthlyPrice : plan.annualPrice} />
                     </div>
-                    <span className={`text-xs font-light ${plan.highlighted ? "text-gray-500" : "text-gray-400"}`}>
-                      MXN {cycle === "monthly" ? t("pricing.perMonth") : t("pricing.perYear")}
+                    <span className={`text-xs font-light ${plan.highlighted ? "text-white" : "text-gray-400"}`}>
+                      {t("pricing.currency")} {cycle === "monthly" ? t("pricing.perMonth") : t("pricing.perYear")}
                     </span>
                   </>
                 )}

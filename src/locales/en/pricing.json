@@ -26,8 +26,8 @@
     {
       "id": "Pro",
       "name": "Pro",
-      "monthlyPrice": "386",
-      "annualPrice": "3,712",
+      "monthlyPrice": "24",
+      "annualPrice": "230",
       "description": "For growing creators",
       "features": [
         "Unlimited projects",
@@ -54,5 +54,6 @@
       "cta": "Contact us",
       "customPrice": true
     }
-  ]
+  ],
+  "currency": "USD"
 }

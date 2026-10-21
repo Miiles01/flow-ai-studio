@@ -14,7 +14,7 @@ function getSupabase() {
 
 // Map a price id to the app plan name stored on profiles.plan
 function planFromPriceId(priceId?: string): string {
-  if (priceId === "pro_monthly" || priceId === "pro_yearly") return "pro";
+  if (priceId && /^pro_(monthly|yearly)(_usd)?$/.test(priceId)) return "pro";
   return "free";
 }
 

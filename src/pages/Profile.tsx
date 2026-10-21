@@ -337,14 +337,14 @@ const Profile = () => {
                   <div className="text-right">
                     <span className="text-2xl font-semibold block">
                       {plan === "pro"
-                        ? (subscription?.price_id === "pro_yearly" ? "$3,712" : "$386")
+                        ? ({ pro_yearly: "$3,712", pro_monthly_usd: "$24", pro_yearly_usd: "$230" } as Record<string, string>)[subscription?.price_id ?? ""] ?? "$386"
                         : plan === "business" || plan === "negocios" ? "Custom" : "$0"}
                     </span>
                     <span className="text-[10px] font-light text-muted-foreground block">
                       {plan === "free"
                         ? dt("dashboard.text143")
                         : plan === "pro"
-                          ? (subscription?.price_id === "pro_yearly" ? dt("dashboard.text145") : "MXN / mes")
+                          ? (subscription?.price_id === "pro_yearly" ? dt("dashboard.text145") : subscription?.price_id === "pro_yearly_usd" ? "USD / year" : subscription?.price_id === "pro_monthly_usd" ? "USD / month" : "MXN / mes")
                           : dt("dashboard.text146")}
                     </span>
                   </div>

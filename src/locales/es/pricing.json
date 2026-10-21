@@ -54,5 +54,6 @@
       "cta": "Contactar",
       "customPrice": true
     }
-  ]
+  ],
+  "currency": "MXN"
 }
