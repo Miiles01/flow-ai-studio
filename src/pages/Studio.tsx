@@ -2,6 +2,7 @@ import { StudioGridSkeleton } from "@/components/PageSkeletons";
 import { useStudioTemplates } from "@/hooks/useStudioTemplates";
 import { DiscoveriesBoard } from "@/components/discoveries/DiscoveriesBoard";
 import StudioCard from "@/components/studio/StudioCard";
+import MyPages from "@/components/studio/MyPages";
 
 
 export default function Studio() {
@@ -13,6 +14,8 @@ export default function Studio() {
       <div>
         <h1 className="text-2xl md:text-3xl font-normal text-foreground">Estudio</h1>
       </div>
+
+      <MyPages />
 
       {/* Arquitectura logarítmica */}
       <section className="space-y-6">

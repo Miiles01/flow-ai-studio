@@ -13,7 +13,7 @@
   "mcp": {
     "server": {
       "name": "miiles",
-      "version": "0.1.0",
+      "version": "0.2.0",
       "title": "Miiles"
     },
     "tools": [
@@ -56,6 +56,137 @@
           "required": [
             "slug"
           ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "list_my_pages",
+        "title": "Ver mis páginas",
+        "description": "Lista las páginas del usuario conectado en Miiles, con su estado (borrador o publicada) y su enlace en wearemiiles.com.",
+        "annotations": {
+          "readOnlyHint": true,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "$schema": "https://json-schema.org/draft/2020-12/schema",
+          "type": "object",
+          "properties": {},
+          "additionalProperties": false
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "save_page_files",
+        "title": "Guardar archivos de mi página",
+        "description": "Crea (si no existe) y guarda archivos de la página del usuario en Miiles como borrador. Debe incluir index.html. Las imágenes y fuentes van en base64. No publica: usa publish_page después.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": false
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "page_slug": {
+              "type": "string",
+              "description": "Vacío u omitido = página principal (wearemiiles.com/usuario). Pro: nombre corto para páginas extra (wearemiiles.com/usuario/nombre)."
+            },
+            "title": {
+              "type": "string",
+              "maxLength": 120,
+              "description": "Nombre de la página para mostrar en Estudio."
+            },
+            "template_slug": {
+              "type": "string",
+              "maxLength": 120,
+              "description": "Slug de la plantilla de Estudio usada como base."
+            },
+            "files": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "path": {
+                    "type": "string",
+                    "description": "Ruta relativa, p. ej. index.html, css/style.css, img/foto.jpg."
+                  },
+                  "content": {
+                    "type": "string",
+                    "description": "Contenido del archivo: texto para HTML/CSS/JS/SVG, base64 para binarios."
+                  },
+                  "encoding": {
+                    "type": "string",
+                    "enum": [
+                      "utf8",
+                      "base64"
+                    ],
+                    "description": "utf8 (por defecto) o base64."
+                  }
+                },
+                "required": [
+                  "path",
+                  "content"
+                ],
+                "additionalProperties": false
+              },
+              "minItems": 1,
+              "maxItems": 50,
+              "description": "Archivos a guardar o reemplazar (máx. 50 por llamada, 3 MB cada uno)."
+            }
+          },
+          "required": [
+            "files"
+          ],
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "publish_page",
+        "title": "Publicar mi página",
+        "description": "Publica la página del usuario en wearemiiles.com y devuelve su enlace. Requiere haber guardado index.html con save_page_files. Confirma con el usuario antes de publicar.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": false,
+          "idempotentHint": true,
+          "openWorldHint": true
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "page_slug": {
+              "type": "string",
+              "description": "Vacío u omitido = página principal."
+            }
+          },
+          "additionalProperties": false,
+          "$schema": "http://json-schema.org/draft-07/schema#"
+        },
+        "outputSchema": null
+      },
+      {
+        "name": "unpublish_page",
+        "title": "Despublicar mi página",
+        "description": "Quita de internet la página del usuario (vuelve a borrador). Sus archivos se conservan.",
+        "annotations": {
+          "readOnlyHint": false,
+          "destructiveHint": true,
+          "idempotentHint": true,
+          "openWorldHint": true
+        },
+        "inputSchema": {
+          "type": "object",
+          "properties": {
+            "page_slug": {
+              "type": "string",
+              "description": "Vacío u omitido = página principal."
+            }
+          },
           "additionalProperties": false,
           "$schema": "http://json-schema.org/draft-07/schema#"
         },

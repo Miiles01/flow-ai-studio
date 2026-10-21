@@ -28,7 +28,7 @@ export default function UseTemplateDialog({ template, open, onOpenChange }: { te
   const [agent, setAgent] = useState<typeof AGENTS[number]>("Claude");
   const [copied, setCopied] = useState<"" | "mcp" | "prompt">("");
   const guide = STEPS[agent];
-  const prompt = `Quiero adaptar la plantilla de Miiles «${template.title}» (${template.slug}). Usa el conector de Miiles y consulta get_studio_template con slug "${template.slug}"; si no está conectado, usa este ZIP: ${template.download_url || "solicítame el archivo descargado"}. Pregúntame mi nombre, servicios, textos, imágenes y colores antes de editar. Trabaja únicamente en mi copia local. No afirmes que mi página está publicada: la publicación automática en wearemiiles.com todavía no está disponible.`;
+  const prompt = `Quiero adaptar la plantilla de Miiles «${template.title}» (${template.slug}). Usa el conector de Miiles y consulta get_studio_template con slug "${template.slug}"; si no está conectado, usa este ZIP: ${template.download_url || "solicítame el archivo descargado"}. Pregúntame mi nombre, servicios, textos, imágenes y colores antes de editar. Cuando esté lista y yo lo confirme, guárdala con save_page_files (incluye index.html e imágenes) y publícala con publish_page; dame el enlace de wearemiiles.com que te devuelva.`;
   async function copy(text: string, kind: "mcp" | "prompt") {
     try { await navigator.clipboard.writeText(text); setCopied(kind); }
     catch { toast.error("No pudimos copiarlo. Selecciona el texto y cópialo manualmente."); }
@@ -54,7 +54,7 @@ export default function UseTemplateDialog({ template, open, onOpenChange }: { te
       <label htmlFor="template-agent-prompt" className="text-sm font-normal">Paso 2 · Pega esto en el chat de {agent}</label>
       <textarea id="template-agent-prompt" readOnly value={prompt} className="min-h-32 w-full resize-none rounded-md border border-border bg-muted p-3 text-xs font-light leading-5 text-foreground" />
       <Button onClick={() => copy(prompt, "prompt")} className="w-full hover:translate-y-0">{copied === "prompt" ? <Check /> : <Copy />}{copied === "prompt" ? "Prompt copiado" : "Copiar prompt para mi agente"}</Button>
-      <p className="text-xs text-muted-foreground">La publicación automática en wearemiiles.com llegará pronto.</p>
+      <p className="text-xs text-muted-foreground">Al final dile «Publica mi página en Miiles» y quedará en wearemiiles.com/tu-usuario. La verás en Estudio → Mis páginas.</p>
     </DialogContent>
   </Dialog>;
 }

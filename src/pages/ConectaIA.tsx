@@ -44,19 +44,21 @@ const AGENTS = [
 const CAN = [
   "Ver el catálogo de plantillas de Miiles Estudio.",
   "Consultar el detalle de una plantilla y sus enlaces de vista previa.",
+  "Guardar tu página adaptada y publicarla en wearemiiles.com/tu-usuario cuando tú se lo pidas.",
   "Trabajar con tu cuenta, solo con lo que tú autorizas.",
 ];
 
 const CANNOT = [
   "Ver tu contraseña o tu método de inicio de sesión.",
   "Ver datos, tableros o plantillas de otras personas.",
-  "Editar ni publicar una página tuya: eso todavía se hace dentro de Miiles.",
+  "Tocar páginas de otras personas o publicar sin que se lo pidas.",
 ];
 
 const EXAMPLES = [
   "¿Qué plantillas de portafolio tiene Miiles Estudio?",
   "Muéstrame los detalles de la plantilla Aura y su vista previa.",
   "Compara Minimalist y Gallery: ¿cuál me sirve para un fotógrafo de producto?",
+  "Publica mi página en Miiles.",
 ];
 
 const fadeUp = {
