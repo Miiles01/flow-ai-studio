@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
+import { motion } from "framer-motion";
 import { ExternalLink, Trash2, EyeOff, Globe } from "lucide-react";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
+import { useTheme } from "@/contexts/ThemeContext";
 import { Button } from "@/components/ui/button";
 import { useToast } from "@/hooks/use-toast";
 import { publicSiteUrl } from "@/lib/userSites";
@@ -10,6 +12,7 @@ type Site = { id: string; title: string; path: string; status: string; template_
 
 export default function MyPages() {
   const { user } = useAuth();
+  const { isDark } = useTheme();
   const { toast } = useToast();
   const [sites, setSites] = useState<Site[] | null>(null);
   const [busy, setBusy] = useState("");
@@ -46,33 +49,55 @@ export default function MyPages() {
           Aún no tienes páginas. Elige una plantilla abajo, pulsa «Usar esta plantilla» y, cuando tu agente termine, dile «Publica mi página en Miiles».
         </p>
       ) : (
-        <ul className="space-y-3">
+        <div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,max(220px,calc((100%-3rem)/3))),1fr))] gap-6 pt-2">
           {sites.map((s) => {
             const url = publicSiteUrl(s.path);
             const live = s.status === "published";
             return (
-              <li key={s.id} className="flex flex-wrap items-center gap-4 rounded-2xl border border-border bg-card p-4">
-                <div className="min-w-0 flex-1">
-                  <div className="flex items-center gap-2">
-                    <span className="text-base font-normal text-foreground truncate">{s.title}</span>
-                    <span className={`rounded-full px-2 py-0.5 text-[10px] font-normal ${live ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"}`}>{live ? "Publicada" : "Borrador"}</span>
+              <motion.div key={s.id} whileHover={{ y: -6, transition: { duration: 0.2 } }}
+                className={`overflow-hidden rounded-[24px] ${isDark ? "bg-black ring-1 ring-white/10" : "bg-white shadow-md"}`}>
+                {/* Vista previa en vivo (solo páginas visibles) */}
+                <div className={`relative aspect-[4/3] overflow-hidden ${isDark ? "bg-white/5" : "bg-miiles-gray-50"}`}>
+                  {live ? (
+                    <iframe
+                      src={url}
+                      title={`Vista previa de ${s.title}`}
+                      sandbox="allow-scripts"
+                      tabIndex={-1}
+                      loading="lazy"
+                      className="pointer-events-none absolute left-0 top-0 h-[400%] w-[400%] origin-top-left scale-[0.25] border-0 bg-background"
+                    />
+                  ) : (
+                    <div className="flex h-full w-full flex-col items-center justify-center gap-2 text-muted-foreground">
+                      <EyeOff className="h-6 w-6" />
+                      <span className="text-xs font-light">Página oculta</span>
+                    </div>
+                  )}
+                  <span className={`absolute right-3 top-3 rounded-full px-2 py-0.5 text-[10px] font-normal ${live ? "bg-primary/10 text-primary" : "bg-muted text-muted-foreground"}`}>
+                    {live ? "Visible" : "Oculta"}
+                  </span>
+                </div>
+                {/* Datos y acciones */}
+                <div className="space-y-3 p-4">
+                  <div className="min-w-0">
+                    <p className={`truncate text-base font-normal ${isDark ? "text-white" : "text-black"}`}>{s.title}</p>
+                    <p className="truncate text-xs font-light text-muted-foreground">
+                      {url.replace("https://", "")}{s.template_slug ? ` · plantilla ${s.template_slug}` : ""}
+                      {live && s.published_at ? ` · ${new Date(s.published_at).toLocaleDateString("es-MX")}` : ""}
+                    </p>
                   </div>
-                  <p className="text-xs font-light text-muted-foreground truncate">
-                    {url.replace("https://", "")}{s.template_slug ? ` · plantilla ${s.template_slug}` : ""}
-                    {live && s.published_at ? ` · ${new Date(s.published_at).toLocaleDateString("es-MX")}` : ""}
-                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {live && <Button asChild size="sm" variant="outline" className="rounded-full"><a href={url} target="_blank" rel="noreferrer"><ExternalLink />Abrir</a></Button>}
+                    {live
+                      ? <Button size="sm" variant="outline" className="rounded-full" disabled={busy === s.id} onClick={() => act(s, "unpublish")}><EyeOff />Ocultar</Button>
+                      : <Button size="sm" className="rounded-full" disabled={busy === s.id} onClick={() => act(s, "publish")}><Globe />Mostrar</Button>}
+                    <Button size="sm" variant="ghost" className="rounded-full text-destructive" aria-label={`Borrar ${s.title}`} disabled={busy === s.id} onClick={() => act(s, "delete")}><Trash2 /></Button>
+                  </div>
                 </div>
-                <div className="flex gap-2">
-                  {live && <Button asChild size="sm" variant="outline" className="rounded-full"><a href={url} target="_blank" rel="noreferrer"><ExternalLink />Abrir</a></Button>}
-                  {live
-                    ? <Button size="sm" variant="outline" className="rounded-full" disabled={busy === s.id} onClick={() => act(s, "unpublish")}><EyeOff />Despublicar</Button>
-                    : <Button size="sm" className="rounded-full" disabled={busy === s.id} onClick={() => act(s, "publish")}><Globe />Publicar</Button>}
-                  <Button size="sm" variant="ghost" className="rounded-full text-destructive" aria-label={`Borrar ${s.title}`} disabled={busy === s.id} onClick={() => act(s, "delete")}><Trash2 /></Button>
-                </div>
-              </li>
+              </motion.div>
             );
           })}
-        </ul>
+        </div>
       )}
     </section>
   );
