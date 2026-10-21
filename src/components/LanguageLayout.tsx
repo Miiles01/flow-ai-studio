@@ -12,9 +12,9 @@ const LanguageLayout = () => {
     if (lang && SUPPORTED_LANGS.includes(lang) && i18n.language !== lang) {
       i18n.changeLanguage(lang);
     }
+    if (lang) document.documentElement.lang = lang;
   }, [lang, i18n]);
 
-  // Si el idioma no es válido, redirigir a /es/
   if (!lang || !SUPPORTED_LANGS.includes(lang)) {
     return <Navigate to="/es/" replace />;
   }
