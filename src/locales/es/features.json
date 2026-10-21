@@ -1,0 +1,73 @@
+{
+  "items": [
+    {
+      "id": "colaboraciones",
+      "badge": "Colaboraciones",
+      "title": "Colabora con marcas",
+      "description": "Encuentra marcas líderes y colabora con ellas en proyectos creativos para redes sociales y estrategias digitales de alto impacto. Conéctate con audiencias globales de forma sencilla.",
+      "bullets": [
+        "Conexión directa con marcas de primer nivel mundial.",
+        "Proyectos creativos y campañas para redes sociales.",
+        "Oportunidades exclusivas para monetizar tu portafolio."
+      ]
+    },
+    {
+      "id": "ai-studio",
+      "badge": "Inteligencia Artificial",
+      "title": "Diseña modelos de negocios con la potencia de la IA",
+      "description": "Describe tu idea y desarrolla toda una estructura de negocio y descubre nuevas oportunidades para desarrollar proyectos escalables.",
+      "bullets": [
+        "Generación instantánea de estructuras comerciales a partir de tu visión.",
+        "Visualización clara de tu cadena de valor y flujos de ingresos.",
+        "Sugerencias inteligentes de la IA para validar y escalar tu proyecto."
+      ]
+    },
+    {
+      "id": "collab",
+      "badge": "Colaboración en Vivo",
+      "title": "Co-creación y presencia en tiempo real",
+      "description": "Invita a tu equipo a trabajar en el mismo lienzo. Visualiza los avatares de los usuarios conectados y edita de forma concurrente sin conflictos de cambios.",
+      "bullets": [
+        "Presencia visual interactiva mediante stack de avatares en el encabezado.",
+        "Sincronización instantánea de movimientos, colores y conectores.",
+        "Compartido rápido mediante URLs públicas para visualización."
+      ]
+    },
+    {
+      "id": "canvas",
+      "badge": "Lienzo Avanzado",
+      "title": "Canvas infinito y personalización total",
+      "description": "Estructura tus ideas sin límites físicos. Conecta figuras de cualquier tipo mediante handles bidireccionales y muévete con un zoom ultra-amplio de 5% a 400%.",
+      "bullets": [
+        "Líneas de conexión curvadas con etiquetas de texto editables en el centro.",
+        "Desconexión rápida de nodos arrastrando desde su mitad izquierda.",
+        "Figuras geométricas personalizables con colores vibrantes de marca."
+      ]
+    }
+  ],
+  "phrases": [
+    "Crea un embudo de ventas para mi curso online...",
+    "Diseña una campaña de marketing en redes sociales...",
+    "Estructura el flujo de onboarding de la app...",
+    "Planifica la estrategia de contenido para Instagram...",
+    "Organiza el proceso de soporte y tickets B2B..."
+  ],
+  "apps": "Apps",
+  "select": "Seleccionar",
+  "pan": "Navegar",
+  "shapes": "Formas",
+  "text": "Texto",
+  "todo": "Lista de Tareas",
+  "image": "Imagen",
+  "section": "Sección",
+  "mateo": "Mateo",
+  "sofia": "Sofía",
+  "intro": "Presentamos a Miiles",
+  "title": "Lleva tus ideas a la realidad",
+  "subtitle": "Un lugar pensado para descubrir oportunidades",
+  "plansTitle": "Nuestros planes",
+  "plansDescription": "Elige el plan ideal para automatizar y escalar tu negocio.",
+  "aiAlt": "AI",
+  "collaborator": "Colaborador {{number}}",
+  "heroAlt": "Persona usando Miiles en una tablet, cómoda en su sofá"
+}

@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+import { useLocalePath } from "@/hooks/useLocalePath";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Check } from "lucide-react";
@@ -5,6 +7,8 @@ import LandingNavbar from "@/components/LandingNavbar";
 import LandingFooter from "@/components/LandingFooter";
 
 const BusinessInquiryThanks = () => {
+  const { t } = useTranslation();
+  const localePath = useLocalePath();
   return (
     <>
       <LandingNavbar />
@@ -18,18 +22,13 @@ const BusinessInquiryThanks = () => {
           >
             <Check className="text-white" size={28} strokeWidth={2.5} />
           </motion.div>
-          <h1 className="text-4xl md:text-5xl font-normal tracking-tight mb-4">
-            ¡Gracias! <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>Nos pondremos en contacto.</span>
+          <h1 className="text-4xl md:text-5xl font-normal tracking-tight mb-4">{t("business.thanks.text1")} <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>{t("business.thanks.text2")}</span>
           </h1>
-          <p className="text-base font-light text-gray-500 mb-10 max-w-md">
-            Recibimos tu solicitud del plan Negocios. Nuestro equipo te escribirá muy pronto al correo que nos dejaste.
-          </p>
+          <p className="text-base font-light text-gray-500 mb-10 max-w-md">{t("business.thanks.text3")}</p>
           <Link
-            to="/"
+            to={localePath("/")}
             className="px-8 py-4 rounded-full bg-black text-white text-sm font-normal hover:bg-opacity-80 transition-all"
-          >
-            Volver al inicio
-          </Link>
+          >{t("business.thanks.text4")}</Link>
         </section>
         <LandingFooter />
       </div>

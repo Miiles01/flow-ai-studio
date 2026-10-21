@@ -12,24 +12,24 @@ const LandingFooter = () => {
           {/* Left side */}
           <div className="flex flex-col justify-between h-full min-h-[200px]">
             <h2 className="text-3xl font-normal leading-tight max-w-xs text-black">
-              {t("footer.slogan")}
+              {t("home.footer.slogan")}
             </h2>
             <p className="text-[10px] md:text-xs font-light text-gray-400 mt-10 md:mt-0">
-              {t("footer.copyright")}
+              {t("home.footer.copyright")}
             </p>
           </div>
 
           {/* Right side */}
           <div className="flex gap-20 md:gap-40">
             <div className="space-y-6">
-              <h3 className="text-[10px] font-normal text-gray-400 tracking-widest">{t("footer.company")}</h3>
+              <h3 className="text-[10px] font-normal text-gray-400 tracking-widest">{t("home.footer.company")}</h3>
               <div className="flex flex-col gap-4 text-sm font-light text-black">
-                <Link to={localePath("/terminos")} className="hover:opacity-50 transition-opacity">{t("footer.terms")}</Link>
-                <Link to={localePath("/privacidad")} className="hover:opacity-50 transition-opacity">{t("footer.privacy")}</Link>
+                <Link to={localePath("/terminos")} className="hover:opacity-50 transition-opacity">{t("home.footer.terms")}</Link>
+                <Link to={localePath("/privacidad")} className="hover:opacity-50 transition-opacity">{t("home.footer.privacy")}</Link>
               </div>
             </div>
             <div className="space-y-6">
-              <h3 className="text-[10px] font-normal text-gray-400 tracking-widest">{t("footer.social")}</h3>
+              <h3 className="text-[10px] font-normal text-gray-400 tracking-widest">{t("home.footer.social")}</h3>
               <div className="flex flex-col gap-4 text-sm font-light text-black">
                 <a href="https://www.instagram.com/miiles.studio/" target="_blank" rel="noopener noreferrer" className="hover:opacity-50 transition-opacity">Instagram</a>
                 <a href="https://www.tiktok.com/@miiles.studio" target="_blank" rel="noopener noreferrer" className="hover:opacity-50 transition-opacity">Tiktok</a>

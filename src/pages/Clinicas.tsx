@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+import { useLocalePath } from "@/hooks/useLocalePath";
 import { useState, useEffect, useRef, useCallback } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -40,37 +42,6 @@ import { openWhatsApp } from "@/lib/whatsapp";
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText);
 
-const WHATSAPP_MESSAGE = "Hola, quiero activar el asistente para mi clínica.";
-const WHATSAPP_DEMO_MESSAGE = "Hola, quiero solicitar una demo del asistente para mi clínica.";
-
-const CLINIC_FAQS = [
-  {
-    question: "¿Cómo funciona el Asistente para Clínicas por $500 MXN al mes?",
-    answer:
-      "Es una suscripción mensual completa que dota a tu clínica o consultorio de un asistente inteligente 24/7 y una página web médica profesional. El asistente atiende pacientes por mensaje y web, responde dudas frecuentes, agenda citas en tu calendario y envía recordatorios automáticos para que ningún paciente falte a su consulta.",
-  },
-  {
-    question: "¿Qué pasa si un paciente tiene una duda médica delicada o una emergencia?",
-    answer:
-      "El asistente está entrenado para reconocer límites éticos y médicos. Resuelve dudas operativas (costos de consulta, ubicación, preparación para estudios, horarios) y, ante cualquier síntoma crítico o solicitud médica específica, canaliza inmediatamente al paciente a la línea directa de emergencias o al contacto directo del médico responsable.",
-  },
-  {
-    question: "¿Cómo se gestiona el dominio .com de la página web?",
-    answer:
-      "La página web de tu clínica está 100% incluida y alojada dentro del servicio. Si deseas que tu web funcione bajo tu propio nombre de dominio personalizado (por ejemplo www.tucapaclinicamedica.com o .mx), este registro tiene un costo anual adicional opcional que podemos gestionar y conectar por ti.",
-  },
-  {
-    question: "¿Hay plazos forzosos o penalizaciones por cancelación?",
-    answer:
-      "No. La suscripción es mensual y puedes cancelarla en cualquier momento sin penalizaciones. Estamos convencidos del valor que aporta a tu consulta: con una sola cita que el asistente rescate fuera de horario, la mensualidad de $500 MXN se paga sola múltiples veces.",
-  },
-  {
-    question: "¿Para qué tipo de clínicas o consultorios está pensado?",
-    answer:
-      "Está optimizado para clínicas dentales, consultorios dermatológicos, clínicas de fisioterapia, consultorios de ginecología, nutrición, psicología, pediatría, medicina estética y policlínicas que buscan orden y mayor captación de pacientes.",
-  },
-];
-
 const fadeUp = {
   hidden: { opacity: 0, y: 22 },
   visible: {
@@ -81,6 +52,42 @@ const fadeUp = {
 };
 
 const Clinicas = () => {
+  const { t } = useTranslation();
+  const localePath = useLocalePath();
+  const copy = t("clinics.copy", { returnObjects: true }) as string[];
+
+const WHATSAPP_MESSAGE = copy[0];
+const WHATSAPP_DEMO_MESSAGE = copy[1];
+
+const CLINIC_FAQS = [
+  {
+    question: copy[2],
+    answer:
+      copy[3],
+  },
+  {
+    question: copy[4],
+    answer:
+      copy[5],
+  },
+  {
+    question: copy[6],
+    answer:
+      copy[7],
+  },
+  {
+    question: copy[8],
+    answer:
+      copy[9],
+  },
+  {
+    question: copy[10],
+    answer:
+      copy[11],
+  },
+];
+
+
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [formData, setFormData] = useState({
@@ -131,13 +138,13 @@ const Clinicas = () => {
     });
 
     document.title =
-      "Asistente Inteligente para Clínicas y Consultorios Médicos | Miiles";
+      copy[12];
 
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) {
       metaDesc.setAttribute(
         "content",
-        "Llena la agenda de tu clínica o consultorio con el Asistente de IA de Miiles. Citas 24/7, recordatorios automáticos y web médica por solo $500 MXN al mes."
+        copy[13]
       );
     }
 
@@ -149,17 +156,17 @@ const Clinicas = () => {
       "@graph": [
         {
           "@type": "Product",
-          name: "Asistente Inteligente para Clínicas y Consultorios",
+          name: copy[14],
           description:
-            "Asistente de IA para agendamiento de pacientes 24/7, recordatorios automáticos y portal web médico.",
+            copy[15],
           offers: {
             "@type": "Offer",
             price: "500",
-            priceCurrency: "MXN",
+            priceCurrency: copy[35],
             priceSpecification: {
               "@type": "UnitPriceSpecification",
               price: "500",
-              priceCurrency: "MXN",
+              priceCurrency: copy[35],
               unitCode: "MON",
             },
             availability: "https://schema.org/InStock",
@@ -188,7 +195,7 @@ const Clinicas = () => {
       const existing = document.getElementById("schema-clinicas-asistente");
       if (existing) existing.remove();
     };
-  }, []);
+  }, [t]);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -225,7 +232,7 @@ const Clinicas = () => {
             >
               <Stethoscope className="w-4 h-4 text-blue-600" />
               <span className="text-[11px] font-normal tracking-wide text-blue-900 dark:text-blue-200">
-                Especializado para clínicas
+                {copy[16]}
               </span>
             </motion.div>
 
@@ -236,27 +243,27 @@ const Clinicas = () => {
               variants={fadeUp}
               className="text-balance text-[2.75rem] sm:text-5xl md:text-6xl lg:text-7xl font-normal tracking-tight text-black dark:text-white leading-[1.08] max-w-4xl mx-auto mb-12 md:mb-14"
             >
-              El asistente{" "}
+              {copy[17]}{" "}
               <span
                 style={{
                   fontFamily: "'Welth Catritz', serif",
                   fontStyle: "italic",
                 }}
               >
-                inteligente
+                {copy[18]}
               </span>{" "}
-              que llena la{" "}
+              {copy[19]}{" "}
               <span
                 style={{
                   fontFamily: "'Welth Catritz', serif",
                   fontStyle: "italic",
                 }}
               >
-                agenda
+                {copy[20]}
               </span>{" "}
-              de tu clínica
+              {copy[21]}
               <span className="block mt-4 text-2xl sm:text-3xl md:text-4xl text-blue-600 dark:text-blue-300 font-normal tracking-tight">
-                — 24 horas al día
+                {copy[22]}
               </span>
             </motion.h1>
 
@@ -285,7 +292,7 @@ const Clinicas = () => {
               className="flex justify-center mb-8 md:mb-10"
             >
               <SlideArrowButton href="https://tupaginanueva.com/">
-                Ver demo
+                {copy[23]}
               </SlideArrowButton>
             </motion.div>
 
@@ -297,10 +304,7 @@ const Clinicas = () => {
               transition={{ delay: 0.1 }}
               className="text-base sm:text-lg md:text-xl font-light text-miiles-gray-600 dark:text-white/85 max-w-3xl mx-auto leading-relaxed mb-10"
             >
-              No dejes que los pacientes se vayan con otra clínica por no responder a tiempo. Tu
-              asistente responde al instante, confirma citas en tu calendario oficial,
-              resuelve dudas de tratamientos y envía recordatorios para eliminar los pacientes que no
-              asisten.
+              {copy[24]}
             </motion.p>
 
             {/* Resumen de Condiciones Claras */}
@@ -312,7 +316,7 @@ const Clinicas = () => {
             >
               <div className="flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-blue-50 dark:bg-blue-500/10 border border-blue-200/80 dark:border-blue-400/20">
                 <CheckCircle2 className="w-5 h-5 text-blue-600 dark:text-blue-300 shrink-0" />
-                <span className="text-base md:text-lg font-normal text-blue-900 dark:text-blue-200">Cancela cuando quieras</span>
+                <span className="text-base md:text-lg font-normal text-blue-900 dark:text-blue-200">{copy[25]}</span>
               </div>
             </motion.div>
           </header>
@@ -345,14 +349,13 @@ const Clinicas = () => {
             />
             <div className="relative z-10 max-w-5xl mx-auto text-center space-y-6">
               <span className="text-sm font-normal text-blue-600 dark:text-blue-300">
-                El reto diario en clínicas
+                {copy[26]}
               </span>
               <h2 data-split-title className="text-balance text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-normal tracking-tight leading-[1.08] text-black dark:text-white">
-                El 40% de los pacientes potenciales se pierde por lentitud en la atención
+                {copy[27]}
               </h2>
               <p data-fade-p className="text-sm md:text-base font-light text-miiles-gray-600 dark:text-white/85 max-w-2xl mx-auto">
-                Un consultorio con recepción ocupada o que no atiende noches ni fines de semana regala
-                citas a clínicas competidoras todos los días.
+                {copy[28]}
               </p>
             </div>
           </section>
@@ -361,10 +364,10 @@ const Clinicas = () => {
           <section className="py-14 md:py-24 px-6 md:px-12 max-w-6xl mx-auto">
             <div className="text-center max-w-3xl mx-auto mb-10 md:mb-16 space-y-3">
               <span className="text-xs font-normal tracking-widest text-blue-600 dark:text-blue-300">
-                El plan
+                {copy[29]}
               </span>
               <h2 data-split-title className="text-balance text-3xl sm:text-4xl md:text-5xl font-normal tracking-tight text-black dark:text-white">
-                Todo lo que tu clínica necesita
+                {copy[30]}
               </h2>
             </div>
 
@@ -380,14 +383,14 @@ const Clinicas = () => {
                   onClick={() => setCycle("monthly")}
                   className={`relative z-10 flex-1 py-2.5 text-xs font-normal transition-colors duration-300 ${cycle === "monthly" ? "text-white dark:text-black" : "text-gray-500 dark:text-white/80"}`}
                 >
-                  Mensual
+                  {copy[31]}
                 </button>
                 <button
                   onClick={() => setCycle("annually")}
                   className={`relative z-10 flex-1 py-2.5 text-xs font-normal transition-colors duration-300 ${cycle === "annually" ? "text-white dark:text-black" : "text-gray-500 dark:text-white/80"}`}
                 >
                   <span className="inline-flex items-center justify-center gap-1.5">
-                    Anual
+                    {copy[32]}
                     <span
                       className={`text-[10px] px-1.5 py-0.5 rounded-full ${
                         cycle === "annually"
@@ -395,7 +398,7 @@ const Clinicas = () => {
                           : "bg-blue-600/10 text-blue-600 dark:text-blue-300"
                       }`}
                     >
-                      -10%
+                      {copy[33]}
                     </span>
                   </span>
                 </button>
@@ -406,19 +409,19 @@ const Clinicas = () => {
               <div className="rounded-[2.5rem] bg-black dark:bg-neutral-900 text-white p-8 sm:p-10 shadow-[0_40px_80px_rgba(0,0,0,0.2)] dark:shadow-none transition-all duration-500 hover:-translate-y-2">
                 <div className="flex flex-col items-start gap-4 mb-2">
                   <img src="/clinicas-star.png" alt="" className="w-10 h-10 shrink-0" />
-                  <h3 className="text-2xl font-normal">Agente AI Clínico</h3>
+                  <h3 className="text-2xl font-normal">{copy[34]}</h3>
                 </div>
                 <div className="flex items-baseline gap-1 mb-2">
                   <span className="text-5xl font-normal tracking-tight">
                     {cycle === "monthly" ? "$500" : "$5,400"}
                   </span>
                   <span className="text-xs font-light text-white/70">
-                    MXN {cycle === "monthly" ? "/ mes" : "/ año"}
+                    {copy[35]} {cycle === "monthly" ? copy[36] : copy[37]}
                   </span>
                 </div>
                 {cycle === "annually" ? (
                   <p className="text-[11px] font-light mb-8 text-white/70">
-                    ✦ Ahorras 10%: pagando al año te descontamos $600 MXN
+                    {copy[38]}
                   </p>
                 ) : (
                   <div className="mb-8" />
@@ -426,13 +429,13 @@ const Clinicas = () => {
 
                 <ul className="space-y-4">
                   {[
-                    { icon: Globe, text: "Página web de clínica" },
-                    { icon: Clock, text: "Tus clientes pueden agendar contigo 24/7" },
-                    { icon: BellRing, text: "Recordatorios automáticos" },
-                    { icon: LayoutDashboard, text: "Panel de gestión personal para administrar tu calendario de trabajo" },
-                    { icon: Workflow, text: "Herramientas de trabajo para automatizar los procesos de tu clínica" },
-                    { icon: SlidersHorizontal, text: "Plataforma 100% personalizable" },
-                    { icon: AtSign, text: "Incluye espacio para dominio" },
+                    { icon: Globe, text: copy[39] },
+                    { icon: Clock, text: copy[40] },
+                    { icon: BellRing, text: copy[41] },
+                    { icon: LayoutDashboard, text: copy[42] },
+                    { icon: Workflow, text: copy[43] },
+                    { icon: SlidersHorizontal, text: copy[44] },
+                    { icon: AtSign, text: copy[45] },
                   ].map(({ icon: Icon, text }) => (
                     <li key={text} className="flex items-start gap-3">
                       <Icon className="w-5 h-5 text-white shrink-0 mt-0.5" strokeWidth={1.5} />
@@ -448,10 +451,10 @@ const Clinicas = () => {
           <section className="py-14 md:py-20 px-6 md:px-12 max-w-4xl mx-auto space-y-8 md:space-y-12">
             <div className="text-center space-y-3">
               <span className="text-xs font-normal tracking-widest text-blue-600 dark:text-blue-300">
-                Preguntas frecuentes
+                {copy[46]}
               </span>
               <h2 data-split-title className="text-balance text-3xl md:text-4xl font-normal tracking-tight text-black dark:text-white">
-                Todo lo que necesitas saber antes de activar tu clínica
+                {copy[47]}
               </h2>
             </div>
 
@@ -497,11 +500,10 @@ const Clinicas = () => {
           {/* ─── CALL TO ACTION FINAL ─── */}
           <section className="py-14 md:py-24 px-6 md:px-12 max-w-5xl mx-auto text-center space-y-4 md:space-y-6">
             <h2 data-split-title className="text-balance text-3xl sm:text-4xl md:text-6xl font-normal text-black dark:text-white tracking-tight leading-tight">
-              Moderniza la atención de tus pacientes hoy mismo
+              {copy[48]}
             </h2>
             <p data-fade-p className="text-base sm:text-lg font-light text-miiles-gray-600 dark:text-white/85 max-w-xl mx-auto">
-              Por solo $500 MXN al mes tendrás el asistente que tu clínica necesita para nunca más perder
-              una consulta.
+              {copy[49]}
             </p>
           </section>
 
@@ -514,7 +516,7 @@ const Clinicas = () => {
       </div>
 
       {/* CTA pegado (fuera del smooth wrapper para que quede fijo) */}
-      <StickyCta label="Activar agente" onClick={() => openWhatsApp(WHATSAPP_MESSAGE)} />
+      <StickyCta label={copy[50]} onClick={() => openWhatsApp(WHATSAPP_MESSAGE)} />
 
       {/* ─── MODAL DE CONTRATACIÓN ASISTENTE PARA CLÍNICAS (FUERA DEL SMOOTH WRAPPER) ─── */}
       <AnimatePresence>
@@ -548,42 +550,41 @@ const Clinicas = () => {
                     <Check className="w-8 h-8" />
                   </div>
                   <h3 className="text-2xl font-normal text-black dark:text-white">
-                    ¡Solicitud de Clínica Recibida!
+                    {copy[51]}
                   </h3>
                   <p className="text-sm font-light text-miiles-gray-600 dark:text-white/85 max-w-md mx-auto">
-                    Nos pondremos en contacto de inmediato para conectar los horarios de
-                    tu consultorio y dejar activo tu asistente en menos de 48 horas.
+                    {copy[52]}
                   </p>
                   <button
                     onClick={() => setIsModalOpen(false)}
                     className="inline-flex items-center gap-2 rounded-full px-8 py-3 text-xs font-normal bg-blue-600 text-white hover:bg-black dark:hover:bg-white dark:hover:text-black transition-all"
                   >
-                    Entendido
+                    {copy[53]}
                   </button>
                 </div>
               ) : (
                 <form onSubmit={handleSubmit} className="space-y-5">
                   <div>
                     <span className="text-[11px] font-normal text-blue-600 dark:text-blue-300">
-                      {cycle === "monthly" ? "Suscripción mensual — $500 MXN / mes" : "Suscripción anual — $5,400 MXN / año"}
+                      {cycle === "monthly" ? copy[54] : copy[55]}
                     </span>
                     <h3 className="text-2xl font-normal text-black dark:text-white mt-1">
-                      Activar Asistente para tu Clínica
+                      {copy[56]}
                     </h3>
                     <p className="text-xs font-light text-miiles-gray-600 dark:text-white/85 mt-1">
-                      Comienza a agendar pacientes 24/7 sin plazos forzosos.
+                      {copy[57]}
                     </p>
                   </div>
 
                   {/* Nombre de la clínica */}
                   <div className="space-y-1.5">
                     <label className="text-xs font-normal text-black dark:text-white">
-                      Nombre de la Clínica o Consultorio:
+                      {copy[58]}
                     </label>
                     <input
                       type="text"
                       required
-                      placeholder="Ej. Clínica Dental Sonrisas, Dr. Garza..."
+                      placeholder={copy[59]}
                       value={formData.clinicName}
                       onChange={(e) =>
                         setFormData({ ...formData, clinicName: e.target.value })
@@ -595,7 +596,7 @@ const Clinicas = () => {
                   {/* Especialidad */}
                   <div className="space-y-1.5">
                     <label className="text-xs font-normal text-black dark:text-white">
-                      Especialidad Médica Principal:
+                      {copy[60]}
                     </label>
                     <select
                       value={formData.specialty}
@@ -604,20 +605,20 @@ const Clinicas = () => {
                       }
                       className="w-full text-xs font-light rounded-xl border border-miiles-gray-200 dark:border-white/10 p-3 bg-white dark:bg-black focus:outline-none focus:border-blue-600"
                     >
-                      <option value="dental">Dental / Odontología</option>
-                      <option value="dermo">Dermatología / Medicina Estética</option>
-                      <option value="fisio">Fisioterapia / Rehabilitación</option>
-                      <option value="psico">Psicología / Psiquiatría</option>
-                      <option value="nutri">Nutrición</option>
-                      <option value="pediatria">Pediatría / Medicina General</option>
-                      <option value="otra">Otra Especialidad</option>
+                      <option value="dental">{copy[61]}</option>
+                      <option value="dermo">{copy[62]}</option>
+                      <option value="fisio">{copy[63]}</option>
+                      <option value="psico">{copy[64]}</option>
+                      <option value="nutri">{copy[65]}</option>
+                      <option value="pediatria">{copy[66]}</option>
+                      <option value="otra">{copy[67]}</option>
                     </select>
                   </div>
 
                   {/* Número de médicos */}
                   <div className="space-y-1.5">
                     <label className="text-xs font-normal text-black dark:text-white">
-                      ¿Cuántos doctores o consultorios atienden?
+                      {copy[68]}
                     </label>
                     <select
                       value={formData.estimatedDoctors}
@@ -626,9 +627,9 @@ const Clinicas = () => {
                       }
                       className="w-full text-xs font-light rounded-xl border border-miiles-gray-200 dark:border-white/10 p-3 bg-white dark:bg-black focus:outline-none focus:border-blue-600"
                     >
-                      <option value="1">1 doctor / consultorio individual</option>
-                      <option value="2-3">2 a 3 doctores</option>
-                      <option value="4+">4 o más especialistas</option>
+                      <option value="1">{copy[69]}</option>
+                      <option value="2-3">{copy[70]}</option>
+                      <option value="4+">{copy[71]}</option>
                     </select>
                   </div>
 
@@ -644,20 +645,19 @@ const Clinicas = () => {
                       className="mt-0.5 rounded border-gray-300 text-blue-600 focus:ring-blue-600"
                     />
                     <label htmlFor="includeClinicDomain" className="text-xs font-light text-miiles-gray-800">
-                      <strong>Deseo dominio .com o .mx propio (adicional opcional):</strong> Ayúdenme a
-                      registrar y conectar el dominio web oficial de mi clínica.
+                      <strong>{copy[72]}</strong> {copy[73]}
                     </label>
                   </div>
 
                   {/* Contacto */}
                   <div className="space-y-1.5">
                     <label className="text-xs font-normal text-black dark:text-white">
-                      Teléfono para contactarte:
+                      {copy[74]}
                     </label>
                     <input
                       type="text"
                       required
-                      placeholder="+52 55... (o tu correo)"
+                      placeholder={copy[75]}
                       value={formData.contact}
                       onChange={(e) =>
                         setFormData({ ...formData, contact: e.target.value })
@@ -672,13 +672,13 @@ const Clinicas = () => {
                       onClick={() => setIsModalOpen(false)}
                       className="px-5 py-2.5 rounded-full text-xs font-normal text-miiles-gray-600 dark:text-white/85 hover:text-black dark:text-white transition-colors"
                     >
-                      Cancelar
+                      {copy[76]}
                     </button>
                     <button
                       type="submit"
                       className="inline-flex items-center gap-2 px-7 py-3 rounded-full bg-blue-600 text-white text-xs font-normal hover:bg-black dark:hover:bg-white dark:hover:text-black transition-all duration-300 hover:scale-105"
                     >
-                      <span>Activar Clínica</span>
+                      <span>{copy[77]}</span>
                       <Send className="w-3.5 h-3.5" />
                     </button>
                   </div>

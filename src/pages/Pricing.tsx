@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+import { useLocalePath } from "@/hooks/useLocalePath";
 import { useEffect, useRef } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
@@ -18,6 +20,8 @@ if (!CustomEase.get("osmo-ease")) {
 }
 
 const Pricing = () => {
+  const { t } = useTranslation();
+  const localePath = useLocalePath();
   const smootherRef = useRef<ScrollSmoother | null>(null);
   const navigate = useNavigate();
   const { user } = useAuth();
@@ -56,7 +60,7 @@ const Pricing = () => {
         navigate(`/login?next=${encodeURIComponent(`/dashboard?upgrade=true&cycle=${cycle}`)}`);
       }
     } else if (planName === "Negocios") {
-      navigate("/precios/negocios");
+      navigate(localePath("/precios/negocios"));
     }
   };
 
@@ -67,12 +71,9 @@ const Pricing = () => {
         <div id="smooth-content-pricing" className="bg-white text-black font-sans pb-0">
           
           <section className="min-h-[50vh] flex flex-col items-center justify-center text-center px-6 pt-40 pb-12">
-            <h1 className="text-5xl md:text-7xl font-normal leading-tight tracking-tight mb-8 max-w-4xl">
-              Todo un ecosistema de IA. <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>Un solo pago.</span>
+            <h1 className="text-5xl md:text-7xl font-normal leading-tight tracking-tight mb-8 max-w-4xl">{t("pricing.copy.text1")} <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>{t("pricing.copy.text2")}</span>
             </h1>
-            <p className="text-lg font-light text-gray-500 max-w-2xl mb-12">
-              Potencia tu marca con la flexibilidad que necesitas. Sin letras pequeñas, solo el impulso que mereces.
-            </p>
+            <p className="text-lg font-light text-gray-500 max-w-2xl mb-12">{t("pricing.copy.text3")}</p>
           </section>
 
           {/* Componente del selector de ciclo y tarjetas de planes */}

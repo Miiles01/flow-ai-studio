@@ -1,0 +1,15 @@
+{
+  "copy": [
+    "Hi, I need you to connect to my Shopify store so I can edit it from here.\n\nDetails:\n\n•  Site:\n\n•  Published theme:\n\n•  Working folder:\n\nPlease do this step by step, briefly explaining each step:\n\n1.  Check whether Shopify CLI is installed (shopify version). If it is not, or updating fails due to permissions, give me the sudo command so I can run it.\n\n2.  Download the theme with shopify theme pull into the working folder. I will sign in through the browser; never enter credentials yourself.\n\n3.  Tell me which sections the home page has (templates/index.json).\n\n4.  Make this change: in the hero title, replace \"made for you\" with \"made for everyone\".\n\n5.  Run shopify theme dev so I can preview it without touching the published store.\n\n6.  When I confirm, upload ONLY the modified file to the published theme with:\n\n   shopify theme push --only templates/index.json --allow-live --nodelete\n\n7.  Do not push without my explicit confirmation. See https://shopify.dev/docs/api/shopify-cli for more information",
+    "Home",
+    "Connect Shopify to your assistant",
+    "Manage your online store more easily: this assistant helps you edit it and make any changes. You no longer need to make manual changes; just give it an instruction and it gets done.",
+    "Tutorial: how to connect Shopify to your Miiles assistant",
+    "Prompt to copy",
+    "Copy this prompt, fill in your details (site, theme, and folder), and paste it into your assistant.",
+    "Copied!",
+    "Copy prompt",
+    "©",
+    "Miiles"
+  ]
+}

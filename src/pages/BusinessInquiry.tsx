@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+import { useLocalePath } from "@/hooks/useLocalePath";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -8,6 +10,8 @@ import { toast } from "sonner";
 import { Loader2 } from "lucide-react";
 
 const BusinessInquiry = () => {
+  const { t } = useTranslation();
+  const localePath = useLocalePath();
   const navigate = useNavigate();
   const [submitting, setSubmitting] = useState(false);
   const [form, setForm] = useState({
@@ -26,7 +30,7 @@ const BusinessInquiry = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!form.name.trim() || !form.email.trim()) {
-      toast.error("Nombre y email son obligatorios");
+      toast.error(t("business.inquiry.text1"));
       return;
     }
     setSubmitting(true);
@@ -41,10 +45,10 @@ const BusinessInquiry = () => {
     });
     setSubmitting(false);
     if (error) {
-      toast.error("No se pudo enviar tu solicitud. Inténtalo de nuevo.");
+      toast.error(t("business.inquiry.text2"));
       return;
     }
-    navigate("/precios/negocios/gracias");
+    navigate(localePath("/precios/negocios/gracias"));
   };
 
   const inputClass =
@@ -56,48 +60,45 @@ const BusinessInquiry = () => {
       <div className="bg-white text-black font-sans min-h-screen">
         <section className="max-w-2xl mx-auto px-6 pt-40 pb-24">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <h1 className="text-4xl md:text-5xl font-normal tracking-tight mb-4">
-              Hablemos de tu <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>equipo.</span>
+            <h1 className="text-4xl md:text-5xl font-normal tracking-tight mb-4">{t("business.inquiry.text3")} <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>{t("business.inquiry.text4")}</span>
             </h1>
-            <p className="text-base font-light text-gray-500 mb-10 max-w-lg">
-              Cuéntanos sobre tu empresa y te contactaremos para armar un plan Negocios a tu medida.
-            </p>
+            <p className="text-base font-light text-gray-500 mb-10 max-w-lg">{t("business.inquiry.text5")}</p>
 
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
-                  <label className="text-xs text-gray-500 mb-1.5 block font-light">Nombre *</label>
-                  <input value={form.name} onChange={update("name")} className={inputClass} placeholder="Tu nombre" />
+                  <label className="text-xs text-gray-500 mb-1.5 block font-light">{t("business.inquiry.text6")}</label>
+                  <input value={form.name} onChange={update("name")} className={inputClass} placeholder={t("business.inquiry.text7")} />
                 </div>
                 <div>
-                  <label className="text-xs text-gray-500 mb-1.5 block font-light">Email *</label>
-                  <input value={form.email} onChange={update("email")} type="email" className={inputClass} placeholder="tu@empresa.com" />
+                  <label className="text-xs text-gray-500 mb-1.5 block font-light">{t("business.inquiry.text8")}</label>
+                  <input value={form.email} onChange={update("email")} type="email" className={inputClass} placeholder={t("business.inquiry.text9")} />
                 </div>
                 <div>
-                  <label className="text-xs text-gray-500 mb-1.5 block font-light">Empresa</label>
-                  <input value={form.company} onChange={update("company")} className={inputClass} placeholder="Nombre de la empresa" />
+                  <label className="text-xs text-gray-500 mb-1.5 block font-light">{t("business.inquiry.text10")}</label>
+                  <input value={form.company} onChange={update("company")} className={inputClass} placeholder={t("business.inquiry.text11")} />
                 </div>
                 <div>
-                  <label className="text-xs text-gray-500 mb-1.5 block font-light">Teléfono</label>
-                  <input value={form.phone} onChange={update("phone")} className={inputClass} placeholder="+52 ..." />
+                  <label className="text-xs text-gray-500 mb-1.5 block font-light">{t("business.inquiry.text12")}</label>
+                  <input value={form.phone} onChange={update("phone")} className={inputClass} placeholder={t("business.inquiry.text13")} />
                 </div>
                 <div>
-                  <label className="text-xs text-gray-500 mb-1.5 block font-light">Tamaño del equipo</label>
-                  <input value={form.team_size} onChange={update("team_size")} className={inputClass} placeholder="Ej. 5-20 personas" />
+                  <label className="text-xs text-gray-500 mb-1.5 block font-light">{t("business.inquiry.text14")}</label>
+                  <input value={form.team_size} onChange={update("team_size")} className={inputClass} placeholder={t("business.inquiry.text15")} />
                 </div>
                 <div>
-                  <label className="text-xs text-gray-500 mb-1.5 block font-light">Página web o redes</label>
-                  <input value={form.web_or_socials} onChange={update("web_or_socials")} className={inputClass} placeholder="sitio.com / @usuario" />
+                  <label className="text-xs text-gray-500 mb-1.5 block font-light">{t("business.inquiry.text16")}</label>
+                  <input value={form.web_or_socials} onChange={update("web_or_socials")} className={inputClass} placeholder={t("business.inquiry.text17")} />
                 </div>
               </div>
               <div>
-                <label className="text-xs text-gray-500 mb-1.5 block font-light">¿En qué te podemos ayudar?</label>
+                <label className="text-xs text-gray-500 mb-1.5 block font-light">{t("business.inquiry.text18")}</label>
                 <textarea
                   value={form.message}
                   onChange={update("message")}
                   rows={4}
                   className={inputClass + " resize-none"}
-                  placeholder="Cuéntanos un poco más..."
+                  placeholder={t("business.inquiry.text19")}
                 />
               </div>
 
@@ -106,9 +107,7 @@ const BusinessInquiry = () => {
                 disabled={submitting}
                 className="w-full flex items-center justify-center gap-2 px-8 py-4 rounded-full bg-black text-white text-sm font-normal hover:bg-opacity-80 transition-all disabled:opacity-60"
               >
-                {submitting && <Loader2 size={16} className="animate-spin" />}
-                Enviar solicitud
-              </button>
+                {submitting && <Loader2 size={16} className="animate-spin" />}{t("business.inquiry.text20")}</button>
             </form>
           </motion.div>
         </section>

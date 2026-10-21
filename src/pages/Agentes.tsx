@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+import { useLocalePath } from "@/hooks/useLocalePath";
 import { useState, useEffect, useRef } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
@@ -32,66 +34,6 @@ import agenteDisenoPoster from "@/assets/agente-diseno-poster.jpg.asset.json";
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText);
 
-const WHATSAPP_MESSAGE = "Hola, quiero activar el diseñador y el embudo de ventas para mi negocio.";
-const WHATSAPP_DEMO_MESSAGE = "Hola, quiero solicitar una demo del diseñador y el embudo de ventas para mi negocio.";
-
-const AGENTS = [
-  {
-    key: "disenador",
-    icon: Palette,
-    name: "Agente Diseñador",
-    tagline: "Tu marca y tu web completa, listas para vender con autoridad",
-    features: [
-      { icon: PenTool, text: "Refinamiento de marca: logotipo, tipografías y paleta" },
-      { icon: Globe, text: "Sitio web completo, rápido y responsive" },
-      { icon: Share2, text: "Publicaciones para Instagram, TikTok y campañas de venta" },
-      { icon: Package, text: "Empaques, etiquetas y mockups de producto" },
-      { icon: Megaphone, text: "Anuncios, letreros y papelería personalizada" },
-      { icon: AtSign, text: "Incluye espacio para dominio" },
-    ],
-  },
-  {
-    key: "embudo",
-    icon: Filter,
-    name: "Embudo de ventas",
-    tagline: "Un sistema que capta y atiende clientes por ti",
-    features: [
-      { icon: Filter, text: "Embudo de conversión para agendar llamadas o pedir cotizaciones" },
-      { icon: Bot, text: "Asistente de ventas con inteligencia artificial" },
-      { icon: FolderOpen, text: "Catálogo y portafolio de tus servicios" },
-      { icon: Clock, text: "Automatizaciones que atienden a tus clientes 24/7" },
-    ],
-  },
-];
-
-const FAQS = [
-  {
-    question: "¿Qué incluye exactamente el Agente Diseñador por $2,000 MXN?",
-    answer:
-      "Incluye todo lo visual que tu negocio necesita para vender: diseño o refinamiento de tu identidad de marca, logotipo oficial, tu sitio web completo, aplicaciones para redes sociales (posts, carruseles, portadas), diseño de empaques, letreros, anuncios publicitarios y papelería personalizada. Es un pago único sin mensualidades sorpresa.",
-  },
-  {
-    question: "¿Qué es el embudo de ventas y cómo funciona?",
-    answer:
-      "Es un sistema que recibe a tus prospectos, los guía y los convierte en clientes sin que tengas que perseguirlos a mano. Incluye un embudo de conversión para agendar llamadas o pedir cotizaciones, tu catálogo y portafolio, automatizaciones que funcionan 24/7 y un asistente de ventas con inteligencia artificial que atiende a tus clientes cuando tú no puedes.",
-  },
-  {
-    question: "¿Cómo funciona el pago del dominio .com?",
-    answer:
-      "El desarrollo de tu sitio web está 100% cubierto por el pago único de $2,000 MXN y ya incluye el espacio para tu dominio. El nombre de dominio personalizado (.com o .mx) es un costo anual independiente que puedes adquirir tú mismo o solicitar que lo gestionemos como un adicional para dejarlo enlazado.",
-  },
-  {
-    question: "¿Por qué trabajar con el diseñador y el embudo juntos?",
-    answer:
-      "El Diseñador crea tu marca y tu web con una estética sólida, y el embudo de ventas la convierte en un sistema que capta prospectos y cierra clientes todos los días. Tu negocio queda listo para competir con los líderes de tu industria en cuestión de días.",
-  },
-  {
-    question: "¿Tengo una clínica o consultorio, qué servicio me corresponde?",
-    answer:
-      "Para el sector salud contamos con el Asistente para Clínicas: una solución especializada bajo suscripción de $500 MXN/mes que automatiza la agenda de pacientes 24/7, responde dudas frecuentes y reduce el ausentismo.",
-  },
-];
-
 const fadeUp = {
   hidden: { opacity: 0, y: 22 },
   visible: {
@@ -102,6 +44,71 @@ const fadeUp = {
 };
 
 const Agentes = () => {
+  const { t } = useTranslation();
+  const localePath = useLocalePath();
+  const copy = t("agents.copy", { returnObjects: true }) as string[];
+
+const WHATSAPP_MESSAGE = copy[0];
+const WHATSAPP_DEMO_MESSAGE = copy[1];
+
+const AGENTS = [
+  {
+    key: "disenador",
+    icon: Palette,
+    name: copy[2],
+    tagline: copy[3],
+    features: [
+      { icon: PenTool, text: copy[4] },
+      { icon: Globe, text: copy[5] },
+      { icon: Share2, text: copy[6] },
+      { icon: Package, text: copy[7] },
+      { icon: Megaphone, text: copy[8] },
+      { icon: AtSign, text: copy[9] },
+    ],
+  },
+  {
+    key: "embudo",
+    icon: Filter,
+    name: copy[10],
+    tagline: copy[11],
+    features: [
+      { icon: Filter, text: copy[12] },
+      { icon: Bot, text: copy[13] },
+      { icon: FolderOpen, text: copy[14] },
+      { icon: Clock, text: copy[15] },
+    ],
+  },
+];
+
+const FAQS = [
+  {
+    question: copy[16],
+    answer:
+      copy[17],
+  },
+  {
+    question: copy[18],
+    answer:
+      copy[19],
+  },
+  {
+    question: copy[20],
+    answer:
+      copy[21],
+  },
+  {
+    question: copy[22],
+    answer:
+      copy[23],
+  },
+  {
+    question: copy[24],
+    answer:
+      copy[25],
+  },
+];
+
+
   const [openFaq, setOpenFaq] = useState<number | null>(0);
   const smootherRef = useRef<ScrollSmoother | null>(null);
 
@@ -140,13 +147,13 @@ const Agentes = () => {
     });
 
     document.title =
-      "Diseñador y Embudo de Ventas para Escalar tu Negocio | Miiles";
+      copy[26];
 
     const metaDesc = document.querySelector('meta[name="description"]');
     if (metaDesc) {
       metaDesc.setAttribute(
         "content",
-        "Escala tu negocio con Miiles: tu Agente Diseñador de marca y web completa ($2,000 MXN) y tu embudo de ventas con asistente de IA ($2,000 MXN). Pago único, soluciones llave en mano."
+        copy[27]
       );
     }
 
@@ -162,29 +169,29 @@ const Agentes = () => {
           url: "https://miiles.app/",
           logo: "https://miiles.app/favicon.png",
           description:
-            "Diseño de marca, sitios web y sistemas de ventas automatizados con inteligencia artificial para escalar negocios.",
+            copy[28],
         },
         {
           "@type": "Product",
-          name: "Agente Diseñador — Marca y Web",
+          name: copy[29],
           description:
-            "Diseño de marca, sitio web completo, logotipos, publicaciones para redes sociales, empaques, letreros y anuncios.",
+            copy[30],
           offers: {
             "@type": "Offer",
             price: "2000",
-            priceCurrency: "MXN",
+            priceCurrency: copy[50],
             availability: "https://schema.org/InStock",
           },
         },
         {
           "@type": "Product",
-          name: "Embudo de ventas — Captación y Atención Automatizada",
+          name: copy[31],
           description:
-            "Sistema de embudo de ventas con asistente de ventas con inteligencia artificial, automatizaciones 24/7, catálogo y agendado de llamadas o cotizaciones.",
+            copy[32],
           offers: {
             "@type": "Offer",
             price: "2000",
-            priceCurrency: "MXN",
+            priceCurrency: copy[50],
             availability: "https://schema.org/InStock",
           },
         },
@@ -211,7 +218,7 @@ const Agentes = () => {
       const existing = document.getElementById("schema-agentes-comerciales");
       if (existing) existing.remove();
     };
-  }, []);
+  }, [t]);
 
   return (
     <>
@@ -243,7 +250,7 @@ const Agentes = () => {
             >
               <Layers className="w-4 h-4 text-blue-600 dark:text-blue-300" />
               <span className="text-[11px] font-normal tracking-wide text-blue-900 dark:text-blue-200">
-                Especializado para negocios
+                {copy[33]}
               </span>
             </motion.div>
 
@@ -253,17 +260,17 @@ const Agentes = () => {
               variants={fadeUp}
               className="text-balance text-[2.75rem] sm:text-5xl md:text-6xl lg:text-7xl font-normal tracking-tight text-black dark:text-white leading-[1.08] max-w-4xl mx-auto mb-12 md:mb-14"
             >
-              Un diseñador y un embudo de ventas que hacen crecer tu{" "}
+              {copy[34]}{" "}
               <span
                 style={{
                   fontFamily: "'Welth Catritz', serif",
                   fontStyle: "italic",
                 }}
               >
-                negocio
+                {copy[35]}
               </span>
               <span className="block mt-4 text-2xl sm:text-3xl md:text-4xl text-blue-600 dark:text-blue-300 font-normal tracking-tight">
-                — 24 horas al día
+                {copy[36]}
               </span>
             </motion.h1>
 
@@ -291,7 +298,7 @@ const Agentes = () => {
               className="flex justify-center mb-8 md:mb-10"
             >
               <SlideArrowButton onClick={() => openWhatsApp(WHATSAPP_DEMO_MESSAGE)}>
-                Solicitar demo
+                {copy[37]}
               </SlideArrowButton>
             </motion.div>
 
@@ -302,9 +309,8 @@ const Agentes = () => {
               transition={{ delay: 0.1 }}
               className="text-base sm:text-lg md:text-xl font-light text-miiles-gray-600 dark:text-white/85 max-w-3xl mx-auto leading-relaxed mb-10"
             >
-              Para escalar de verdad necesitas dos cosas: <strong>una marca y una web de alto nivel</strong>{" "}
-              que justifiquen tus precios y <strong>un embudo de ventas automatizado</strong> que capte
-              y atienda clientes por ti mientras atiendes tu negocio.
+              {copy[38]} <strong>{copy[39]}</strong>{" "}
+              {copy[40]} <strong>{copy[41]}</strong> {copy[42]}
             </motion.p>
 
             <motion.div
@@ -316,7 +322,7 @@ const Agentes = () => {
               <div className="flex items-center gap-2.5 px-5 py-2.5 rounded-full bg-blue-50 dark:bg-blue-500/10 border border-blue-200/80 dark:border-blue-400/20">
                 <CheckCircle2 className="w-5 h-5 text-blue-600 dark:text-blue-300 shrink-0" />
                 <span className="text-base md:text-lg font-normal text-blue-900 dark:text-blue-200">
-                  Sin contratos forzosos ni comisiones
+                  {copy[43]}
                 </span>
               </div>
             </motion.div>
@@ -348,20 +354,19 @@ const Agentes = () => {
             />
             <div className="relative z-10 max-w-5xl mx-auto text-center space-y-6">
               <span className="text-sm font-normal text-blue-600 dark:text-blue-300">
-                El reto de escalar un negocio
+                {copy[44]}
               </span>
               <h2
                 data-split-title
                 className="text-balance text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-normal tracking-tight leading-[1.08] text-black dark:text-white"
               >
-                Si tu marca no inspira confianza y tu web no vende, el cliente se va con otro
+                {copy[45]}
               </h2>
               <p
                 data-fade-p
                 className="text-sm md:text-base font-light text-miiles-gray-600 dark:text-white/85 max-w-2xl mx-auto"
               >
-                Sin una marca y una web de alto nivel ni un embudo que atienda por ti, pasas el día
-                persiguiendo clientes a mano y perdiendo ventas que ya tenías cerca.
+                {copy[46]}
               </p>
             </div>
           </section>
@@ -370,13 +375,13 @@ const Agentes = () => {
           <section className="py-14 md:py-24 px-6 md:px-12 max-w-6xl mx-auto">
             <div className="text-center max-w-3xl mx-auto mb-10 md:mb-16 space-y-3">
               <span className="text-xs font-normal tracking-widest text-blue-600 dark:text-blue-300">
-                Lo que incluye
+                {copy[47]}
               </span>
               <h2
                 data-split-title
                 className="text-balance text-3xl sm:text-4xl md:text-5xl font-normal tracking-tight text-black dark:text-white"
               >
-                Elige lo que tu negocio necesita
+                {copy[48]}
               </h2>
             </div>
 
@@ -395,8 +400,8 @@ const Agentes = () => {
                   <p className="text-xs font-light text-white/70 mb-6">{tagline}</p>
 
                   <div className="flex items-baseline gap-1 mb-8">
-                    <span className="text-5xl font-normal tracking-tight">$2,000</span>
-                    <span className="text-xs font-light text-white/70">MXN</span>
+                    <span className="text-5xl font-normal tracking-tight">{copy[49]}</span>
+                    <span className="text-xs font-light text-white/70">{copy[50]}</span>
                   </div>
 
                   <ul className="space-y-4">
@@ -416,13 +421,13 @@ const Agentes = () => {
           <section className="py-14 md:py-20 px-6 md:px-12 max-w-4xl mx-auto space-y-8 md:space-y-12">
             <div className="text-center space-y-3">
               <span className="text-xs font-normal tracking-widest text-blue-600 dark:text-blue-300">
-                Preguntas frecuentes
+                {copy[51]}
               </span>
               <h2
                 data-split-title
                 className="text-balance text-3xl md:text-4xl font-normal tracking-tight text-black dark:text-white"
               >
-                Claridad total sobre cómo funciona todo
+                {copy[52]}
               </h2>
             </div>
 
@@ -472,13 +477,13 @@ const Agentes = () => {
               data-split-title
               className="text-balance text-3xl sm:text-4xl md:text-6xl font-normal text-black dark:text-white tracking-tight leading-tight"
             >
-              Escala tu negocio con tu diseñador y tu embudo de ventas
+              {copy[53]}
             </h2>
             <p
               data-fade-p
               className="text-base sm:text-lg font-light text-miiles-gray-600 dark:text-white/85 max-w-xl mx-auto"
             >
-              Por $2,000 MXN de pago único por servicio, tu marca, tu web y tu embudo quedan listos para vender.
+              {copy[54]}
             </p>
           </section>
 
@@ -490,7 +495,7 @@ const Agentes = () => {
       </div>
 
       {/* CTA pegado (fuera del smooth wrapper para que quede fijo) */}
-      <StickyCta label="Activar agente" onClick={() => openWhatsApp(WHATSAPP_MESSAGE)} />
+      <StickyCta label={copy[55]} onClick={() => openWhatsApp(WHATSAPP_MESSAGE)} />
     </>
   );
 };

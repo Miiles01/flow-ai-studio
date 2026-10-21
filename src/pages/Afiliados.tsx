@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { useLocalePath } from "@/hooks/useLocalePath";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import gsap from "gsap";
@@ -58,6 +59,7 @@ const DEMO_WIDTH = 1440;
 const DEMO_HEIGHT = 900;
 
 const PortfolioDemo = () => {
+  const { t } = useTranslation();
   const frameRef = useRef<HTMLDivElement>(null);
   const [scale, setScale] = useState(0.6);
   // 0 = todavía no se ha visto; cada valor nuevo monta otro iframe y la animación empieza de cero
@@ -135,8 +137,8 @@ const PortfolioDemo = () => {
           <iframe
             key={run}
             ref={iframeRef}
-            src={PORTFOLIO_DEMO_SRC}
-            title="Portafolio de Ale creado con Miiles"
+            src={`${PORTFOLIO_DEMO_SRC}#${encodeURIComponent(JSON.stringify(t("affiliates.portfolioCopy", { returnObjects: true })))}`}
+            title={t("affiliates.portfolioTitle")}
             tabIndex={-1}
             aria-hidden="true"
             scrolling="no"
@@ -162,6 +164,7 @@ const PortfolioDemo = () => {
 };
 
 const AnimatedDashboardMockup = () => {
+  const { t } = useTranslation();
   const [scale, setScale] = useState(1);
   const [isMobile, setIsMobile] = useState(false);
   const containerRef = useRef<HTMLDivElement>(null);
@@ -358,20 +361,16 @@ const AnimatedDashboardMockup = () => {
 
           {/* nav */}
           <div className="flex flex-col gap-1">
-            {[
-              { label: 'Inicio', active: false },
-              { label: 'Tableros', active: true },
-              { label: 'Estudio', active: false },
-            ].map((item) => (
+            {(t("affiliates.navigation", { returnObjects: true }) as { label: string; active: boolean }[]).map((item, index) => (
               <div key={item.label}
                 className={`flex items-center gap-3 px-4 py-3 rounded-[22px] text-[13px] cursor-pointer ${
                   item.active
                     ? 'bg-white border border-[#EEEFF2] font-normal text-black shadow-sm'
                     : 'font-light text-black/50'
                 }`}>
-                {item.label === 'Inicio'
+                {index === 0
                   ? <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><path d="M3 9l9-7 9 7v11a2 2 0 01-2 2H5a2 2 0 01-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
-                  : item.label === 'Estudio'
+                  : index === 2
                   ? <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"><path d="M12 21a9 9 0 1 1 9-9c0 1.657-1.343 3-3 3h-1.5a1.5 1.5 0 0 0-1.06 2.56l.06.06a1.5 1.5 0 0 1-1.06 2.56A9 9 0 0 1 12 21z"/><circle cx="8" cy="10" r="0.75"/><circle cx="12" cy="7.5" r="0.75"/><circle cx="16" cy="10" r="0.75"/></svg>
                   : <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/></svg>
                 }
@@ -423,8 +422,8 @@ const AnimatedDashboardMockup = () => {
                 </svg>
               </div>
               <div>
-                <div className="text-[11px] font-normal text-black">Afiliados</div>
-                <div className="text-[9px] font-light text-black/40 leading-snug mt-0.5">Comparte tu link y recibe comisiones</div>
+                <div className="text-[11px] font-normal text-black">{t("affiliates.affiliates")}</div>
+                <div className="text-[9px] font-light text-black/40 leading-snug mt-0.5">{t("affiliates.shareCommission")}</div>
               </div>
             </div>
           </motion.div>
@@ -433,12 +432,12 @@ const AnimatedDashboardMockup = () => {
           <div className="flex items-center gap-2.5 px-1 py-1">
             <img
               src="https://i.pravatar.cc/80?img=47"
-              alt="Ariana"
+              alt={t("affiliates.ariana")}
               className="w-10 h-10 rounded-full object-cover flex-shrink-0"
             />
             <div>
-              <div className="text-[13px] font-normal text-black">Ariana</div>
-              <div className="text-[10px] text-black/40 font-light">Plan Pro</div>
+              <div className="text-[13px] font-normal text-black">{t("affiliates.ariana")}</div>
+              <div className="text-[10px] text-black/40 font-light">{t("affiliates.proPlan")}</div>
             </div>
           </div>
         </div>
@@ -456,15 +455,15 @@ const AnimatedDashboardMockup = () => {
           </div>
         </div>
         <div className="flex items-center justify-between mb-8">
-          <h2 className="text-[22px] font-normal text-black">Mis Tableros</h2>
+          <h2 className="text-[22px] font-normal text-black">{t("affiliates.boardsTitle")}</h2>
           <div className="flex items-center gap-2 bg-black text-white rounded-full px-4 py-2 text-[12px] font-light cursor-pointer">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"><path d="M12 5v14M5 12h14"/></svg>
-            Nuevo tablero
+            {t("affiliates.newBoard")}
           </div>
         </div>
 
         <div className="grid grid-cols-3 gap-5">
-          {['Nuevos', 'Campaña Q3', 'UGC Verano', 'Estrategia', 'Lanzamiento', 'Branding'].map((name) => (
+          {(t("affiliates.boards", { returnObjects: true }) as string[]).map((name) => (
             <div key={name}
               className="rounded-[24px] bg-white shadow-md overflow-hidden cursor-pointer flex flex-col justify-end p-5"
               style={{ aspectRatio: '4/3' }}>
@@ -539,8 +538,8 @@ const AnimatedDashboardMockup = () => {
                   <path d="M12 7h4.5a2.5 2.5 0 0 0 0-5C13 2 12 7 12 7z"/>
                 </svg>
                 <div className="text-left">
-                  <h3 className="text-[18px] font-medium text-black tracking-tight leading-none">Afiliados</h3>
-                  <p className="text-[12px] font-light text-zinc-400 mt-1.5">Comparte tu link y recibe comisiones</p>
+                  <h3 className="text-[18px] font-medium text-black tracking-tight leading-none">{t("affiliates.affiliates")}</h3>
+                  <p className="text-[12px] font-light text-zinc-400 mt-1.5">{t("affiliates.shareCommission")}</p>
                 </div>
               </div>
 
@@ -559,7 +558,7 @@ const AnimatedDashboardMockup = () => {
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" className="mr-1">
                       <path d="M9 17H7A5 5 0 0 1 7 7h2M15 7h2a5 5 0 0 1 0 10h-2M8 12h8"/>
                     </svg>
-                    Generar link
+                    {t("affiliates.generateLink")}
                   </motion.button>
                 </div>
               ) : (
@@ -605,10 +604,10 @@ const AnimatedDashboardMockup = () => {
               {/* Centered Footer Text */}
               <p className="text-[12px] font-light text-zinc-400 text-center select-none mt-2">
                 {phase === 'copied' 
-                  ? "¡Link copiado con éxito!" 
+                  ? t("affiliates.copied") 
                   : ['open_popup', 'hover_generate', 'click_generate'].includes(phase)
                     ? ""
-                    : "Compártelo y empieza a ganar"
+                    : t("affiliates.shareEarn")
                 }
               </p>
             </motion.div>
@@ -624,17 +623,14 @@ const AnimatedDashboardMockup = () => {
 };
 
 /* ─── Data ──────────────────────────────────────────────────────────────── */
-const STEPS = [
-  { icon: Gift, label: "Plan Pro gratis", detail: "Únete como afiliado y accede a todas las herramientas de Miiles sin pagar nada. Tú usas, tú vendes, tú ganas." },
-  { icon: Link2, label: "Link de afiliado", detail: "Ve a la sección Afiliados en tu menú lateral y genera tu enlace único con un solo clic." },
-  { icon: Percent, label: "Gana el 25%", detail: "Compártelo en tus redes, stories o bio. Cada membresía vendida con tu link te da el 25% directo." },
-  { icon: Users, label: "Comunidad exclusiva", detail: "Acceso a comunidad privada, drops de contenido y eventos que no están abiertos al público." },
-];
+
 
 /* ─── Page ──────────────────────────────────────────────────────────────── */
 const Afiliados = () => {
   const smootherRef = useRef<ScrollSmoother | null>(null);
   const { t } = useTranslation();
+  const localePath = useLocalePath();
+  const steps = (t("affiliates.steps", { returnObjects: true }) as { label: string; detail: string }[]).map((step, i) => ({ ...step, icon: [Gift, Link2, Percent, Users][i] }));
 
   useEffect(() => {
     if (window.location.search.includes("nosmooth")) {
@@ -976,27 +972,27 @@ const Afiliados = () => {
 
             <div className="relative z-10 w-full flex flex-col items-center justify-center">
               <h1 className="text-5xl md:text-7xl lg:text-[90px] font-normal leading-[1.05] tracking-tight mb-8 max-w-4xl mx-auto">
-              <span className="block">Todo creador necesita una base</span>
+              <span className="block">{t("affiliates.headline")}</span>
             </h1>
 
             <p data-fade className="text-[17px] md:text-xl font-light text-black max-w-xl mx-auto mb-10 leading-relaxed px-2 md:px-0">
-              Únete al programa de afiliados de Miiles. Comparte tu link y recibe el <strong className="text-black font-normal">25%</strong> de comisión en suscripciones.
+              {t("affiliates.heroBefore")}<strong className="text-black font-normal">{t("affiliates.commission")}</strong>{t("affiliates.heroAfter")}
             </p>
 
             <div data-fade className="flex items-center justify-center gap-4 flex-wrap">
               <Link
-                to="/register"
+                to={localePath("/register")}
                 className="px-8 py-4 rounded-full bg-black text-white text-[15px] font-normal hover:-translate-y-2 transition-transform duration-300 flex items-center gap-2"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C12.3 8.8 15.2 11.7 24 12C15.2 12.3 12.3 15.2 12 24C11.7 15.2 8.8 12.3 0 12C8.8 11.7 11.7 8.8 12 0Z" /></svg>
-                Crear cuenta
+                {t("affiliates.createAccount")}
               </Link>
             </div>
 
             {/* BRAND CAROUSEL */}
             <div data-fade className="w-full mt-16 md:mt-24 mb-4 overflow-hidden relative z-10">
               <h4 className="text-center text-xs font-light text-black/80 mb-8 tracking-widest">
-                Elegido por
+                {t("affiliates.trustedBy")}
               </h4>
               <div className="px-[5%] md:px-[20%] max-w-7xl mx-auto">
                 <div className="relative w-full" style={{ maskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)" }}>
@@ -1014,7 +1010,7 @@ const Afiliados = () => {
               <div className="hero-grow rounded-3xl overflow-hidden border border-black/8 shadow-[0_24px_80px_rgba(0,0,0,0.08)] bg-zinc-50 aspect-[16/9] w-full max-w-full">
                 <img
                   src={creadoresHeroImg}
-                  alt="Tres creadores de contenido sonriendo juntos"
+                  alt={t("affiliates.heroAlt")}
                   className="w-full h-full object-cover"
                   loading="eager"
                 />
@@ -1028,7 +1024,7 @@ const Afiliados = () => {
             <div className="pin-height">
               <div className="container-pin">
                 <p className="sentence">
-                  {"Somos Miiles. Creamos tecnología para ayudar a los creadores a construir sin límites."
+                  {t("affiliates.mission")
                     .split(' ')
                     .map((word, wIdx) => (
                       <span key={wIdx} className="word">
@@ -1050,7 +1046,7 @@ const Afiliados = () => {
             <div className="max-w-6xl mx-auto">
               <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                 {(
-                  t("landing.build_cards", { returnObjects: true }) as {
+                  t("affiliates.buildCards", { returnObjects: true }) as {
                     title: string;
                     desc: string;
                     image: string;
@@ -1085,8 +1081,8 @@ const Afiliados = () => {
           <section className="pt-12 pb-12 md:pt-24 md:pb-12 px-6 bg-white text-center">
             <div className="max-w-4xl mx-auto" data-fade>
               <h2 className="text-4xl md:text-6xl font-normal leading-[1.3] tracking-tight pb-2">
-                Crea con el <span style={{ fontFamily: "'Welth Catritz', serif", overflow: 'visible' }} className="pr-1 italic tracking-normal font-light">poder</span><br />
-                de la IA
+                {t("affiliates.aiBefore")}<span style={{ fontFamily: "'Welth Catritz', serif", overflow: 'visible' }} className="pr-1 italic tracking-normal font-light">{t("affiliates.aiPower")}</span><br />
+                {t("affiliates.aiAfter")}
               </h2>
             </div>
           </section>
@@ -1105,22 +1101,22 @@ const Afiliados = () => {
             <div className="max-w-5xl mx-auto">
               <div className="text-center mb-20">
                 <h2 className="text-4xl md:text-6xl font-normal leading-[1.3] tracking-tight pb-2">
-                  Empieza desde<br className="hidden md:block" /> <span style={{ fontFamily: "'Welth Catritz', serif", overflow: 'visible' }} className="pr-1 italic tracking-normal font-light">cualquier</span> lugar
+                  {t("affiliates.anyBefore")}<br className="hidden md:block" /> <span style={{ fontFamily: "'Welth Catritz', serif", overflow: 'visible' }} className="pr-1 italic tracking-normal font-light">{t("affiliates.any")}</span>{t("affiliates.anyAfter")}
                 </h2>
                 <div data-fade className="text-[15px] font-normal text-zinc-600 mt-6 max-w-lg mx-auto flex flex-col md:flex-row items-center justify-center gap-3 md:gap-6">
                   <div>
                     <Check className="w-4 h-4 inline-block mr-1.5 text-black" strokeWidth={3} />
-                    <span>Sin formularios complicados.</span>
+                    <span>{t("affiliates.noForms")}</span>
                   </div>
                   <div>
                     <Check className="w-4 h-4 inline-block mr-1.5 text-black" strokeWidth={3} />
-                    <span>Sin procesos de aprobación largos.</span>
+                    <span>{t("affiliates.noWaiting")}</span>
                   </div>
                 </div>
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-16">
-                {STEPS.map((s, i) => (
+                {steps.map((s, i) => (
                   <div
                     key={i}
                     data-fade
@@ -1159,15 +1155,15 @@ const Afiliados = () => {
                   <g id="h104-track">
                     <image href="/afiliados/arrow.webp" height={300} clipPath="url(#h104-round-clip)" />
                     <text className="h104-seg" fill="black" fontSize={350}>
-                      <textPath href="#h104-line" textAnchor="start">Empieza</textPath>
+                      <textPath href="#h104-line" textAnchor="start">{t("affiliates.start")}</textPath>
                     </text>
                     <image href="/afiliados/estrella.webp" height={300} clipPath="url(#h104-round-clip)" />
                     <text className="h104-seg" fill="black" fontSize={350}>
-                      <textPath href="#h104-line" textAnchor="start">tu camino</textPath>
+                      <textPath href="#h104-line" textAnchor="start">{t("affiliates.journey")}</textPath>
                     </text>
                     <image href="/afiliados/sonrisa.webp" height={300} clipPath="url(#h104-round-clip)" />
                     <text className="h104-seg" fill="black" fontSize={350}>
-                      <textPath href="#h104-line" textAnchor="start">hoy</textPath>
+                      <textPath href="#h104-line" textAnchor="start">{t("affiliates.today")}</textPath>
                     </text>
                     <image href="/afiliados/group18.webp" height={300} clipPath="url(#h104-round-clip)" />
                   </g>
@@ -1180,16 +1176,16 @@ const Afiliados = () => {
           <div className="block md:hidden py-20 px-6 text-center bg-white border-t border-black/5">
             <div className="max-w-md mx-auto flex flex-col items-center">
               <h2 className="text-3xl font-normal leading-tight tracking-tight mb-8">
-                Empieza hoy <span style={{ fontFamily: "'Welth Catritz', serif", overflow: 'visible' }} className="pr-1 italic tracking-normal font-light">mismo</span>
+                {t("affiliates.mobileBefore")}<span style={{ fontFamily: "'Welth Catritz', serif", overflow: 'visible' }} className="pr-1 italic tracking-normal font-light">{t("affiliates.mobileAccent")}</span>
               </h2>
               <Link
-                to="/register"
+                to={localePath("/register")}
                 className="px-8 py-4 rounded-full bg-black text-white text-[15px] font-normal inline-flex items-center justify-center gap-2 hover:-translate-y-1 transition-transform duration-300"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12 0C12.3 8.8 15.2 11.7 24 12C15.2 12.3 12.3 15.2 12 24C11.7 15.2 8.8 12.3 0 12C8.8 11.7 11.7 8.8 12 0Z" />
                 </svg>
-                Crear cuenta
+                {t("affiliates.createAccount")}
               </Link>
             </div>
           </div>

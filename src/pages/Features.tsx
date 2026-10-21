@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -41,63 +42,13 @@ const BRANDS = [
 const brandsRow1 = [...BRANDS, ...BRANDS, ...BRANDS, ...BRANDS];
 const brandsRow2 = [...BRANDS.slice().reverse(), ...BRANDS.slice().reverse(), ...BRANDS.slice().reverse(), ...BRANDS.slice().reverse()];
 
-const featuresData = [
-  {
-    id: "colaboraciones",
-    badge: "Colaboraciones",
-    title: "Colabora con marcas",
-    description: "Encuentra marcas líderes y colabora con ellas en proyectos creativos para redes sociales y estrategias digitales de alto impacto. Conéctate con audiencias globales de forma sencilla.",
-    bullets: [
-      "Conexión directa con marcas de primer nivel mundial.",
-      "Proyectos creativos y campañas para redes sociales.",
-      "Oportunidades exclusivas para monetizar tu portafolio."
-    ]
-  },
-  {
-    id: "ai-studio",
-    badge: "Inteligencia Artificial",
-    title: "Diseña modelos de negocios con la potencia de la IA",
-    description: "Describe tu idea y desarrolla toda una estructura de negocio y descubre nuevas oportunidades para desarrollar proyectos escalables.",
-    bullets: [
-      "Generación instantánea de estructuras comerciales a partir de tu visión.",
-      "Visualización clara de tu cadena de valor y flujos de ingresos.",
-      "Sugerencias inteligentes de la IA para validar y escalar tu proyecto."
-    ]
-  },
-  {
-    id: "collab",
-    badge: "Colaboración en Vivo",
-    title: "Co-creación y presencia en tiempo real",
-    description: "Invita a tu equipo a trabajar en el mismo lienzo. Visualiza los avatares de los usuarios conectados y edita de forma concurrente sin conflictos de cambios.",
-    bullets: [
-      "Presencia visual interactiva mediante stack de avatares en el encabezado.",
-      "Sincronización instantánea de movimientos, colores y conectores.",
-      "Compartido rápido mediante URLs públicas para visualización."
-    ]
-  },
-  {
-    id: "canvas",
-    badge: "Lienzo Avanzado",
-    title: "Canvas infinito y personalización total",
-    description: "Estructura tus ideas sin límites físicos. Conecta figuras de cualquier tipo mediante handles bidireccionales y muévete con un zoom ultra-amplio de 5% a 400%.",
-    bullets: [
-      "Líneas de conexión curvadas con etiquetas de texto editables en el centro.",
-      "Desconexión rápida de nodos arrastrando desde su mitad izquierda.",
-      "Figuras geométricas personalizables con colores vibrantes de marca."
-    ]
-  }
-];
+type Feature = { id: string; badge: string; title: string; description: string; bullets: string[] };
 
 import isotipoImg from "@/assets/isotipo.webp";
 
 const TypewriterInput = () => {
-  const phrases = [
-    "Crea un embudo de ventas para mi curso online...",
-    "Diseña una campaña de marketing en redes sociales...",
-    "Estructura el flujo de onboarding de la app...",
-    "Planifica la estrategia de contenido para Instagram...",
-    "Organiza el proceso de soporte y tickets B2B..."
-  ];
+  const { t, i18n } = useTranslation();
+  const phrases = t("features.phrases", { returnObjects: true }) as string[];
 
   const [isExpanded, setIsExpanded] = useState(false);
   const [currentText, setCurrentText] = useState("");
@@ -176,7 +127,7 @@ const TypewriterInput = () => {
     return () => {
       timeouts.forEach(clearTimeout);
     };
-  }, [phraseIdx]);
+  }, [phraseIdx, i18n.language]);
 
   return (
     <div className="relative w-full h-full flex items-center justify-center select-none">
@@ -202,7 +153,7 @@ const TypewriterInput = () => {
               transition={{ duration: 0.15 }}
               className="w-full h-full flex items-center justify-center"
             >
-              <img src={isotipoImg} alt="AI" className="w-7 h-7 object-contain select-none pointer-events-none" />
+              <img src={isotipoImg} alt={t("features.aiAlt")} className="w-7 h-7 object-contain select-none pointer-events-none" />
             </motion.div>
           ) : (
             /* Estado 2: Contenedor expandido con input y controles */
@@ -229,7 +180,7 @@ const TypewriterInput = () => {
                     <rect x="14" y="14" width="7" height="7" rx="1" />
                     <rect x="3" y="14" width="7" height="7" rx="1" />
                   </svg>
-                  <span className="text-[11px] font-light text-white/70 tracking-wider">Apps</span>
+                  <span className="text-[11px] font-light text-white/70 tracking-wider">{t("features.apps")}</span>
                 </div>
                 <div className={`w-8 h-8 rounded-full flex items-center justify-center transition-all duration-300 ${
                   isSubmitted || currentText.length > 5 
@@ -271,6 +222,7 @@ const TypewriterInput = () => {
 };
 
 const InteractiveCanvasMockup = () => {
+  const { t, i18n } = useTranslation();
   const [activeTool, setActiveTool] = useState<"select" | "pan" | "shapes" | "text" | "todo" | "image" | "section">("select");
   const [activeShape, setActiveShape] = useState<"square" | "circle" | "diamond" | "triangle" | "hexagon" | "star">("square");
   const [cursorPos, setCursorPos] = useState({ x: 180, y: 221, opacity: 0, scale: 1 });
@@ -452,7 +404,7 @@ const InteractiveCanvasMockup = () => {
                   transition={{ duration: 0.15, ease: "easeOut" }}
                   className="absolute left-[calc(100%+12px)] top-1/2 bg-black text-white text-[13px] font-light py-1.5 px-3 rounded-full whitespace-nowrap shadow-lg z-30 pointer-events-none"
                 >
-                  Seleccionar
+                  {t("features.select")}
                 </motion.div>
               )}
             </AnimatePresence>
@@ -472,7 +424,7 @@ const InteractiveCanvasMockup = () => {
                   transition={{ duration: 0.15, ease: "easeOut" }}
                   className="absolute left-[calc(100%+12px)] top-1/2 bg-black text-white text-[13px] font-light py-1.5 px-3 rounded-full whitespace-nowrap shadow-lg z-30 pointer-events-none"
                 >
-                  Navegar
+                  {t("features.pan")}
                 </motion.div>
               )}
             </AnimatePresence>
@@ -576,7 +528,7 @@ const InteractiveCanvasMockup = () => {
                   transition={{ duration: 0.15, ease: "easeOut" }}
                   className="absolute left-[calc(100%+12px)] top-1/2 flex items-center leading-none bg-black text-white text-[13px] font-light py-1.5 px-3 rounded-full whitespace-nowrap shadow-lg z-30 pointer-events-none"
                 >
-                  Formas
+                  {t("features.shapes")}
                 </motion.div>
               )}
             </AnimatePresence>
@@ -596,7 +548,7 @@ const InteractiveCanvasMockup = () => {
                   transition={{ duration: 0.15, ease: "easeOut" }}
                   className="absolute left-[calc(100%+12px)] top-1/2 flex items-center leading-none bg-black text-white text-[13px] font-light py-1.5 px-3 rounded-full whitespace-nowrap shadow-lg z-30 pointer-events-none"
                 >
-                  Texto
+                  {t("features.text")}
                 </motion.div>
               )}
             </AnimatePresence>
@@ -616,7 +568,7 @@ const InteractiveCanvasMockup = () => {
                   transition={{ duration: 0.15, ease: "easeOut" }}
                   className="absolute left-[calc(100%+12px)] top-1/2 flex items-center leading-none bg-black text-white text-[13px] font-light py-1.5 px-3 rounded-full whitespace-nowrap shadow-lg z-30 pointer-events-none"
                 >
-                  Lista de Tareas
+                  {t("features.todo")}
                 </motion.div>
               )}
             </AnimatePresence>
@@ -636,7 +588,7 @@ const InteractiveCanvasMockup = () => {
                   transition={{ duration: 0.15, ease: "easeOut" }}
                   className="absolute left-[calc(100%+12px)] top-1/2 flex items-center leading-none bg-black text-white text-[13px] font-light py-1.5 px-3 rounded-full whitespace-nowrap shadow-lg z-30 pointer-events-none"
                 >
-                  Imagen
+                  {t("features.image")}
                 </motion.div>
               )}
             </AnimatePresence>
@@ -656,7 +608,7 @@ const InteractiveCanvasMockup = () => {
                   transition={{ duration: 0.15, ease: "easeOut" }}
                   className="absolute left-[calc(100%+12px)] top-1/2 flex items-center leading-none bg-black text-white text-[13px] font-light py-1.5 px-3 rounded-full whitespace-nowrap shadow-lg z-30 pointer-events-none"
                 >
-                  Sección
+                  {t("features.section")}
                 </motion.div>
               )}
             </AnimatePresence>
@@ -691,6 +643,7 @@ const InteractiveCanvasMockup = () => {
 };
 
 const CollaborationMockup = () => {
+  const { t, i18n } = useTranslation();
   return (
     <div className="w-full h-full relative bg-white/70 backdrop-blur-sm rounded-[1.5rem] border border-neutral-200/50 overflow-hidden flex items-center justify-center select-none">
       {/* Central Canvas Mockup containing avatars */}
@@ -710,7 +663,7 @@ const CollaborationMockup = () => {
               delay: 0,
             }}
           >
-            <img src={avatar1} alt="Colaborador 1" className="w-full h-full object-cover" />
+            <img src={avatar1} alt={t("features.collaborator", { number: 1 })} className="w-full h-full object-cover" />
           </motion.div>
 
           {/* Avatar 2 */}
@@ -725,7 +678,7 @@ const CollaborationMockup = () => {
               delay: 0.2,
             }}
           >
-            <img src={avatar2} alt="Colaborador 2" className="w-full h-full object-cover" />
+            <img src={avatar2} alt={t("features.collaborator", { number: 2 })} className="w-full h-full object-cover" />
           </motion.div>
 
           {/* Avatar 3 */}
@@ -740,7 +693,7 @@ const CollaborationMockup = () => {
               delay: 0.4,
             }}
           >
-            <img src={avatar3} alt="Colaborador 3" className="w-full h-full object-cover" />
+            <img src={avatar3} alt={t("features.collaborator", { number: 3 })} className="w-full h-full object-cover" />
           </motion.div>
 
           {/* Avatar 4 */}
@@ -755,7 +708,7 @@ const CollaborationMockup = () => {
               delay: 0.6,
             }}
           >
-            <img src={avatar4} alt="Colaborador 4" className="w-full h-full object-cover" />
+            <img src={avatar4} alt={t("features.collaborator", { number: 4 })} className="w-full h-full object-cover" />
           </motion.div>
         </div>
 
@@ -786,7 +739,7 @@ const CollaborationMockup = () => {
             />
           </svg>
           <div className="bg-[#4059F1] text-white py-1 px-3.5 rounded-full shadow-[0_4px_12px_rgba(64,89,241,0.25)] -ml-1.5 mt-4 flex items-center justify-center">
-            <span className="text-[11px] sm:text-xs font-semibold tracking-wide leading-none pt-0.5">Mateo</span>
+            <span className="text-[11px] sm:text-xs font-semibold tracking-wide leading-none pt-0.5">{t("features.mateo")}</span>
           </div>
         </motion.div>
 
@@ -816,7 +769,7 @@ const CollaborationMockup = () => {
             />
           </svg>
           <div className="bg-[#FCB5B9] text-neutral-800 py-1 px-3.5 rounded-full shadow-[0_4px_12px_rgba(252,181,185,0.3)] -ml-1.5 mt-4 flex items-center justify-center">
-            <span className="text-[11px] sm:text-xs font-semibold tracking-wide leading-none pt-0.5">Sofía</span>
+            <span className="text-[11px] sm:text-xs font-semibold tracking-wide leading-none pt-0.5">{t("features.sofia")}</span>
           </div>
         </motion.div>
 
@@ -826,6 +779,8 @@ const CollaborationMockup = () => {
 };
 
 const Features = () => {
+  const { t, i18n } = useTranslation();
+  const featuresData = t("features.items", { returnObjects: true }) as Feature[];
   const smootherRef = useRef<ScrollSmoother | null>(null);
 
   useEffect(() => {
@@ -897,13 +852,13 @@ const Features = () => {
         <div id="smooth-content-features" className="bg-white text-black font-sans pb-0">
           <section className="min-h-[60vh] flex flex-col items-center justify-center text-center px-6 pt-40 pb-12">
             <h3 className="text-[22px] font-normal mb-4 tracking-tight">
-              Presentamos a Miiles
+              {t("features.intro")}
             </h3>
             <h1 className="text-5xl md:text-7xl font-normal leading-tight tracking-tight mb-8 max-w-4xl">
-              Lleva tus ideas a la realidad
+              {t("features.title")}
             </h1>
             <p className="text-lg font-light text-gray-500 max-w-2xl">
-              Un lugar pensado para descubrir oportunidades
+              {t("features.subtitle")}
             </p>
           </section>
 
@@ -912,7 +867,7 @@ const Features = () => {
             <div className="max-w-6xl mx-auto rounded-[2rem] overflow-hidden shadow-xl border border-gray-100">
               <img
                 src={funcionesHero.url}
-                alt="Persona usando Miiles en una tablet, cómoda en su sofá"
+                alt={t("features.heroAlt")}
                 className="w-full h-auto object-cover"
                 loading="lazy"
               />
@@ -1038,10 +993,10 @@ const Features = () => {
           {/* Pricing Section Title */}
           <section className="pt-12 pb-6 flex flex-col items-center justify-center text-center px-6">
             <h2 className="text-4xl md:text-6xl font-normal leading-tight tracking-tight mb-4 max-w-4xl">
-              Nuestros planes
+              {t("features.plansTitle")}
             </h2>
             <p className="text-md font-light text-gray-500 max-w-2xl">
-              Elige el plan ideal para automatizar y escalar tu negocio.
+              {t("features.plansDescription")}
             </p>
           </section>
 

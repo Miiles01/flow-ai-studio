@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+import { useLocalePath } from "@/hooks/useLocalePath";
 import { useEffect, useRef } from "react";
 import { Link } from "react-router-dom";
 import gsap from "gsap";
@@ -15,6 +17,8 @@ if (!CustomEase.get("osmo-ease")) {
 }
 
 const About = () => {
+  const { t } = useTranslation();
+  const localePath = useLocalePath();
   const smootherRef = useRef<ScrollSmoother | null>(null);
 
   useEffect(() => {
@@ -89,22 +93,18 @@ const About = () => {
                 />
               </div>
               
-              <span className="fade-up text-lg md:text-xl font-normal text-gray-400 mb-6">
-                Sobre nosotros
-              </span>
+              <span className="fade-up text-lg md:text-xl font-normal text-gray-400 mb-6">{t("about.copy.text1")}</span>
               
-              <p className="fade-up text-lg md:text-xl font-light text-gray-500 max-w-2xl mx-auto leading-relaxed">
-                Diseñamos el futuro del trabajo creativo. Herramientas con inteligencia artificial para estructurar, colaborar y escalar sin límites.
-              </p>
+              <p className="fade-up text-lg md:text-xl font-light text-gray-500 max-w-2xl mx-auto leading-relaxed">{t("about.copy.text2")}</p>
             </div>
           </section>
 
           {/* NUESTRA MISIÓN */}
           <section className="pt-32 pb-20 px-6">
             <div className="max-w-5xl mx-auto text-center">
-              <h2 className="text-4xl font-normal tracking-tighter mb-12">Nuestra misión</h2>
+              <h2 className="text-4xl font-normal tracking-tighter mb-12">{t("about.copy.text3")}</h2>
               <div className="fade-up space-y-4 text-3xl md:text-5xl font-light text-gray-500 leading-snug md:leading-snug">
-                <p>Nuestra misión es construir sistemas de productividad con inteligencia artificial para que recuperes el control de tu tiempo.</p>
+                <p>{t("about.copy.text4")}</p>
               </div>
             </div>
           </section>
@@ -117,21 +117,16 @@ const About = () => {
               <div className="w-full aspect-video rounded-[2rem] overflow-hidden fade-up shadow-2xl">
                 <img 
                   src="/miiles-jacket.jpg" 
-                  alt="Equipo Miiles" 
+                  alt={t("about.copy.text5")} 
                   className="w-full h-full object-cover"
                 />
               </div>
               <div className="flex flex-col max-w-3xl">
                 <div className="fade-up space-y-6 text-lg font-light text-gray-600 leading-normal text-center md:text-left">
                   <p>
-                    <span className="text-black font-normal">Miiles nació en 2019 como Miiles Creative Studio</span>, un pequeño estudio en la Ciudad de México fundado por Miiles Horton con una idea clara: ayudar a negocios locales a construir marcas que compitieran en serio. Imagen, diseño, posicionamiento. Nada más, nada menos.
-                  </p>
-                  <p>
-                    El portafolio fue creciendo. ERPxtender, TikTok, BeeSpeaker, Naabi Kanabi. Cada cliente sumó perspectiva sobre cómo los negocios realmente operan y dónde se atascan.
-                  </p>
-                  <p>
-                    En 2024 Miiles lanzó Auto-flex, una apuesta por negocios automatizados y flexibles, y con eso pisó por primera vez el territorio de la IA. No fue un pivot de marketing. Fue el inicio de una transformación que meses después daría forma a Miiles AI.
-                  </p>
+                    <span className="text-black font-normal">{t("about.copy.text6")}</span>{t("about.copy.text7")}</p>
+                  <p>{t("about.copy.text8")}</p>
+                  <p>{t("about.copy.text9")}</p>
                 </div>
               </div>
             </div>
@@ -140,18 +135,15 @@ const About = () => {
           {/* FINAL CTA */}
           <section className="py-40 px-6">
             <div className="max-w-4xl mx-auto text-center flex flex-col items-center">
-              <h2 className="pt-2 text-5xl md:text-8xl font-normal tracking-tighter mb-12 leading-[1.2] md:leading-[1.2]">
-                Únete al <span className="pr-2 md:pr-4" style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>cambio</span>
+              <h2 className="pt-2 text-5xl md:text-8xl font-normal tracking-tighter mb-12 leading-[1.2] md:leading-[1.2]">{t("about.copy.text10")} <span className="pr-2 md:pr-4" style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>{t("about.copy.text11")}</span>
               </h2>
               <Link
-                to="/register"
+                to={localePath("/register")}
                 className="inline-flex items-center gap-2 px-10 py-5 rounded-full bg-black text-white text-base font-light hover:-translate-y-2 transition-transform duration-300"
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
                   <path d="M12 0C12.3 8.8 15.2 11.7 24 12C15.2 12.3 12.3 15.2 12 24C11.7 15.2 8.8 12.3 0 12C8.8 11.7 11.7 8.8 12 0Z" />
-                </svg>
-                Prueba Miiles
-              </Link>
+                </svg>{t("about.copy.text12")}</Link>
             </div>
           </section>
 

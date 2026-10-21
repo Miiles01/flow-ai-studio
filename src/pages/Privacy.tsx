@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useEffect, useRef, useState } from "react";
 import LandingNavbar from "@/components/LandingNavbar";
 import LandingFooter from "@/components/LandingFooter";
@@ -8,18 +9,19 @@ import { ScrollSmoother } from "gsap/ScrollSmoother";
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother);
 
 const Privacy = () => {
+  const { t } = useTranslation();
   const smootherRef = useRef<ScrollSmoother | null>(null);
   const sidebarRef = useRef<HTMLElement>(null);
   const containerRef = useRef<HTMLDivElement>(null);
   const [activeSection, setActiveSection] = useState("recoleccion");
 
   const sections = [
-    { id: "recoleccion", title: "1. Recopilación de Información" },
-    { id: "uso", title: "2. Uso de la Información" },
-    { id: "compartir", title: "3. Cómo Compartimos la Información" },
-    { id: "seguridad", title: "4. Seguridad de tus Datos" },
-    { id: "derechos", title: "5. Tus Derechos de Privacidad" },
-    { id: "contacto", title: "6. Información de Contacto" },
+    { id: "recoleccion", title: t("legal.privacy.text1") },
+    { id: "uso", title: t("legal.privacy.text2") },
+    { id: "compartir", title: t("legal.privacy.text3") },
+    { id: "seguridad", title: t("legal.privacy.text4") },
+    { id: "derechos", title: t("legal.privacy.text5") },
+    { id: "contacto", title: t("legal.privacy.text6") },
   ];
 
   useEffect(() => {
@@ -115,15 +117,9 @@ const Privacy = () => {
             <div className="absolute top-0 left-1/4 w-[500px] h-[500px] rounded-full bg-gradient-to-br from-[#E8ECFE] via-[#FEEDED]/40 to-transparent blur-3xl opacity-60 pointer-events-none" />
             
             <div className="max-w-4xl mx-auto text-center relative z-10">
-              <span className="text-xs font-semibold tracking-wider text-miiles-blue mb-3 block">
-                Privacidad y Seguridad
-              </span>
-              <h1 className="text-4xl md:text-6xl font-normal tracking-tight text-neutral-900 mb-6">
-                Política de privacidad
-              </h1>
-              <p className="text-md font-light text-gray-500 max-w-xl mx-auto leading-relaxed">
-                Última actualización: 10 de junio de 2026. Tu privacidad es de vital importancia para nosotros. Entérate de cómo recopilamos y tratamos tus datos personales.
-              </p>
+              <span className="text-xs font-semibold tracking-wider text-miiles-blue mb-3 block">{t("legal.privacy.text7")}</span>
+              <h1 className="text-4xl md:text-6xl font-normal tracking-tight text-neutral-900 mb-6">{t("legal.privacy.text8")}</h1>
+              <p className="text-md font-light text-gray-500 max-w-xl mx-auto leading-relaxed">{t("legal.privacy.text9")}</p>
             </div>
           </section>
 
@@ -135,9 +131,7 @@ const Privacy = () => {
               <div className="hidden lg:block w-[250px]">
                 {/* Sticky Sidebar Index */}
                 <aside ref={sidebarRef} className="bg-neutral-50/50 backdrop-blur-md border border-neutral-100 p-5 rounded-[24px] w-[250px]">
-                  <h3 className="text-xs font-semibold tracking-wider text-neutral-400 mb-4 px-2">
-                    Índice
-                  </h3>
+                  <h3 className="text-xs font-semibold tracking-wider text-neutral-400 mb-4 px-2">{t("legal.privacy.text10")}</h3>
                   <nav className="flex flex-col gap-1.5">
                     {sections.map((section) => {
                       const isActive = activeSection === section.id;
@@ -163,81 +157,45 @@ const Privacy = () => {
               <article className="fade-in-legal space-y-12 text-left">
                 
                 <div id="recoleccion" className="scroll-mt-32 space-y-4">
-                  <h2 className="text-2xl font-normal text-neutral-900 tracking-tight">
-                    1. Recopilación de Información
-                  </h2>
+                  <h2 className="text-2xl font-normal text-neutral-900 tracking-tight">{t("legal.privacy.text1")}</h2>
                   <div className="h-[1px] w-12 bg-miiles-blue mb-4" />
-                  <p className="text-md font-light text-neutral-600 leading-relaxed">
-                    Recopilamos información personal cuando la proporcionas directamente al registrarte en Miiles, como tu nombre, dirección de correo electrónico, y datos de perfil profesional o comercial.
-                  </p>
-                  <p className="text-md font-light text-neutral-600 leading-relaxed">
-                    También recopilamos información de manera automática a través del uso de la Plataforma. Esto incluye datos técnicos de tu dispositivo, tu dirección IP, el tipo de navegador que utilizas, e información detallada de tu interacción con el lienzo y nuestras herramientas interactivas de IA.
-                  </p>
+                  <p className="text-md font-light text-neutral-600 leading-relaxed">{t("legal.privacy.text11")}</p>
+                  <p className="text-md font-light text-neutral-600 leading-relaxed">{t("legal.privacy.text12")}</p>
                 </div>
 
                 <div id="uso" className="scroll-mt-32 space-y-4">
-                  <h2 className="text-2xl font-normal text-neutral-900 tracking-tight">
-                    2. Uso de la Información
-                  </h2>
+                  <h2 className="text-2xl font-normal text-neutral-900 tracking-tight">{t("legal.privacy.text2")}</h2>
                   <div className="h-[1px] w-12 bg-miiles-blue mb-4" />
-                  <p className="text-md font-light text-neutral-600 leading-relaxed">
-                    Utilizamos tu información personal para operar, mantener y mejorar las herramientas del Servicio. Esto incluye la personalización de tu lienzo digital, la sincronización de colaboración en tiempo real con avatares de tu equipo y el procesamiento de tus solicitudes con nuestros modelos de Inteligencia Artificial.
-                  </p>
-                  <p className="text-md font-light text-neutral-600 leading-relaxed">
-                    Asimismo, utilizamos tu correo electrónico para enviarte notificaciones técnicas importantes, avisos de facturación, o información relevante de la plataforma sobre oportunidades de colaboración con marcas. Puedes optar por no recibir correos promocionales en cualquier momento.
-                  </p>
+                  <p className="text-md font-light text-neutral-600 leading-relaxed">{t("legal.privacy.text13")}</p>
+                  <p className="text-md font-light text-neutral-600 leading-relaxed">{t("legal.privacy.text14")}</p>
                 </div>
 
                 <div id="compartir" className="scroll-mt-32 space-y-4">
-                  <h2 className="text-2xl font-normal text-neutral-900 tracking-tight">
-                    3. Cómo Compartimos la Información
-                  </h2>
+                  <h2 className="text-2xl font-normal text-neutral-900 tracking-tight">{t("legal.privacy.text3")}</h2>
                   <div className="h-[1px] w-12 bg-miiles-blue mb-4" />
-                  <p className="text-md font-light text-neutral-600 leading-relaxed">
-                    Miiles no vende tus datos personales a terceros bajo ninguna circunstancia. Compartimos información con proveedores de servicios de confianza que nos ayudan a operar la plataforma (como bases de datos e integradores de autenticación y pasarelas de pago), siempre bajo estrictos términos de confidencialidad.
-                  </p>
-                  <p className="text-md font-light text-neutral-600 leading-relaxed">
-                    Adicionalmente, si decides participar de forma voluntaria en campañas de colaboración con marcas o portafolios públicos, la información que decidas compartir en dicho perfil será visible para las marcas registradas asociadas en Miiles.
-                  </p>
+                  <p className="text-md font-light text-neutral-600 leading-relaxed">{t("legal.privacy.text15")}</p>
+                  <p className="text-md font-light text-neutral-600 leading-relaxed">{t("legal.privacy.text16")}</p>
                 </div>
 
                 <div id="seguridad" className="scroll-mt-32 space-y-4">
-                  <h2 className="text-2xl font-normal text-neutral-900 tracking-tight">
-                    4. Seguridad de tus Datos
-                  </h2>
+                  <h2 className="text-2xl font-normal text-neutral-900 tracking-tight">{t("legal.privacy.text4")}</h2>
                   <div className="h-[1px] w-12 bg-miiles-blue mb-4" />
-                  <p className="text-md font-light text-neutral-600 leading-relaxed">
-                    La seguridad de tu información es de suma importancia. Implementamos medidas técnicas y organizativas robustas, como protocolos de encriptación de datos SSL/TLS durante la transmisión y almacenamiento seguro en servidores, para proteger tu información contra acceso no autorizado, alteración o destrucción.
-                  </p>
-                  <p className="text-md font-light text-neutral-600 leading-relaxed">
-                    A pesar de nuestros esfuerzos, te recordamos que ningún método de transmisión a través de Internet o almacenamiento electrónico es 100% infalible, por lo que te sugerimos proteger siempre tus contraseñas y accesos.
-                  </p>
+                  <p className="text-md font-light text-neutral-600 leading-relaxed">{t("legal.privacy.text17")}</p>
+                  <p className="text-md font-light text-neutral-600 leading-relaxed">{t("legal.privacy.text18")}</p>
                 </div>
 
                 <div id="derechos" className="scroll-mt-32 space-y-4">
-                  <h2 className="text-2xl font-normal text-neutral-900 tracking-tight">
-                    5. Tus Derechos de Privacidad
-                  </h2>
+                  <h2 className="text-2xl font-normal text-neutral-900 tracking-tight">{t("legal.privacy.text5")}</h2>
                   <div className="h-[1px] w-12 bg-miiles-blue mb-4" />
-                  <p className="text-md font-light text-neutral-600 leading-relaxed">
-                    Dependiendo de tu ubicación geográfica, puedes contar con ciertos derechos sobre tus datos personales conforme a normativas de protección de datos (como el RGPD o leyes equivalentes). Estos derechos incluyen solicitar acceso a tus datos personales, la corrección de errores, o la eliminación total de tus registros en nuestra base de datos.
-                  </p>
-                  <p className="text-md font-light text-neutral-600 leading-relaxed">
-                    Si deseas ejercitar cualquiera de tus derechos o solicitar la baja de tu cuenta y la remoción completa de tus datos personales, puedes gestionarlo directamente en la sección de perfil de tu cuenta o contactarnos mediante nuestro correo de soporte legal.
-                  </p>
+                  <p className="text-md font-light text-neutral-600 leading-relaxed">{t("legal.privacy.text19")}</p>
+                  <p className="text-md font-light text-neutral-600 leading-relaxed">{t("legal.privacy.text20")}</p>
                 </div>
 
                 <div id="contacto" className="scroll-mt-32 space-y-4">
-                  <h2 className="text-2xl font-normal text-neutral-900 tracking-tight">
-                    6. Información de Contacto
-                  </h2>
+                  <h2 className="text-2xl font-normal text-neutral-900 tracking-tight">{t("legal.privacy.text6")}</h2>
                   <div className="h-[1px] w-12 bg-miiles-blue mb-4" />
-                  <p className="text-md font-light text-neutral-600 leading-relaxed">
-                    Si tienes dudas, sugerencias o comentarios acerca de esta Política de Privacidad o la forma en que tratamos tus datos personales en la plataforma, no dudes en escribirnos a nuestro correo de contacto o soporte:
-                  </p>
-                  <p className="text-md font-normal text-neutral-800 leading-relaxed">
-                    Soporte legal: legal@miiles.app
-                  </p>
+                  <p className="text-md font-light text-neutral-600 leading-relaxed">{t("legal.privacy.text21")}</p>
+                  <p className="text-md font-normal text-neutral-800 leading-relaxed">{t("legal.privacy.text22")}</p>
                 </div>
 
               </article>

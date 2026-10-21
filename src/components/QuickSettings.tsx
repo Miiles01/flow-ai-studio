@@ -1,3 +1,6 @@
+import { useTranslation } from "react-i18next";
+import dashboardI18n from "@/i18n";
+const dt = (key: string, options?: Record<string, unknown>): string => dashboardI18n.t(key, options) as string;
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Settings, Sun, Moon, Laptop, User, ArrowRight, Download } from "lucide-react";
@@ -9,6 +12,7 @@ import { motion } from "framer-motion";
 import { toast } from "sonner";
 
 export function QuickSettings({ children }: { children?: React.ReactNode }) {
+  useTranslation();
   const { theme, setTheme, isDark } = useTheme();
   const { plan } = usePlan();
   const { canInstall, isIOS, isStandalone, promptInstall } = useInstallPrompt();
@@ -24,27 +28,27 @@ export function QuickSettings({ children }: { children?: React.ReactNode }) {
       return;
     }
     if (isIOS) {
-      toast("Instala Miiles", {
-        description: "Toca Compartir y luego “Agregar a inicio”.",
+      toast(dt("dashboard.text188"), {
+        description: dt("dashboard.text189"),
       });
       return;
     }
-    toast("Abrir en aplicación", {
+    toast(dt("dashboard.text190"), {
       description:
-        "Usa el ícono de instalar en la barra de direcciones de tu navegador (o el menú ⋮ → “Instalar Miiles”).",
+        dt("dashboard.text191"),
     });
   };
 
 
 
   const planNames: Record<string, string> = {
-    free: "Plan Gratis",
-    pro: "Plan Pro",
-    business: "Plan Negocios",
-    negocios: "Plan Negocios",
+    free: dt("dashboard.text142"),
+    pro: dt("dashboard.text140"),
+    business: dt("dashboard.text141"),
+    negocios: dt("dashboard.text141"),
   };
   
-  const displayPlan = planNames[plan?.toLowerCase() || "free"] || `Plan ${plan ? plan.charAt(0).toUpperCase() + plan.slice(1) : "Gratis"}`;
+  const displayPlan = planNames[plan?.toLowerCase() || "free"] || `Plan ${plan ? plan.charAt(0).toUpperCase() + plan.slice(1) : dt("dashboard.text183")}`;
   const isPremium = plan?.toLowerCase() !== "free";
 
   return (
@@ -52,7 +56,7 @@ export function QuickSettings({ children }: { children?: React.ReactNode }) {
       <PopoverTrigger asChild>
         {children || (
           <button
-            title="Ajustes rápidos"
+            title={dt("dashboard.text192")}
             className={`
               relative flex items-center justify-center
               w-9 h-9 rounded-full
@@ -87,10 +91,10 @@ export function QuickSettings({ children }: { children?: React.ReactNode }) {
           }
         `}
       >
-        <div className="space-y-4">
+        <div className="space-y-4"><label>{dt("dashboard.language")} <select aria-label={dt("dashboard.language")} value={dashboardI18n.language.startsWith("en") ? "en" : "es"} onChange={(event) => { void dashboardI18n.changeLanguage(event.target.value); }}><option value="es">Español</option><option value="en">English</option></select></label>
           {/* Header & Plan Info */}
           <div className="space-y-2">
-            <h4 className="text-[11px] font-semibold tracking-wider opacity-50">Membresía</h4>
+            <h4 className="text-[11px] font-semibold tracking-wider opacity-50">{dt("dashboard.text193")}</h4>
             <div 
               className="p-3 rounded-2xl flex items-center justify-between border transition-all duration-300 bg-white/5 border-white/5 text-white"
             >
@@ -113,7 +117,7 @@ export function QuickSettings({ children }: { children?: React.ReactNode }) {
                   }
                 `}
               >
-                {isPremium ? "Gestionar" : "Mejorar"}
+                {isPremium ? dt("dashboard.label8") : dt("dashboard.label9")}
               </button>
             </div>
           </div>
@@ -122,7 +126,7 @@ export function QuickSettings({ children }: { children?: React.ReactNode }) {
 
           {/* Quick Actions List */}
           <div className="space-y-2">
-            <h4 className="text-[11px] font-semibold tracking-wider opacity-50 mb-1">Ajustes</h4>
+            <h4 className="text-[11px] font-semibold tracking-wider opacity-50 mb-1">{dt("dashboard.text194")}</h4>
             
             {/* Theme Selector Row */}
             <div 
@@ -136,14 +140,14 @@ export function QuickSettings({ children }: { children?: React.ReactNode }) {
                 ) : (
                   <Laptop size={16} strokeWidth={1.5} className="opacity-70" />
                 )}
-                <span className="text-[13px] font-light">Tema</span>
+                <span className="text-[13px] font-light">{dt("dashboard.text195")}</span>
               </div>
               
               <div className="flex items-center gap-1 p-0.5 rounded-full border bg-white/5 border-white/10">
                 {/* Light Theme Button */}
                 <button
                   type="button"
-                  title="Tema claro"
+                  title={dt("dashboard.text196")}
                   onClick={() => setTheme("light")}
                   className={`
                     p-1.5 rounded-full transition-all duration-200 hover:scale-105
@@ -159,7 +163,7 @@ export function QuickSettings({ children }: { children?: React.ReactNode }) {
                 {/* Dark Theme Button */}
                 <button
                   type="button"
-                  title="Tema oscuro"
+                  title={dt("dashboard.text197")}
                   onClick={() => setTheme("dark")}
                   className={`
                     p-1.5 rounded-full transition-all duration-200 hover:scale-105
@@ -175,7 +179,7 @@ export function QuickSettings({ children }: { children?: React.ReactNode }) {
                 {/* System Theme Button */}
                 <button
                   type="button"
-                  title="Tema del sistema"
+                  title={dt("dashboard.text198")}
                   onClick={() => setTheme("system")}
                   className={`
                     p-1.5 rounded-full transition-all duration-200 hover:scale-105
@@ -200,7 +204,7 @@ export function QuickSettings({ children }: { children?: React.ReactNode }) {
             >
               <div className="flex items-center gap-2.5">
                 <User size={16} strokeWidth={1.5} className="opacity-70" />
-                <span className="text-[13px] font-light">Ajustes del perfil</span>
+                <span className="text-[13px] font-light">{dt("dashboard.text199")}</span>
               </div>
             </button>
 

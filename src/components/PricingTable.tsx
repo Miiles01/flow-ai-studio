@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+import { useLocalePath } from "@/hooks/useLocalePath";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -109,35 +111,6 @@ const RotatingPrice = ({ value }: { value: string }) => {
   );
 };
 
-const plans = [
-  {
-    name: "Gratis",
-    monthlyPrice: "0",
-    annualPrice: "0",
-    description: "Para explorar Miiles",
-    features: ["1 proyecto", "Hasta 10 colaboraciones", "Soporte por email"],
-    cta: "Empieza gratis",
-  },
-  {
-    name: "Pro",
-    monthlyPrice: "386",
-    annualPrice: "3,712",
-    description: "Para creadores en crecimiento",
-    features: ["Proyectos ilimitados", "Colaboraciones ilimitadas", "Analítica avanzada", "Soporte prioritario"],
-    cta: "Empezar Pro",
-    highlighted: true,
-    annualBadge: "Ahorra 20% con el plan anual",
-  },
-  {
-    name: "Negocios",
-    monthlyPrice: "¡Charlemos!",
-    annualPrice: "¡Charlemos!",
-    description: "Para equipos y empresas",
-    features: ["Todo lo de Pro", "Cuentas multi-usuario", "API access", "Account manager"],
-    cta: "Contactar",
-    customPrice: true,
-  },
-];
 
 interface PricingTableProps {
   onPlanSelect?: (planName: string, cycle: "monthly" | "annually") => void;
@@ -145,6 +118,9 @@ interface PricingTableProps {
 }
 
 export default function PricingTable({ onPlanSelect, isModal }: PricingTableProps = {}) {
+  const { t } = useTranslation();
+  const localePath = useLocalePath();
+  const plans = t("pricing.plans", { returnObjects: true }) as { id: string; name: string; monthlyPrice: string; annualPrice: string; description: string; features: string[]; cta: string; highlighted?: boolean; annualBadge?: string; customPrice?: boolean }[];
   const [cycle, setCycle] = useState<"monthly" | "annually">("monthly");
 
   return (
@@ -161,13 +137,13 @@ export default function PricingTable({ onPlanSelect, isModal }: PricingTableProp
             onClick={() => setCycle("monthly")}
             className={`relative z-10 flex-1 py-2.5 text-xs font-normal transition-colors duration-300 ${cycle === "monthly" ? "text-white" : "text-gray-400"}`}
           >
-            Mensual
+            {t("pricing.monthly")}
           </button>
           <button
             onClick={() => setCycle("annually")}
             className={`relative z-10 flex-1 py-2.5 text-xs font-normal transition-colors duration-300 flex items-center justify-center gap-1.5 ${cycle === "annually" ? "text-white" : "text-gray-400"}`}
           >
-            Anual
+            {t("pricing.annually")}
             <span className={`text-[10px] px-1.5 py-0.5 rounded-full ${cycle === "annually" ? "bg-white/20 text-white" : "bg-miiles-blue/10 text-miiles-blue"}`}>
               -20%
             </span>
@@ -195,7 +171,7 @@ export default function PricingTable({ onPlanSelect, isModal }: PricingTableProp
               <div className="flex items-baseline gap-1 mb-2">
                 {plan.customPrice ? (
                   <div className="text-[38px] font-normal tracking-tight font-sans h-[1.1em] flex items-center">
-                    ¡Charlemos!
+                    {t("pricing.letsTalk")}
                   </div>
                 ) : (
                   <>
@@ -204,7 +180,7 @@ export default function PricingTable({ onPlanSelect, isModal }: PricingTableProp
                       <RotatingPrice value={cycle === "monthly" ? plan.monthlyPrice : plan.annualPrice} />
                     </div>
                     <span className={`text-xs font-light ${plan.highlighted ? "text-gray-500" : "text-gray-400"}`}>
-                      MXN {cycle === "monthly" ? "/mes" : "/año"}
+                      MXN {cycle === "monthly" ? t("pricing.perMonth") : t("pricing.perYear")}
                     </span>
                   </>
                 )}
@@ -229,7 +205,7 @@ export default function PricingTable({ onPlanSelect, isModal }: PricingTableProp
               
               {onPlanSelect ? (
                 <button
-                  onClick={() => onPlanSelect(plan.name, cycle)}
+                  onClick={() => onPlanSelect(plan.id, cycle)}
                   className={`text-center px-8 py-4 rounded-full text-xs font-normal transition-all duration-300 font-sans ${
                     plan.highlighted 
                       ? "bg-white text-black hover:bg-opacity-90" 
@@ -240,7 +216,7 @@ export default function PricingTable({ onPlanSelect, isModal }: PricingTableProp
                 </button>
               ) : (
                 <Link
-                  to={plan.customPrice ? "/precios/negocios" : "/login"}
+                  to={localePath(plan.customPrice ? "/precios/negocios" : "/login")}
                   className={`text-center px-8 py-4 rounded-full text-xs font-normal transition-all duration-300 font-sans ${
                     plan.highlighted 
                       ? "bg-white text-black hover:bg-opacity-90" 

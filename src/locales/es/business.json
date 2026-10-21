@@ -1,0 +1,30 @@
+{
+  "inquiry": {
+    "text1": "Nombre y email son obligatorios",
+    "text2": "No se pudo enviar tu solicitud. Inténtalo de nuevo.",
+    "text3": "Hablemos de tu",
+    "text4": "equipo.",
+    "text5": "Cuéntanos sobre tu empresa y te contactaremos para armar un plan Negocios a tu medida.",
+    "text6": "Nombre *",
+    "text7": "Tu nombre",
+    "text8": "Email *",
+    "text9": "tu@empresa.com",
+    "text10": "Empresa",
+    "text11": "Nombre de la empresa",
+    "text12": "Teléfono",
+    "text13": "+52 ...",
+    "text14": "Tamaño del equipo",
+    "text15": "Ej. 5-20 personas",
+    "text16": "Página web o redes",
+    "text17": "sitio.com / @usuario",
+    "text18": "¿En qué te podemos ayudar?",
+    "text19": "Cuéntanos un poco más...",
+    "text20": "Enviar solicitud"
+  },
+  "thanks": {
+    "text1": "¡Gracias!",
+    "text2": "Nos pondremos en contacto.",
+    "text3": "Recibimos tu solicitud del plan Negocios. Nuestro equipo te escribirá muy pronto al correo que nos dejaste.",
+    "text4": "Volver al inicio"
+  }
+}

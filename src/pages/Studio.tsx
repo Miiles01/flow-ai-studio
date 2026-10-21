@@ -1,3 +1,6 @@
+import { useTranslation } from "react-i18next";
+import dashboardI18n from "@/i18n";
+const dt = (key: string, options?: Record<string, unknown>): string => dashboardI18n.t(key, options) as string;
 import { StudioGridSkeleton } from "@/components/PageSkeletons";
 import { useStudioTemplates } from "@/hooks/useStudioTemplates";
 import { DiscoveriesBoard } from "@/components/discoveries/DiscoveriesBoard";
@@ -6,13 +9,14 @@ import MyPages from "@/components/studio/MyPages";
 
 
 export default function Studio() {
+  useTranslation();
   const { templates, loading } = useStudioTemplates();
   const list = templates;
 
   return (
     <div className="p-8 md:px-12 md:pb-12 md:pt-24 max-w-5xl mx-auto space-y-12">
       <div>
-        <h1 className="text-2xl md:text-3xl font-normal text-foreground">Estudio</h1>
+        <h1 className="text-2xl md:text-3xl font-normal text-foreground">{dt("dashboard.text65")}</h1>
       </div>
 
       <MyPages />
@@ -20,7 +24,7 @@ export default function Studio() {
       {/* Arquitectura logarítmica */}
       <section className="space-y-6">
         <div className="mb-2">
-          <h2 className="text-xl md:text-2xl font-medium text-foreground">Arquitectura logarítmica</h2>
+          <h2 className="text-xl md:text-2xl font-medium text-foreground">{dt("dashboard.text66")}</h2>
         </div>
         <DiscoveriesBoard />
       </section>
@@ -29,14 +33,14 @@ export default function Studio() {
       <section className="space-y-6">
         <div className="flex flex-wrap gap-4 justify-between items-end">
           <div>
-            <h2 className="text-xl md:text-2xl font-medium text-foreground">Librería</h2>
+            <h2 className="text-xl md:text-2xl font-medium text-foreground">{dt("dashboard.text67")}</h2>
           </div>
         </div>
 
         {loading ? (
           <StudioGridSkeleton />
         ) : list.length === 0 ? (
-          <p className="text-sm text-muted-foreground py-12 text-center">Aún no hay plantillas aquí.</p>
+          <p className="text-sm text-muted-foreground py-12 text-center">{dt("dashboard.text68")}</p>
         ) : (
           // Columnas según el ancho disponible (no el viewport), con un máximo de 3: 3 en desktop, 2 en tablet, 1 en móvil,
           // y se reacomodan solas al abrir o cerrar el sidebar

@@ -1,0 +1,30 @@
+{
+  "inquiry": {
+    "text1": "Name and email are required",
+    "text2": "Your request could not be sent. Please try again.",
+    "text3": "Let's talk about your",
+    "text4": "team.",
+    "text5": "Tell us about your company and we will contact you to build a Business plan tailored to your needs.",
+    "text6": "Name *",
+    "text7": "Your name",
+    "text8": "Email *",
+    "text9": "you@company.com",
+    "text10": "Company",
+    "text11": "Company name",
+    "text12": "Phone",
+    "text13": "+52 ...",
+    "text14": "Team size",
+    "text15": "E.g. 5–20 people",
+    "text16": "Website or social media",
+    "text17": "website.com / @username",
+    "text18": "How can we help you?",
+    "text19": "Tell us a little more...",
+    "text20": "Send request"
+  },
+  "thanks": {
+    "text1": "Thank you!",
+    "text2": "We will be in touch.",
+    "text3": "We have received your Business plan request. Our team will contact you shortly at the email address you provided.",
+    "text4": "Back to home"
+  }
+}

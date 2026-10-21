@@ -1,3 +1,6 @@
+import { useTranslation } from "react-i18next";
+import dashboardI18n from "@/i18n";
+const dt = (key: string, options?: Record<string, unknown>): string => dashboardI18n.t(key, options) as string;
 import { useEffect, useState } from "react";
 import { useSearchParams, useNavigate } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
@@ -68,6 +71,7 @@ function ProgramFormDialog({
   title: string;
   submitLabel: string;
 }) {
+  useTranslation();
   const [form, setForm] = useState(initialData);
 
   useEffect(() => {
@@ -88,15 +92,15 @@ function ProgramFormDialog({
           className="space-y-4 mt-2"
         >
           <div className="space-y-2">
-            <Label className="font-light">Marca</Label>
+            <Label className="font-light">{dt("dashboard.text98")}</Label>
             <Input value={form.brand_name} onChange={(e) => setForm({ ...form, brand_name: e.target.value })} required />
           </div>
           <div className="space-y-2">
-            <Label className="font-light">Nombre del programa</Label>
+            <Label className="font-light">{dt("dashboard.text99")}</Label>
             <Input value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} required />
           </div>
           <div className="space-y-2">
-            <Label className="font-light">Descripción</Label>
+            <Label className="font-light">{dt("dashboard.text100")}</Label>
             <textarea
               value={form.description}
               onChange={(e) => setForm({ ...form, description: e.target.value })}
@@ -105,29 +109,29 @@ function ProgramFormDialog({
           </div>
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label className="font-light">Categoría</Label>
+              <Label className="font-light">{dt("dashboard.text101")}</Label>
               <select
                 value={form.category}
                 onChange={(e) => setForm({ ...form, category: e.target.value })}
                 className="w-full rounded-md bg-background shadow-sm px-3 py-2 text-sm"
               >
                 {categoryOptions.filter((c) => c !== "todos").map((c) => (
-                  <option key={c} value={c}>{c}</option>
+                  <option key={c} value={c}>{dt("dashboard.category_" + c)}</option>
                 ))}
               </select>
             </div>
             <div className="space-y-2">
-              <Label className="font-light">Comisión</Label>
-              <Input placeholder="ej: 10%" value={form.commission_rate} onChange={(e) => setForm({ ...form, commission_rate: e.target.value })} />
+              <Label className="font-light">{dt("dashboard.text102")}</Label>
+              <Input placeholder={dt("dashboard.label11")} value={form.commission_rate} onChange={(e) => setForm({ ...form, commission_rate: e.target.value })} />
             </div>
           </div>
           <div className="space-y-2">
-            <Label className="font-light">URL del programa</Label>
+            <Label className="font-light">{dt("dashboard.text103")}</Label>
             <Input type="url" placeholder="https://..." value={form.program_url} onChange={(e) => setForm({ ...form, program_url: e.target.value })} />
           </div>
           <div className="space-y-2">
-            <Label className="font-light">Banner (URL de imagen)</Label>
-            <Input type="url" placeholder="https://ejemplo.com/banner.jpg" value={form.banner_url} onChange={(e) => setForm({ ...form, banner_url: e.target.value })} />
+            <Label className="font-light">{dt("dashboard.text104")}</Label>
+            <Input type="url" placeholder={dt("dashboard.label12")} value={form.banner_url} onChange={(e) => setForm({ ...form, banner_url: e.target.value })} />
             {form.banner_url && (
               <div className="space-y-2 mt-1">
                 <div className="w-full h-24 rounded-md overflow-hidden relative">
@@ -141,7 +145,7 @@ function ProgramFormDialog({
                   />
                 </div>
                 <div className="flex items-center gap-3">
-                  <span className="text-xs text-muted-foreground font-light shrink-0">Posición</span>
+                  <span className="text-xs text-muted-foreground font-light shrink-0">{dt("dashboard.text105")}</span>
                   <input
                     type="range"
                     min={0}
@@ -156,8 +160,8 @@ function ProgramFormDialog({
           </div>
           <div className="flex items-center justify-between py-2 border-t border-border/10 mt-3 pt-3">
             <div>
-              <Label htmlFor="is_featured" className="font-light cursor-pointer text-sm">Destacado</Label>
-              <p className="text-[11px] text-muted-foreground font-light mt-0.5">Mostrar este programa en la sección de destacados</p>
+              <Label htmlFor="is_featured" className="font-light cursor-pointer text-sm">{dt("dashboard.text106")}</Label>
+              <p className="text-[11px] text-muted-foreground font-light mt-0.5">{dt("dashboard.text107")}</p>
             </div>
             <Switch
               id="is_featured"
@@ -176,6 +180,7 @@ function ProgramFormDialog({
 }
 
 export default function Programs() {
+  useTranslation();
   const { user } = useAuth();
   const { isDark } = useTheme();
   const navigate = useNavigate();
@@ -217,11 +222,11 @@ export default function Programs() {
     if (savedIds.has(programId)) {
       await supabase.from("user_applications").delete().eq("user_id", user.id).eq("program_id", programId);
       setSavedIds((prev) => { const s = new Set(prev); s.delete(programId); return s; });
-      toast.success("Programa eliminado");
+      toast.success(dt("dashboard.text108"));
     } else {
       await supabase.from("user_applications").insert({ user_id: user.id, program_id: programId, status: "saved" });
       setSavedIds((prev) => new Set(prev).add(programId));
-      toast.success("Programa guardado");
+      toast.success(dt("dashboard.text109"));
     }
   }
 
@@ -241,9 +246,9 @@ export default function Programs() {
       slug,
     } as any);
     if (error) {
-      toast.error("Error al añadir programa");
+      toast.error(dt("dashboard.text110"));
     } else {
-      toast.success("Programa añadido");
+      toast.success(dt("dashboard.text111"));
       setAddOpen(false);
       loadData();
     }
@@ -265,9 +270,9 @@ export default function Programs() {
       banner_position: data.banner_position,
     }).eq("id", editProgram.id);
     if (error) {
-      toast.error("Error al actualizar programa");
+      toast.error(dt("dashboard.text112"));
     } else {
-      toast.success("Programa actualizado");
+      toast.success(dt("dashboard.text113"));
       setEditOpen(false);
       setEditProgram(null);
       loadData();
@@ -278,9 +283,9 @@ export default function Programs() {
   async function handleDelete(programId: string) {
     const { error } = await supabase.from("brand_programs").delete().eq("id", programId);
     if (error) {
-      toast.error("Error al eliminar programa");
+      toast.error(dt("dashboard.text114"));
     } else {
-      toast.success("Programa eliminado");
+      toast.success(dt("dashboard.text108"));
       setPrograms((prev) => prev.filter((p) => p.id !== programId));
     }
   }
@@ -303,14 +308,13 @@ export default function Programs() {
     <div className="p-8 md:px-12 md:pb-12 md:pt-24 max-w-5xl mx-auto space-y-8">
       <div className="flex items-start justify-between">
         <div>
-          <h1 className="text-2xl font-normal text-foreground">Programas de marcas</h1>
-          <p className="text-sm text-miiles-gray-400 font-light mt-2">Encuentra y guarda programas de afiliados y colaboraciones</p>
+          <h1 className="text-2xl font-normal text-foreground">{dt("dashboard.text115")}</h1>
+          <p className="text-sm text-miiles-gray-400 font-light mt-2">{dt("dashboard.text116")}</p>
         </div>
         {isAdmin && (
           <Button size="sm" className="gap-1.5" onClick={() => setAddOpen(true)}>
             <Plus size={14} />
-            Añadir programa
-          </Button>
+             {dt("dashboard.text117")} </Button>
         )}
       </div>
 
@@ -319,7 +323,7 @@ export default function Programs() {
         <div className="relative flex-1">
           <Search size={16} className="absolute left-4 top-1/2 -translate-y-1/2 text-miiles-gray-400" />
           <Input
-            placeholder="Buscar marca..."
+            placeholder={dt("dashboard.text118")}
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             className="pl-10"
@@ -336,7 +340,7 @@ export default function Programs() {
                   : "bg-background text-miiles-gray-400 shadow-sm hover:-translate-y-1 hover:bg-foreground hover:text-background"
               }`}
             >
-              {c}
+              {dt("dashboard.category_" + c)}
             </button>
           ))}
         </div>
@@ -372,14 +376,14 @@ export default function Programs() {
                     setEditOpen(true);
                   }}
                   className="p-1 rounded-full hover:bg-miiles-blue-light text-muted-foreground hover:text-miiles-blue transition-colors"
-                  title="Editar programa"
+                  title={dt("dashboard.text119")}
                 >
                   <Pencil size={14} />
                 </button>
                 <button
                   onClick={(e) => { e.stopPropagation(); handleDelete(p.id); }}
                   className="p-1 rounded-full hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
-                  title="Eliminar programa"
+                  title={dt("dashboard.text120")}
                 >
                   <X size={14} />
                 </button>
@@ -410,7 +414,7 @@ export default function Programs() {
                 className="text-xs"
               >
                 {savedIds.has(p.id) ? <BookmarkCheck size={14} className="mr-1" /> : <Bookmark size={14} className="mr-1" />}
-                {savedIds.has(p.id) ? "Guardado" : "Guardar"}
+                {savedIds.has(p.id) ? dt("dashboard.label7") : dt("dashboard.text121")}
               </Button>
               {p.program_url && (
                 <a
@@ -420,7 +424,7 @@ export default function Programs() {
                   onClick={(e) => e.stopPropagation()}
                   className="text-xs text-accent hover:underline inline-flex items-center gap-1 font-light"
                 >
-                  Visitar <ExternalLink size={12} />
+                   {dt("dashboard.text122")} <ExternalLink size={12} />
                 </a>
               )}
             </div>
@@ -431,7 +435,7 @@ export default function Programs() {
 
       {filtered.length === 0 && (
         <div className="text-center py-20 text-miiles-gray-400 font-light">
-          <p>No se encontraron programas</p>
+          <p>{dt("dashboard.text123")}</p>
         </div>
       )}
 
@@ -442,8 +446,8 @@ export default function Programs() {
         initialData={emptyForm}
         onSubmit={handleAdd}
         saving={saving}
-        title="Nuevo programa"
-        submitLabel="Añadir"
+        title={dt("dashboard.text124")}
+        submitLabel={dt("dashboard.text125")}
       />
 
       {/* Edit program dialog */}
@@ -464,8 +468,8 @@ export default function Programs() {
           }}
           onSubmit={handleEdit}
           saving={saving}
-          title="Editar programa"
-          submitLabel="Guardar cambios"
+          title={dt("dashboard.text119")}
+          submitLabel={dt("dashboard.text126")}
         />
       )}
     </div>

@@ -55,9 +55,9 @@ const HomeSections = ({ beforeFaq }: { beforeFaq?: ReactNode }) => {
     return () => clearTimeout(id);
   }, [openFaq]);
 
-  const cards = t("landing.build_cards", { returnObjects: true }) as BuildCard[];
-  const plans = t("landing.plans", { returnObjects: true }) as Plan[];
-  const faqs = t("landing.faq_items", { returnObjects: true }) as Faq[];
+  const cards = t("home.landing.build_cards", { returnObjects: true }) as BuildCard[];
+  const plans = t("home.landing.plans", { returnObjects: true }) as Plan[];
+  const faqs = t("home.landing.faq_items", { returnObjects: true }) as Faq[];
 
   const faqSchema = {
     "@context": "https://schema.org",
@@ -75,10 +75,10 @@ const HomeSections = ({ beforeFaq }: { beforeFaq?: ReactNode }) => {
       <section aria-labelledby="build-title" className="px-6 py-24 md:py-32">
         <div className="max-w-6xl mx-auto">
           <h2 id="build-title" className="text-5xl md:text-7xl font-normal tracking-tight leading-[1.05] text-black">
-            {t("landing.build_title")}
+            {t("home.landing.build_title")}
           </h2>
           <p data-anim-heading className="mt-5 text-lg md:text-xl font-light text-black/70 max-w-2xl">
-            {t("landing.build_subtitle")}
+            {t("home.landing.build_subtitle")}
           </p>
 
           <div className="mt-14 grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -116,10 +116,10 @@ const HomeSections = ({ beforeFaq }: { beforeFaq?: ReactNode }) => {
         <div className="max-w-6xl mx-auto grid grid-cols-1 lg:grid-cols-[1fr_1.35fr] gap-12 lg:gap-16 items-start">
           <div>
             <h2 id="plans-title" className="text-6xl md:text-8xl font-normal tracking-tight leading-[0.95] text-black">
-              {t("landing.plans_title")}
+              {t("home.landing.plans_title")}
             </h2>
             <p data-anim-heading className="mt-8 text-xl md:text-2xl font-light text-black/75 leading-snug max-w-sm">
-              {t("landing.plans_subtitle")}
+              {t("home.landing.plans_subtitle")}
             </p>
           </div>
 
@@ -176,7 +176,7 @@ const HomeSections = ({ beforeFaq }: { beforeFaq?: ReactNode }) => {
       <section aria-labelledby="faq-title" className="px-6 pt-24 pb-16 md:pt-32 md:pb-20">
         <div ref={faqGridRef} className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-[1fr_1.35fr] gap-12 lg:gap-16 items-start">
           <h2 ref={faqTitleRef} id="faq-title" className="text-5xl lg:text-7xl font-normal tracking-tight leading-[1.02] text-black">
-            {t("landing.faq_title")}
+            {t("home.landing.faq_title")}
           </h2>
 
           <div>

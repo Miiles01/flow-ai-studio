@@ -1,3 +1,6 @@
+import { useTranslation } from "react-i18next";
+import dashboardI18n from "@/i18n";
+const dt = (key: string, options?: Record<string, unknown>): string => dashboardI18n.t(key, options) as string;
 import { useEffect, useState } from "react";
 import {
   Dialog,
@@ -33,6 +36,7 @@ const initials = (name: string) =>
   name.split(" ").map((w) => w[0]).filter(Boolean).slice(0, 2).join("").toUpperCase();
 
 const ShareDialog = ({ open, onOpenChange, flowId }: Props) => {
+  useTranslation();
   const [loading, setLoading] = useState(true);
   const [isPublic, setIsPublic] = useState(false);
   const [publicToken, setPublicToken] = useState<string>("");
@@ -82,7 +86,7 @@ const ShareDialog = ({ open, onOpenChange, flowId }: Props) => {
           id: c.id,
           user_id: c.user_id,
           role: c.role,
-          display_name: profMap.get(c.user_id)?.display_name ?? "Usuario",
+          display_name: profMap.get(c.user_id)?.display_name ?? dt("dashboard.text137"),
           avatar_url: profMap.get(c.user_id)?.avatar_url ?? null,
         })),
       );
@@ -117,17 +121,17 @@ const ShareDialog = ({ open, onOpenChange, flowId }: Props) => {
       e.stopPropagation();
     }
     if (!publicUrl) {
-      toast.error("No hay un enlace válido para copiar");
+      toast.error(dt("dashboard.text206"));
       return;
     }
     
     try {
       await navigator.clipboard.writeText(publicUrl);
       setCopied(true);
-      toast.success("Enlace copiado al portapapeles");
+      toast.success(dt("dashboard.text207"));
       setTimeout(() => setCopied(false), 1500);
     } catch (err) {
-      console.error("Clipboard API failed, using fallback:", err);
+      console.error(dt("dashboard.text208"), err);
       // Fallback
       const textArea = document.createElement("textarea");
       textArea.value = publicUrl;
@@ -143,14 +147,14 @@ const ShareDialog = ({ open, onOpenChange, flowId }: Props) => {
         const successful = document.execCommand('copy');
         if (successful) {
           setCopied(true);
-          toast.success("Enlace copiado al portapapeles");
+          toast.success(dt("dashboard.text207"));
           setTimeout(() => setCopied(false), 1500);
         } else {
-          toast.error("No se pudo copiar el enlace");
+          toast.error(dt("dashboard.text209"));
         }
       } catch (err) {
-        console.error("Fallback failed:", err);
-        toast.error("No se pudo copiar el enlace");
+        console.error(dt("dashboard.text210"), err);
+        toast.error(dt("dashboard.text209"));
       }
       document.body.removeChild(textArea);
     }
@@ -165,13 +169,13 @@ const ShareDialog = ({ open, onOpenChange, flowId }: Props) => {
       p_email: cleaned,
     });
     if (error) {
-      toast.error("Error al buscar usuario");
+      toast.error(dt("dashboard.text211"));
       setInviting(false);
       return;
     }
     const result = (data as any[])?.[0];
     if (!result?.user_id) {
-      toast.error("Este usuario aún no tiene cuenta en Miiles");
+      toast.error(dt("dashboard.text212"));
       setInviting(false);
       return;
     }
@@ -186,15 +190,15 @@ const ShareDialog = ({ open, onOpenChange, flowId }: Props) => {
 
     if (insertError) {
       if (insertError.code === "23505") {
-        toast.error("Este usuario ya es colaborador");
+        toast.error(dt("dashboard.text213"));
       } else {
-        toast.error("No se pudo invitar al usuario");
+        toast.error(dt("dashboard.text214"));
       }
       setInviting(false);
       return;
     }
 
-    toast.success(`Invitación enviada a ${cleaned}`);
+    toast.success(dt("dashboard.dynamic267", { value1: cleaned }));
     setEmail("");
     setInviting(false);
     loadData();
@@ -213,17 +217,16 @@ const ShareDialog = ({ open, onOpenChange, flowId }: Props) => {
   const removeCollab = async (collabId: string) => {
     setCollaborators((prev) => prev.filter((c) => c.id !== collabId));
     await supabase.from("flow_collaborators").delete().eq("id", collabId);
-    toast.success("Colaborador removido");
+    toast.success(dt("dashboard.text215"));
   };
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className={`max-w-md rounded-[28px] border-none shadow-[0_20px_60px_rgb(0,0,0,0.15)] ${isDark ? 'bg-[#1C1C1E] text-white' : 'bg-white text-black'}`}>
         <DialogHeader>
-          <DialogTitle className="text-[18px] font-normal">Compartir tablero</DialogTitle>
+          <DialogTitle className="text-[18px] font-normal">{dt("dashboard.text216")}</DialogTitle>
           <DialogDescription className={`text-[13px] font-light ${isDark ? 'text-[#9CA3AF]' : 'text-[#6B7280]'}`}>
-            Invita a tu equipo o genera un enlace para colaborar en tiempo real.
-          </DialogDescription>
+             {dt("dashboard.text217")} </DialogDescription>
         </DialogHeader>
 
         {loading ? (
@@ -235,8 +238,7 @@ const ShareDialog = ({ open, onOpenChange, flowId }: Props) => {
             {/* Email invite */}
             <div>
               <p className={`text-[13px] font-medium mb-3 ${isDark ? 'text-white' : 'text-black'}`}>
-                Invitar por correo
-              </p>
+                 {dt("dashboard.text218")} </p>
               <form onSubmit={handleInvite} className="flex items-center gap-2">
                 <div className="relative flex-1">
                   <Mail size={14} className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#9CA3AF]" />
@@ -255,8 +257,8 @@ const ShareDialog = ({ open, onOpenChange, flowId }: Props) => {
                     onChange={(e) => setInviteRole(e.target.value as Role)}
                     className={`appearance-none text-[13px] font-light pl-4 pr-8 h-11 rounded-full border-none outline-none cursor-pointer focus:ring-1 focus:ring-[#4059F1] ${isDark ? 'bg-white/5 text-white hover:bg-white/10' : 'bg-[#F3F4F6] text-black hover:bg-[#E5E7EB]'}`}
                   >
-                    <option value="editor">Editor</option>
-                    <option value="viewer">Lector</option>
+                    <option value="editor">{dt("dashboard.text62")}</option>
+                    <option value="viewer">{dt("dashboard.text219")}</option>
                   </select>
                   <ChevronDown size={14} className={`absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none ${isDark ? 'text-white/50' : 'text-[#6B7280]'}`} />
                 </div>
@@ -265,7 +267,7 @@ const ShareDialog = ({ open, onOpenChange, flowId }: Props) => {
                   disabled={inviting}
                   className={`h-11 px-5 rounded-full text-[13px] font-normal transition-colors disabled:opacity-50 ${isDark ? 'bg-white text-black hover:bg-gray-200' : 'bg-black text-white hover:bg-[#1F2937]'}`}
                 >
-                  {inviting ? <Loader2 size={14} className="animate-spin" /> : "Invitar"}
+                  {inviting ? <Loader2 size={14} className="animate-spin" /> : dt("dashboard.text220")}
                 </button>
               </form>
             </div>
@@ -292,8 +294,8 @@ const ShareDialog = ({ open, onOpenChange, flowId }: Props) => {
                           onChange={(e) => updateCollabRole(c.id, e.target.value as Role)}
                           className={`appearance-none text-[12.5px] font-light pl-3 pr-7 h-8 rounded-full border-none outline-none cursor-pointer ${isDark ? 'bg-transparent hover:bg-white/10 text-white' : 'bg-transparent hover:bg-[#F3F4F6] text-black'}`}
                         >
-                          <option value="editor">Editor</option>
-                          <option value="viewer">Lector</option>
+                          <option value="editor">{dt("dashboard.text62")}</option>
+                          <option value="viewer">{dt("dashboard.text219")}</option>
                         </select>
                         <ChevronDown size={12} className={`absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none ${isDark ? 'text-white/50' : 'text-[#6B7280]'}`} />
                       </div>
@@ -318,11 +320,9 @@ const ShareDialog = ({ open, onOpenChange, flowId }: Props) => {
                 <div>
                   <p className="text-[13.5px] font-medium flex items-center gap-2">
                     <LinkIcon size={15} className={isDark ? 'text-white/70' : 'text-[#6B7280]'} />
-                    Enlace público
-                  </p>
+                     {dt("dashboard.text221")} </p>
                   <p className={`text-[12px] font-light mt-1 ${isDark ? 'text-[#9CA3AF]' : 'text-[#6B7280]'}`}>
-                    Cualquiera con el enlace podrá acceder
-                  </p>
+                     {dt("dashboard.text222")} </p>
                 </div>
                 <Switch 
                   checked={isPublic} 
@@ -345,19 +345,18 @@ const ShareDialog = ({ open, onOpenChange, flowId }: Props) => {
                       className={`h-11 px-5 rounded-full text-[13px] font-normal transition-colors flex items-center gap-2 shrink-0 ${isDark ? 'bg-white text-black hover:bg-gray-200' : 'bg-black text-white hover:bg-[#1F2937]'}`}
                     >
                       {copied ? <Check size={15} /> : <Copy size={15} />}
-                      {copied ? "Copiado" : "Copiar"}
+                      {copied ? dt("dashboard.label5") : dt("dashboard.text223")}
                     </button>
                   </div>
                   <div className={`flex items-center gap-2 text-[12.5px] font-light ${isDark ? 'text-[#9CA3AF]' : 'text-[#6B7280]'}`}>
-                    Permisos del enlace:
-                    <div className="relative">
+                     {dt("dashboard.text224")} <div className="relative">
                       <select
                         value={publicRole}
                         onChange={(e) => changePublicRole(e.target.value as Role)}
                         className={`appearance-none text-[12.5px] font-light pl-3 pr-7 h-8 rounded-full border-none outline-none cursor-pointer focus:ring-1 focus:ring-[#4059F1] ${isDark ? 'bg-white/5 text-white hover:bg-white/10' : 'bg-[#F3F4F6] text-black hover:bg-[#E5E7EB]'}`}
                       >
-                        <option value="editor">Editor</option>
-                        <option value="viewer">Lector</option>
+                        <option value="editor">{dt("dashboard.text62")}</option>
+                        <option value="viewer">{dt("dashboard.text219")}</option>
                       </select>
                       <ChevronDown size={12} className={`absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none ${isDark ? 'text-white/50' : 'text-[#6B7280]'}`} />
                     </div>

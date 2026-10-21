@@ -1,3 +1,6 @@
+import { useTranslation } from "react-i18next";
+import dashboardI18n from "@/i18n";
+const dt = (key: string, options?: Record<string, unknown>): string => dashboardI18n.t(key, options) as string;
 import { BoardsSkeleton } from "@/components/PageSkeletons";
 import { pageCache } from "@/lib/pageCache";
 import { useEffect, useRef, useState } from "react";
@@ -16,6 +19,7 @@ type SharedFlow = FlowRow & { role: "editor" | "viewer" };
 const FREE_BOARD_LIMIT = 10;
 
 export default function Boards() {
+  useTranslation();
   const { user } = useAuth();
   const { isDark } = useTheme();
   const navigate = useNavigate();
@@ -43,7 +47,7 @@ export default function Boards() {
         .select("flow_id, role")
         .eq("user_id", user.id),
     ]);
-    if (flowsErr) toast.error("Error al cargar tableros");
+    if (flowsErr) toast.error(dt("dashboard.text47"));
     const nextFlows = (flowsData as FlowRow[]) || [];
     const nextPlan = (profileData?.plan as "free" | "pro") || "free";
     let nextShared: SharedFlow[] = [];
@@ -96,16 +100,16 @@ export default function Boards() {
   const handleCreate = async (initialPrompt?: string) => {
     if (!user) return;
     if (atLimit) {
-      toast.error(`Has alcanzado el límite de ${FREE_BOARD_LIMIT} tableros del plan gratuito. Actualiza a Pro para tableros ilimitados.`);
+      toast.error(dt("dashboard.dynamic263", { value1: FREE_BOARD_LIMIT }));
       return;
     }
     const { data, error } = await supabase
       .from("flows")
-      .insert([{ user_id: user.id, name: `Tablero ${new Date().toLocaleDateString("es")}`, nodes: [], edges: [] }])
+      .insert([{ user_id: user.id, name: dt("dashboard.dynamic264", { value1: new Date().toLocaleDateString(dashboardI18n.language) }), nodes: [], edges: [] }])
       .select()
       .single();
     if (error || !data) {
-      toast.error("No se pudo crear el tablero");
+      toast.error(dt("dashboard.text48"));
       return;
     }
     navigate(`/boards/${data.id}`, initialPrompt ? { state: { initialPrompt } } : undefined);
@@ -125,10 +129,10 @@ export default function Boards() {
     e.stopPropagation();
     const { error } = await supabase.from("flows").delete().eq("id", id);
     if (error) {
-      toast.error("Error al eliminar");
+      toast.error(dt("dashboard.text49"));
       return;
     }
-    toast.success("Tablero eliminado");
+    toast.success(dt("dashboard.text50"));
     setFlows((prev) => prev.filter((f) => f.id !== id));
   };
 
@@ -141,10 +145,10 @@ export default function Boards() {
       .eq("flow_id", flowId)
       .eq("user_id", user.id);
     if (error) {
-      toast.error("No se pudo salir del tablero");
+      toast.error(dt("dashboard.text51"));
       return;
     }
-    toast.success("Saliste del tablero");
+    toast.success(dt("dashboard.text52"));
     setShared((prev) => prev.filter((f) => f.id !== flowId));
   };
 
@@ -155,7 +159,7 @@ export default function Boards() {
   return (
     <div className="p-8 md:px-12 md:pb-12 md:pt-24 max-w-5xl mx-auto space-y-12">
       <div className="flex items-center justify-between flex-wrap gap-4">
-        <h1 className={`text-2xl md:text-3xl font-normal ${isDark ? 'text-white' : 'text-black'}`}>Mis Tableros</h1>
+        <h1 className={`text-2xl md:text-3xl font-normal ${isDark ? 'text-white' : 'text-black'}`}>{dt("dashboard.text53")}</h1>
         <button
           disabled={atLimit}
           className={`flex items-center gap-2 px-4 py-2 rounded-full text-sm font-light transition-colors ${
@@ -168,29 +172,26 @@ export default function Boards() {
           onClick={() => handleCreate()}
         >
           <Plus size={16} />
-          Nuevo tablero
-        </button>
+           {dt("dashboard.text54")} </button>
       </div>
 
       {atLimit && (
         <div className="rounded-2xl bg-[#FFF8E6] border border-[#FDE68A] px-5 py-4 flex items-center justify-between flex-wrap gap-3">
           <p className="text-[13px] font-light text-[#92400E]">
-            Has alcanzado el límite de {FREE_BOARD_LIMIT} tableros del plan gratuito. Actualiza a Pro para crear tableros ilimitados.
-          </p>
+             {dt("dashboard.text55")} {FREE_BOARD_LIMIT}  {dt("dashboard.text56")} </p>
           <button
             onClick={() => navigate("/precios")}
             className="text-[13px] font-normal px-4 py-2 rounded-full bg-black text-white hover:bg-miiles-pink transition-colors"
           >
-            Ver planes Pro
-          </button>
+             {dt("dashboard.text57")} </button>
         </div>
       )}
 
       {flows.length === 0 ? (
         <div className={`text-center py-20 rounded-2xl ${isDark ? 'bg-white/5' : 'bg-miiles-gray-50'}`}>
           <LayoutDashboard size={48} className="mx-auto text-miiles-gray-200 mb-4" />
-          <h2 className={`text-lg font-normal mb-2 ${isDark ? 'text-white' : 'text-black'}`}>No tienes tableros</h2>
-          <p className="text-sm font-light text-miiles-gray-400">Crea tu primer tablero para organizar tus ideas.</p>
+          <h2 className={`text-lg font-normal mb-2 ${isDark ? 'text-white' : 'text-black'}`}>{dt("dashboard.text58")}</h2>
+          <p className="text-sm font-light text-miiles-gray-400">{dt("dashboard.text59")}</p>
         </div>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
@@ -211,7 +212,7 @@ export default function Boards() {
                 <button
                   onClick={(e) => handleDelete(e, flow.id)}
                   className={`p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all ${isDark ? 'hover:bg-white/10 text-white/40 hover:text-white' : 'hover:bg-black/5 text-black/30 hover:text-black'}`}
-                  aria-label="Eliminar"
+                  aria-label={dt("dashboard.text60")}
                 >
                   <Trash2 size={16} strokeWidth={1.5} />
                 </button>
@@ -226,7 +227,7 @@ export default function Boards() {
         <div className="space-y-6">
           <div className="flex items-center gap-3">
             <Users size={20} strokeWidth={1.5} className={isDark ? 'text-white/70' : 'text-miiles-gray-600'} />
-            <h2 className={`text-lg font-normal ${isDark ? 'text-white' : 'text-black'}`}>Compartidos conmigo</h2>
+            <h2 className={`text-lg font-normal ${isDark ? 'text-white' : 'text-black'}`}>{dt("dashboard.text61")}</h2>
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {shared.map((flow, i) => (
@@ -244,13 +245,13 @@ export default function Boards() {
                       ? isDark ? "bg-white/10 text-white/80" : "bg-miiles-blue-light text-miiles-blue"
                       : isDark ? "bg-white/5 text-white/50" : "bg-miiles-gray-100 text-miiles-gray-600"
                   }`}>
-                    {flow.role === "editor" ? "Editor" : "Solo lectura"}
+                    {flow.role === "editor" ? dt("dashboard.text62") : dt("dashboard.text63")}
                   </span>
                   <button
                     onClick={(e) => handleLeave(e, flow.id)}
                     className={`p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all ${isDark ? 'hover:bg-white/10 text-white/40 hover:text-white' : 'hover:bg-black/5 text-black/30 hover:text-black'}`}
-                    aria-label="Salir del tablero"
-                    title="Salir del tablero"
+                    aria-label={dt("dashboard.text64")}
+                    title={dt("dashboard.text64")}
                   >
                     <LogOut size={16} strokeWidth={1.5} />
                   </button>

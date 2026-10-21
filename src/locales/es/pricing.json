@@ -1,0 +1,58 @@
+{
+  "copy": {
+    "text1": "Todo un ecosistema de IA.",
+    "text2": "Un solo pago.",
+    "text3": "Potencia tu marca con la flexibilidad que necesitas. Sin letras pequeñas, solo el impulso que mereces."
+  },
+  "monthly": "Mensual",
+  "annually": "Anual",
+  "letsTalk": "¡Charlemos!",
+  "perMonth": "/mes",
+  "perYear": "/año",
+  "plans": [
+    {
+      "id": "Gratis",
+      "name": "Gratis",
+      "monthlyPrice": "0",
+      "annualPrice": "0",
+      "description": "Para explorar Miiles",
+      "features": [
+        "1 proyecto",
+        "Hasta 10 colaboraciones",
+        "Soporte por email"
+      ],
+      "cta": "Empieza gratis"
+    },
+    {
+      "id": "Pro",
+      "name": "Pro",
+      "monthlyPrice": "386",
+      "annualPrice": "3,712",
+      "description": "Para creadores en crecimiento",
+      "features": [
+        "Proyectos ilimitados",
+        "Colaboraciones ilimitadas",
+        "Analítica avanzada",
+        "Soporte prioritario"
+      ],
+      "cta": "Empezar Pro",
+      "highlighted": true,
+      "annualBadge": "Ahorra 20% con el plan anual"
+    },
+    {
+      "id": "Negocios",
+      "name": "Negocios",
+      "monthlyPrice": "¡Charlemos!",
+      "annualPrice": "¡Charlemos!",
+      "description": "Para equipos y empresas",
+      "features": [
+        "Todo lo de Pro",
+        "Cuentas multi-usuario",
+        "API access",
+        "Account manager"
+      ],
+      "cta": "Contactar",
+      "customPrice": true
+    }
+  ]
+}

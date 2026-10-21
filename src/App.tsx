@@ -9,6 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { ThemeProvider } from "@/contexts/ThemeContext";
 import DashboardLayout from "@/components/DashboardLayout";
 import Landing from "./pages/Landing";
+import LangRedirect from "@/components/LangRedirect";
 import LandingDev from "./pages/LandingDev";
 import Afiliados from "./pages/Afiliados";
 import About from "./pages/About";
@@ -134,16 +135,16 @@ const App = () => (
             <LandingCursor />
             <Routes>
               <Route path="/.lovable/oauth/consent" element={<OAuthConsent />} />
-              <Route path="/" element={<Landing />} />
+              <Route path="/" element={<LangRedirect />} />
               <Route path="/home-dev" element={<LandingDev />} />
-              <Route path="/acerca-de" element={<About />} />
-              <Route path="/afiliados" element={<Afiliados />} />
-              <Route path="/precios" element={<Pricing />} />
-              <Route path="/precios/negocios" element={<BusinessInquiry />} />
-              <Route path="/precios/negocios/gracias" element={<BusinessInquiryThanks />} />
-              <Route path="/funciones" element={<Features />} />
-              <Route path="/terminos" element={<Terms />} />
-              <Route path="/privacidad" element={<Privacy />} />
+              <Route path="/acerca-de" element={<LangRedirect />} />
+              <Route path="/afiliados" element={<LangRedirect />} />
+              <Route path="/precios" element={<LangRedirect />} />
+              <Route path="/precios/negocios" element={<LangRedirect />} />
+              <Route path="/precios/negocios/gracias" element={<LangRedirect />} />
+              <Route path="/funciones" element={<LangRedirect />} />
+              <Route path="/terminos" element={<LangRedirect />} />
+              <Route path="/privacidad" element={<LangRedirect />} />
               <Route path="/dashboard" element={<DashboardRoute><Dashboard /></DashboardRoute>} />
               <Route path="/boards" element={<DashboardRoute><Boards /></DashboardRoute>} />
               <Route path="/trends" element={<DashboardRoute><Trends /></DashboardRoute>} />
@@ -170,11 +171,11 @@ const App = () => (
 
               <Route path="/admin" element={<Admin />} />
               <Route path="/ventas" element={<Ventas />} />
-              <Route path="/shopify-tutorial" element={<ShopifyTutorial />} />
-              <Route path="/conecta-tu-ia" element={<ConectaIA />} />
-              <Route path="/agentes" element={<Agentes />} />
-              <Route path="/servicios" element={<Agentes />} />
-              <Route path="/clinicas" element={<Clinicas />} />
+              <Route path="/shopify-tutorial" element={<LangRedirect />} />
+              <Route path="/conecta-tu-ia" element={<LangRedirect />} />
+              <Route path="/agentes" element={<LangRedirect />} />
+              <Route path="/servicios" element={<LangRedirect />} />
+              <Route path="/clinicas" element={<LangRedirect />} />
 
               {/* Rutas con prefijo de idioma (/es/..., /en/...) para las páginas públicas */}
               <Route path="/:lang" element={<LanguageLayout />}>
@@ -191,6 +192,7 @@ const App = () => (
                 <Route path="servicios" element={<Agentes />} />
                 <Route path="clinicas" element={<Clinicas />} />
                 <Route path="shopify-tutorial" element={<ShopifyTutorial />} />
+                <Route path="conecta-tu-ia" element={<ConectaIA />} />
               </Route>
 
               <Route path="*" element={<NotFound />} />

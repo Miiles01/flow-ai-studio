@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+import { useLocalePath } from "@/hooks/useLocalePath";
 import { useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
@@ -5,68 +7,73 @@ import { ArrowLeft, Check, Copy, ShieldCheck, X } from "lucide-react";
 
 const MCP_URL = `https://${import.meta.env["VITE_SUPABASE_PROJECT_ID"]}.supabase.co/functions/v1/mcp`;
 
-const AGENTS = [
-  {
-    name: "Claude",
-    steps: [
-      "Abre Claude y ve a Ajustes → Conectores.",
-      "Toca «Agregar conector personalizado».",
-      "Ponle de nombre Miiles y pega el enlace.",
-      "Inicia sesión con tu cuenta de Miiles y acepta.",
-    ],
-    config: MCP_URL,
-    configLabel: "Copiar enlace de Miiles",
-  },
-  {
-    name: "Cursor",
-    steps: [
-      "Abre Cursor → Settings → MCP.",
-      "Toca «Add new MCP server».",
-      "Pega la configuración que copiaste.",
-      "Inicia sesión con tu cuenta de Miiles y acepta.",
-    ],
-    config: JSON.stringify({ mcpServers: { miiles: { url: MCP_URL } } }, null, 2),
-    configLabel: "Copiar configuración",
-  },
-  {
-    name: "Otro agente",
-    steps: [
-      "Busca en tu agente la opción «Agregar servidor MCP».",
-      "Elige el tipo de conexión por enlace (HTTP).",
-      "Pega el enlace de Miiles.",
-      "Inicia sesión con tu cuenta de Miiles y acepta.",
-    ],
-    config: MCP_URL,
-    configLabel: "Copiar enlace de Miiles",
-  },
-] as const;
-
-const CAN = [
-  "Ver el catálogo de plantillas de Miiles Estudio.",
-  "Consultar el detalle de una plantilla y sus enlaces de vista previa.",
-  "Guardar tu página adaptada y publicarla en wearemiiles.com/tu-usuario cuando tú se lo pidas.",
-  "Trabajar con tu cuenta, solo con lo que tú autorizas.",
-];
-
-const CANNOT = [
-  "Ver tu contraseña o tu método de inicio de sesión.",
-  "Ver datos, tableros o plantillas de otras personas.",
-  "Tocar páginas de otras personas o publicar sin que se lo pidas.",
-];
-
-const EXAMPLES = [
-  "¿Qué plantillas de portafolio tiene Miiles Estudio?",
-  "Muéstrame los detalles de la plantilla Aura y su vista previa.",
-  "Compara Minimalist y Gallery: ¿cuál me sirve para un fotógrafo de producto?",
-  "Publica mi página en Miiles.",
-];
-
 const fadeUp = {
   hidden: { opacity: 0, y: 20 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.55, ease: [0.25, 0.1, 0.25, 1] as const } },
 };
 
 const ConectaIA = () => {
+  const { t } = useTranslation();
+  const localePath = useLocalePath();
+  const copy = t("connectai.copy", { returnObjects: true }) as string[];
+
+const AGENTS = [
+  {
+    name: "Claude",
+    steps: [
+      copy[0],
+      copy[1],
+      copy[2],
+      copy[3],
+    ],
+    config: MCP_URL,
+    configLabel: copy[4],
+  },
+  {
+    name: "Cursor",
+    steps: [
+      copy[5],
+      copy[6],
+      copy[7],
+      copy[3],
+    ],
+    config: JSON.stringify({ mcpServers: { miiles: { url: MCP_URL } } }, null, 2),
+    configLabel: copy[8],
+  },
+  {
+    name: copy[9],
+    steps: [
+      copy[10],
+      copy[11],
+      copy[12],
+      copy[3],
+    ],
+    config: MCP_URL,
+    configLabel: copy[4],
+  },
+] as const;
+
+const CAN = [
+  copy[13],
+  copy[14],
+  copy[15],
+  copy[16],
+];
+
+const CANNOT = [
+  copy[17],
+  copy[18],
+  copy[19],
+];
+
+const EXAMPLES = [
+  copy[20],
+  copy[21],
+  copy[22],
+  copy[23],
+];
+
+
   const [copied, setCopied] = useState("");
   const timerRef = useRef<number | null>(null);
 
@@ -92,15 +99,15 @@ const ConectaIA = () => {
     <div className="min-h-screen bg-white text-black">
       <header className="fixed top-6 left-1/2 -translate-x-1/2 w-[95vw] md:w-max z-[100]">
         <nav className="flex items-center justify-between gap-10 px-6 md:px-8 py-2.5 rounded-full backdrop-blur-md bg-white/80 border border-neutral-200/50 shadow-[0_8px_30px_rgba(0,0,0,0.04)]">
-          <Link to="/" className="flex items-center shrink-0">
-            <img src="/logotipo.svg" alt="Miiles" className="h-5 w-auto" />
+          <Link to={localePath("/")} className="flex items-center shrink-0">
+            <img src="/logotipo.svg" alt={copy[44]} className="h-5 w-auto" />
           </Link>
           <Link
-            to="/"
+            to={localePath("/")}
             className="flex items-center gap-1.5 text-xs font-normal px-5 py-2.5 rounded-full bg-black text-white transition-all duration-300 hover:scale-105"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
-            Inicio
+            {copy[24]}
           </Link>
         </nav>
       </header>
@@ -116,14 +123,13 @@ const ConectaIA = () => {
             variants={fadeUp}
             className="text-3xl md:text-5xl font-normal tracking-tight text-black"
           >
-            Conecta tu IA a Miiles
+            {copy[25]}
           </motion.h1>
           <motion.p
             variants={fadeUp}
             className="text-sm md:text-base font-light text-miiles-gray-600 max-w-2xl mx-auto leading-relaxed"
           >
-            Una sola vez, en un minuto: tu asistente podrá consultar las plantillas
-            de Miiles Estudio y ayudarte a armar tu portafolio o tu embudo de ventas.
+            {copy[26]}
           </motion.p>
         </motion.section>
 
@@ -135,9 +141,9 @@ const ConectaIA = () => {
           className="space-y-6"
         >
           <div className="space-y-1.5">
-            <h2 className="text-xl md:text-2xl font-normal text-black">Paso 1 · Elige tu agente</h2>
+            <h2 className="text-xl md:text-2xl font-normal text-black">{copy[27]}</h2>
             <p className="text-sm font-light text-miiles-gray-600">
-              Copia el enlace y sigue los cuatro pasos. Después inicia sesión con tu cuenta de Miiles.
+              {copy[28]}
             </p>
           </div>
 
@@ -165,7 +171,7 @@ const ConectaIA = () => {
                   }`}
                 >
                   {copied === agent.name ? <Check className="w-4 h-4" /> : <Copy className="w-4 h-4" />}
-                  {copied === agent.name ? "¡Copiado!" : agent.configLabel}
+                  {copied === agent.name ? copy[29] : agent.configLabel}
                 </button>
               </div>
             ))}
@@ -181,7 +187,7 @@ const ConectaIA = () => {
         >
           <div className="flex items-start gap-3">
             <ShieldCheck className="h-5 w-5 shrink-0 text-miiles-blue" />
-            <h2 className="text-lg font-normal text-black">Qué puede y qué no puede hacer tu agente</h2>
+            <h2 className="text-lg font-normal text-black">{copy[30]}</h2>
           </div>
           <div className="mt-6 grid gap-8 md:grid-cols-2">
             <ul className="space-y-3">
@@ -211,9 +217,9 @@ const ConectaIA = () => {
           className="space-y-5"
         >
           <div className="space-y-1.5">
-            <h2 className="text-xl md:text-2xl font-normal text-black">Paso 2 · Pide tu plantilla</h2>
+            <h2 className="text-xl md:text-2xl font-normal text-black">{copy[31]}</h2>
             <p className="text-sm font-light text-miiles-gray-600">
-              Ya conectado, prueba con alguna de estas preguntas en el chat de tu agente.
+              {copy[32]}
             </p>
           </div>
           <div className="rounded-[24px] border border-miiles-gray-200 bg-miiles-gray-50 p-6 md:p-8 space-y-4">
@@ -227,7 +233,7 @@ const ConectaIA = () => {
                   }`}
                 >
                   {copied === example ? <Check className="w-3 h-3" /> : <Copy className="w-3 h-3" />}
-                  {copied === example ? "Copiado" : "Copiar"}
+                  {copied === example ? copy[42] : copy[43]}
                 </button>
               </div>
             ))}
@@ -241,23 +247,22 @@ const ConectaIA = () => {
           transition={{ duration: 0.55, ease: [0.25, 0.1, 0.25, 1] }}
           className="rounded-[24px] border border-miiles-gray-200 bg-miiles-gray-50 p-6 md:p-8 text-center space-y-3"
         >
-          <h2 className="text-lg font-normal text-black">¿Todavía no tienes cuenta?</h2>
+          <h2 className="text-lg font-normal text-black">{copy[33]}</h2>
           <p className="text-sm font-light text-miiles-gray-600 max-w-xl mx-auto">
-            La conexión se hace con tu cuenta de Miiles, así que primero créala o entra
-            para poder autorizar a tu agente.
+            {copy[34]}
           </p>
           <div className="flex flex-wrap justify-center gap-3 pt-1">
             <Link
-              to="/register"
+              to={localePath("/register")}
               className="inline-flex items-center rounded-full bg-black px-6 py-3 text-sm font-normal text-white transition-all duration-300 hover:bg-miiles-pink hover:scale-105"
             >
-              Crear cuenta
+              {copy[35]}
             </Link>
             <Link
-              to="/login"
+              to={localePath("/login")}
               className="inline-flex items-center rounded-full border border-miiles-gray-200 bg-white px-6 py-3 text-sm font-normal text-black transition-all duration-300 hover:scale-105"
             >
-              Entrar
+              {copy[36]}
             </Link>
           </div>
         </motion.section>
@@ -265,9 +270,9 @@ const ConectaIA = () => {
 
       <footer className="pb-10 px-6">
         <p className="text-center text-xs font-light text-miiles-gray-400">
-          © {new Date().getFullYear()} Miiles ·{" "}
-          <Link to="/privacidad" className="hover:opacity-50">Privacidad</Link> ·{" "}
-          <Link to="/terminos" className="hover:opacity-50">Términos</Link>
+          {copy[37]} {new Date().getFullYear()} {copy[38]}{" "}
+          <Link to={localePath("/privacidad")} className="hover:opacity-50">{copy[39]}</Link> {copy[40]}{" "}
+          <Link to={localePath("/terminos")} className="hover:opacity-50">{copy[41]}</Link>
         </p>
       </footer>
     </div>
