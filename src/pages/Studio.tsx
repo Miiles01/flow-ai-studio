@@ -21,9 +21,6 @@ export default function Studio() {
       <section className="space-y-6">
         <div className="mb-2">
           <h2 className="text-xl md:text-2xl font-medium text-foreground">Arquitectura logarítmica</h2>
-          <p className="text-sm font-light text-miiles-gray-400 mt-1">
-            Aprende sobre los logaritmos de cada red y cómo eligen qué mostrar.
-          </p>
         </div>
         <DiscoveriesBoard />
       </section>
@@ -33,9 +30,6 @@ export default function Studio() {
         <div className="flex flex-wrap gap-4 justify-between items-end">
           <div>
             <h2 className="text-xl md:text-2xl font-medium text-foreground">Librería</h2>
-            <p className="text-sm font-light text-miiles-gray-400 mt-1">
-              Plantillas para tu portafolio o embudo de ventas.
-            </p>
           </div>
         </div>
 
