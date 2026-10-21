@@ -55,11 +55,11 @@ export default function OAuthConsent() {
           <div className="space-y-2">
             <p className="text-xs uppercase tracking-[0.18em] text-muted-foreground">Conexión con agentes</p>
             <h1 className="text-2xl font-normal break-words">Conectar {details.client.name || "tu agente"}</h1>
-            <p className="text-sm font-light text-muted-foreground">Este agente podrá consultar el catálogo de plantillas de Miiles con tu cuenta.</p>
+            <p className="text-sm font-light text-muted-foreground">Este agente podrá usar las plantillas de Miiles y crear, guardar y publicar tus páginas en wearemiiles.com.</p>
           </div>
         </div>
         <ul className="space-y-3 rounded-2xl bg-muted/60 p-5 text-sm font-light">
-          {[["ok","Consultar plantillas y sus enlaces de descarga."],["no","Sin acceso a tu GitHub ni a páginas de otros usuarios."],["no","No puede editar ni publicar páginas."]].map(([k,t]) => <li key={t} className="flex items-start gap-3">{k==="ok" ? <Check className="h-4 w-4 mt-0.5 shrink-0 text-foreground" /> : <X className="h-4 w-4 mt-0.5 shrink-0 text-muted-foreground" />}<span>{t}</span></li>)}
+          {[["ok","Consultar las plantillas de Estudio."],["ok","Guardar, publicar y despublicar tus propias páginas."],["no","Sin acceso a tu contraseña, tu GitHub ni a páginas de otros usuarios."]].map(([k,t]) => <li key={t} className="flex items-start gap-3">{k==="ok" ? <Check className="h-4 w-4 mt-0.5 shrink-0 text-foreground" /> : <X className="h-4 w-4 mt-0.5 shrink-0 text-muted-foreground" />}<span>{t}</span></li>)}
         </ul>
         <div className="flex flex-col gap-2">
           <Button className="w-full rounded-full h-11" disabled={busy} onClick={() => decide(true)}>{busy && <Loader2 className="animate-spin" />}Autorizar conexión</Button>
