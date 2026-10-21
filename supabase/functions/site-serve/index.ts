@@ -7,9 +7,20 @@ import { createClient } from "npm:@supabase/supabase-js@2";
 const types: Record<string, string> = { html: "text/html; charset=utf-8", htm: "text/html; charset=utf-8", css: "text/css; charset=utf-8", js: "application/javascript; charset=utf-8", mjs: "application/javascript; charset=utf-8", json: "application/json", txt: "text/plain; charset=utf-8", xml: "application/xml", png: "image/png", jpg: "image/jpeg", jpeg: "image/jpeg", webp: "image/webp", avif: "image/avif", svg: "image/svg+xml", gif: "image/gif", ico: "image/x-icon", woff: "font/woff", woff2: "font/woff2", ttf: "font/ttf", otf: "font/otf", mp4: "video/mp4", webm: "video/webm", mp3: "audio/mpeg", pdf: "application/pdf" };
 const SEG = /^[a-z0-9][a-z0-9_-]{0,39}$/;
 
+// Favicon de las páginas de usuarios: la estrella colorida de Miiles.
+const FAVICON_URL = "https://miiles.app/app-icon-512.png";
+const ICON_LINK = `<link rel="icon" type="image/png" href="${FAVICON_URL}">`;
+
 function decode(content: string, encoding: string): Uint8Array {
   if (encoding === "base64") return Uint8Array.from(atob(content), (c) => c.charCodeAt(0));
   return new TextEncoder().encode(content);
+}
+
+// Si el HTML no trae su propio ícono, le inyectamos la estrella de Miiles.
+function withFavicon(html: string): string {
+  if (/rel=["'][^"']*icon/i.test(html)) return html;
+  if (/<\/head>/i.test(html)) return html.replace(/<\/head>/i, `${ICON_LINK}</head>`);
+  return ICON_LINK + html;
 }
 
 Deno.serve(async (req) => {
@@ -52,8 +63,16 @@ Deno.serve(async (req) => {
       }
       const ext = file.split(".").pop()?.toLowerCase() ?? "";
       const type = types[ext] ?? hit.content_type ?? "application/octet-stream";
-      const body = decode(hit.content, hit.encoding);
+      let body = decode(hit.content, hit.encoding);
+      if (ext === "html" || ext === "htm") {
+        body = new TextEncoder().encode(withFavicon(new TextDecoder().decode(body)));
+      }
       return new Response(req.method === "HEAD" ? null : body, { headers: { ...corsHeaders, "Content-Type": type, "X-Miiles-Content-Type": type, "Cache-Control": "public, max-age=60", "X-Content-Type-Options": "nosniff" } });
+    }
+    // Si piden el favicon y la página no trae uno, servimos la estrella de Miiles.
+    const requested = parts[parts.length - 1]?.toLowerCase();
+    if (requested === "favicon.ico" || requested === "favicon.png") {
+      return new Response(null, { status: 302, headers: { ...corsHeaders, Location: FAVICON_URL, "Cache-Control": "public, max-age=3600" } });
     }
     return notFound();
   } catch {
