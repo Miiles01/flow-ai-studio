@@ -71,7 +71,7 @@ const Pricing = () => {
         <div id="smooth-content-pricing" className="bg-white text-black font-sans pb-0">
           
           <section className="min-h-[50vh] flex flex-col items-center justify-center text-center px-6 pt-40 pb-12">
-            <h1 className="text-5xl md:text-7xl font-normal leading-tight tracking-tight mb-8 max-w-4xl">{t("pricing.copy.text1")}<span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>{t("pricing.copy.text2")}</span>
+            <h1 className="text-5xl md:text-7xl font-normal leading-tight tracking-tight mb-8 max-w-4xl">{t("pricing.copy.text1")} <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>{t("pricing.copy.text2")}</span>
             </h1>
             <p className="text-lg font-light text-gray-500 max-w-2xl mb-12">{t("pricing.copy.text3")}</p>
           </section>

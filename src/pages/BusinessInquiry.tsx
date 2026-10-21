@@ -60,7 +60,7 @@ const BusinessInquiry = () => {
       <div className="bg-white text-black font-sans min-h-screen">
         <section className="max-w-2xl mx-auto px-6 pt-40 pb-24">
           <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-            <h1 className="text-4xl md:text-5xl font-normal tracking-tight mb-4">{t("business.inquiry.text3")}<span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>{t("business.inquiry.text4")}</span>
+            <h1 className="text-4xl md:text-5xl font-normal tracking-tight mb-4">{t("business.inquiry.text3")} <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>{t("business.inquiry.text4")}</span>
             </h1>
             <p className="text-base font-light text-gray-500 mb-10 max-w-lg">{t("business.inquiry.text5")}</p>
 

@@ -22,7 +22,7 @@ const BusinessInquiryThanks = () => {
           >
             <Check className="text-white" size={28} strokeWidth={2.5} />
           </motion.div>
-          <h1 className="text-4xl md:text-5xl font-normal tracking-tight mb-4">{t("business.thanks.text1")}<span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>{t("business.thanks.text2")}</span>
+          <h1 className="text-4xl md:text-5xl font-normal tracking-tight mb-4">{t("business.thanks.text1")} <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic" }}>{t("business.thanks.text2")}</span>
           </h1>
           <p className="text-base font-light text-gray-500 mb-10 max-w-md">{t("business.thanks.text3")}</p>
           <Link
