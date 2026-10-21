@@ -216,7 +216,7 @@ export default function PricingTable({ onPlanSelect, isModal }: PricingTableProp
                 </button>
               ) : (
                 <Link
-                  to={plan.customPrice ? "/precios/negocios" : "/login"}
+                  to={localePath(plan.customPrice ? "/precios/negocios" : "/login")}
                   className={`text-center px-8 py-4 rounded-full text-xs font-normal transition-all duration-300 font-sans ${
                     plan.highlighted 
                       ? "bg-white text-black hover:bg-opacity-90" 
