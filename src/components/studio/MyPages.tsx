@@ -100,7 +100,7 @@ export default function MyPages() {
                     type="button"
                     onClick={() => setToDelete(s)}
                     disabled={isBusy}
-                    aria-label={`Eliminar ${s.title}`}
+                    aria-label={dt("dashboard.aria294", { title: s.title })}
                     title={dt("dashboard.text60")}
                     className="absolute left-3 top-3 z-10 flex h-9 w-9 items-center justify-center rounded-full bg-white text-black shadow-sm transition-opacity duration-200 hover:bg-white/90 focus-visible:opacity-100 disabled:opacity-50 md:opacity-0 md:group-hover:opacity-100"
                   >
@@ -123,7 +123,7 @@ export default function MyPages() {
                         {isBusy
                           ? <Loader2 size={10} className="animate-spin" />
                           : <span className={`h-1.5 w-1.5 rounded-full ${live ? "bg-miiles-blue" : isDark ? "bg-white/40" : "bg-black/30"}`} />}
-                        {live ? "Visible" : "Oculta"}
+                        {live ? dt("dashboard.label0") : dt("dashboard.label1")}
                       </button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
@@ -132,8 +132,8 @@ export default function MyPages() {
                       className={`w-40 rounded-2xl p-1.5 ${isDark ? "bg-[#1C1C1E] border-white/10 text-white" : "bg-white border-gray-200 text-black"}`}
                     >
                       {([
-                        { value: "published", label: "Visible", Icon: Eye },
-                        { value: "draft", label: "Oculta", Icon: EyeOff },
+                        { value: "published", label: dt("dashboard.label0"), Icon: Eye },
+                        { value: "draft", label: dt("dashboard.label1"), Icon: EyeOff },
                       ] as const).map((o) => {
                         const selected = s.status === o.value;
                         return (
@@ -162,7 +162,7 @@ export default function MyPages() {
                     <button
                       type="button"
                       onClick={() => copyLink(s, url)}
-                      aria-label={`Copiar enlace de ${s.title}`}
+                      aria-label={dt("dashboard.aria295", { title: s.title })}
                       title={dt("dashboard.text234")}
                       className="shrink-0 rounded-full p-1 text-muted-foreground transition-opacity hover:text-foreground focus-visible:opacity-100 md:opacity-0 md:group-hover/link:opacity-100"
                     >

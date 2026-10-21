@@ -1,0 +1,58 @@
+{
+  "copy": {
+    "text1": "An entire AI ecosystem.",
+    "text2": "One payment.",
+    "text3": "Empower your brand with the flexibility you need. No fine print, just the momentum you deserve."
+  },
+  "monthly": "Monthly",
+  "annually": "Annual",
+  "letsTalk": "Let's talk!",
+  "perMonth": "/month",
+  "perYear": "/year",
+  "plans": [
+    {
+      "id": "Gratis",
+      "name": "Free",
+      "monthlyPrice": "0",
+      "annualPrice": "0",
+      "description": "Explore Miiles",
+      "features": [
+        "1 project",
+        "Up to 10 collaborations",
+        "Email support"
+      ],
+      "cta": "Start for free"
+    },
+    {
+      "id": "Pro",
+      "name": "Pro",
+      "monthlyPrice": "386",
+      "annualPrice": "3,712",
+      "description": "For growing creators",
+      "features": [
+        "Unlimited projects",
+        "Unlimited collaborations",
+        "Advanced analytics",
+        "Priority support"
+      ],
+      "cta": "Get Pro",
+      "highlighted": true,
+      "annualBadge": "Save 20% with the annual plan"
+    },
+    {
+      "id": "Negocios",
+      "name": "Business",
+      "monthlyPrice": "Let's talk!",
+      "annualPrice": "Let's talk!",
+      "description": "For teams and businesses",
+      "features": [
+        "Everything in Pro",
+        "Multi-user accounts",
+        "API access",
+        "Account manager"
+      ],
+      "cta": "Contact us",
+      "customPrice": true
+    }
+  ]
+}

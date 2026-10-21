@@ -116,13 +116,13 @@ function ProgramFormDialog({
                 className="w-full rounded-md bg-background shadow-sm px-3 py-2 text-sm"
               >
                 {categoryOptions.filter((c) => c !== "todos").map((c) => (
-                  <option key={c} value={c}>{c}</option>
+                  <option key={c} value={c}>{dt("dashboard.category_" + c)}</option>
                 ))}
               </select>
             </div>
             <div className="space-y-2">
               <Label className="font-light">{dt("dashboard.text102")}</Label>
-              <Input placeholder="ej: 10%" value={form.commission_rate} onChange={(e) => setForm({ ...form, commission_rate: e.target.value })} />
+              <Input placeholder={dt("dashboard.label11")} value={form.commission_rate} onChange={(e) => setForm({ ...form, commission_rate: e.target.value })} />
             </div>
           </div>
           <div className="space-y-2">
@@ -131,7 +131,7 @@ function ProgramFormDialog({
           </div>
           <div className="space-y-2">
             <Label className="font-light">{dt("dashboard.text104")}</Label>
-            <Input type="url" placeholder="https://ejemplo.com/banner.jpg" value={form.banner_url} onChange={(e) => setForm({ ...form, banner_url: e.target.value })} />
+            <Input type="url" placeholder={dt("dashboard.label12")} value={form.banner_url} onChange={(e) => setForm({ ...form, banner_url: e.target.value })} />
             {form.banner_url && (
               <div className="space-y-2 mt-1">
                 <div className="w-full h-24 rounded-md overflow-hidden relative">
@@ -340,7 +340,7 @@ export default function Programs() {
                   : "bg-background text-miiles-gray-400 shadow-sm hover:-translate-y-1 hover:bg-foreground hover:text-background"
               }`}
             >
-              {c}
+              {dt("dashboard.category_" + c)}
             </button>
           ))}
         </div>
@@ -414,7 +414,7 @@ export default function Programs() {
                 className="text-xs"
               >
                 {savedIds.has(p.id) ? <BookmarkCheck size={14} className="mr-1" /> : <Bookmark size={14} className="mr-1" />}
-                {savedIds.has(p.id) ? "Guardado" : dt("dashboard.text121")}
+                {savedIds.has(p.id) ? dt("dashboard.label7") : dt("dashboard.text121")}
               </Button>
               {p.program_url && (
                 <a

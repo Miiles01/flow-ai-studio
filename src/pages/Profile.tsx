@@ -574,7 +574,7 @@ const Profile = () => {
                   ) : (
                     <Save size={18} className="mr-2" />
                   )}
-                  {savedSuccess ? "Guardado" : dt("dashboard.text126")}
+                  {savedSuccess ? dt("dashboard.label7") : dt("dashboard.text126")}
                 </Button>
               </div>
             </motion.div>

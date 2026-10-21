@@ -424,7 +424,7 @@ export default function Dashboard() {
                           ? "bg-miiles-blue-light text-miiles-blue"
                           : "bg-muted text-muted-foreground"
                       }`}>
-                        {app.status === "applied" ? "Postulado" : "Guardado"}
+                        {app.status === "applied" ? dt("dashboard.label6") : dt("dashboard.label7")}
                       </span>
                       <span className="text-[10px] text-miiles-gray-400 font-light">
                         {new Date(app.created_at).toLocaleDateString(dashboardI18n.language, { day: "numeric", month: "short" })}

@@ -345,7 +345,7 @@ const ShareDialog = ({ open, onOpenChange, flowId }: Props) => {
                       className={`h-11 px-5 rounded-full text-[13px] font-normal transition-colors flex items-center gap-2 shrink-0 ${isDark ? 'bg-white text-black hover:bg-gray-200' : 'bg-black text-white hover:bg-[#1F2937]'}`}
                     >
                       {copied ? <Check size={15} /> : <Copy size={15} />}
-                      {copied ? "Copiado" : dt("dashboard.text223")}
+                      {copied ? dt("dashboard.label5") : dt("dashboard.text223")}
                     </button>
                   </div>
                   <div className={`flex items-center gap-2 text-[12.5px] font-light ${isDark ? 'text-[#9CA3AF]' : 'text-[#6B7280]'}`}>

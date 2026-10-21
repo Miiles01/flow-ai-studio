@@ -66,7 +66,7 @@ const DEVICE_LABEL = { desktop: dt("dashboard.text69"), tablet: dt("dashboard.te
   const previewRef = useRef<HTMLDivElement>(null);
 
   usePageSeo({
-    title: t ? `${t.title} — Miiles Estudio` : "Plantillas — Miiles Estudio",
+    title: t ? `${t.title} — Miiles Estudio` : dt("dashboard.label10"),
     description: t?.description || dt("dashboard.text85"),
   });
 
@@ -107,7 +107,7 @@ const DEVICE_LABEL = { desktop: dt("dashboard.text69"), tablet: dt("dashboard.te
   const iconBtn = "h-9 w-9 shrink-0 rounded-full text-muted-foreground hover:text-foreground";
   const getButton = (
     <Button onClick={obtain} disabled={downloading} size="sm" className="hover:translate-y-0">
-      <Download size={15} strokeWidth={1.75} /> {downloading ? "Descargando…" : "Obtener"}
+      <Download size={15} strokeWidth={1.75} /> {downloading ? dt("dashboard.label2") : dt("dashboard.label3")}
     </Button>
   );
   const frameProps = t ? {
@@ -153,7 +153,7 @@ const DEVICE_LABEL = { desktop: dt("dashboard.text69"), tablet: dt("dashboard.te
         <main className="mx-auto max-w-7xl px-5 pb-12 pt-6 md:px-8 md:pt-8">
           <div className="mb-5 flex items-center justify-between gap-3">
             <Button variant="ghost" onClick={() => navigate("/studio")} className="-ml-3 text-muted-foreground hover:text-foreground"><ArrowLeft />  {dt("dashboard.text65")}</Button>
-            <Button variant="outline" onClick={obtain} disabled={downloading} className="shrink-0 rounded-full hover:translate-y-0"><Download /> {downloading ? "Descargando…" : "Descargar"}</Button>
+            <Button variant="outline" onClick={obtain} disabled={downloading} className="shrink-0 rounded-full hover:translate-y-0"><Download /> {downloading ? dt("dashboard.label2") : dt("dashboard.label4")}</Button>
           </div>
           {downloadError && <p role="alert" className="mb-5 text-sm text-destructive">{downloadError}</p>}
           <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_380px]">

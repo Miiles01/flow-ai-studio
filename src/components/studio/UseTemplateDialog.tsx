@@ -50,7 +50,7 @@ const STEPS: Record<typeof AGENTS[number], { steps: string[]; copy: string; copy
       </div>
       <div className="space-y-4 border-y border-border py-5">
         <p className="text-sm font-normal">{dt("dashboard.text256")} {agent}</p>
-        <Button variant="outline" onClick={() => copy(guide.copy, "mcp")} className="w-full rounded-full">{copied === "mcp" ? <Check /> : <Copy />}{copied === "mcp" ? "Copiado" : guide.copyLabel}</Button>
+        <Button variant="outline" onClick={() => copy(guide.copy, "mcp")} className="w-full rounded-full">{copied === "mcp" ? <Check /> : <Copy />}{copied === "mcp" ? dt("dashboard.label5") : guide.copyLabel}</Button>
         <ol className="space-y-2">
           {guide.steps.map((s, i) => <li key={s} className="flex gap-3 text-sm font-light"><span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-muted text-[10px]">{i + 1}</span>{s}</li>)}
         </ol>

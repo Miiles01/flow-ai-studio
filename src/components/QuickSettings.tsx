@@ -117,7 +117,7 @@ export function QuickSettings({ children }: { children?: React.ReactNode }) {
                   }
                 `}
               >
-                {isPremium ? "Gestionar" : "Mejorar"}
+                {isPremium ? dt("dashboard.label8") : dt("dashboard.label9")}
               </button>
             </div>
           </div>
