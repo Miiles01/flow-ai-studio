@@ -27,6 +27,7 @@ import { getStripeEnvironment } from "@/lib/stripe";
 
 import { getVideoEmbedUrl } from "@/lib/videoEmbed";
 import { isValidUsername } from "@/lib/referral";
+import { publicSiteUrl } from "@/lib/userSites";
 
 function VideoLinkPopover({ value, onSave, onCancel }: { value: string; onSave: (v: string) => void; onCancel: () => void }) {
   useTranslation();
@@ -81,6 +82,12 @@ const Profile = () => {
   const [niche, setNiche] = useState("");
   const [phone, setPhone] = useState("");
   const [portfolioUrl, setPortfolioUrl] = useState("");
+  const [mySites, setMySites] = useState<string[]>([]);
+  useEffect(() => {
+    if (!user) return;
+    supabase.from("user_sites").select("path").eq("owner_id", user.id).eq("status", "published").order("created_at")
+      .then(({ data }) => setMySites((data ?? []).map((r: { path: string }) => r.path)));
+  }, [user]);
   const [videoUrl1, setVideoUrl1] = useState("");
   const [videoUrl2, setVideoUrl2] = useState("");
   const [videoUrl3, setVideoUrl3] = useState("");
@@ -450,77 +457,6 @@ const Profile = () => {
             </CardContent>
           </Card>
 
-          {/* Portafolio de videos */}
-          <Card>
-            <CardHeader className="pb-4">
-              <CardTitle className="text-base">{dt("dashboard.text162")}</CardTitle>
-              <p className="text-xs text-muted-foreground font-light mt-1">{dt("dashboard.text163")}</p>
-            </CardHeader>
-            <CardContent>
-              <div className="grid grid-cols-3 gap-3">
-                {videos.map(({ val, set }, i) => {
-                  const embedUrl = getVideoEmbedUrl(val);
-                  return (
-                    <div key={i} className="relative">
-                      <div className="aspect-[9/16] rounded-xl overflow-hidden bg-muted/40 relative">
-                        {embedUrl ? (
-                          <iframe
-                            src={embedUrl}
-                            className="w-full h-full"
-                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                            allowFullScreen
-                            loading="lazy"
-                            referrerPolicy="strict-origin-when-cross-origin"
-                            title={`Video ${i + 1}`}
-                          />
-                        ) : val.trim() ? (
-                          <button
-                            type="button"
-                            onClick={() => setEditingVideo(i)}
-                            className="flex h-full w-full flex-col items-center justify-center gap-2 px-4 text-center text-muted-foreground hover:text-foreground transition-colors"
-                          >
-                            <Pencil size={18} />
-                            <span className="text-xs font-light">{dt("dashboard.text164")}</span>
-                            <span className="text-[10px] font-light opacity-80">{dt("dashboard.text165")}</span>
-                          </button>
-                        ) : (
-                          <button
-                            type="button"
-                            onClick={() => setEditingVideo(i)}
-                            className="flex flex-col items-center justify-center w-full h-full text-muted-foreground hover:text-foreground transition-colors"
-                          >
-                            <Plus size={20} />
-                            <span className="text-[10px] font-light mt-1">{dt("dashboard.text166")} {i + 1}</span>
-                          </button>
-                        )}
-
-                        {val.trim() && (
-                          <div className="absolute right-2 top-2 z-10 flex items-center gap-2">
-                            <button type="button" onClick={() => setEditingVideo(i)} className="p-2 rounded-full bg-background/90 text-foreground shadow-sm">
-                              <Pencil size={14} />
-                            </button>
-                            <button type="button" onClick={() => { set(""); setEditingVideo(null); }} className="p-2 rounded-full bg-background/90 text-foreground shadow-sm">
-                              <X size={14} />
-                            </button>
-                          </div>
-                        )}
-                      </div>
-                      <AnimatePresence>
-                        {editingVideo === i && (
-                          <VideoLinkPopover
-                            value={val}
-                            onSave={(v) => { set(v); setEditingVideo(null); }}
-                            onCancel={() => setEditingVideo(null)}
-                          />
-                        )}
-                      </AnimatePresence>
-                    </div>
-                  );
-                })}
-              </div>
-            </CardContent>
-          </Card>
-
           <Card>
             <CardHeader className="pb-4">
               <CardTitle className="text-base">{dt("dashboard.text167")}</CardTitle>
@@ -532,6 +468,27 @@ const Profile = () => {
                   <Globe size={14} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
                   <Input value={portfolioUrl} onChange={(e) => setPortfolioUrl(e.target.value)} placeholder="https://miportafolio.com" className="pl-9" />
                 </div>
+                {mySites.length > 0 && (
+                  <div className="mt-3 space-y-1.5">
+                    <p className="text-[11px] text-muted-foreground font-light">{dt("dashboard.profileMyPages")}</p>
+                    <div className="flex flex-wrap gap-2">
+                      {mySites.map((path) => {
+                        const url = publicSiteUrl(path);
+                        const active = portfolioUrl === url;
+                        return (
+                          <button
+                            key={path}
+                            type="button"
+                            onClick={() => setPortfolioUrl(url)}
+                            className={`rounded-full px-3 py-1.5 text-xs font-light transition-colors ${active ? "bg-foreground text-background" : "bg-muted text-foreground hover:bg-muted/70"}`}
+                          >
+                            {url.replace("https://", "").replace(/\/$/, "")}
+                          </button>
+                        );
+                      })}
+                    </div>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>

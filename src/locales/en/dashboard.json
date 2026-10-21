@@ -294,5 +294,6 @@
   "category_tech": "tech",
   "category_general": "general",
   "aria294": "Delete {{title}}",
-  "aria295": "Copy link for {{title}}"
+  "aria295": "Copy link for {{title}}",
+  "profileMyPages": "Your published Miiles pages (tap one to use it):"
 }
