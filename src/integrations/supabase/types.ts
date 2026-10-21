@@ -914,6 +914,92 @@ export type Database = {
         }
         Relationships: []
       }
+      user_site_files: {
+        Row: {
+          content: string
+          content_type: string
+          created_at: string
+          encoding: string
+          file_path: string
+          id: string
+          owner_id: string
+          site_id: string
+          size_bytes: number
+          updated_at: string
+        }
+        Insert: {
+          content: string
+          content_type: string
+          created_at?: string
+          encoding?: string
+          file_path: string
+          id?: string
+          owner_id: string
+          site_id: string
+          size_bytes?: number
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          content_type?: string
+          created_at?: string
+          encoding?: string
+          file_path?: string
+          id?: string
+          owner_id?: string
+          site_id?: string
+          size_bytes?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "user_site_files_site_id_fkey"
+            columns: ["site_id"]
+            isOneToOne: false
+            referencedRelation: "user_sites"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_sites: {
+        Row: {
+          created_at: string
+          id: string
+          owner_id: string
+          page_slug: string
+          path: string
+          published_at: string | null
+          status: string
+          template_slug: string | null
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          owner_id: string
+          page_slug?: string
+          path: string
+          published_at?: string | null
+          status?: string
+          template_slug?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          owner_id?: string
+          page_slug?: string
+          path?: string
+          published_at?: string | null
+          status?: string
+          template_slug?: string | null
+          title?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       widget_jobs: {
         Row: {
           answer: string | null
@@ -1030,6 +1116,14 @@ export type Database = {
           nodes: Json
           public_role: string
           user_id: string
+        }[]
+      }
+      get_published_site_file: {
+        Args: { p_file: string; p_path: string }
+        Returns: {
+          content: string
+          content_type: string
+          encoding: string
         }[]
       }
       get_referral_stats: {
