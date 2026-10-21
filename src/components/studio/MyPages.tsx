@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, ChevronDown, Copy, Eye, EyeOff, Loader2, Trash2 } from "lucide-react";
+import { Check, Copy, Eye, EyeOff, Loader2, Trash2 } from "lucide-react";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -121,7 +121,6 @@ export default function MyPages() {
                           ? <Loader2 size={10} className="animate-spin" />
                           : <span className={`h-1.5 w-1.5 rounded-full ${live ? "bg-miiles-blue" : isDark ? "bg-white/40" : "bg-black/30"}`} />}
                         {live ? "Visible" : "Oculta"}
-                        <ChevronDown size={11} strokeWidth={1.75} className="opacity-60" />
                       </button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent
