@@ -49,7 +49,7 @@ export default function UseTemplateDialog({ template, open, onOpenChange }: { te
         <ol className="space-y-2">
           {guide.steps.map((s, i) => <li key={s} className="flex gap-3 text-sm font-light"><span className="flex h-5 w-5 shrink-0 items-center justify-center rounded-full bg-muted text-[10px]">{i + 1}</span>{s}</li>)}
         </ol>
-        <div className="flex gap-3"><ShieldCheck className="h-5 w-5 shrink-0 text-primary" /><p className="text-xs leading-5 text-muted-foreground">Tu IA solo podrá ver las plantillas de Miiles. Nunca verá tu contraseña ni datos de otras personas.</p></div>
+        <div className="flex gap-3"><ShieldCheck className="h-5 w-5 shrink-0 text-primary" /><p className="text-xs leading-5 text-muted-foreground">Tu IA podrá ver las plantillas y guardar o publicar solo tus páginas. Nunca verá tu contraseña ni datos de otras personas.</p></div>
       </div>
       <label htmlFor="template-agent-prompt" className="text-sm font-normal">Paso 2 · Pega esto en el chat de {agent}</label>
       <textarea id="template-agent-prompt" readOnly value={prompt} className="min-h-32 w-full resize-none rounded-md border border-border bg-muted p-3 text-xs font-light leading-5 text-foreground" />
