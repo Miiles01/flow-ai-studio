@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, Copy, EyeOff, Loader2, Trash2 } from "lucide-react";
+import { Check, ChevronDown, Copy, Eye, EyeOff, Loader2, Trash2 } from "lucide-react";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -103,24 +104,53 @@ export default function MyPages() {
                     <Trash2 size={15} strokeWidth={1.5} />
                   </button>
 
-                  {/* Estado: un clic cambia entre visible y oculta */}
-                  <button
-                    type="button"
-                    onClick={() => act(s, live ? "unpublish" : "publish")}
-                    disabled={isBusy}
-                    aria-pressed={live}
-                    title={live ? "Ocultar página" : "Mostrar página"}
-                    className={`absolute right-3 top-3 z-10 flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-normal transition-colors disabled:opacity-60 ${
-                      live
-                        ? "bg-white text-black shadow-sm hover:bg-white/90"
-                        : isDark ? "bg-white/10 text-white hover:bg-white/15" : "bg-black/5 text-black/60 hover:bg-black/10"
-                    }`}
-                  >
-                    {isBusy
-                      ? <Loader2 size={10} className="animate-spin" />
-                      : <span className={`h-1.5 w-1.5 rounded-full ${live ? "bg-miiles-blue" : isDark ? "bg-white/40" : "bg-black/30"}`} />}
-                    {live ? "Visible" : "Oculta"}
-                  </button>
+                  {/* Estado: un selector para elegir entre visible y oculta */}
+                  <DropdownMenu modal={false}>
+                    <DropdownMenuTrigger asChild>
+                      <button
+                        type="button"
+                        disabled={isBusy}
+                        aria-label={`Estado de ${s.title}: ${live ? "visible" : "oculta"}`}
+                        className={`absolute right-3 top-3 z-10 flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-normal outline-none transition-colors disabled:opacity-60 ${
+                          live
+                            ? "bg-white text-black shadow-sm hover:bg-white/90"
+                            : isDark ? "bg-white/10 text-white hover:bg-white/15" : "bg-black/5 text-black/60 hover:bg-black/10"
+                        }`}
+                      >
+                        {isBusy
+                          ? <Loader2 size={10} className="animate-spin" />
+                          : <span className={`h-1.5 w-1.5 rounded-full ${live ? "bg-miiles-blue" : isDark ? "bg-white/40" : "bg-black/30"}`} />}
+                        {live ? "Visible" : "Oculta"}
+                        <ChevronDown size={11} strokeWidth={1.75} className="opacity-60" />
+                      </button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent
+                      align="end"
+                      sideOffset={6}
+                      className={`w-60 rounded-2xl p-1.5 ${isDark ? "bg-[#1C1C1E] border-white/10 text-white" : "bg-white border-gray-200 text-black"}`}
+                    >
+                      {([
+                        { value: "published", label: "Visible", hint: "Cualquiera con el enlace puede verla.", Icon: Eye },
+                        { value: "draft", label: "Oculta", hint: "El enlace deja de abrir hasta que la muestres.", Icon: EyeOff },
+                      ] as const).map((o) => {
+                        const selected = s.status === o.value;
+                        return (
+                          <DropdownMenuItem
+                            key={o.value}
+                            onSelect={() => { if (!selected) act(s, o.value === "published" ? "publish" : "unpublish"); }}
+                            className={`flex cursor-pointer items-start gap-3 rounded-xl px-3 py-2.5 ${isDark ? "focus:bg-white/10" : "focus:bg-[#F3F4F6]"}`}
+                          >
+                            <o.Icon size={15} strokeWidth={1.5} className="mt-0.5 shrink-0" />
+                            <span className="min-w-0 flex-1">
+                              <span className="block text-[13px] font-normal">{o.label}</span>
+                              <span className={`block text-[11px] font-light leading-4 ${isDark ? "text-white/50" : "text-[#6B7280]"}`}>{o.hint}</span>
+                            </span>
+                            {selected && <Check size={14} strokeWidth={1.75} className="mt-0.5 shrink-0" />}
+                          </DropdownMenuItem>
+                        );
+                      })}
+                    </DropdownMenuContent>
+                  </DropdownMenu>
                 </div>
 
                 {/* Título y enlace (con copiar al pasar el cursor) */}

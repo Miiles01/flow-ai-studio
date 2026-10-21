@@ -18,27 +18,28 @@ const DEVICE_LABEL = { desktop: "Escritorio", tablet: "Tablet", mobile: "Móvil"
 const DESKTOP_WIDTH = 1440;
 const DESKTOP_HEIGHT = 900;
 
-const AI_TOOLS = [
+// Los logos van sin recorte: Claude y Antigravity llegan hasta la orilla y un redondeo les corta las puntas
+const AI_TOOLS: { name: string; logo: string; rounded?: boolean }[] = [
   { name: "Claude", logo: "/logos/claude.svg" },
   { name: "Codex", logo: codexLogo.url },
-  { name: "Cursor", logo: cursorLogo.url },
+  { name: "Cursor", logo: cursorLogo.url, rounded: true }, // su imagen es un cuadro: se redondea
   { name: "Antigravity", logo: antigravityLogo.url },
   { name: "DeepSeek", logo: "/logos/deepseek.svg" },
 ];
 
 const STEPS = [
-  "Descarga la plantilla y descomprime el archivo.",
-  "Abre la carpeta en tu IA favorita (Claude, Codex, Cursor, Antigravity…).",
-  "Pídele los cambios: tu nombre, textos, fotos, colores y datos de contacto.",
-  "Publícala y comparte tu nueva presentación.",
+  "Descarga la plantilla y descomprime el archivo ZIP.",
+  "Ábrela en tu herramienta de IA: Claude, Codex, Cursor, Antigravity o DeepSeek.",
+  "Indica los cambios que necesitas: nombre, textos, fotografías, colores y datos de contacto.",
+  "Publica tu página y compártela con marcas y clientes.",
 ];
 
 const FAQ = [
-  { q: "¿Qué puedo editar?", a: "Realmente todo: textos, imágenes, colores, tipografías, secciones, animaciones y enlaces. La plantilla es tuya para adaptarla a tu marca." },
-  { q: "¿Necesito saber programar?", a: "No. Basta con abrir la carpeta en una IA agéntica y describirle con tus palabras lo que quieres cambiar." },
-  { q: "¿Qué incluye la descarga?", a: "Un archivo ZIP con la página completa (HTML, estilos, imágenes y efectos) lista para que una IA la lea y la modifique." },
-  { q: "¿Funciona en celular y tablet?", a: "Sí. Puedes revisarlo en \"Ver en pantalla completa\" cambiando entre escritorio, tablet y móvil." },
-  { q: "¿Dónde la publico?", a: "En cualquier hosting de páginas estáticas, o pídele a tu IA que la publique por ti." },
+  { q: "¿Qué elementos puedo personalizar?", a: "Todos. Puedes modificar textos, imágenes, colores, tipografías, secciones, animaciones y enlaces para adaptar la plantilla a tu marca personal." },
+  { q: "¿Necesito conocimientos de programación?", a: "No. Tu asistente de IA interpreta lo que le pides en lenguaje natural y aplica los cambios directamente en la página." },
+  { q: "¿Qué incluye la descarga?", a: "Un archivo ZIP con la página completa (HTML, estilos, imágenes y animaciones), organizado para que cualquier herramienta de IA pueda leerlo y editarlo." },
+  { q: "¿Se adapta a celulares y tablets?", a: "Sí, el diseño es responsivo. Puedes comprobarlo en «Ver en pantalla completa», alternando entre escritorio, tablet y móvil." },
+  { q: "¿Dónde puedo publicarla?", a: "En wearemiiles.com/tu-usuario, directamente desde tu asistente conectado a Miiles, o en cualquier servicio de hosting para sitios estáticos." },
 ];
 
 export default function StudioTemplate() {
@@ -187,18 +188,18 @@ export default function StudioTemplate() {
                 )}
               </div>
               <div className="border-t border-border pt-5">
-                <p className="text-sm font-normal text-foreground">Disponible para tus IAs</p>
-                <p className="mt-1 text-xs font-light text-muted-foreground">Funciona con todas las plataformas agénticas.</p>
+                <p className="text-sm font-normal text-foreground">Compatible con tu asistente de IA</p>
+                <p className="mt-1 text-xs font-light text-muted-foreground">Edítala desde las principales herramientas de IA agéntica.</p>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {AI_TOOLS.map((a) => (
                     <span key={a.name} className="flex items-center gap-2 rounded-full border border-border bg-background px-3 py-1.5 text-xs font-light text-foreground">
-                      <img src={a.logo} alt="" className="h-4 w-4 rounded-sm object-contain" /> {a.name}
+                      <img src={a.logo} alt="" className={`h-4 w-4 shrink-0 object-contain ${a.rounded ? "rounded-full" : ""}`} /> {a.name}
                     </span>
                   ))}
                 </div>
               </div>
               <div className="border-t border-border pt-5">
-                <p className="mb-3 text-sm font-normal text-foreground">Cómo usarla</p>
+                <p className="mb-3 text-sm font-normal text-foreground">Cómo personalizarla</p>
                 <ol className="space-y-2 text-sm font-light leading-6 text-muted-foreground">
                   {STEPS.map((s, i) => (
                     <li key={i} className="flex gap-3"><span className="flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-muted text-xs text-foreground">{i + 1}</span>{s}</li>
