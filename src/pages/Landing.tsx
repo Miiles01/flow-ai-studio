@@ -62,8 +62,8 @@ const renderWord = (word: string, isItalic = false) => {
 const Landing = () => {
   const { t } = useTranslation();
   usePageSeo({
-    title: t("landing.seo_title"),
-    description: t("landing.seo_description"),
+    title: t("home.landing.seo_title"),
+    description: t("home.landing.seo_description"),
     robots: "index, follow",
   });
   const smootherRef = useRef<ScrollSmoother | null>(null);
@@ -217,18 +217,18 @@ const Landing = () => {
             <div className="relative z-10 w-full max-w-6xl flex flex-col items-center justify-center">
 
               <h1 className="hero-title text-[44px] leading-[1.08] sm:text-6xl md:text-7xl lg:text-[84px] font-normal tracking-[-0.035em] text-black max-w-6xl [text-wrap:balance]">
-                {t("landing.hero_h1_before")}{" "}
+                {t("home.landing.hero_h1_before")}{" "}
                 <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic", letterSpacing: "-0.01em" }}>
-                  {t("landing.hero_h1_accent")}
+                  {t("home.landing.hero_h1_accent")}
                 </span>{" "}
-                {t("landing.hero_h1_after")}
+                {t("home.landing.hero_h1_after")}
               </h1>
 
               <p
                 data-anim-heading
                 className="mt-6 md:mt-8 text-base sm:text-lg md:text-xl font-light text-black/70 leading-relaxed max-w-2xl [text-wrap:balance]"
               >
-                {t("landing.hero_desc")}
+                {t("home.landing.hero_desc")}
               </p>
 
               <div data-anim-heading className="w-full mt-10 md:mt-12">
@@ -238,7 +238,7 @@ const Landing = () => {
               {/* BRAND CAROUSEL (Moved into Hero) */}
               <div className="w-full pt-12 md:pt-16 pb-6">
                 <p className="text-center text-xs font-light text-black/60 mb-8 tracking-widest transition-colors duration-300">
-                  {t("landing.trusted_by")}
+                  {t("home.landing.trusted_by")}
                 </p>
                 <div className="px-[10%] md:px-[20%]">
                   <div className="relative w-full overflow-hidden" style={{ maskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 15%, black 85%, transparent)" }}>
@@ -262,7 +262,7 @@ const Landing = () => {
                 <div className="pin-height">
                   <div className="container">
                     <h2 className="scroll-text text-black text-4xl md:text-7xl lg:text-[90px] font-normal tracking-tight">
-                      {t("landing.orbit_title_1")}<br />{t("landing.orbit_title_2")}
+                      {t("home.landing.orbit_title_1")}<br />{t("home.landing.orbit_title_2")}
                     </h2>
                     {swirlImages.slice(0, 8).map((src, idx) => (
                       <div 

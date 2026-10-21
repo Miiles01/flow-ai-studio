@@ -17,11 +17,11 @@ const HOLD_MS = 1800;
  * Guarda la idea y lleva al usuario a crear su tablero, donde se genera sola.
  */
 const HeroPrompt = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const navigate = useNavigate();
   const { user } = useAuth();
   const reduceMotion = useReducedMotion();
-  const examples = t("landing.hero_examples", { returnObjects: true }) as Example[];
+  const examples = t("home.landing.hero_examples", { returnObjects: true }) as Example[];
 
   const [activeIdx, setActiveIdx] = useState(0);
   const [typed, setTyped] = useState("");
@@ -60,7 +60,7 @@ const HeroPrompt = () => {
     };
     timer = setTimeout(tick, 300);
     return () => clearTimeout(timer);
-  }, [activeIdx, reduceMotion, examples.length]);
+  }, [activeIdx, reduceMotion, examples.length, i18n.language]);
 
   const handleGenerate = (idea: string) => {
     savePendingHomePrompt(idea);

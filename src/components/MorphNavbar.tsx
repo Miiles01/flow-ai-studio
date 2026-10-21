@@ -90,15 +90,15 @@ const MorphNavbar = ({ isLanding }: MorphNavbarProps) => {
     const segments = window.location.pathname.split("/").filter(Boolean);
     if (segments[0] === "es" || segments[0] === "en") segments.shift();
     i18n.changeLanguage(lng);
-    navigate(`/${lng}/${segments.join("/")}`);
+    navigate(`/${lng}/${segments.join("/")}${window.location.search}${window.location.hash}`);
     close();
   };
 
   const menuItems = [
-    { label: t("navbar.home"), href: localePath("/") },
-    { label: t("navbar.about"), href: localePath("/acerca-de") },
-    { label: t("navbar.functions"), href: localePath("/funciones") },
-    { label: t("navbar.pricing"), href: localePath("/precios") },
+    { label: t("home.navbar.home"), href: localePath("/") },
+    { label: t("home.navbar.about"), href: localePath("/acerca-de") },
+    { label: t("home.navbar.functions"), href: localePath("/funciones") },
+    { label: t("home.navbar.pricing"), href: localePath("/precios") },
   ];
   const socialLinks = [
     { label: "Instagram", href: "https://www.instagram.com/miiles.studio/" },
@@ -106,9 +106,9 @@ const MorphNavbar = ({ isLanding }: MorphNavbarProps) => {
     { label: "Youtube", href: "https://www.youtube.com/@MiilesAI/shorts" },
   ];
   const legalLinks = [
-    { label: t("navbar.affiliates"), href: "/afiliados" },
-    { label: t("navbar.terms"), href: "/terminos" },
-    { label: t("navbar.privacy"), href: "/privacidad" },
+    { label: t("home.navbar.affiliates"), href: localePath("/afiliados") },
+    { label: t("home.navbar.terms"), href: localePath("/terminos") },
+    { label: t("home.navbar.privacy"), href: localePath("/privacidad") },
   ];
 
   const isMobile = viewport < MOBILE_BREAKPOINT;
@@ -164,7 +164,7 @@ const MorphNavbar = ({ isLanding }: MorphNavbarProps) => {
                 aria-controls="miiles-menu"
                 className={`text-sm font-normal tracking-tight hover:opacity-50 transition-[color,opacity] ${morph} ${ink}`}
               >
-                {open ? t("navbar.close") : t("navbar.menu")}
+                {open ? t("home.navbar.close") : t("home.navbar.menu")}
               </button>
               <Link
                 to="/login"
@@ -173,7 +173,7 @@ const MorphNavbar = ({ isLanding }: MorphNavbarProps) => {
                   dark ? "bg-white text-black" : "bg-black text-white"
                 }`}
               >
-                {t("navbar.join")}
+                {t("home.navbar.join")}
               </Link>
             </div>
           </div>
@@ -189,7 +189,7 @@ const MorphNavbar = ({ isLanding }: MorphNavbarProps) => {
               {/* Ancho final fijo y centrado: la caja crece y lo va descubriendo, pero el
                   contenido no se reacomoda; las opciones solo suben, como en el portafolio. */}
               <nav
-                aria-label={t("navbar.menu")}
+                aria-label={t("home.navbar.menu")}
                 style={{ width: openWidth }}
                 className="relative left-1/2 -translate-x-1/2 flex flex-col md:flex-row gap-10 md:gap-0 px-8 md:px-16 pt-8 md:pt-12 pb-10 md:pb-14 max-h-[calc(100vh-140px)] overflow-y-auto"
               >
@@ -218,7 +218,7 @@ const MorphNavbar = ({ isLanding }: MorphNavbarProps) => {
                         className="text-4xl md:text-5xl lg:text-[50px] font-medium leading-[1.15] tracking-tight text-white hover:opacity-50 transition-opacity duration-300 text-left"
                         style={{ fontFamily: "'Manrope', sans-serif" }}
                       >
-                        {t("navbar.language")}
+                        {t("home.navbar.language")}
                       </button>
                     </MenuItem>
                     <AnimatePresence>
@@ -231,8 +231,8 @@ const MorphNavbar = ({ isLanding }: MorphNavbarProps) => {
                           className="mt-4 md:mt-0 md:absolute md:bottom-0 md:left-64 bg-white rounded-3xl p-3 w-max min-w-[220px] shadow-[0_20px_40px_rgba(0,0,0,0.2)] z-10 flex flex-col gap-2"
                         >
                           {[
-                            { code: "es", label: "Español", active: i18n.language === "es" },
-                            { code: "en", label: "English", active: i18n.language?.startsWith("en") },
+                            { code: "es", label: t("home.navbar.spanish"), active: i18n.language === "es" },
+                            { code: "en", label: t("home.navbar.english"), active: i18n.language?.startsWith("en") },
                           ].map((lang) => (
                             <button
                               key={lang.code}

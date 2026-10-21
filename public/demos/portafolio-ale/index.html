@@ -414,6 +414,29 @@
 </div>
 </div>
 
+<script>
+// Localized copy is supplied by the affiliates page before split-text animations start.
+try {
+  const copy = JSON.parse(decodeURIComponent(location.hash.slice(1)));
+  if (Array.isArray(copy)) {
+    const translations = new Map(copy.map(item => [item.original, item.text]));
+    const walker = document.createTreeWalker(document.documentElement, NodeFilter.SHOW_TEXT);
+    while (walker.nextNode()) {
+      const node = walker.currentNode;
+      if (['SCRIPT', 'STYLE'].includes(node.parentElement?.tagName)) continue;
+      const text = node.textContent.trim();
+      if (translations.has(text)) node.textContent = node.textContent.replace(text, translations.get(text));
+    }
+    document.querySelectorAll('[aria-label], [alt], meta[name="description"]').forEach(el => {
+      ['aria-label', 'alt', 'content'].forEach(attr => {
+        const value = el.getAttribute(attr);
+        if (translations.has(value)) el.setAttribute(attr, translations.get(value));
+      });
+    });
+    document.documentElement.lang = translations.get('Portafolio') === 'Portfolio' ? 'en' : 'es';
+  }
+} catch { /* Standalone demo keeps its original Spanish copy. */ }
+</script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollTrigger.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.13.0/ScrollSmoother.min.js"></script>

@@ -1,0 +1,185 @@
+{
+  "landing": {
+    "hero_badge": "Miiles",
+    "hero_title_hoy": "Hoy",
+    "hero_title_es": "es",
+    "hero_title_un": "un",
+    "hero_title_buen": "buen",
+    "hero_title_dia": "día",
+    "hero_title_para": "para",
+    "hero_title_crear": "crear",
+    "hero_subtitle": "Imagina un proyecto. Hazlo realidad.",
+    "hero_cta": "Unirse ahora",
+    "seo_title": "Business Model Canvas con IA para emprendedores | Miiles",
+    "seo_description": "Estructura tus ideas de negocio con inteligencia artificial: crea tu Business Model Canvas, valida tu idea con IA y usa prompts de estrategia en minutos.",
+    "hero_h1": "Todo modelo de negocio necesita una base",
+    "hero_h1_before": "Todo modelo de",
+    "hero_h1_accent": "negocio",
+    "hero_h1_after": "necesita una base",
+    "hero_desc": "Descubre cómo los estrategas globales crean negocios que funcionan.",
+    "hero_examples": [
+      {
+        "label": "Tableros",
+        "prompt": "Un plan de lanzamiento para mi marca de ropa"
+      },
+      {
+        "label": "Flujos",
+        "prompt": "El proceso de ventas de mi negocio, paso a paso"
+      },
+      {
+        "label": "Tareas",
+        "prompt": "Las tareas para abrir mi cafetería este mes"
+      },
+      {
+        "label": "Contenido",
+        "prompt": "Mi calendario de contenido para TikTok e Instagram"
+      }
+    ],
+    "orbit_title_1": "Descubre",
+    "orbit_title_2": "conexiones",
+    "scroll_text_1_1": "Unifica tus ideas",
+    "scroll_text_1_2": "en un solo lugar",
+    "scroll_text_1_3": "y empieza a crear",
+    "scroll_text_2_1": "Un espacio para",
+    "scroll_text_2_2": "conectar y co-crear",
+    "scroll_text_2_3": "sin límites",
+    "mobile_title_1": "Unifica tus ideas",
+    "mobile_title_2": "y empieza a",
+    "mobile_title_3": "crear",
+    "trusted_by": "Elegido por",
+    "system_title_1": "Un sistema.",
+    "system_title_2": "Más",
+    "system_title_3": "ganancias.",
+    "colab_title": "Encuentra colaboraciones",
+    "colab_desc": "En Miiles encontrarás oportunidades únicas para impulsar tu marca.",
+    "sales_title": "Haz que tu idea suene con fuerza de ventas",
+    "sales_desc": "Si tu marca vende servicios o productos, haz que otros vendedores en todo el mundo también los ofrezcan.",
+    "testim_quote": "Luce realmente asombroso",
+    "testim_name": "Karol Wegner",
+    "testim_role": "CEO de BeeSpeaker",
+    "curve_text": "Es horaaaaaa de crearrrrrrrrr",
+    "cta_title": "Es hora de crear",
+    "cta_subtitle": "Crea tu cuenta hoy mismo",
+    "cta_button": "Prueba Miiles",
+    "build_title": "¿Qué vas a crear?",
+    "build_subtitle": "Lo que imagines para tu negocio, la inteligencia artificial de Miiles te ayuda a estructurarlo.",
+    "build_cards": [
+      {
+        "title": "Diseña un portafolio",
+        "desc": "Crea un portafolio profesional con un solo prompt: muestra quién eres, qué vendes y cómo lo vendes, listo para compartir.",
+        "image": "/__l5e/assets-v1/cbd244fc-25ad-436c-927c-51b19326a5df/home-portafolio.png",
+        "alt": "Portafolio generado por la IA de Miiles con la foto y el nombre de la creadora"
+      },
+      {
+        "title": "Clientes y campañas",
+        "desc": "Organiza clientes, campañas, contratos e ingresos con widgets dentro del mismo tablero. Todo tu negocio a la vista, sin cambiar de herramienta.",
+        "image": "/home-clientes.webp",
+        "alt": "Widgets de clientes y campañas en un tablero de Miiles"
+      },
+      {
+        "title": "Algoritmos de redes",
+        "desc": "Entiende cómo deciden TikTok, Instagram, YouTube y Facebook qué mostrar, y qué estrategias usan los creadores que están creciendo.",
+        "image": "/home-algoritmos.webp",
+        "alt": "Diagrama de cómo funciona el algoritmo de una red social"
+      }
+    ],
+    "plans_title": "Elige tu plan",
+    "plans_subtitle": "Hecho para donde estás y hacia donde vas.",
+    "plans": [
+      {
+        "name": "Empieza gratis",
+        "price": "$0",
+        "unit": "MXN/mes",
+        "intro": "Incluye:",
+        "features": [
+          "1 proyecto",
+          "Hasta 10 colaboraciones",
+          "Soporte por email"
+        ],
+        "cta": "Empezar gratis"
+      },
+      {
+        "name": "Plan Pro desde",
+        "price": "$309",
+        "unit": "MXN/mes",
+        "note": "*Facturado anualmente (MXN 3,712 al año)",
+        "intro": "Crece sin límites, con más funciones y más soporte.",
+        "features": [
+          "Proyectos ilimitados",
+          "Colaboraciones ilimitadas",
+          "Analítica avanzada",
+          "Soporte prioritario"
+        ],
+        "cta": "Ver todos los planes"
+      }
+    ],
+    "faq_title": "Preguntas frecuentes",
+    "faq_items": [
+      {
+        "q": "¿Qué es Miiles?",
+        "a": [
+          "Miiles es una plataforma de inteligencia artificial para emprendedores que convierte ideas en modelos de negocio. Describe tu idea y Miiles genera tu Business Model Canvas, flujos y listas de tareas en un tablero visual que puedes editar con tu equipo.",
+          "Además, en Descubrimientos aprendes cómo funcionan los algoritmos de TikTok, Instagram, YouTube y Facebook, y qué estrategias están usando los creadores que crecen."
+        ]
+      },
+      {
+        "q": "¿Cómo funciona Miiles?",
+        "a": [
+          "Escribes tu idea como se la contarías a alguien. Si hace falta, la IA te hace algunas preguntas para entender tu objetivo, te propone un plan estratégico y, cuando lo apruebas, construye el tablero con la estructura de tu negocio.",
+          "Después puedes editar, mover y ampliar cada parte, o pedirle a la IA que desarrolle una sección a partir de lo que ya tienes."
+        ]
+      },
+      {
+        "q": "¿Qué es un Business Model Canvas?",
+        "a": [
+          "Es una herramienta de estrategia, creada por Alexander Osterwalder, que resume un negocio en nueve bloques: segmentos de clientes, propuesta de valor, canales, relación con clientes, fuentes de ingresos, recursos clave, actividades clave, socios clave y estructura de costos.",
+          "Miiles lo genera a partir de tu idea para que puedas revisarlo, ajustarlo y compartirlo en minutos."
+        ]
+      },
+      {
+        "q": "¿Puedo validar mi idea de negocio con IA?",
+        "a": [
+          "Miiles te ayuda a estructurar tu idea y a ver con claridad qué necesitas comprobar: quién es tu cliente, qué problema resuelves, por qué canal llegas y cómo generas ingresos.",
+          "La validación real la haces hablando con tus clientes; Miiles te da el mapa para hacerlo con orden."
+        ]
+      },
+      {
+        "q": "¿Necesito saber de estrategia o escribir prompts?",
+        "a": [
+          "No. No necesitas dominar prompts para estrategia de negocios: escribes en lenguaje natural y Miiles se encarga de las preguntas y de la estructura.",
+          "Si ya sabes de estrategia, puedes pedir marcos concretos, como el Business Model Canvas, y ajustar cada bloque a tu manera."
+        ]
+      },
+      {
+        "q": "¿Cuánto cuesta?",
+        "a": [
+          "Puedes empezar gratis. El plan Pro cuesta MXN 386 al mes o MXN 3,712 al año (ahorras 20%) e incluye proyectos y colaboraciones ilimitadas, analítica avanzada y soporte prioritario.",
+          "Para equipos y empresas hay un plan Negocios a la medida."
+        ]
+      }
+    ]
+  },
+  "navbar": {
+    "home": "Inicio",
+    "about": "Acerca de",
+    "functions": "Funciones",
+    "pricing": "Precios",
+    "join": "Unirse",
+    "language": "Idioma",
+    "close": "Cerrar",
+    "menu": "Menú",
+    "affiliates": "Afiliados",
+    "terms": "Términos y condiciones",
+    "privacy": "Política de privacidad",
+    "spanish": "Español",
+    "english": "English"
+  },
+  "footer": {
+    "slogan": "Diseñado para mentes creativas",
+    "copyright": "© Miiles, todos los derechos reservados, 2026",
+    "company": "Compañía",
+    "terms": "Términos y condiciones",
+    "privacy": "Política de privacidad",
+    "social": "Redes Sociales"
+  }
+}

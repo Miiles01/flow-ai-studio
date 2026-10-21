@@ -1,0 +1,199 @@
+{
+  "headline": "Todo creador necesita una base",
+  "createAccount": "Crear cuenta",
+  "trustedBy": "Elegido por",
+  "affiliates": "Afiliados",
+  "shareCommission": "Comparte tu link y recibe comisiones",
+  "proPlan": "Plan Pro",
+  "boardsTitle": "Mis Tableros",
+  "newBoard": "Nuevo tablero",
+  "generateLink": "Generar link",
+  "noForms": "Sin formularios complicados.",
+  "noWaiting": "Sin procesos de aprobación largos.",
+  "start": "Empieza",
+  "journey": "tu camino",
+  "today": "hoy",
+  "portfolioTitle": "Portafolio de Ale creado con Miiles",
+  "heroAlt": "Tres creadores de contenido sonriendo juntos",
+  "ariana": "Ariana",
+  "copied": "¡Link copiado con éxito!",
+  "shareEarn": "Compártelo y empieza a ganar",
+  "mission": "Somos Miiles. Creamos tecnología para ayudar a los creadores a construir sin límites.",
+  "heroBefore": "Únete al programa de afiliados de Miiles. Comparte tu link y recibe el ",
+  "heroAfter": " de comisión en suscripciones.",
+  "commission": "25%",
+  "aiBefore": "Crea con el ",
+  "aiPower": "poder",
+  "aiAfter": "de la IA",
+  "anyBefore": "Empieza desde",
+  "any": "cualquier",
+  "anyAfter": " lugar",
+  "mobileBefore": "Empieza hoy ",
+  "mobileAccent": "mismo",
+  "steps": [
+    {
+      "label": "Plan Pro gratis",
+      "detail": "Únete como afiliado y accede a todas las herramientas de Miiles sin pagar nada. Tú usas, tú vendes, tú ganas."
+    },
+    {
+      "label": "Link de afiliado",
+      "detail": "Ve a la sección Afiliados en tu menú lateral y genera tu enlace único con un solo clic."
+    },
+    {
+      "label": "Gana el 25%",
+      "detail": "Compártelo en tus redes, stories o bio. Cada membresía vendida con tu link te da el 25% directo."
+    },
+    {
+      "label": "Comunidad exclusiva",
+      "detail": "Acceso a comunidad privada, drops de contenido y eventos que no están abiertos al público."
+    }
+  ],
+  "boards": [
+    "Nuevos",
+    "Campaña Q3",
+    "UGC Verano",
+    "Estrategia",
+    "Lanzamiento",
+    "Branding"
+  ],
+  "navigation": [
+    {
+      "label": "Inicio",
+      "active": false
+    },
+    {
+      "label": "Tableros",
+      "active": true
+    },
+    {
+      "label": "Estudio",
+      "active": false
+    }
+  ],
+  "buildCards": [
+    {
+      "title": "Diseña un portafolio",
+      "desc": "Crea un portafolio profesional con un solo prompt: muestra quién eres, qué vendes y cómo lo vendes, listo para compartir.",
+      "image": "/__l5e/assets-v1/cbd244fc-25ad-436c-927c-51b19326a5df/home-portafolio.png",
+      "alt": "Portafolio generado por la IA de Miiles con la foto y el nombre de la creadora"
+    },
+    {
+      "title": "Clientes y campañas",
+      "desc": "Organiza clientes, campañas, contratos e ingresos con widgets dentro del mismo tablero. Todo tu negocio a la vista, sin cambiar de herramienta.",
+      "image": "/home-clientes.webp",
+      "alt": "Widgets de clientes y campañas en un tablero de Miiles"
+    },
+    {
+      "title": "Algoritmos de redes",
+      "desc": "Entiende cómo deciden TikTok, Instagram, YouTube y Facebook qué mostrar, y qué estrategias usan los creadores que están creciendo.",
+      "image": "/home-algoritmos.webp",
+      "alt": "Diagrama de cómo funciona el algoritmo de una red social"
+    }
+  ],
+  "portfolioCopy": [
+    {
+      "original": "Hola,",
+      "text": "Hola,"
+    },
+    {
+      "original": "soy",
+      "text": "soy"
+    },
+    {
+      "original": "Principal",
+      "text": "Principal"
+    },
+    {
+      "original": "Marcas",
+      "text": "Marcas"
+    },
+    {
+      "original": "Contenido",
+      "text": "Contenido"
+    },
+    {
+      "original": "Nichos",
+      "text": "Nichos"
+    },
+    {
+      "original": "Sobre mí",
+      "text": "Sobre mí"
+    },
+    {
+      "original": "Testimonios",
+      "text": "Testimonios"
+    },
+    {
+      "original": "Contacto",
+      "text": "Contacto"
+    },
+    {
+      "original": "Menú",
+      "text": "Menú"
+    },
+    {
+      "original": "Cerrar ✕",
+      "text": "Cerrar ✕"
+    },
+    {
+      "original": "Menú móvil",
+      "text": "Menú móvil"
+    },
+    {
+      "original": "Visor de contenido",
+      "text": "Visor de contenido"
+    },
+    {
+      "original": "Cerrar",
+      "text": "Cerrar"
+    },
+    {
+      "original": "Portafolio",
+      "text": "Portafolio"
+    },
+    {
+      "original": "Ale, creadora de contenido UGC",
+      "text": "Ale, creadora de contenido UGC"
+    },
+    {
+      "original": "Soy Ale, creadora de contenido UGC. Hago videos y fotos que se sienten como la recomendación de una amiga.",
+      "text": "Soy Ale, creadora de contenido UGC. Hago videos y fotos que se sienten como la recomendación de una amiga."
+    },
+    {
+      "original": "Trabajo con marcas de belleza, moda y bienestar que quieren conectar con su audiencia de forma natural.",
+      "text": "Trabajo con marcas de belleza, moda y bienestar que quieren conectar con su audiencia de forma natural."
+    },
+    {
+      "original": "Creadora de contenido UGC",
+      "text": "Creadora de contenido UGC"
+    },
+    {
+      "original": "Marcas que confiaron en mí",
+      "text": "Marcas que confiaron en mí"
+    },
+    {
+      "original": "Hagamos algo juntas",
+      "text": "Hagamos algo juntas"
+    },
+    {
+      "original": "Mis redes",
+      "text": "Mis redes"
+    },
+    {
+      "original": "Escríbeme directo",
+      "text": "Escríbeme directo"
+    },
+    {
+      "original": "© 2026 Ale · Plantilla UGC de We Are Miiles",
+      "text": "© 2026 Ale · Plantilla UGC de We Are Miiles"
+    },
+    {
+      "original": "Ale · Portafolio (demo)",
+      "text": "Ale · Portafolio (demo)"
+    },
+    {
+      "original": "Portafolio de Ale, creadora de contenido UGC: videos y fotos para marcas de belleza, moda y bienestar.",
+      "text": "Portafolio de Ale, creadora de contenido UGC: videos y fotos para marcas de belleza, moda y bienestar."
+    }
+  ]
+}

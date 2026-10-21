@@ -1,0 +1,73 @@
+{
+  "items": [
+    {
+      "id": "colaboraciones",
+      "badge": "Collaborations",
+      "title": "Collaborate with brands",
+      "description": "Find leading brands and collaborate on creative social media projects and high-impact digital strategies. Connect with global audiences with ease.",
+      "bullets": [
+        "Direct access to world-class brands.",
+        "Creative projects and social media campaigns.",
+        "Exclusive opportunities to monetize your portfolio."
+      ]
+    },
+    {
+      "id": "ai-studio",
+      "badge": "Artificial Intelligence",
+      "title": "Design business models with the power of AI",
+      "description": "Describe your idea, build a complete business structure, and discover new opportunities to develop scalable projects.",
+      "bullets": [
+        "Instant business structures generated from your vision.",
+        "A clear view of your value chain and revenue streams.",
+        "Smart AI suggestions to validate and scale your project."
+      ]
+    },
+    {
+      "id": "collab",
+      "badge": "Live Collaboration",
+      "title": "Co-create and connect in real time",
+      "description": "Invite your team to work on the same canvas. See connected users’ avatars and edit together without conflicting changes.",
+      "bullets": [
+        "Interactive visual presence with stacked avatars in the header.",
+        "Instant synchronization of movements, colors, and connectors.",
+        "Quick sharing through public viewing URLs."
+      ]
+    },
+    {
+      "id": "canvas",
+      "badge": "Advanced Canvas",
+      "title": "Infinite canvas, complete customization",
+      "description": "Structure your ideas without physical limits. Connect any shapes using bidirectional handles and navigate with a wide zoom range from 5% to 400%.",
+      "bullets": [
+        "Curved connectors with editable text labels in the middle.",
+        "Quickly disconnect nodes by dragging from their left half.",
+        "Customizable geometric shapes in vibrant brand colors."
+      ]
+    }
+  ],
+  "phrases": [
+    "Create a sales funnel for my online course...",
+    "Design a social media marketing campaign...",
+    "Map out the app onboarding flow...",
+    "Plan an Instagram content strategy...",
+    "Organize the B2B support and ticket process..."
+  ],
+  "apps": "Apps",
+  "select": "Select",
+  "pan": "Pan",
+  "shapes": "Shapes",
+  "text": "Text",
+  "todo": "To-do List",
+  "image": "Image",
+  "section": "Section",
+  "mateo": "Mateo",
+  "sofia": "Sofía",
+  "intro": "Introducing Miiles",
+  "title": "Bring your ideas to life",
+  "subtitle": "A place designed to discover opportunities",
+  "plansTitle": "Our plans",
+  "plansDescription": "Choose the right plan to automate and scale your business.",
+  "aiAlt": "AI",
+  "collaborator": "Collaborator {{number}}",
+  "heroAlt": "Person comfortably using Miiles on a tablet on their sofa"
+}
