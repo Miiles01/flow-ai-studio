@@ -295,5 +295,28 @@
   "category_general": "general",
   "aria294": "Delete {{title}}",
   "aria295": "Copy link for {{title}}",
-  "profileMyPages": "Your published Miiles pages (tap one to use it):"
+  "profileMyPages": "Your published Miiles pages (tap one to use it):",
+  "connectMcp": {
+    "step1": "Open your agent's Connectors section (in Claude: Settings → Connectors).",
+    "step2": "Choose «Add custom connector».",
+    "step3": "Name it Miiles and paste the link.",
+    "step4": "Sign in with your Miiles account and accept.",
+    "title": "Connect Miiles through MCP",
+    "subtitle": "· Only the first time; it takes a minute.",
+    "connectTitle": "Connect your agent",
+    "copyLink": "Copy link",
+    "copied": "Copied",
+    "privacy": "Your agent can see the templates and save or publish only your pages. It will never see your password or other people's data.",
+    "pasteTitle": "Paste this message into your agent's chat",
+    "copyMessage": "Copy message",
+    "messageCopied": "Message copied",
+    "publishNote": "When it's ready, say «Publish my page on Miiles» and it will live at wearemiiles.com/your-username. You'll see it in Studio → My pages.",
+    "stepOf": "Step {{step}} of 2",
+    "close": "Close",
+    "dialogTitle": "Add custom connector",
+    "nameLabel": "Name",
+    "urlLabel": "MCP server URL",
+    "cancel": "Cancel",
+    "continue": "Continue"
+  }
 }
