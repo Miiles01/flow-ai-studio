@@ -295,6 +295,8 @@
   "category_general": "general",
   "aria294": "Eliminar {{title}}",
   "aria295": "Copiar enlace de {{title}}",
+  "renamePage": "Cambiar nombre de {{title}}",
+  "pageName": "Nombre de la página",
   "profileMyPages": "Tus páginas publicadas en Miiles (toca una para usarla):",
   "connectMcp": {
     "step1": "Abre la sección Conectores de tu agente (en Claude: Ajustes → Conectores).",
