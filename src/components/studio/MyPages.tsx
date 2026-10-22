@@ -1,9 +1,11 @@
 import { useTranslation } from "react-i18next";
 import dashboardI18n from "@/i18n";
 const dt = (key: string, options?: Record<string, unknown>): string => dashboardI18n.t(key, options) as string;
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { Check, Copy, Eye, EyeOff, Loader2, Trash2 } from "lucide-react";
+import { Check, Copy, Eye, EyeOff, Loader2, Pencil, Trash2 } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
@@ -22,6 +24,40 @@ export default function MyPages() {
   const [busy, setBusy] = useState("");
   const [copiedId, setCopiedId] = useState("");
   const [toDelete, setToDelete] = useState<Site | null>(null);
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [draftTitle, setDraftTitle] = useState("");
+  const renamePending = useRef(false);
+  const renameCancelled = useRef(false);
+
+  function startRename(site: Site) {
+    renameCancelled.current = false;
+    setDraftTitle(site.title);
+    setEditingId(site.id);
+  }
+
+  async function saveTitle(site: Site) {
+    if (!user || renamePending.current || renameCancelled.current) return;
+    const title = draftTitle.trim();
+    if (!title || title === site.title) {
+      setEditingId(null);
+      return;
+    }
+    renamePending.current = true;
+    setBusy(site.id);
+    try {
+      const { data, error } = await supabase.from("user_sites")
+        .update({ title }).eq("id", site.id).eq("owner_id", user.id)
+        .select("title").single();
+      if (error) throw error;
+      setSites((current) => current?.map((item) => item.id === site.id ? { ...item, title: data.title } : item) ?? null);
+      setEditingId(null);
+    } catch (error) {
+      toast({ title: dt("dashboard.text132"), description: error instanceof Error ? error.message : dt("dashboard.text229"), variant: "destructive" });
+    } finally {
+      renamePending.current = false;
+      setBusy("");
+    }
+  }
 
   async function load() {
     if (!user) return;
@@ -154,7 +190,37 @@ export default function MyPages() {
 
                 {/* Título y enlace (con copiar al pasar el cursor) */}
                 <div className="p-4">
-                  <p className={`truncate text-base font-normal ${isDark ? "text-white" : "text-black"}`}>{s.title}</p>
+                  {editingId === s.id ? (
+                    <div className="relative h-8">
+                      <Input
+                        autoFocus
+                        aria-label={dt("dashboard.pageName")}
+                        value={draftTitle}
+                        disabled={isBusy}
+                        onFocus={(event) => event.currentTarget.select()}
+                        onChange={(event) => setDraftTitle(event.target.value)}
+                        onBlur={() => saveTitle(s)}
+                        onKeyDown={(event) => {
+                          if (event.key === "Enter") { event.preventDefault(); saveTitle(s); }
+                          if (event.key === "Escape") { event.preventDefault(); renameCancelled.current = true; setEditingId(null); }
+                        }}
+                        className="h-8 px-2 pr-8 text-base md:text-base font-normal text-foreground"
+                      />
+                      {isBusy && <Loader2 size={14} className="absolute right-2 top-2 animate-spin text-muted-foreground" />}
+                    </div>
+                  ) : (
+                    <Button
+                      variant="ghost"
+                      disabled={isBusy || !!busy}
+                      onClick={() => startRename(s)}
+                      aria-label={dt("dashboard.renamePage", { title: s.title })}
+                      title={dt("dashboard.renamePage", { title: s.title })}
+                      className="group/title h-8 w-full min-w-0 justify-start gap-2 px-0 text-base font-normal text-foreground hover:bg-transparent"
+                    >
+                      <span className="truncate">{s.title}</span>
+                      <Pencil size={13} strokeWidth={1.5} className="shrink-0 text-muted-foreground transition-opacity md:opacity-0 md:group-hover/title:opacity-100 group-focus-visible/title:opacity-100" />
+                    </Button>
+                  )}
                   <div className="group/link mt-0.5 flex min-w-0 items-center gap-1.5">
                     <a href={url} target="_blank" rel="noreferrer" className="truncate text-xs font-light text-muted-foreground transition-colors hover:text-foreground">
                       {shownUrl}

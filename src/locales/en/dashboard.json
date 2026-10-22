@@ -295,6 +295,8 @@
   "category_general": "general",
   "aria294": "Delete {{title}}",
   "aria295": "Copy link for {{title}}",
+  "renamePage": "Rename {{title}}",
+  "pageName": "Page name",
   "profileMyPages": "Your published Miiles pages (tap one to use it):",
   "connectMcp": {
     "step1": "Open your agent's Connectors section (in Claude: Settings → Connectors).",
