@@ -19,6 +19,28 @@ const CONNECT_STEPS = ["step1", "step2", "step3", "step4"] as const;
 type Step = 1 | 2;
 
 /** Paso 1: el pop-up «Agregar conector personalizado» con los dos campos ya llenos. */
+/** Campo de la ilustración: al pasar el cursor aparece «copiar» y copia su valor. */
+function CopyField({ value, className }: { value: string; className: string }) {
+  const [done, setDone] = useState(false);
+  async function onCopy() {
+    try { await navigator.clipboard.writeText(value); setDone(true); setTimeout(() => setDone(false), 1600); }
+    catch { toast.error(dt("dashboard.text252")); }
+  }
+  return (
+    <div className={`group/field relative mt-1.5 rounded-xl py-2.5 pl-3.5 pr-11 ${className}`}>
+      {value}
+      <button
+        type="button"
+        onClick={onCopy}
+        aria-label={`${dt("dashboard.connectMcp.copy")} ${value}`}
+        className="absolute right-1.5 top-1/2 flex h-8 w-8 -translate-y-1/2 items-center justify-center rounded-lg text-muted-foreground opacity-0 transition-opacity duration-150 hover:text-foreground focus-visible:opacity-100 group-hover/field:opacity-100"
+      >
+        {done ? <Check size={14} strokeWidth={1.8} /> : <Copy size={14} strokeWidth={1.5} />}
+      </button>
+    </div>
+  );
+}
+
 function ConnectorIllustration({ isDark }: { isDark: boolean }) {
   const card = isDark ? "bg-[#1C1C1E] border-white/10" : "bg-white border-black/[0.06]";
   const field = isDark ? "bg-white/5 text-white" : "bg-[#F7F7F8] text-black";
@@ -32,9 +54,9 @@ function ConnectorIllustration({ isDark }: { isDark: boolean }) {
       {/* Esqueleto del texto introductorio */}
       <div className="mt-3 space-y-2"><div className={`h-2 w-11/12 rounded-full ${bar}`} /><div className={`h-2 w-7/12 rounded-full ${bar}`} /></div>
       <p className="mt-5 text-xs font-light text-muted-foreground">{dt("dashboard.connectMcp.nameLabel")}</p>
-      <div className={`mt-1.5 rounded-xl px-3.5 py-2.5 text-[13px] ${field}`}>Miiles</div>
+      <CopyField value="Miiles" className={`text-[13px] ${field}`} />
       <p className="mt-4 text-xs font-light text-muted-foreground">{dt("dashboard.connectMcp.urlLabel")}</p>
-      <div className={`mt-1.5 break-all rounded-xl px-3.5 py-2.5 font-mono text-[11px] leading-5 ${field}`}>{MCP_URL}</div>
+      <CopyField value={MCP_URL} className={`break-all font-mono text-[11px] leading-5 ${field}`} />
       <div className="mt-2 space-y-2"><div className={`h-2 w-10/12 rounded-full ${bar}`} /><div className={`h-2 w-6/12 rounded-full ${bar}`} /></div>
       {/* Esqueleto del aviso */}
       <div className="mt-6 space-y-2"><div className={`h-2 w-full rounded-full ${bar}`} /><div className={`h-2 w-11/12 rounded-full ${bar}`} /><div className={`h-2 w-8/12 rounded-full ${bar}`} /></div>
@@ -123,16 +145,13 @@ export default function UseTemplateDialog({ template, open, onOpenChange }: { te
 
   return <Dialog open={open} onOpenChange={onOpenChange}>
     <DialogContent
-      ref={setScrollEl}
       hideClose
-      className={`${isDark ? "dark" : ""} scrollbar-hide max-h-[90dvh] w-[calc(100%-2rem)] max-w-5xl overflow-y-auto rounded-[28px] bg-background p-6 text-foreground sm:p-8`}
+      className={`${isDark ? "dark" : ""} max-h-[90dvh] w-[calc(100%-2rem)] max-w-5xl overflow-hidden rounded-[28px] bg-background p-0 text-foreground md:h-[min(90dvh,720px)]`}
     >
       {/* Cerrar: la misma píldora de los pop-ups de Widgets y Apps */}
-      {/* Fija arriba a la derecha aunque se haga scroll */}
-      <div className="pointer-events-none sticky top-0 z-50 -mb-px h-px">
       <DialogClose asChild>
         <button
-          className={`pointer-events-auto absolute -right-2 -top-2 z-50 flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${
+          className={`absolute right-4 top-4 z-50 flex items-center gap-1.5 rounded-full px-3 py-1.5 text-sm font-medium transition-colors ${
             isDark ? "bg-white/10 hover:bg-white/20 text-white" : "bg-black/5 hover:bg-black/10 text-black"
           }`}
           aria-label={dt("dashboard.connectMcp.close")}
@@ -141,11 +160,11 @@ export default function UseTemplateDialog({ template, open, onOpenChange }: { te
           <X size={14} />
         </button>
       </DialogClose>
-      </div>
 
-      <div className="grid items-start gap-8 md:grid-cols-[minmax(0,1fr)_minmax(0,0.95fr)]">
+      {/* Solo la columna de texto hace scroll; la imagen y el botón Cerrar quedan fijos */}
+      <div className="grid min-h-0 md:h-full md:grid-cols-[minmax(0,1fr)_minmax(0,0.95fr)]">
         {/* Información */}
-        <div className="min-w-0 space-y-8 md:pb-[28vh]">
+        <div ref={setScrollEl} className="scrollbar-hide min-w-0 max-h-[90dvh] space-y-8 overflow-y-auto p-6 sm:p-8 md:max-h-none md:pb-[28vh]">
           <DialogHeader className="space-y-3 text-left">
             <MiilesStar className="h-7 w-7 text-primary" />
             <DialogTitle className="text-2xl font-normal tracking-normal">{dt("dashboard.connectMcp.title")}</DialogTitle>
@@ -187,8 +206,8 @@ export default function UseTemplateDialog({ template, open, onOpenChange }: { te
         </div>
 
         {/* Ilustración fija que cambia según el paso (solo en pantallas medianas en adelante) */}
-        <div className="sticky top-0 hidden md:block">
-          <div className={`relative flex min-h-[520px] items-center justify-center overflow-hidden rounded-[24px] p-8 ${isDark ? "bg-white/[0.03]" : "bg-gradient-to-b from-[#FDFDFD] to-[#F1EFF6]"}`}>
+        <div className="hidden p-8 pl-0 md:block">
+          <div className={`relative flex h-full items-center justify-center overflow-hidden rounded-[24px] p-8 ${isDark ? "bg-white/[0.03]" : "bg-gradient-to-b from-[#FDFDFD] to-[#F1EFF6]"}`}>
             <AnimatePresence mode="wait" initial={false}>
               <motion.div
                 key={step}
@@ -201,7 +220,6 @@ export default function UseTemplateDialog({ template, open, onOpenChange }: { te
                 {step === 1 ? <ConnectorIllustration isDark={isDark} /> : <ChatIllustration isDark={isDark} prompt={prompt} active={step === 2} />}
               </motion.div>
             </AnimatePresence>
-            <span className={`absolute bottom-4 left-1/2 -translate-x-1/2 rounded-full px-3 py-1 text-[11px] font-light ${isDark ? "bg-white/10 text-white/70" : "bg-white text-black/60"}`}>{dt("dashboard.connectMcp.stepOf", { step })}</span>
           </div>
         </div>
       </div>

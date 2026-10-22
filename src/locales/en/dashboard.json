@@ -311,12 +311,12 @@
     "copyMessage": "Copy message",
     "messageCopied": "Message copied",
     "publishNote": "When it's ready, say «Publish my page on Miiles» and it will live at wearemiiles.com/your-username. You'll see it in Studio → My pages.",
-    "stepOf": "Step {{step}} of 2",
     "close": "Close",
     "dialogTitle": "Add custom connector",
     "nameLabel": "Name",
     "urlLabel": "MCP server URL",
     "cancel": "Cancel",
-    "continue": "Continue"
+    "continue": "Continue",
+    "copy": "Copy"
   }
 }

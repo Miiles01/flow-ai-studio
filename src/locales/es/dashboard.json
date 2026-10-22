@@ -311,12 +311,12 @@
     "copyMessage": "Copiar mensaje",
     "messageCopied": "Mensaje copiado",
     "publishNote": "Cuando esté lista, dile «Publica mi página en Miiles» y quedará en wearemiiles.com/tu-usuario. La verás en Estudio → Mis páginas.",
-    "stepOf": "Paso {{step}} de 2",
     "close": "Cerrar",
     "dialogTitle": "Agregar conector personalizado",
     "nameLabel": "Nombre",
     "urlLabel": "URL del servidor MCP",
     "cancel": "Cancelar",
-    "continue": "Continuar"
+    "continue": "Continuar",
+    "copy": "Copiar"
   }
 }
