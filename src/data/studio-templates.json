@@ -1,5 +1,15 @@
 [
   {
+    "slug": "portafolio-ugc-v15",
+    "title": "Blush",
+    "kind": "portfolio",
+    "description": "Plantilla de portafolio UGC en rosa con texto negro y tu nombre gigante sobre la foto, que se encoge hasta el navbar al hacer scroll. Incluye un titular que se revela línea por línea, una foto en círculo que crece a pantalla completa, franjas en movimiento con los logotipos de las marcas, nichos, galería de videos y fotos con parallax, reseñas con logo de cada marca y contacto con botones directos.",
+    "thumbnail_url": "https://wearemiiles.com/studio/thumbs/ugc-v15.jpg",
+    "preview_url": "https://wearemiiles.com/ugc-v15/",
+    "download_url": "https://wearemiiles.com/studio/descargas/ugc-v15.zip",
+    "template_number": 15
+  },
+  {
     "slug": "portafolio-ugc-v14",
     "title": "Eclipse",
     "kind": "portfolio",
