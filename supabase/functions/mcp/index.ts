@@ -11,6 +11,16 @@ import { defineTool } from "npm:@lovable.dev/mcp-js@3.1.1";
 // src/data/studio-templates.json
 var studio_templates_default = [
   {
+    slug: "portafolio-ugc-v14",
+    title: "Eclipse",
+    kind: "portfolio",
+    description: "Plantilla de portafolio UGC editorial en negro puro con texto blanco y tu nombre en grande. Incluye videos verticales en el hero, un texto sobre m\xED que se enciende palabra por palabra, estad\xEDsticas de la cuenta con efecto de puntos negro y azul, galer\xEDa 3D de trabajos, nichos, marcas con las que has colaborado, rese\xF1as con logo de cada marca y contacto con botones directos.",
+    thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v14.jpg",
+    preview_url: "https://wearemiiles.com/ugc-v14/",
+    download_url: "https://wearemiiles.com/studio/descargas/ugc-v14.zip",
+    template_number: 14
+  },
+  {
     slug: "portafolio-ugc-v13",
     title: "Aura",
     kind: "portfolio",
