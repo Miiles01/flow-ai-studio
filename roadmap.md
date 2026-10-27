@@ -1,5 +1,5 @@
 # Objetivo actual
-- [ ] En la home principal (no Afiliados), cambiar el botón a Explorar plantillas y añadir carrusel de fotografías de Studio con pausa al pasar el cursor.
+- [ ] En la home principal (no Afiliados), ocultar temporalmente el input, poner Explorar plantillas y añadir debajo un carrusel de fotografías de Studio con pausa al pasar el cursor.
 - [x] Asignar números internos estables y nombres creativos a las plantillas, conservando enlaces; catálogo, diálogo y números únicos verificados.
 
 - [x] Usar la imagen PNG original de "Portafolio" (sin convertirla) en la tarjeta de Inicio y verificar que cargue.
