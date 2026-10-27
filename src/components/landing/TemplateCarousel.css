@@ -1,0 +1,28 @@
+.home-template-carousel {
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.home-template-carousel::-webkit-scrollbar { display: none; }
+.home-template-track {
+  display: flex;
+  width: max-content;
+  animation: home-template-drift 100s linear infinite;
+}
+.home-template-group {
+  display: flex;
+  flex-shrink: 0;
+  gap: 1.25rem;
+  padding-right: 1.25rem;
+}
+.home-template-carousel:hover .home-template-track,
+.home-template-carousel:focus-within .home-template-track,
+.home-template-carousel:active .home-template-track {
+  animation-play-state: paused;
+}
+@keyframes home-template-drift {
+  to { transform: translateX(-50%); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .home-template-track { animation: none; }
+  .home-template-group[aria-hidden="true"] { display: none; }
+}

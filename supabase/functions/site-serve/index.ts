@@ -67,7 +67,7 @@ Deno.serve(async (req) => {
       if (ext === "html" || ext === "htm") {
         body = new TextEncoder().encode(withFavicon(new TextDecoder().decode(body)));
       }
-      return new Response(req.method === "HEAD" ? null : body, { headers: { ...corsHeaders, "Content-Type": type, "X-Miiles-Content-Type": type, "Cache-Control": "public, max-age=60", "X-Content-Type-Options": "nosniff" } });
+      return new Response(req.method === "HEAD" ? null : new Blob([body as Uint8Array<ArrayBuffer>]), { headers: { ...corsHeaders, "Content-Type": type, "X-Miiles-Content-Type": type, "Cache-Control": "public, max-age=60", "X-Content-Type-Options": "nosniff" } });
     }
     // Si piden el favicon y la página no trae uno, servimos la estrella de Miiles.
     const requested = parts[parts.length - 1]?.toLowerCase();
