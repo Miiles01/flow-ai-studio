@@ -243,7 +243,7 @@ const Landing = () => {
                   else carousel.scrollIntoView({ behavior: reduceMotion ? "instant" : "smooth", block: "center" });
                 }}>
                   {t("home.landing.explore_templates")}
-                  <ArrowUpLeft aria-hidden="true" className="transition-transform duration-300 ease-out group-hover:rotate-[135deg]" />
+                  <ArrowUpLeft aria-hidden="true" className="transition-transform duration-300 ease-out group-hover:-rotate-45" />
                 </Button>
               </div>
 
