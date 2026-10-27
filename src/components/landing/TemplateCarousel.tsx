@@ -15,9 +15,9 @@ export default function TemplateCarousel() {
         {[false, true].map((duplicate) => (
           <div key={String(duplicate)} className="home-template-group" aria-hidden={duplicate || undefined}>
             {portfolios.map((template) => (
-              <Button key={template.id} asChild variant="ghost" className="block h-auto w-[280px] sm:w-[360px] lg:w-[420px] shrink-0 aspect-video overflow-hidden rounded-lg p-0 bg-card focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
+              <Button key={template.id} asChild variant="ghost" className="block h-auto w-[280px] sm:w-[360px] lg:w-[420px] shrink-0 aspect-[4/3] overflow-hidden rounded-lg p-0 bg-card focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2">
                 <Link to={`/studio/${template.slug}`} tabIndex={duplicate ? -1 : 0} aria-label={template.title}>
-                  <img src={template.thumbnail_url ?? undefined} alt={duplicate ? "" : template.title} className="h-full w-full object-cover object-top" draggable={false} />
+                  <img src={template.thumbnail_url ?? undefined} alt={duplicate ? "" : template.title} className="h-full w-full object-contain" draggable={false} />
                 </Link>
               </Button>
             ))}
