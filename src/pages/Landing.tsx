@@ -15,7 +15,9 @@ import brand6 from "@/assets/miiles/brands/brand6.svg";
 
 import LandingNavbar from "@/components/LandingNavbar";
 import LandingFooter from "@/components/LandingFooter";
-import HeroPrompt from "@/components/landing/HeroPrompt";
+import TemplateCarousel from "@/components/landing/TemplateCarousel";
+import { Button } from "@/components/ui/button";
+import { ArrowDown } from "lucide-react";
 import HomeSections from "@/components/landing/HomeSections";
 import { usePageSeo } from "@/hooks/usePageSeo";
 // Graphic assets copied from Downloads
@@ -232,7 +234,20 @@ const Landing = () => {
               </p>
 
               <div data-anim-heading className="w-full mt-10 md:mt-12">
-                <HeroPrompt />
+                <Button size="lg" className="h-auto py-4 text-[15px]" onClick={() => {
+                  const carousel = document.getElementById("home-templates");
+                  if (!carousel) return;
+                  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+                  if (smootherRef.current) smootherRef.current.scrollTo(carousel, !reduceMotion, "top center");
+                  else carousel.scrollIntoView({ behavior: reduceMotion ? "instant" : "smooth", block: "center" });
+                }}>
+                  {t("home.landing.explore_templates")}
+                  <ArrowDown aria-hidden="true" />
+                </Button>
+              </div>
+
+              <div className="mt-10 md:mt-14 w-screen max-w-none">
+                <TemplateCarousel />
               </div>
 
               {/* BRAND CAROUSEL (Moved into Hero) */}
