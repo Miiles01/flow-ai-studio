@@ -63,6 +63,10 @@ import { planFlow, buildPlanContext, type PlanResult } from "@/lib/planFlow";
 import { FlowExtendContext, type ExtendSide, type FlowExtendTarget } from "@/contexts/FlowExtendContext";
 import { runWidgetAI, WidgetAIModelError, type WidgetAIComment } from "@/lib/widgetAI";
 
+import i18nInstance from "@/i18n";
+import { useTranslation as useBoardsT } from "react-i18next";
+const bt = (k: string, o?: Record<string, unknown>): string => i18nInstance.t(k, o) as string;
+
 const WIDGET_NODE_TYPES = new Set(["kanbanNode", "clientCardNode", "campaignsNode", "ingresosNode", "collabFinderNode", "contractsNode"]);
 const uid = () =>
   typeof crypto !== "undefined" && "randomUUID" in crypto
@@ -728,14 +732,14 @@ const IndexContent = () => {
       })
     );
     setGroupPicker(null);
-    toast.success("Estilo de grupo aplicado");
+    toast.success(bt("boards.groupStyle"));
   }, [setNodes]);
 
   const handleGroupDelete = useCallback(() => {
     const selectedIds = selectedNodes.map((n) => n.id);
     setNodes((nds) => nds.filter((n) => !n.selected));
     setEdges((eds) => eds.filter((e) => !selectedIds.includes(e.source) && !selectedIds.includes(e.target)));
-    toast.success("Elementos eliminados");
+    toast.success(bt("boards.itemsDeleted"));
   }, [selectedNodes, setNodes, setEdges]);
 
   // Close settings dropdown on outside click
@@ -780,7 +784,7 @@ const IndexContent = () => {
         const { data, error } = await supabase.rpc("get_public_flow", { p_token: guestToken });
         const f = (data as any[])?.[0];
         if (error || !f) {
-          toast.error("Tablero no disponible");
+          toast.error(bt("boards.unavailable"));
           navigate("/");
           return;
         }
@@ -811,7 +815,7 @@ const IndexContent = () => {
         .eq("id", id)
         .maybeSingle();
       if (error || !data) {
-        toast.error("Tablero no encontrado");
+        toast.error(bt("boards.notFound"));
         navigate("/boards");
         return;
       }
@@ -1373,7 +1377,7 @@ const IndexContent = () => {
           }, 100);
         }
 
-        toast.success(`Diagrama generado con ${newNodes.length} nodos`);
+        toast.success(bt("boards.generated", { count: newNodes.length }));
       } catch (err) {
         setNodes((prev) => prev.filter((n) => n.id !== skeletonId));
         const message = err instanceof Error ? err.message : "Error desconocido";
@@ -1414,7 +1418,7 @@ const IndexContent = () => {
     async (prompt: string, target: FlowExtendTarget) => {
       const sourceNode = nodes.find((n) => n.id === target.nodeId);
       if (!sourceNode) {
-        toast.error("No se encontró el elemento de origen");
+        toast.error(bt("boards.sourceMissing"));
         return;
       }
 
@@ -1451,7 +1455,7 @@ const IndexContent = () => {
 
         if (newNodes.length === 0) {
           setNodes((prev) => prev.filter((n) => n.id !== skeletonId));
-          toast.error("La IA no generó nodos nuevos");
+          toast.error(bt("boards.noNewNodes"));
           return;
         }
 
@@ -1525,7 +1529,7 @@ const IndexContent = () => {
           }, 100);
         }
 
-        toast.success(`Flujo ampliado con ${newNodes.length} nodos`);
+        toast.success(bt("boards.expanded", { count: newNodes.length }));
       } catch (err) {
         setNodes((prev) => prev.filter((n) => n.id !== skeletonId));
         const message = err instanceof Error ? err.message : "Error desconocido";
@@ -1742,10 +1746,10 @@ const IndexContent = () => {
                 { status: "done", answer: (result as any).answer || job.answer || "✅ Resultados aplicados al widget." },
                 (result as any).data
               );
-              toast.success("Resultados aplicados al widget");
+              toast.success(bt("boards.resultsApplied"));
             } else {
               resolveComment({ status: "done", answer: (result as any).answer || job.answer || "" });
-              toast.success("Resultados listos");
+              toast.success(bt("boards.resultsReady"));
             }
           } catch (err) {
             const errMsg = err instanceof Error ? err.message : String(err);
@@ -1756,7 +1760,7 @@ const IndexContent = () => {
             if (err instanceof WidgetAIModelError) {
               toast.error(err.message, { duration: 8000 });
             } else {
-              toast.error("No se pudieron aplicar los resultados");
+              toast.error(bt("boards.resultsFailed"));
             }
           } finally {
             await supabase.from("widget_jobs").update({ status: "applied" }).eq("id", job.id);
@@ -1905,7 +1909,7 @@ const IndexContent = () => {
       isCreatingRef.current = false;
       if (error || !data) {
         setSaveState("error");
-        toast.error("Error al crear el tablero");
+        toast.error(bt("boards.createFailed"));
         return;
       }
       lastSavedRef.current = serialized;
@@ -1969,10 +1973,10 @@ const IndexContent = () => {
         .select()
         .single();
       if (error) {
-        toast.error("No se pudo duplicar el tablero");
+        toast.error(bt("boards.duplicateFailed"));
         return;
       }
-      toast.success("Copia creada en tus tableros");
+      toast.success(bt("boards.duplicated"));
       setDuplicateDialogOpen(false);
     } finally {
       setDuplicating(false);
@@ -2299,7 +2303,7 @@ const IndexContent = () => {
             <button
               onClick={() => navigate("/boards")}
               className={`p-2 rounded-full transition-colors ${isDark ? 'hover:bg-white/10 text-[#9CA3AF] hover:text-white' : 'hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black'}`}
-              aria-label="Volver"
+              aria-label={bt("boards.back")}
             >
               <ArrowLeft size={18} strokeWidth={1.5} />
             </button>
@@ -2318,7 +2322,7 @@ const IndexContent = () => {
               ref={settingsButtonRef}
               onClick={() => setSettingsOpen(!settingsOpen)}
               className={`w-9 h-9 flex items-center justify-center rounded-full transition-all ${isDark ? 'bg-black text-white ring-1 ring-white/10 hover:bg-white/10' : 'bg-white hover:bg-[#F3F4F6] ring-1 ring-gray-200 '} ${settingsOpen ? (isDark ? "bg-white/10" : "bg-[#F3F4F6]") : ""}`}
-              aria-label="Configuración del tablero"
+              aria-label={bt("boards.boardSettings")}
             >
               <Settings2 size={16} strokeWidth={1.5} className={isDark ? 'text-[#9CA3AF]' : 'text-[#6B7280]'} />
             </button>
@@ -2333,7 +2337,7 @@ const IndexContent = () => {
                   className={`absolute top-[calc(100%+8px)] left-0 w-52 rounded-2xl overflow-hidden z-50 shadow-[0_24px_70px_rgba(0,0,0,0.15)] border border-white/10 text-white ${isDark ? 'bg-[#1C1C1E]' : 'bg-black/70 backdrop-blur-2xl'}`}
                 >
                   <div className="px-3 py-2.5">
-                    <p className="text-[10px] text-white/50 font-light tracking-widest mb-1 px-2">Ajustes</p>
+                    <p className="text-[10px] text-white/50 font-light tracking-widest mb-1 px-2">{bt("boards.settings")}</p>
                     <button
                       onClick={() => { setHideTools((v) => !v); }}
                       className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors text-left ${
@@ -2342,7 +2346,7 @@ const IndexContent = () => {
                     >
                       <MonitorPlay size={15} strokeWidth={1.5} className={`${hideTools ? "text-black" : "text-white/70"} shrink-0`} />
                       <span className={`text-[13px] font-normal ${hideTools ? "text-black" : "text-white"}`}>
-                        Modo presentación
+                        {bt("boards.presentation")}
                       </span>
                     </button>
 
@@ -2357,7 +2361,7 @@ const IndexContent = () => {
                           : <Copy size={15} strokeWidth={1.5} className="text-white/70 shrink-0" />
                         }
                         <span className="text-[13px] font-normal text-white">
-                          Duplicar tablero
+                          {bt("boards.duplicate")}
                         </span>
                       </button>
                     )}
@@ -2368,13 +2372,13 @@ const IndexContent = () => {
                         setNodes([]);
                         setEdges([]);
                         setSettingsOpen(false);
-                        toast.success("Lienzo limpiado correctamente");
+                        toast.success(bt("boards.canvasCleared"));
                       }}
                       className="w-full flex items-center gap-3 px-3 py-2.5 rounded-xl transition-colors text-left group hover:bg-[#EF4444]/20 hover:text-[#EF4444]"
                     >
                       <Trash2 size={15} strokeWidth={1.5} className="shrink-0 transition-colors text-white/70 group-hover:text-[#EF4444]" />
                       <span className="text-[13px] font-normal transition-colors text-white group-hover:text-[#EF4444]">
-                        Limpiar lienzo
+                        {bt("boards.clearCanvas")}
                       </span>
                     </button>
 
@@ -2434,7 +2438,7 @@ const IndexContent = () => {
                   onKeyDown={(e) => { if (e.key === "Enter" && !duplicating) duplicateBoard(); }}
                   maxLength={120}
                   className={`mt-4 w-full rounded-xl px-4 py-3 text-sm outline-none transition-colors ${isDark ? 'bg-white/5 border border-white/10 text-white placeholder:text-white/30 focus:border-white/25' : 'bg-[#F7F7F8] border border-[#E5E7EB] text-black placeholder:text-[#9CA3AF] focus:border-[#9CA3AF]'}`}
-                  placeholder="Nombre del tablero"
+                  placeholder={bt("boards.boardName")}
                 />
                 <div className="mt-5 flex items-center justify-end gap-2">
                   <button
@@ -2442,7 +2446,7 @@ const IndexContent = () => {
                     disabled={duplicating}
                     className={`rounded-full px-4 py-2.5 text-[13px] font-normal transition-colors disabled:opacity-50 ${isDark ? 'hover:bg-white/10 text-white' : 'hover:bg-[#F3F4F6] text-black'}`}
                   >
-                    Cancelar
+                    {bt("boards.cancel")}
                   </button>
                   <button
                     onClick={duplicateBoard}
@@ -2450,7 +2454,7 @@ const IndexContent = () => {
                     className={`flex items-center gap-2 rounded-full px-5 py-2.5 text-[13px] font-medium transition-colors disabled:opacity-50 ${isDark ? 'bg-white text-black hover:bg-white/90' : 'bg-black text-white hover:bg-miiles-pink'}`}
                   >
                     {duplicating ? <Loader2 size={15} className="animate-spin" /> : <Copy size={15} strokeWidth={1.5} />}
-                    Duplicar tablero
+                    {bt("boards.duplicate")}
                   </button>
                 </div>
               </motion.div>
@@ -2471,14 +2475,14 @@ const IndexContent = () => {
               {!canEdit && (
                 <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-medium pointer-events-auto ${isDark ? 'bg-black text-white/80 ring-1 ring-white/10' : 'bg-white text-[#6B7280] ring-1 ring-gray-200 '}`}>
                   <EyeIcon size={12} strokeWidth={1.5} />
-                  Solo lectura
+                  {bt("boards.readOnly")}
                 </div>
               )}
               {isOwner && id && id !== "new" && (
                 <button
                   onClick={() => {
                     if (!isPro) {
-                      toast.info("Compartir tableros está disponible en el plan Pro");
+                      toast.info(bt("boards.sharingPro"));
                       navigate("/precios");
                       return;
                     }
@@ -2486,7 +2490,7 @@ const IndexContent = () => {
                   }}
                   className={`flex h-9 items-center justify-center px-4 rounded-full font-medium text-[13px] transition-all pointer-events-auto ${isDark ? 'bg-black text-white ring-1 ring-white/10 hover:bg-white/10' : 'bg-white text-black ring-1 ring-gray-200 hover:bg-gray-50'}`}
                 >
-                  Invitar
+                  {bt("boards.invite")}
                 </button>
               )}
               <div className="pointer-events-auto">
@@ -2508,7 +2512,7 @@ const IndexContent = () => {
                         ? isDark ? "hover:bg-white/10 text-[#9CA3AF] hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
                         : isDark ? "text-white/20 cursor-not-allowed" : "text-[#D1D5DB] cursor-not-allowed"
                     }`}
-                    aria-label="Deshacer"
+                    aria-label={bt("boards.undo")}
                   >
                     <Undo2 size={16} strokeWidth={1.5} />
                   </button>
@@ -2527,7 +2531,7 @@ const IndexContent = () => {
                         ? isDark ? "hover:bg-white/10 text-[#9CA3AF] hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
                         : isDark ? "text-white/20 cursor-not-allowed" : "text-[#D1D5DB] cursor-not-allowed"
                     }`}
-                    aria-label="Rehacer"
+                    aria-label={bt("boards.redo")}
                   >
                     <Redo2 size={16} strokeWidth={1.5} />
                   </button>
@@ -2550,13 +2554,13 @@ const IndexContent = () => {
                         ? isDark ? "bg-white/10 text-white" : "bg-[#F3F4F6] text-black"
                         : isDark ? "hover:bg-white/10 text-[#9CA3AF] hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
                     }`}
-                    aria-label="Panel de tareas"
+                    aria-label={bt("boards.taskPanel")}
                   >
                     <PanelRight size={16} strokeWidth={1.5} />
                   </button>
                 </TooltipTrigger>
                 <TooltipContent side="bottom" sideOffset={8} className="text-[12px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
-                  Lista de tareas
+                  {bt("boards.taskList2")}
                 </TooltipContent>
               </Tooltip>
             </div>
@@ -2573,7 +2577,7 @@ const IndexContent = () => {
           {!canEdit && (
             <div className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-medium pointer-events-auto ${isDark ? 'bg-black text-white/80 ring-1 ring-white/10' : 'bg-white text-[#6B7280] ring-1 ring-gray-200 '}`}>
               <EyeIcon size={12} strokeWidth={1.5} />
-              Lectura
+              {bt("boards.reading")}
             </div>
           )}
           <div className="pointer-events-auto flex gap-2 items-center">
@@ -2581,7 +2585,7 @@ const IndexContent = () => {
               <button
                 onClick={() => {
                   if (!isPro) {
-                    toast.info("Compartir tableros está disponible en el plan Pro");
+                    toast.info(bt("boards.sharingPro"));
                     navigate("/precios");
                     return;
                   }
@@ -2589,7 +2593,7 @@ const IndexContent = () => {
                 }}
                 className={`flex h-9 items-center justify-center px-4 rounded-full font-medium text-[13px] transition-all ${isDark ? 'bg-black text-white ring-1 ring-white/10 hover:bg-white/10' : 'bg-white text-black ring-1 ring-gray-200 hover:bg-gray-50'}`}
               >
-                Invitar
+                {bt("boards.invite")}
               </button>
             )}
             <PresenceStack users={activeUsersForPresence} localUserId={identityForPresence.id} />
@@ -2758,7 +2762,7 @@ const IndexContent = () => {
                   <button
                     onClick={() => setGroupPicker(groupPicker === "fill" ? null : "fill")}
                     className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black transition-colors relative"
-                    title="Color de Relleno del Grupo"
+                    title={bt("boards.groupFill")}
                   >
                     <Palette size={13} />
                   </button>
@@ -2786,7 +2790,7 @@ const IndexContent = () => {
                   <button
                     onClick={() => setGroupPicker(groupPicker === "border" ? null : "border")}
                     className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black transition-colors relative"
-                    title="Color de Borde del Grupo"
+                    title={bt("boards.groupBorder")}
                   >
                     <Square size={12} />
                   </button>
@@ -2814,7 +2818,7 @@ const IndexContent = () => {
                   <button
                     onClick={() => setGroupPicker(groupPicker === "text" ? null : "text")}
                     className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black transition-colors relative"
-                    title="Color del Texto del Grupo"
+                    title={bt("boards.groupText")}
                   >
                     <Baseline size={13} />
                   </button>
@@ -2843,7 +2847,7 @@ const IndexContent = () => {
                 <button
                   onClick={handleGroupDelete}
                   className="w-7 h-7 flex items-center justify-center rounded-md hover:bg-red-50 text-gray-400 hover:text-red-500 transition-colors"
-                  title="Eliminar Selección"
+                  title={bt("boards.deleteSelection")}
                 >
                   <Trash2 size={13} />
                 </button>
@@ -2989,7 +2993,7 @@ const IndexContent = () => {
             <div className={`flex items-center justify-between px-5 pt-5 pb-4 border-b ${isDark ? 'border-white/10' : 'border-[#F3F4F6]'}`}>
               <div className="flex items-center gap-2">
                 <ListChecks size={16} strokeWidth={1.5} className="text-[#6B7280]" />
-                <span className={`text-[13px] font-medium ${isDark ? 'text-white' : 'text-black'}`}>Lista de tareas</span>
+                <span className={`text-[13px] font-medium ${isDark ? 'text-white' : 'text-black'}`}>{bt("boards.taskList2")}</span>
               </div>
               <button
                 onClick={() => setTaskPanelOpen(false)}
@@ -3109,7 +3113,7 @@ const IndexContent = () => {
                       <div className="flex items-center gap-2 px-1">
                         <ListChecks size={13} strokeWidth={1.5} className="text-[#9CA3AF]" />
                         <span className="text-[12px] font-medium" style={{ color: isDark ? "#FFFFFF" : "#1F2937" }}>
-                          Otras tareas
+                          {bt("boards.otherTasks")}
                         </span>
                         <span className="text-[11px] font-light text-[#9CA3AF]">{todoNodes.length}</span>
                       </div>
@@ -3265,7 +3269,7 @@ const IndexContent = () => {
                           {/* Tasks */}
                           <div className="space-y-2 pt-1">
                             {tasks.length === 0 && (
-                              <p className="text-[12px] font-light py-1" style={{ color: isCardDark ? "#6B7280" : "#9CA3AF" }}>Sin tareas aún.</p>
+                              <p className="text-[12px] font-light py-1" style={{ color: isCardDark ? "#6B7280" : "#9CA3AF" }}>{bt("boards.noTasks")}</p>
                             )}
                             {tasks.map((task) => (
                               <div key={task.id} className="group/task flex items-center gap-3 py-1" onClick={(e) => e.stopPropagation()}>
@@ -3295,7 +3299,7 @@ const IndexContent = () => {
                                       addTask();
                                     }
                                   }}
-                                  placeholder="Nueva tarea..."
+                                  placeholder={bt("boards.newTask")}
                                   className="flex-1 bg-transparent border-none outline-none text-[13px] font-light leading-snug min-w-0 placeholder-gray-400 p-0"
                                   style={{
                                     color: task.completed ? (isCardDark ? "#6B7280" : "#9CA3AF") : effectiveTextColor,
@@ -3309,21 +3313,21 @@ const IndexContent = () => {
                                   <button
                                     onClick={(e) => { e.stopPropagation(); moveTask(task.id, "up"); }}
                                     className="p-1 rounded-md hover:bg-black/10 dark:hover:bg-white/10 text-gray-400 hover:text-gray-600 transition-colors"
-                                    title="Subir"
+                                    title={bt("boards.moveUp")}
                                   >
                                     <ArrowUp size={11} />
                                   </button>
                                   <button
                                     onClick={(e) => { e.stopPropagation(); moveTask(task.id, "down"); }}
                                     className="p-1 rounded-md hover:bg-black/10 dark:hover:bg-white/10 text-gray-400 hover:text-gray-600 transition-colors"
-                                    title="Bajar"
+                                    title={bt("boards.moveDown")}
                                   >
                                     <ArrowDown size={11} />
                                   </button>
                                   <button
                                     onClick={(e) => { e.stopPropagation(); deleteTask(task.id); }}
                                     className="p-1 rounded-md hover:bg-red-50 dark:hover:bg-red-500/10 text-gray-400 hover:text-red-600 transition-colors"
-                                    title="Eliminar"
+                                    title={bt("boards.delete")}
                                   >
                                     <Trash2 size={11} />
                                   </button>
@@ -3532,7 +3536,7 @@ const IndexContent = () => {
                         </button>
                       </TooltipTrigger>
                       <TooltipContent side="top" align="center" sideOffset={8} className="text-[12px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
-                        Copiar instrucciones
+                        {bt("boards.copyInstructions")}
                       </TooltipContent>
                     </Tooltip>
                     
@@ -3554,7 +3558,7 @@ const IndexContent = () => {
                         </button>
                       </TooltipTrigger>
                       <TooltipContent side="top" align="center" sideOffset={8} className="text-[12px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light">
-                        Descargar instrucciones
+                        {bt("boards.downloadInstructions")}
                       </TooltipContent>
                     </Tooltip>
                   </div>
