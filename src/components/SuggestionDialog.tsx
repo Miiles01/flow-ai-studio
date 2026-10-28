@@ -4,6 +4,8 @@
  */
 
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Button } from "@/components/ui/button";
 import { Lightbulb, X, Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -18,6 +20,7 @@ type Props = {
 };
 
 const SuggestionDialog = ({ open, network, context, onClose }: Props) => {
+  const { t } = useTranslation();
   const [message, setMessage] = useState("");
   const [sending, setSending] = useState(false);
 
@@ -33,7 +36,7 @@ const SuggestionDialog = ({ open, network, context, onClose }: Props) => {
     const user = userData?.user;
     if (!user) {
       setSending(false);
-      toast.error("Inicia sesión para enviar tu sugerencia");
+      toast.error(t("architecture.ui.signInSuggestion"));
       return;
     }
     const { error } = await supabase.from("suggestions").insert({
@@ -44,10 +47,10 @@ const SuggestionDialog = ({ open, network, context, onClose }: Props) => {
     });
     setSending(false);
     if (error) {
-      toast.error("No se pudo enviar tu sugerencia");
+      toast.error(t("architecture.ui.suggestionError"));
       return;
     }
-    toast.success("¡Gracias! Recibimos tu sugerencia");
+    toast.success(t("architecture.ui.suggestionSuccess"));
     setMessage("");
     onClose();
   };
@@ -70,20 +73,19 @@ const SuggestionDialog = ({ open, network, context, onClose }: Props) => {
         <div className="flex items-start justify-between gap-4">
           <div>
             <p className="flex items-center gap-2 text-[15px] font-normal text-gray-900 dark:text-white">
-              <Lightbulb size={16} /> Sugerir ideas
+              <Lightbulb size={16} /> {t("architecture.ui.suggest")}
             </p>
             <p className="mt-1 text-[12px] font-light text-gray-500 dark:text-white/50">
-              Cuéntanos tu idea o aprendizaje para mejorar la arquitectura algorítmica
-              {network ? ` de ${network}` : ""}.
+              {t(network ? "architecture.ui.suggestionDescriptionNetwork" : "architecture.ui.suggestionDescription", { network })}
             </p>
           </div>
-          <button
+          <Button variant="ghost" size="icon"
             onClick={onClose}
-            className="rounded-full p-1.5 text-gray-400 transition-colors hover:bg-gray-50 hover:text-gray-900 dark:hover:bg-white/10 dark:hover:text-white"
-            aria-label="Cerrar"
+            className="rounded-full p-1.5 text-muted-foreground hover:bg-muted hover:text-foreground"
+            aria-label={t("architecture.ui.close")}
           >
             <X size={16} />
-          </button>
+          </Button>
         </div>
 
         <textarea
@@ -91,7 +93,7 @@ const SuggestionDialog = ({ open, network, context, onClose }: Props) => {
           value={message}
           maxLength={MAX}
           onChange={(e) => setMessage(e.target.value)}
-          placeholder="Escribe aquí tu sugerencia, idea o aprendizaje…"
+          placeholder={t("architecture.ui.suggestionPlaceholder")}
           className="mt-5 h-40 w-full resize-none rounded-2xl bg-gray-50 p-4 text-[13.5px] font-light leading-relaxed text-gray-900 outline-none placeholder:text-gray-300 dark:bg-white/5 dark:text-white dark:placeholder:text-white/25"
         />
         <p className="mt-1 text-right text-[11px] font-light text-gray-300 dark:text-white/30">
@@ -99,20 +101,20 @@ const SuggestionDialog = ({ open, network, context, onClose }: Props) => {
         </p>
 
         <div className="mt-4 flex items-center gap-3">
-          <button
+          <Button
             onClick={send}
             disabled={!valid || sending}
-            className="flex items-center gap-2 rounded-full bg-black px-5 py-2.5 text-[13px] font-normal text-white transition-colors hover:bg-neutral-800 disabled:opacity-40 dark:border dark:border-white/10 dark:hover:bg-zinc-900"
+            className="flex items-center gap-2 rounded-full px-5 py-2.5 text-[13px] font-normal"
           >
             {sending && <Loader2 size={13} className="animate-spin" />}
-            Enviar sugerencia
-          </button>
-          <button
+            {t("architecture.ui.sendSuggestion")}
+          </Button>
+          <Button variant="ghost"
             onClick={onClose}
-            className="rounded-full px-4 py-2.5 text-[13px] font-light text-gray-400 transition-colors hover:text-gray-900 dark:hover:text-white"
+            className="rounded-full px-4 py-2.5 text-[13px] font-light text-muted-foreground hover:text-foreground"
           >
-            Cancelar
-          </button>
+            {t("architecture.ui.cancel")}
+          </Button>
         </div>
       </div>
     </div>
