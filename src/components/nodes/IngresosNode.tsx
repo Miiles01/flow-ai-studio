@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+import i18nInstance from "@/i18n";
 /**
  * ═══════════════════════════════════════════════════════════════════════════
  *  REGLA GLOBAL DE WIDGETS (Miiles) — LEE ESTO ANTES DE EDITAR
@@ -62,7 +64,7 @@ const MONTHS_SHORT = ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "s
 const MONTHS_FULL = ["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
 
 const fmtMoney = (n: number) =>
-  `$ ${new Intl.NumberFormat("es-MX", { maximumFractionDigits: 0 }).format(Math.round(n || 0))}`;
+  `$ ${new Intl.NumberFormat(i18nInstance.language, { maximumFractionDigits: 0 }).format(Math.round(n || 0))}`;
 
 const monthKey = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}`;
 const parseKey = (k?: string): { y: number; m: number } | null => {
@@ -73,13 +75,13 @@ const parseKey = (k?: string): { y: number; m: number } | null => {
 };
 const keyLabel = (k?: string) => {
   const p = parseKey(k);
-  if (!p) return "Selecciona mes";
-  return `${MONTHS_FULL[p.m]} ${p.y}`;
+  if (!p) return i18nInstance.t("widgets1.label107");
+  return new Intl.DateTimeFormat(i18nInstance.language, { month: "long", year: "numeric" }).format(new Date(p.y, p.m, 1));
 };
 const keyShort = (k: string) => {
   const p = parseKey(k);
   if (!p) return k;
-  return `${MONTHS_SHORT[p.m]} ${String(p.y).slice(2)}`;
+  return new Intl.DateTimeFormat(i18nInstance.language, { month: "short", year: "2-digit" }).format(new Date(p.y, p.m, 1));
 };
 
 // Campaign date -> which month it "closes" in
@@ -103,6 +105,7 @@ const isWhite = (c?: string) => {
 };
 
 const IngresosNode = ({ id, data, selected }: NodeProps) => {
+  const { t } = useTranslation();
   const { setNodes, getNodes } = useReactFlow();
   const { zoom } = useViewport();
   const { isDark } = useTheme();
@@ -158,13 +161,13 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
         const arr = (nd.campaigns ?? []) as Campaign[];
         return {
           id: n.id,
-          title: String(nd.title ?? "").trim() || "Campañas",
+          title: String(nd.title ?? "").trim() || t("widgets1.label023"),
           subtitle: String(nd.subtitle ?? "").trim(),
           count: arr.length,
         };
       });
-    return list.sort((a, b) => a.title.localeCompare(b.title, "es"));
-  }, [allNodes]);
+    return list.sort((a, b) => a.title.localeCompare(b.title, i18nInstance.language));
+  }, [allNodes, t]);
 
   const selectedIds = useMemo(() => {
     const raw = d.sourceNodeIds ?? [];
@@ -181,8 +184,8 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
   const sourcesLabel = isAllSources
     ? "Todos"
     : selectedIds.length === 1
-      ? (sources.find((s) => s.id === selectedIds[0])?.title ?? "1 widget")
-      : `${selectedIds.length} widgets`;
+      ? (sources.find((s) => s.id === selectedIds[0])?.title ?? t("widgets1.label109"))
+      : t("widgets1.widgetCount", { count: selectedIds.length });
 
   // ── derive campaigns from canvas ─────────────────────────
   const allCampaigns: Campaign[] = useMemo(() => {
@@ -257,7 +260,7 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
     // Top brands
     const byBrand = new Map<string, number>();
     for (const c of rangeCampaigns) {
-      const b = (c.brand || "Sin nombre").trim() || "Sin nombre";
+      const b = (c.brand || t("widgets1.label039")).trim() || t("widgets1.label039");
       byBrand.set(b, (byBrand.get(b) ?? 0) + (c.amount || 0));
     }
     const brands = Array.from(byBrand.entries())
@@ -271,7 +274,7 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
     for (const c of pendingList) {
       const withDate = (c.installments ?? []).find((i) => i.date);
       const label = withDate?.date
-        ? new Date(withDate.date).toLocaleDateString("es-MX", { month: "long", year: "numeric" })
+        ? new Date(withDate.date).toLocaleDateString(i18nInstance.language, { month: "long", year: "numeric" })
         : "Sin Fecha Estimada";
       const arr = grouped.get(label) ?? [];
       arr.push(c);
@@ -279,7 +282,7 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
     }
 
     return { totalRange, totalHistoric, paid, pending, chartData, avgMonthly, topMonth, brands, grouped };
-  }, [rangeCampaigns, allCampaigns, d.fromMonth, d.toMonth, currentYear]);
+  }, [rangeCampaigns, allCampaigns, d.fromMonth, d.toMonth, currentYear, t]);
 
   // ── toggle paid on a campaign ────────────────────────────
   const togglePaid = (campaignId: string) => {
@@ -314,7 +317,7 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
       <WidgetCommentSlot nodeId={id} />
 
       {/* Drag handle */}
-      <div className="absolute top-0 left-1/2 z-20 h-5 w-28 -translate-x-1/2 cursor-grab rounded-b-xl active:cursor-grabbing group/handle" title="Mover widget">
+      <div className="absolute top-0 left-1/2 z-20 h-5 w-28 -translate-x-1/2 cursor-grab rounded-b-xl active:cursor-grabbing group/handle" title={t("widgets1.label028")}>
         <div className={`mx-auto mt-1 h-1.5 w-8 rounded-full opacity-0 transition-opacity group-hover/handle:opacity-100 ${isBoardDark ? "bg-white/40" : "bg-black/20"}`} />
       </div>
 
@@ -338,15 +341,15 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
                 isDark ? "bg-[#1C1C1E] border border-white/10" : "bg-white border border-neutral-100"
               }`}
             >
-              <ToolBtn active={d.showTitle !== false} onClick={() => update({ showTitle: !(d.showTitle !== false) })} title="Título" isDark={isDark}><Heading1 size={14} /></ToolBtn>
-              <ToolBtn active={!!d.showSubtitle} onClick={() => update({ showSubtitle: !d.showSubtitle })} title="Subtítulo" isDark={isDark}><Heading2 size={14} /></ToolBtn>
+              <ToolBtn active={d.showTitle !== false} onClick={() => update({ showTitle: !(d.showTitle !== false) })} title={t("widgets1.label029")} isDark={isDark}><Heading1 size={14} /></ToolBtn>
+              <ToolBtn active={!!d.showSubtitle} onClick={() => update({ showSubtitle: !d.showSubtitle })} title={t("widgets1.label030")} isDark={isDark}><Heading2 size={14} /></ToolBtn>
               <div className={`w-px h-4 mx-0.5 ${isDark ? "bg-white/10" : "bg-neutral-200"}`} />
               <div className="relative">
-                <ToolBtn onClick={() => setBgOpen((v) => !v)} title="Color de fondo" isDark={isDark}><Palette size={14} /></ToolBtn>
+                <ToolBtn onClick={() => setBgOpen((v) => !v)} title={t("widgets1.label026")} isDark={isDark}><Palette size={14} /></ToolBtn>
                 {bgOpen && <PickerPopover colors={RAINBOW_COLORS} onPick={(v) => { update({ backgroundColor: v === "transparent" ? undefined : v }); setBgOpen(false); }} isDark={isDark} />}
               </div>
               <div className={`w-px h-4 mx-0.5 ${isDark ? "bg-white/10" : "bg-neutral-200"}`} />
-              <ToolBtn onClick={remove} title="Eliminar" isDark={isDark} danger><Trash2 size={14} /></ToolBtn>
+              <ToolBtn onClick={remove} title={t("widgets1.label027")} isDark={isDark} danger><Trash2 size={14} /></ToolBtn>
             </motion.div>
           </div>
         )}
@@ -357,7 +360,7 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
         {/* Header */}
         {d.showTitle !== false && (
           <input
-            value={d.title ?? "Ingresos"}
+            value={d.title ?? t("widgets1.label111")}
             onChange={(e) => update({ title: e.target.value })}
             style={{ color: boardTextColor }}
             className="nodrag w-full bg-transparent border-none outline-none text-[28px] font-bold tracking-tight mb-1"
@@ -365,7 +368,7 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
         )}
         {d.showSubtitle && (
           <input
-            value={d.subtitle ?? "Lo que cerraste por mes y lo que está por entrar."}
+            value={d.subtitle ?? t("widgets1.label112")}
             onChange={(e) => update({ subtitle: e.target.value })}
             className={`nodrag w-full bg-transparent border-none outline-none text-[13.5px] mb-5 ${boardSubtleColor}`}
           />
@@ -375,7 +378,7 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
         {/* Date range */}
         <div className="flex items-end gap-3 mb-6 nodrag">
           <div>
-            <div className={`text-[11px] mb-1.5 ${boardSubtleColor}`}>Desde</div>
+            <div className={`text-[11px] mb-1.5 ${boardSubtleColor}`}>{t("widgets1.label113")}</div>
             <div className="relative">
               <button onClick={() => { setFromOpen((v) => !v); setToOpen(false); }} className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-[13px] font-medium ${softSurface} hover:opacity-90`} style={softSurfaceStyle}>
                 <Calendar size={13} className="opacity-60" />
@@ -385,7 +388,7 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
             </div>
           </div>
           <div>
-            <div className={`text-[11px] mb-1.5 ${boardSubtleColor}`}>Hasta</div>
+            <div className={`text-[11px] mb-1.5 ${boardSubtleColor}`}>{t("widgets1.label114")}</div>
             <div className="relative">
               <button onClick={() => { setToOpen((v) => !v); setFromOpen(false); }} className={`flex items-center gap-2 px-3.5 py-2 rounded-xl text-[13px] font-medium ${softSurface} hover:opacity-90`} style={softSurfaceStyle}>
                 <Calendar size={13} className="opacity-60" />
@@ -395,7 +398,7 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
             </div>
           </div>
           <div>
-            <div className={`text-[11px] mb-1.5 ${boardSubtleColor}`}>Campañas</div>
+            <div className={`text-[11px] mb-1.5 ${boardSubtleColor}`}>{t("widgets1.label023")}</div>
             <div className="relative">
               <button
                 onClick={() => { setSourcesOpen((v) => !v); setFromOpen(false); setToOpen(false); }}
@@ -424,7 +427,7 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
               className={`flex items-center gap-1.5 px-3 py-2 rounded-xl text-[12px] font-medium ${isBoardDark ? "text-white/80 hover:text-white" : "text-neutral-600 hover:text-neutral-900"} hover:opacity-80 ${softSurface}`}
               style={softSurfaceStyle}
             >
-              <RotateCcw size={12} /> Resetear
+              <RotateCcw size={12} />  {t("widgets1.label115")}
             </button>
           )}
 
@@ -432,22 +435,22 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
 
         {/* KPI row */}
         <div className="grid grid-cols-3 gap-4 mb-4">
-          <KpiCard isDark={isDark} icon={<DollarSign size={14} />} accent={accent} label={`Total cerrado ${currentYear}`} value={fmtMoney(stats.totalRange)} sub={`Histórico: ${fmtMoney(stats.totalHistoric)}`} />
-          <KpiCard isDark={isDark} icon={<BarChart3 size={14} />} accent={accent} label={`Promedio mensual ${currentYear}`} value={fmtMoney(stats.avgMonthly)} />
-          <KpiCard isDark={isDark} icon={<TrendingUp size={14} />} accent={accent} label="Mes más alto" value={fmtMoney(stats.topMonth?.value ?? 0)} sub={stats.topMonth ? keyLabel(stats.topMonth.key) : "—"} />
+          <KpiCard isDark={isDark} icon={<DollarSign size={14} />} accent={accent} label={t("widgets1.closedYear", { year: currentYear })} value={fmtMoney(stats.totalRange)} sub={t("widgets1.historic", { amount: fmtMoney(stats.totalHistoric) })} />
+          <KpiCard isDark={isDark} icon={<BarChart3 size={14} />} accent={accent} label={t("widgets1.averageYear", { year: currentYear })} value={fmtMoney(stats.avgMonthly)} />
+          <KpiCard isDark={isDark} icon={<TrendingUp size={14} />} accent={accent} label={t("widgets1.label116")} value={fmtMoney(stats.topMonth?.value ?? 0)} sub={stats.topMonth ? keyLabel(stats.topMonth.key) : "—"} />
         </div>
 
         {/* Cashflow row */}
         <div className="grid grid-cols-2 gap-4 mb-4">
           <div className="rounded-2xl p-5" style={{ background: isDark ? "linear-gradient(180deg, #1A1D24 0%, #13151A 100%)" : "linear-gradient(180deg, #FDFDFD 0%, #F8F9FD 100%)" }}>
             <div className="flex items-center gap-1.5 mb-2">
-              <span className="text-[13px] font-semibold" style={{ color: isDark ? "rgba(255,255,255,0.6)" : "rgba(0,0,0,0.5)" }}>Cobrado</span>
+              <span className="text-[13px] font-semibold" style={{ color: isDark ? "rgba(255,255,255,0.6)" : "rgba(0,0,0,0.5)" }}>{t("widgets1.label019")}</span>
             </div>
             <div className="text-[34px] font-bold tracking-tight leading-none" style={{ color: "#4059F1" }}>{fmtMoney(stats.paid)}</div>
           </div>
           <div className="rounded-2xl p-5" style={{ backgroundColor: "#000000" }}>
             <div className="flex items-center gap-1.5 mb-2">
-              <span className="text-[13px] font-semibold text-white/70">Por cobrar</span>
+              <span className="text-[13px] font-semibold text-white/70">{t("widgets1.label020")}</span>
             </div>
             <div className="text-[34px] font-bold tracking-tight leading-none text-white">{fmtMoney(stats.pending)}</div>
           </div>
@@ -456,7 +459,7 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
         {/* Charts row */}
         <div className="grid grid-cols-[1.6fr_1fr] gap-4 mb-4">
           <div className={`rounded-2xl p-5 ${softSurface}`} style={softSurfaceStyle}>
-            <div className={`text-[13.5px] font-semibold mb-3 ${isDark ? "text-white" : "text-neutral-900"}`}>Total cerrado por mes</div>
+            <div className={`text-[13.5px] font-semibold mb-3 ${isDark ? "text-white" : "text-neutral-900"}`}>{t("widgets1.label117")}</div>
             <div className="h-[220px] nodrag nopan">
               <ResponsiveContainer width="100%" height="100%">
                 <BarChart data={stats.chartData} margin={{ top: 8, right: 8, left: -12, bottom: 0 }}>
@@ -466,7 +469,7 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
                   <RTooltip
                     cursor={{ fill: isDark ? "rgba(255,255,255,0.05)" : "rgba(0,0,0,0.04)" }}
                     contentStyle={{ background: isDark ? "#1C1C1E" : "#fff", border: `1px solid ${isDark ? "rgba(255,255,255,0.1)" : "rgba(0,0,0,0.08)"}`, borderRadius: 12, fontSize: 12, color: isDark ? "#fff" : "#111827" }}
-                    formatter={(v: number) => [fmtMoney(v), "Cerrado"]}
+                    formatter={(v: number) => [fmtMoney(v), t("widgets1.label118")]}
                   />
                   <Bar dataKey="value" fill={accent} radius={[6, 6, 0, 0]} />
                 </BarChart>
@@ -475,9 +478,9 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
           </div>
 
           <div className={`rounded-2xl p-5 ${softSurface}`} style={softSurfaceStyle}>
-            <div className={`text-[13.5px] font-semibold mb-3 ${isDark ? "text-white" : "text-neutral-900"}`}>Top marcas</div>
+            <div className={`text-[13.5px] font-semibold mb-3 ${isDark ? "text-white" : "text-neutral-900"}`}>{t("widgets1.label119")}</div>
             {stats.brands.length === 0 ? (
-              <div className={`text-[12px] ${isDark ? "text-white/60" : "text-neutral-500"} py-8 text-center`}>Aún no hay marcas.</div>
+              <div className={`text-[12px] ${isDark ? "text-white/60" : "text-neutral-500"} py-8 text-center`}>{t("widgets1.label120")}</div>
             ) : (
               <>
                 <div className="h-[150px] nodrag nopan">
@@ -537,11 +540,11 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
         {/* Pending list */}
         <div className={`rounded-2xl p-5 ${softSurface}`} style={softSurfaceStyle}>
           <div className="flex items-baseline justify-between mb-4">
-            <div className={`text-[15px] font-semibold ${isDark ? "text-white" : "text-neutral-900"}`}>Por cobrar</div>
-            <div className={`text-[12px] ${isDark ? "text-white/60" : "text-neutral-500"}`}><span className={`font-semibold ${isDark ? "text-white" : "text-neutral-900"}`}>{fmtMoney(stats.pending)}</span> pendiente</div>
+            <div className={`text-[15px] font-semibold ${isDark ? "text-white" : "text-neutral-900"}`}>{t("widgets1.label020")}</div>
+            <div className={`text-[12px] ${isDark ? "text-white/60" : "text-neutral-500"}`}><span className={`font-semibold ${isDark ? "text-white" : "text-neutral-900"}`}>{fmtMoney(stats.pending)}</span>  {t("widgets1.pendingSuffix")}</div>
           </div>
           {stats.grouped.size === 0 ? (
-            <div className={`text-[12.5px] ${isDark ? "text-white/60" : "text-neutral-500"} py-6 text-center`}>Sin pendientes 🎉</div>
+            <div className={`text-[12.5px] ${isDark ? "text-white/60" : "text-neutral-500"} py-6 text-center`}>{t("widgets1.label121")}</div>
           ) : (
             <div className="space-y-4">
               {Array.from(stats.grouped.entries()).map(([label, arr]) => {
@@ -556,7 +559,7 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
                       {arr.map((c) => (
                         <div key={c.id} className={`nodrag flex items-center justify-between gap-3 px-3 py-2.5 rounded-xl transition-colors ${isDark ? "hover:brightness-110" : "bg-neutral-50 hover:bg-neutral-100"}`} style={isDark ? { backgroundColor: "#252528", color: "#FFFFFF" } : { backgroundColor: "#F9FAFB", color: "#111827" }}>
                           <div className="flex items-center gap-1.5 min-w-0">
-                            <span className={`text-[13px] font-medium truncate ${isDark ? "text-white" : "text-neutral-900"}`}>{c.brand || "Sin nombre"}</span>
+                            <span className={`text-[13px] font-medium truncate ${isDark ? "text-white" : "text-neutral-900"}`}>{c.brand || t("widgets1.label039")}</span>
                             <ArrowUpRight size={12} className="opacity-40 shrink-0" />
                           </div>
                           <div className="flex items-center gap-3 shrink-0">
@@ -565,7 +568,8 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
                               onClick={() => togglePaid(c.id)}
                               className={`text-[11px] font-semibold px-2.5 py-1 rounded-full border transition-colors ${isDark ? "border-white/15 text-[#E5E7EB] hover:bg-white/10" : "border-neutral-200 text-neutral-700 bg-white hover:bg-neutral-100"}`}
                             >
-                              Cobrado
+                              
+                              {t("widgets1.label019")}
                             </button>
                           </div>
                         </div>
@@ -580,7 +584,7 @@ const IngresosNode = ({ id, data, selected }: NodeProps) => {
 
         {allCampaigns.length === 0 && (
           <div className={`mt-4 rounded-xl p-4 text-[12.5px] text-center ${isDark ? "border border-white/[0.08] text-white/60" : "bg-white border border-neutral-200 text-neutral-600"}`} style={softSurfaceStyle}>
-            Añade el widget <span className="font-semibold">Campañas</span> y crea colaboraciones para ver aquí tus ingresos.
+            {t("widgets1.incomeHint")}
           </div>
         )}
       </div>
@@ -625,19 +629,22 @@ const SourcesPicker = ({
   onToggle: (id: string) => void;
   onAll: () => void;
   isDark: boolean;
-}) => (
+}) => {
+  const { t } = useTranslation();
+  return (
   <div className={`nodrag nopan absolute top-full mt-2 left-0 z-50 rounded-xl p-2 w-[260px] max-h-[280px] overflow-y-auto ${isDark ? "bg-[#1C1C1E] border border-white/10 text-white" : "bg-white border border-neutral-200 text-neutral-900"}`}>
     <div className={`text-[10.5px] uppercase tracking-wide px-2 py-1 ${isDark ? "text-white/40" : "text-neutral-400"}`}>Widgets</div>
     <button
       onClick={onAll}
       className={`w-full flex items-center justify-between gap-2 px-2 py-2 rounded-lg text-left text-[13px] ${isDark ? "hover:bg-white/10" : "hover:bg-neutral-100"}`}
     >
-      <span>Todos los widgets</span>
+      <span>{t("widgets1.label122")}</span>
       {isAll && <Check size={14} className="text-[#4059F1]" />}
     </button>
     {sources.length === 0 && (
       <div className={`px-2 py-3 text-[12px] ${isDark ? "text-white/50" : "text-neutral-500"}`}>
-        No hay widgets de Campañas en el tablero.
+        
+        {t("widgets1.label123")}
       </div>
     )}
     {sources.map((s) => {
@@ -651,7 +658,7 @@ const SourcesPicker = ({
           <span className="min-w-0">
             <span className="block text-[13px] truncate">{s.title}</span>
             <span className={`block text-[11px] truncate ${isDark ? "text-white/45" : "text-neutral-500"}`}>
-              {s.subtitle || `${s.count} campaña${s.count === 1 ? "" : "s"}`}
+              {s.subtitle || t("widgets1.campaigns", { count: s.count })}
             </span>
           </span>
           {sel && <Check size={14} className="text-[#4059F1] shrink-0 mt-0.5" />}
@@ -660,6 +667,7 @@ const SourcesPicker = ({
     })}
   </div>
 );
+};
 
 const MonthPicker = ({ value, onPick, isDark }: { value?: string; onPick: (v: string) => void; isDark: boolean }) => {
 
@@ -673,7 +681,7 @@ const MonthPicker = ({ value, onPick, isDark }: { value?: string; onPick: (v: st
         <button onClick={() => setYear((y) => y + 1)} className={`px-2 py-1 rounded-md text-[12px] ${isDark ? "hover:bg-white/10" : "hover:bg-neutral-100"}`}>›</button>
       </div>
       <div className="grid grid-cols-3 gap-1">
-        {MONTHS_SHORT.map((m, i) => {
+        {Array.from({ length: 12 }, (_, i) => new Intl.DateTimeFormat(i18nInstance.language, { month: "short" }).format(new Date(2024, i, 1))).map((m, i) => {
           const k = `${year}-${String(i + 1).padStart(2, "0")}`;
           const isSel = k === value;
           return (
@@ -695,7 +703,9 @@ const MonthPicker = ({ value, onPick, isDark }: { value?: string; onPick: (v: st
   );
 };
 
-const PickerPopover = ({ colors, onPick, isDark }: { colors: { name: string; value: string }[]; onPick: (v: string) => void; isDark: boolean }) => (
+const PickerPopover = ({ colors, onPick, isDark }: { colors: { name: string; value: string }[]; onPick: (v: string) => void; isDark: boolean }) => {
+  const { t } = useTranslation();
+  return (
   <div className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px] ${isDark ? "bg-[#1C1C1E] border border-white/10" : "bg-white border border-neutral-100"} shadow-sm`}>
     {colors.map((c) => (
       <button
@@ -703,12 +713,172 @@ const PickerPopover = ({ colors, onPick, isDark }: { colors: { name: string; val
         onClick={() => onPick(c.value)}
         className="w-6 h-6 rounded-full border border-neutral-200/60 transition-transform hover:scale-110 relative overflow-hidden "
         style={{ backgroundColor: c.value === "transparent" ? "white" : c.value }}
-        title={c.name}
+        title={widgetLabel(c.name)}
       >
         {c.value === "transparent" && <div className="absolute inset-0 w-full h-[1.5px] top-1/2 bg-red-500 rotate-45" />}
       </button>
     ))}
   </div>
 );
+};
 
 export default memo(IngresosNode);
+
+const WIDGET_LABEL_KEYS: Record<string, string> = {
+  "Transparente": "label001",
+  "Rojo": "label002",
+  "Naranja": "label003",
+  "Amarillo": "label004",
+  "Verde": "label005",
+  "Azul": "label006",
+  "Morado": "label007",
+  "Rosa": "label008",
+  "Blanco": "label009",
+  "Negro": "label010",
+  "Sin orden": "label011",
+  "Por columnas": "label012",
+  "Por filas": "label013",
+  "Estado": "label014",
+  "Cobro": "label015",
+  "Pendiente": "label016",
+  "Activa": "label017",
+  "Completada": "label018",
+  "Cobrado": "label019",
+  "Por cobrar": "label020",
+  "Intercambio": "label021",
+  "Evento": "label022",
+  "Campañas": "label023",
+  "Mostrar/ocultar título": "label024",
+  "Mostrar/ocultar subtítulo": "label025",
+  "Color de fondo": "label026",
+  "Eliminar": "label027",
+  "Mover widget": "label028",
+  "Título": "label029",
+  "Subtítulo": "label030",
+  "Nueva": "label031",
+  "Orden": "label032",
+  "Agrupar": "label033",
+  "Buscar marca…": "label034",
+  "Aún no tienes campañas.": "label035",
+  "Añadir la primera": "label036",
+  "Sin campañas": "label037",
+  "Sin resultados para tu búsqueda.": "label038",
+  "Sin nombre": "label039",
+  "Exclusividad": "label040",
+  "Vista previa de la portada": "label041",
+  "Nuevo cliente": "label042",
+  "Eliminar campaña": "label043",
+  "Cerrar": "label044",
+  "Nombre de la marca": "label045",
+  "Cliente": "label046",
+  "Cambiar": "label047",
+  "Asignar cliente…": "label048",
+  "Quitar cliente": "label049",
+  "Crear nuevo cliente": "label050",
+  "Portada": "label051",
+  "https://… URL de la imagen": "label052",
+  "Arrastra la imagen para ajustar la altura": "label053",
+  "Quitar portada": "label054",
+  "Pago": "label055",
+  "Marcar como cobrada": "label056",
+  "Estado de la colaboración": "label057",
+  "💵 Monetario": "label058",
+  "🔄 Intercambio": "label059",
+  "Monto total a cobrar": "label060",
+  "Número de cuotas": "label061",
+  "Pago único. Si quieres puedes cargar la fecha estimada.": "label062",
+  "Mes de cierre del trato": "label063",
+  "Selecciona un mes": "label064",
+  "Usado en estadísticas de ingresos.": "label065",
+  "Días de pago": "label066",
+  "Días hábiles después del último entregable publicado.": "label067",
+  "Entregables de contenido": "label068",
+  "Reel (Instagram)": "label069",
+  "Story (Instagram)": "label070",
+  "Post (Instagram)": "label071",
+  "Short de YouTube": "label072",
+  "Video de YouTube": "label073",
+  "Asistencia a evento": "label074",
+  "Legal": "label075",
+  "La campaña tiene cláusula de exclusividad": "label076",
+  "Notas internas": "label077",
+  "Recordatorios, condiciones especiales, contactos…": "label078",
+  "Eliminar widget": "label079",
+  "Contratos": "label080",
+  "Cambiar imagen": "label081",
+  "Subir imagen": "label082",
+  "Posición": "label083",
+  "Páginas": "label084",
+  "Solo la primera hoja": "label085",
+  "Repetir en todas": "label086",
+  "Quitar logotipo": "label087",
+  "Insertar campo de firma": "label088",
+  "Firma": "label089",
+  "Abrir": "label090",
+  "Suelta aquí tu logotipo": "label091",
+  "Logotipo del documento": "label092",
+  "Subir logotipo (JPG, PNG o SVG)": "label093",
+  "Escribe aquí el contenido": "label094",
+  "Plantillas": "label095",
+  "Reemplazar el documento con esta plantilla": "label096",
+  "Añadir al final del documento": "label097",
+  "Eliminar página": "label098",
+  "Añadir página": "label099",
+  "Carta": "label100",
+  "Arriba izquierda": "label101",
+  "Arriba centro": "label102",
+  "Arriba derecha": "label103",
+  "Abajo izquierda": "label104",
+  "Abajo centro": "label105",
+  "Abajo derecha": "label106",
+  "Selecciona mes": "label107",
+  "Todos": "label108",
+  "1 widget": "label109",
+  "Sin Fecha Estimada": "label110",
+  "Ingresos": "label111",
+  "Lo que cerraste por mes y lo que está por entrar.": "label112",
+  "Desde": "label113",
+  "Hasta": "label114",
+  "Resetear": "label115",
+  "Mes más alto": "label116",
+  "Total cerrado por mes": "label117",
+  "Cerrado": "label118",
+  "Top marcas": "label119",
+  "Aún no hay marcas.": "label120",
+  "Sin pendientes 🎉": "label121",
+  "Todos los widgets": "label122",
+  "No hay widgets de Campañas en el tablero.": "label123",
+  "Nombre del cliente": "label124",
+  "Cargo / empresa": "label125",
+  "Valor": "label126",
+  "Asignado a": "label127",
+  "Editar cliente": "label128",
+  "Información": "label129",
+  "Nombre": "label130",
+  "URL de foto (opcional)": "label131",
+  "Descripción": "label132",
+  "Notas del prospecto…": "label133",
+  "Contacto": "label134",
+  "correo@ejemplo.com": "label135",
+  "https://sitio.com": "label136",
+  "Valor del prospecto": "label137",
+  "Etiquetas": "label138",
+  "Nueva etiqueta": "label139",
+  "Asignados": "label140",
+  "correo (opcional)": "label141",
+  "Agregar persona": "label142",
+  "Campos personalizados": "label143",
+  "Campo": "label144",
+  "Agregar campo": "label145",
+  "Nuevo": "label146",
+  "Contactado": "label147",
+  "Interesado": "label148",
+  "Perdido": "label149",
+  "días · inicia con la publicación.": "exclusivityStart",
+  "pendiente": "pendingSuffix",
+  "Añade el widget Campañas y crea colaboraciones para ver aquí tus ingresos.": "incomeHint"
+};
+function widgetLabel(value: string): string {
+  const key = WIDGET_LABEL_KEYS[value];
+  return key ? i18nInstance.t(`widgets1.${key}`) : value;
+}

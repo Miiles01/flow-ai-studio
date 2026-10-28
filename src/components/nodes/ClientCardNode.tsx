@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+import i18nInstance from "@/i18n";
 /**
  * ═══════════════════════════════════════════════════════════════════════════
  *  REGLA GLOBAL DE WIDGETS (Miiles) — LEE ESTO ANTES DE EDITAR
@@ -90,6 +92,7 @@ const initials = (s: string) => {
 };
 
 const ClientCardNode = ({ id, data, selected }: NodeProps) => {
+  const { t } = useTranslation();
   const { setNodes, getNodes } = useReactFlow();
   const { zoom } = useViewport();
   const { isDark } = useTheme();
@@ -140,7 +143,7 @@ const ClientCardNode = ({ id, data, selected }: NodeProps) => {
               <button
                 onClick={() => setActivePicker(activePicker === "fill" ? null : "fill")}
                 className={`w-7 h-7 flex items-center justify-center rounded-lg relative ${isDark ? "hover:bg-white/10" : "hover:bg-neutral-100"}`}
-                title="Color de fondo"
+                title={t("widgets1.label026")}
               >
                 <Palette size={13} className="text-[#6B7280]" />
                 <div className="absolute bottom-1 right-1 w-2 h-2 rounded-full border border-white" style={{ backgroundColor }} />
@@ -157,7 +160,7 @@ const ClientCardNode = ({ id, data, selected }: NodeProps) => {
                 className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${
                   isDark ? "hover:bg-red-500/20 text-white/60 hover:text-red-400" : "hover:bg-red-50 text-neutral-400 hover:text-red-500"
                 }`}
-                title="Eliminar"
+                title={t("widgets1.label027")}
               >
                 <Trash2 size={13} />
               </button>
@@ -166,7 +169,7 @@ const ClientCardNode = ({ id, data, selected }: NodeProps) => {
         )}
       </AnimatePresence>
 
-      <div className="absolute top-0 left-1/2 z-20 h-5 w-28 -translate-x-1/2 cursor-grab rounded-b-xl active:cursor-grabbing" title="Mover widget">
+      <div className="absolute top-0 left-1/2 z-20 h-5 w-28 -translate-x-1/2 cursor-grab rounded-b-xl active:cursor-grabbing" title={t("widgets1.label028")}>
         <div className={`mx-auto mt-1.5 h-1.5 w-8 rounded-full opacity-0 transition-opacity group-hover/widget:opacity-100 ${isEffectiveBgDark ? "bg-white/40" : "bg-black/20"}`} />
       </div>
 
@@ -201,7 +204,7 @@ const ClientCardNode = ({ id, data, selected }: NodeProps) => {
             <input
               value={d.name ?? ""}
               onChange={(e) => update({ name: e.target.value })}
-              placeholder="Nombre del cliente"
+              placeholder={t("widgets1.label124")}
               className={`nodrag nopan w-full bg-transparent border-none outline-none text-[15px] font-semibold ${
                 isEffectiveBgDark ? "placeholder:text-white/40" : "placeholder:text-neutral-400"
               }`}
@@ -210,7 +213,7 @@ const ClientCardNode = ({ id, data, selected }: NodeProps) => {
             <input
               value={d.role ?? ""}
               onChange={(e) => update({ role: e.target.value })}
-              placeholder="Cargo / empresa"
+              placeholder={t("widgets1.label125")}
               className={`nodrag nopan w-full bg-transparent border-none outline-none text-[11px] font-normal mt-0.5 ${
                 isEffectiveBgDark ? "placeholder:text-white/50 text-white/90" : "placeholder:text-neutral-400 text-neutral-600"
               }`}
@@ -223,13 +226,13 @@ const ClientCardNode = ({ id, data, selected }: NodeProps) => {
         <div ref={scrollRef} className="px-4 pb-4 flex-1 overflow-y-auto kanban-scrollbar space-y-2">
           {(d.tags?.length ?? 0) > 0 && (
             <div className="flex flex-wrap gap-1">
-              {d.tags!.map((t) => (
+              {d.tags!.map((tag) => (
                 <span
-                  key={t.id}
+                  key={tag.id}
                   className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full font-medium"
-                  style={{ backgroundColor: `${t.color}22`, color: t.color, border: `1px solid ${t.color}44` }}
+                  style={{ backgroundColor: `${tag.color}22`, color: tag.color, border: `1px solid ${tag.color}44` }}
                 >
-                  {t.label}
+                  {widgetLabel(tag.label)}
                 </span>
               ))}
             </div>
@@ -289,14 +292,14 @@ const ClientCardNode = ({ id, data, selected }: NodeProps) => {
 
           {d.value && (
             <div className={`pt-1.5 mt-1 border-t ${dividerCls} flex items-center justify-between`}>
-              <span className={`text-[10px] tracking-wide ${subtleText}`}>Valor</span>
+              <span className={`text-[10px] tracking-wide ${subtleText}`}>{t("widgets1.label126")}</span>
               <span className="text-[13px] font-semibold" style={{ color: isEffectiveBgDark ? "#93C5FD" : accentColor }}>{d.value}</span>
             </div>
           )}
 
           {(d.assignees?.length ?? 0) > 0 && (
             <div className="flex items-center gap-1 pt-1">
-              <span className={`text-[10px] ${subtleText} mr-1`}>Asignado a</span>
+              <span className={`text-[10px] ${subtleText} mr-1`}>{t("widgets1.label127")}</span>
               {d.assignees!.slice(0, 4).map((a) => (
                 <div
                   key={a.id}
@@ -346,6 +349,7 @@ const ClientEditorPopover = ({
   onClose: () => void;
   onUpdate: (patch: Partial<ClientCardNodeData>) => void;
 }) => {
+  const { t } = useTranslation();
   const popoverRef = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState({ top: -999, left: -999 });
 
@@ -441,28 +445,28 @@ const ClientEditorPopover = ({
         className="sticky top-0 z-10 px-4 pt-4 pb-6 flex items-center justify-between"
         style={{ background: isDark ? "linear-gradient(to bottom, #1C1C1E 60%, transparent)" : "linear-gradient(to bottom, #ffffff 60%, transparent)" }}
       >
-        <span className="text-[13px] font-semibold">Editar cliente</span>
+        <span className="text-[13px] font-semibold">{t("widgets1.label128")}</span>
         <button
           onClick={onClose}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-colors text-[11px] font-medium ${isDark ? "bg-white/10 hover:bg-white/20 text-white" : "bg-black/5 hover:bg-black/10 text-black"}`}
         >
-          <span>Cerrar</span><X size={12} />
+          <span>{t("widgets1.label044")}</span><X size={12} />
         </button>
       </div>
 
       <div className="px-4 pb-4">
-        <Section label="Información" icon={<UserIcon size={12} />}>
+        <Section label={t("widgets1.label129")} icon={<UserIcon size={12} />}>
           <div className="space-y-1.5">
             <input
               value={data.name ?? ""}
               onChange={(e) => onUpdate({ name: e.target.value })}
-              placeholder="Nombre"
+              placeholder={t("widgets1.label130")}
               className={`w-full text-[12px] px-2 py-1.5 rounded-md outline-none ${inputCls}`}
             />
             <input
               value={data.role ?? ""}
               onChange={(e) => onUpdate({ role: e.target.value })}
-              placeholder="Cargo / empresa"
+              placeholder={t("widgets1.label125")}
               className={`w-full text-[12px] px-2 py-1.5 rounded-md outline-none ${inputCls}`}
             />
             <div className="relative">
@@ -470,31 +474,31 @@ const ClientEditorPopover = ({
               <input
                 value={data.avatarUrl ?? ""}
                 onChange={(e) => onUpdate({ avatarUrl: e.target.value || undefined })}
-                placeholder="URL de foto (opcional)"
+                placeholder={t("widgets1.label131")}
                 className={`w-full text-[12px] pl-7 pr-2 py-1.5 rounded-md outline-none ${inputCls}`}
               />
             </div>
           </div>
         </Section>
 
-        <Section label="Descripción" icon={<AlignLeft size={12} />}>
+        <Section label={t("widgets1.label132")} icon={<AlignLeft size={12} />}>
           <textarea
             value={data.description ?? ""}
             onChange={(e) => onUpdate({ description: e.target.value || undefined })}
             rows={3}
-            placeholder="Notas del prospecto…"
+            placeholder={t("widgets1.label133")}
             className={`w-full text-[12px] px-2 py-1.5 rounded-md outline-none resize-none ${inputCls}`}
           />
         </Section>
 
-        <Section label="Contacto" icon={<Mail size={12} />}>
+        <Section label={t("widgets1.label134")} icon={<Mail size={12} />}>
           <div className="space-y-1.5">
             <div className="relative">
               <Mail size={11} className="absolute left-2 top-1/2 -translate-y-1/2 opacity-50" />
               <input
                 value={data.email ?? ""}
                 onChange={(e) => onUpdate({ email: e.target.value || undefined })}
-                placeholder="correo@ejemplo.com"
+                placeholder={t("widgets1.label135")}
                 className={`w-full text-[12px] pl-7 pr-2 py-1.5 rounded-md outline-none ${inputCls}`}
               />
             </div>
@@ -512,14 +516,14 @@ const ClientEditorPopover = ({
               <input
                 value={data.website ?? ""}
                 onChange={(e) => onUpdate({ website: e.target.value || undefined })}
-                placeholder="https://sitio.com"
+                placeholder={t("widgets1.label136")}
                 className={`w-full text-[12px] pl-7 pr-2 py-1.5 rounded-md outline-none ${inputCls}`}
               />
             </div>
           </div>
         </Section>
 
-        <Section label="Valor del prospecto" icon={<DollarSign size={12} />}>
+        <Section label={t("widgets1.label137")} icon={<DollarSign size={12} />}>
           <input
             value={data.value ?? ""}
             onChange={(e) => onUpdate({ value: e.target.value || undefined })}
@@ -528,17 +532,17 @@ const ClientEditorPopover = ({
           />
         </Section>
 
-        <Section label="Etiquetas" icon={<TagIcon size={12} />}>
+        <Section label={t("widgets1.label138")} icon={<TagIcon size={12} />}>
           {(data.tags?.length ?? 0) > 0 && (
             <div className="flex flex-wrap gap-1 mb-1.5">
-              {data.tags!.map((t) => (
+              {data.tags!.map((tag) => (
                 <span
-                  key={t.id}
+                  key={tag.id}
                   className="inline-flex items-center gap-1 text-[10px] px-2 py-0.5 rounded-full font-medium"
-                  style={{ backgroundColor: `${t.color}22`, color: t.color, border: `1px solid ${t.color}44` }}
+                  style={{ backgroundColor: `${tag.color}22`, color: tag.color, border: `1px solid ${tag.color}44` }}
                 >
-                  {t.label}
-                  <button onClick={() => removeTag(t.id)} className="opacity-60 hover:opacity-100"><X size={9} /></button>
+                  {widgetLabel(tag.label)}
+                  <button onClick={() => removeTag(tag.id)} className="opacity-60 hover:opacity-100"><X size={9} /></button>
                 </span>
               ))}
             </div>
@@ -546,7 +550,7 @@ const ClientEditorPopover = ({
           <div className="flex flex-wrap gap-1 mb-2">
             {PRESET_STATUS_TAGS.map((p) => (
               <button
-                key={p.label}
+                key={widgetLabel(p.label)}
                 onClick={() => addTag(p.label, p.color)}
                 className="text-[10px] px-2 py-0.5 rounded-full font-medium hover:opacity-80"
                 style={{ backgroundColor: `${p.color}22`, color: p.color, border: `1px solid ${p.color}44` }}
@@ -561,7 +565,7 @@ const ClientEditorPopover = ({
               onChange={(e) => setNewTagLabel(e.target.value)}
               onKeyDown={(e) => { if (e.key === "Enter") { addTag(newTagLabel, newTagColor); setNewTagLabel(""); } }}
               className={`flex-1 text-[11px] px-2 py-1 rounded-md outline-none ${inputCls}`}
-              placeholder="Nueva etiqueta"
+              placeholder={t("widgets1.label139")}
             />
             <div className="relative flex items-center justify-center">
               <button
@@ -591,7 +595,7 @@ const ClientEditorPopover = ({
           </div>
         </Section>
 
-        <Section label="Asignados" icon={<Users size={12} />}>
+        <Section label={t("widgets1.label140")} icon={<Users size={12} />}>
           {(data.assignees?.length ?? 0) > 0 && (
             <div className="space-y-1 mb-1.5">
               {data.assignees!.map((a) => (
@@ -615,7 +619,7 @@ const ClientEditorPopover = ({
                 value={newAssigneeName}
                 onChange={(e) => setNewAssigneeName(e.target.value)}
                 className={`w-full text-[11px] pl-6 pr-2 py-1 rounded-md outline-none ${inputCls}`}
-                placeholder="Nombre"
+                placeholder={t("widgets1.label130")}
               />
             </div>
             <div className="relative">
@@ -625,16 +629,16 @@ const ClientEditorPopover = ({
                 onChange={(e) => setNewAssigneeEmail(e.target.value)}
                 onKeyDown={(e) => e.key === "Enter" && addAssignee()}
                 className={`w-full text-[11px] pl-6 pr-2 py-1 rounded-md outline-none ${inputCls}`}
-                placeholder="correo (opcional)"
+                placeholder={t("widgets1.label141")}
               />
             </div>
             <button onClick={addAssignee} className={`w-full text-[11px] py-1 rounded-md flex items-center justify-center gap-1 ${ghostBtn}`}>
-              <Plus size={11} /> Agregar persona
+              <Plus size={11} />  {t("widgets1.label142")}
             </button>
           </div>
         </Section>
 
-        <Section label="Campos personalizados" icon={<ListPlus size={12} />}>
+        <Section label={t("widgets1.label143")} icon={<ListPlus size={12} />}>
           {(data.fields?.length ?? 0) > 0 && (
             <div className="space-y-1 mb-1.5">
               {data.fields!.map((f) => (
@@ -643,13 +647,13 @@ const ClientEditorPopover = ({
                     value={f.label}
                     onChange={(e) => updateField(f.id, { label: e.target.value })}
                     className={`w-[40%] text-[11px] px-1.5 py-0.5 rounded outline-none bg-transparent border ${isDark ? "border-white/10" : "border-neutral-200"}`}
-                    placeholder="Campo"
+                    placeholder={t("widgets1.label144")}
                   />
                   <input
                     value={f.value}
                     onChange={(e) => updateField(f.id, { value: e.target.value })}
                     className={`flex-1 text-[11px] px-1.5 py-0.5 rounded outline-none bg-transparent border ${isDark ? "border-white/10" : "border-neutral-200"}`}
-                    placeholder="Valor"
+                    placeholder={t("widgets1.label126")}
                   />
                   <button onClick={() => removeField(f.id)} className="opacity-60 hover:opacity-100 hover:text-red-500 px-1"><X size={11} /></button>
                 </div>
@@ -661,14 +665,14 @@ const ClientEditorPopover = ({
               value={newFieldLabel}
               onChange={(e) => setNewFieldLabel(e.target.value)}
               className={`w-[40%] text-[11px] px-2 py-1 rounded-md outline-none ${inputCls}`}
-              placeholder="Campo"
+              placeholder={t("widgets1.label144")}
             />
             <input
               value={newFieldValue}
               onChange={(e) => setNewFieldValue(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && addField()}
               className={`flex-1 text-[11px] px-2 py-1 rounded-md outline-none ${inputCls}`}
-              placeholder="Valor"
+              placeholder={t("widgets1.label126")}
             />
             <button onClick={addField} className={`text-[11px] px-2 py-1 rounded-md ${ghostBtn}`}><Plus size={11} /></button>
           </div>
@@ -688,7 +692,9 @@ const Section = ({ label, icon, children }: { label: string; icon?: React.ReactN
   </div>
 );
 
-const PickerPopover = ({ colors, onPick, isDark }: { colors: { name: string; value: string }[]; onPick: (v: string) => void; isDark: boolean }) => (
+const PickerPopover = ({ colors, onPick, isDark }: { colors: { name: string; value: string }[]; onPick: (v: string) => void; isDark: boolean }) => {
+  const { t } = useTranslation();
+  return (
   <div className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px] ${isDark ? "bg-[#1C1C1E] border border-white/10" : "bg-white border border-neutral-100"} shadow-sm`}>
     {colors.map((c) => (
       <button
@@ -696,12 +702,172 @@ const PickerPopover = ({ colors, onPick, isDark }: { colors: { name: string; val
         onClick={() => onPick(c.value)}
         className="w-6 h-6 rounded-full border border-neutral-200/60 transition-transform hover:scale-110 relative overflow-hidden "
         style={{ backgroundColor: c.value === "transparent" ? "white" : c.value }}
-        title={c.name}
+        title={widgetLabel(c.name)}
       >
         {c.value === "transparent" && <div className="absolute inset-0 w-full h-[1.5px] top-1/2 bg-red-500 rotate-45" />}
       </button>
     ))}
   </div>
 );
+};
 
 export default memo(ClientCardNode);
+
+const WIDGET_LABEL_KEYS: Record<string, string> = {
+  "Transparente": "label001",
+  "Rojo": "label002",
+  "Naranja": "label003",
+  "Amarillo": "label004",
+  "Verde": "label005",
+  "Azul": "label006",
+  "Morado": "label007",
+  "Rosa": "label008",
+  "Blanco": "label009",
+  "Negro": "label010",
+  "Sin orden": "label011",
+  "Por columnas": "label012",
+  "Por filas": "label013",
+  "Estado": "label014",
+  "Cobro": "label015",
+  "Pendiente": "label016",
+  "Activa": "label017",
+  "Completada": "label018",
+  "Cobrado": "label019",
+  "Por cobrar": "label020",
+  "Intercambio": "label021",
+  "Evento": "label022",
+  "Campañas": "label023",
+  "Mostrar/ocultar título": "label024",
+  "Mostrar/ocultar subtítulo": "label025",
+  "Color de fondo": "label026",
+  "Eliminar": "label027",
+  "Mover widget": "label028",
+  "Título": "label029",
+  "Subtítulo": "label030",
+  "Nueva": "label031",
+  "Orden": "label032",
+  "Agrupar": "label033",
+  "Buscar marca…": "label034",
+  "Aún no tienes campañas.": "label035",
+  "Añadir la primera": "label036",
+  "Sin campañas": "label037",
+  "Sin resultados para tu búsqueda.": "label038",
+  "Sin nombre": "label039",
+  "Exclusividad": "label040",
+  "Vista previa de la portada": "label041",
+  "Nuevo cliente": "label042",
+  "Eliminar campaña": "label043",
+  "Cerrar": "label044",
+  "Nombre de la marca": "label045",
+  "Cliente": "label046",
+  "Cambiar": "label047",
+  "Asignar cliente…": "label048",
+  "Quitar cliente": "label049",
+  "Crear nuevo cliente": "label050",
+  "Portada": "label051",
+  "https://… URL de la imagen": "label052",
+  "Arrastra la imagen para ajustar la altura": "label053",
+  "Quitar portada": "label054",
+  "Pago": "label055",
+  "Marcar como cobrada": "label056",
+  "Estado de la colaboración": "label057",
+  "💵 Monetario": "label058",
+  "🔄 Intercambio": "label059",
+  "Monto total a cobrar": "label060",
+  "Número de cuotas": "label061",
+  "Pago único. Si quieres puedes cargar la fecha estimada.": "label062",
+  "Mes de cierre del trato": "label063",
+  "Selecciona un mes": "label064",
+  "Usado en estadísticas de ingresos.": "label065",
+  "Días de pago": "label066",
+  "Días hábiles después del último entregable publicado.": "label067",
+  "Entregables de contenido": "label068",
+  "Reel (Instagram)": "label069",
+  "Story (Instagram)": "label070",
+  "Post (Instagram)": "label071",
+  "Short de YouTube": "label072",
+  "Video de YouTube": "label073",
+  "Asistencia a evento": "label074",
+  "Legal": "label075",
+  "La campaña tiene cláusula de exclusividad": "label076",
+  "Notas internas": "label077",
+  "Recordatorios, condiciones especiales, contactos…": "label078",
+  "Eliminar widget": "label079",
+  "Contratos": "label080",
+  "Cambiar imagen": "label081",
+  "Subir imagen": "label082",
+  "Posición": "label083",
+  "Páginas": "label084",
+  "Solo la primera hoja": "label085",
+  "Repetir en todas": "label086",
+  "Quitar logotipo": "label087",
+  "Insertar campo de firma": "label088",
+  "Firma": "label089",
+  "Abrir": "label090",
+  "Suelta aquí tu logotipo": "label091",
+  "Logotipo del documento": "label092",
+  "Subir logotipo (JPG, PNG o SVG)": "label093",
+  "Escribe aquí el contenido": "label094",
+  "Plantillas": "label095",
+  "Reemplazar el documento con esta plantilla": "label096",
+  "Añadir al final del documento": "label097",
+  "Eliminar página": "label098",
+  "Añadir página": "label099",
+  "Carta": "label100",
+  "Arriba izquierda": "label101",
+  "Arriba centro": "label102",
+  "Arriba derecha": "label103",
+  "Abajo izquierda": "label104",
+  "Abajo centro": "label105",
+  "Abajo derecha": "label106",
+  "Selecciona mes": "label107",
+  "Todos": "label108",
+  "1 widget": "label109",
+  "Sin Fecha Estimada": "label110",
+  "Ingresos": "label111",
+  "Lo que cerraste por mes y lo que está por entrar.": "label112",
+  "Desde": "label113",
+  "Hasta": "label114",
+  "Resetear": "label115",
+  "Mes más alto": "label116",
+  "Total cerrado por mes": "label117",
+  "Cerrado": "label118",
+  "Top marcas": "label119",
+  "Aún no hay marcas.": "label120",
+  "Sin pendientes 🎉": "label121",
+  "Todos los widgets": "label122",
+  "No hay widgets de Campañas en el tablero.": "label123",
+  "Nombre del cliente": "label124",
+  "Cargo / empresa": "label125",
+  "Valor": "label126",
+  "Asignado a": "label127",
+  "Editar cliente": "label128",
+  "Información": "label129",
+  "Nombre": "label130",
+  "URL de foto (opcional)": "label131",
+  "Descripción": "label132",
+  "Notas del prospecto…": "label133",
+  "Contacto": "label134",
+  "correo@ejemplo.com": "label135",
+  "https://sitio.com": "label136",
+  "Valor del prospecto": "label137",
+  "Etiquetas": "label138",
+  "Nueva etiqueta": "label139",
+  "Asignados": "label140",
+  "correo (opcional)": "label141",
+  "Agregar persona": "label142",
+  "Campos personalizados": "label143",
+  "Campo": "label144",
+  "Agregar campo": "label145",
+  "Nuevo": "label146",
+  "Contactado": "label147",
+  "Interesado": "label148",
+  "Perdido": "label149",
+  "días · inicia con la publicación.": "exclusivityStart",
+  "pendiente": "pendingSuffix",
+  "Añade el widget Campañas y crea colaboraciones para ver aquí tus ingresos.": "incomeHint"
+};
+function widgetLabel(value: string): string {
+  const key = WIDGET_LABEL_KEYS[value];
+  return key ? i18nInstance.t(`widgets1.${key}`) : value;
+}

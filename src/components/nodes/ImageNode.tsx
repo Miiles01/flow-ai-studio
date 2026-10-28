@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { memo, useState, useRef, useCallback } from "react";
 import { Handle, Position, type NodeProps, NodeResizer, useReactFlow, useViewport } from "@xyflow/react";
 import { ImageIcon, Link2, Maximize2, Minimize2, AlertTriangle, RotateCcw, Trash2, Check } from "lucide-react";
@@ -15,6 +16,7 @@ const HANDLE_CLASS =
 
 // ── ImageNode ────────────────────────────────────────────────────
 const ImageNode = ({ id, data, selected }: NodeProps) => {
+  const { t: translate } = useTranslation();
   const { getNodes, setNodes } = useReactFlow();
   const { zoom } = useViewport();
   const { isDark } = useTheme();
@@ -128,7 +130,7 @@ const ImageNode = ({ id, data, selected }: NodeProps) => {
                     ? isDark ? "hover:bg-white/10 text-zinc-400" : "hover:bg-[#F3F4F6] text-[#6B7280]"
                     : isDark ? "bg-indigo-600/30 text-indigo-400 border border-indigo-500/20" : "bg-[#EEF2FF] text-[#4059F1] border border-gray-200 "
                 }`}
-                title="Pegar URL de imagen"
+                title={translate("widgets2.text98")}
               >
                 <Link2 size={13} strokeWidth={2} />
               </button>
@@ -141,7 +143,7 @@ const ImageNode = ({ id, data, selected }: NodeProps) => {
                 className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${
                   isDark ? "hover:bg-white/10 text-zinc-400" : "hover:bg-[#F3F4F6] text-[#6B7280]"
                 }`}
-                title={objectFit === "cover" ? "Cambiar a Contain" : "Cambiar a Cover"}
+                title={objectFit === "cover" ? translate("widgets2.text99") : translate("widgets2.text100")}
               >
                 {objectFit === "cover"
                   ? <Maximize2 size={13} strokeWidth={2} />
@@ -157,7 +159,7 @@ const ImageNode = ({ id, data, selected }: NodeProps) => {
                 className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${
                   isDark ? 'hover:bg-red-500/20 text-[#9CA3AF] hover:text-red-400' : 'hover:bg-[#FEE2E2] text-[#9CA3AF] hover:text-[#EF4444]'
                 }`}
-                title="Eliminar imagen"
+                title={translate("widgets2.text101")}
               >
                 <Trash2 size={13} strokeWidth={2} />
               </button>
@@ -190,13 +192,13 @@ const ImageNode = ({ id, data, selected }: NodeProps) => {
                 if (e.key === "Enter") handleConfirmUrl();
                 if (e.key === "Escape") setShowInput(false);
               }}
-              placeholder="https://ejemplo.com/imagen.jpg"
+              placeholder={translate("widgets2.text102")}
               className={`flex-1 text-[12px] font-light outline-none border-none bg-transparent placeholder-gray-400 nodrag nopan ${isDark ? 'text-white' : 'text-black'}`}
             />
             <button
               onClick={handleConfirmUrl}
               className="w-6 h-6 flex items-center justify-center rounded-lg bg-[#4059F1] hover:bg-[#3348d4] transition-colors"
-              title="Confirmar URL"
+              title={translate("widgets2.text92")}
             >
               <Check size={11} className="text-white stroke-[2.5]" />
             </button>
@@ -226,8 +228,8 @@ const ImageNode = ({ id, data, selected }: NodeProps) => {
               <ImageIcon size={18} className="text-[#9CA3AF]" strokeWidth={1.5} />
             </div>
             <div className="flex flex-col items-center gap-1">
-              <p className={`text-[12px] font-medium ${isDark ? 'text-zinc-300' : 'text-[#6B7280]'}`}>Añadir imagen</p>
-              <p className="text-[10px] text-[#9CA3AF] font-light">Pega una URL de imagen</p>
+              <p className={`text-[12px] font-medium ${isDark ? 'text-zinc-300' : 'text-[#6B7280]'}`}>{translate("widgets2.text103")}</p>
+              <p className="text-[10px] text-[#9CA3AF] font-light">{translate("widgets2.text104")}</p>
             </div>
           </motion.div>
         )}
@@ -263,7 +265,7 @@ const ImageNode = ({ id, data, selected }: NodeProps) => {
               <AlertTriangle size={18} className="text-[#EF4444]" strokeWidth={1.5} />
             </div>
             <div className="flex flex-col items-center gap-1">
-              <p className="text-[12px] font-medium text-[#EF4444]">URL inválida</p>
+              <p className="text-[12px] font-medium text-[#EF4444]">{translate("widgets2.text105")}</p>
               <p className="text-[10px] text-[#9CA3AF] font-light flex items-center gap-1">
                 <RotateCcw size={9} /> Clic para reintentar
               </p>

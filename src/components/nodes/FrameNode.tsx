@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { memo, useState, useRef } from "react";
 import { type NodeProps, NodeResizer, useReactFlow, useViewport } from "@xyflow/react";
 import { Trash2, Palette, Square } from "lucide-react";
@@ -12,19 +13,20 @@ export type FrameNodeData = {
 };
 
 const RAINBOW_COLORS = [
-  { name: "Transparente", value: "transparent" },
-  { name: "Rojo", value: "#EF4444" },
-  { name: "Naranja", value: "#F97316" },
-  { name: "Amarillo", value: "#FACC15" },
-  { name: "Verde", value: "#22C55E" },
-  { name: "Azul", value: "#4059F1" },
-  { name: "Morado", value: "#A855F7" },
-  { name: "Rosa", value: "#FCB5B9" },
-  { name: "Blanco", value: "#FFFFFF" },
-  { name: "Negro", value: "#1F2937" },
+  { name: "widgets2.text1", value: "transparent" },
+  { name: "widgets2.text2", value: "#EF4444" },
+  { name: "widgets2.text3", value: "#F97316" },
+  { name: "widgets2.text4", value: "#FACC15" },
+  { name: "widgets2.text5", value: "#22C55E" },
+  { name: "widgets2.text6", value: "#4059F1" },
+  { name: "widgets2.text7", value: "#A855F7" },
+  { name: "widgets2.text8", value: "#FCB5B9" },
+  { name: "widgets2.text9", value: "#FFFFFF" },
+  { name: "widgets2.text10", value: "#1F2937" },
 ];
 
 const FrameNode = ({ id, data, selected }: NodeProps) => {
+  const { t: translate } = useTranslation();
   const { setNodes, getNodes } = useReactFlow();
   const { zoom } = useViewport();
   const { isDark } = useTheme();
@@ -85,7 +87,7 @@ const FrameNode = ({ id, data, selected }: NodeProps) => {
           />
         ) : (
           <span className={`text-[12px] font-medium transition-colors select-none cursor-text ${isDark ? 'text-zinc-500 hover:text-zinc-300' : 'text-[#9CA3AF] hover:text-[#6B7280]'}`}>
-            {label || "Sección"}
+            {label || translate("widgets2.text96")}
           </span>
         )}
       </div>
@@ -114,7 +116,7 @@ const FrameNode = ({ id, data, selected }: NodeProps) => {
               <button
                 onClick={() => setActivePicker(activePicker === "fill" ? null : "fill")}
                 className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors relative ${isDark ? 'hover:bg-white/10' : 'hover:bg-[#F3F4F6]'}`}
-                title="Color de relleno"
+                title={translate("widgets2.text83")}
               >
                 <Palette size={13} className="text-[#6B7280]" />
                 <div
@@ -131,7 +133,7 @@ const FrameNode = ({ id, data, selected }: NodeProps) => {
               <button
                 onClick={() => setActivePicker(activePicker === "border" ? null : "border")}
                 className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors relative ${isDark ? 'hover:bg-white/10' : 'hover:bg-[#F3F4F6]'}`}
-                title="Color de borde"
+                title={translate("widgets2.text84")}
               >
                 <Square size={13} className="text-[#6B7280]" />
                 <div
@@ -158,7 +160,7 @@ const FrameNode = ({ id, data, selected }: NodeProps) => {
                       style={{
                         backgroundColor: c.value === "transparent" ? "white" : c.value,
                       }}
-                      title={c.name}
+                      title={translate(c.name)}
                     >
                       {c.value === "transparent" && (
                         <div className="absolute w-full h-[1.5px] bg-red-500 rotate-45" />
@@ -182,7 +184,7 @@ const FrameNode = ({ id, data, selected }: NodeProps) => {
                       style={{
                         backgroundColor: c.value === "transparent" ? "white" : c.value,
                       }}
-                      title={c.name}
+                      title={translate(c.name)}
                     >
                       {c.value === "transparent" && (
                         <div className="absolute w-full h-[1.5px] bg-red-500 rotate-45" />
@@ -210,7 +212,7 @@ const FrameNode = ({ id, data, selected }: NodeProps) => {
                 className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${
                   isDark ? 'hover:bg-red-500/20 text-[#9CA3AF] hover:text-[#EF4444]' : 'hover:bg-[#FEE2E2] text-[#9CA3AF] hover:text-[#EF4444]'
                 }`}
-                title="Eliminar sección"
+                title={translate("widgets2.text97")}
               >
                 <Trash2 size={13} strokeWidth={2} />
               </button>

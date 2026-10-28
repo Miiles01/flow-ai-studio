@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useState, useMemo, useRef, useEffect } from "react";
 import { Trash2, X, Check, Sparkles, Loader2, AlertTriangle } from "lucide-react";
 import ReactMarkdown from "react-markdown";
@@ -21,6 +22,7 @@ const formatStamp = (ts: number) => {
 };
 
 const WidgetCommentBadge = ({ comments, onChange }: Props) => {
+  const { t: translate } = useTranslation();
   const [open, setOpen] = useState(false);
   const scrollRef = useRef<HTMLDivElement>(null);
   const unreadCount = useMemo(() => comments.filter((c) => !c.read).length, [comments]);
@@ -65,7 +67,7 @@ const WidgetCommentBadge = ({ comments, onChange }: Props) => {
             className={`relative w-8 h-8 rounded-full flex items-center justify-center border-2 border-white dark:border-[#1C1C1E] shadow-sm transition-colors ${
               isWorking || hasUnread ? "bg-black" : "bg-miiles-gray-400"
             }`}
-            title={isWorking ? "Trabajando en tu tarea…" : "Comentarios"}
+            title={isWorking ? translate("widgets2.text106") : translate("widgets2.text107")}
           >
             {isWorking && (
               <span className="absolute inset-0 rounded-full border-2 border-black/20 border-t-black animate-spin -m-1" />
@@ -90,11 +92,11 @@ const WidgetCommentBadge = ({ comments, onChange }: Props) => {
         >
           <div className="flex items-center justify-between px-4 py-3.5 border-b border-black/5 dark:border-white/10 shrink-0">
             <div className="flex items-center gap-2">
-              <span className="text-[13px] font-semibold text-foreground">Comentarios</span>
+              <span className="text-[13px] font-semibold text-foreground">{translate("widgets2.text107")}</span>
               <button
                 onClick={clearAll}
                 className="p-1.5 rounded-lg transition-colors text-miiles-gray-400 hover:text-red-500 hover:bg-red-500/10"
-                title="Borrar todos"
+                title={translate("widgets2.text108")}
               >
                 <Trash2 size={14} />
               </button>
@@ -103,7 +105,7 @@ const WidgetCommentBadge = ({ comments, onChange }: Props) => {
               onClick={() => setOpen(false)}
               className="flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-colors text-[11px] font-medium bg-black/5 hover:bg-black/10 dark:bg-white/10 dark:hover:bg-white/20 text-black dark:text-white"
             >
-              <span>Cerrar</span>
+              <span>{translate("widgets2.text26")}</span>
               <X size={12} />
             </button>
           </div>
@@ -111,7 +113,7 @@ const WidgetCommentBadge = ({ comments, onChange }: Props) => {
             {comments.map((c) => (
               <div key={c.id} className="group">
                 <div className="flex items-center gap-1.5 text-[10px] text-miiles-gray-400 mb-1">
-                  <span>Tú</span>
+                  <span>{translate("widgets2.text109")}</span>
                   {c.createdAt && (
                     <>
                       <span>·</span>
@@ -148,7 +150,7 @@ const WidgetCommentBadge = ({ comments, onChange }: Props) => {
                           <div className="h-full w-1/3 rounded-full bg-black dark:bg-white animate-[widget-loader_1.4s_ease-in-out_infinite]" />
                         </div>
                         <span className="text-[10px] text-miiles-gray-400 shrink-0">
-                          {c.provider ? `${c.provider} trabajando…` : "Trabajando en tu tarea…"}
+                          {c.provider ? translate("widgets2.providerWorking", { provider: c.provider }) : "Trabajando en tu tarea…"}
                         </span>
                       </div>
                     )}
