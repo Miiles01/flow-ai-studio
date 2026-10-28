@@ -339,6 +339,7 @@ const ZoomStepper = ({ isDark }: { isDark: boolean }) => {
 };
 
 const IndexContent = () => {
+  useBoardsT();
   const { id } = useParams();
   const location = useLocation();
   const navigate = useNavigate();

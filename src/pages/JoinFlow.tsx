@@ -17,6 +17,7 @@ type PublicFlow = {
 };
 
 const JoinFlow = () => {
+  useBoardsT();
   const { token } = useParams();
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
@@ -90,11 +91,10 @@ const JoinFlow = () => {
       <div className="max-w-md w-full text-center">
         <img src={logotipoSvg} alt="miiles" className="h-6 mx-auto mb-10 opacity-80" />
         <h1 className="text-[26px] font-normal tracking-tight mb-2">
-          {flow?.name || "Tablero compartido"}
+          {flow?.name || bt("boards.sharedBoard")}
         </h1>
         <p className="text-[13px] font-light text-miiles-gray-400 mb-8">
-          Te invitaron a colaborar en este tablero como{" "}
-          {flow?.public_role === "editor" ? "editor" : "lector"}.
+          {bt("boards.invitedAs", { role: bt(flow?.public_role === "editor" ? "boards.roleEditor" : "boards.roleViewer") })}
         </p>
 
         <div className="flex flex-col gap-3">
