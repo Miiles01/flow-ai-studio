@@ -48,6 +48,7 @@ function LinkPopover({
   const href = anchor.getAttribute("href") || "";
   const display = href.length > 32 ? href.slice(0, 30) + "…" : href;
   const { isDark } = useTheme();
+  const { t: translate } = useTranslation();
   return (
     <motion.div
       initial={{ opacity: 0, y: 4 }}
