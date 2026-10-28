@@ -1,6 +1,10 @@
 import React, { useState } from "react";
+import { useTranslation } from "react-i18next";
+import { Button } from "@/components/ui/button";
 import { LineChart, X, ArrowLeft } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
+
+const MotionButton = motion.create(Button);
 
 const RETENTION_PATTERNS = [
   {
@@ -98,6 +102,7 @@ const RETENTION_PATTERNS = [
 ];
 
 export function RetentionPopup() {
+  const { t } = useTranslation();
   const [isOpen, setIsOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<number | null>(null);
 
@@ -107,7 +112,7 @@ export function RetentionPopup() {
     <div className="absolute bottom-4 sm:bottom-8 left-4 sm:left-8 z-50 max-w-[calc(100vw-2rem)]">
       <AnimatePresence>
         {!isOpen && (
-          <motion.button
+          <MotionButton
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
@@ -115,8 +120,8 @@ export function RetentionPopup() {
             className="px-5 py-2.5 rounded-full transition-all hover:bg-gray-50 dark:hover:bg-[#2a2a2a] text-black dark:text-white bg-white dark:bg-[#1a1a1a] shadow-sm border border-slate-200 dark:border-[#333] font-medium text-sm cursor-pointer flex items-center gap-2"
           >
             <LineChart size={16} strokeWidth={2.5} />
-            Retención
-          </motion.button>
+            {t("architecture.ui.retention")}
+          </MotionButton>
         )}
       </AnimatePresence>
 
@@ -132,20 +137,21 @@ export function RetentionPopup() {
             <div className="px-5 py-4  flex items-center justify-between ">
               <div className="flex items-center gap-3">
                 {selectedPattern ? (
-                  <button 
+                  <Button variant="ghost" 
+                    aria-label={t("architecture.ui.back")}
                     onClick={() => setSelectedId(null)}
                     className="p-1.5 -ml-1.5 hover:bg-black/5 dark:hover:bg-white/10 rounded-full transition-colors"
                   >
                     <ArrowLeft size={18} className="text-gray-600 dark:text-gray-300" />
-                  </button>
+                  </Button>
                 ) : (
                   <LineChart size={20} className="text-gray-900 dark:text-white" />
                 )}
                 <h3 className="font-medium text-gray-900 dark:text-white">
-                  {selectedPattern ? selectedPattern.title : "Diagnóstico de Retención"}
+                  {selectedPattern ? t(selectedPattern.title) : t("architecture.ui.retentionTitle")}
                 </h3>
               </div>
-              <button
+              <Button variant="ghost"
                 onClick={() => {
                   setIsOpen(false);
                   setTimeout(() => setSelectedId(null), 300);
@@ -153,8 +159,8 @@ export function RetentionPopup() {
                 className="px-4 py-2 rounded-full transition-all hover:bg-gray-50 dark:hover:bg-[#2a2a2a] text-black dark:text-white bg-white dark:bg-[#1a1a1a] shadow-sm border border-slate-200 dark:border-[#333] font-medium text-sm cursor-pointer flex items-center gap-2"
               >
                 <X size={16} strokeWidth={2.5} />
-                Cerrar
-              </button>
+                {t("architecture.ui.close")}
+              </Button>
             </div>
 
             {/* Content */}
@@ -162,27 +168,27 @@ export function RetentionPopup() {
               {!selectedPattern ? (
                 <div className="flex flex-col gap-1">
                   <p className="px-3 pt-2 pb-3 text-sm text-gray-500 dark:text-gray-400">
-                    Selecciona un caso de gráfica para diagnosticar por qué tu video está perdiendo audiencia.
+                    {t("architecture.ui.retentionPrompt")}
                   </p>
                   <div className="grid grid-cols-2 gap-2 px-1 pb-1">
                     {RETENTION_PATTERNS.map((p) => (
-                      <button
+                      <Button variant="ghost"
                         key={p.id}
                         onClick={() => setSelectedId(p.id)}
-                        className={`text-left w-full p-3 rounded-md hover:bg-gray-50 dark:hover:bg-white/5 transition-colors flex flex-col gap-3 group border border-transparent hover:border-slate-100 dark:hover:border-white/5 `}
+                        className={`text-left h-auto whitespace-normal w-full p-3 rounded-md hover:bg-gray-50 dark:hover:bg-white/5 transition-colors flex flex-col items-stretch gap-3 group border border-transparent hover:border-slate-100 dark:hover:border-white/5 `}
                       >
                         <div className={`w-full h-16 shrink-0 bg-white dark:bg-black/20 rounded-md overflow-hidden flex items-center justify-center p-2 border border-slate-100 dark:border-white/5 shadow-sm group-hover:shadow-md transition-shadow`}>
                           {p.svg}
                         </div>
                         <div className="flex flex-col items-start gap-1.5">
                           <span className={`text-[10px] font-semibold px-1.5 py-0.5 rounded  ${p.bgBadge}`}>
-                            {p.badge}
+                            {t(p.badge)}
                           </span>
                           <p className="text-xs font-medium text-gray-900 dark:text-white group-hover:text-[#4059F1] transition-colors leading-snug">
-                            {p.title}
+                            {t(p.title)}
                           </p>
                         </div>
-                      </button>
+                      </Button>
                     ))}
                   </div>
                 </div>
@@ -194,22 +200,22 @@ export function RetentionPopup() {
                   
                   <div>
                     <p className="text-sm text-gray-600 dark:text-gray-300 leading-relaxed">
-                      {selectedPattern.desc}
+                      {t(selectedPattern.desc)}
                     </p>
                   </div>
 
                   <div className="flex flex-col gap-4">
                     <div>
-                      <h4 className="text-xs font-semibold text-gray-400  tracking-wider mb-1">Qué significa</h4>
-                      <p className="text-sm text-gray-900 dark:text-white">{selectedPattern.meaning}</p>
+                      <h4 className="text-xs font-semibold text-gray-400  tracking-wider mb-1">{t("architecture.ui.meaning")}</h4>
+                      <p className="text-sm text-gray-900 dark:text-white">{t(selectedPattern.meaning)}</p>
                     </div>
                     <div>
-                      <h4 className="text-xs font-semibold text-gray-400  tracking-wider mb-1">Causa Típica</h4>
-                      <p className="text-sm text-gray-900 dark:text-white">{selectedPattern.cause}</p>
+                      <h4 className="text-xs font-semibold text-gray-400  tracking-wider mb-1">{t("architecture.ui.cause")}</h4>
+                      <p className="text-sm text-gray-900 dark:text-white">{t(selectedPattern.cause)}</p>
                     </div>
                     <div className="bg-blue-50 dark:bg-blue-900/10 p-3 rounded-md ">
-                      <h4 className="text-xs font-semibold text-blue-600 dark:text-blue-400  tracking-wider mb-1">Qué hacer</h4>
-                      <p className="text-sm text-blue-900 dark:text-blue-100">{selectedPattern.action}</p>
+                      <h4 className="text-xs font-semibold text-blue-600 dark:text-blue-400  tracking-wider mb-1">{t("architecture.ui.action")}</h4>
+                      <p className="text-sm text-blue-900 dark:text-blue-100">{t(selectedPattern.action)}</p>
                     </div>
                   </div>
                 </div>
