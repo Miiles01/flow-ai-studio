@@ -1,0 +1,842 @@
+{
+  "flows": {
+    "tiktok": {
+      "title": "TikTok algorithm (FYP)",
+      "videos": {
+        "0": {
+          "title": "How social media algorithms work today (Víctor Heras Media)",
+          "ariaLabel": "Play video: How social media algorithms work today (Víctor Heras Media)"
+        },
+        "1": {
+          "title": "How the new TikTok algorithm works in 2026 (Alex Arano)",
+          "ariaLabel": "Play video: How the new TikTok algorithm works in 2026 (Alex Arano)"
+        },
+        "2": {
+          "title": "How TikTok's algorithm works in 2026 (Daniel Aguillón)",
+          "ariaLabel": "Play video: How TikTok's algorithm works in 2026 (Daniel Aguillón)"
+        }
+      },
+      "nodes": {
+        "A_TRIAL": {
+          "data": {
+            "tag": "Test",
+            "label": "There is no manual 'Test Mode'",
+            "sublabel": "TikTok automatically tests ALL videos with small batches of viewers (Phase 1).",
+            "details": {
+              "tr1": {
+                "tag": "Fact",
+                "label": "Automated testing",
+                "sublabel": "You do not need a test button; the algorithm already treats each post as an independent test."
+              }
+            }
+          }
+        },
+        "A": {
+          "data": {
+            "tag": "Start",
+            "label": "Post type",
+            "sublabel": "Is it a paid ad or organic content?"
+          }
+        },
+        "A_ADS": {
+          "data": {
+            "tag": "Ads",
+            "label": "Paid ad (Ads)",
+            "sublabel": "Independent of the organic algorithm. Scales through budget (CPA / auctions).",
+            "details": {
+              "ads1": {
+                "tag": "Metric",
+                "label": "CPA & ROAS",
+                "sublabel": "Cost per acquisition and return on ad spend: key metrics for scaling."
+              },
+              "ads2": {
+                "tag": "Metric",
+                "label": "CTR & CPM",
+                "sublabel": "Click-through rate and cost per thousand impressions determine ad efficiency."
+              },
+              "ads3": {
+                "tag": "Tip",
+                "label": "Targeting",
+                "sublabel": "The ad algorithm seeks conversions, not just retention like the organic algorithm."
+              }
+            }
+          }
+        },
+        "A_ORG": {
+          "data": {
+            "tag": "Organic",
+            "label": "Organic content",
+            "sublabel": "Enters the algorithm's test mode for evaluation."
+          }
+        },
+        "S": {
+          "data": {
+            "tag": "Strategies",
+            "label": "What is working now",
+            "sublabel": "View details to see current strategies",
+            "details": {
+              "s1": {
+                "tag": "Strategy",
+                "label": "7–15-second videos",
+                "sublabel": "Maximize completion rate and loops. Ideal for early growth."
+              },
+              "s2": {
+                "tag": "Strategy",
+                "label": "Seamless loop",
+                "sublabel": "Connect the ending to the opening: viewers watch 2–3 times without noticing."
+              },
+              "s3": {
+                "tag": "Strategy",
+                "label": "Content series",
+                "sublabel": "Parts 1, 2, 3… drive profile searches and longer sessions."
+              },
+              "s4": {
+                "tag": "Strategy",
+                "label": "The first 3 words",
+                "sublabel": "Say them aloud and display them as text: TikTok indexes them for search (SEO)."
+              }
+            }
+          }
+        },
+        "B": {
+          "data": {
+            "tag": "Phase 1",
+            "label": "The algorithm classifies it",
+            "sublabel": "Audio, on-screen text, hashtags and topic determine who sees it"
+          }
+        },
+        "C": {
+          "data": {
+            "tag": "Phase 2 · Round 1",
+            "label": "Shown to ~100–500 people",
+            "sublabel": "A small sample of relevant viewers sees it in their FYP. Everything is measured here.",
+            "details": {
+              "c1": {
+                "tag": "Signal",
+                "label": "3-second retention",
+                "sublabel": "Do viewers swipe or stay? If most scroll before second 3, there is no round 2."
+              },
+              "c2": {
+                "tag": "Signal",
+                "label": "Early likes and comments",
+                "sublabel": "Reactions from this small sample carry more weight: every like matters."
+              },
+              "c3": {
+                "tag": "Signal",
+                "label": "Shares and saves",
+                "sublabel": "The hardest signals to earn: worth more than any like."
+              }
+            }
+          }
+        },
+        "D": {
+          "data": {
+            "tag": "Decision",
+            "label": "Did the sample respond better than to similar videos?",
+            "details": {
+              "d1_tk": {
+                "tag": "Concept drift",
+                "label": "Short-lived interests",
+                "sublabel": "TikTok assumes a user's interests change within minutes. If your video matches the moment's exact trend, it scales quickly."
+              }
+            }
+          }
+        },
+        "E": {
+          "data": {
+            "tag": "Outcome",
+            "label": "Distribution stops",
+            "sublabel": "Your account is not penalized: the next video starts from scratch"
+          }
+        },
+        "F": {
+          "data": {
+            "tag": "Phase 3 · Round 2",
+            "label": "Scales to ~1,000–5,000 people",
+            "sublabel": "A larger, more diverse audience; the same measurements repeat"
+          }
+        },
+        "G": {
+          "data": {
+            "tag": "Decision",
+            "label": "Do the signals hold up as reach grows?",
+            "details": {
+              "g1": {
+                "tag": "Metric",
+                "label": "Engagement benchmark",
+                "sublabel": "Above 6–8% engagement in the seed round often scales. Below 3%, it is harder."
+              },
+              "g2": {
+                "tag": "Tip",
+                "label": "Reply to comments with video",
+                "sublabel": "Each reply restarts the original video's distribution cycle."
+              }
+            }
+          }
+        },
+        "H": {
+          "data": {
+            "tag": "Outcome",
+            "label": "Growing rounds: 10K → 100K → 1M",
+            "sublabel": "Each round repeats the test. As long as it keeps winning, it keeps scaling."
+          }
+        }
+      },
+      "edges": {
+        "eA-ADS": {
+          "label": "Paid ad"
+        },
+        "eA-TRIAL": {
+          "label": "Test mode"
+        },
+        "eA-ORG": {
+          "label": "Organic"
+        },
+        "eD-E": {
+          "label": "No"
+        },
+        "eD-F": {
+          "label": "Yes"
+        },
+        "eG-E": {
+          "label": "No"
+        },
+        "eG-H": {
+          "label": "Yes"
+        },
+        "eH-G": {
+          "label": "Loop"
+        }
+      }
+    },
+    "instagram": {
+      "title": "Trial Reels (Instagram)",
+      "videos": {
+        "0": {
+          "title": "Exposing Instagram's new 2026 algorithm (Víctor Heras Media)",
+          "ariaLabel": "Play video: Exposing Instagram's new 2026 algorithm (Víctor Heras Media)"
+        },
+        "1": {
+          "title": "The only way to beat the algorithm in 2026 (Víctor Heras Media)",
+          "ariaLabel": "Play video: The only way to beat the algorithm in 2026 (Víctor Heras Media)"
+        },
+        "2": {
+          "title": "The latest algorithm update, September 2026 (Robert Benjamin)",
+          "ariaLabel": "Play video: The latest algorithm update, September 2026 (Robert Benjamin)"
+        }
+      },
+      "nodes": {
+        "A": {
+          "data": {
+            "tag": "Start",
+            "label": "Post type",
+            "sublabel": "Is it a paid ad or organic content?"
+          }
+        },
+        "A_ADS": {
+          "data": {
+            "tag": "Ads",
+            "label": "Paid ad (Ads)",
+            "sublabel": "Independent of the organic algorithm. Scales through budget (CPA / auctions).",
+            "details": {
+              "ads1": {
+                "tag": "Metric",
+                "label": "CPA & ROAS",
+                "sublabel": "Cost per acquisition and return on ad spend: key metrics for scaling."
+              },
+              "ads2": {
+                "tag": "Metric",
+                "label": "CTR & CPM",
+                "sublabel": "Click-through rate and cost per thousand impressions determine ad efficiency."
+              },
+              "ads3": {
+                "tag": "Tip",
+                "label": "Targeting",
+                "sublabel": "The ad algorithm seeks conversions, not just retention like the organic algorithm."
+              }
+            }
+          }
+        },
+        "A_ORG": {
+          "data": {
+            "tag": "Organic",
+            "label": "Organic content",
+            "sublabel": "Enters the algorithm's test mode for evaluation."
+          }
+        },
+        "S": {
+          "data": {
+            "tag": "Strategies",
+            "label": "What is working now",
+            "sublabel": "View details to see current strategies",
+            "details": {
+              "s1": {
+                "tag": "Strategy",
+                "label": "Post 3–5 trial reels per week",
+                "sublabel": "Trials do not fatigue your audience: test variations confidently."
+              },
+              "s2": {
+                "tag": "Strategy",
+                "label": "Remix your winners",
+                "sublabel": "When a trial takes off, create 2–3 variations of the same angle."
+              },
+              "s3": {
+                "tag": "Strategy",
+                "label": "Large text + b-roll",
+                "sublabel": "A format that is performing well: a strong statement over moving footage."
+              },
+              "s4": {
+                "tag": "Strategy",
+                "label": "Trending audio",
+                "sublabel": "Use it within the first 24 hours of the trend; momentum fades afterward."
+              }
+            }
+          }
+        },
+        "PLUS": {
+          "data": {
+            "tag": "Subscription",
+            "label": "Instagram Plus",
+            "sublabel": "Paid subscription with exclusive visibility and control tools.",
+            "details": {
+              "p1": {
+                "tag": "Reach",
+                "label": "Featured stories",
+                "sublabel": "Your stories appear first in the feed and last 48 hours (24 extra hours)."
+              },
+              "p2": {
+                "tag": "Privacy",
+                "label": "Secret preview",
+                "sublabel": "Watch other people's stories without appearing in their viewer list."
+              },
+              "p3": {
+                "tag": "Data",
+                "label": "Advanced analytics",
+                "sublabel": "See exactly how many times and who rewatched your story."
+              },
+              "p4": {
+                "tag": "Control",
+                "label": "Audiences and profile",
+                "sublabel": "Unlimited audience lists, extra pins and exclusive fonts."
+              }
+            }
+          }
+        },
+        "B": {
+          "data": {
+            "tag": "Phase 1 · Round 1",
+            "label": "Trial audience: ~100–1,000 non-followers",
+            "sublabel": "Instagram shows it to relevant people who do NOT follow you"
+          }
+        },
+        "C": {
+          "data": {
+            "tag": "Phase 2",
+            "label": "Critical window: ~90 minutes",
+            "sublabel": "Early performance determines whether the reel scales or stalls"
+          }
+        },
+        "D": {
+          "data": {
+            "tag": "Decision",
+            "label": "Does it retain viewers and generate engagement in the trial?",
+            "details": {
+              "d1": {
+                "tag": "Signal",
+                "label": "3-second retention",
+                "sublabel": "Percentage of people watching past second 3. A healthy benchmark: 60% or more."
+              },
+              "d2": {
+                "tag": "Signal",
+                "label": "Early engagement",
+                "sublabel": "Likes and comments from the sample; Instagram compares them with similar reels."
+              },
+              "d3": {
+                "tag": "Tip",
+                "label": "How to improve the hook",
+                "sublabel": "Movement + large text in the first frame. No intros: get straight to the value."
+              }
+            }
+          }
+        },
+        "E": {
+          "data": {
+            "tag": "Outcome",
+            "label": "Limited distribution",
+            "sublabel": "The reel stays within the test group. Adjust the hook and try again."
+          }
+        },
+        "F": {
+          "data": {
+            "tag": "Decision · Round 2",
+            "label": "Does it generate DMs and shares? (dark social)",
+            "details": {
+              "f1": {
+                "tag": "Signal",
+                "label": "Dark social",
+                "sublabel": "DMs and shares carry more weight than likes: a signal of real value between friends."
+              },
+              "f2": {
+                "tag": "Metric",
+                "label": "Shares-to-reach ratio",
+                "sublabel": "1 share per 100 views is already a strong signal to expand distribution."
+              },
+              "f3": {
+                "tag": "Tip",
+                "label": "An effective CTA",
+                "sublabel": "\"Send this to someone who…\" — directly asking for a share amplifies dark social."
+              }
+            }
+          }
+        },
+        "G": {
+          "data": {
+            "tag": "Outcome",
+            "label": "Explore & recommendations",
+            "sublabel": "Enters the large-scale ML system: Two-Tower Neural Network (FAISS) + MTML ranking.",
+            "details": {
+              "g1": {
+                "tag": "Architecture",
+                "label": "Two-Tower Model",
+                "sublabel": "Two neural networks (one for you, one for the post) map content using embeddings computed offline."
+              },
+              "g2": {
+                "tag": "Calculation",
+                "label": "Value Model (VM)",
+                "sublabel": "Score = W_click × P(click) + W_like × P(like) − W_seeless × P(see less)."
+              },
+              "g3": {
+                "tag": "Integrity",
+                "label": "Feed diversity",
+                "sublabel": "Strict rule: never shows more than 3 consecutive posts from the same account."
+              }
+            }
+          }
+        }
+      },
+      "edges": {
+        "eA-ADS": {
+          "label": "Paid ad"
+        },
+        "eA-TRIAL": {
+          "label": "Test mode"
+        },
+        "eA-ORG": {
+          "label": "Organic"
+        },
+        "eD-E": {
+          "label": "No"
+        },
+        "eD-F": {
+          "label": "Yes"
+        },
+        "eF-E": {
+          "label": "Weak"
+        },
+        "eF-G": {
+          "label": "Strong"
+        }
+      }
+    },
+    "facebook": {
+      "title": "Facebook EdgeRank",
+      "videos": {
+        "0": {
+          "title": "How social media algorithms work today (Víctor Heras Media)",
+          "ariaLabel": "Play video: How social media algorithms work today (Víctor Heras Media)"
+        }
+      },
+      "nodes": {
+        "A_TRIAL": {
+          "data": {
+            "tag": "Test",
+            "label": "A/B testing for Reels / posts",
+            "sublabel": "Facebook lets you test variations (text, video) through Creator Studio.",
+            "details": {
+              "tr1": {
+                "tag": "Creator Studio",
+                "label": "Controlled tests",
+                "sublabel": "You can launch up to 4 variations and Facebook distributes the winner."
+              }
+            }
+          }
+        },
+        "A": {
+          "data": {
+            "tag": "Start",
+            "label": "You publish content",
+            "sublabel": "Enters the inventory available to your community"
+          }
+        },
+        "A_ADS": {
+          "data": {
+            "tag": "Ads",
+            "label": "Paid ad (Meta Ads)",
+            "sublabel": "Competes in auctions through Meta's algorithm, which evaluates each candidate's total value.",
+            "details": {
+              "ads1": {
+                "tag": "Auction",
+                "label": "Total value formula",
+                "sublabel": "Total value = (Bid × Estimated action rate) + Ad quality."
+              },
+              "ads2": {
+                "tag": "AI",
+                "label": "Learning phase",
+                "sublabel": "The ad set needs ~50 stable conversion events in 7 days to optimize."
+              },
+              "ads3": {
+                "tag": "Tip",
+                "label": "Advantage+ & liquidity",
+                "sublabel": "Meta recommends broad audiences and campaign-level budgets to give ML flexibility."
+              }
+            }
+          }
+        },
+        "A_ORG": {
+          "data": {
+            "tag": "Organic",
+            "label": "Organic content",
+            "sublabel": "Enters the algorithm's test mode for evaluation."
+          }
+        },
+        "S": {
+          "data": {
+            "tag": "Strategies",
+            "label": "What is working now",
+            "sublabel": "View details to see current strategies",
+            "details": {
+              "s1": {
+                "tag": "Strategy",
+                "label": "Content that starts conversations",
+                "sublabel": "Meaningful interactions (long comments) boost reach."
+              },
+              "s2": {
+                "tag": "Strategy",
+                "label": "Native video + Facebook Reels",
+                "sublabel": "Facebook strongly favors its own player over external links."
+              },
+              "s3": {
+                "tag": "Strategy",
+                "label": "Groups and community",
+                "sublabel": "Content from active groups almost always appears near the top of the feed."
+              }
+            }
+          }
+        },
+        "B": {
+          "data": {
+            "tag": "Phase 1",
+            "label": "Network inventory",
+            "sublabel": "Posts from friends, Pages and Groups. Excludes content that violates rules. Ads and recommendations are handled separately."
+          }
+        },
+        "C": {
+          "data": {
+            "tag": "Phase 2",
+            "label": "Lightweight shortlist (~500 posts)",
+            "sublabel": "A fast model narrows thousands of posts to the 500 most relevant using key signals.",
+            "details": {
+              "c1": {
+                "tag": "Signal",
+                "label": "Active signals",
+                "sublabel": "Comments, shares and reactions: the most heavily weighted signals."
+              },
+              "c2": {
+                "tag": "Signal",
+                "label": "Passive signals",
+                "sublabel": "Watch time and clicks: lower weight, but they still contribute."
+              }
+            }
+          }
+        },
+        "D": {
+          "data": {
+            "tag": "Phase 3",
+            "label": "Generative ranking (GEM)",
+            "sublabel": "A large foundation model predicts the precise engagement and conversion value of that shortlist."
+          }
+        },
+        "E": {
+          "data": {
+            "tag": "Phase 4",
+            "label": "Relevancy score",
+            "sublabel": "Each post receives a personalized score for each user"
+          }
+        },
+        "F": {
+          "data": {
+            "tag": "Outcome",
+            "label": "Ranked feed",
+            "sublabel": "Sorted from highest to lowest score, mixed with ads"
+          }
+        }
+      },
+      "edges": {
+        "eA-ADS": {
+          "label": "Paid ad"
+        },
+        "eA-TRIAL": {
+          "label": "Test mode"
+        },
+        "eA-ORG": {
+          "label": "Organic"
+        }
+      }
+    },
+    "youtube": {
+      "title": "YouTube Shorts",
+      "videos": {
+        "0": {
+          "title": "YouTube changed its algorithm in 2026: how it works now (Edu Serrano)",
+          "ariaLabel": "Play video: YouTube changed its algorithm in 2026: how it works now (Edu Serrano)"
+        },
+        "1": {
+          "title": "A complete guide to YouTube's algorithm in 2026 (vidIQ)",
+          "ariaLabel": "Play video: A complete guide to YouTube's algorithm in 2026 (vidIQ)"
+        },
+        "2": {
+          "title": "How YouTube's new algorithm works in 2026 (Pol Tenas)",
+          "ariaLabel": "Play video: How YouTube's new algorithm works in 2026 (Pol Tenas)"
+        }
+      },
+      "nodes": {
+        "A": {
+          "data": {
+            "tag": "Start",
+            "label": "Post type",
+            "sublabel": "Is it a paid ad or organic content?"
+          }
+        },
+        "A_ADS": {
+          "data": {
+            "tag": "Ads",
+            "label": "Paid ad (Ads)",
+            "sublabel": "Independent of the organic algorithm. Scales through budget (CPA / auctions).",
+            "details": {
+              "ads1": {
+                "tag": "Metric",
+                "label": "CPA & ROAS",
+                "sublabel": "Cost per acquisition and return on ad spend: key metrics for scaling."
+              },
+              "ads2": {
+                "tag": "Metric",
+                "label": "CTR & CPM",
+                "sublabel": "Click-through rate and cost per thousand impressions determine ad efficiency."
+              },
+              "ads3": {
+                "tag": "Tip",
+                "label": "Targeting",
+                "sublabel": "The ad algorithm seeks conversions, not just retention like the organic algorithm."
+              }
+            }
+          }
+        },
+        "A_ORG": {
+          "data": {
+            "tag": "Organic",
+            "label": "Organic content",
+            "sublabel": "Distribution is based on initial CTR (viewed vs. swiped away)."
+          }
+        },
+        "S": {
+          "data": {
+            "tag": "Strategies",
+            "label": "What is working now",
+            "sublabel": "View details to see current strategies",
+            "details": {
+              "s1": {
+                "tag": "Strategy",
+                "label": "50–60 seconds",
+                "sublabel": "A high-performing length: a complete story without filler."
+              },
+              "s2": {
+                "tag": "Strategy",
+                "label": "Connect Shorts to your channel",
+                "sublabel": "Shorts that lead to long-form videos turn viewers into subscribers."
+              },
+              "s3": {
+                "tag": "Strategy",
+                "label": "Search-friendly titles",
+                "sublabel": "Shorts are indexed: use the exact phrase your audience would search for."
+              }
+            }
+          }
+        },
+        "B": {
+          "data": {
+            "tag": "Phase 1 · Round 1",
+            "label": "Candidate generation (Recall)",
+            "sublabel": "A neural network narrows millions of videos to hundreds of candidates using watch history, searches and demographics.",
+            "details": {
+              "b1_yt": {
+                "tag": "ML",
+                "label": "Nearest neighbor search",
+                "sublabel": "Finds videos relevant to you in a huge embedding space, extremely quickly."
+              }
+            }
+          }
+        },
+        "C": {
+          "data": {
+            "tag": "Decision",
+            "label": "Viewed or swiped away?",
+            "details": {
+              "c1": {
+                "tag": "Metric",
+                "label": "Viewed vs. swiped",
+                "sublabel": "The key Shorts metric: the percentage who choose to stay after seeing the first frame."
+              },
+              "c2": {
+                "tag": "Tip",
+                "label": "The first frame",
+                "sublabel": "Treat it like a thumbnail: clear composition and readable text."
+              }
+            }
+          }
+        },
+        "D": {
+          "data": {
+            "tag": "Outcome",
+            "label": "Short stalls",
+            "sublabel": "High swipe-away rate: the feed stops showing it"
+          }
+        },
+        "E": {
+          "data": {
+            "tag": "Phase 2 · Round 2",
+            "label": "Deep ranking (Precision)",
+            "sublabel": "A second neural network ranks the candidates. It optimizes expected watch time, not clicks.",
+            "details": {
+              "e1_yt": {
+                "tag": "ML",
+                "label": "Freshness reward",
+                "sublabel": "The model uses the video's age as a feature to avoid only recommending older videos with many views."
+              }
+            }
+          }
+        },
+        "F": {
+          "data": {
+            "tag": "Decision",
+            "label": "High viewer satisfaction?",
+            "details": {
+              "f1": {
+                "tag": "Metric",
+                "label": "Satisfaction surveys",
+                "sublabel": "YouTube asks viewers directly and adjusts distribution based on their answers."
+              },
+              "f2": {
+                "tag": "Metric",
+                "label": "Continued viewing session",
+                "sublabel": "If viewers keep watching after your Short, the system rewards you."
+              }
+            }
+          }
+        },
+        "G": {
+          "data": {
+            "tag": "Outcome",
+            "label": "Evergreen library",
+            "sublabel": "Resurfaces through seasonal peaks and searches for months"
+          }
+        }
+      },
+      "edges": {
+        "eA-ADS": {
+          "label": "Paid ad"
+        },
+        "eA-TRIAL": {
+          "label": "Test mode"
+        },
+        "eA-ORG": {
+          "label": "Organic"
+        },
+        "eC-D": {
+          "label": "≥70% swipe away"
+        },
+        "eC-E": {
+          "label": "Retains viewers"
+        },
+        "eF-D": {
+          "label": "No"
+        },
+        "eF-G": {
+          "label": "Yes"
+        }
+      }
+    }
+  },
+  "patterns": {
+    "1": {
+      "badge": "Case 1",
+      "title": "Weak hook",
+      "desc": "A sharp drop in the first 1–3 seconds, then the curve flattens.",
+      "meaning": "Viewers who stayed through the opening are engaged and keep watching.",
+      "cause": "A weak hook, a long introduction or a confusing title.",
+      "action": "Cut the intro. Get straight to the action in the first second."
+    },
+    "2": {
+      "badge": "Case 2",
+      "title": "Weak hook + weak structure",
+      "desc": "A sharp initial drop, followed by a continued decline without leveling off.",
+      "meaning": "Beyond the weak hook, the content also fails to hold the viewers who stayed.",
+      "cause": "Slow pacing, tangents or a lack of hooks throughout the video.",
+      "action": "Fix the opening first, then restructure the rest."
+    },
+    "3": {
+      "badge": "Case 3",
+      "title": "Weak ending",
+      "desc": "Steady retention through most of the video, followed by a steep drop at the end.",
+      "meaning": "The content works well up to a point, but the ending disappoints.",
+      "cause": "A generic CTA, a dull recap or a weak payoff.",
+      "action": "Try endings that hook viewers into your next piece of content."
+    },
+    "4": {
+      "badge": "Case 4",
+      "title": "Unmet expectations",
+      "desc": "A steady decline throughout the video, with no clear flat stretch.",
+      "meaning": "The hook promised something the rest of the content does not deliver at the same level.",
+      "cause": "A gap between the hook’s promise and the actual value.",
+      "action": "Align the hook with what you will actually deliver."
+    },
+    "5": {
+      "badge": "Case 5",
+      "title": "Strong video",
+      "desc": "A small initial drop and a nearly flat curve for the rest of the video.",
+      "meaning": "The hook worked and the content holds interest from start to finish.",
+      "cause": "A clear promise from the first second + consistent pacing and value.",
+      "action": "Identify exactly what worked and repeat the formula."
+    }
+  },
+  "ui": {
+    "title": "Algorithmic architecture",
+    "description": "Interactive diagram explaining how the {{network}} algorithm works.",
+    "selectedNetwork": "selected network",
+    "close": "Close",
+    "suggest": "Suggest ideas",
+    "unavailable": "The architecture diagram is not available for this network",
+    "showDetails": "Show details",
+    "hideDetails": "Hide details",
+    "playVideo": "Play video: {{title}}",
+    "video": "Video",
+    "closeExpanded": "Close expanded view",
+    "expandVideo": "Expand video",
+    "reduceVideo": "Reduce video",
+    "closeVideo": "Close video",
+    "suggestionDescription": "Share an idea or insight to improve the algorithmic architecture.",
+    "suggestionDescriptionNetwork": "Share an idea or insight to improve the algorithmic architecture for {{network}}.",
+    "suggestionPlaceholder": "Write your suggestion, idea or insight here…",
+    "sendSuggestion": "Send suggestion",
+    "cancel": "Cancel",
+    "signInSuggestion": "Sign in to send your suggestion",
+    "suggestionError": "Your suggestion could not be sent",
+    "suggestionSuccess": "Thank you! We received your suggestion",
+    "retention": "Retention",
+    "retentionTitle": "Retention diagnosis",
+    "retentionPrompt": "Select a graph pattern to diagnose why your video is losing viewers.",
+    "meaning": "What it means",
+    "cause": "Typical cause",
+    "action": "What to do",
+    "back": "Back to patterns"
+  }
+}
