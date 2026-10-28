@@ -6,6 +6,10 @@ import { useAuth } from "@/contexts/AuthContext";
 import { toast } from "sonner";
 import logotipoSvg from "@/assets/miiles/logotipo.svg";
 
+import i18nInstance from "@/i18n";
+import { useTranslation as useBoardsT } from "react-i18next";
+const bt = (k: string, o?: Record<string, unknown>): string => i18nInstance.t(k, o) as string;
+
 type PublicFlow = {
   id: string;
   name: string;
@@ -13,6 +17,7 @@ type PublicFlow = {
 };
 
 const JoinFlow = () => {
+  useBoardsT();
   const { token } = useParams();
   const navigate = useNavigate();
   const { user, loading: authLoading } = useAuth();
@@ -44,11 +49,11 @@ const JoinFlow = () => {
       .rpc("join_flow_by_token", { p_token: token })
       .then(({ data, error }) => {
         if (error) {
-          toast.error("No se pudo agregar el tablero");
+          toast.error(bt("boards.joinFailed"));
           navigate("/boards");
           return;
         }
-        toast.success("Tablero agregado a tu cuenta");
+        toast.success(bt("boards.joined"));
         navigate(`/boards/${data as string}`, { replace: true });
       });
   }, [authLoading, loading, flow, user, token, navigate]);
@@ -65,15 +70,15 @@ const JoinFlow = () => {
     return (
       <div className="w-screen h-screen flex items-center justify-center bg-background px-6">
         <div className="text-center">
-          <h1 className="text-2xl font-normal mb-2">Tablero no disponible</h1>
+          <h1 className="text-2xl font-normal mb-2">{bt("boards.unavailable")}</h1>
           <p className="text-sm font-light text-miiles-gray-400 mb-6">
-            Este enlace ya no es válido o el tablero fue marcado como privado.
+            {bt("boards.invalidLink")}
           </p>
           <button
             onClick={() => navigate("/")}
             className="px-5 py-2 rounded-full bg-black text-white text-sm font-light hover:bg-miiles-pink transition-colors"
           >
-            Ir al inicio
+            {bt("boards.goHome")}
           </button>
         </div>
       </div>
@@ -86,11 +91,10 @@ const JoinFlow = () => {
       <div className="max-w-md w-full text-center">
         <img src={logotipoSvg} alt="miiles" className="h-6 mx-auto mb-10 opacity-80" />
         <h1 className="text-[26px] font-normal tracking-tight mb-2">
-          {flow?.name || "Tablero compartido"}
+          {flow?.name || bt("boards.sharedBoard")}
         </h1>
         <p className="text-[13px] font-light text-miiles-gray-400 mb-8">
-          Te invitaron a colaborar en este tablero como{" "}
-          {flow?.public_role === "editor" ? "editor" : "lector"}.
+          {bt("boards.invitedAs", { role: bt(flow?.public_role === "editor" ? "boards.roleEditor" : "boards.roleViewer") })}
         </p>
 
         <div className="flex flex-col gap-3">
@@ -100,7 +104,7 @@ const JoinFlow = () => {
             }
             className="w-full h-12 rounded-full bg-black text-white text-sm font-normal hover:bg-[#1F2937] transition-colors flex items-center justify-center gap-2"
           >
-            Entrar como invitado
+            {bt("boards.joinAsGuest")}
             <ArrowRight size={16} />
           </button>
           <button
@@ -110,7 +114,7 @@ const JoinFlow = () => {
             className="w-full h-12 rounded-full bg-[#F3F4F6] text-black text-sm font-light hover:bg-[#E5E7EB] transition-colors flex items-center justify-center gap-2"
           >
             <UserPlus size={16} />
-            Iniciar sesión y guardar en mis tableros
+            {bt("boards.signInAndSave")}
           </button>
         </div>
       </div>

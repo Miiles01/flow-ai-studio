@@ -4,6 +4,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { MousePointer, Hand, Type, ListTodo, ImageIcon, SquareDashed, Plus } from "lucide-react";
 import { Tooltip, TooltipContent, TooltipTrigger } from "@/components/ui/tooltip";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useTranslation } from "react-i18next";
+import i18nInstance from "@/i18n";
+const bt = (k: string, o?: Record<string, unknown>): string => i18nInstance.t(k, o) as string;
 
 type ToolbarProps = {
   onAddNode: (type: string) => void;
@@ -16,7 +19,7 @@ type ToolbarProps = {
 const SHAPES = [
   {
     id: "square",
-    label: "Rectángulo",
+    label: "Rectángulo", labelKey: "boards.shape_rect",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-[18px] h-[18px]">
         <rect x="2" y="2" width="20" height="20" rx="3" />
@@ -25,7 +28,7 @@ const SHAPES = [
   },
   {
     id: "circle",
-    label: "Círculo",
+    label: "Círculo", labelKey: "boards.shape_circle",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-[18px] h-[18px]">
         <circle cx="12" cy="12" r="10" />
@@ -34,7 +37,7 @@ const SHAPES = [
   },
   {
     id: "diamond",
-    label: "Rombo",
+    label: "Rombo", labelKey: "boards.shape_diamond",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-[18px] h-[18px]">
         <polygon points="12,2 22,12 12,22 2,12" />
@@ -43,7 +46,7 @@ const SHAPES = [
   },
   {
     id: "triangle",
-    label: "Triángulo",
+    label: "Triángulo", labelKey: "boards.shape_triangle",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-[18px] h-[18px]">
         <polygon points="12,2 22,22 2,22" />
@@ -52,7 +55,7 @@ const SHAPES = [
   },
   {
     id: "hexagon",
-    label: "Hexágono",
+    label: "Hexágono", labelKey: "boards.shape_hexagon",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-[18px] h-[18px]">
         <polygon points="12,2 21,7 21,17 12,22 3,17 3,7" />
@@ -61,7 +64,7 @@ const SHAPES = [
   },
   {
     id: "star",
-    label: "Estrella",
+    label: "Estrella", labelKey: "boards.shape_star",
     icon: (
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-[18px] h-[18px]">
         <polygon points="12,2 15,9 22,9 17,14 19,21 12,17 5,21 7,14 2,9 9,9" />
@@ -96,6 +99,7 @@ const Toolbar = ({
   const barRef = useRef<HTMLDivElement>(null);
   const shapesButtonRef = useRef<HTMLButtonElement>(null);
   const { isDark } = useTheme();
+  useTranslation();
 
   /* Detección de proximidad suave para expandir antes de tocar el borde exacto */
   useEffect(() => {
@@ -210,7 +214,7 @@ const Toolbar = ({
             sideOffset={12}
             className="text-[12px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light"
           >
-            Seleccionar
+            {bt("boards.select")}
           </TooltipContent>
         </Tooltip>
 
@@ -240,7 +244,7 @@ const Toolbar = ({
             sideOffset={12}
             className="text-[12px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light"
           >
-            Navegar
+            {bt("boards.pan")}
           </TooltipContent>
         </Tooltip>
 
@@ -278,7 +282,7 @@ const Toolbar = ({
                           ? "hover:bg-white/10 text-[#9CA3AF] hover:text-white"
                           : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
                       }`}
-                      aria-label="Elementos y formas"
+                      aria-label={bt("boards.elements")}
                     >
                       <Plus size={19} strokeWidth={1.75} />
                     </button>
@@ -288,7 +292,7 @@ const Toolbar = ({
                     sideOffset={12}
                     className="text-[12px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light"
                   >
-                    Elementos y formas
+                    {bt("boards.elements")}
                   </TooltipContent>
                 </Tooltip>
               </motion.div>
@@ -343,7 +347,7 @@ const Toolbar = ({
                       sideOffset={12}
                       className="text-[12px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light"
                     >
-                      Formas
+                      {bt("boards.shapes")}
                     </TooltipContent>
                   </Tooltip>
                 </div>
@@ -378,7 +382,7 @@ const Toolbar = ({
                     sideOffset={12}
                     className="text-[12px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light"
                   >
-                    Texto
+                    {bt("boards.text")}
                   </TooltipContent>
                 </Tooltip>
 
@@ -412,7 +416,7 @@ const Toolbar = ({
                     sideOffset={12}
                     className="text-[12px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light"
                   >
-                    Lista de Tareas
+                    {bt("boards.taskList")}
                   </TooltipContent>
                 </Tooltip>
 
@@ -446,7 +450,7 @@ const Toolbar = ({
                     sideOffset={12}
                     className="text-[12px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light"
                   >
-                    Imagen
+                    {bt("boards.image")}
                   </TooltipContent>
                 </Tooltip>
 
@@ -480,7 +484,7 @@ const Toolbar = ({
                     sideOffset={12}
                     className="text-[12px] bg-black text-white border-none rounded-full px-3 py-1.5 font-light"
                   >
-                    Sección
+                    {bt("boards.section")}
                   </TooltipContent>
                 </Tooltip>
               </motion.div>
@@ -520,7 +524,7 @@ const Toolbar = ({
                         setInteractionMode("edit");
                         setFlyoutOpen(false);
                       }}
-                      title={shape.label}
+                      title={bt((shape as { labelKey?: string }).labelKey ?? "", { defaultValue: shape.label })}
                       className={`w-11 h-11 flex items-center justify-center rounded-xl transition-all ${
                         selectedShape === shape.id
                           ? "bg-white text-black "
