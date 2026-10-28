@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { useTranslation } from "react-i18next";
 import { Maximize2, Minimize2, X } from "lucide-react";
 import { motion, useReducedMotion } from "framer-motion";
 import { Button } from "@/components/ui/button";
@@ -12,6 +13,7 @@ type Props = {
 };
 
 export default function TrendVideoPlayer({ title, embedUrl, expanded, onExpandedChange, onClose }: Props) {
+  const { t } = useTranslation();
   const closeButtonRef = useRef<HTMLButtonElement>(null);
   const reducedMotion = useReducedMotion();
 
@@ -25,7 +27,7 @@ export default function TrendVideoPlayer({ title, embedUrl, expanded, onExpanded
         <Button
           type="button"
           variant="ghost"
-          aria-label="Cerrar vista ampliada"
+          aria-label={t("architecture.ui.closeExpanded")}
           className="absolute inset-0 z-40 h-auto w-auto rounded-none bg-foreground/45 p-0 hover:translate-y-0 hover:bg-foreground/45"
           onClick={() => onExpandedChange(false)}
           onPointerDown={(event) => event.stopPropagation()}
@@ -56,8 +58,8 @@ export default function TrendVideoPlayer({ title, embedUrl, expanded, onExpanded
               variant="ghost"
               size="icon"
               onClick={() => onExpandedChange(!expanded)}
-              aria-label={expanded ? "Reducir video" : "Ampliar video"}
-              title={expanded ? "Reducir video" : "Ampliar video"}
+              aria-label={t(expanded ? "architecture.ui.reduceVideo" : "architecture.ui.expandVideo")}
+              title={t(expanded ? "architecture.ui.reduceVideo" : "architecture.ui.expandVideo")}
               className="size-9 rounded-full hover:translate-y-0"
             >
               {expanded ? <Minimize2 size={17} /> : <Maximize2 size={17} />}
@@ -68,8 +70,8 @@ export default function TrendVideoPlayer({ title, embedUrl, expanded, onExpanded
               variant="ghost"
               size="icon"
               onClick={onClose}
-              aria-label="Cerrar video"
-              title="Cerrar video"
+              aria-label={t("architecture.ui.closeVideo")}
+              title={t("architecture.ui.closeVideo")}
               className="size-9 rounded-full hover:translate-y-0"
             >
               <X size={18} />
