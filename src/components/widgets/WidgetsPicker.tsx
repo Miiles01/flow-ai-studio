@@ -4,6 +4,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Search, X } from "lucide-react";
 import { WIDGETS, type WidgetDef } from "./registry";
 import { useTheme } from "@/contexts/ThemeContext";
+import { useTranslation } from "react-i18next";
+import i18nInstance from "@/i18n";
+const bt = (k: string, o?: Record<string, unknown>): string => i18nInstance.t(k, o) as string;
 
 type Props = {
   open: boolean;
@@ -13,6 +16,7 @@ type Props = {
 
 const WidgetsPicker = ({ open, onClose, onPick }: Props) => {
   const { isDark } = useTheme();
+  useTranslation();
   const [query, setQuery] = useState("");
 
   useEffect(() => {
@@ -28,10 +32,12 @@ const WidgetsPicker = ({ open, onClose, onPick }: Props) => {
     if (!open) setQuery("");
   }, [open]);
 
+  const wName = (w: WidgetDef) => bt(`boards.w_${w.id.replace(/-/g, "_")}_name`, { defaultValue: w.name });
+  const wDesc = (w: WidgetDef) => bt(`boards.w_${w.id.replace(/-/g, "_")}_desc`, { defaultValue: w.description });
   const filtered = WIDGETS.filter((w) => {
     const q = query.trim().toLowerCase();
     if (!q) return true;
-    return w.name.toLowerCase().includes(q) || w.description.toLowerCase().includes(q);
+    return wName(w).toLowerCase().includes(q) || wDesc(w).toLowerCase().includes(q);
   });
 
   if (typeof document === "undefined") return null;
@@ -68,7 +74,7 @@ const WidgetsPicker = ({ open, onClose, onPick }: Props) => {
                   autoFocus
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Buscar widgets…"
+                  placeholder={bt("boards.searchWidgets")}
                   className={`flex-1 bg-transparent border-none outline-none text-[14px] font-light ${
                     isDark ? "text-white placeholder:text-white/40" : "text-black placeholder:text-neutral-400"
                   }`}
@@ -78,9 +84,9 @@ const WidgetsPicker = ({ open, onClose, onPick }: Props) => {
                   className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-colors text-sm font-medium ${
                     isDark ? "bg-white/10 hover:bg-white/20 text-white" : "bg-black/5 hover:bg-black/10 text-black"
                   }`}
-                  aria-label="Cerrar"
+                  aria-label={bt("boards.close")}
                 >
-                  <span>Cerrar</span>
+                  <span>{bt("boards.close")}</span>
                   <X size={14} />
                 </button>
               </div>
@@ -126,9 +132,9 @@ const WidgetsPicker = ({ open, onClose, onPick }: Props) => {
                           >
                             <Icon size={18} strokeWidth={1.5} />
                           </div>
-                          <div className={`text-[14px] font-normal mb-0.5 ${isDark ? "text-white" : "text-black"}`}>{w.name}</div>
+                          <div className={`text-[14px] font-normal mb-0.5 ${isDark ? "text-white" : "text-black"}`}>{wName(w)}</div>
                           <div className={`text-[11px] font-light leading-snug ${isDark ? "text-white/50" : "text-neutral-500"}`}>
-                            {w.description}
+                            {wDesc(w)}
                           </div>
                         </button>
                       );
