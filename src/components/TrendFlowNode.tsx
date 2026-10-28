@@ -1,4 +1,6 @@
 import { memo } from "react";
+import { useTranslation } from "react-i18next";
+import { Button } from "@/components/ui/button";
 import { Handle, Position, type NodeProps } from "@xyflow/react";
 import { Lightbulb, LightbulbOff } from "lucide-react";
 import { motion } from "framer-motion";
@@ -59,6 +61,7 @@ const KIND_STYLES: Record<TrendNodeKind, { card: string; tag: string }> = {
 const HIDDEN_HANDLE = "!w-1 !h-1 !min-w-0 !min-h-0 !opacity-0 !pointer-events-none !border-none !bg-transparent";
 
 const TrendFlowNode = ({ id, data }: NodeProps) => {
+  const { t } = useTranslation();
   const d = data as TrendNodeData;
   const kind = d.kind ?? "phase";
   const s = KIND_STYLES[kind];
@@ -114,20 +117,23 @@ const TrendFlowNode = ({ id, data }: NodeProps) => {
 
       {/* Ojo: expandir/colapsar las "raíces" del nodo */}
       {d.hasDetails && (
-        <button
+        <Button
+          variant="ghost"
+          size="icon"
           onClick={(e) => {
             e.stopPropagation();
             d.onToggle?.(id);
           }}
-          title={d.expanded ? "Ocultar detalle" : "Ver más detalle"}
+          title={t(d.expanded ? "architecture.ui.hideDetails" : "architecture.ui.showDetails")}
+          aria-label={t(d.expanded ? "architecture.ui.hideDetails" : "architecture.ui.showDetails")}
           className={`nodrag nopan absolute -bottom-3.5 left-1/2 -translate-x-1/2 w-7 h-7 rounded-full flex items-center justify-center border shadow-md transition-all cursor-pointer z-10 before:absolute before:-inset-2.5 before:content-[''] before:rounded-full ${
             d.expanded
-              ? "bg-[#4059F1] text-white border-[#4059F1]"
-              : "bg-white dark:bg-[#1C1C1E] text-[#4059F1] dark:text-[#9DA9F9] border-[#E5E7EB] dark:border-white/15 hover:scale-110"
+              ? "bg-primary text-primary-foreground border-primary hover:bg-primary"
+              : "bg-card text-primary border-border hover:scale-110 hover:bg-card"
           }`}
         >
           {d.expanded ? <LightbulbOff size={13} strokeWidth={2} /> : <Lightbulb size={13} strokeWidth={2} />}
-        </button>
+        </Button>
       )}
 
       <Handle id="t" type="target" position={Position.Top} className={HIDDEN_HANDLE} />

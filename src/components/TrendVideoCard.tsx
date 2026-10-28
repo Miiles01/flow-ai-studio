@@ -1,4 +1,5 @@
 import { memo } from "react";
+import { useTranslation } from "react-i18next";
 import { Handle, Position, type NodeProps } from "@xyflow/react";
 import { Play } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -11,6 +12,7 @@ export type TrendVideoCardData = {
 };
 
 const TrendVideoCard = ({ data }: NodeProps) => {
+  const { t } = useTranslation();
   const video = data as TrendVideoCardData;
 
   return (
@@ -28,7 +30,7 @@ const TrendVideoCard = ({ data }: NodeProps) => {
           video.onPlay(event.currentTarget);
         }}
         onPointerDown={(event) => event.stopPropagation()}
-        aria-label={video.ariaLabel ?? `Reproducir ${video.title}`}
+        aria-label={video.ariaLabel ?? t("architecture.ui.playVideo", { title: video.title })}
         className="nodrag nopan h-auto w-[280px] flex-col items-stretch gap-0 overflow-hidden rounded-2xl border border-border bg-card p-0 text-left text-card-foreground shadow-md hover:translate-y-0 hover:bg-card"
       >
         <span className="relative block aspect-video w-full overflow-hidden bg-muted">
@@ -48,7 +50,7 @@ const TrendVideoCard = ({ data }: NodeProps) => {
         </span>
         <span className="flex w-full items-center gap-2 px-4 py-3">
           <span className="rounded-full bg-miiles-blue-light px-2 py-0.5 text-[9px] font-normal uppercase text-miiles-blue dark:bg-miiles-blue/20 dark:text-miiles-blue-light">
-            Video
+            {t("architecture.ui.video")}
           </span>
           <span className="min-w-0 truncate text-xs font-normal text-foreground">{video.title}</span>
         </span>

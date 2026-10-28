@@ -1,4 +1,6 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
+import { localizeTrendFlow } from "@/lib/localizeTrendFlow";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
 import { X, Lightbulb } from "lucide-react";
 import SuggestionDialog from "@/components/SuggestionDialog";
@@ -67,11 +69,15 @@ type Props = {
 };
 
 export function TrendStoryViewer({ trends, startIndex, onClose }: Props) {
+  const { t, i18n } = useTranslation();
   const { isDark } = useTheme();
   const open = startIndex !== null && trends.length > 0;
   const targetNetwork = startIndex !== null && trends[startIndex] ? trends[startIndex].network : null;
   const [suggestOpen, setSuggestOpen] = useState(false);
-  const activeFlow = targetNetwork ? TREND_FLOWS[targetNetwork as string] : null;
+  const activeFlow = useMemo(() => {
+    const flow = targetNetwork ? TREND_FLOWS[targetNetwork] : undefined;
+    return flow ? localizeTrendFlow(flow, t) : null;
+  }, [targetNetwork, t, i18n.resolvedLanguage]);
   const [activeVideo, setActiveVideo] = useState<NonNullable<TrendFlow["videos"]>[number] | null>(null);
   const [videoExpanded, setVideoExpanded] = useState(false);
   const videoTriggerRef = useRef<HTMLButtonElement | null>(null);
@@ -105,7 +111,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose }: Props) {
         setHighlightedNode(null);
       }, 3000);
     }
-  }, [targetNetwork, open, activeFlow]);
+  }, [targetNetwork, open]);
 
   const openVideo = useCallback((trigger: HTMLButtonElement, index = 0) => {
     const video = activeFlow?.videos?.[index];
@@ -230,7 +236,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose }: Props) {
     }
 
     return { visibleNodes: nodes, visibleEdges: edges };
-  }, [activeFlow, expandedIds, toggleNodeDetails, openVideo]);
+  }, [activeFlow, expandedIds, toggleNodeDetails, openVideo, highlightedNode]);
 
   const activeEmbedUrl = activeVideo ? getYouTubeExplainerEmbedUrl(activeVideo.url) : null;
 
@@ -245,9 +251,9 @@ export function TrendStoryViewer({ trends, startIndex, onClose }: Props) {
         }}
         className="p-0 overflow-hidden border-none max-w-[95vw] w-[95vw] h-[95vh] rounded-[32px] shadow-2xl bg-white dark:bg-[#0f0f11] [&>button.absolute.right-4]:hidden"
       >
-        <DialogTitle className="sr-only">Arquitectura Algorítmica</DialogTitle>
+        <DialogTitle className="sr-only">{t("architecture.ui.title")}</DialogTitle>
         <DialogDescription className="sr-only">
-          Esquema interactivo que explica cómo funciona el algoritmo de {targetNetwork ?? "la red seleccionada"}.
+          {t("architecture.ui.description", { network: targetNetwork ?? t("architecture.ui.selectedNetwork") })}
         </DialogDescription>
         {/* Full Dotted pattern Background across the ENTIRE modal */}
         <div 
@@ -270,7 +276,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose }: Props) {
             className="absolute right-8 top-8 z-[60] rounded-full border border-border bg-card px-5 py-2.5 text-sm font-normal text-card-foreground shadow-sm hover:translate-y-0 hover:bg-muted"
           >
             <X size={16} strokeWidth={2.5} />
-            Cerrar
+            {t("architecture.ui.close")}
           </Button>
         )}
 
@@ -282,7 +288,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose }: Props) {
           className="absolute bottom-8 right-8 z-[60] rounded-full border border-border bg-card px-5 py-2.5 text-sm font-normal text-card-foreground shadow-sm hover:translate-y-0 hover:bg-muted"
         >
           <Lightbulb size={16} strokeWidth={2.5} />
-          Sugerir ideas
+          {t("architecture.ui.suggest")}
         </Button>
 
         <SuggestionDialog
@@ -300,7 +306,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose }: Props) {
                 <div className="pointer-events-auto flex items-center gap-3 rounded-full border border-border bg-card px-4 py-2.5 text-card-foreground sm:rounded-2xl sm:px-5 sm:py-4">
                   <div>
                     <h2 className="text-lg font-normal leading-none text-foreground sm:text-2xl">
-                      <span className="hidden sm:inline">Arquitectura Algorítmica</span>
+                      <span className="hidden sm:inline">{t("architecture.ui.title")}</span>
                       <span className="sm:hidden">{targetNetwork ? targetNetwork.charAt(0).toUpperCase() + targetNetwork.slice(1) : ""}</span>
                     </h2>
                     <p className="mt-1 hidden text-sm font-light text-muted-foreground sm:block">{targetNetwork ? targetNetwork.charAt(0).toUpperCase() + targetNetwork.slice(1) : ""}</p>
@@ -353,7 +359,7 @@ export function TrendStoryViewer({ trends, startIndex, onClose }: Props) {
           ) : (
             <div className="w-full h-full flex items-center justify-center">
               <div className="bg-white/60 dark:bg-white/5 backdrop-blur-md px-6 py-4 rounded-2xl border border-black/5 dark:border-white/10 shadow-sm">
-                <p className="text-gray-500 dark:text-gray-400 font-light text-sm">El diagrama de arquitectura no está disponible para esta red</p>
+                <p className="text-gray-500 dark:text-gray-400 font-light text-sm">{t("architecture.ui.unavailable")}</p>
               </div>
             </div>
           )}

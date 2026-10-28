@@ -1,5 +1,7 @@
 # Architecture rules
 
+- Algorithmic architecture keeps stable graph IDs, geometry and media in its data module; all display copy uses locale keys resolved when rendering, so language changes preserve graph structure and expanded details.
+
 - The home template carousel reads the same Studio catalogue hook as the library; keep the prompt component intact while hidden so it can be restored without losing its workflow.
 
 - Studio project uploads retain a sanitized source ZIP in a private bucket and extract only static preview files; compiled client projects require a built entry point because server builds are not available.
