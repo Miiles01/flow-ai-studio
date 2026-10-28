@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { memo, useState, useRef, useCallback } from "react";
 import { Handle, Position, type NodeProps, NodeResizer, useReactFlow, useViewport } from "@xyflow/react";
 import { Globe, Link2, ExternalLink, Trash2, Check, RotateCcw } from "lucide-react";
@@ -19,6 +20,7 @@ function normalizeUrl(value: string): string {
 }
 
 const EmbedNode = ({ id, data, selected }: NodeProps) => {
+  const { t: translate } = useTranslation();
   const { getNodes, setNodes } = useReactFlow();
   const { zoom } = useViewport();
   const { isDark } = useTheme();
@@ -121,7 +123,7 @@ const EmbedNode = ({ id, data, selected }: NodeProps) => {
                     ? isDark ? "hover:bg-white/10 text-zinc-400" : "hover:bg-[#F3F4F6] text-[#6B7280]"
                     : isDark ? "bg-indigo-600/30 text-indigo-400 border border-indigo-500/20" : "bg-[#EEF2FF] text-[#4059F1] border border-gray-200 "
                 }`}
-                title="Pegar URL del sitio"
+                title={translate("widgets2.text89")}
               >
                 <Link2 size={13} strokeWidth={2} />
               </button>
@@ -134,7 +136,7 @@ const EmbedNode = ({ id, data, selected }: NodeProps) => {
                     target="_blank"
                     rel="noopener noreferrer"
                     className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${isDark ? "hover:bg-white/10 text-zinc-400" : "hover:bg-[#F3F4F6] text-[#6B7280]"}`}
-                    title="Abrir en nueva pestaña"
+                    title={translate("widgets2.text90")}
                   >
                     <ExternalLink size={13} strokeWidth={2} />
                   </a>
@@ -147,7 +149,7 @@ const EmbedNode = ({ id, data, selected }: NodeProps) => {
                 className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${
                   isDark ? 'hover:bg-red-500/20 text-[#9CA3AF] hover:text-red-400' : 'hover:bg-[#FEE2E2] text-[#9CA3AF] hover:text-[#EF4444]'
                 }`}
-                title="Eliminar"
+                title={translate("widgets2.text15")}
               >
                 <Trash2 size={13} strokeWidth={2} />
               </button>
@@ -180,13 +182,13 @@ const EmbedNode = ({ id, data, selected }: NodeProps) => {
                 if (e.key === "Enter") handleConfirmUrl();
                 if (e.key === "Escape") setShowInput(false);
               }}
-              placeholder="https://ejemplo.com"
+              placeholder={translate("widgets2.text91")}
               className={`flex-1 text-[12px] font-light outline-none border-none bg-transparent placeholder-gray-400 nodrag nopan ${isDark ? 'text-white' : 'text-black'}`}
             />
             <button
               onClick={handleConfirmUrl}
               className="w-6 h-6 flex items-center justify-center rounded-lg bg-[#4059F1] hover:bg-[#3348d4] transition-colors"
-              title="Confirmar URL"
+              title={translate("widgets2.text92")}
             >
               <Check size={11} className="text-white stroke-[2.5]" />
             </button>
@@ -215,8 +217,8 @@ const EmbedNode = ({ id, data, selected }: NodeProps) => {
               <Globe size={18} className="text-[#9CA3AF]" strokeWidth={1.5} />
             </div>
             <div className="flex flex-col items-center gap-1">
-              <p className={`text-[12px] font-medium ${isDark ? 'text-zinc-300' : 'text-[#6B7280]'}`}>Embeber sitio web</p>
-              <p className="text-[10px] text-[#9CA3AF] font-light">Pega una URL</p>
+              <p className={`text-[12px] font-medium ${isDark ? 'text-zinc-300' : 'text-[#6B7280]'}`}>{translate("widgets2.text93")}</p>
+              <p className="text-[10px] text-[#9CA3AF] font-light">{translate("widgets2.text94")}</p>
             </div>
           </motion.div>
         )}
@@ -232,10 +234,10 @@ const EmbedNode = ({ id, data, selected }: NodeProps) => {
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-[10px] font-light text-[#4059F1] hover:underline flex items-center gap-1 shrink-0 nodrag"
-                title="Abrir sitio en nueva pestaña"
+                title={translate("widgets2.text95")}
                 onMouseDown={(e) => e.stopPropagation()}
               >
-                Abrir <ExternalLink size={9} />
+                {translate("widgets2.text52")} <ExternalLink size={9} />
               </a>
             </div>
             <iframe

@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+import i18nInstance from "@/i18n";
 /**
  * ═══════════════════════════════════════════════════════════════════════════
  *  REGLA GLOBAL DE WIDGETS (Miiles) — LEE ESTO ANTES DE EDITAR
@@ -148,7 +150,7 @@ const initials = (s: string) => {
   return parts.filter(Boolean).slice(0, 2).map((p) => p[0]?.toUpperCase() ?? "").join("") || "?";
 };
 const formatMoney = (n: number) =>
-  new Intl.NumberFormat("es-MX", { style: "currency", currency: "MXN", maximumFractionDigits: 0 }).format(n || 0);
+  new Intl.NumberFormat(i18nInstance.language, { style: "currency", currency: "MXN", maximumFractionDigits: 0 }).format(n || 0);
 
 const emptyDeliverables = (): CampaignDeliverables => ({
   reel: 0, tiktok: 0, story: 0, post: 0, short: 0, video: 0, event: 0,
@@ -163,7 +165,7 @@ const primaryFormat = (d: CampaignDeliverables): string | null => {
     ["post", "Post"], ["short", "Short YT"], ["video", "Video YT"], ["event", "Evento"],
   ];
   const found = entries.find(([k]) => d[k] > 0);
-  return found ? found[1] : null;
+  return found ? widgetLabel(found[1]) : null;
 };
 
 const makeCampaign = (): Campaign => ({
@@ -191,6 +193,7 @@ const STATUS_STYLES: Record<CampaignStatus, { bg: string; text: string; border: 
 /* ─────────────────────────── NODE ─────────────────────────── */
 
 const CampaignsNode = ({ id, data, selected }: NodeProps) => {
+  const { t } = useTranslation();
   const { setNodes, getNodes } = useReactFlow();
   const { zoom } = useViewport();
   const { isDark } = useTheme();
@@ -201,7 +204,7 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
   const rawFill = d.backgroundColor ?? (isDark ? "#2C2C2E" : "#FFFFFF");
   const backgroundColor = isDark && isWhite(rawFill) ? "#2C2C2E" : rawFill;
   const accentColor = d.accentColor ?? "#4059F1";
-  const title = d.title ?? "Campañas";
+  const title = d.title ?? t("widgets1.label023");
   const showTitle = d.showTitle ?? true;
   const subtitle = d.subtitle ?? "";
   const showSubtitle = d.showSubtitle ?? false;
@@ -319,7 +322,7 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
                 className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${
                   showTitle ? "bg-[#4059F1] text-white" : isDark ? "hover:bg-white/10 text-white/70" : "hover:bg-neutral-100 text-neutral-600"
                 }`}
-                title="Mostrar/ocultar título"
+                title={t("widgets1.label024")}
               >
                 <Heading1 size={13} />
               </button>
@@ -328,7 +331,7 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
                 className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${
                   showSubtitle ? "bg-[#4059F1] text-white" : isDark ? "hover:bg-white/10 text-white/70" : "hover:bg-neutral-100 text-neutral-600"
                 }`}
-                title="Mostrar/ocultar subtítulo"
+                title={t("widgets1.label025")}
               >
                 <Heading2 size={13} />
               </button>
@@ -339,7 +342,7 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
                 <button
                   onClick={() => setActivePicker(activePicker === "fill" ? null : "fill")}
                   className={`w-7 h-7 flex items-center justify-center rounded-lg relative ${isDark ? "hover:bg-white/10" : "hover:bg-neutral-100"}`}
-                  title="Color de fondo"
+                  title={t("widgets1.label026")}
                 >
                   <Palette size={13} className="text-[#6B7280]" />
                   <div className="absolute bottom-1 right-1 w-2 h-2 rounded-full border border-white overflow-hidden" style={{ backgroundColor: backgroundColor === "transparent" ? "white" : backgroundColor }}>
@@ -358,7 +361,7 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
                 className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${
                   isDark ? "hover:bg-red-500/20 text-white/60 hover:text-red-400" : "hover:bg-red-50 text-neutral-400 hover:text-red-500"
                 }`}
-                title="Eliminar"
+                title={t("widgets1.label027")}
               >
                 <Trash2 size={13} />
               </button>
@@ -367,7 +370,7 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
         )}
       </AnimatePresence>
 
-      <div className="absolute top-0 left-1/2 z-20 h-5 w-28 -translate-x-1/2 cursor-grab rounded-b-xl active:cursor-grabbing" title="Mover widget">
+      <div className="absolute top-0 left-1/2 z-20 h-5 w-28 -translate-x-1/2 cursor-grab rounded-b-xl active:cursor-grabbing" title={t("widgets1.label028")}>
         <div className={`mx-auto mt-1.5 h-1.5 w-8 rounded-full opacity-0 transition-opacity group-hover/widget:opacity-100 ${isBoardDark ? "bg-white/40" : "bg-black/20"}`} />
       </div>
 
@@ -399,7 +402,7 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
                       isBoardDark ? "placeholder:text-white/45" : "placeholder:text-black/35"
                     }`}
                     style={{ color: boardTextColor }}
-                    placeholder="Título"
+                    placeholder={t("widgets1.label029")}
                   />
                 )}
                 {showSubtitle && (
@@ -410,7 +413,7 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
                       isBoardDark ? "placeholder:text-white/45 text-white/90" : "placeholder:text-black/35 text-neutral-700"
                     }`}
                     style={{ color: boardTextColor }}
-                    placeholder="Subtítulo"
+                    placeholder={t("widgets1.label030")}
                   />
                 )}
               </div>
@@ -420,14 +423,14 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
               className="nodrag nopan shrink-0 inline-flex items-center gap-1.5 px-3 py-2 rounded-xl text-[12px] font-medium text-white transition-opacity hover:opacity-80 "
               style={{ backgroundColor: "#111827" }}
             >
-              <Plus size={14} /> Nueva
+              <Plus size={14} />  {t("widgets1.label031")}
             </button>
           </div>
 
           {/* Filtros: disposición + agrupación + buscador */}
           <div className="mt-3 flex flex-wrap items-center gap-2">
             <FilterSelect
-              label="Orden"
+              label={t("widgets1.label032")}
               value={layout}
               options={LAYOUT_OPTIONS}
               onChange={(v) => update({ layout: v as CampaignsLayout })}
@@ -435,7 +438,7 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
               textColor={boardTextColor}
             />
             <FilterSelect
-              label="Agrupar"
+              label={t("widgets1.label033")}
               value={groupBy}
               options={GROUP_OPTIONS}
               onChange={(v) => update({ groupBy: v as CampaignsGroupBy })}
@@ -454,7 +457,7 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
               <input
                 value={filter}
                 onChange={(e) => setFilter(e.target.value)}
-                placeholder="Buscar marca…"
+                placeholder={t("widgets1.label034")}
                 className={`nodrag nopan flex-1 min-w-0 bg-transparent border-none outline-none text-[12.5px] ${
                   isBoardDark ? "placeholder:text-white/55" : "placeholder:text-black/35"
                 }`}
@@ -471,13 +474,14 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
               <div className={`w-12 h-12 rounded-full flex items-center justify-center ${isBoardDark ? "bg-white/10 text-white" : "bg-black/[0.04] text-neutral-600"}`}>
                 <Plus size={20} />
               </div>
-              <p className="text-[12.5px]">Aún no tienes campañas.</p>
+              <p className="text-[12.5px]">{t("widgets1.label035")}</p>
               <button
                 onClick={addCampaign}
                 className="nodrag nopan text-[11.5px] underline underline-offset-2 font-medium"
                 style={{ color: isBoardDark ? "#FFFFFF" : accentColor }}
               >
-                Añadir la primera
+                
+                {t("widgets1.label036")}
               </button>
             </div>
           ) : layout === "none" ? (
@@ -500,7 +504,7 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
             <div className="flex gap-4 items-start overflow-x-auto kanban-scrollbar pb-3 px-1">
               {groups.map((g) => (
                 <div key={g.key} className="shrink-0 w-[240px] flex flex-col gap-2">
-                  <GroupHeader label={g.key} count={g.items.length} isBoardDark={isBoardDark} textColor={boardTextColor} />
+                  <GroupHeader label={widgetLabel(g.key)} count={g.items.length} isBoardDark={isBoardDark} textColor={boardTextColor} />
                   <div className="flex flex-col gap-3 pb-2">
                     {g.items.map((c) => (
                       <CampaignCard
@@ -520,7 +524,7 @@ const CampaignsNode = ({ id, data, selected }: NodeProps) => {
             <div className="flex flex-col gap-5 pb-2 px-1">
               {groups.map((g) => (
                 <div key={g.key} className="flex flex-col gap-2">
-                  <GroupHeader label={g.key} count={g.items.length} isBoardDark={isBoardDark} textColor={boardTextColor} />
+                  <GroupHeader label={widgetLabel(g.key)} count={g.items.length} isBoardDark={isBoardDark} textColor={boardTextColor} />
                   {g.items.length === 0 ? (
                     <GroupEmpty isBoardDark={isBoardDark} />
                   ) : (
@@ -575,6 +579,7 @@ const FilterSelect = ({
   textColor: string;
   disabled?: boolean;
 }) => {
+  const { t } = useTranslation();
   const [open, setOpen] = useState(false);
   const ref = useRef<HTMLDivElement>(null);
 
@@ -608,7 +613,7 @@ const FilterSelect = ({
         }}
       >
         <span className="opacity-60">{label}:</span>
-        <span className="truncate max-w-[110px]">{current}</span>
+        <span className="truncate max-w-[110px]">{widgetLabel(current ?? "")}</span>
         <ChevronDown size={12} style={{ opacity: 0.6 }} />
       </button>
 
@@ -626,7 +631,7 @@ const FilterSelect = ({
                 isBoardDark ? "text-white hover:bg-white/10" : "text-neutral-900 hover:bg-neutral-100"
               } ${o.value === value ? (isBoardDark ? "bg-white/10" : "bg-neutral-100") : ""}`}
             >
-              {o.label}
+              {widgetLabel(o.label)}
               {o.value === value && <Check size={13} />}
             </button>
           ))}
@@ -654,21 +659,29 @@ const GroupHeader = ({
   </div>
 );
 
-const GroupEmpty = ({ isBoardDark }: { isBoardDark: boolean }) => (
+const GroupEmpty = ({ isBoardDark }: { isBoardDark: boolean }) => {
+  const { t } = useTranslation();
+  return (
   <div
     className={`rounded-2xl border border-dashed py-4 text-center text-[11.5px] ${
       isBoardDark ? "border-white/15 text-white/50" : "border-black/10 text-neutral-400"
     }`}
   >
-    Sin campañas
+    
+    {t("widgets1.label037")}
   </div>
 );
+};
 
-const EmptySearch = ({ isBoardDark }: { isBoardDark: boolean }) => (
+const EmptySearch = ({ isBoardDark }: { isBoardDark: boolean }) => {
+  const { t } = useTranslation();
+  return (
   <div className={`h-full flex items-center justify-center text-[12.5px] ${isBoardDark ? "text-white/60" : "text-neutral-500"}`}>
-    Sin resultados para tu búsqueda.
+    
+    {t("widgets1.label038")}
   </div>
 );
+};
 
 /* ─────────── Campaign card (grid tile) ─────────── */
 
@@ -678,6 +691,7 @@ const CampaignCard = ({
 }: {
   c: Campaign; isDark: boolean; accentColor: string; onOpen: () => void;
 }) => {
+  const { t } = useTranslation();
   const status = isDark
     ? (c.status === "Pendiente"
         ? { bg: "rgba(245, 158, 11, 0.18)", text: "#FCD34D", border: "rgba(245, 158, 11, 0.35)" }
@@ -687,7 +701,7 @@ const CampaignCard = ({
     : STATUS_STYLES[c.status];
   const pieces = totalPieces(c.deliverables);
   const fmt = primaryFormat(c.deliverables);
-  const brand = c.brand || "Sin nombre";
+  const brand = c.brand || t("widgets1.label039");
   const cardTextColor = isDark ? "#FFFFFF" : "#111827";
 
   return (
@@ -705,7 +719,7 @@ const CampaignCard = ({
         <div className={`-mx-3.5 -mt-3.5 mb-3 h-[150px] overflow-hidden rounded-t-2xl ${isDark ? "bg-white/5" : "bg-neutral-100"}`}>
           <img
             src={c.coverUrl}
-            alt={`Portada de ${brand}`}
+            alt={t("widgets1.coverFor", { brand })}
             loading="lazy"
             className="w-full h-full object-cover"
             style={{ objectPosition: `50% ${c.coverPosY ?? 50}%` }}
@@ -726,7 +740,7 @@ const CampaignCard = ({
             <div className="min-w-0 flex-1">
               <p className="text-[13.5px] font-semibold truncate leading-tight" style={{ color: cardTextColor }}>{brand}</p>
               <p className="text-[11px] opacity-60 mt-0.5 truncate" style={{ color: cardTextColor }}>
-                {pieces} contenido{pieces === 1 ? "" : "s"}{fmt ? ` · ${fmt}` : ""}
+                {t("widgets1.content", { count: pieces })}{fmt ? ` · ${fmt}` : ""}
               </p>
             </div>
           </div>
@@ -740,21 +754,22 @@ const CampaignCard = ({
                     : { backgroundColor: "#E8ECFE", color: "#4059F1", border: "1px solid #C7CFFD" }
                 }
               >
-                Exclusividad
+                
+                {t("widgets1.label040")}
               </span>
             )}
             <span
               className="text-[10px] px-2 py-0.5 rounded-full font-medium"
               style={{ backgroundColor: status.bg, color: status.text, border: `1px solid ${status.border}` }}
             >
-              {c.status}
+              {widgetLabel(c.status)}
             </span>
           </div>
         </div>
       </div>
       <div className="mt-3 flex items-end justify-between">
         <span className="text-[17px] font-bold tracking-tight" style={{ color: cardTextColor }}>
-          {c.payType === "intercambio" ? "Intercambio" : formatMoney(c.amount)}
+          {c.payType === "intercambio" ? t("widgets1.label021") : formatMoney(c.amount)}
         </span>
       </div>
     </button>
@@ -768,6 +783,7 @@ const CoverPositioner = ({
 }: {
   url: string; posY: number; softSurface: string; onChange: (v: number) => void;
 }) => {
+  const { t } = useTranslation();
   const ref = useRef<HTMLDivElement>(null);
   const [dragging, setDragging] = useState(false);
 
@@ -800,7 +816,7 @@ const CoverPositioner = ({
     >
       <img
         src={url}
-        alt="Vista previa de la portada"
+        alt={t("widgets1.label041")}
         draggable={false}
         className="w-full h-full object-cover pointer-events-none"
         style={{ objectPosition: `50% ${posY}%` }}
@@ -822,6 +838,7 @@ const CampaignEditorPopover = ({
   onUpdate: (patch: Partial<Campaign>) => void;
   onDelete: () => void;
 }) => {
+  const { t } = useTranslation();
   const popoverRef = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState({ top: -999, left: -999 });
 
@@ -896,7 +913,7 @@ const CampaignEditorPopover = ({
   const clientOptions = useMemo(() => {
     return getNodes()
       .filter((n) => n.type === "clientCardNode")
-      .map((n) => ({ id: n.id, name: ((n.data as any)?.name || "Sin nombre") as string, avatarUrl: (n.data as any)?.avatarUrl as string | undefined }));
+      .map((n) => ({ id: n.id, name: ((n.data as any)?.name || t("widgets1.label039")) as string, avatarUrl: (n.data as any)?.avatarUrl as string | undefined }));
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [getNodes, campaign.clientId]);
   const selectedClient = clientOptions.find((c) => c.id === campaign.clientId);
@@ -951,7 +968,7 @@ const CampaignEditorPopover = ({
             className={`p-1.5 rounded-lg transition-colors ${
               isDark ? "hover:bg-red-500/20 text-white/60 hover:text-red-400" : "hover:bg-red-50 text-neutral-400 hover:text-red-500"
             }`}
-            title="Eliminar campaña"
+            title={t("widgets1.label043")}
           >
             <Trash2 size={14} />
           </button>
@@ -960,7 +977,7 @@ const CampaignEditorPopover = ({
           onClick={onClose}
           className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-colors text-[11px] font-medium ${isDark ? "bg-white/10 hover:bg-white/20 text-white" : "bg-black/5 hover:bg-black/10 text-black"}`}
         >
-          <span>Cerrar</span>
+          <span>{t("widgets1.label044")}</span>
           <X size={12} />
         </button>
       </div>
@@ -973,13 +990,13 @@ const CampaignEditorPopover = ({
             autoFocus
             value={campaign.brand}
             onChange={(e) => onUpdate({ brand: e.target.value })}
-            placeholder="Nombre de la marca"
+            placeholder={t("widgets1.label045")}
             className="w-full bg-transparent border-none outline-none text-[22px] font-bold tracking-tight placeholder:opacity-40"
           />
         </div>
 
         {/* Cliente asignado */}
-        <Section title="Cliente" subtle={subtle}>
+        <Section title={t("widgets1.label046")} subtle={subtle}>
           <div className="relative">
             <button
               onClick={() => setClientPickerOpen((v) => !v)}
@@ -991,14 +1008,14 @@ const CampaignEditorPopover = ({
                     {selectedClient.avatarUrl ? <img src={selectedClient.avatarUrl} alt="" className="w-full h-full rounded-full object-cover" /> : initials(selectedClient.name)}
                   </div>
                   <span className="flex-1 text-[13px] font-medium truncate">{selectedClient.name}</span>
-                  <span className={`text-[11px] ${subtle}`}>Cambiar</span>
+                  <span className={`text-[11px] ${subtle}`}>{t("widgets1.label047")}</span>
                 </>
               ) : (
                 <>
                   <div className={`w-7 h-7 rounded-full flex items-center justify-center shrink-0 ${softSurface}`}>
                     <Users size={13} className="opacity-60" />
                   </div>
-                  <span className={`flex-1 text-[13px] ${subtle}`}>Asignar cliente…</span>
+                  <span className={`flex-1 text-[13px] ${subtle}`}>{t("widgets1.label048")}</span>
                 </>
               )}
             </button>
@@ -1025,14 +1042,15 @@ const CampaignEditorPopover = ({
                     onClick={() => { onUpdate({ clientId: undefined }); setClientPickerOpen(false); }}
                     className={`w-full text-left px-2 py-1.5 rounded-lg text-[12px] ${subtle} ${isDark ? "hover:bg-white/10" : "hover:bg-neutral-100"}`}
                   >
-                    Quitar cliente
+                    
+                    {t("widgets1.label049")}
                   </button>
                 )}
                 <button
-                  onClick={() => createAndAssignClient(campaign.brand || "Nuevo cliente")}
+                  onClick={() => createAndAssignClient(campaign.brand || t("widgets1.label042"))}
                   className={`w-full flex items-center gap-2 px-2 py-1.5 rounded-lg text-left text-[12.5px] font-medium border-t mt-1 pt-2 ${isDark ? "border-white/10 hover:bg-white/10 text-white" : "border-neutral-100 hover:bg-neutral-100 text-neutral-900"}`}
                 >
-                  <Plus size={12} /> Crear nuevo cliente
+                  <Plus size={12} />  {t("widgets1.label050")}
                 </button>
               </div>
             )}
@@ -1040,11 +1058,11 @@ const CampaignEditorPopover = ({
         </Section>
 
         {/* Portada */}
-        <Section title="Portada" subtle={subtle}>
+        <Section title={t("widgets1.label051")} subtle={subtle}>
           <input
             value={campaign.coverUrl ?? ""}
             onChange={(e) => onUpdate({ coverUrl: e.target.value.trim() || undefined })}
-            placeholder="https://… URL de la imagen"
+            placeholder={t("widgets1.label052")}
             className={`w-full px-3 py-2.5 rounded-lg text-[13px] outline-none ${inputCls}`}
           />
           {campaign.coverUrl && (
@@ -1056,12 +1074,13 @@ const CampaignEditorPopover = ({
                 onChange={(v) => onUpdate({ coverPosY: v })}
               />
               <div className="flex items-center justify-between mt-2">
-                <span className={`text-[11px] ${subtle}`}>Arrastra la imagen para ajustar la altura</span>
+                <span className={`text-[11px] ${subtle}`}>{t("widgets1.label053")}</span>
                 <button
                   onClick={() => onUpdate({ coverUrl: undefined, coverPosY: undefined })}
                   className={`text-[11.5px] ${subtle} hover:opacity-80`}
                 >
-                  Quitar portada
+                  
+                  {t("widgets1.label054")}
                 </button>
               </div>
             </div>
@@ -1071,7 +1090,7 @@ const CampaignEditorPopover = ({
 
 
         {/* Cobro rápido */}
-        <Section title="Pago" subtle={subtle}>
+        <Section title={t("widgets1.label055")} subtle={subtle}>
           <label className={`flex items-center gap-2.5 p-3 rounded-lg cursor-pointer ${softSurface}`}>
             <input
               type="checkbox"
@@ -1079,16 +1098,16 @@ const CampaignEditorPopover = ({
               onChange={(e) => onUpdate({ paidAt: e.target.checked ? Date.now() : undefined })}
               className={isDark ? "accent-white" : "accent-black"}
             />
-            <span className="text-[12.5px] font-medium">Marcar como cobrada</span>
+            <span className="text-[12.5px] font-medium">{t("widgets1.label056")}</span>
             {campaign.paidAt && (
-              <span className={`ml-auto text-[11px] font-semibold ${isDark ? "text-white" : "text-black"}`}>Cobrado</span>
+              <span className={`ml-auto text-[11px] font-semibold ${isDark ? "text-white" : "text-black"}`}>{t("widgets1.label019")}</span>
             )}
           </label>
         </Section>
 
 
         {/* Estado */}
-        <Section title="Estado de la colaboración" subtle={subtle}>
+        <Section title={t("widgets1.label057")} subtle={subtle}>
           <SegmentedGroup
             value={campaign.status}
             options={[
@@ -1103,7 +1122,7 @@ const CampaignEditorPopover = ({
         </Section>
 
         {/* Tipo de cobro + monto */}
-        <Section title="Cobro" subtle={subtle}>
+        <Section title={t("widgets1.label015")} subtle={subtle}>
           <SegmentedGroup
             value={campaign.payType}
             options={[
@@ -1116,7 +1135,7 @@ const CampaignEditorPopover = ({
           />
           {campaign.payType === "monetario" && (
             <div className="mt-3">
-              <label className={`text-[11.5px] font-medium ${subtle}`}>Monto total a cobrar</label>
+              <label className={`text-[11.5px] font-medium ${subtle}`}>{t("widgets1.label060")}</label>
               <div className={`mt-1 flex items-center gap-2 px-3 py-2 rounded-lg ${inputCls}`}>
                 <DollarSign size={14} className="opacity-60" />
                 <input
@@ -1134,7 +1153,7 @@ const CampaignEditorPopover = ({
 
         {/* Cuotas */}
         {campaign.payType === "monetario" && (
-          <Section title="Número de cuotas" subtle={subtle}>
+          <Section title={t("widgets1.label061")} subtle={subtle}>
             <SegmentedGroup
               value={String(campaign.installmentsCount)}
               options={[1, 2, 3, 4, 6].map((n) => ({ value: String(n), label: String(n) }))}
@@ -1143,7 +1162,7 @@ const CampaignEditorPopover = ({
               accentColor={accentColor}
             />
             {campaign.installmentsCount === 1 ? (
-              <p className={`text-[11.5px] mt-2 ${subtle}`}>Pago único. Si quieres puedes cargar la fecha estimada.</p>
+              <p className={`text-[11.5px] mt-2 ${subtle}`}>{t("widgets1.label062")}</p>
             ) : null}
             <div className="mt-3 space-y-2">
               {(campaign.installments ?? []).map((inst, i) => (
@@ -1178,20 +1197,20 @@ const CampaignEditorPopover = ({
         )}
 
         {/* Mes de cierre */}
-        <Section title="Mes de cierre del trato" subtle={subtle}>
+        <Section title={t("widgets1.label063")} subtle={subtle}>
           <select
             value={campaign.closeMonth ?? ""}
             onChange={(e) => onUpdate({ closeMonth: e.target.value })}
             className={`w-full px-3 py-2 rounded-lg text-[13px] ${inputCls}`}
           >
-            <option value="">Selecciona un mes</option>
-            {MONTHS.map((m) => <option key={m} value={m}>{m}</option>)}
+            <option value="">{t("widgets1.label064")}</option>
+            {MONTHS.map((m, index) => <option key={m} value={m}>{new Intl.DateTimeFormat(i18nInstance.language, { month: "long" }).format(new Date(2024, index, 1))}</option>)}
           </select>
-          <p className={`text-[11px] mt-1 ${subtle}`}>Usado en estadísticas de ingresos.</p>
+          <p className={`text-[11px] mt-1 ${subtle}`}>{t("widgets1.label065")}</p>
         </Section>
 
         {/* Días de pago */}
-        <Section title="Días de pago" subtle={subtle}>
+        <Section title={t("widgets1.label066")} subtle={subtle}>
           <SegmentedGroup
             value={String(campaign.paymentDays)}
             options={[15, 30, 45, 60, 90].map((n) => ({ value: String(n), label: String(n) }))}
@@ -1199,28 +1218,28 @@ const CampaignEditorPopover = ({
             isDark={isDark}
             accentColor={accentColor}
           />
-          <p className={`text-[11px] mt-1 ${subtle}`}>Días hábiles después del último entregable publicado.</p>
+          <p className={`text-[11px] mt-1 ${subtle}`}>{t("widgets1.label067")}</p>
         </Section>
 
         {/* Entregables */}
         <Section
-          title="Entregables de contenido"
+          title={t("widgets1.label068")}
           subtle={subtle}
-          right={<span className={`text-[11.5px] font-medium ${subtle}`}>{total} {total === 1 ? "pieza" : "piezas"}</span>}
+          right={<span className={`text-[11.5px] font-medium ${subtle}`}>{t("widgets1.pieces", { count: total })}</span>}
         >
           <div className="grid grid-cols-2 gap-2">
-            <DeliverableCounter icon={<Instagram size={13} />} label="Reel (Instagram)"    value={campaign.deliverables.reel}   onDec={() => setDeliverable("reel", -1)}   onInc={() => setDeliverable("reel", 1)}   isDark={isDark} inputCls={inputCls} />
+            <DeliverableCounter icon={<Instagram size={13} />} label={t("widgets1.label069")}    value={campaign.deliverables.reel}   onDec={() => setDeliverable("reel", -1)}   onInc={() => setDeliverable("reel", 1)}   isDark={isDark} inputCls={inputCls} />
             <DeliverableCounter icon={<span className="text-[13px]">🎵</span>} label="TikTok" value={campaign.deliverables.tiktok} onDec={() => setDeliverable("tiktok", -1)} onInc={() => setDeliverable("tiktok", 1)} isDark={isDark} inputCls={inputCls} />
-            <DeliverableCounter icon={<Instagram size={13} />} label="Story (Instagram)"   value={campaign.deliverables.story}  onDec={() => setDeliverable("story", -1)}  onInc={() => setDeliverable("story", 1)}  isDark={isDark} inputCls={inputCls} />
-            <DeliverableCounter icon={<Instagram size={13} />} label="Post (Instagram)"    value={campaign.deliverables.post}   onDec={() => setDeliverable("post", -1)}   onInc={() => setDeliverable("post", 1)}   isDark={isDark} inputCls={inputCls} />
-            <DeliverableCounter icon={<Youtube size={13} />}   label="Short de YouTube"    value={campaign.deliverables.short}  onDec={() => setDeliverable("short", -1)}  onInc={() => setDeliverable("short", 1)}  isDark={isDark} inputCls={inputCls} />
-            <DeliverableCounter icon={<Youtube size={13} />}   label="Video de YouTube"    value={campaign.deliverables.video}  onDec={() => setDeliverable("video", -1)}  onInc={() => setDeliverable("video", 1)}  isDark={isDark} inputCls={inputCls} />
-            <DeliverableCounter icon={<Users size={13} />}     label="Asistencia a evento" value={campaign.deliverables.event}  onDec={() => setDeliverable("event", -1)}  onInc={() => setDeliverable("event", 1)}  isDark={isDark} inputCls={inputCls} />
+            <DeliverableCounter icon={<Instagram size={13} />} label={t("widgets1.label070")}   value={campaign.deliverables.story}  onDec={() => setDeliverable("story", -1)}  onInc={() => setDeliverable("story", 1)}  isDark={isDark} inputCls={inputCls} />
+            <DeliverableCounter icon={<Instagram size={13} />} label={t("widgets1.label071")}    value={campaign.deliverables.post}   onDec={() => setDeliverable("post", -1)}   onInc={() => setDeliverable("post", 1)}   isDark={isDark} inputCls={inputCls} />
+            <DeliverableCounter icon={<Youtube size={13} />}   label={t("widgets1.label072")}    value={campaign.deliverables.short}  onDec={() => setDeliverable("short", -1)}  onInc={() => setDeliverable("short", 1)}  isDark={isDark} inputCls={inputCls} />
+            <DeliverableCounter icon={<Youtube size={13} />}   label={t("widgets1.label073")}    value={campaign.deliverables.video}  onDec={() => setDeliverable("video", -1)}  onInc={() => setDeliverable("video", 1)}  isDark={isDark} inputCls={inputCls} />
+            <DeliverableCounter icon={<Users size={13} />}     label={t("widgets1.label074")} value={campaign.deliverables.event}  onDec={() => setDeliverable("event", -1)}  onInc={() => setDeliverable("event", 1)}  isDark={isDark} inputCls={inputCls} />
           </div>
         </Section>
 
         {/* Exclusividad */}
-        <Section title="Legal" subtle={subtle}>
+        <Section title={t("widgets1.label075")} subtle={subtle}>
           <label className={`flex items-center gap-2.5 p-3 rounded-lg cursor-pointer ${softSurface}`}>
             <input
               type="checkbox"
@@ -1228,7 +1247,7 @@ const CampaignEditorPopover = ({
               onChange={(e) => onUpdate({ exclusivity: e.target.checked })}
               className="accent-[#4059F1]"
             />
-            <span className="text-[12.5px] font-medium">La campaña tiene cláusula de exclusividad</span>
+            <span className="text-[12.5px] font-medium">{t("widgets1.label076")}</span>
           </label>
           {campaign.exclusivity && (
             <div className="mt-2 flex items-center gap-2">
@@ -1239,17 +1258,17 @@ const CampaignEditorPopover = ({
                 onChange={(e) => onUpdate({ exclusivityDays: Number(e.target.value) || 0 })}
                 className={`w-24 px-3 py-2 rounded-lg text-[13px] ${inputCls}`}
               />
-              <span className={`text-[12px] ${subtle}`}>días · inicia con la publicación.</span>
+              <span className={`text-[12px] ${subtle}`}>{t("widgets1.exclusivityStart")}</span>
             </div>
           )}
         </Section>
 
         {/* Notas */}
-        <Section title="Notas internas" subtle={subtle}>
+        <Section title={t("widgets1.label077")} subtle={subtle}>
           <textarea
             value={campaign.notes ?? ""}
             onChange={(e) => onUpdate({ notes: e.target.value })}
-            placeholder="Recordatorios, condiciones especiales, contactos…"
+            placeholder={t("widgets1.label078")}
             rows={3}
             className={`w-full px-3 py-2 rounded-lg text-[13px] resize-y ${inputCls}`}
           />
@@ -1283,7 +1302,9 @@ const SegmentedGroup = ({
   onChange: (v: string) => void;
   isDark: boolean;
   accentColor: string;
-}) => (
+}) => {
+  const { t } = useTranslation();
+  return (
   <div className={`inline-flex flex-wrap gap-1 p-1 rounded-lg ${isDark ? "bg-white/5" : "bg-neutral-100"}`}>
     {options.map((opt) => {
       const active = opt.value === value;
@@ -1298,12 +1319,13 @@ const SegmentedGroup = ({
               : { color: isDark ? "rgba(255,255,255,0.7)" : "#4B4F63" }
           }
         >
-          {opt.label}
+          {widgetLabel(opt.label)}
         </button>
       );
     })}
   </div>
 );
+};
 
 const DeliverableCounter = ({
   icon, label, value, onDec, onInc, isDark, inputCls,
@@ -1345,7 +1367,9 @@ const PickerPopover = ({
   selected?: string;
   onPick: (v: string) => void;
   isDark: boolean;
-}) => (
+}) => {
+  const { t } = useTranslation();
+  return (
   <div
     className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl p-2.5 grid grid-cols-5 gap-1.5 z-[1001] w-[150px] ${
       isDark ? "bg-[#1C1C1E] border border-white/10" : "bg-white border border-neutral-100"
@@ -1357,7 +1381,7 @@ const PickerPopover = ({
         onClick={() => onPick(c.value)}
         className="w-6 h-6 rounded-full border border-neutral-200/60 transition-transform hover:scale-110 relative overflow-hidden flex items-center justify-center"
         style={{ backgroundColor: c.value === "transparent" ? "white" : c.value }}
-        title={c.name}
+        title={widgetLabel(c.name)}
       >
         {c.value === "transparent" && <div className="absolute inset-0 w-full h-[1.5px] top-1/2 bg-red-500 rotate-45" />}
         {selected === c.value && c.value !== "transparent" && (
@@ -1367,5 +1391,165 @@ const PickerPopover = ({
     ))}
   </div>
 );
+};
 
 export default memo(CampaignsNode);
+
+const WIDGET_LABEL_KEYS: Record<string, string> = {
+  "Transparente": "label001",
+  "Rojo": "label002",
+  "Naranja": "label003",
+  "Amarillo": "label004",
+  "Verde": "label005",
+  "Azul": "label006",
+  "Morado": "label007",
+  "Rosa": "label008",
+  "Blanco": "label009",
+  "Negro": "label010",
+  "Sin orden": "label011",
+  "Por columnas": "label012",
+  "Por filas": "label013",
+  "Estado": "label014",
+  "Cobro": "label015",
+  "Pendiente": "label016",
+  "Activa": "label017",
+  "Completada": "label018",
+  "Cobrado": "label019",
+  "Por cobrar": "label020",
+  "Intercambio": "label021",
+  "Evento": "label022",
+  "Campañas": "label023",
+  "Mostrar/ocultar título": "label024",
+  "Mostrar/ocultar subtítulo": "label025",
+  "Color de fondo": "label026",
+  "Eliminar": "label027",
+  "Mover widget": "label028",
+  "Título": "label029",
+  "Subtítulo": "label030",
+  "Nueva": "label031",
+  "Orden": "label032",
+  "Agrupar": "label033",
+  "Buscar marca…": "label034",
+  "Aún no tienes campañas.": "label035",
+  "Añadir la primera": "label036",
+  "Sin campañas": "label037",
+  "Sin resultados para tu búsqueda.": "label038",
+  "Sin nombre": "label039",
+  "Exclusividad": "label040",
+  "Vista previa de la portada": "label041",
+  "Nuevo cliente": "label042",
+  "Eliminar campaña": "label043",
+  "Cerrar": "label044",
+  "Nombre de la marca": "label045",
+  "Cliente": "label046",
+  "Cambiar": "label047",
+  "Asignar cliente…": "label048",
+  "Quitar cliente": "label049",
+  "Crear nuevo cliente": "label050",
+  "Portada": "label051",
+  "https://… URL de la imagen": "label052",
+  "Arrastra la imagen para ajustar la altura": "label053",
+  "Quitar portada": "label054",
+  "Pago": "label055",
+  "Marcar como cobrada": "label056",
+  "Estado de la colaboración": "label057",
+  "💵 Monetario": "label058",
+  "🔄 Intercambio": "label059",
+  "Monto total a cobrar": "label060",
+  "Número de cuotas": "label061",
+  "Pago único. Si quieres puedes cargar la fecha estimada.": "label062",
+  "Mes de cierre del trato": "label063",
+  "Selecciona un mes": "label064",
+  "Usado en estadísticas de ingresos.": "label065",
+  "Días de pago": "label066",
+  "Días hábiles después del último entregable publicado.": "label067",
+  "Entregables de contenido": "label068",
+  "Reel (Instagram)": "label069",
+  "Story (Instagram)": "label070",
+  "Post (Instagram)": "label071",
+  "Short de YouTube": "label072",
+  "Video de YouTube": "label073",
+  "Asistencia a evento": "label074",
+  "Legal": "label075",
+  "La campaña tiene cláusula de exclusividad": "label076",
+  "Notas internas": "label077",
+  "Recordatorios, condiciones especiales, contactos…": "label078",
+  "Eliminar widget": "label079",
+  "Contratos": "label080",
+  "Cambiar imagen": "label081",
+  "Subir imagen": "label082",
+  "Posición": "label083",
+  "Páginas": "label084",
+  "Solo la primera hoja": "label085",
+  "Repetir en todas": "label086",
+  "Quitar logotipo": "label087",
+  "Insertar campo de firma": "label088",
+  "Firma": "label089",
+  "Abrir": "label090",
+  "Suelta aquí tu logotipo": "label091",
+  "Logotipo del documento": "label092",
+  "Subir logotipo (JPG, PNG o SVG)": "label093",
+  "Escribe aquí el contenido": "label094",
+  "Plantillas": "label095",
+  "Reemplazar el documento con esta plantilla": "label096",
+  "Añadir al final del documento": "label097",
+  "Eliminar página": "label098",
+  "Añadir página": "label099",
+  "Carta": "label100",
+  "Arriba izquierda": "label101",
+  "Arriba centro": "label102",
+  "Arriba derecha": "label103",
+  "Abajo izquierda": "label104",
+  "Abajo centro": "label105",
+  "Abajo derecha": "label106",
+  "Selecciona mes": "label107",
+  "Todos": "label108",
+  "1 widget": "label109",
+  "Sin Fecha Estimada": "label110",
+  "Ingresos": "label111",
+  "Lo que cerraste por mes y lo que está por entrar.": "label112",
+  "Desde": "label113",
+  "Hasta": "label114",
+  "Resetear": "label115",
+  "Mes más alto": "label116",
+  "Total cerrado por mes": "label117",
+  "Cerrado": "label118",
+  "Top marcas": "label119",
+  "Aún no hay marcas.": "label120",
+  "Sin pendientes 🎉": "label121",
+  "Todos los widgets": "label122",
+  "No hay widgets de Campañas en el tablero.": "label123",
+  "Nombre del cliente": "label124",
+  "Cargo / empresa": "label125",
+  "Valor": "label126",
+  "Asignado a": "label127",
+  "Editar cliente": "label128",
+  "Información": "label129",
+  "Nombre": "label130",
+  "URL de foto (opcional)": "label131",
+  "Descripción": "label132",
+  "Notas del prospecto…": "label133",
+  "Contacto": "label134",
+  "correo@ejemplo.com": "label135",
+  "https://sitio.com": "label136",
+  "Valor del prospecto": "label137",
+  "Etiquetas": "label138",
+  "Nueva etiqueta": "label139",
+  "Asignados": "label140",
+  "correo (opcional)": "label141",
+  "Agregar persona": "label142",
+  "Campos personalizados": "label143",
+  "Campo": "label144",
+  "Agregar campo": "label145",
+  "Nuevo": "label146",
+  "Contactado": "label147",
+  "Interesado": "label148",
+  "Perdido": "label149",
+  "días · inicia con la publicación.": "exclusivityStart",
+  "pendiente": "pendingSuffix",
+  "Añade el widget Campañas y crea colaboraciones para ver aquí tus ingresos.": "incomeHint"
+};
+function widgetLabel(value: string): string {
+  const key = WIDGET_LABEL_KEYS[value];
+  return key ? i18nInstance.t(`widgets1.${key}`) : value;
+}

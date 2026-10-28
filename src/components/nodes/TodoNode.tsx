@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { memo, useState, useRef, useEffect, forwardRef } from "react";
 import { Handle, Position, type NodeProps, NodeResizer, useReactFlow, useViewport } from "@xyflow/react";
 import {
@@ -32,16 +33,16 @@ const HANDLE_CLASS =
   "!w-[10px] !h-[10px] !rounded-full !bg-white !border-[1.5px] !border-[#4059F1] transition-all duration-200 hover:!bg-[#4059F1] before:absolute before:-inset-3 before:content-[''] !z-[10000] pointer-events-auto";
 
 const RAINBOW_COLORS = [
-  { name: "Transparente", value: "transparent" },
-  { name: "Rojo", value: "#EF4444" },
-  { name: "Naranja", value: "#F97316" },
-  { name: "Amarillo", value: "#FACC15" },
-  { name: "Verde", value: "#22C55E" },
-  { name: "Azul", value: "#4059F1" },
-  { name: "Morado", value: "#A855F7" },
-  { name: "Rosa", value: "#FCB5B9" },
-  { name: "Blanco", value: "#FFFFFF" },
-  { name: "Negro", value: "#1F2937" },
+  { name: "widgets2.text1", value: "transparent" },
+  { name: "widgets2.text2", value: "#EF4444" },
+  { name: "widgets2.text3", value: "#F97316" },
+  { name: "widgets2.text4", value: "#FACC15" },
+  { name: "widgets2.text5", value: "#22C55E" },
+  { name: "widgets2.text6", value: "#4059F1" },
+  { name: "widgets2.text7", value: "#A855F7" },
+  { name: "widgets2.text8", value: "#FCB5B9" },
+  { name: "widgets2.text9", value: "#FFFFFF" },
+  { name: "widgets2.text10", value: "#1F2937" },
 ];
 
 interface AutoResizingTextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {
@@ -114,6 +115,7 @@ const isWhite = (c?: string) => {
 };
 
 const TodoNode = ({ id, data, selected }: NodeProps) => {
+  const { t: translate } = useTranslation();
   const { getNodes, setNodes } = useReactFlow();
   const selectedNodes = getNodes().filter((n) => n.selected);
   const isSingleSelected = selected && selectedNodes.length === 1;
@@ -123,8 +125,8 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
   const nodeData = data as TodoNodeData;
   const showTitle = nodeData.showTitle ?? true;
   const showSubtitle = nodeData.showSubtitle ?? true;
-  const title = nodeData.title ?? "Lista de Tareas";
-  const subtitle = nodeData.subtitle ?? "Organiza tus actividades diarias";
+  const title = nodeData.title ?? translate("widgets2.text112");
+  const subtitle = nodeData.subtitle ?? translate("widgets2.text113");
   const tasks = nodeData.tasks ?? [
     { id: "t1", text: "Definir objetivos de diseño", completed: false },
     { id: "t2", text: "Diseñar wireframes responsivos", completed: false },
@@ -271,7 +273,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
       }}
       className="relative w-full h-full"
     >
-      <div className="absolute top-0 left-1/2 z-20 h-5 w-28 -translate-x-1/2 cursor-grab rounded-b-xl active:cursor-grabbing" title="Mover widget">
+      <div className="absolute top-0 left-1/2 z-20 h-5 w-28 -translate-x-1/2 cursor-grab rounded-b-xl active:cursor-grabbing" title={translate("widgets2.text16")}>
         <div className={`mx-auto mt-1.5 h-1.5 w-8 rounded-full opacity-0 transition-opacity group-hover/widget:opacity-100 ${isBoardDark ? "bg-white/40" : "bg-black/20"}`} />
       </div>
 
@@ -317,7 +319,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                       ? (isDark ? "bg-white/10 text-white" : "bg-[#F3F4F6] text-[#4059F1]") 
                       : (isDark ? "hover:bg-white/10 text-white/60 hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280]")
                   }`}
-                  title={showTitle ? "Ocultar Título" : "Mostrar Título"}
+                  title={showTitle ? translate("widgets2.text42") : translate("widgets2.text43")}
                 >
                   <Heading1 size={13} strokeWidth={showTitle ? 2.5 : 2} />
                 </button>
@@ -330,7 +332,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                       ? (isDark ? "bg-white/10 text-white" : "bg-[#F3F4F6] text-[#4059F1]") 
                       : (isDark ? "hover:bg-white/10 text-white/60 hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280]")
                   }`}
-                  title={showSubtitle ? "Ocultar Subtítulo" : "Mostrar Subtítulo"}
+                  title={showSubtitle ? translate("widgets2.text44") : translate("widgets2.text45")}
                 >
                   <Heading2 size={13} strokeWidth={showSubtitle ? 2.5 : 2} />
                 </button>
@@ -342,7 +344,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                   <button
                     onClick={() => updateNodeData({ fontSize: Math.max(10, fontSize - 1) })}
                     className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${isDark ? 'hover:bg-white/10 text-white/60 hover:text-white' : 'hover:bg-[#F3F4F6] text-[#6B7280]'}`}
-                    title="Reducir letra"
+                    title={translate("widgets2.text46")}
                   >
                     <Minus size={11} strokeWidth={2.5} />
                   </button>
@@ -371,7 +373,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                   <button
                     onClick={() => updateNodeData({ fontSize: Math.min(200, fontSize + 1) })}
                     className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${isDark ? 'hover:bg-white/10 text-white/60 hover:text-white' : 'hover:bg-[#F3F4F6] text-[#6B7280]'}`}
-                    title="Aumentar letra"
+                    title={translate("widgets2.text47")}
                   >
                     <Plus size={11} strokeWidth={2.5} />
                   </button>
@@ -387,7 +389,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                       setActivePicker(activePicker === "bg" ? null : "bg");
                     }}
                     className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors relative ${isDark ? 'hover:bg-white/10 text-white/60 hover:text-white' : 'hover:bg-[#F3F4F6] text-[#6B7280]'}`}
-                    title="Color de fondo"
+                    title={translate("widgets2.text14")}
                   >
                     <Palette size={13} className="text-[#6B7280]" />
                     <div
@@ -410,7 +412,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                           }}
                           className="w-6 h-6 rounded-full border border-gray-200/60 transition-transform hover:scale-110 flex items-center justify-center overflow-hidden relative cursor-pointer"
                           style={{ backgroundColor: c.value === "transparent" ? "white" : c.value }}
-                          title={c.name}
+                          title={translate(c.name)}
                         >
                           {c.value === "transparent" && <div className="absolute w-full h-[1.5px] bg-red-500 rotate-45" />}
                           {backgroundColor === c.value && c.value !== "transparent" && (
@@ -426,7 +428,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                 <button
                   onClick={() => setNodes((nds) => nds.filter((n) => n.id !== id))}
                   className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${isDark ? 'hover:bg-red-500/20 text-[#9CA3AF] hover:text-[#EF4444]' : 'hover:bg-[#FEE2E2] text-[#9CA3AF] hover:text-[#EF4444]'}`}
-                  title="Eliminar"
+                  title={translate("widgets2.text15")}
                 >
                   <Trash2 size={13} strokeWidth={2} />
                 </button>
@@ -449,7 +451,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
               className={`bg-transparent font-sans font-semibold focus:outline-none border-none p-0 w-full whitespace-pre-wrap break-words resize-none overflow-hidden ${
                 isBoardDark ? "placeholder:text-white/45" : "placeholder:text-black/35"
               }`}
-              placeholder="Título de la Lista"
+              placeholder={translate("widgets2.text48")}
               style={{
                 fontSize: `${fontSize * 1.3}px`,
                 color: boardTextColor,
@@ -464,7 +466,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
               className={`bg-transparent font-sans font-normal focus:outline-none border-none p-0 w-full whitespace-pre-wrap break-words resize-none overflow-hidden ${
                 isBoardDark ? "placeholder:text-white/45 text-white/90" : "placeholder:text-black/35 text-neutral-700"
               }`}
-              placeholder="Añade un subtítulo descriptivo..."
+              placeholder={translate("widgets2.text49")}
               style={{
                 fontSize: `${fontSize * 0.95}px`,
                 color: boardTextColor,
@@ -525,7 +527,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                     value={task.text}
                     onChange={(e) => handleTaskTextChange(task.id, e.target.value)}
                     onKeyDown={(e) => handleKeyDown(e, task.id)}
-                    placeholder="Añadir una tarea..."
+                    placeholder={translate("widgets2.text50")}
                     className={`bg-transparent w-full focus:outline-none border-none font-sans font-light focus:ring-0 leading-normal p-0 whitespace-pre-wrap break-words resize-none overflow-hidden ${
                       isBoardDark ? "placeholder:text-white/40" : "placeholder:text-black/35"
                     }`}
@@ -547,7 +549,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                     className={`p-1 rounded-md transition-colors ${
                       isBoardDark ? "hover:bg-white/15 text-white/60 hover:text-white" : "hover:bg-black/10 text-neutral-500 hover:text-neutral-900"
                     }`}
-                    title="Subir"
+                    title={translate("widgets2.text40")}
                   >
                     <ArrowUp size={11} />
                   </button>
@@ -556,7 +558,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                     className={`p-1 rounded-md transition-colors ${
                       isBoardDark ? "hover:bg-white/15 text-white/60 hover:text-white" : "hover:bg-black/10 text-neutral-500 hover:text-neutral-900"
                     }`}
-                    title="Bajar"
+                    title={translate("widgets2.text41")}
                   >
                     <ArrowDown size={11} />
                   </button>
@@ -565,7 +567,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
                     className={`p-1 rounded-md transition-colors ${
                       isBoardDark ? "hover:bg-red-500/20 text-white/60 hover:text-red-400" : "hover:bg-red-50 text-neutral-500 hover:text-red-600"
                     }`}
-                    title="Eliminar"
+                    title={translate("widgets2.text15")}
                   >
                     <Trash2 size={11} />
                   </button>
@@ -587,7 +589,7 @@ const TodoNode = ({ id, data, selected }: NodeProps) => {
             style={{ fontSize: `${fontSize * 0.9}px` }}
           >
             <Plus size={13} />
-            <span>Nueva Tarea...</span>
+            <span>{translate("widgets2.text51")}</span>
           </button>
         )}
       </div>

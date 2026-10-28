@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { memo, useState, useRef, useEffect, forwardRef } from "react";
 import { Handle, Position, type NodeProps, NodeResizer, useReactFlow, useViewport } from "@xyflow/react";
 import { motion, AnimatePresence } from "framer-motion";
@@ -93,26 +94,26 @@ const SVG_SHAPES: Record<string, React.ReactNode> = {
 };
 
 const RAINBOW_COLORS = [
-  { name: "Transparente", value: "transparent" },
-  { name: "Rojo", value: "#EF4444" },
-  { name: "Naranja", value: "#F97316" },
-  { name: "Amarillo", value: "#FACC15" },
-  { name: "Verde", value: "#22C55E" },
-  { name: "Azul", value: "#4059F1" },
-  { name: "Morado", value: "#A855F7" },
-  { name: "Rosa", value: "#FCB5B9" },
-  { name: "Blanco", value: "#FFFFFF" },
-  { name: "Negro", value: "#1F2937" },
+  { name: "widgets2.text1", value: "transparent" },
+  { name: "widgets2.text2", value: "#EF4444" },
+  { name: "widgets2.text3", value: "#F97316" },
+  { name: "widgets2.text4", value: "#FACC15" },
+  { name: "widgets2.text5", value: "#22C55E" },
+  { name: "widgets2.text6", value: "#4059F1" },
+  { name: "widgets2.text7", value: "#A855F7" },
+  { name: "widgets2.text8", value: "#FCB5B9" },
+  { name: "widgets2.text9", value: "#FFFFFF" },
+  { name: "widgets2.text10", value: "#1F2937" },
 ];
 
 const TEXT_COLOR_PALETTE = [
-  { name: "Negro", value: "#111827" },
-  { name: "Gris", value: "#6B7280" },
-  { name: "Blanco", value: "#FFFFFF" },
-  { name: "Azul", value: "#2563EB" },
-  { name: "Verde", value: "#059669" },
-  { name: "Rojo", value: "#DC2626" },
-  { name: "Amarillo", value: "#FACC15" },
+  { name: "widgets2.text10", value: "#111827" },
+  { name: "widgets2.text11", value: "#6B7280" },
+  { name: "widgets2.text9", value: "#FFFFFF" },
+  { name: "widgets2.text6", value: "#2563EB" },
+  { name: "widgets2.text5", value: "#059669" },
+  { name: "widgets2.text2", value: "#DC2626" },
+  { name: "widgets2.text4", value: "#FACC15" },
 ];
 
 const handleClass =
@@ -131,6 +132,7 @@ const isBlackColor = (color: string | undefined): boolean => {
 };
 
 const ShapeNode = ({ id, data, selected }: NodeProps) => {
+  const { t: translate } = useTranslation();
   const nodeData = data as ShapeNodeData;
   const shape = nodeData.shape || "square";
   const [label, setLabel] = useState((nodeData.label || "").replace(/<br\s*\/?>/gi, "\n"));
@@ -203,7 +205,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
     >
       <NodeResizer isVisible={!!isSingleSelected} minWidth={60} minHeight={60} lineStyle={{ border: "none" }} />
 
-      <div className="absolute top-0 left-1/2 z-20 h-5 w-28 -translate-x-1/2 cursor-grab rounded-b-xl active:cursor-grabbing" title="Mover widget">
+      <div className="absolute top-0 left-1/2 z-20 h-5 w-28 -translate-x-1/2 cursor-grab rounded-b-xl active:cursor-grabbing" title={translate("widgets2.text16")}>
         <div className={`mx-auto mt-1.5 h-1.5 w-8 rounded-full opacity-0 transition-opacity group-hover/widget:opacity-100 ${isFillDark ? "bg-white/40" : "bg-black/20"}`} />
       </div>
 
@@ -238,7 +240,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
                       className={`w-6 h-6 flex items-center justify-center rounded-md transition-colors ${
                         isActive ? "bg-[#4059F1] text-white" : isDark ? "hover:bg-white/10 text-zinc-400 hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black"
                       }`}
-                      title={`Cambiar a ${s}`}
+                      title={translate("widgets2.changeShape", { shape: translate(`widgets2.shapes.${s}`) })}
                     >
                       {s === "square" && <Square size={12} />}
                       {s === "circle" && <Circle size={12} />}
@@ -259,7 +261,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
                 <button
                   onClick={() => setActivePicker(activePicker === "fill" ? null : "fill")}
                   className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors relative ${isDark ? 'hover:bg-white/10' : 'hover:bg-[#F3F4F6]'}`}
-                  title="Color de relleno"
+                  title={translate("widgets2.text83")}
                 >
                   <Palette size={13} className="text-[#6B7280]" />
                   <div
@@ -276,7 +278,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
                 <button
                   onClick={() => setActivePicker(activePicker === "border" ? null : "border")}
                   className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors relative ${isDark ? 'hover:bg-white/10' : 'hover:bg-[#F3F4F6]'}`}
-                  title="Color de borde"
+                  title={translate("widgets2.text84")}
                 >
                   <Square size={13} className="text-[#6B7280]" />
                   <div
@@ -293,7 +295,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
                 <button
                   onClick={() => setActivePicker(activePicker === "text" ? null : "text")}
                   className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors ${isDark ? 'hover:bg-white/10' : 'hover:bg-[#F3F4F6]'}`}
-                  title="Color de texto"
+                  title={translate("widgets2.text85")}
                 >
                   <Baseline size={13} style={{ color: nodeData.textColor || (isDark ? "#FFFFFF" : "#111827") }} className="stroke-[2.5]" />
                 </button>
@@ -307,7 +309,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
                         onClick={() => { updateNodeData({ fillColor: c.value }); setActivePicker(null); }}
                         className="w-6 h-6 rounded-full border border-gray-200/60 transition-transform hover:scale-110 flex items-center justify-center overflow-hidden relative cursor-pointer"
                         style={{ backgroundColor: c.value === "transparent" ? "white" : c.value }}
-                        title={c.name}
+                        title={translate(c.name)}
                       >
                         {c.value === "transparent" && <div className="absolute w-full h-[1.5px] bg-red-500 rotate-45" />}
                       </button>
@@ -324,7 +326,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
                         onClick={() => { updateNodeData({ strokeColor: c.value }); setActivePicker(null); }}
                         className="w-6 h-6 rounded-full border border-gray-200/60 transition-transform hover:scale-110 flex items-center justify-center overflow-hidden relative cursor-pointer"
                         style={{ backgroundColor: c.value === "transparent" ? "white" : c.value }}
-                        title={c.name}
+                        title={translate(c.name)}
                       >
                         {c.value === "transparent" && <div className="absolute w-full h-[1.5px] bg-red-500 rotate-45" />}
                       </button>
@@ -341,7 +343,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
                         onClick={() => { updateNodeData({ textColor: c.value }); setActivePicker(null); }}
                         className="w-6 h-6 rounded-full border border-gray-200 hover:scale-110 transition-transform flex items-center justify-center"
                         style={{ backgroundColor: c.value }}
-                        title={c.name}
+                        title={translate(c.name)}
                       >
                         {(nodeData.textColor || "#111827") === c.value && (
                           <Check size={10} className={c.value === "#FFFFFF" || c.value === "#FACC15" ? "text-gray-800" : "text-white"} />
@@ -363,7 +365,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
                     updateNodeData({ fontSize: Math.max(10, currentSize - 1) });
                   }}
                   className={`w-6 h-6 flex items-center justify-center rounded-md text-[#6B7280] transition-colors ${isDark ? 'hover:bg-white/10' : 'hover:bg-[#F3F4F6]'}`}
-                  title="Reducir letra"
+                  title={translate("widgets2.text46")}
                 >
                   <Minus size={10} strokeWidth={2.5} />
                 </button>
@@ -385,7 +387,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
                     updateNodeData({ fontSize: Math.min(200, currentSize + 1) });
                   }}
                   className={`w-6 h-6 flex items-center justify-center rounded-md text-[#6B7280] transition-colors ${isDark ? 'hover:bg-white/10' : 'hover:bg-[#F3F4F6]'}`}
-                  title="Aumentar letra"
+                  title={translate("widgets2.text47")}
                 >
                   <Plus size={10} strokeWidth={2.5} />
                 </button>
@@ -398,7 +400,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
                   className={`w-6 h-6 flex items-center justify-center rounded-md transition-colors ${
                     nodeData.bold ? "bg-[#4059F1] text-white" : isDark ? "hover:bg-white/10 text-[#6B7280]" : "hover:bg-[#F3F4F6] text-[#6B7280]"
                   }`}
-                  title="Negrita"
+                  title={translate("widgets2.text86")}
                 >
                   <Bold size={11} />
                 </button>
@@ -409,7 +411,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
                   className={`w-6 h-6 flex items-center justify-center rounded-md transition-colors ${
                     nodeData.italic ? "bg-[#4059F1] text-white" : isDark ? "hover:bg-white/10 text-[#6B7280]" : "hover:bg-[#F3F4F6] text-[#6B7280]"
                   }`}
-                  title="Cursiva"
+                  title={translate("widgets2.text87")}
                 >
                   <Italic size={11} />
                 </button>
@@ -420,7 +422,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
                   className={`w-6 h-6 flex items-center justify-center rounded-md transition-colors ${
                     nodeData.underline ? "bg-[#4059F1] text-white" : isDark ? "hover:bg-white/10 text-[#6B7280]" : "hover:bg-[#F3F4F6] text-[#6B7280]"
                   }`}
-                  title="Subrayado"
+                  title={translate("widgets2.text88")}
                 >
                   <Underline size={11} />
                 </button>
@@ -432,7 +434,7 @@ const ShapeNode = ({ id, data, selected }: NodeProps) => {
               <button
                 onClick={() => setNodes((nds) => nds.filter((n) => n.id !== id))}
                 className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${isDark ? 'hover:bg-red-500/20 text-[#9CA3AF] hover:text-red-400' : 'hover:bg-[#FEE2E2] text-[#9CA3AF] hover:text-[#EF4444]'}`}
-                title="Eliminar"
+                title={translate("widgets2.text15")}
               >
                 <Trash2 size={13} strokeWidth={2} />
               </button>

@@ -23,6 +23,9 @@ import type { Node } from "@xyflow/react";
 export type WidgetDef = {
   id: string;
   name: string;
+  nameKey: string;
+  descriptionKey: string;
+  badgeKey?: string;
   description: string;
   icon: LucideIcon;
   badge?: string;
@@ -38,7 +41,9 @@ export const WIDGETS: WidgetDef[] = [
   {
     id: "kanban",
     name: "Pizarra",
+    nameKey: "widgets2.text111",
     description: "Columnas con tarjetas arrastrables para organizar estados",
+    descriptionKey: "widgets2.extra126",
     icon: Columns3,
     createNode: (position) => ({
       id: `kanban-${Date.now()}`,
@@ -60,7 +65,9 @@ export const WIDGETS: WidgetDef[] = [
   {
     id: "campaigns",
     name: "Campañas",
+    nameKey: "widgets2.extra122",
     description: "Cuadrícula de tarjetas de colaboración con marcas: cobro, cuotas, entregables y exclusividad",
+    descriptionKey: "widgets2.extra127",
     icon: LayoutGrid,
     createNode: (position) => ({
       id: `campaigns-${Date.now()}`,
@@ -78,7 +85,9 @@ export const WIDGETS: WidgetDef[] = [
   {
     id: "client-card",
     name: "Tarjeta de cliente",
+    nameKey: "widgets2.extra123",
     description: "Perfil de prospecto con contacto, etiquetas, valor y campos personalizados",
+    descriptionKey: "widgets2.extra128",
     icon: UserSquare2,
     createNode: (position) => ({
       id: `client-${Date.now()}`,
@@ -97,7 +106,9 @@ export const WIDGETS: WidgetDef[] = [
   {
     id: "ingresos",
     name: "Ingresos",
+    nameKey: "widgets2.extra124",
     description: "Dashboard financiero: total cerrado, promedio, cobrado vs por cobrar, top marcas y pendientes. Se sincroniza con Campañas.",
+    descriptionKey: "widgets2.extra129",
     icon: LineChart,
     createNode: (position) => ({
       id: `ingresos-${Date.now()}`,
@@ -115,9 +126,12 @@ export const WIDGETS: WidgetDef[] = [
   {
     id: "collab-finder",
     name: "Buscador de colaboraciones",
+    nameKey: "widgets2.text82",
     description: "Cuadrícula de sitios web donde encontrar colaboraciones: clic en la imagen y abre el enlace",
+    descriptionKey: "widgets2.extra130",
     icon: Globe,
     badge: "Creadores",
+    badgeKey: "widgets2.extra132",
     createNode: (position) => ({
       id: `collab-${Date.now()}`,
       type: "collabFinderNode",
@@ -140,7 +154,9 @@ export const WIDGETS: WidgetDef[] = [
   {
     id: "contracts",
     name: "Contratos",
+    nameKey: "widgets2.extra125",
     description: "Documento con tamaño de hoja, logotipo, páginas y enlace público para firma",
+    descriptionKey: "widgets2.extra131",
     icon: FileSignature,
     createNode: (position) => ({
       id: `contract-${Date.now()}`,

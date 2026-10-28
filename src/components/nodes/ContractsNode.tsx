@@ -1,3 +1,5 @@
+import { useTranslation } from "react-i18next";
+import i18nInstance from "@/i18n";
 /**
  * ═══════════════════════════════════════════════════════════════════════════
  *  REGLA GLOBAL DE WIDGETS (Miiles)
@@ -50,6 +52,7 @@ const CAT_ICONS: Record<string, any> = {
 };
 
 const ContractsNode = ({ id, data, selected }: NodeProps) => {
+  const { t } = useTranslation();
   const { isDark } = useTheme();
   
   // Variables dinámicas para matching con Figma
@@ -66,7 +69,7 @@ const textPrimary = isDark ? "text-white" : "text-gray-900";
   const d = data as ContractsNodeData;
 
   const pages: ContractPage[] = d.pages?.length ? d.pages : [{ id: uid(), content: "" }];
-  const dims = PAGE_DIMENSIONS[d.pageSize || "Carta"] ?? PAGE_DIMENSIONS.Carta;
+  const dims = PAGE_DIMENSIONS[d.pageSize || t("widgets1.label100")] ?? PAGE_DIMENSIONS.Carta;
 
   const [hovered, setHovered] = useState(false);
   const [activePage, setActivePage] = useState(0);
@@ -261,7 +264,7 @@ const textPrimary = isDark ? "text-white" : "text-gray-900";
               <button
                 onClick={() => setNodes((nds) => nds.filter((n) => n.id !== id))}
                 className="w-8 h-8 flex items-center justify-center rounded-xl text-gray-400 hover:bg-red-50 hover:text-red-500 transition-colors"
-                title="Eliminar widget"
+                title={t("widgets1.label079")}
               >
                 <Trash2 size={14} />
               </button>
@@ -282,7 +285,7 @@ const textPrimary = isDark ? "text-white" : "text-gray-900";
       {/* Zona para mover el widget */}
       <div
         className="absolute top-0 left-1/2 z-30 h-5 w-28 -translate-x-1/2 cursor-grab rounded-b-xl active:cursor-grabbing"
-        title="Mover widget"
+        title={t("widgets1.label028")}
       >
         <div className="mx-auto mt-1.5 h-1.5 w-8 rounded-full bg-black/10 opacity-0 transition-opacity group-hover/widget:opacity-100" />
       </div>
@@ -311,13 +314,13 @@ const textPrimary = isDark ? "text-white" : "text-gray-900";
           onClick={(e) => e.stopPropagation()}
         >
           <input
-            value={d.title ?? "Contratos"}
+            value={d.title ?? t("widgets1.label080")}
             onChange={(e) => update({ title: e.target.value })}
-            placeholder="Contratos"
+            placeholder={t("widgets1.label080")}
             className={`w-48 bg-transparent text-sm font-semibold ${isDark ? "text-white" : "text-gray-900"} outline-none placeholder:text-gray-300`}
           />
           <span className={`text-[10px] font-medium ${textSubtle}`}>
-            {pages.length} {pages.length === 1 ? "página" : "páginas"}
+            {t("widgets1.pages", { count: pages.length })}
           </span>
         </div>
 
@@ -347,7 +350,7 @@ const textPrimary = isDark ? "text-white" : "text-gray-900";
 
           <div className="relative shrink-0">
             <button className={pillCls} onClick={() => setOpenMenu(openMenu === "hoja" ? null : "hoja")}>
-              {d.pageSize || "Carta"}
+              {widgetLabel(d.pageSize || "Carta")}
             </button>
             {openMenu === "hoja" && (
               <Menu
@@ -373,9 +376,9 @@ const textPrimary = isDark ? "text-white" : "text-gray-900";
                   onClick={() => fileRef.current?.click()}
                   className={`flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-xs ${isDark ? "text-white/70" : "text-gray-600"} ${isDark ? "hover:bg-white/10" : "hover:bg-gray-50"} ${isDark ? "hover:text-white" : "hover:text-gray-900"}`}
                 >
-                  <Upload size={12} /> {d.logoUrl ? "Cambiar imagen" : "Subir imagen"}
+                  <Upload size={12} /> {d.logoUrl ? t("widgets1.label081") : t("widgets1.label082")}
                 </button>
-                <p className="px-3 pb-1 pt-2 text-[10px] font-light text-gray-300">Posición</p>
+                <p className="px-3 pb-1 pt-2 text-[10px] font-light text-gray-300">{t("widgets1.label083")}</p>
                 {LOGO_POSITIONS.map((p) => (
                   <button
                     key={p.value}
@@ -384,10 +387,10 @@ const textPrimary = isDark ? "text-white" : "text-gray-900";
                       logoPosition === p.value ? `bg-gray-50 ${isDark ? "text-white" : "text-gray-900"}` : isDark ? "text-white/60" : "text-gray-500"
                     }`}
                   >
-                    {p.label}
+                    {widgetLabel(p.label)}
                   </button>
                 ))}
-                <p className="px-3 pb-1 pt-2 text-[10px] font-light text-gray-300">Páginas</p>
+                <p className="px-3 pb-1 pt-2 text-[10px] font-light text-gray-300">{t("widgets1.label084")}</p>
                 {[
                   { value: false, label: "Solo la primera hoja" },
                   { value: true, label: "Repetir en todas" },
@@ -399,7 +402,7 @@ const textPrimary = isDark ? "text-white" : "text-gray-900";
                       !!d.logoRepeat === o.value ? `bg-gray-50 ${isDark ? "text-white" : "text-gray-900"}` : isDark ? "text-white/60" : "text-gray-500"
                     }`}
                   >
-                    {o.label}
+                    {widgetLabel(o.label)}
                   </button>
                 ))}
                 {d.logoUrl && (
@@ -410,22 +413,22 @@ const textPrimary = isDark ? "text-white" : "text-gray-900";
                     }}
                     className={`mt-1 flex w-full items-center gap-2 rounded-xl px-3 py-2 text-left text-xs ${isDark ? "text-white/40" : "text-gray-400"} ${isDark ? "hover:bg-white/10" : "hover:bg-gray-50"} ${isDark ? "hover:text-white" : "hover:text-gray-900"}`}
                   >
-                    <Trash2 size={12} /> Quitar logotipo
+                    <Trash2 size={12} />  {t("widgets1.label087")}
                   </button>
                 )}
               </div>
             )}
           </div>
 
-          <button onClick={addSignatureField} className={`${pillCls} shrink-0`} title="Insertar campo de firma">
+          <button onClick={addSignatureField} className={`${pillCls} shrink-0`} title={t("widgets1.label088")}>
             <span className="flex items-center gap-1.5">
-              <PenLine size={13} strokeWidth={2} /> Firma
+              <PenLine size={13} strokeWidth={2} />  {t("widgets1.label089")}
             </span>
           </button>
 
           <button onClick={openPublic} className={`px-3 py-1.5 rounded-lg text-[12px] font-medium transition-colors shrink-0 ${isDark ? "bg-white text-gray-900 hover:bg-gray-100" : "bg-[#111827] text-white hover:bg-gray-800"}`}>
             <span className="flex items-center gap-1.5">
-              <ExternalLink size={13} strokeWidth={2} /> Abrir
+              <ExternalLink size={13} strokeWidth={2} />  {t("widgets1.label090")}
             </span>
           </button>
         </div>
@@ -443,7 +446,8 @@ const textPrimary = isDark ? "text-white" : "text-gray-900";
 
         {dragOver && (
           <div className={`pointer-events-none absolute inset-4 z-20 flex items-center justify-center rounded-2xl border ${isDark ? "border-dashed border-white/20" : "border-dashed border-gray-300"} bg-black/5 text-xs font-light ${isDark ? "text-white/60" : "text-gray-500"}`}>
-            Suelta aquí tu logotipo
+            
+            {t("widgets1.label091")}
           </div>
         )}
 
@@ -455,7 +459,7 @@ const textPrimary = isDark ? "text-white" : "text-gray-900";
                 (d.logoUrl ? (
                   <img
                     src={d.logoUrl}
-                    alt="Logotipo del documento"
+                    alt={t("widgets1.label092")}
                     className={`absolute z-10 max-h-16 max-w-[160px] object-contain ${logoPositionClass(logoPosition)}`}
                   />
                 ) : (
@@ -464,7 +468,7 @@ const textPrimary = isDark ? "text-white" : "text-gray-900";
                       onClick={() => fileRef.current?.click()}
                       onMouseDown={(e) => e.stopPropagation()}
                       className={`nodrag nopan absolute z-10 flex h-14 w-14 items-center justify-center rounded-xl text-gray-400 opacity-0 transition-opacity duration-200 group-hover/widget:opacity-30 ${logoPositionClass(logoPosition)}`}
-                      title="Subir logotipo (JPG, PNG o SVG)"
+                      title={t("widgets1.label093")}
                     >
                       <ImageIcon size={20} />
                     </button>
@@ -472,7 +476,7 @@ const textPrimary = isDark ? "text-white" : "text-gray-900";
                 ))}
               {i === 0 && (
                 <h2 className={`mb-8 text-[26px] font-medium leading-tight ${isDark ? "text-white" : "text-gray-900"}`}>
-                  {d.title?.trim() || "Contratos"}
+                  {d.title?.trim() || t("widgets1.label080")}
                 </h2>
               )}
               {editing && pageIndex === i ? (
@@ -482,7 +486,7 @@ const textPrimary = isDark ? "text-white" : "text-gray-900";
                   onChange={(e) => setPageContent(e.target.value)}
                   onBlur={() => setEditing(false)}
                   onMouseDown={(e) => e.stopPropagation()}
-                  placeholder="Escribe aquí el contenido"
+                  placeholder={t("widgets1.label094")}
                   className={`nodrag nopan min-h-0 flex-1 resize-none bg-transparent text-[13.5px] font-light leading-[1.85] ${isDark ? "text-white/90" : "text-gray-800"} outline-none ${isDark ? "placeholder:text-white/20" : "placeholder:text-gray-300"}`}
                 />
               ) : (
@@ -498,7 +502,8 @@ const textPrimary = isDark ? "text-white" : "text-gray-900";
                     <ContractRichText content={p.content} isDark={isDark} />
                   ) : (
                     <span className={isDark ? "text-white/30" : "text-gray-300"}>
-                      Escribe aquí el contenido
+                      
+                      {t("widgets1.label094")}
                     </span>
                   )}
                 </div>
@@ -519,7 +524,7 @@ const textPrimary = isDark ? "text-white" : "text-gray-900";
                 </div>
               )}
               <div className="absolute bottom-6 left-0 right-0 text-center text-[11px] font-light text-gray-300">
-                Página {i + 1} de {pages.length}
+                {t("widgets1.pageOf", { page: i + 1, total: pages.length })}
               </div>
             </div>
           ))}
@@ -554,7 +559,7 @@ const textPrimary = isDark ? "text-white" : "text-gray-900";
               onClick={() => setShowTemplates(true)}
               className={`flex flex-col items-center justify-center gap-1.5 p-3 ${isDark ? "text-white/60" : "text-gray-500"} ${isDark ? "hover:text-white" : "hover:text-gray-900"} transition-colors`}
             >
-              <span className={`text-[10px] font-medium ${isDark ? "text-white/70" : "text-gray-600"}`}>Plantillas</span>
+              <span className={`text-[10px] font-medium ${isDark ? "text-white/70" : "text-gray-600"}`}>{t("widgets1.label095")}</span>
               <div className={`flex h-8 w-8 items-center justify-center rounded-full ${isDark ? "bg-white/10" : "bg-gray-50"} ${isDark ? "text-white" : "text-gray-900"} ${isDark ? "hover:bg-white/20" : "hover:bg-gray-100"}`}>
                 <FileText size={16} strokeWidth={2} />
               </div>
@@ -574,30 +579,30 @@ const textPrimary = isDark ? "text-white" : "text-gray-900";
               onWheelCapture={(e) => e.stopPropagation()}
             >
               <div className="flex items-center justify-between px-3 pb-2 pt-1">
-                <p className={`text-[11px] font-medium ${isDark ? "text-white/60" : "text-gray-500"}`}>Plantillas</p>
+                <p className={`text-[11px] font-medium ${isDark ? "text-white/60" : "text-gray-500"}`}>{t("widgets1.label095")}</p>
               </div>
               <div className="flex flex-col gap-0.5">
-                {CONTRACT_TEMPLATES.map((t) => {
-                  const Icon = CAT_ICONS[t.category] || FileText;
+                {CONTRACT_TEMPLATES.map((template) => {
+                  const Icon = CAT_ICONS[template.category] || FileText;
                   return (
-                    <div key={t.id} className="group/tpl relative">
+                    <div key={template.id} className="group/tpl relative">
                       <button
-                        onClick={() => applyTemplate(t, "replace")}
+                        onClick={() => applyTemplate(template, "replace")}
                         className={`flex w-full items-center gap-2.5 rounded-xl px-3 py-2.5 text-left ${isDark ? "hover:bg-white/10" : "hover:bg-gray-50"} transition-colors`}
-                        title="Reemplazar el documento con esta plantilla"
+                        title={t("widgets1.label096")}
                       >
                         <div className={`flex shrink-0 items-center justify-center ${isDark ? "text-white/40" : "text-gray-400"} ${isDark ? "text-white/60 group-hover/tpl:text-white/90" : "text-gray-400 group-hover/tpl:text-gray-600"}`}>
                           <Icon size={14} strokeWidth={2} />
                         </div>
-                        <span className={`block text-xs font-medium ${isDark ? "text-white/80" : "text-gray-700"}`}>{t.name}</span>
+                        <span className={`block text-xs font-medium ${isDark ? "text-white/80" : "text-gray-700"}`}>{widgetLabel(template.name)}</span>
                       </button>
                       <button
                         onClick={(e) => {
                           e.stopPropagation();
-                          applyTemplate(t, "append");
+                          applyTemplate(template, "append");
                         }}
                         className={`absolute right-2 top-1/2 -translate-y-1/2 hidden rounded-full p-1.5 text-gray-400 hover:bg-white dark:hover:bg-slate-700 ${isDark ? "hover:text-white" : "hover:text-gray-900"} group-hover/tpl:block shadow-sm border ${isDark ? "border-white/5" : "border-gray-100/50"}`}
-                        title="Añadir al final del documento"
+                        title={t("widgets1.label097")}
                       >
                         <Plus size={12} strokeWidth={2.5} />
                       </button>
@@ -647,7 +652,7 @@ const textPrimary = isDark ? "text-white" : "text-gray-900";
               <button
                 onClick={() => removePage(i)}
                 className={`absolute -right-1.5 -top-1.5 hidden h-4 w-4 items-center justify-center rounded-full ${isDark ? "bg-white/10 text-white/60" : "bg-white text-gray-500"} shadow-md border ${isDark ? "border-white/10" : "border-gray-100"} hover:text-red-500 group-hover/page:flex transition-colors`}
-                title="Eliminar página"
+                title={t("widgets1.label098")}
               >
                 <Trash2 size={8} />
               </button>
@@ -657,7 +662,7 @@ const textPrimary = isDark ? "text-white" : "text-gray-900";
         <button
           onClick={addPage}
           className={`flex h-12 w-12 shrink-0 items-center justify-center rounded-sm ${isDark ? "text-white/40" : "text-gray-400"} transition-colors border ${isDark ? "border-dashed border-white/20" : "border-dashed border-gray-300"} ${isDark ? "hover:bg-white/10" : "hover:bg-gray-50"} ${isDark ? "hover:text-white" : "hover:text-gray-900"} ${isDark ? "hover:border-white/30" : "hover:border-gray-400"}`}
-          title="Añadir página"
+          title={t("widgets1.label099")}
         >
           <Plus size={12} />
         </button>
@@ -680,12 +685,13 @@ const textPrimary = isDark ? "text-white" : "text-gray-900";
 };
 
 const Menu = ({ items, active, onPick }: { items: string[]; active: string; onPick: (v: string) => void }) => {
+  const { t } = useTranslation();
   const { isDark } = useTheme();
   return (
   <div className={`absolute right-0 top-full z-30 mt-2 w-[140px] rounded-2xl ${isDark ? "bg-[#1C1C1E]/95" : "bg-white/95"} p-1.5 shadow-sm backdrop-blur-sm`}>
     {items.map((it) => (
       <button
-        key={it}
+        key={widgetLabel(it)}
         onClick={() => onPick(it)}
         className={`block w-full rounded-xl px-3 py-2 text-left text-xs hover:bg-gray-50 ${
           it === active ? `bg-gray-50 ${isDark ? "text-white" : "text-gray-900"}` : isDark ? "text-white/60" : "text-gray-500"
@@ -699,3 +705,178 @@ const Menu = ({ items, active, onPick }: { items: string[]; active: string; onPi
 };
 
 export default memo(ContractsNode);
+
+const WIDGET_LABEL_KEYS: Record<string, string> = {
+"Creación de contenido UGC": "template0",
+"Colaboración con marca": "template1",
+"Servicios freelance": "template2",
+"Agencia con iguala mensual": "template3",
+"Diseño de marca": "template4",
+"Desarrollo de software": "template5",
+"Consultoría y asesoría": "template6",
+"Cesión de derechos de contenido": "template7",
+"Creación de contenido UGC": "template0",
+"Colaboración con marca": "template1",
+"Servicios freelance": "template2",
+"Agencia con iguala mensual": "template3",
+"Diseño de marca": "template4",
+"Desarrollo de software": "template5",
+"Consultoría y asesoría": "template6",
+"Cesión de derechos de contenido": "template7",
+  "Transparente": "label001",
+  "Rojo": "label002",
+  "Naranja": "label003",
+  "Amarillo": "label004",
+  "Verde": "label005",
+  "Azul": "label006",
+  "Morado": "label007",
+  "Rosa": "label008",
+  "Blanco": "label009",
+  "Negro": "label010",
+  "Sin orden": "label011",
+  "Por columnas": "label012",
+  "Por filas": "label013",
+  "Estado": "label014",
+  "Cobro": "label015",
+  "Pendiente": "label016",
+  "Activa": "label017",
+  "Completada": "label018",
+  "Cobrado": "label019",
+  "Por cobrar": "label020",
+  "Intercambio": "label021",
+  "Evento": "label022",
+  "Campañas": "label023",
+  "Mostrar/ocultar título": "label024",
+  "Mostrar/ocultar subtítulo": "label025",
+  "Color de fondo": "label026",
+  "Eliminar": "label027",
+  "Mover widget": "label028",
+  "Título": "label029",
+  "Subtítulo": "label030",
+  "Nueva": "label031",
+  "Orden": "label032",
+  "Agrupar": "label033",
+  "Buscar marca…": "label034",
+  "Aún no tienes campañas.": "label035",
+  "Añadir la primera": "label036",
+  "Sin campañas": "label037",
+  "Sin resultados para tu búsqueda.": "label038",
+  "Sin nombre": "label039",
+  "Exclusividad": "label040",
+  "Vista previa de la portada": "label041",
+  "Nuevo cliente": "label042",
+  "Eliminar campaña": "label043",
+  "Cerrar": "label044",
+  "Nombre de la marca": "label045",
+  "Cliente": "label046",
+  "Cambiar": "label047",
+  "Asignar cliente…": "label048",
+  "Quitar cliente": "label049",
+  "Crear nuevo cliente": "label050",
+  "Portada": "label051",
+  "https://… URL de la imagen": "label052",
+  "Arrastra la imagen para ajustar la altura": "label053",
+  "Quitar portada": "label054",
+  "Pago": "label055",
+  "Marcar como cobrada": "label056",
+  "Estado de la colaboración": "label057",
+  "💵 Monetario": "label058",
+  "🔄 Intercambio": "label059",
+  "Monto total a cobrar": "label060",
+  "Número de cuotas": "label061",
+  "Pago único. Si quieres puedes cargar la fecha estimada.": "label062",
+  "Mes de cierre del trato": "label063",
+  "Selecciona un mes": "label064",
+  "Usado en estadísticas de ingresos.": "label065",
+  "Días de pago": "label066",
+  "Días hábiles después del último entregable publicado.": "label067",
+  "Entregables de contenido": "label068",
+  "Reel (Instagram)": "label069",
+  "Story (Instagram)": "label070",
+  "Post (Instagram)": "label071",
+  "Short de YouTube": "label072",
+  "Video de YouTube": "label073",
+  "Asistencia a evento": "label074",
+  "Legal": "label075",
+  "La campaña tiene cláusula de exclusividad": "label076",
+  "Notas internas": "label077",
+  "Recordatorios, condiciones especiales, contactos…": "label078",
+  "Eliminar widget": "label079",
+  "Contratos": "label080",
+  "Cambiar imagen": "label081",
+  "Subir imagen": "label082",
+  "Posición": "label083",
+  "Páginas": "label084",
+  "Solo la primera hoja": "label085",
+  "Repetir en todas": "label086",
+  "Quitar logotipo": "label087",
+  "Insertar campo de firma": "label088",
+  "Firma": "label089",
+  "Abrir": "label090",
+  "Suelta aquí tu logotipo": "label091",
+  "Logotipo del documento": "label092",
+  "Subir logotipo (JPG, PNG o SVG)": "label093",
+  "Escribe aquí el contenido": "label094",
+  "Plantillas": "label095",
+  "Reemplazar el documento con esta plantilla": "label096",
+  "Añadir al final del documento": "label097",
+  "Eliminar página": "label098",
+  "Añadir página": "label099",
+  "Carta": "label100",
+  "Arriba izquierda": "label101",
+  "Arriba centro": "label102",
+  "Arriba derecha": "label103",
+  "Abajo izquierda": "label104",
+  "Abajo centro": "label105",
+  "Abajo derecha": "label106",
+  "Selecciona mes": "label107",
+  "Todos": "label108",
+  "1 widget": "label109",
+  "Sin Fecha Estimada": "label110",
+  "Ingresos": "label111",
+  "Lo que cerraste por mes y lo que está por entrar.": "label112",
+  "Desde": "label113",
+  "Hasta": "label114",
+  "Resetear": "label115",
+  "Mes más alto": "label116",
+  "Total cerrado por mes": "label117",
+  "Cerrado": "label118",
+  "Top marcas": "label119",
+  "Aún no hay marcas.": "label120",
+  "Sin pendientes 🎉": "label121",
+  "Todos los widgets": "label122",
+  "No hay widgets de Campañas en el tablero.": "label123",
+  "Nombre del cliente": "label124",
+  "Cargo / empresa": "label125",
+  "Valor": "label126",
+  "Asignado a": "label127",
+  "Editar cliente": "label128",
+  "Información": "label129",
+  "Nombre": "label130",
+  "URL de foto (opcional)": "label131",
+  "Descripción": "label132",
+  "Notas del prospecto…": "label133",
+  "Contacto": "label134",
+  "correo@ejemplo.com": "label135",
+  "https://sitio.com": "label136",
+  "Valor del prospecto": "label137",
+  "Etiquetas": "label138",
+  "Nueva etiqueta": "label139",
+  "Asignados": "label140",
+  "correo (opcional)": "label141",
+  "Agregar persona": "label142",
+  "Campos personalizados": "label143",
+  "Campo": "label144",
+  "Agregar campo": "label145",
+  "Nuevo": "label146",
+  "Contactado": "label147",
+  "Interesado": "label148",
+  "Perdido": "label149",
+  "días · inicia con la publicación.": "exclusivityStart",
+  "pendiente": "pendingSuffix",
+  "Añade el widget Campañas y crea colaboraciones para ver aquí tus ingresos.": "incomeHint"
+};
+function widgetLabel(value: string): string {
+  const key = WIDGET_LABEL_KEYS[value];
+  return key ? i18nInstance.t(`widgets1.${key}`) : value;
+}

@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 /**
  * ═══════════════════════════════════════════════════════════════════════════
  *  REGLA GLOBAL DE WIDGETS (Miiles) — LEE ESTO ANTES DE EDITAR
@@ -27,16 +28,16 @@ export type CollabFinderNodeData = {
 };
 
 const RAINBOW_COLORS = [
-  { name: "Transparente", value: "transparent" },
-  { name: "Rojo", value: "#EF4444" },
-  { name: "Naranja", value: "#F97316" },
-  { name: "Amarillo", value: "#FACC15" },
-  { name: "Verde", value: "#22C55E" },
-  { name: "Azul", value: "#4059F1" },
-  { name: "Morado", value: "#A855F7" },
-  { name: "Rosa", value: "#FCB5B9" },
-  { name: "Blanco", value: "#FFFFFF" },
-  { name: "Negro", value: "#1F2937" },
+  { name: "widgets2.text1", value: "transparent" },
+  { name: "widgets2.text2", value: "#EF4444" },
+  { name: "widgets2.text3", value: "#F97316" },
+  { name: "widgets2.text4", value: "#FACC15" },
+  { name: "widgets2.text5", value: "#22C55E" },
+  { name: "widgets2.text6", value: "#4059F1" },
+  { name: "widgets2.text7", value: "#A855F7" },
+  { name: "widgets2.text8", value: "#FCB5B9" },
+  { name: "widgets2.text9", value: "#FFFFFF" },
+  { name: "widgets2.text10", value: "#1F2937" },
 ];
 
 const uid = () =>
@@ -79,6 +80,7 @@ const previewFor = (l: CollabLink) => {
 const faviconFor = (url: string) => `https://icons.duckduckgo.com/ip3/${hostOf(url)}.ico`;
 
 const CollabFinderNode = ({ id, data, selected }: NodeProps) => {
+  const { t: translate } = useTranslation();
   const { setNodes, getNodes } = useReactFlow();
   const { zoom } = useViewport();
   const { isDark } = useTheme();
@@ -106,10 +108,10 @@ const CollabFinderNode = ({ id, data, selected }: NodeProps) => {
   const [filter, setFilter] = useState("all");
 
   const categories = [
-    { id: "all", label: "Todos" },
+    { id: "all", label: translate("widgets2.text65") },
     { id: "latam", label: "LatAm & MX" },
-    { id: "speed", label: "Velocidad" },
-    { id: "niche", label: "Nicho" },
+    { id: "speed", label: translate("widgets2.text66") },
+    { id: "niche", label: translate("widgets2.text67") },
   ];
 
   const getLevel = (link: CollabLink, filterId: string) => {
@@ -166,7 +168,7 @@ const CollabFinderNode = ({ id, data, selected }: NodeProps) => {
               <button
                 onClick={() => setActivePicker(activePicker === "fill" ? null : "fill")}
                 className={`w-7 h-7 flex items-center justify-center rounded-lg relative ${isDark ? "hover:bg-white/10" : "hover:bg-neutral-100"}`}
-                title="Color de fondo"
+                title={translate("widgets2.text14")}
               >
                 <Palette size={13} className="text-[#6B7280]" />
                 <div className="absolute bottom-1 right-1 w-2 h-2 rounded-full border border-white" style={{ backgroundColor }} />
@@ -183,7 +185,7 @@ const CollabFinderNode = ({ id, data, selected }: NodeProps) => {
                 className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${
                   isDark ? "hover:bg-red-500/20 text-white/60 hover:text-red-400" : "hover:bg-red-50 text-neutral-400 hover:text-red-500"
                 }`}
-                title="Eliminar"
+                title={translate("widgets2.text15")}
               >
                 <Trash2 size={13} />
               </button>
@@ -192,7 +194,7 @@ const CollabFinderNode = ({ id, data, selected }: NodeProps) => {
         )}
       </AnimatePresence>
 
-      <div className="absolute top-0 left-1/2 z-20 h-5 w-28 -translate-x-1/2 cursor-grab rounded-b-xl active:cursor-grabbing" title="Mover widget">
+      <div className="absolute top-0 left-1/2 z-20 h-5 w-28 -translate-x-1/2 cursor-grab rounded-b-xl active:cursor-grabbing" title={translate("widgets2.text16")}>
         <div className={`mx-auto mt-1.5 h-1.5 w-8 rounded-full opacity-0 transition-opacity group-hover/widget:opacity-100 ${isEffectiveBgDark ? "bg-white/40" : "bg-black/20"}`} />
       </div>
 
@@ -210,13 +212,13 @@ const CollabFinderNode = ({ id, data, selected }: NodeProps) => {
         {(d.showTitle ?? true) && (
           <div className="px-4 pt-4 pb-0 shrink-0">
             <div className="text-[15px] font-semibold" style={{ color: textColor }}>
-              {d.title || "Buscador de colaboraciones"}
+              {d.title || translate("widgets2.text82")}
             </div>
             
             {/* Filters */}
             <div className="mt-3 mb-1 pointer-events-auto">
               <FilterSelect
-                label="Filtro"
+                label={translate("widgets2.text68")}
                 value={filter}
                 options={categories.map(c => ({ value: c.id, label: c.label }))}
                 onChange={setFilter}
@@ -281,21 +283,21 @@ const CollabFinderNode = ({ id, data, selected }: NodeProps) => {
 
             const getLevelTitle = (level: number, filterId: string) => {
               if (filterId === "latam") {
-                if (level === 1) return "Operación regional nativa";
-                if (level === 2) return "Presencia local (México / LatAm)";
-                return "Enfoque internacional o europeo";
+                if (level === 1) return translate("widgets2.text69");
+                if (level === 2) return translate("widgets2.text70");
+                return translate("widgets2.text71");
               }
               if (filterId === "speed") {
-                if (level === 1) return "Respuesta rápida";
-                if (level === 2) return "En ocasiones hay demoras";
-                return "El proceso suele ser largo";
+                if (level === 1) return translate("widgets2.text72");
+                if (level === 2) return translate("widgets2.text73");
+                return translate("widgets2.text74");
               }
               if (filterId === "niche") {
-                if (level === 1) return "Micro-influencers y nicho";
-                if (level === 2) return "Creadores UGC estándar";
-                return "Enfoque en Ads y automatización";
+                if (level === 1) return translate("widgets2.text75");
+                if (level === 2) return translate("widgets2.text76");
+                return translate("widgets2.text77");
               }
-              return level === 1 ? "Recomendadas" : level === 2 ? "Alternativas" : "Otras opciones";
+              return level === 1 ? translate("widgets2.text78") : level === 2 ? translate("widgets2.text79") : translate("widgets2.text80");
             };
 
             return (
@@ -323,7 +325,7 @@ const CollabFinderNode = ({ id, data, selected }: NodeProps) => {
           })()}
 
           {visibleLinks.length === 0 && (
-            <p className={`text-[11px] mt-3 ${subtleText}`}>No hay sitios disponibles.</p>
+            <p className={`text-[11px] mt-3 ${subtleText}`}>{translate("widgets2.text81")}</p>
           )}
         </div>
       </div>
@@ -338,7 +340,9 @@ const CollabFinderNode = ({ id, data, selected }: NodeProps) => {
 /* ─────────── Editor popover ─────────── */
 
 
-const PickerPopover = ({ colors, onPick, isDark }: { colors: { name: string; value: string }[]; onPick: (v: string) => void; isDark: boolean }) => (
+const PickerPopover = ({ colors, onPick, isDark }: { colors: { name: string; value: string }[]; onPick: (v: string) => void; isDark: boolean }) => {
+  const { t: translate } = useTranslation();
+  return (
   <div className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px] ${isDark ? "bg-[#1C1C1E] border border-white/10" : "bg-white border border-neutral-100"} shadow-sm`}>
     {colors.map((c) => (
       <button
@@ -346,13 +350,14 @@ const PickerPopover = ({ colors, onPick, isDark }: { colors: { name: string; val
         onClick={() => onPick(c.value)}
         className="w-6 h-6 rounded-full border border-neutral-200/60 transition-transform hover:scale-110 relative overflow-hidden"
         style={{ backgroundColor: c.value === "transparent" ? "white" : c.value }}
-        title={c.name}
+        title={translate(c.name)}
       >
         {c.value === "transparent" && <div className="absolute inset-0 w-full h-[1.5px] top-1/2 bg-red-500 rotate-45" />}
       </button>
     ))}
   </div>
-);
+  );
+};
 
 export default memo(CollabFinderNode);
 

@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { memo, useState, useRef, useEffect, useLayoutEffect } from "react";
 import { createPortal } from "react-dom";
 import { type NodeProps, NodeResizer, useReactFlow, useViewport } from "@xyflow/react";
@@ -91,16 +92,16 @@ export type KanbanNodeData = {
 
 
 const RAINBOW_COLORS = [
-  { name: "Transparente", value: "transparent" },
-  { name: "Rojo", value: "#EF4444" },
-  { name: "Naranja", value: "#F97316" },
-  { name: "Amarillo", value: "#FACC15" },
-  { name: "Verde", value: "#22C55E" },
-  { name: "Azul", value: "#4059F1" },
-  { name: "Morado", value: "#A855F7" },
-  { name: "Rosa", value: "#FCB5B9" },
-  { name: "Blanco", value: "#FFFFFF" },
-  { name: "Negro", value: "#1F2937" },
+  { name: "widgets2.text1", value: "transparent" },
+  { name: "widgets2.text2", value: "#EF4444" },
+  { name: "widgets2.text3", value: "#F97316" },
+  { name: "widgets2.text4", value: "#FACC15" },
+  { name: "widgets2.text5", value: "#22C55E" },
+  { name: "widgets2.text6", value: "#4059F1" },
+  { name: "widgets2.text7", value: "#A855F7" },
+  { name: "widgets2.text8", value: "#FCB5B9" },
+  { name: "widgets2.text9", value: "#FFFFFF" },
+  { name: "widgets2.text10", value: "#1F2937" },
 ];
 
 const TAG_COLORS = [
@@ -161,6 +162,7 @@ const initials = (nameOrEmail: string): string => {
 };
 
 const KanbanNode = ({ id, data, selected }: NodeProps) => {
+  const { t: translate } = useTranslation();
   const { setNodes, getNodes } = useReactFlow();
   const { zoom } = useViewport();
   const { isDark } = useTheme();
@@ -169,7 +171,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
   const isSingleSelected = selected && getNodes().filter((n) => n.selected).length === 1;
 
   const columns = nodeData.columns ?? defaultColumns();
-  const title = nodeData.title ?? "Pizarra";
+  const title = nodeData.title ?? translate("widgets2.text111");
   const showTitle = nodeData.showTitle ?? true;
   const showSubtitle = nodeData.showSubtitle ?? false;
   const subtitle = nodeData.subtitle ?? "";
@@ -353,7 +355,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
                 className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${
                   showTitle ? "bg-[#4059F1] text-white" : isDark ? "hover:bg-white/10 text-white/70" : "hover:bg-neutral-100 text-neutral-600"
                 }`}
-                title="Mostrar/ocultar título"
+                title={translate("widgets2.text12")}
               >
                 <Heading1 size={13} />
               </button>
@@ -362,7 +364,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
                 className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${
                   showSubtitle ? "bg-[#4059F1] text-white" : isDark ? "hover:bg-white/10 text-white/70" : "hover:bg-neutral-100 text-neutral-600"
                 }`}
-                title="Mostrar/ocultar subtítulo"
+                title={translate("widgets2.text13")}
               >
                 <Heading2 size={13} />
               </button>
@@ -372,7 +374,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
               <button
                 onClick={() => setActivePicker(activePicker === "fill" ? null : "fill")}
                 className={`w-7 h-7 flex items-center justify-center rounded-lg relative ${isDark ? "hover:bg-white/10" : "hover:bg-neutral-100"}`}
-                title="Color de fondo"
+                title={translate("widgets2.text14")}
               >
                 <Palette size={13} className="text-[#6B7280]" />
                 <div
@@ -399,7 +401,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
                 className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${
                   isDark ? "hover:bg-red-500/20 text-white/60 hover:text-red-400" : "hover:bg-red-50 text-neutral-400 hover:text-red-500"
                 }`}
-                title="Eliminar"
+                title={translate("widgets2.text15")}
               >
                 <Trash2 size={13} />
               </button>
@@ -408,7 +410,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
         )}
       </AnimatePresence>
 
-      <div className="absolute top-0 left-1/2 z-20 h-5 w-28 -translate-x-1/2 cursor-grab rounded-b-xl active:cursor-grabbing" title="Mover widget">
+      <div className="absolute top-0 left-1/2 z-20 h-5 w-28 -translate-x-1/2 cursor-grab rounded-b-xl active:cursor-grabbing" title={translate("widgets2.text16")}>
         <div className={`mx-auto mt-1.5 h-1.5 w-8 rounded-full opacity-0 transition-opacity group-hover/widget:opacity-100 ${isBoardDark ? "bg-white/40" : "bg-black/20"}`} />
       </div>
 
@@ -432,7 +434,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
                   isBoardDark ? "placeholder:text-white/45" : "placeholder:text-black/35"
                 }`}
                 style={{ color: boardTextColor }}
-                placeholder="Título"
+                placeholder={translate("widgets2.text17")}
               />
             )}
             {showSubtitle && (
@@ -443,7 +445,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
                   isBoardDark ? "placeholder:text-white/45 text-white/90" : "placeholder:text-black/35 text-neutral-700"
                 }`}
                 style={{ color: boardTextColor }}
-                placeholder="Subtítulo"
+                placeholder={translate("widgets2.text18")}
               />
             )}
           </div>
@@ -489,7 +491,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
                       className={`opacity-0 hover:opacity-100 group-hover:opacity-100 p-1 rounded transition-colors ${
                         isBoardDark ? "hover:bg-white/15 text-white/70 hover:text-white" : "hover:bg-black/10 text-neutral-500 hover:text-neutral-900"
                       }`}
-                      title="Eliminar columna"
+                      title={translate("widgets2.text19")}
                     >
                       <X size={12} />
                     </button>
@@ -552,7 +554,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
                           isBoardDark ? "border-white/20 hover:bg-white/10 text-white/80" : "border-black/20 hover:bg-black/5 text-neutral-700"
                         }`}
                       >
-                        <Plus size={12} /> Agregar tarjeta
+                        <Plus size={12} /> {translate("widgets2.text20")}
                       </button>
                     </div>
                   </div>
@@ -566,7 +568,7 @@ const KanbanNode = ({ id, data, selected }: NodeProps) => {
                 isBoardDark ? "border-white/25 hover:bg-white/10 text-white/90" : "border-black/20 hover:bg-black/5 text-neutral-700"
               }`}
             >
-              <Plus size={13} /> Nueva columna
+              <Plus size={13} /> {translate("widgets2.text21")}
             </button>
           </div>
         </div>
@@ -627,6 +629,7 @@ const CardView = ({
   onDragOver: (e: React.DragEvent) => void;
   onDragEnd: () => void;
 }) => {
+  const { t: translate } = useTranslation();
   const ref = useRef<HTMLDivElement>(null);
   const ratioValue = card.image?.ratio ?? "16:9";
   const ratioCss = IMAGE_RATIOS.find((r) => r.value === ratioValue)?.aspect ?? "16 / 9";
@@ -706,14 +709,14 @@ const CardView = ({
             className="nodrag nopan w-full text-[13px] font-medium whitespace-pre-wrap break-words leading-tight"
             style={{ color: textColor }}
           >
-            {card.title || "Título"}
+            {card.title || translate("widgets2.text17")}
           </div>
           {(card.showSubtitle || card.subtitle) && (
             <div
               className={`nodrag nopan w-full text-[11px] mt-1 whitespace-pre-wrap break-words leading-tight ${isDark ? "text-white/85" : "text-neutral-600"}`}
               style={{ color: textColor }}
             >
-              {card.subtitle || "Subtítulo"}
+              {card.subtitle || translate("widgets2.text18")}
             </div>
           )}
 
@@ -754,7 +757,7 @@ const CardView = ({
                         ? (accentColor && accentColor !== "transparent" ? accentColor : "#4059F1")
                         : undefined,
                     }}
-                    title={t.completed ? "Marcar como pendiente" : "Marcar como completada"}
+                    title={t.completed ? translate("widgets2.text22") : translate("widgets2.text23")}
                   >
                     {t.completed && (
                       <Check
@@ -775,7 +778,7 @@ const CardView = ({
                       textDecoration: t.completed ? "line-through" : "none",
                     }}
                   >
-                    {t.text || "Tarea"}
+                    {t.text || translate("widgets2.text24")}
                   </span>
                 </div>
               ))}
@@ -829,7 +832,7 @@ const CardView = ({
             onRemove();
           }}
           className="opacity-0 group-hover:opacity-60 hover:!opacity-100 hover:!text-red-500 shrink-0"
-          title="Eliminar"
+          title={translate("widgets2.text15")}
         >
           <Trash2 size={12} />
         </button>
@@ -855,6 +858,7 @@ const CardEditorPopover = ({
   onClose: () => void;
   onUpdate: (patch: Partial<KanbanCard>) => void;
 }) => {
+  const { t: translate } = useTranslation();
   const popoverRef = useRef<HTMLDivElement>(null);
   const [pos, setPos] = useState<{ top: number; left: number }>({ top: -999, left: -999 });
 
@@ -975,30 +979,30 @@ const CardEditorPopover = ({
           className="sticky top-0 z-10 px-4 pt-4 pb-6 flex items-center justify-between"
           style={{ background: isDark ? "linear-gradient(to bottom, #1C1C1E 60%, transparent)" : "linear-gradient(to bottom, #ffffff 60%, transparent)" }}
         >
-          <span className="text-[13px] font-semibold">Editar tarjeta</span>
+          <span className="text-[13px] font-semibold">{translate("widgets2.text25")}</span>
           <button
             onClick={onClose}
             className={`flex items-center gap-1.5 px-3 py-1.5 rounded-full transition-colors text-[11px] font-medium ${isDark ? "bg-white/10 hover:bg-white/20 text-white" : "bg-black/5 hover:bg-black/10 text-black"}`}
           >
-            <span>Cerrar</span>
+            <span>{translate("widgets2.text26")}</span>
             <X size={12} />
           </button>
         </div>
 
         <div className="px-4 pb-4">
           {/* Section: Basics */}
-      <Section label="Título">
+      <Section label={translate("widgets2.text17")}>
         <input
           value={card.title}
           onChange={(e) => onUpdate({ title: e.target.value })}
           className={`w-full text-[13px] px-2 py-1.5 rounded-md outline-none ${inputCls}`}
-          placeholder="Título"
+          placeholder={translate("widgets2.text17")}
         />
       </Section>
 
       <ExpandableRow
         icon={<Baseline size={12} />}
-        label="Subtítulo"
+        label={translate("widgets2.text18")}
         isActive={showSubtitle}
         onActivate={() => setActiveField("subtitle")}
         isDark={isDark}
@@ -1013,14 +1017,14 @@ const CardEditorPopover = ({
               setActiveField(null);
             }}
             className={`w-full text-[12px] px-2 py-1.5 rounded-md outline-none ${inputCls}`}
-            placeholder="Subtítulo"
+            placeholder={translate("widgets2.text18")}
           />
         )}
       </ExpandableRow>
 
       <ExpandableRow
         icon={<AlignLeft size={12} />}
-        label="Descripción"
+        label={translate("widgets2.text27")}
         isActive={showDescription}
         onActivate={() => setActiveField("description")}
         isDark={isDark}
@@ -1036,14 +1040,14 @@ const CardEditorPopover = ({
             }}
             rows={3}
             className={`w-full text-[12px] px-2 py-1.5 rounded-md outline-none resize-none ${inputCls}`}
-            placeholder="Escribe una descripción…"
+            placeholder={translate("widgets2.text28")}
           />
         )}
       </ExpandableRow>
 
       <ExpandableRow
         icon={<Link2 size={12} />}
-        label="Enlace"
+        label={translate("widgets2.text29")}
         isActive={showUrl}
         onActivate={() => setActiveField("url")}
         isDark={isDark}
@@ -1065,7 +1069,7 @@ const CardEditorPopover = ({
 
       <ExpandableRow
         icon={<ImageIcon size={12} />}
-        label="Imagen"
+        label={translate("widgets2.text30")}
         isActive={showImage}
         onActivate={() => setActiveField("image")}
         isDark={isDark}
@@ -1081,7 +1085,7 @@ const CardEditorPopover = ({
                 setActiveField(null);
               }}
               className={`w-full text-[12px] px-2 py-1.5 rounded-md outline-none ${inputCls}`}
-              placeholder="URL de la imagen"
+              placeholder={translate("widgets2.text31")}
             />
             <div className="flex gap-1">
               {IMAGE_RATIOS.map((r) => {
@@ -1109,7 +1113,7 @@ const CardEditorPopover = ({
       </ExpandableRow>
 
       {/* Tags */}
-      <Section label="Etiquetas" icon={<TagIcon size={12} />}>
+      <Section label={translate("widgets2.text32")} icon={<TagIcon size={12} />}>
         {(card.tags?.length ?? 0) > 0 && (
           <div className="flex flex-wrap gap-1 mb-1.5">
             {card.tags!.map((t) => (
@@ -1134,7 +1138,7 @@ const CardEditorPopover = ({
               className="text-[10px] px-2 py-0.5 rounded-full font-medium hover:opacity-80"
               style={{ backgroundColor: `${p.color}22`, color: p.color, border: `1px solid ${p.color}44` }}
             >
-              + {p.label}
+              + {translate(`widgets2.priority.${p.label}`)}
             </button>
           ))}
         </div>
@@ -1149,14 +1153,14 @@ const CardEditorPopover = ({
               }
             }}
             className={`flex-1 text-[11px] px-2 py-1 rounded-md outline-none ${inputCls}`}
-            placeholder="Nueva etiqueta"
+            placeholder={translate("widgets2.text33")}
           />
           <div className="relative flex items-center justify-center">
             <button
               onClick={() => setShowTagPicker(!showTagPicker)}
               className="w-5 h-5 rounded-full border transition-transform hover:scale-105"
               style={{ backgroundColor: newTagColor, borderColor: isDark ? "rgba(255,255,255,0.15)" : "rgba(0,0,0,0.15)" }}
-              title="Seleccionar color"
+              title={translate("widgets2.text34")}
             />
             {showTagPicker && (
               <div className={`absolute bottom-full mb-2 -left-12 w-[120px] rounded-xl p-2.5 grid grid-cols-4 gap-1.5 z-50 ${isDark ? "bg-[#1C1C1E] border border-white/10" : "bg-white border border-neutral-100"} shadow-sm`}>
@@ -1191,7 +1195,7 @@ const CardEditorPopover = ({
       </Section>
 
       {/* Assignees */}
-      <Section label="Equipo" icon={<Users size={12} />}>
+      <Section label={translate("widgets2.text35")} icon={<Users size={12} />}>
         {(card.assignees?.length ?? 0) > 0 && (
           <div className="space-y-1 mb-1.5">
             {card.assignees!.map((a) => (
@@ -1223,7 +1227,7 @@ const CardEditorPopover = ({
               value={newAssigneeName}
               onChange={(e) => setNewAssigneeName(e.target.value)}
               className={`w-full text-[11px] pl-6 pr-2 py-1 rounded-md outline-none ${inputCls}`}
-              placeholder="Nombre"
+              placeholder={translate("widgets2.text36")}
             />
           </div>
           <div className="relative">
@@ -1233,7 +1237,7 @@ const CardEditorPopover = ({
               onChange={(e) => setNewAssigneeEmail(e.target.value)}
               onKeyDown={(e) => e.key === "Enter" && addAssignee()}
               className={`w-full text-[11px] pl-6 pr-2 py-1 rounded-md outline-none ${inputCls}`}
-              placeholder="correo@miiles.app (opcional)"
+              placeholder={translate("widgets2.text37")}
             />
           </div>
           <button
@@ -1246,7 +1250,7 @@ const CardEditorPopover = ({
       </Section>
 
       {/* Checklist de tareas */}
-      <Section label="Tareas" icon={<ListChecks size={12} />}>
+      <Section label={translate("widgets2.text38")} icon={<ListChecks size={12} />}>
         {cardTasks.length > 0 && (
           <div className="space-y-1 mb-2">
             {cardTasks.map((t, idx) => (
@@ -1266,7 +1270,7 @@ const CardEditorPopover = ({
                       ? (accentColor && accentColor !== "transparent" ? accentColor : "#4059F1")
                       : undefined,
                   }}
-                  title={t.completed ? "Marcar como pendiente" : "Marcar como completada"}
+                  title={t.completed ? translate("widgets2.text22") : translate("widgets2.text23")}
                 >
                   {t.completed && (
                     <Check
@@ -1288,7 +1292,7 @@ const CardEditorPopover = ({
                       addTask();
                     }
                   }}
-                  placeholder="Tarea…"
+                  placeholder={translate("widgets2.text39")}
                   className={`flex-1 min-w-0 text-[11px] px-2 py-1 rounded-md outline-none ${inputCls}`}
                   style={{
                     textDecoration: t.completed ? "line-through" : "none",
@@ -1299,21 +1303,21 @@ const CardEditorPopover = ({
                   <button
                     onClick={() => moveTask(idx, -1)}
                     className="p-0.5 rounded hover:bg-black/10 dark:hover:bg-white/10 opacity-60 hover:opacity-100"
-                    title="Subir"
+                    title={translate("widgets2.text40")}
                   >
                     <ArrowUp size={10} />
                   </button>
                   <button
                     onClick={() => moveTask(idx, 1)}
                     className="p-0.5 rounded hover:bg-black/10 dark:hover:bg-white/10 opacity-60 hover:opacity-100"
-                    title="Bajar"
+                    title={translate("widgets2.text41")}
                   >
                     <ArrowDown size={10} />
                   </button>
                   <button
                     onClick={() => removeTask(t.id)}
                     className="p-0.5 rounded opacity-60 hover:opacity-100 hover:text-red-500"
-                    title="Eliminar"
+                    title={translate("widgets2.text15")}
                   >
                     <Trash2 size={10} />
                   </button>
@@ -1396,7 +1400,9 @@ const PickerPopover = ({
   colors: { name: string; value: string }[];
   onPick: (v: string) => void;
   isDark: boolean;
-}) => (
+}) => {
+  const { t: translate } = useTranslation();
+  return (
   <div
     className={`absolute bottom-full mb-2 left-1/2 -translate-x-1/2 rounded-xl p-2.5 grid grid-cols-5 gap-1.5 z-50 w-[150px] ${
       isDark ? "bg-[#1C1C1E] border border-white/10" : "bg-white border border-neutral-100"
@@ -1408,12 +1414,13 @@ const PickerPopover = ({
         onClick={() => onPick(c.value)}
         className="w-6 h-6 rounded-full border border-neutral-200/60 transition-transform hover:scale-110 relative overflow-hidden "
         style={{ backgroundColor: c.value === "transparent" ? "white" : c.value }}
-        title={c.name}
+        title={translate(c.name)}
       >
         {c.value === "transparent" && <div className="absolute inset-0 w-full h-[1.5px] top-1/2 bg-red-500 rotate-45" />}
       </button>
     ))}
   </div>
-);
+  );
+};
 
 export default memo(KanbanNode);

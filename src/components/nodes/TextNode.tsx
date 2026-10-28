@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { memo, useState, useRef, useEffect, useCallback } from "react";
 import { Handle, Position, type NodeProps, NodeResizer, useReactFlow, useViewport } from "@xyflow/react";
 import {
@@ -19,16 +20,16 @@ export type TextNodeData = {
 };
 
 const RAINBOW_COLORS = [
-  { name: "Transparente", value: "transparent" },
-  { name: "Rojo", value: "#EF4444" },
-  { name: "Naranja", value: "#F97316" },
-  { name: "Amarillo", value: "#FACC15" },
-  { name: "Verde", value: "#22C55E" },
-  { name: "Azul", value: "#4059F1" },
-  { name: "Morado", value: "#A855F7" },
-  { name: "Rosa", value: "#FCB5B9" },
-  { name: "Blanco", value: "#FFFFFF" },
-  { name: "Negro", value: "#1F2937" },
+  { name: "widgets2.text1", value: "transparent" },
+  { name: "widgets2.text2", value: "#EF4444" },
+  { name: "widgets2.text3", value: "#F97316" },
+  { name: "widgets2.text4", value: "#FACC15" },
+  { name: "widgets2.text5", value: "#22C55E" },
+  { name: "widgets2.text6", value: "#4059F1" },
+  { name: "widgets2.text7", value: "#A855F7" },
+  { name: "widgets2.text8", value: "#FCB5B9" },
+  { name: "widgets2.text9", value: "#FFFFFF" },
+  { name: "widgets2.text10", value: "#1F2937" },
 ];
 
 const HANDLE_CLASS =
@@ -63,21 +64,21 @@ function LinkPopover({
       <button
         onClick={(e) => { e.stopPropagation(); window.open(href, "_blank"); }}
         className="w-5 h-5 flex items-center justify-center rounded-md hover:bg-[#F3F4F6] text-[#6B7280] transition-colors"
-        title="Abrir"
+        title={translate("widgets2.text52")}
       >
         <ExternalLink size={11} />
       </button>
       <button
         onClick={(e) => { e.stopPropagation(); onEdit(); }}
         className={`text-[11px] font-normal hover:underline px-0.5 transition-colors ${isDark ? 'text-white' : 'text-black'}`}
-        title="Editar"
+        title={translate("widgets2.text53")}
       >
-        Editar
+        {translate("widgets2.text53")}
       </button>
       <button
         onClick={(e) => { e.stopPropagation(); onRemove(); }}
         className="w-5 h-5 flex items-center justify-center rounded-md hover:bg-[#FEE2E2] text-[#9CA3AF] hover:text-[#EF4444] transition-colors"
-        title="Quitar link"
+        title={translate("widgets2.text54")}
       >
         <Trash2 size={11} />
       </button>
@@ -93,6 +94,7 @@ const isBlackColor = (color: string | undefined): boolean => {
 
 // ─── TextNode ───────────────────────────────────────────────────
 const TextNode = ({ id, data, selected }: NodeProps) => {
+  const { t: translate } = useTranslation();
   const { getNodes, setNodes } = useReactFlow();
   const { zoom } = useViewport();
   const { isDark } = useTheme();
@@ -302,7 +304,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
     >
       <NodeResizer isVisible={!!isSingleSelected} minWidth={140} minHeight={40} />
 
-      <div className="absolute top-0 left-1/2 z-20 h-5 w-28 -translate-x-1/2 cursor-grab rounded-b-xl active:cursor-grabbing" title="Mover widget">
+      <div className="absolute top-0 left-1/2 z-20 h-5 w-28 -translate-x-1/2 cursor-grab rounded-b-xl active:cursor-grabbing" title={translate("widgets2.text16")}>
         <div className={`mx-auto mt-1.5 h-1.5 w-8 rounded-full opacity-0 transition-opacity group-hover/widget:opacity-100 ${isEffectiveBgDark ? "bg-white/40" : "bg-black/20"}`} />
       </div>
 
@@ -369,7 +371,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                 <button
                   onMouseDown={(e) => { e.preventDefault(); applyFormat("bold"); }}
                   className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors font-semibold text-[13px] ${isDark ? 'hover:bg-white/10 text-[#9CA3AF] hover:text-white' : 'hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black'}`}
-                  title="Negrita (Ctrl+B)"
+                  title={translate("widgets2.text55")}
                 >
                   B
                 </button>
@@ -378,7 +380,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                 <button
                   onMouseDown={(e) => { e.preventDefault(); applyFormat("italic"); }}
                   className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors italic text-[13px] ${isDark ? 'hover:bg-white/10 text-[#9CA3AF] hover:text-white' : 'hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black'}`}
-                  title="Cursiva (Ctrl+I)"
+                  title={translate("widgets2.text56")}
                 >
                   I
                 </button>
@@ -387,7 +389,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                 <button
                   onMouseDown={(e) => { e.preventDefault(); applyFormat("underline"); }}
                   className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors underline text-[13px] ${isDark ? 'hover:bg-white/10 text-[#9CA3AF] hover:text-white' : 'hover:bg-[#F3F4F6] text-[#6B7280] hover:text-black'}`}
-                  title="Subrayado (Ctrl+U)"
+                  title={translate("widgets2.text57")}
                 >
                   U
                 </button>
@@ -402,7 +404,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                       ? (isDark ? "bg-white text-black border border-gray-200" : "bg-black text-white") 
                       : (isDark ? "hover:bg-white/10 text-[#9CA3AF] hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280]")
                   }`}
-                  title="Alinear izquierda"
+                  title={translate("widgets2.text58")}
                 >
                   <AlignLeft size={13} strokeWidth={2} />
                 </button>
@@ -415,7 +417,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                       ? (isDark ? "bg-white text-black border border-gray-200" : "bg-black text-white") 
                       : (isDark ? "hover:bg-white/10 text-[#9CA3AF] hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280]")
                   }`}
-                  title="Centrar"
+                  title={translate("widgets2.text59")}
                 >
                   <AlignCenter size={13} strokeWidth={2} />
                 </button>
@@ -428,7 +430,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                       ? (isDark ? "bg-white text-black border border-gray-200" : "bg-black text-white") 
                       : (isDark ? "hover:bg-white/10 text-[#9CA3AF] hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280]")
                   }`}
-                  title="Alinear derecha"
+                  title={translate("widgets2.text60")}
                 >
                   <AlignRight size={13} strokeWidth={2} />
                 </button>
@@ -443,7 +445,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                       ? (isDark ? "bg-white text-black border border-gray-200" : "bg-[#EEF2FF] text-[#4059F1]") 
                       : (isDark ? "hover:bg-white/10 text-[#9CA3AF] hover:text-white" : "hover:bg-[#F3F4F6] text-[#6B7280]")
                   }`}
-                  title="Link (Ctrl+K)"
+                  title={translate("widgets2.text61")}
                 >
                   <Link2 size={13} strokeWidth={2} />
                 </button>
@@ -458,7 +460,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                       setActivePicker(activePicker === "bg" ? null : "bg");
                     }}
                     className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors relative ${isDark ? 'hover:bg-white/10 text-white/60 hover:text-white' : 'hover:bg-[#F3F4F6] text-[#6B7280]'}`}
-                    title="Color de fondo"
+                    title={translate("widgets2.text14")}
                   >
                     <Palette size={13} className="text-[#6B7280]" />
                     <div
@@ -481,7 +483,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                           }}
                           className="w-6 h-6 rounded-full border border-gray-200/60 transition-transform hover:scale-110 flex items-center justify-center overflow-hidden relative cursor-pointer"
                           style={{ backgroundColor: c.value === "transparent" ? "white" : c.value }}
-                          title={c.name}
+                          title={translate(c.name)}
                         >
                           {c.value === "transparent" && <div className="absolute w-full h-[1.5px] bg-red-500 rotate-45" />}
                           {backgroundColor === c.value && c.value !== "transparent" && (
@@ -503,7 +505,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                       setActivePicker(activePicker === "text" ? null : "text");
                     }}
                     className={`w-7 h-7 flex items-center justify-center rounded-md transition-colors ${isDark ? 'hover:bg-white/10 text-white/60 hover:text-white' : 'hover:bg-[#F3F4F6] text-[#6B7280]'}`}
-                    title="Color del Texto"
+                    title={translate("widgets2.text62")}
                   >
                     <Baseline size={13} style={{ color: textColor }} className="stroke-[2.5]" />
                   </button>
@@ -518,7 +520,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                           }}
                           className="w-6 h-6 rounded-full border border-gray-200/60 transition-transform hover:scale-110 flex items-center justify-center overflow-hidden relative cursor-pointer"
                           style={{ backgroundColor: c.value === "transparent" ? "white" : c.value }}
-                          title={c.name}
+                          title={translate(c.name)}
                         >
                           {c.value === "transparent" && <div className="absolute w-full h-[1.5px] bg-red-500 rotate-45" />}
                           {textColor === c.value && c.value !== "transparent" && (
@@ -536,7 +538,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                 <button
                   onClick={() => setNodes((nds) => nds.filter((n) => n.id !== id))}
                   className={`w-7 h-7 flex items-center justify-center rounded-lg transition-colors ${isDark ? 'hover:bg-red-500/20 text-[#9CA3AF] hover:text-red-400' : 'hover:bg-[#FEE2E2] text-[#9CA3AF] hover:text-[#EF4444]'}`}
-                  title="Eliminar"
+                  title={translate("widgets2.text15")}
                 >
                   <Trash2 size={13} strokeWidth={2} />
                 </button>
@@ -570,7 +572,7 @@ const TextNode = ({ id, data, selected }: NodeProps) => {
                       onClick={confirmLink}
                       className={`px-3 py-1 rounded-lg text-[12px] font-normal transition-colors shrink-0 ${isDark ? 'bg-white text-black hover:bg-white/90' : 'bg-black text-white hover:bg-black/80'}`}
                     >
-                      {linkUrl.trim() ? "Aplicar" : "Quitar"}
+                      {linkUrl.trim() ? translate("widgets2.text63") : translate("widgets2.text64")}
                     </button>
                   </motion.div>
                 )}

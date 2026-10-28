@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { createPortal } from "react-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -15,6 +16,7 @@ type Props = {
 };
 
 const WidgetsPicker = ({ open, onClose, onPick }: Props) => {
+  const { t: translate } = useTranslation();
   const { isDark } = useTheme();
   useTranslation();
   const [query, setQuery] = useState("");
@@ -95,7 +97,7 @@ const WidgetsPicker = ({ open, onClose, onPick }: Props) => {
               <div className="p-5 overflow-y-auto scrollbar-hide" style={{ maxHeight: "60vh" }}>
                 {filtered.length === 0 ? (
                   <div className={`text-center py-12 text-sm font-light ${isDark ? "text-white/40" : "text-neutral-400"}`}>
-                    No hay widgets que coincidan.
+                    {translate("widgets2.text115")}
                   </div>
                 ) : (
                   <div className="grid grid-cols-3 gap-3">
@@ -122,7 +124,7 @@ const WidgetsPicker = ({ open, onClose, onPick }: Props) => {
                                   : "bg-black text-white"
                               }`}
                             >
-                              {w.badge}
+                              {translate(w.badgeKey)}
                             </span>
                           )}
                           <div

@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { useState } from "react";
 import { useViewport } from "@xyflow/react";
 import { useTheme } from "@/contexts/ThemeContext";
@@ -9,6 +10,7 @@ const SIDES: ExtendSide[] = ["top", "bottom", "left", "right"];
 const ZONE = 38; // px catch area outside the node border
 
 const NodeExtendHandles = ({ nodeId }: { nodeId: string }) => {
+  const { t: translate } = useTranslation();
   const { zoom } = useViewport();
   const { isDark } = useTheme();
   const { active, requestExtend } = useFlowExtend();
@@ -66,7 +68,7 @@ const NodeExtendHandles = ({ nodeId }: { nodeId: string }) => {
                         ? "bg-white border border-gray-200 hover:bg-gray-100"
                         : "bg-black border border-black hover:bg-gray-900"
                   }`}
-                  title="Ampliar con IA desde aquí"
+                  title={translate("widgets2.text110")}
                 >
                   <img
                     src={estrellaIcon}
