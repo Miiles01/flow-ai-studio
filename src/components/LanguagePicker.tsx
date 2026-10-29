@@ -45,27 +45,3 @@ export function LanguageOptions({ isDark, label }: { isDark: boolean; label: str
     </div>
   );
 }
-
-/** Selector compacto ES / EN, con el mismo estilo que el selector de tema. */
-export function LanguageToggle({ label }: { label: string }) {
-  const { current, change } = useLang();
-  return (
-    <div role="radiogroup" aria-label={label} className="flex items-center gap-1 rounded-full border border-white/10 bg-white/5 p-0.5">
-      {LANGS.map((l) => (
-        <button
-          key={l.value}
-          type="button"
-          role="radio"
-          aria-checked={current === l.value}
-          title={l.label}
-          onClick={() => change(l.value)}
-          className={`rounded-full px-2.5 py-1 text-[11px] font-medium transition-all duration-200 ${
-            current === l.value ? "bg-white text-black shadow-sm" : "text-white/60 hover:text-white"
-          }`}
-        >
-          {l.short}
-        </button>
-      ))}
-    </div>
-  );
-}
