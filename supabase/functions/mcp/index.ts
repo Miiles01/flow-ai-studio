@@ -11,6 +11,16 @@ import { defineTool } from "npm:@lovable.dev/mcp-js@3.1.1";
 // src/data/studio-templates.json
 var studio_templates_default = [
   {
+    slug: "portafolio-ugc-v18",
+    title: "Meadow",
+    kind: "portfolio",
+    description: "Plantilla de portafolio UGC editorial en tonos arena con t\xEDtulos serif amarillos sobre una foto de paisaje. Incluye navbar en c\xE1psula con p\xEDldora que se desliza, secci\xF3n Sobre m\xED con foto a todo el ancho que se revela al hacer scroll, frase destacada y tres fotos, piezas en formato reel, marcas, nichos, CTA en negro, testimonios con logo de cada marca, fondo que cambia de color con el scroll y contacto con botones directos.",
+    thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v18.jpg",
+    preview_url: "https://wearemiiles.com/ugc-v18/",
+    download_url: "https://wearemiiles.com/studio/descargas/ugc-v18.zip",
+    template_number: 18
+  },
+  {
     slug: "portafolio-ugc-v17",
     title: "Breeze",
     kind: "portfolio",
