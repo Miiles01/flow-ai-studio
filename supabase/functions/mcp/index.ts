@@ -11,6 +11,16 @@ import { defineTool } from "npm:@lovable.dev/mcp-js@3.1.1";
 // src/data/studio-templates.json
 var studio_templates_default = [
   {
+    slug: "portafolio-ugc-v17",
+    title: "Breeze",
+    kind: "portfolio",
+    description: "Plantilla de portafolio UGC en blanco y azul cielo con texto negro, tu nombre gigante y tu foto sin fondo frente a un carrusel de tarjetas tipo app (notas, guion, archivos, m\xE9tricas y fotos). Incluye fondo que cambia de blanco a azul entre secciones, texto que se enciende palabra por palabra, carrusel de videos y fotos que se mueve solo, \xEDconos con acentos verde y rosa, nichos, marcas, testimonios con logo de cada marca, men\xFA tipo cortina y contacto con botones directos.",
+    thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v17.jpg",
+    preview_url: "https://wearemiiles.com/ugc-v17/",
+    download_url: "https://wearemiiles.com/studio/descargas/ugc-v17.zip",
+    template_number: 17
+  },
+  {
     slug: "portafolio-ugc-v16",
     title: "Velvet",
     kind: "portfolio",

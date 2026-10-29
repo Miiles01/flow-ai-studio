@@ -1,5 +1,15 @@
 [
   {
+    "slug": "portafolio-ugc-v17",
+    "title": "Breeze",
+    "kind": "portfolio",
+    "description": "Plantilla de portafolio UGC en blanco y azul cielo con texto negro, tu nombre gigante y tu foto sin fondo frente a un carrusel de tarjetas tipo app (notas, guion, archivos, métricas y fotos). Incluye fondo que cambia de blanco a azul entre secciones, texto que se enciende palabra por palabra, carrusel de videos y fotos que se mueve solo, íconos con acentos verde y rosa, nichos, marcas, testimonios con logo de cada marca, menú tipo cortina y contacto con botones directos.",
+    "thumbnail_url": "https://wearemiiles.com/studio/thumbs/ugc-v17.jpg",
+    "preview_url": "https://wearemiiles.com/ugc-v17/",
+    "download_url": "https://wearemiiles.com/studio/descargas/ugc-v17.zip",
+    "template_number": 17
+  },
+  {
     "slug": "portafolio-ugc-v16",
     "title": "Velvet",
     "kind": "portfolio",
