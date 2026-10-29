@@ -1,5 +1,15 @@
 [
   {
+    "slug": "portafolio-ugc-v16",
+    "title": "Velvet",
+    "kind": "portfolio",
+    "description": "Plantilla de portafolio UGC en negro con rosa y tu nombre gigante sobre la foto. Incluye un titular que se revela línea por línea, una foto que crece a pantalla completa, galería de trabajos que se arrastra, texto gigante en movimiento, campañas en formato reel que se abren en grande, paquetes con efecto 3D, cambio de tema de negro a rosa, testimonios del equipo de marketing de cada marca y contacto con botones directos.",
+    "thumbnail_url": "https://wearemiiles.com/studio/thumbs/ugc-v16.jpg",
+    "preview_url": "https://wearemiiles.com/ugc-v16/",
+    "download_url": "https://wearemiiles.com/studio/descargas/ugc-v16.zip",
+    "template_number": 16
+  },
+  {
     "slug": "portafolio-ugc-v15",
     "title": "Blush",
     "kind": "portfolio",
