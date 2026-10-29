@@ -3,7 +3,8 @@ import dashboardI18n from "@/i18n";
 const dt = (key: string, options?: Record<string, unknown>): string => dashboardI18n.t(key, options) as string;
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Settings, Sun, Moon, Laptop, User, ArrowRight, Download } from "lucide-react";
+import { Settings, Sun, Moon, Laptop, User, ArrowRight, Download, Languages } from "lucide-react";
+import { LanguageToggle } from "@/components/LanguagePicker";
 import { useTheme } from "@/contexts/ThemeContext";
 import { usePlan } from "@/hooks/usePlan";
 import { useInstallPrompt } from "@/hooks/useInstallPrompt";
@@ -91,7 +92,7 @@ export function QuickSettings({ children }: { children?: React.ReactNode }) {
           }
         `}
       >
-        <div className="space-y-4"><label>{dt("dashboard.language")} <select aria-label={dt("dashboard.language")} value={dashboardI18n.language.startsWith("en") ? "en" : "es"} onChange={(event) => { void dashboardI18n.changeLanguage(event.target.value); }}><option value="es">Español</option><option value="en">English</option></select></label>
+        <div className="space-y-4">
           {/* Header & Plan Info */}
           <div className="space-y-2">
             <h4 className="text-[11px] font-semibold tracking-wider opacity-50">{dt("dashboard.text193")}</h4>
@@ -192,6 +193,15 @@ export function QuickSettings({ children }: { children?: React.ReactNode }) {
                   <Laptop size={14} strokeWidth={2} />
                 </button>
               </div>
+            </div>
+
+            {/* Language Selector Row */}
+            <div className="flex items-center justify-between px-3 py-2">
+              <div className="flex items-center gap-2.5">
+                <Languages size={16} strokeWidth={1.5} className="opacity-70" />
+                <span className="text-[13px] font-light">{dt("dashboard.language")}</span>
+              </div>
+              <LanguageToggle label={dt("dashboard.language")} />
             </div>
 
             {/* Profile Settings row */}

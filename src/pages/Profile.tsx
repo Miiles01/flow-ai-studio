@@ -21,6 +21,7 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import AvatarUpload from "@/components/AvatarUpload";
+import { LanguageOptions } from "@/components/LanguagePicker";
 import { UpgradeProDialog } from "@/components/UpgradeProDialog";
 import { useSubscription } from "@/hooks/useSubscription";
 import { getStripeEnvironment } from "@/lib/stripe";
@@ -372,7 +373,15 @@ const Profile = () => {
             </Card>
           </div>
 
-          <label>{dt("dashboard.language")} <select aria-label={dt("dashboard.language")} value={dashboardI18n.language.startsWith("en") ? "en" : "es"} onChange={(event) => { void dashboardI18n.changeLanguage(event.target.value); }}><option value="es">Español</option><option value="en">English</option></select></label>
+          {/* Idioma del dashboard */}
+          <Card>
+            <CardHeader className="pb-4">
+              <CardTitle className="text-base">{dt("dashboard.language")}</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <LanguageOptions isDark={isDark} label={dt("dashboard.language")} />
+            </CardContent>
+          </Card>
           {/* Información personal */}
           <Card>
             <CardHeader className="pb-4">
