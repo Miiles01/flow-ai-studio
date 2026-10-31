@@ -11,6 +11,16 @@ import { defineTool } from "npm:@lovable.dev/mcp-js@3.1.1";
 // src/data/studio-templates.json
 var studio_templates_default = [
   {
+    slug: "portafolio-ugc-v23",
+    title: "Studio",
+    kind: "portfolio",
+    description: "Plantilla de portafolio UGC con estilo de app de dise\xF1o: blanco y negro con acentos de color, tu nombre en el centro de un mosaico de celdas que deja ver tus fotos y texturas de pincel, regla y gu\xEDas. Incluye entrada con la palabra Portafolio, barra de navegaci\xF3n flotante con blur, t\xEDtulos que aparecen letra por letra, Sobre m\xED con mini fotos y subrayados a l\xE1piz, banda de color que se abre con el scroll, marcas, nichos como panel de capas, testimonios como comentarios, contacto en tarjetas y cursor con nombre.",
+    thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v23.jpg",
+    preview_url: "https://wearemiiles.com/ugc-v23/",
+    download_url: "https://wearemiiles.com/studio/descargas/ugc-v23.zip",
+    template_number: 23
+  },
+  {
     slug: "portafolio-ugc-v18",
     title: "Meadow",
     kind: "portfolio",
