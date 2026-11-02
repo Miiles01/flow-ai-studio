@@ -190,7 +190,7 @@ const DEVICE_LABEL = { desktop: dt("dashboard.text69"), tablet: dt("dashboard.te
                 <p className="mt-3 whitespace-pre-line text-sm font-light leading-6 text-muted-foreground">{t.description || `Plantilla de ${KIND_LABEL[t.kind]?.toLowerCase() ?? dt("dashboard.text92")} disponible en Miiles Estudio.`}</p>
               </div>
               <div className="flex flex-col gap-3">
-                <Button size="lg" onClick={() => setUseTemplateOpen(true)} className="h-12 w-full rounded-full hover:translate-y-0"><MiilesStar className="h-4 w-4" />  {dt("dashboard.text93")}</Button>
+                <Button size="lg" onClick={() => { if (t) trackEvent("template_use", { slug: t.slug, title: t.title }); setUseTemplateOpen(true); }} className="h-12 w-full rounded-full hover:translate-y-0"><MiilesStar className="h-4 w-4" />  {dt("dashboard.text93")}</Button>
                 {t.preview_url ? (
                   <Button asChild variant="outline" size="lg" className="w-full rounded-full hover:translate-y-0">
                     <a href={t.preview_url} target="_blank" rel="noopener noreferrer"><Maximize2 />  {dt("dashboard.text94")}</a>

@@ -66,6 +66,9 @@ export default function Admin() {
             </TabsTrigger>
           </TabsList>
 
+          <TabsContent value="customers" className="mt-6">
+            <CustomersTab />
+          </TabsContent>
           <TabsContent value="prospects" className="mt-6">
             <ProspectsTab />
           </TabsContent>
