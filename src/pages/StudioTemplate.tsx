@@ -71,6 +71,10 @@ const DEVICE_LABEL = { desktop: dt("dashboard.text69"), tablet: dt("dashboard.te
   });
 
   useEffect(() => {
+    if (t) trackEvent("template_view", { slug: t.slug, title: t.title });
+  }, [t?.slug]);
+
+  useEffect(() => {
     const onResize = () => setVw(window.innerWidth);
     window.addEventListener("resize", onResize);
     return () => window.removeEventListener("resize", onResize);
