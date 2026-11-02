@@ -1,4 +1,5 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import { trackEvent } from "@/lib/trackEvent";
 import { useTranslation } from "react-i18next";
 import { localizeTrendFlow } from "@/lib/localizeTrendFlow";
 import { Dialog, DialogContent, DialogDescription, DialogTitle } from "@/components/ui/dialog";
@@ -88,6 +89,10 @@ export function TrendStoryViewer({ trends, startIndex, onClose }: Props) {
   const rfInstanceRef = useRef<ReactFlowInstance | null>(null);
 
   // Al cambiar de red, el diagrama vuelve a su vista genérica enfocada en el Inicio
+  useEffect(() => {
+    if (open && targetNetwork) trackEvent("architecture_view", { network: targetNetwork });
+  }, [open, targetNetwork]);
+
   useEffect(() => {
     setExpandedIds(new Set());
     setActiveVideo(null);
