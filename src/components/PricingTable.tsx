@@ -2,6 +2,7 @@ import { useTranslation } from "react-i18next";
 import { useLocalePath } from "@/hooks/useLocalePath";
 import { useEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
+import { trackEvent } from "@/lib/trackEvent";
 import { motion } from "framer-motion";
 import gsap from "gsap";
 import { SplitText } from "gsap/SplitText";
@@ -157,6 +158,14 @@ export default function PricingTable({ onPlanSelect, isModal }: PricingTableProp
           {plans.map((plan) => (
             <div
               key={plan.name}
+              onClickCapture={(e) => {
+                const isCta = !!(e.target as HTMLElement).closest("a,button[data-cta]");
+                trackEvent(isCta ? "pricing_cta" : "pricing_card_click", {
+                  plan: plan.id,
+                  cta: isCta ? (plan.customPrice ? "contact" : "pro") : undefined,
+                  cycle,
+                });
+              }}
               className={`flex flex-col rounded-[2.5rem] p-10 transition-all duration-500 hover:-translate-y-2 ${
                 plan.highlighted
                   ? "bg-black text-white shadow-[0_40px_80px_rgba(0,0,0,0.2)]"
