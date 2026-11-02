@@ -113,7 +113,7 @@ export function QuickSettings({ children }: { children?: React.ReactNode }) {
                   flex items-center text-[11px] font-medium px-2.5 py-1 rounded-full transition-all hover:scale-[1.03]
                   ${isPremium
                     ? "bg-white/10 hover:bg-white/20 text-white border border-white/10"
-                    : "bg-gradient-to-r from-violet-600 to-indigo-600 hover:opacity-90 text-white shadow-sm"
+                    : isDark ? "bg-white text-black hover:bg-white/90" : "bg-black text-white hover:bg-miiles-pink"
                   }
                 `}
               >
