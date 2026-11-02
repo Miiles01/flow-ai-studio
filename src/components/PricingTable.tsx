@@ -162,7 +162,7 @@ export default function PricingTable({ onPlanSelect, isModal }: PricingTableProp
                 const isCta = !!(e.target as HTMLElement).closest("a,button[data-cta]");
                 trackEvent(isCta ? "pricing_cta" : "pricing_card_click", {
                   plan: plan.id,
-                  cta: isCta ? (plan.customPrice ? "contact" : "pro") : undefined,
+                  cta: isCta ? (plan.customPrice ? "contact" : plan.id) : undefined,
                   cycle,
                 });
               }}
@@ -214,6 +214,7 @@ export default function PricingTable({ onPlanSelect, isModal }: PricingTableProp
               
               {onPlanSelect ? (
                 <button
+                  data-cta
                   onClick={() => onPlanSelect(plan.id, cycle)}
                   className={`text-center px-8 py-4 rounded-full text-xs font-normal transition-all duration-300 font-sans ${
                     plan.highlighted 
