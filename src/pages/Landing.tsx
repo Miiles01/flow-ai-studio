@@ -18,7 +18,7 @@ import LandingFooter from "@/components/LandingFooter";
 import TemplateCarousel from "@/components/landing/TemplateCarousel";
 // HeroPrompt (el campo de la portada) se conserva en src/components/landing/HeroPrompt.tsx — oculto por decisión del usuario.
 import { Button } from "@/components/ui/button";
-import { ArrowUpLeft } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import HomeSections from "@/components/landing/HomeSections";
 import { usePageSeo } from "@/hooks/usePageSeo";
 // Graphic assets copied from Downloads
@@ -243,7 +243,7 @@ const Landing = () => {
                   else carousel.scrollIntoView({ behavior: reduceMotion ? "instant" : "smooth", block: "center" });
                 }}>
                   {t("home.landing.explore_templates")}
-                  <ArrowUpLeft aria-hidden="true" className="transition-transform duration-300 ease-out group-hover:-rotate-45" />
+                  <ArrowUpRight aria-hidden="true" className="transition-transform duration-300 ease-out group-hover:rotate-45" />
                 </Button>
               </div>
 
