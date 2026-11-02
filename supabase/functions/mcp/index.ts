@@ -11,6 +11,16 @@ import { defineTool } from "npm:@lovable.dev/mcp-js@3.1.1";
 // src/data/studio-templates.json
 var studio_templates_default = [
   {
+    slug: "portafolio-ugc-v24",
+    title: "Olive",
+    kind: "portfolio",
+    description: "Plantilla de portafolio UGC en verde oliva, crema y terracota con t\xEDtulos en Melodrama. Incluye tu foto a pantalla completa con tu nombre gigante, frase que se enciende palabra por palabra, foto que se abre a pantalla completa, Mi trabajo en tarjetas escalonadas, marcas, nichos con foto al pasar el mouse, Sobre m\xED, fondo que cambia entre verde y crema con el scroll, rese\xF1as recientes que avanzan solas y se detienen con el cursor, contacto en tarjetas y footer terracota que se revela al final.",
+    thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v24.jpg",
+    preview_url: "https://wearemiiles.com/ugc-v24/",
+    download_url: "https://wearemiiles.com/studio/descargas/ugc-v24.zip",
+    template_number: 24
+  },
+  {
     slug: "portafolio-ugc-v19",
     title: "Coral",
     kind: "portfolio",

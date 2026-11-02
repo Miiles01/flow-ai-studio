@@ -19,7 +19,7 @@ export default function StudioLibraryCard({ t }: { t: StudioTemplate }) {
         type="button"
         onClick={open}
         aria-label={dt("dashboard.dynamic268", { value1: t.title })}
-        className={`relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-[24px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring ${isDark ? "ring-1 ring-white/10" : "ring-1 ring-black/5"}`}
+        className={`relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-[24px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring`}
         style={{
           background: isDark
             ? "linear-gradient(180deg, #121212 0%, #0A0A0A 100%)"
@@ -27,7 +27,7 @@ export default function StudioLibraryCard({ t }: { t: StudioTemplate }) {
         }}
       >
         <div
-          className={`w-[76%] overflow-hidden rounded-[8px] transition-transform duration-500 ease-out group-hover:scale-[1.03] ${isDark ? "ring-1 ring-white/10" : "shadow-[0_12px_32px_-12px_rgba(28,30,42,0.25)]"}`}
+          className={`w-[76%] overflow-hidden rounded-[8px] transition-transform duration-500 ease-out group-hover:scale-[1.03] ${isDark ? "" : "shadow-[0_12px_32px_-12px_rgba(28,30,42,0.25)]"}`}
         >
           {t.thumbnail_url && (
             <img src={t.thumbnail_url} alt={t.title} className="block aspect-[4/3] h-auto w-full object-cover" loading="lazy" />
