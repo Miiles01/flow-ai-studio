@@ -14,10 +14,10 @@ export default function AdminLogin({ onSuccess }: { onSuccess: () => void }) {
     e.preventDefault();
     setLoading(true);
     try {
-      await login(password);
+      await login(password.trim());
       onSuccess();
     } catch (err: any) {
-      toast.error(err.message ?? "Contraseña incorrecta");
+      toast.error("Contraseña incorrecta");
     } finally {
       setLoading(false);
     }

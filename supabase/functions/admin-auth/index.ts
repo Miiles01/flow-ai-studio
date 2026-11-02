@@ -54,7 +54,7 @@ Deno.serve(async (req) => {
 
     if (password !== ADMIN_PASSWORD) {
       return new Response(JSON.stringify({ error: "Contraseña incorrecta" }), {
-        status: 401, headers: { ...corsHeaders, "Content-Type": "application/json" },
+        status: 200, headers: { ...corsHeaders, "Content-Type": "application/json" },
       });
     }
 

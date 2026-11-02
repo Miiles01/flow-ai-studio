@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { ArrowLeft, Download, Maximize2, Monitor, Tablet, Smartphone } from "lucide-react";
 import MiilesStar from "@/components/MiilesStar";
+import { trackEvent } from "@/lib/trackEvent";
 import UseTemplateDialog from "@/components/studio/UseTemplateDialog";
 import { useTheme } from "@/contexts/ThemeContext";
 import { Button } from "@/components/ui/button";
@@ -69,6 +70,10 @@ const DEVICE_LABEL = { desktop: dt("dashboard.text69"), tablet: dt("dashboard.te
     title: t ? `${t.title} — Miiles Estudio` : dt("dashboard.label10"),
     description: t?.description || dt("dashboard.text85"),
   });
+
+  useEffect(() => {
+    if (t) trackEvent("template_view", { slug: t.slug, title: t.title });
+  }, [t?.slug]);
 
   useEffect(() => {
     const onResize = () => setVw(window.innerWidth);
@@ -185,7 +190,7 @@ const DEVICE_LABEL = { desktop: dt("dashboard.text69"), tablet: dt("dashboard.te
                 <p className="mt-3 whitespace-pre-line text-sm font-light leading-6 text-muted-foreground">{t.description || `Plantilla de ${KIND_LABEL[t.kind]?.toLowerCase() ?? dt("dashboard.text92")} disponible en Miiles Estudio.`}</p>
               </div>
               <div className="flex flex-col gap-3">
-                <Button size="lg" onClick={() => setUseTemplateOpen(true)} className="h-12 w-full rounded-full hover:translate-y-0"><MiilesStar className="h-4 w-4" />  {dt("dashboard.text93")}</Button>
+                <Button size="lg" onClick={() => { if (t) trackEvent("template_use", { slug: t.slug, title: t.title }); setUseTemplateOpen(true); }} className="h-12 w-full rounded-full hover:translate-y-0"><MiilesStar className="h-4 w-4" />  {dt("dashboard.text93")}</Button>
                 {t.preview_url ? (
                   <Button asChild variant="outline" size="lg" className="w-full rounded-full hover:translate-y-0">
                     <a href={t.preview_url} target="_blank" rel="noopener noreferrer"><Maximize2 />  {dt("dashboard.text94")}</a>

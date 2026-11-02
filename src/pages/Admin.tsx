@@ -9,7 +9,8 @@ import InstructionsTab from "@/components/admin/InstructionsTab";
 import CouponsTab from "@/components/admin/CouponsTab";
 import StudioTab from "@/components/admin/StudioTab";
 import SuggestionsTab from "@/components/admin/SuggestionsTab";
-import { LogOut, Database, FileCode, Loader2, Briefcase, Brain, Ticket, Lightbulb, Palette } from "lucide-react";
+import { LogOut, Database, FileCode, Loader2, Briefcase, Brain, Ticket, Lightbulb, Palette, Users } from "lucide-react";
+import CustomersTab from "@/components/admin/CustomersTab";
 
 export default function Admin() {
   const { valid, checking, logout } = useAdminAuth();
@@ -37,8 +38,11 @@ export default function Admin() {
       </header>
 
       <main className="max-w-6xl mx-auto p-6 md:p-10">
-        <Tabs defaultValue="prospects">
-          <TabsList className="bg-white/5 border border-white/10">
+        <Tabs defaultValue="customers">
+          <TabsList className="bg-white/5 border border-white/10 flex-wrap h-auto">
+            <TabsTrigger value="customers" className="data-[state=active]:bg-white data-[state=active]:text-black">
+              <Users className="h-4 w-4" /> Clientes
+            </TabsTrigger>
             <TabsTrigger value="prospects" className="data-[state=active]:bg-white data-[state=active]:text-black">
               <Database className="h-4 w-4" /> Prospectos
             </TabsTrigger>
@@ -62,6 +66,9 @@ export default function Admin() {
             </TabsTrigger>
           </TabsList>
 
+          <TabsContent value="customers" className="mt-6">
+            <CustomersTab />
+          </TabsContent>
           <TabsContent value="prospects" className="mt-6">
             <ProspectsTab />
           </TabsContent>
