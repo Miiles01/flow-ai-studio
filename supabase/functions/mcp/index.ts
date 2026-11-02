@@ -11,6 +11,16 @@ import { defineTool } from "npm:@lovable.dev/mcp-js@3.1.1";
 // src/data/studio-templates.json
 var studio_templates_default = [
   {
+    slug: "portafolio-ugc-v21",
+    title: "Golden",
+    kind: "portfolio",
+    description: "Plantilla de portafolio UGC en crema y dorado con tu foto fija de fondo y tu nombre gigante. Incluye una tarjeta que crece hasta llenar la pantalla, paso horizontal a Mi trabajo, fotos de fondo que cambian por secci\xF3n, marcas, nichos con foto, llamado a la acci\xF3n sobre una foto, testimonios con logo de cada marca, contacto con botones directos y men\xFA con subrayado dibujado a mano.",
+    thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v21.jpg",
+    preview_url: "https://wearemiiles.com/ugc-v21/",
+    download_url: "https://wearemiiles.com/studio/descargas/ugc-v21.zip",
+    template_number: 21
+  },
+  {
     slug: "portafolio-ugc-v20",
     title: "Lavender",
     kind: "portfolio",
