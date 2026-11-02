@@ -27,7 +27,7 @@ export default function StudioLibraryCard({ t }: { t: StudioTemplate }) {
         }}
       >
         <div
-          className={`w-[76%] overflow-hidden rounded-[8px] transition-transform duration-500 ease-out group-hover:scale-[1.03] ${isDark ? "" : "shadow-[0_12px_32px_-12px_rgba(28,30,42,0.25)]"}`}
+          className={`w-[76%] overflow-hidden rounded-[8px] transition-transform duration-500 ease-out group-hover:scale-[1.03] ${isDark ? "" : "shadow-[0_8px_24px_-10px_rgba(28,30,42,0.10)]"}`}
         >
           {t.thumbnail_url && (
             <img src={t.thumbnail_url} alt={t.title} className="block aspect-[4/3] h-auto w-full object-cover" loading="lazy" />
