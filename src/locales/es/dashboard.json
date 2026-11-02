@@ -268,6 +268,7 @@
   "dynamic266": "Se renueva el {{value1}}",
   "dynamic267": "Invitación enviada a {{value1}}",
   "dynamic268": "Ver {{value1}}",
+  "studioView": "Ver",
   "dynamic269": "Quiero adaptar la plantilla de Miiles «{{value1}}» ({{value2}}). Usa el conector de Miiles y consulta get_studio_template con slug \"{{value3}}\"; si no está conectado, usa este ZIP: {{value4}}. Pregúntame mi nombre, servicios, textos, imágenes y colores antes de editar. Cuando esté lista y yo lo confirme, guárdala con save_page_files (incluye index.html e imágenes) y publícala con publish_page; dame el enlace de wearemiiles.com que te devuelva.",
   "usedLink": "Usaron tu link",
   "boughtPlan": "Compraron un plan",

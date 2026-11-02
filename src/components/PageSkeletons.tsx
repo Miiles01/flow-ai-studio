@@ -52,9 +52,9 @@ export function BoardsSkeleton() {
 
 export function StudioGridSkeleton() {
   return (
-    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 pt-2" aria-busy="true">
-      {Array.from({ length: 6 }).map((_, i) => (
-        <Skeleton key={i} className="aspect-video rounded-lg" />
+    <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-10 pt-2" aria-busy="true">
+      {Array.from({ length: 4 }).map((_, i) => (
+        <Skeleton key={i} className="aspect-square rounded-[24px]" />
       ))}
     </div>
   );

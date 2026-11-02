@@ -4,7 +4,7 @@ const dt = (key: string, options?: Record<string, unknown>): string => dashboard
 import { StudioGridSkeleton } from "@/components/PageSkeletons";
 import { useStudioTemplates } from "@/hooks/useStudioTemplates";
 import { DiscoveriesBoard } from "@/components/discoveries/DiscoveriesBoard";
-import StudioCard from "@/components/studio/StudioCard";
+import StudioLibraryCard from "@/components/studio/StudioLibraryCard";
 import MyPages from "@/components/studio/MyPages";
 
 
@@ -42,10 +42,9 @@ export default function Studio() {
         ) : list.length === 0 ? (
           <p className="text-sm text-muted-foreground py-12 text-center">{dt("dashboard.text68")}</p>
         ) : (
-          // Columnas según el ancho disponible (no el viewport), con un máximo de 3: 3 en desktop, 2 en tablet, 1 en móvil,
-          // y se reacomodan solas al abrir o cerrar el sidebar
-          <div className="grid grid-cols-[repeat(auto-fill,minmax(min(100%,max(220px,calc((100%-3rem)/3))),1fr))] gap-6 pt-2">
-            {list.map((t) => <StudioCard key={t.id} t={t} className="w-full" />)}
+          // Dos columnas en desktop (con el sidebar abierto o cerrado) y tablet; una sola en móvil
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-10 pt-2">
+            {list.map((t) => <StudioLibraryCard key={t.id} t={t} />)}
           </div>
         )}
       </section>
