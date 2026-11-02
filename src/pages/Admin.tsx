@@ -37,8 +37,11 @@ export default function Admin() {
       </header>
 
       <main className="max-w-6xl mx-auto p-6 md:p-10">
-        <Tabs defaultValue="prospects">
-          <TabsList className="bg-white/5 border border-white/10">
+        <Tabs defaultValue="customers">
+          <TabsList className="bg-white/5 border border-white/10 flex-wrap h-auto">
+            <TabsTrigger value="customers" className="data-[state=active]:bg-white data-[state=active]:text-black">
+              <Users className="h-4 w-4" /> Clientes
+            </TabsTrigger>
             <TabsTrigger value="prospects" className="data-[state=active]:bg-white data-[state=active]:text-black">
               <Database className="h-4 w-4" /> Prospectos
             </TabsTrigger>
