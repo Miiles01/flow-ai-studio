@@ -19,8 +19,6 @@ const CheckIcon = ({ highlighted }: { highlighted?: boolean }) => {
 // Precio tipo odómetro (Annnimate "pricing"): cada dígito es una columna con las caras 0–9 y rueda
 // hasta el número nuevo, escalonado desde la derecha. Si el precio gana o pierde dígitos, el ancho
 // se anima para que "$" y el periodo se muevan con el número.
-const DIGIT_W = 0.62; // em
-
 const RollingPrice = ({ value }: { value: string }) => {
   const wrapRef = useRef<HTMLSpanElement>(null);
   const prevRef = useRef(value);
@@ -54,14 +52,18 @@ const RollingPrice = ({ value }: { value: string }) => {
     return () => ctx.kill();
   }, [value]);
 
+  // clip-path en lugar de overflow-hidden: recorta igual pero no rompe la línea base, así los dígitos quedan
+  // alineados con "$". Cada columna lleva su dígito invisible en el flujo (con números tabulares) para tomar
+  // ancho y línea base reales, y encima rueda la tira 0–9.
   return (
-    <span ref={wrapRef} className="relative inline-flex items-baseline overflow-hidden whitespace-nowrap" aria-label={value}>
+    <span ref={wrapRef} className="relative inline-flex items-baseline whitespace-nowrap tabular-nums" style={{ clipPath: "inset(-0.2em 0)" }} aria-label={value}>
       {value.split("").map((ch, i) =>
         /[0-9]/.test(ch) ? (
-          <span key={`d${value.length - i}`} aria-hidden="true" className="relative inline-block overflow-hidden" style={{ width: `${DIGIT_W}em`, height: "1.1em" }}>
-            <span data-roller={ch} className="absolute left-0 top-0 flex flex-col" style={{ transform: `translateY(${-Number(ch)}em)` }}>
+          <span key={`d${value.length - i}`} aria-hidden="true" className="relative inline-block" style={{ clipPath: "inset(0 -0.1em)" }}>
+            <span className="invisible">{ch}</span>
+            <span data-roller={ch} className="absolute inset-x-0 top-0 flex flex-col" style={{ transform: `translateY(${-Number(ch)}em)` }}>
               {Array.from({ length: 10 }, (_, d) => (
-                <span key={d} className="block text-center" style={{ height: "1em", lineHeight: "1em", width: `${DIGIT_W}em`, paddingTop: "0.05em" }}>{d}</span>
+                <span key={d} className="block text-center" style={{ height: "1em", lineHeight: "1em" }}>{d}</span>
               ))}
             </span>
           </span>
