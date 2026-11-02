@@ -11,6 +11,16 @@ import { defineTool } from "npm:@lovable.dev/mcp-js@3.1.1";
 // src/data/studio-templates.json
 var studio_templates_default = [
   {
+    slug: "portafolio-ugc-v19",
+    title: "Coral",
+    kind: "portfolio",
+    description: "Plantilla de portafolio UGC en crema, coral y lila con un titular editorial. Incluye una entrada donde tus fotos se apilan y vuelan a la fila del inicio, men\xFA en c\xE1psula con una forma que se desliza, Sobre m\xED, marcas, reels que se abren en grande, nichos en tarjetas que se expanden, testimonios que se reacomodan al tocarlos y contacto con botones directos.",
+    thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v19.jpg",
+    preview_url: "https://wearemiiles.com/ugc-v19/",
+    download_url: "https://wearemiiles.com/studio/descargas/ugc-v19.zip",
+    template_number: 19
+  },
+  {
     slug: "portafolio-ugc-v22",
     title: "Sunny",
     kind: "portfolio",
