@@ -11,6 +11,16 @@ import { defineTool } from "npm:@lovable.dev/mcp-js@3.1.1";
 // src/data/studio-templates.json
 var studio_templates_default = [
   {
+    slug: "portafolio-ugc-v22",
+    title: "Sunny",
+    kind: "portfolio",
+    description: "Plantilla de portafolio UGC en amarillo y blanco con t\xEDtulos editoriales. Incluye un inicio con la palabra Portafolio partida y tu foto al centro que crece con el scroll hasta abrir un moodboard de fotos, m\xE9tricas y notas, Sobre m\xED con palabras que se colorean, foto que se revela fija, marcas, nichos con palabras gigantes que pasan, testimonios con logo de cada marca y contacto con tarjetas directas.",
+    thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v22.jpg",
+    preview_url: "https://wearemiiles.com/ugc-v22/",
+    download_url: "https://wearemiiles.com/studio/descargas/ugc-v22.zip",
+    template_number: 22
+  },
+  {
     slug: "portafolio-ugc-v21",
     title: "Golden",
     kind: "portfolio",
