@@ -5,6 +5,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import { ArrowLeft, Download, Maximize2, Monitor, Tablet, Smartphone } from "lucide-react";
 import MiilesStar from "@/components/MiilesStar";
+import { trackEvent } from "@/lib/trackEvent";
 import UseTemplateDialog from "@/components/studio/UseTemplateDialog";
 import { useTheme } from "@/contexts/ThemeContext";
 import { Button } from "@/components/ui/button";
