@@ -1,12 +1,9 @@
 import { useTranslation } from "react-i18next";
 import { useLocalePath } from "@/hooks/useLocalePath";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import gsap from "gsap";
-import { SplitText } from "gsap/SplitText";
-
-gsap.registerPlugin(SplitText);
 
 // Checkbox Icon Component
 const CheckIcon = ({ highlighted }: { highlighted?: boolean }) => {
@@ -18,96 +15,60 @@ const CheckIcon = ({ highlighted }: { highlighted?: boolean }) => {
   );
 };
 
-// 3D Rotating Price Animation Component (Flip Board Stagger)
-const RotatingPrice = ({ value }: { value: string }) => {
-  const containerRef = useRef<HTMLDivElement>(null);
-  const [prices, setPrices] = useState({ current: value, next: "" });
-  const isAnimating = useRef(false);
+// Precio tipo odómetro (Annnimate "pricing"): cada dígito es una columna con las caras 0–9 y rueda
+// hasta el número nuevo, escalonado desde la derecha. Si el precio gana o pierde dígitos, el ancho
+// se anima para que "$" y el periodo se muevan con el número.
+const DIGIT_W = 0.62; // em
 
-  useEffect(() => {
-    if (isAnimating.current || value === prices.current) return;
-    setPrices(prev => ({ ...prev, next: value }));
-  }, [value, prices.current]);
+const RollingPrice = ({ value }: { value: string }) => {
+  const wrapRef = useRef<HTMLSpanElement>(null);
+  const prevRef = useRef(value);
+  const prevWidth = useRef<number | null>(null);
 
-  useEffect(() => {
-    if (!prices.next || !containerRef.current) return;
-
-    isAnimating.current = true;
+  // Antes de pintar el valor nuevo: cada columna arranca en el dígito que tenía en la misma posición (desde la derecha)
+  useLayoutEffect(() => {
+    const wrap = wrapRef.current;
+    if (!wrap) return;
+    const prev = prevRef.current;
+    prevRef.current = value;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const cols = Array.from(wrap.querySelectorAll<HTMLElement>("[data-roller]"));
+    const prevDigits = prev.replace(/[^0-9]/g, "").split("").reverse();
     const ctx = gsap.context(() => {
-      const currentEl = containerRef.current?.querySelector(".current-price");
-      const nextEl = containerRef.current?.querySelector(".next-price");
-
-      if (!currentEl || !nextEl) return;
-
-      // Make nextEl visible temporarily to measure width
-      gsap.set(nextEl, { autoAlpha: 1, position: "absolute", left: 0, top: 0 });
-      const nextWidth = (nextEl as HTMLElement).offsetWidth;
-      gsap.set(nextEl, { autoAlpha: 0 });
-
-      // Split text into characters
-      const currentSplit = SplitText.create(currentEl, { type: "chars" });
-      const nextSplit = SplitText.create(nextEl, { type: "chars" });
-
-      const tl = gsap.timeline({
-        onComplete: () => {
-          // Revert splits to restore original DOM structure
-          currentSplit.revert();
-          nextSplit.revert();
-          setPrices({ current: value, next: "" });
-          isAnimating.current = false;
-          gsap.set(containerRef.current, { width: "auto" });
-        },
+      // Ancho: del valor anterior al nuevo
+      const newW = wrap.scrollWidth;
+      if (prevWidth.current !== null && prevWidth.current !== newW && !reduce) {
+        gsap.fromTo(wrap, { width: prevWidth.current }, { width: newW, duration: 0.6, ease: "expo.out", clearProps: "width" });
+      }
+      prevWidth.current = newW;
+      cols.reverse().forEach((roller, i) => {
+        const to = Number(roller.dataset.roller);
+        const from = prevDigits[i] !== undefined ? Number(prevDigits[i]) : 0;
+        if (reduce || prev === value) { gsap.set(roller, { y: `${-to}em` }); return; }
+        gsap.fromTo(roller, { y: `${-from}em` }, { y: `${-to}em`, duration: 0.6, ease: "expo.inOut", delay: i * 0.05 });
       });
-
-      // Animate container width to fit the next price text smoothly
-      tl.to(containerRef.current, {
-        width: nextWidth,
-        duration: 0.4,
-        ease: "expo.out",
-      }, 0);
-
-      // Setup initial state for next price characters (folded back from top)
-      gsap.set(nextSplit.chars, {
-        rotationX: -90,
-        transformOrigin: "50% 0%",
-        opacity: 0,
-      });
-      gsap.set(nextEl, { autoAlpha: 1 });
-
-      // Flip old price characters downwards
-      tl.to(currentSplit.chars, {
-        rotationX: 90,
-        transformOrigin: "50% 100%",
-        opacity: 0,
-        stagger: { each: 0.05, from: "start" },
-        duration: 0.25,
-        ease: "power2.in",
-      }, 0);
-
-      // Flip new price characters downwards (as requested: duration 0.3s, power2.out, stagger 0.08s)
-      tl.to(nextSplit.chars, {
-        rotationX: 0,
-        opacity: 1,
-        stagger: { each: 0.08, from: "start" },
-        duration: 0.3,
-        ease: "power2.out",
-      }, 0.08); // Starts slightly before current finish for overlap
-    }, containerRef);
-
-    return () => ctx.revert();
-  }, [prices.next, value]);
+      // Separadores (coma) entran suave
+      if (!reduce && prev !== value) gsap.from(wrap.querySelectorAll("[data-sep]"), { opacity: 0, duration: 0.3, delay: 0.15 });
+    }, wrap);
+    return () => ctx.kill();
+  }, [value]);
 
   return (
-    <div 
-      ref={containerRef} 
-      className="relative inline-flex items-baseline justify-start overflow-visible h-[1.1em] transition-all" 
-      style={{ perspective: "1000px" }}
-    >
-      <span className="current-price inline-block whitespace-nowrap">{prices.current}</span>
-      {prices.next && (
-        <span className="next-price absolute left-0 top-0 inline-block opacity-0 whitespace-nowrap">{prices.next}</span>
+    <span ref={wrapRef} className="relative inline-flex items-baseline overflow-hidden whitespace-nowrap" aria-label={value}>
+      {value.split("").map((ch, i) =>
+        /[0-9]/.test(ch) ? (
+          <span key={`d${value.length - i}`} aria-hidden="true" className="relative inline-block overflow-hidden" style={{ width: `${DIGIT_W}em`, height: "1.1em" }}>
+            <span data-roller={ch} className="absolute left-0 top-0 flex flex-col" style={{ transform: `translateY(${-Number(ch)}em)` }}>
+              {Array.from({ length: 10 }, (_, d) => (
+                <span key={d} className="block text-center" style={{ height: "1em", lineHeight: "1em", width: `${DIGIT_W}em`, paddingTop: "0.05em" }}>{d}</span>
+              ))}
+            </span>
+          </span>
+        ) : (
+          <span key={`s${value.length - i}`} data-sep aria-hidden="true" className="inline-block">{ch}</span>
+        )
       )}
-    </div>
+    </span>
   );
 };
 
@@ -177,7 +138,7 @@ export default function PricingTable({ onPlanSelect, isModal }: PricingTableProp
                   <>
                     <div className="text-5xl font-normal tracking-tight flex items-baseline">
                       <span>$</span>
-                      <RotatingPrice value={cycle === "monthly" ? plan.monthlyPrice : plan.annualPrice} />
+                      <RollingPrice value={cycle === "monthly" ? plan.monthlyPrice : plan.annualPrice} />
                     </div>
                     <span className={`text-xs font-light ${plan.highlighted ? "text-white" : "text-gray-400"}`}>
                       {t("pricing.currency")} {cycle === "monthly" ? t("pricing.perMonth") : t("pricing.perYear")}
