@@ -11,6 +11,16 @@ import { defineTool } from "npm:@lovable.dev/mcp-js@3.1.1";
 // src/data/studio-templates.json
 var studio_templates_default = [
   {
+    slug: "portafolio-ugc-v20",
+    title: "Lavender",
+    kind: "portfolio",
+    description: "Plantilla de portafolio UGC en gris oscuro con lavanda y un titular gigante en dos filas. Incluye un carrusel infinito de fotos que se encoge al arrastrarlo r\xE1pido, lista de nichos con foto que sigue al cursor, cuadr\xEDcula de reels, marcas, sobre m\xED, testimonios con logo de cada marca, contacto con botones directos y footer que se revela al final.",
+    thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v20.jpg",
+    preview_url: "https://wearemiiles.com/ugc-v20/",
+    download_url: "https://wearemiiles.com/studio/descargas/ugc-v20.zip",
+    template_number: 20
+  },
+  {
     slug: "portafolio-ugc-v23",
     title: "Studio",
     kind: "portfolio",
