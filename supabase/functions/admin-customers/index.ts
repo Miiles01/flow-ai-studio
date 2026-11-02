@@ -98,7 +98,7 @@ Deno.serve(async (req) => {
         architecture_views: ev.filter((e) => e.event === "architecture_view").length,
         networks,
         pricing_card_clicks: ev.filter((e) => e.event === "pricing_card_click").length,
-        pro_clicks: ev.filter((e) => e.event === "pricing_cta" && e.props?.cta !== "contact" && e.props?.cta !== "free").length,
+        pro_clicks: ev.filter((e) => e.event === "pricing_cta" && e.props?.cta === "pro").length,
         contact_clicks: ev.filter((e) => e.event === "pricing_cta" && e.props?.cta === "contact").length,
         template_views: ev.filter((e) => e.event === "template_view").length,
         template_uses: ev.filter((e) => e.event === "template_use").length,
