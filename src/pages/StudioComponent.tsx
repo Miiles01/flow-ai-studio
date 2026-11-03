@@ -113,11 +113,8 @@ export default function StudioComponentPage() {
               className="flex items-center justify-center rounded-[24px] px-6 py-10"
               style={{ background: isDark ? "linear-gradient(180deg, #121212 0%, #0A0A0A 100%)" : "linear-gradient(180deg, #FDFDFD 0%, #F8F9FD 100%)" }}
             >
-              <div className={`relative aspect-[9/19.5] h-[min(72vh,680px)] rounded-[40px] p-[8px] ${isDark ? "bg-zinc-800" : "bg-black shadow-[0_24px_60px_-24px_rgba(28,30,42,0.45)]"}`}>
-                <div className="relative h-full w-full overflow-hidden rounded-[32px] bg-black">
-                  <video src={c.preview_video_url} poster={c.poster_url ?? undefined} autoPlay muted loop playsInline className="h-full w-full object-cover" aria-label={c.title} />
-                  <span className="absolute left-1/2 top-[10px] h-[18px] w-[34%] -translate-x-1/2 rounded-full bg-black" aria-hidden="true" />
-                </div>
+              <div className={`relative aspect-[9/16] h-[min(72vh,680px)] overflow-hidden rounded-[10px] bg-black ${isDark ? "" : "shadow-[0_8px_24px_-10px_rgba(28,30,42,0.10)]"}`}>
+                <video src={c.preview_video_url} poster={c.poster_url ?? undefined} autoPlay muted loop playsInline className="h-full w-full object-cover" aria-label={c.title} />
               </div>
             </div>
 

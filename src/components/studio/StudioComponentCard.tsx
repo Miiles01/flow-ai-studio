@@ -31,22 +31,19 @@ export default function StudioComponentCard({ c }: { c: StudioComponent }) {
         className="relative flex aspect-[4/5] w-full items-center justify-center overflow-hidden rounded-[24px] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         style={{ background: isDark ? "linear-gradient(180deg, #121212 0%, #0A0A0A 100%)" : "linear-gradient(180deg, #FDFDFD 0%, #F8F9FD 100%)" }}
       >
-        {/* Marco de celular */}
-        <div className={`relative h-[82%] aspect-[9/19.5] rounded-[26px] p-[5px] transition-transform duration-500 ease-out group-hover:scale-[1.03] ${isDark ? "bg-zinc-800" : "bg-black shadow-[0_14px_32px_-14px_rgba(28,30,42,0.35)]"}`}>
-          <div className="relative h-full w-full overflow-hidden rounded-[21px] bg-black">
-            <video
-              ref={videoRef}
-              src={c.preview_video_url}
-              poster={c.poster_url ?? undefined}
-              muted
-              loop
-              playsInline
-              preload="metadata"
-              aria-hidden="true"
-              className="h-full w-full object-cover"
-            />
-            <span className="absolute left-1/2 top-[7px] h-[10px] w-[34%] -translate-x-1/2 rounded-full bg-black" aria-hidden="true" />
-          </div>
+        {/* Pantalla vertical (Reel 9:16) con el mismo redondeo y sombra que las pantallas de la Librería */}
+        <div className={`relative h-[82%] aspect-[9/16] overflow-hidden rounded-[8px] bg-black transition-transform duration-500 ease-out group-hover:scale-[1.03] ${isDark ? "" : "shadow-[0_8px_24px_-10px_rgba(28,30,42,0.10)]"}`}>
+          <video
+            ref={videoRef}
+            src={c.preview_video_url}
+            poster={c.poster_url ?? undefined}
+            muted
+            loop
+            playsInline
+            preload="metadata"
+            aria-hidden="true"
+            className="h-full w-full object-cover"
+          />
         </div>
       </button>
 
