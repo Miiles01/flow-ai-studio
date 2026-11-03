@@ -35,6 +35,9 @@ export default function Studio() {
       {/* Componentes: animaciones de video y otros assets que se copian como prompt */}
       <section className="space-y-6">
         <div>
+          <span className="mb-3 inline-flex rounded-full bg-black px-3 py-1 text-xs font-normal text-white dark:border dark:border-white/10">
+            {(i18n.language || "es").startsWith("en") ? "Coming soon" : "Próximo lanzamiento"}
+          </span>
           <h2 className="text-xl md:text-2xl font-medium text-foreground">{(i18n.language || "es").startsWith("en") ? "Components" : "Componentes"}</h2>
           <p className="mt-1 text-sm font-light text-muted-foreground">
             {(i18n.language || "es").startsWith("en")
