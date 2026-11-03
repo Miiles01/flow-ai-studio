@@ -6,6 +6,9 @@ import { useStudioTemplates } from "@/hooks/useStudioTemplates";
 import { DiscoveriesBoard } from "@/components/discoveries/DiscoveriesBoard";
 import StudioLibraryCard from "@/components/studio/StudioLibraryCard";
 import MyPages from "@/components/studio/MyPages";
+import StudioComponentCard from "@/components/studio/StudioComponentCard";
+import { STUDIO_COMPONENTS } from "@/lib/studioComponents";
+import i18n from "@/i18n";
 
 
 export default function Studio() {
@@ -27,6 +30,26 @@ export default function Studio() {
           <h2 className="text-xl md:text-2xl font-medium text-foreground">{dt("dashboard.text66")}</h2>
         </div>
         <DiscoveriesBoard />
+      </section>
+
+      {/* Componentes: animaciones de video y otros assets que se copian como prompt */}
+      <section className="space-y-6">
+        <div>
+          <h2 className="text-xl md:text-2xl font-medium text-foreground">{(i18n.language || "es").startsWith("en") ? "Components" : "Componentes"}</h2>
+          <p className="mt-1 text-sm font-light text-muted-foreground">
+            {(i18n.language || "es").startsWith("en")
+              ? "Video animations ready to copy and paste into your AI assistant"
+              : "Animaciones de video listas para copiar y pegar en tu asistente de IA"}
+          </p>
+        </div>
+        {STUDIO_COMPONENTS.length === 0 ? (
+          <p className="text-sm text-muted-foreground py-12 text-center">{(i18n.language || "es").startsWith("en") ? "Coming soon" : "Muy pronto"}</p>
+        ) : (
+          // Tres columnas en desktop, dos en tablet y en móvil (los marcos de celular son angostos)
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-10 pt-2">
+            {STUDIO_COMPONENTS.map((c) => <StudioComponentCard key={c.slug} c={c} />)}
+          </div>
+        )}
       </section>
 
       {/* Librería */}

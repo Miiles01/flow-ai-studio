@@ -44,6 +44,7 @@ import Admin from "./pages/Admin";
 import Ventas from "./pages/Ventas";
 import Studio from "./pages/Studio";
 import StudioTemplate from "./pages/StudioTemplate";
+import StudioComponentPage from "./pages/StudioComponent";
 import OAuthConsent from "./pages/OAuthConsent";
 import { oauthReturnPath } from "@/lib/oauth-return-path";
 
@@ -154,6 +155,7 @@ const App = () => (
               <Route path="/boards/join/:token" element={<JoinFlow />} />
               <Route path="/boards/:id" element={<Index />} />
               <Route path="/studio" element={<DashboardRoute><Studio /></DashboardRoute>} />
+              <Route path="/studio/componentes/:slug" element={<ProtectedRoute><StudioComponentPage /></ProtectedRoute>} />
               <Route path="/studio/:slug" element={<ProtectedRoute><StudioTemplate /></ProtectedRoute>} />
               <Route path="/programs" element={<DashboardRoute><Programs /></DashboardRoute>} />
               <Route path="/programs/:id" element={<ProgramDetail />} />
