@@ -35,7 +35,7 @@ const COPY = {
     portfolioTitle: "Tu portafolio, siempre en línea",
     portfolioText: "Con Miiles diseñas tu portafolio como una página web. Para empezar, nuestro equipo te diseña uno de muestra con tus fotos y videos. Al ser una página web, tu portafolio queda visible siempre y lo compartes con un solo enlace. Estos son algunos estilos que puedes usar:",
     previewLabel: "Vista previa de la plantilla",
-    earlyTitle: "Acceso anticipado a todo",
+    earlyTitle: "Acceso anticipado a herramientas, skills y componentes",
     earlyText: "Usas todas las funciones de Miiles desde el primer día y pruebas antes que nadie las que vienen en camino.",
     features: [
       { title: "Diseño web", text: "Crea y publica tu portafolio desde plantillas pensadas para creadores." },
@@ -67,7 +67,7 @@ const COPY = {
     portfolioTitle: "Your portfolio, always online",
     portfolioText: "With Miiles you design your portfolio as a website. To get you started, our team designs a sample one with your photos and videos. Since it is a website, your portfolio stays online and you share it with a single link. These are some of the styles you can use:",
     previewLabel: "Template preview",
-    earlyTitle: "Early access to everything",
+    earlyTitle: "Early access to tools, skills and components",
     earlyText: "You use every Miiles feature from day one and try the upcoming ones before anyone else.",
     features: [
       { title: "Web design", text: "Create and publish your portfolio from templates made for creators." },
