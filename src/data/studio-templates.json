@@ -7,7 +7,9 @@
     "thumbnail_url": "https://wearemiiles.com/studio/thumbs/ugc-v24.jpg",
     "preview_url": "https://wearemiiles.com/ugc-v24/",
     "download_url": "https://wearemiiles.com/studio/descargas/ugc-v24.zip",
-    "template_number": 24
+    "template_number": 24,
+    "preview_video_url": "https://wearemiiles.com/studio/previews/ugc-v24.mp4",
+    "preview_video_webm_url": "https://wearemiiles.com/studio/previews/ugc-v24.webm"
   },
   {
     "slug": "portafolio-ugc-v19",
@@ -17,7 +19,9 @@
     "thumbnail_url": "https://wearemiiles.com/studio/thumbs/ugc-v19.jpg",
     "preview_url": "https://wearemiiles.com/ugc-v19/",
     "download_url": "https://wearemiiles.com/studio/descargas/ugc-v19.zip",
-    "template_number": 19
+    "template_number": 19,
+    "preview_video_url": "https://wearemiiles.com/studio/previews/ugc-v19.mp4",
+    "preview_video_webm_url": "https://wearemiiles.com/studio/previews/ugc-v19.webm"
   },
   {
     "slug": "portafolio-ugc-v22",
@@ -27,7 +31,9 @@
     "thumbnail_url": "https://wearemiiles.com/studio/thumbs/ugc-v22.jpg",
     "preview_url": "https://wearemiiles.com/ugc-v22/",
     "download_url": "https://wearemiiles.com/studio/descargas/ugc-v22.zip",
-    "template_number": 22
+    "template_number": 22,
+    "preview_video_url": "https://wearemiiles.com/studio/previews/ugc-v22.mp4",
+    "preview_video_webm_url": "https://wearemiiles.com/studio/previews/ugc-v22.webm"
   },
   {
     "slug": "portafolio-ugc-v21",
@@ -37,7 +43,9 @@
     "thumbnail_url": "https://wearemiiles.com/studio/thumbs/ugc-v21.jpg",
     "preview_url": "https://wearemiiles.com/ugc-v21/",
     "download_url": "https://wearemiiles.com/studio/descargas/ugc-v21.zip",
-    "template_number": 21
+    "template_number": 21,
+    "preview_video_url": "https://wearemiiles.com/studio/previews/ugc-v21.mp4",
+    "preview_video_webm_url": "https://wearemiiles.com/studio/previews/ugc-v21.webm"
   },
   {
     "slug": "portafolio-ugc-v20",
@@ -47,7 +55,9 @@
     "thumbnail_url": "https://wearemiiles.com/studio/thumbs/ugc-v20.jpg",
     "preview_url": "https://wearemiiles.com/ugc-v20/",
     "download_url": "https://wearemiiles.com/studio/descargas/ugc-v20.zip",
-    "template_number": 20
+    "template_number": 20,
+    "preview_video_url": "https://wearemiiles.com/studio/previews/ugc-v20.mp4",
+    "preview_video_webm_url": "https://wearemiiles.com/studio/previews/ugc-v20.webm"
   },
   {
     "slug": "portafolio-ugc-v23",

@@ -13,6 +13,9 @@ export type StudioTemplate = {
   is_published?: boolean;
   preview_url?: string | null;
   download_url?: string | null;
+  // Video corto (loader + scroll) que se reproduce en la miniatura al pasar el cursor; se sirve desde wearemiiles.com
+  preview_video_url?: string | null;
+  preview_video_webm_url?: string | null;
 };
 
 // Plantillas de la Librería: viven en src/data/studio-templates.json. La página completa,
