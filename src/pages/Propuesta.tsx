@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import i18n from "@/i18n";
 import { usePageSeo } from "@/hooks/usePageSeo";
@@ -25,6 +25,8 @@ const COPY = {
     seoTitle: "Propuesta UGC · Miiles",
     seoDesc: "Nuestra propuesta para creadores UGC: acceso permanente a Miiles Pro, tu portafolio publicado y comisiones como afiliado.",
     tag: "Propuesta UGC",
+    navTitle: "Contenido",
+    nav: ["Inicio", "Fase 1", "Fase 2"],
     kicker: "Para creadores de contenido UGC",
     title: "Programa",
     phase1: "Fase 1",
@@ -55,6 +57,8 @@ const COPY = {
     seoTitle: "UGC Proposal · Miiles",
     seoDesc: "Our proposal for UGC creators: permanent access to Miiles Pro, your portfolio published and affiliate commissions.",
     tag: "UGC Proposal",
+    navTitle: "Contents",
+    nav: ["Start", "Phase 1", "Phase 2"],
     kicker: "For UGC content creators",
     title: "Program",
     phase1: "Phase 1",
@@ -93,14 +97,59 @@ export default function Propuesta() {
   });
   const c = COPY[lang];
 
+  // Índice lateral (desktop y tablet): marca la sección que está a la vista y lleva a ella al hacer clic
+  const SECTIONS = ["inicio", "fase-1", "fase-2"];
+  const [active, setActive] = useState("inicio");
+  useEffect(() => {
+    // Activa la última sección cuyo inicio ya pasó el 35% de la pantalla
+    const onScroll = () => {
+      let current = SECTIONS[0];
+      for (const id of SECTIONS) {
+        const el = document.getElementById(id);
+        if (el && el.getBoundingClientRect().top <= window.innerHeight * 0.35) current = id;
+      }
+      setActive(current);
+    };
+    onScroll();
+    window.addEventListener("scroll", onScroll, { passive: true });
+    return () => window.removeEventListener("scroll", onScroll);
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  const goTo = (id: string) => {
+    const el = document.getElementById(id);
+    if (!el) return;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    el.scrollIntoView({ behavior: reduce ? "auto" : "smooth", block: "start" });
+  };
+
   usePageSeo({ title: c.seoTitle, description: c.seoDesc, robots: "noindex, nofollow" });
 
   return (
     <div className="min-h-screen bg-white text-black" lang={lang}>
       <LandingNavbar />
 
-      <main className="mx-auto max-w-3xl px-6 pb-24">
-        <section className="pt-40 md:pt-48">
+      <div className="mx-auto max-w-5xl px-6 pb-24 md:grid md:grid-cols-[180px_minmax(0,1fr)] md:gap-12 lg:gap-16">
+        {/* Índice fijo a la izquierda: solo desktop y tablet */}
+        <div className="hidden pt-48 md:block">
+          <aside className="sticky top-32 rounded-[24px] bg-miiles-gray-50 p-4">
+            <p className="mb-3 px-2 text-xs font-light text-miiles-gray-400">{c.navTitle}</p>
+            <nav className="flex flex-col gap-1">
+              {SECTIONS.map((id, i) => (
+                <button
+                  key={id}
+                  type="button"
+                  onClick={() => goTo(id)}
+                  aria-current={active === id ? "true" : undefined}
+                  className={`rounded-xl px-3 py-2 text-left text-sm transition-all duration-300 ${active === id ? "translate-x-1 bg-miiles-blue-light/60 font-normal text-miiles-blue" : "font-light text-miiles-gray-600 hover:translate-x-1 hover:bg-white hover:text-black"}`}
+                >
+                  {c.nav[i]}
+                </button>
+              ))}
+            </nav>
+          </aside>
+        </div>
+
+      <main className="min-w-0">
+        <section id="inicio" className="scroll-mt-32 pt-40 md:pt-48">
           <div className="flex items-center justify-between gap-4">
             <p className="text-sm font-light text-miiles-gray-400">{c.kicker}</p>
             <div className="flex rounded-full bg-miiles-gray-50 p-1" role="group" aria-label="Idioma / Language">
@@ -120,7 +169,7 @@ export default function Propuesta() {
           <h1 className="mt-3 text-4xl font-normal leading-[1.05] tracking-tight md:text-6xl">{c.title}</h1>
         </section>
 
-        <section className="mt-20">
+        <section id="fase-1" className="mt-20 scroll-mt-32">
           <span className="inline-flex rounded-full bg-miiles-blue-light px-3 py-1 text-xs font-normal text-miiles-blue">{c.phase1}</span>
           <h2 className="mt-4 text-2xl font-normal tracking-tight md:text-4xl">{c.phase1Title}</h2>
           <p className="mt-5 text-base font-light leading-relaxed text-miiles-gray-600">{c.phase1Text}</p>
@@ -170,7 +219,7 @@ export default function Propuesta() {
           </div>
         </section>
 
-        <section className="mt-20">
+        <section id="fase-2" className="mt-20 scroll-mt-32">
           <span className="inline-flex rounded-full bg-miiles-pink-light px-3 py-1 text-xs font-normal text-black">{c.phase2}</span>
           <h2 className="mt-4 text-2xl font-normal tracking-tight md:text-4xl">{c.phase2Title}</h2>
           <p className="mt-5 text-base font-light leading-relaxed text-miiles-gray-600">{c.phase2Text}</p>
@@ -195,6 +244,7 @@ export default function Propuesta() {
           </Link>
         </section>
       </main>
+      </div>
       <LandingFooter />
     </div>
   );
