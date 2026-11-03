@@ -9,6 +9,7 @@ import { LayoutTemplate, LayoutDashboard, TrendingUp, Clapperboard, Crown, Globe
 // Íconos de los beneficios, en el mismo orden que los textos
 const FEATURE_ICONS = [LayoutTemplate, LayoutDashboard, TrendingUp, Clapperboard];
 const BULLET_ICONS = [Crown, Globe, Zap, Percent, HandCoins];
+const PHASE1_ICONS = [Crown, Globe, Zap, Percent];
 
 // Propuesta UGC: página tipo blog, sencilla, siempre en modo claro y en español o inglés (selector arriba).
 // Los videos de las plantillas se sirven desde wearemiiles.com para que miiles.app no cargue su peso.
@@ -31,6 +32,7 @@ const COPY = {
     title: "Programa",
     phase1: "Fase 1",
     phase1Title: "Iniciación",
+    phase1Bullets: ["Plan Pro permanente", "Tu portafolio 24/7", "Acceso anticipado a herramientas, skills y componentes", "25% de comisión sin límite"],
     phase1Text: "Tienes acceso permanente a Miiles en su plan Pro. No es una prueba: la herramienta es tuya mientras formes parte del programa.",
     portfolioTitle: "Tu portafolio, siempre en línea",
     portfolioText: "Con Miiles diseñas tu portafolio como una página web. Para empezar, nuestro equipo te diseña uno de muestra con tus fotos y videos. Al ser una página web, tu portafolio queda visible siempre y lo compartes con un solo enlace. Estos son algunos estilos que puedes usar:",
@@ -48,7 +50,7 @@ const COPY = {
     phase2: "Fase 2",
     phase2Title: "Lealtad",
     phase2Text: "Mantienes todos los beneficios de la fase 1 y se suman bonos negociables: pagos adicionales que definimos contigo según lo que construyamos juntos.",
-    bullets: ["Plan Pro permanente", "Tu portafolio publicado", "Acceso anticipado a todas las funciones", "25% de comisión sin límite", "Bonos negociables"],
+    bullets: ["Plan Pro permanente", "Tu portafolio 24/7", "Acceso anticipado a todas las funciones", "25% de comisión sin límite", "Bonos negociables"],
     ctaTitle: "¿Empezamos?",
     ctaText: "Crea tu cuenta y te ayudamos a armar tu primer portafolio.",
     cta: "Crear mi cuenta",
@@ -63,6 +65,7 @@ const COPY = {
     title: "Program",
     phase1: "Phase 1",
     phase1Title: "Onboarding",
+    phase1Bullets: ["Permanent Pro plan", "Your portfolio 24/7", "Early access to tools, skills and components", "25% commission, no limit"],
     phase1Text: "You get permanent access to Miiles on the Pro plan. It is not a trial: the tool is yours for as long as you are part of the program.",
     portfolioTitle: "Your portfolio, always online",
     portfolioText: "With Miiles you design your portfolio as a website. To get you started, our team designs a sample one with your photos and videos. Since it is a website, your portfolio stays online and you share it with a single link. These are some of the styles you can use:",
@@ -80,7 +83,7 @@ const COPY = {
     phase2: "Phase 2",
     phase2Title: "Loyalty",
     phase2Text: "You keep every benefit from phase 1 and add negotiable bonuses: extra payments we define with you based on what we build together.",
-    bullets: ["Permanent Pro plan", "Your portfolio published", "Early access to every feature", "25% commission, no limit", "Negotiable bonuses"],
+    bullets: ["Permanent Pro plan", "Your portfolio 24/7", "Early access to every feature", "25% commission, no limit", "Negotiable bonuses"],
     ctaTitle: "Shall we start?",
     ctaText: "Create your account and we will help you build your first portfolio.",
     cta: "Create my account",
@@ -172,7 +175,18 @@ export default function Propuesta() {
         <section id="fase-1" className="mt-20 scroll-mt-32">
           <span className="inline-flex rounded-full bg-miiles-blue-light px-3 py-1 text-xs font-normal text-miiles-blue">{c.phase1}</span>
           <h2 className="mt-4 text-2xl font-normal tracking-tight md:text-4xl">{c.phase1Title}</h2>
-          <p className="mt-5 text-base font-light leading-relaxed text-miiles-gray-600">{c.phase1Text}</p>
+          <ul className="mt-6 flex flex-col gap-3 text-base font-light text-miiles-gray-600">
+            {c.phase1Bullets.map((b, i) => {
+              const Icon = PHASE1_ICONS[i];
+              return (
+                <li key={b} className="flex items-center gap-3">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-miiles-gray-50 text-black"><Icon size={16} strokeWidth={1.5} /></span>
+                  <span>{b}</span>
+                </li>
+              );
+            })}
+          </ul>
+          <p className="mt-8 text-base font-light leading-relaxed text-miiles-gray-600">{c.phase1Text}</p>
 
           <h3 className="mt-12 text-lg font-normal">{c.portfolioTitle}</h3>
           <p className="mt-3 text-base font-light leading-relaxed text-miiles-gray-600">{c.portfolioText}</p>
