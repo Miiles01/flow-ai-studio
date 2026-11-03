@@ -130,7 +130,7 @@ export default function Propuesta() {
       <div className="mx-auto max-w-5xl px-6 pb-24 md:grid md:grid-cols-[180px_minmax(0,1fr)] md:gap-12 lg:gap-16">
         {/* Índice fijo a la izquierda: solo desktop y tablet */}
         <div className="hidden pt-48 md:block">
-          <aside className="sticky top-32 rounded-[24px] bg-miiles-gray-50 p-4">
+          <aside className="sticky top-32">
             <p className="mb-3 px-2 text-xs font-light text-miiles-gray-400">{c.navTitle}</p>
             <nav className="flex flex-col gap-1">
               {SECTIONS.map((id, i) => (
@@ -139,7 +139,7 @@ export default function Propuesta() {
                   type="button"
                   onClick={() => goTo(id)}
                   aria-current={active === id ? "true" : undefined}
-                  className={`rounded-xl px-3 py-2 text-left text-sm transition-all duration-300 ${active === id ? "translate-x-1 bg-miiles-blue-light/60 font-normal text-miiles-blue" : "font-light text-miiles-gray-600 hover:translate-x-1 hover:bg-white hover:text-black"}`}
+                  className={`rounded-xl px-3 py-2 text-left text-sm transition-all duration-300 ${active === id ? "translate-x-1 bg-miiles-blue-light/60 font-normal text-miiles-blue" : "font-light text-miiles-gray-600 hover:translate-x-1 hover:text-black"}`}
                 >
                   {c.nav[i]}
                 </button>
@@ -180,7 +180,7 @@ export default function Propuesta() {
           <div className="mt-8 grid grid-cols-1 gap-6 sm:grid-cols-3">
             {PREVIEWS.map((p) => (
               <figure key={p.name} className="m-0">
-                <div className="overflow-hidden rounded-[20px] bg-miiles-gray-50 p-3">
+                <div className="overflow-hidden rounded-[20px] bg-[linear-gradient(180deg,#FDFDFD_0%,#F8F9FD_100%)] p-3">
                   <video
                     src={`https://wearemiiles.com/studio/previews/ugc-v${p.n}.mp4`}
                     poster={`https://wearemiiles.com/studio/thumbs/ugc-v${p.n}.jpg`}
@@ -203,7 +203,7 @@ export default function Propuesta() {
             {c.features.map((f, i) => {
               const Icon = FEATURE_ICONS[i];
               return (
-              <li key={f.title} className="flex items-center gap-3 rounded-2xl bg-miiles-gray-50 p-4">
+              <li key={f.title} className="flex items-center gap-3 rounded-2xl bg-[linear-gradient(180deg,#FDFDFD_0%,#F8F9FD_100%)] p-4">
                 <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-black shadow-sm"><Icon size={17} strokeWidth={1.5} /></span>
                 <span className="min-w-0">
                   <span className="block text-sm font-normal">{f.title}</span>
@@ -238,7 +238,7 @@ export default function Propuesta() {
           </ul>
         </section>
 
-        <section className="mt-24 flex flex-col items-center rounded-[24px] bg-miiles-gray-50 p-8 text-center md:p-12">
+        <section className="mt-24 flex flex-col items-center rounded-[24px] bg-[linear-gradient(180deg,#FDFDFD_0%,#F8F9FD_100%)] p-8 text-center md:p-12">
           <h2 className="text-2xl font-normal tracking-tight md:text-3xl">{c.ctaTitle}</h2>
           <p className="mx-auto mt-3 max-w-lg text-base font-light leading-relaxed text-miiles-gray-600">{c.ctaText}</p>
           <Link to="/register" className="mt-6 inline-flex rounded-full bg-black px-6 py-3 text-sm font-normal text-white transition-colors hover:bg-miiles-pink">
