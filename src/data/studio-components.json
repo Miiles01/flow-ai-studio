@@ -3,25 +3,144 @@
     "slug": "carrusel-circular",
     "title": "Carrusel circular",
     "category": "Carrusel",
-    "description": "Tarjetas sobre un arco que giran una por una: se detiene en cada una y pasa a la siguiente. Sirve para mostrar fotos o productos en un Reel vertical, alternando con tarjetas de color con un ícono.",
+    "description": "Tarjetas sobre un arco que giran una por una: se detiene en cada una y pasa a la siguiente. Alterna fotos con tarjetas de color con un ícono.",
     "preview_video_url": "https://wearemiiles.com/studio/componentes/carrusel-circular.mp4",
     "poster_url": "https://wearemiiles.com/studio/componentes/carrusel-circular.jpg",
     "code_url": "https://wearemiiles.com/studio/componentes/carrusel-circular.tsx.txt",
     "code_filename": "CircularCarousel.tsx",
     "stack": "Remotion + React, 1080×1920 a 30 fps",
-    "instruction": "Si no tengo un proyecto de Remotion, créalo primero; registra la composición en 1080×1920 a 30 fps, pon mis fotos e íconos SVG en public/ y cámbialos en la lista de tarjetas. Usa siempre fondo blanco y tarjetas sin sombra.",
+    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps, pon mis fotos e íconos SVG en public/ y cámbialos en la lista de tarjetas. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
     "customize": [
-      "Cambia las fotos de la lista de tarjetas",
-      "Alterna con tarjetas de color sólido con un ícono (SVG de una tinta) y elige su color",
-      "Ajusta hold (cuánto se queda cada tarjeta) y move (cuánto dura el giro)",
-      "Cambia gap para separar más o menos las tarjetas",
-      "Sube radius para que el arco sea más plano"
-    ],
-    "faq": [
-      {
-        "q": "¿Qué necesito para renderizarla?",
-        "a": "Un proyecto de Remotion (React). Si no lo tienes, tu IA lo crea con el prompt y te dice el comando para exportar el video."
-      }
+      "Cambia las fotos y las tarjetas de color con ícono en la lista de tarjetas",
+      "Cambia el color de fondo: los desvanecidos toman ese mismo color",
+      "Ajusta hold (pausa) y move (duración del giro)",
+      "Cambia gap para separar las tarjetas y radius para aplanar el arco"
+    ]
+  },
+  {
+    "slug": "espiral-3d",
+    "title": "Espiral 3D",
+    "category": "Carrusel",
+    "description": "Las tarjetas suben en una espiral 3D y en cada paso una queda al frente y al centro. Las de atrás se ven más tenues.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/espiral-3d.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/espiral-3d.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/espiral-3d.tsx.txt",
+    "code_filename": "SpiralCarousel.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps, pon mis fotos e íconos SVG en public/ y cámbialos en la lista de tarjetas. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia las fotos y las tarjetas de color con ícono en la lista de tarjetas",
+      "Cambia el color de fondo: los desvanecidos toman ese mismo color",
+      "Cambia radius, stepAngle y rise para la forma de la espiral",
+      "Ajusta hold y move para el ritmo"
+    ]
+  },
+  {
+    "slug": "abanico",
+    "title": "Abanico",
+    "category": "Carrusel",
+    "description": "La tarjeta activa queda al centro y las demás se abren en abanico hacia abajo y a los lados, apagándose al alejarse.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/abanico.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/abanico.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/abanico.tsx.txt",
+    "code_filename": "FanCarousel.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps, pon mis fotos e íconos SVG en public/ y cámbialos en la lista de tarjetas. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia las fotos y las tarjetas de color con ícono en la lista de tarjetas",
+      "Cambia el color de fondo: los desvanecidos toman ese mismo color",
+      "Cambia cardWidth y cardHeight",
+      "Ajusta hold y move para el ritmo"
+    ]
+  },
+  {
+    "slug": "rueda-vertical",
+    "title": "Rueda vertical",
+    "category": "Carrusel",
+    "description": "Una rueda de tarjetas que gira de arriba a abajo con una tarjeta enfocada al centro; se desvanece arriba y abajo.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/rueda-vertical.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/rueda-vertical.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/rueda-3d.tsx.txt",
+    "code_filename": "WheelCarousel.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps, pon mis fotos e íconos SVG en public/ y cámbialos en la lista de tarjetas. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia las fotos y las tarjetas de color con ícono en la lista de tarjetas",
+      "Cambia el color de fondo: los desvanecidos toman ese mismo color",
+      "Usa direction: \"vertical\"",
+      "Cambia cardSize y radius para el zoom y la separación"
+    ]
+  },
+  {
+    "slug": "rueda-horizontal",
+    "title": "Rueda horizontal",
+    "category": "Carrusel",
+    "description": "La misma rueda girando de lado a lado en formato Reel, con la tarjeta del centro enfocada y sin desvanecido en los costados.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/rueda-horizontal.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/rueda-horizontal.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/rueda-3d.tsx.txt",
+    "code_filename": "WheelCarousel.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps, pon mis fotos e íconos SVG en public/ y cámbialos en la lista de tarjetas. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia las fotos y las tarjetas de color con ícono en la lista de tarjetas",
+      "Cambia el color de fondo: los desvanecidos toman ese mismo color",
+      "Usa direction: \"horizontal\"",
+      "Cambia cardSize y radius para el zoom y la separación"
+    ]
+  },
+  {
+    "slug": "pila-3d",
+    "title": "Pila 3D",
+    "category": "Carrusel",
+    "description": "Tarjetas apiladas hacia el fondo: la de enfrente se queda un momento, baja y sale, y la pila avanza.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/pila-3d.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/pila-3d.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/pila-3d.tsx.txt",
+    "code_filename": "StackSlider.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps, pon mis fotos e íconos SVG en public/ y cámbialos en la lista de tarjetas. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia las fotos y las tarjetas de color con ícono en la lista de tarjetas",
+      "Cambia el color de fondo: los desvanecidos toman ese mismo color",
+      "Cambia visible para mostrar más o menos tarjetas en la pila",
+      "Ajusta hold y move para el ritmo"
+    ]
+  },
+  {
+    "slug": "columnas-inclinadas",
+    "title": "Columnas inclinadas",
+    "category": "Fondo",
+    "description": "Columnas de tarjetas sobre un plano inclinado que suben y bajan sin parar, sobre negro con una sombra que cubre la parte de arriba.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/columnas-inclinadas.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/columnas-inclinadas.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/columnas-inclinadas.tsx.txt",
+    "code_filename": "TiltedColumns.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps, pon mis fotos e íconos SVG en public/ y cámbialos en la lista de tarjetas. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia las fotos y las tarjetas de color con ícono en la lista de tarjetas",
+      "Cambia el color de fondo: los desvanecidos toman ese mismo color",
+      "Cambia shadeColor y shadeReach para la sombra",
+      "Ajusta columns, cardSize y speed"
+    ]
+  },
+  {
+    "slug": "anillo-interior",
+    "title": "Anillo interior",
+    "category": "Carrusel",
+    "description": "Las tarjetas forman un cilindro con la cámara adentro y giran de arriba a abajo sin parar; la del centro se ve grande.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/anillo-interior.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/anillo-interior.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/anillo-interior.tsx.txt",
+    "code_filename": "InnerRing.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps, pon mis fotos e íconos SVG en public/ y cámbialos en la lista de tarjetas. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia las fotos y las tarjetas de color con ícono en la lista de tarjetas",
+      "Cambia el color de fondo: los desvanecidos toman ese mismo color",
+      "Ajusta fade (0 a 1) para el desvanecido",
+      "Cambia zoom y turnSeconds"
     ]
   }
 ]
