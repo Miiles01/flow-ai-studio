@@ -52,7 +52,7 @@ const COPY = {
     phase2Text: "Mantienes todos los beneficios de la fase 1 y se suman bonos negociables: pagos adicionales que definimos contigo según lo que construyamos juntos.",
     bullets: ["Plan Pro permanente", "Tu portafolio 24/7", "Acceso anticipado a todas las funciones", "25% de comisión sin límite", "Bonos negociables"],
     ctaTitle: "¿Empezamos?",
-    ctaText: "Crea tu cuenta y te ayudamos a armar tu primer portafolio.",
+    ctaText: "Crea tu cuenta y arma tu primer portafolio hoy.",
     cta: "Crear mi cuenta",
   },
   en: {
@@ -85,7 +85,7 @@ const COPY = {
     phase2Text: "You keep every benefit from phase 1 and add negotiable bonuses: extra payments we define with you based on what we build together.",
     bullets: ["Permanent Pro plan", "Your portfolio 24/7", "Early access to every feature", "25% commission, no limit", "Negotiable bonuses"],
     ctaTitle: "Shall we start?",
-    ctaText: "Create your account and we will help you build your first portfolio.",
+    ctaText: "Create your account and build your first portfolio today.",
     cta: "Create my account",
   },
 } as const;
