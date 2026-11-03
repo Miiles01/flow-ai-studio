@@ -32,7 +32,7 @@ export default function StudioComponentCard({ c }: { c: StudioComponent }) {
         style={{ background: isDark ? "linear-gradient(180deg, #121212 0%, #0A0A0A 100%)" : "linear-gradient(180deg, #FDFDFD 0%, #F8F9FD 100%)" }}
       >
         {/* Pantalla vertical (Reel 9:16) con el mismo redondeo y sombra que las pantallas de la Librería */}
-        <div className={`relative h-[82%] aspect-[9/16] overflow-hidden rounded-[8px] bg-black transition-transform duration-500 ease-out group-hover:scale-[1.03] ${isDark ? "" : "shadow-[0_8px_24px_-10px_rgba(28,30,42,0.10)]"}`}>
+        <div className={`relative h-[82%] aspect-[9/16] overflow-hidden rounded-[8px] bg-white transition-transform duration-500 ease-out group-hover:scale-[1.03] ${isDark ? "" : "shadow-[0_8px_24px_-10px_rgba(28,30,42,0.10)]"}`}>
           <video
             ref={videoRef}
             src={c.preview_video_url}
@@ -42,7 +42,7 @@ export default function StudioComponentCard({ c }: { c: StudioComponent }) {
             playsInline
             preload="metadata"
             aria-hidden="true"
-            className="h-full w-full object-cover"
+            className="block h-full w-full scale-[1.01] object-cover"
           />
         </div>
       </button>
