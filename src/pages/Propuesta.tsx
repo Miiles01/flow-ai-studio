@@ -187,9 +187,9 @@ export default function Propuesta() {
           </ul>
         </section>
 
-        <section className="mt-24 rounded-[24px] bg-miiles-gray-50 p-8 md:p-10">
+        <section className="mt-24 flex flex-col items-center rounded-[24px] bg-miiles-gray-50 p-8 text-center md:p-12">
           <h2 className="text-2xl font-normal tracking-tight md:text-3xl">{c.ctaTitle}</h2>
-          <p className="mt-3 max-w-lg text-base font-light leading-relaxed text-miiles-gray-600">{c.ctaText}</p>
+          <p className="mx-auto mt-3 max-w-lg text-base font-light leading-relaxed text-miiles-gray-600">{c.ctaText}</p>
           <Link to="/register" className="mt-6 inline-flex rounded-full bg-black px-6 py-3 text-sm font-normal text-white transition-colors hover:bg-miiles-pink">
             {c.cta}
           </Link>
