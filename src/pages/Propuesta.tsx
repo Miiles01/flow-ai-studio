@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import i18n from "@/i18n";
 import { usePageSeo } from "@/hooks/usePageSeo";
 
@@ -88,7 +88,9 @@ function Check() {
 }
 
 export default function Propuesta() {
+  const params = useParams();
   const [lang, setLang] = useState<Lang>(() => {
+    if (params.lang === "en" || params.lang === "es") return params.lang;
     const q = new URLSearchParams(window.location.search).get("lang");
     if (q === "en" || q === "es") return q;
     return (i18n.language || "es").startsWith("en") ? "en" : "es";

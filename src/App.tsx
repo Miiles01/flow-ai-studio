@@ -195,6 +195,7 @@ const App = () => (
                 <Route path="clinicas" element={<Clinicas />} />
                 <Route path="shopify-tutorial" element={<ShopifyTutorial />} />
                 <Route path="conecta-tu-ia" element={<ConectaIA />} />
+                <Route path="propuesta" element={<Propuesta />} />
               </Route>
 
               <Route path="*" element={<NotFound />} />
