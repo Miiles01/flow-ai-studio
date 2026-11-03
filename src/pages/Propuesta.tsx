@@ -2,6 +2,13 @@ import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import i18n from "@/i18n";
 import { usePageSeo } from "@/hooks/usePageSeo";
+import LandingNavbar from "@/components/LandingNavbar";
+import LandingFooter from "@/components/LandingFooter";
+import { LayoutTemplate, LayoutDashboard, TrendingUp, Clapperboard, Crown, Globe, Zap, Percent, HandCoins } from "lucide-react";
+
+// Íconos de los beneficios, en el mismo orden que los textos
+const FEATURE_ICONS = [LayoutTemplate, LayoutDashboard, TrendingUp, Clapperboard];
+const BULLET_ICONS = [Crown, Globe, Zap, Percent, HandCoins];
 
 // Propuesta UGC: página tipo blog, sencilla, siempre en modo claro y en español o inglés (selector arriba).
 // Los videos de las plantillas se sirven desde wearemiiles.com para que miiles.app no cargue su peso.
@@ -19,8 +26,7 @@ const COPY = {
     seoDesc: "Nuestra propuesta para creadores UGC: acceso permanente a Miiles Pro, tu portafolio publicado y comisiones como afiliado.",
     tag: "Propuesta UGC",
     kicker: "Para creadores de contenido UGC",
-    title: "Crece con Miiles en dos fases",
-    intro: "Queremos trabajar contigo. Nuestra campaña tiene dos fases: en la primera te damos acceso completo a la herramienta y un portafolio listo; en la segunda sumamos bonos que acordamos juntos.",
+    title: "Programa",
     phase1: "Fase 1",
     phase1Title: "Iniciación",
     phase1Text: "Tienes acceso permanente a Miiles en su plan Pro. No es una prueba: la herramienta es tuya mientras formes parte del programa.",
@@ -50,8 +56,7 @@ const COPY = {
     seoDesc: "Our proposal for UGC creators: permanent access to Miiles Pro, your portfolio published and affiliate commissions.",
     tag: "UGC Proposal",
     kicker: "For UGC content creators",
-    title: "Grow with Miiles in two phases",
-    intro: "We want to work with you. Our campaign has two phases: in the first one you get full access to the tool and a ready-made portfolio; in the second one we add bonuses that we agree on together.",
+    title: "Program",
     phase1: "Phase 1",
     phase1Title: "Onboarding",
     phase1Text: "You get permanent access to Miiles on the Pro plan. It is not a trial: the tool is yours for as long as you are part of the program.",
@@ -78,15 +83,6 @@ const COPY = {
   },
 } as const;
 
-function Check() {
-  return (
-    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true" className="mt-[3px] shrink-0">
-      <circle cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="1.5" />
-      <path d="M8 12.5L10.5 15L16 9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
-    </svg>
-  );
-}
-
 export default function Propuesta() {
   const params = useParams();
   const [lang, setLang] = useState<Lang>(() => {
@@ -101,33 +97,27 @@ export default function Propuesta() {
 
   return (
     <div className="min-h-screen bg-white text-black" lang={lang}>
-      <header className="mx-auto flex max-w-3xl items-center justify-between px-6 py-8">
-        <Link to="/" aria-label="Miiles">
-          <img src="/logotipo.svg" alt="Miiles" className="h-5 w-auto" />
-        </Link>
-        <div className="flex items-center gap-4">
-          <span className="hidden text-xs font-light text-miiles-gray-400 sm:inline">{c.tag}</span>
-          <div className="flex rounded-full bg-miiles-gray-50 p-1" role="group" aria-label="Idioma / Language">
-            {(["es", "en"] as const).map((l) => (
-              <button
-                key={l}
-                type="button"
-                onClick={() => setLang(l)}
-                aria-pressed={lang === l}
-                className={`rounded-full px-3 py-1 text-xs font-normal transition-colors ${lang === l ? "bg-black text-white" : "text-miiles-gray-400 hover:text-black"}`}
-              >
-                {l === "es" ? "ES" : "EN"}
-              </button>
-            ))}
-          </div>
-        </div>
-      </header>
+      <LandingNavbar />
 
       <main className="mx-auto max-w-3xl px-6 pb-24">
-        <section className="pt-10 md:pt-16">
-          <p className="text-sm font-light text-miiles-gray-400">{c.kicker}</p>
+        <section className="pt-40 md:pt-48">
+          <div className="flex items-center justify-between gap-4">
+            <p className="text-sm font-light text-miiles-gray-400">{c.kicker}</p>
+            <div className="flex rounded-full bg-miiles-gray-50 p-1" role="group" aria-label="Idioma / Language">
+              {(["es", "en"] as const).map((l) => (
+                <button
+                  key={l}
+                  type="button"
+                  onClick={() => setLang(l)}
+                  aria-pressed={lang === l}
+                  className={`rounded-full px-3 py-1 text-xs font-normal transition-colors ${lang === l ? "bg-black text-white" : "text-miiles-gray-400 hover:text-black"}`}
+                >
+                  {l === "es" ? "ES" : "EN"}
+                </button>
+              ))}
+            </div>
+          </div>
           <h1 className="mt-3 text-4xl font-normal leading-[1.05] tracking-tight md:text-6xl">{c.title}</h1>
-          <p className="mt-6 max-w-xl text-base font-light leading-relaxed text-miiles-gray-600 md:text-lg">{c.intro}</p>
         </section>
 
         <section className="mt-20">
@@ -150,11 +140,10 @@ export default function Propuesta() {
                     loop
                     playsInline
                     preload="metadata"
-                    aria-label={`${c.previewLabel} ${p.name}`}
+                    aria-label={c.previewLabel}
                     className="block aspect-[4/3] w-full rounded-[10px] object-cover"
                   />
                 </div>
-                <figcaption className="mt-3 text-sm font-normal">{p.name}</figcaption>
               </figure>
             ))}
           </div>
@@ -162,12 +151,16 @@ export default function Propuesta() {
           <h3 className="mt-14 text-lg font-normal">{c.earlyTitle}</h3>
           <p className="mt-3 text-base font-light leading-relaxed text-miiles-gray-600">{c.earlyText}</p>
           <ul className="mt-6 grid grid-cols-1 gap-3 sm:grid-cols-2">
-            {c.features.map((f) => (
+            {c.features.map((f, i) => {
+              const Icon = FEATURE_ICONS[i];
+              return (
               <li key={f.title} className="rounded-2xl bg-miiles-gray-50 p-5">
+                <span className="mb-4 flex h-9 w-9 items-center justify-center rounded-full bg-white text-black shadow-sm"><Icon size={17} strokeWidth={1.5} /></span>
                 <p className="text-sm font-normal">{f.title}</p>
                 <p className="mt-1 text-sm font-light leading-relaxed text-miiles-gray-600">{f.text}</p>
               </li>
-            ))}
+              );
+            })}
           </ul>
 
           <h3 className="mt-14 text-lg font-normal">{c.affTitle}</h3>
@@ -182,9 +175,15 @@ export default function Propuesta() {
           <h2 className="mt-4 text-2xl font-normal tracking-tight md:text-4xl">{c.phase2Title}</h2>
           <p className="mt-5 text-base font-light leading-relaxed text-miiles-gray-600">{c.phase2Text}</p>
           <ul className="mt-6 flex flex-col gap-3 text-base font-light text-miiles-gray-600">
-            {c.bullets.map((b) => (
-              <li key={b} className="flex gap-3"><Check /><span>{b}</span></li>
-            ))}
+            {c.bullets.map((b, i) => {
+              const Icon = BULLET_ICONS[i];
+              return (
+                <li key={b} className="flex items-center gap-3">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-miiles-gray-50 text-black"><Icon size={16} strokeWidth={1.5} /></span>
+                  <span>{b}</span>
+                </li>
+              );
+            })}
           </ul>
         </section>
 
@@ -196,6 +195,7 @@ export default function Propuesta() {
           </Link>
         </section>
       </main>
+      <LandingFooter />
     </div>
   );
 }
