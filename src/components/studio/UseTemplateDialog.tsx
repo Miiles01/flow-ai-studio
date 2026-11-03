@@ -9,6 +9,9 @@ import { Button } from "@/components/ui/button";
 import { Dialog, DialogClose, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { useTheme } from "@/contexts/ThemeContext";
 import type { StudioTemplate } from "@/lib/studio";
+import antigravityLogo from "@/assets/ai-logos/antigravity.png.asset.json";
+import codexLogo from "@/assets/ai-logos/codex.png.asset.json";
+import cursorLogo from "@/assets/ai-logos/cursor.png.asset.json";
 
 const dt = (key: string, options?: Record<string, unknown>): string => dashboardI18n.t(key, options) as string;
 const MCP_URL = `https://${import.meta.env.VITE_SUPABASE_PROJECT_ID}.supabase.co/functions/v1/mcp`;
@@ -17,6 +20,49 @@ const MCP_URL = `https://${import.meta.env.VITE_SUPABASE_PROJECT_ID}.supabase.co
 const CONNECT_STEPS = ["step1", "step2", "step3", "step4"] as const;
 
 type Step = 1 | 2;
+
+// Agentes que se pueden conectar: el logo va cambiando para mostrar que funciona en cualquiera
+const AI_LOGOS: { name: string; logo: string; rounded?: boolean }[] = [
+  { name: "Claude", logo: "/logos/claude.svg" },
+  { name: "Codex", logo: codexLogo.url },
+  { name: "Gemini", logo: "/logos/gemini.svg" },
+  { name: "Cursor", logo: cursorLogo.url, rounded: true },
+  { name: "Antigravity", logo: antigravityLogo.url },
+];
+
+/** Logo de un agente de IA que cambia cada poco (Claude → Codex → Gemini → Cursor → Antigravity). */
+function RotatingAiLogo({ size = 40, className = "" }: { size?: number; className?: string }) {
+  const reduce = useReducedMotion();
+  const [i, setI] = useState(0);
+  useEffect(() => {
+    if (reduce) return;
+    const id = setInterval(() => setI((n) => (n + 1) % AI_LOGOS.length), 1800);
+    return () => clearInterval(id);
+  }, [reduce]);
+  const a = AI_LOGOS[i];
+  return (
+    <span
+      className={`relative inline-flex shrink-0 items-center justify-center overflow-hidden rounded-xl border border-black/[0.06] bg-white shadow-sm ${className}`}
+      style={{ width: size, height: size }}
+      aria-label={a.name}
+      role="img"
+    >
+      <AnimatePresence mode="wait" initial={false}>
+        <motion.img
+          key={a.name}
+          src={a.logo}
+          alt=""
+          className={`object-contain ${a.rounded ? "rounded-md" : ""}`}
+          style={{ width: size * 0.55, height: size * 0.55 }}
+          initial={{ opacity: 0, y: 8, scale: 0.9 }}
+          animate={{ opacity: 1, y: 0, scale: 1 }}
+          exit={{ opacity: 0, y: -8, scale: 0.9 }}
+          transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
+        />
+      </AnimatePresence>
+    </span>
+  );
+}
 
 /** Paso 1: el pop-up «Agregar conector personalizado» con los dos campos ya llenos. */
 /** Campo de la ilustración: al pasar el cursor aparece «copiar» y copia su valor. */
@@ -47,6 +93,7 @@ function ConnectorIllustration({ isDark }: { isDark: boolean }) {
   const bar = isDark ? "bg-white/10" : "bg-black/[0.07]";
   return (
     <div className={`w-full rounded-[22px] border p-6 shadow-[0_24px_60px_rgba(0,0,0,0.10)] ${card}`}>
+      <RotatingAiLogo size={40} className="mb-4" />
       <div className="flex items-start justify-between">
         <p className="text-lg font-medium tracking-tight">{dt("dashboard.connectMcp.dialogTitle")}</p>
         <span className={`flex h-7 w-7 items-center justify-center rounded-lg border ${isDark ? "border-white/10" : "border-black/10"}`}><X size={13} strokeWidth={1.5} /></span>
@@ -58,8 +105,6 @@ function ConnectorIllustration({ isDark }: { isDark: boolean }) {
       <p className="mt-4 text-xs font-light text-muted-foreground">{dt("dashboard.connectMcp.urlLabel")}</p>
       <CopyField value={MCP_URL} className={`break-all font-mono text-[11px] leading-5 ${field}`} />
       <div className="mt-2 space-y-2"><div className={`h-2 w-10/12 rounded-full ${bar}`} /><div className={`h-2 w-6/12 rounded-full ${bar}`} /></div>
-      {/* Esqueleto del aviso */}
-      <div className="mt-6 space-y-2"><div className={`h-2 w-full rounded-full ${bar}`} /><div className={`h-2 w-11/12 rounded-full ${bar}`} /><div className={`h-2 w-8/12 rounded-full ${bar}`} /></div>
       <div className="relative mt-6 flex justify-end gap-2">
         <span className={`rounded-xl border px-4 py-2 text-[13px] ${isDark ? "border-white/10" : "border-black/10"}`}>{dt("dashboard.connectMcp.cancel")}</span>
         <span className={`rounded-xl px-4 py-2 text-[13px] font-medium ${isDark ? "bg-white text-black" : "bg-black text-white"}`}>{dt("dashboard.connectMcp.continue")}</span>
@@ -173,7 +218,7 @@ export default function UseTemplateDialog({ template, open, onOpenChange }: { te
 
           {/* Paso 1 */}
           <section className="space-y-4" onMouseEnter={() => setStep(1)} onFocusCapture={() => setStep(1)}>
-            <h3 className={stepTitle}><span className={stepNum}>1</span>{dt("dashboard.connectMcp.connectTitle")}</h3>
+            <h3 className={stepTitle}><span className={stepNum}>1</span>{dt("dashboard.connectMcp.connectTitle")}<RotatingAiLogo size={30} className="ml-auto md:hidden" /></h3>
             {/* El enlace completo a la vista: si no cabe, pasa a otra línea */}
             <div className={`flex items-center gap-3 rounded-2xl p-2 pl-4 ${isDark ? "bg-white/5" : "bg-[#F7F7F8]"}`}>
               <code className="min-w-0 flex-1 select-all break-all py-1 font-mono text-xs leading-5 text-foreground">{MCP_URL}</code>
