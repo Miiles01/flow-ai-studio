@@ -38,10 +38,10 @@ const COPY = {
     earlyTitle: "Acceso anticipado a herramientas, skills y componentes",
     earlyText: "Usas todas las funciones de Miiles desde el primer día y pruebas antes que nadie las que vienen en camino.",
     features: [
-      { title: "Diseño web", text: "Crea y publica tu portafolio desde plantillas pensadas para creadores." },
-      { title: "Canvas de organización", text: "Ordena ideas, guiones y entregas de cada campaña en un solo lugar." },
-      { title: "Sección de algoritmos", text: "Entiende qué está funcionando en cada red y por qué." },
-      { title: "Próximamente", text: "Componentes para editar contenido para redes sociales, con acceso antes que nadie." },
+      { title: "Diseño web", text: "Tu portafolio desde plantillas" },
+      { title: "Canvas de organización", text: "Ideas, guiones y entregas en un lugar" },
+      { title: "Sección de algoritmos", text: "Qué funciona en cada red" },
+      { title: "Próximamente", text: "Componentes para editar tu contenido" },
     ],
     affTitle: "Tu enlace de afiliado",
     affText: "Compartes tu enlace y recibes una comisión cada vez que alguien compra el plan Pro con él. Sin límite de ventas.",
@@ -70,10 +70,10 @@ const COPY = {
     earlyTitle: "Early access to tools, skills and components",
     earlyText: "You use every Miiles feature from day one and try the upcoming ones before anyone else.",
     features: [
-      { title: "Web design", text: "Create and publish your portfolio from templates made for creators." },
-      { title: "Organization canvas", text: "Keep ideas, scripts and deliverables for every campaign in one place." },
-      { title: "Algorithms section", text: "Understand what is working on each platform and why." },
-      { title: "Coming soon", text: "Components to edit content for social media, with access before anyone else." },
+      { title: "Web design", text: "Your portfolio from templates" },
+      { title: "Organization canvas", text: "Ideas, scripts and deliverables in one place" },
+      { title: "Algorithms section", text: "What works on each platform" },
+      { title: "Coming soon", text: "Components to edit your content" },
     ],
     affTitle: "Your affiliate link",
     affText: "Share your link and earn a commission every time someone buys the Pro plan with it. No sales limit.",
@@ -203,10 +203,12 @@ export default function Propuesta() {
             {c.features.map((f, i) => {
               const Icon = FEATURE_ICONS[i];
               return (
-              <li key={f.title} className="rounded-2xl bg-miiles-gray-50 p-5">
-                <span className="mb-4 flex h-9 w-9 items-center justify-center rounded-full bg-white text-black shadow-sm"><Icon size={17} strokeWidth={1.5} /></span>
-                <p className="text-sm font-normal">{f.title}</p>
-                <p className="mt-1 text-sm font-light leading-relaxed text-miiles-gray-600">{f.text}</p>
+              <li key={f.title} className="flex items-center gap-3 rounded-2xl bg-miiles-gray-50 p-4">
+                <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-white text-black shadow-sm"><Icon size={17} strokeWidth={1.5} /></span>
+                <span className="min-w-0">
+                  <span className="block text-sm font-normal">{f.title}</span>
+                  <span className="block text-xs font-light text-miiles-gray-600">{f.text}</span>
+                </span>
               </li>
               );
             })}
