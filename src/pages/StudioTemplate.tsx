@@ -165,7 +165,10 @@ const DEVICE_LABEL = { desktop: dt("dashboard.text69"), tablet: dt("dashboard.te
             {/* Página + preguntas */}
             <div className="min-w-0 space-y-6">
               <div ref={previewRef} className="relative aspect-[8/5] w-full overflow-hidden rounded-[24px] border border-border bg-muted shadow-sm">
-                {t.thumbnail_url ? (
+                {t.preview_video_url ? (
+                  // Vista previa en video: se reproduce sola en bucle (la miniatura queda como póster mientras carga)
+                  <video src={t.preview_video_url} poster={t.thumbnail_url ?? undefined} autoPlay muted loop playsInline aria-label={t.title} className="absolute inset-0 h-full w-full object-cover object-top" />
+                ) : t.thumbnail_url ? (
                   <img src={t.thumbnail_url} alt={t.title} className="absolute inset-0 h-full w-full object-cover object-top" />
                 ) : <iframe {...frameProps} tabIndex={-1} style={{ width: DESKTOP_WIDTH, height: DESKTOP_HEIGHT, transform: `scale(${previewWidth / DESKTOP_WIDTH})`, transformOrigin: "top left", visibility: previewWidth > 0 ? "visible" : "hidden" }} className="absolute left-0 top-0 border-0 bg-background" />}
               </div>
