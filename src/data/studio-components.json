@@ -3,22 +3,25 @@
     "slug": "carrusel-circular",
     "title": "Carrusel circular",
     "category": "Carrusel",
-    "description": "Tarjetas sobre un arco que giran una por una: se detiene en cada una y pasa a la siguiente. Sirve para mostrar fotos, frases o productos en un Reel vertical. Mezcla fotos con tarjetas de color y texto.",
+    "description": "Tarjetas sobre un arco que giran una por una: se detiene en cada una y pasa a la siguiente. Sirve para mostrar fotos o productos en un Reel vertical, alternando con tarjetas de color con un ícono.",
     "preview_video_url": "https://wearemiiles.com/studio/componentes/carrusel-circular.mp4",
     "poster_url": "https://wearemiiles.com/studio/componentes/carrusel-circular.jpg",
     "code_url": "https://wearemiiles.com/studio/componentes/carrusel-circular.tsx.txt",
     "code_filename": "CircularCarousel.tsx",
     "stack": "Remotion + React, 1080×1920 a 30 fps",
-    "instruction": "Si no tengo un proyecto de Remotion, créalo primero; registra la composición en 1080×1920 a 30 fps, pon mis fotos en public/ y cámbialas en la lista de tarjetas. Usa siempre fondo blanco.",
+    "instruction": "Si no tengo un proyecto de Remotion, créalo primero; registra la composición en 1080×1920 a 30 fps, pon mis fotos e íconos SVG en public/ y cámbialos en la lista de tarjetas. Usa siempre fondo blanco y tarjetas sin sombra.",
     "customize": [
-      "Cambia las fotos y las frases de la lista de tarjetas",
-      "Usa tarjetas de color sólido con una frase para alternar con las fotos",
+      "Cambia las fotos de la lista de tarjetas",
+      "Alterna con tarjetas de color sólido con un ícono (SVG de una tinta) y elige su color",
       "Ajusta hold (cuánto se queda cada tarjeta) y move (cuánto dura el giro)",
       "Cambia gap para separar más o menos las tarjetas",
       "Sube radius para que el arco sea más plano"
     ],
     "faq": [
-      { "q": "¿Qué necesito para renderizarla?", "a": "Un proyecto de Remotion (React). Si no lo tienes, tu IA lo crea con el prompt y te dice el comando para exportar el video." }
+      {
+        "q": "¿Qué necesito para renderizarla?",
+        "a": "Un proyecto de Remotion (React). Si no lo tienes, tu IA lo crea con el prompt y te dice el comando para exportar el video."
+      }
     ]
   }
 ]
