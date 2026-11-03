@@ -40,7 +40,7 @@ const COPY = {
     phase2: "Fase 2",
     phase2Title: "Crecimiento",
     phase2Text: "Mantienes todos los beneficios de la fase 1 y se suman bonos negociables: pagos adicionales que definimos contigo según lo que construyamos juntos.",
-    bullets: ["Plan Pro permanente", "Tu portafolio publicado", "Acceso anticipado a todas las funciones", "24% de comisión sin límite", "Bonos negociables"],
+    bullets: ["Plan Pro permanente", "Tu portafolio publicado", "Acceso anticipado a todas las funciones", "25% de comisión sin límite", "Bonos negociables"],
     ctaTitle: "¿Empezamos?",
     ctaText: "Crea tu cuenta y te ayudamos a armar tu primer portafolio.",
     cta: "Crear mi cuenta",
@@ -71,7 +71,7 @@ const COPY = {
     phase2: "Phase 2",
     phase2Title: "Growth",
     phase2Text: "You keep every benefit from phase 1 and add negotiable bonuses: extra payments we define with you based on what we build together.",
-    bullets: ["Permanent Pro plan", "Your portfolio published", "Early access to every feature", "24% commission, no limit", "Negotiable bonuses"],
+    bullets: ["Permanent Pro plan", "Your portfolio published", "Early access to every feature", "25% commission, no limit", "Negotiable bonuses"],
     ctaTitle: "Shall we start?",
     ctaText: "Create your account and we will help you build your first portfolio.",
     cta: "Create my account",
@@ -171,7 +171,7 @@ export default function Propuesta() {
           <h3 className="mt-14 text-lg font-normal">{c.affTitle}</h3>
           <div className="mt-5 flex flex-col gap-6 rounded-[24px] bg-black p-8 text-white md:flex-row md:items-center md:justify-between">
             <p className="max-w-sm text-base font-light leading-relaxed text-white/80">{c.affText}</p>
-            <p className="shrink-0 text-6xl font-normal tracking-tight md:text-7xl">24%</p>
+            <p className="shrink-0 text-6xl font-normal tracking-tight md:text-7xl">25%</p>
           </div>
         </section>
 
