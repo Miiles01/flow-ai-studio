@@ -17,6 +17,7 @@ import LandingNavbar from "@/components/LandingNavbar";
 import LandingFooter from "@/components/LandingFooter";
 import TemplateCarousel from "@/components/landing/TemplateCarousel";
 // HeroPrompt (el campo de la portada) se conserva en src/components/landing/HeroPrompt.tsx — oculto por decisión del usuario.
+import { Link } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { ArrowUpRight } from "lucide-react";
 import HomeSections from "@/components/landing/HomeSections";
@@ -235,15 +236,12 @@ const Landing = () => {
               </p>
 
               <div data-anim-heading className="w-full mt-10 md:mt-12">
-                <Button size="lg" className="group h-auto py-4 text-[15px]" onClick={() => {
-                  const carousel = document.getElementById("home-templates");
-                  if (!carousel) return;
-                  const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-                  if (smootherRef.current) smootherRef.current.scrollTo(carousel, !reduceMotion, "top center");
-                  else carousel.scrollIntoView({ behavior: reduceMotion ? "instant" : "smooth", block: "center" });
-                }}>
-                  {t("home.landing.explore_templates")}
-                  <ArrowUpRight aria-hidden="true" className="transition-transform duration-300 ease-out group-hover:rotate-45" />
+                {/* Igual que "Unirse": lleva a /login, que manda al dashboard si ya hay sesión */}
+                <Button asChild size="lg" className="group h-auto py-4 text-[15px]">
+                  <Link to="/login">
+                    {t("home.landing.explore_templates")}
+                    <ArrowUpRight aria-hidden="true" className="transition-transform duration-300 ease-out group-hover:rotate-45" />
+                  </Link>
                 </Button>
               </div>
 
