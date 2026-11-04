@@ -142,5 +142,440 @@
       "Ajusta fade (0 a 1) para el desvanecido",
       "Cambia zoom y turnSeconds"
     ]
+  },
+  {
+    "slug": "frase-letras",
+    "title": "Letras",
+    "category": "Texto",
+    "description": "La frase aparece letra por letra, centrada y en negro, lista para Reels y TikTok.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/frase-letras.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/frase-letras.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/frase-clave.tsx.txt",
+    "code_filename": "KeyPhrase.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps y usa estas props: split: \"letters\", stagger: 1; pon la tipografía en public/fonts/Manrope.woff2 y cambia examplePhrases por mis frases. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia las frases en phrases (una línea por renglón)",
+      "Elige split: \"lines\", \"words\" o \"letters\"",
+      "Usa highlight para resaltar palabras con otra tipografía",
+      "Respeta la zona segura de TikTok / Reels con safeArea"
+    ]
+  },
+  {
+    "slug": "cambio-de-frase",
+    "title": "Cambio de frase",
+    "category": "Texto",
+    "description": "Una frase empuja a la otra: las líneas salen hacia arriba mientras entran las nuevas.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/cambio-de-frase.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/cambio-de-frase.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/frase-clave.tsx.txt",
+    "code_filename": "KeyPhrase.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps y usa estas props: split: \"lines\", transition: \"swap\", stagger: 2, enter: 12, exit: 12; pon la tipografía en public/fonts/Manrope.woff2 y cambia examplePhrases por mis frases. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia las frases en phrases (una línea por renglón)",
+      "Elige split: \"lines\", \"words\" o \"letters\"",
+      "Usa highlight para resaltar palabras con otra tipografía",
+      "Respeta la zona segura de TikTok / Reels con safeArea"
+    ]
+  },
+  {
+    "slug": "letras-desde-el-inicio",
+    "title": "Letras desde el inicio",
+    "category": "Texto",
+    "description": "Las letras entran de izquierda a derecha, una tras otra.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/letras-desde-el-inicio.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/letras-desde-el-inicio.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/frase-clave.tsx.txt",
+    "code_filename": "KeyPhrase.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps y usa estas props: split: \"letters\", from: \"start\", stagger: 1.5; pon la tipografía en public/fonts/Manrope.woff2 y cambia examplePhrases por mis frases. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia las frases en phrases (una línea por renglón)",
+      "Elige split: \"lines\", \"words\" o \"letters\"",
+      "Usa highlight para resaltar palabras con otra tipografía",
+      "Respeta la zona segura de TikTok / Reels con safeArea"
+    ]
+  },
+  {
+    "slug": "letras-desde-el-centro",
+    "title": "Letras desde el centro",
+    "category": "Texto",
+    "description": "Las letras nacen desde el centro de la frase hacia los lados.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/letras-desde-el-centro.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/letras-desde-el-centro.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/frase-clave.tsx.txt",
+    "code_filename": "KeyPhrase.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps y usa estas props: split: \"letters\", from: \"center\", stagger: 1.5; pon la tipografía en public/fonts/Manrope.woff2 y cambia examplePhrases por mis frases. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia las frases en phrases (una línea por renglón)",
+      "Elige split: \"lines\", \"words\" o \"letters\"",
+      "Usa highlight para resaltar palabras con otra tipografía",
+      "Respeta la zona segura de TikTok / Reels con safeArea"
+    ]
+  },
+  {
+    "slug": "letras-desde-el-final",
+    "title": "Letras desde el final",
+    "category": "Texto",
+    "description": "Las letras entran de la última a la primera.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/letras-desde-el-final.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/letras-desde-el-final.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/frase-clave.tsx.txt",
+    "code_filename": "KeyPhrase.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps y usa estas props: split: \"letters\", from: \"end\", stagger: 1.5; pon la tipografía en public/fonts/Manrope.woff2 y cambia examplePhrases por mis frases. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia las frases en phrases (una línea por renglón)",
+      "Elige split: \"lines\", \"words\" o \"letters\"",
+      "Usa highlight para resaltar palabras con otra tipografía",
+      "Respeta la zona segura de TikTok / Reels con safeArea"
+    ]
+  },
+  {
+    "slug": "letras-desde-los-extremos",
+    "title": "Letras desde los extremos",
+    "category": "Texto",
+    "description": "Las letras entran desde las orillas hacia el centro de la frase.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/letras-desde-los-extremos.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/letras-desde-los-extremos.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/frase-clave.tsx.txt",
+    "code_filename": "KeyPhrase.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps y usa estas props: split: \"letters\", from: \"edges\", stagger: 1.5; pon la tipografía en public/fonts/Manrope.woff2 y cambia examplePhrases por mis frases. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia las frases en phrases (una línea por renglón)",
+      "Elige split: \"lines\", \"words\" o \"letters\"",
+      "Usa highlight para resaltar palabras con otra tipografía",
+      "Respeta la zona segura de TikTok / Reels con safeArea"
+    ]
+  },
+  {
+    "slug": "letras-aleatorias",
+    "title": "Letras en orden aleatorio",
+    "category": "Texto",
+    "description": "Las letras aparecen en desorden hasta formar la frase.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/letras-aleatorias.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/letras-aleatorias.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/frase-clave.tsx.txt",
+    "code_filename": "KeyPhrase.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps y usa estas props: split: \"letters\", from: \"random\", stagger: 1.5; pon la tipografía en public/fonts/Manrope.woff2 y cambia examplePhrases por mis frases. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia las frases en phrases (una línea por renglón)",
+      "Elige split: \"lines\", \"words\" o \"letters\"",
+      "Usa highlight para resaltar palabras con otra tipografía",
+      "Respeta la zona segura de TikTok / Reels con safeArea"
+    ]
+  },
+  {
+    "slug": "letras-elasticas",
+    "title": "Letras elásticas",
+    "category": "Texto",
+    "description": "Una palabra grande en columnas que se estiran y encogen como resortes.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/letras-elasticas.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/letras-elasticas.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/letras-elasticas.tsx.txt",
+    "code_filename": "ElasticStack.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps pon la tipografía en public/fonts/Anton.woff2 y cambia text por mi palabra. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia text por tu palabra (corta funciona mejor)",
+      "Cambia el color del texto y el fondo",
+      "Ajusta la velocidad del estiramiento"
+    ]
+  },
+  {
+    "slug": "linea-que-resuena",
+    "title": "Línea que resuena",
+    "category": "Elemento",
+    "description": "Una línea gruesa que vibra como una cuerda cada cierto tiempo.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/linea-que-resuena.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/linea-que-resuena.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/linea-que-resuena.tsx.txt",
+    "code_filename": "ResonantLine.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps y úsala como detalle encima o debajo de mis textos. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia el color y el grosor (thickness)",
+      "Ajusta cada cuánto vibra",
+      "Úsala como separador entre textos"
+    ]
+  },
+  {
+    "slug": "orbita-con-zoom",
+    "title": "Órbita con zoom",
+    "category": "Galería",
+    "description": "Las fotos salen del centro y forman un círculo que gira sin parar; la cámara se acerca a un lado del círculo y regresa.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/orbita-con-zoom.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/orbita-con-zoom.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/orbita-zoom.tsx.txt",
+    "code_filename": "OrbitZoom.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps pon mis fotos en public/ y cámbialas en exampleItems. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia las fotos o tarjetas de color con ícono en items",
+      "Ajusta radius y cardSize para separar las fotos",
+      "focus elige hacia qué lado se acerca la cámara",
+      "zoom y turnSeconds para el acercamiento y la velocidad"
+    ]
+  },
+  {
+    "slug": "botones-que-se-revelan",
+    "title": "Botones que se revelan",
+    "category": "Elemento",
+    "description": "Botones con ícono y texto que aparecen uno por uno, en filas.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/botones-que-se-revelan.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/botones-que-se-revelan.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/botones-iconos.tsx.txt",
+    "code_filename": "IconPills.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps pon la tipografía en public/fonts/Manrope.woff2 y cambia examplePills por mis botones (íconos de lucide-react). Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia los textos e íconos en rows",
+      "Cambia colores de fondo y de los botones",
+      "every controla el tiempo entre botones"
+    ]
+  },
+  {
+    "slug": "botones-en-columna",
+    "title": "Botones en columna",
+    "category": "Elemento",
+    "description": "Cuatro botones grandes con ícono que aparecen uno debajo del otro.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/botones-en-columna.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/botones-en-columna.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/botones-iconos.tsx.txt",
+    "code_filename": "IconPills.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps y usa rows con un botón por fila, fontSize: 92 y every: 26; pon la tipografía en public/fonts/Manrope.woff2. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Pon un botón por fila en rows",
+      "Cambia íconos (lucide-react) y textos",
+      "Ajusta fontSize y every"
+    ]
+  },
+  {
+    "slug": "frase-con-puntos",
+    "title": "Frase con puntos",
+    "category": "Texto",
+    "description": "Una frase sobre una cuadrícula de puntos que se apartan al paso de dos cursores invisibles.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/frase-con-puntos.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/frase-con-puntos.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/frase-con-puntos.tsx.txt",
+    "code_filename": "DotsPhrase.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps pon la tipografía en public/fonts/Manrope.woff2 y cambia text por mi frase. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia text por tu frase",
+      "Cambia el color de los puntos y del texto",
+      "Ajusta el tamaño de los puntos y el radio de empuje"
+    ]
+  },
+  {
+    "slug": "tarjetas-que-se-apilan",
+    "title": "Tarjetas que se apilan",
+    "category": "Elemento",
+    "description": "Tarjetas de tareas que llegan una sobre otra; las de atrás se aclaran.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/tarjetas-que-se-apilan.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/tarjetas-que-se-apilan.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/tarjetas-apiladas.tsx.txt",
+    "code_filename": "StackCards.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps pon la tipografía en public/fonts/Manrope.woff2 y cambia exampleTasks por mis tarjetas. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia títulos, etiquetas y colores en cards",
+      "Ajusta el tiempo entre tarjetas",
+      "Cambia el color de fondo"
+    ]
+  },
+  {
+    "slug": "fotos-que-crecen",
+    "title": "Fotos que crecen",
+    "category": "Galería",
+    "description": "Un cuadro pequeño cambia de foto rápido entre dos palabras y crece hasta llenar la pantalla.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/fotos-que-crecen.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/fotos-que-crecen.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/fotos-que-crecen.tsx.txt",
+    "code_filename": "FlipGrow.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps pon la tipografía en public/fonts/Manrope.woff2, pon mis fotos en public/ y cámbialas en images. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia las fotos en images",
+      "Cambia las dos palabras de los lados",
+      "Ajusta la velocidad del cambio de fotos"
+    ]
+  },
+  {
+    "slug": "galeria-con-profundidad",
+    "title": "Galería con profundidad",
+    "category": "Galería",
+    "description": "Pocas fotos, alternadas a los lados, que suben sin parar en un bucle perfecto.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/galeria-con-profundidad.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/galeria-con-profundidad.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/galeria-profundidad.tsx.txt",
+    "code_filename": "DepthGallery.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps pon mis fotos en public/ y cámbialas en exampleItems; usa una duración de seconds × 30 cuadros. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia las fotos en items",
+      "count: cuántas fotos (mejor pocas)",
+      "seconds: duración del bucle",
+      "size: tamaño de las fotos"
+    ]
+  },
+  {
+    "slug": "cuadricula-que-se-reacomoda",
+    "title": "Cuadrícula que se reacomoda",
+    "category": "Galería",
+    "description": "Empieza con una foto, aparecen más y la cuadrícula pasa a 2 y 3 columnas; cada foto viaja a su lugar.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/cuadricula-que-se-reacomoda.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/cuadricula-que-se-reacomoda.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/cuadricula-reacomoda.tsx.txt",
+    "code_filename": "GridFlip.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps pon mis fotos en public/ y cámbialas en exampleItems. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia las fotos en items",
+      "layouts define los pasos (columnas, filas y ancho)",
+      "flow: true para que todas las fotos estén desde el inicio",
+      "move y hold para la velocidad"
+    ]
+  },
+  {
+    "slug": "lluvia-de-likes",
+    "title": "Lluvia de likes",
+    "category": "Galería",
+    "description": "Una frase al centro mientras caen y rebotan fotos, íconos y burbujas de likes.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/lluvia-de-likes.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/lluvia-de-likes.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/lluvia-likes.tsx.txt",
+    "code_filename": "FallingItems.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps pon la tipografía en public/fonts/Manrope.woff2 y cambia exampleDrops por mis fotos, íconos (lucide-react) y likes. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia la frase en text",
+      "Cambia lo que cae en drops",
+      "every: tiempo entre caídas; size: tamaño"
+    ]
+  },
+  {
+    "slug": "lluvia-desde-arriba",
+    "title": "Lluvia desde arriba",
+    "category": "Galería",
+    "description": "Fotos, íconos y likes caen desde arriba por dos fuentes que se mueven de lado a lado.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/lluvia-desde-arriba.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/lluvia-desde-arriba.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/lluvia-likes.tsx.txt",
+    "code_filename": "FallingItems.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps y usa fromTop: true, sources: 2, every: 5; pon la tipografía en public/fonts/Manrope.woff2 y cambia exampleDrops. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia la frase en text",
+      "sources: cuántas fuentes",
+      "Cambia lo que cae en drops"
+    ]
+  },
+  {
+    "slug": "transicion-escala",
+    "title": "Transición: escala",
+    "category": "Transición",
+    "description": "La escena se aleja y la nueva se descubre de abajo hacia arriba y crece.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/transicion-escala.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/transicion-escala.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/transiciones-pagina.tsx.txt",
+    "code_filename": "PageTransition.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps y usa variant: \"scale\"; pon la tipografía en public/fonts/Manrope.woff2 y cambia los textos de from y to. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia from y to (texto, color o foto)",
+      "stage: color detrás de las escenas",
+      "speed para la velocidad"
+    ]
+  },
+  {
+    "slug": "transicion-cortina-curva",
+    "title": "Transición: cortina curva",
+    "category": "Transición",
+    "description": "Una cortina con curva sube, cubre todo y se va hacia arriba mostrando la nueva escena.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/transicion-cortina-curva.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/transicion-cortina-curva.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/transiciones-pagina.tsx.txt",
+    "code_filename": "PageTransition.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps y usa variant: \"curve\"; pon la tipografía en public/fonts/Manrope.woff2 y cambia los textos de from y to. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia from y to",
+      "overlayColor: color de la cortina",
+      "speed para la velocidad"
+    ]
+  },
+  {
+    "slug": "transicion-disolver",
+    "title": "Transición: disolver",
+    "category": "Transición",
+    "description": "La escena se deshace con un ruido orgánico y un borde de color.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/transicion-disolver.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/transicion-disolver.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/transiciones-pagina.tsx.txt",
+    "code_filename": "PageTransition.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps y usa variant: \"dissolve\"; pon la tipografía en public/fonts/Manrope.woff2 y cambia los textos de from y to. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia from y to",
+      "overlayColor: color del borde",
+      "speed para la velocidad"
+    ]
+  },
+  {
+    "slug": "transicion-espiral",
+    "title": "Transición: espiral",
+    "category": "Transición",
+    "description": "Una espiral se dibuja con un trazo que engorda hasta cubrir la pantalla.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/transicion-espiral.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/transicion-espiral.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/transiciones-pagina.tsx.txt",
+    "code_filename": "PageTransition.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps y usa variant: \"spiral\"; pon la tipografía en public/fonts/Manrope.woff2 y cambia los textos de from y to. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia from y to",
+      "overlayColor: color de la espiral",
+      "speed para la velocidad"
+    ]
+  },
+  {
+    "slug": "foto-repeticion-capsula",
+    "title": "Foto con repetición: cápsula",
+    "category": "Galería",
+    "description": "Una foto en forma de cápsula: copias de la misma foto se encogen como ecos mientras la de adentro hace zoom.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/foto-repeticion-capsula.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/foto-repeticion-capsula.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/foto-repeticion.tsx.txt",
+    "code_filename": "RepetitionImage.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps pon mi foto en public/ y úsala en image, con shape: \"pill\". Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia image por tu foto",
+      "elems: cuántas copias",
+      "initialScale, duration y stagger para el ritmo"
+    ]
+  },
+  {
+    "slug": "foto-repeticion-arco",
+    "title": "Foto con repetición: arco",
+    "category": "Galería",
+    "description": "Una foto en forma de arco con copias que se encogen hacia abajo.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/foto-repeticion-arco.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/foto-repeticion-arco.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/foto-repeticion.tsx.txt",
+    "code_filename": "RepetitionImage.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps pon mi foto en public/ y úsala en image, con shape: \"arch\", origin: \"50% 100%\", elems: 6, initialScale: 2.5. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia image por tu foto",
+      "origin: hacia dónde se encogen",
+      "elems e initialScale"
+    ]
   }
 ]

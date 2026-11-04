@@ -74,7 +74,7 @@ export default function Studio() {
                   type="button"
                   aria-pressed={active}
                   onClick={() => { setComponentFilter(cat.id); setShowAllComponents(false); }}
-                  className={`flex-none rounded-full px-4 py-2 text-sm font-light transition-colors ${active ? "bg-foreground text-background" : "bg-background text-miiles-gray-400 shadow-sm dark:bg-white/10 dark:text-white/60 dark:shadow-none"}`}
+                  className={`flex-none rounded-full px-4 py-2 text-sm font-light transition-colors ${active ? "border border-foreground bg-foreground text-background" : "border border-miiles-gray-200 bg-transparent text-black dark:border-white/15 dark:text-white"}`}
                 >
                   {en ? cat.en : cat.es}
                 </button>
