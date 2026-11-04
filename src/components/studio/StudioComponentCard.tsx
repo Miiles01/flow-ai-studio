@@ -1,29 +1,32 @@
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import i18n from "@/i18n";
 import { useTheme } from "@/contexts/ThemeContext";
 import type { StudioComponent } from "@/lib/studioComponents";
 
 // Tarjeta de Componentes: mismo contenedor con degradado que la Librería, pero con un marco de celular (Reel 9:16).
-// El video se reproduce al pasar el cursor (y se queda en su primer cuadro el resto del tiempo).
-export default function StudioComponentCard({ c }: { c: StudioComponent }) {
+// El video se reproduce cuando "playing" es true: la sección activa toda la fila sobre la que está el cursor
+// (y se queda en su primer cuadro el resto del tiempo).
+export default function StudioComponentCard({ c, playing = false }: { c: StudioComponent; playing?: boolean }) {
   const navigate = useNavigate();
   const { isDark } = useTheme();
   const videoRef = useRef<HTMLVideoElement>(null);
   const en = (i18n.language || "es").startsWith("en");
   const open = () => navigate(`/studio/componentes/${c.slug}`);
 
-  const start = () => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-    videoRef.current?.play().catch(() => {});
-  };
-  const stop = () => {
+  useEffect(() => {
     const v = videoRef.current;
-    if (v) { v.pause(); v.currentTime = 0; }
-  };
+    if (!v) return;
+    if (playing && !window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      v.play().catch(() => {});
+    } else {
+      v.pause();
+      v.currentTime = 0;
+    }
+  }, [playing]);
 
   return (
-    <div className="group" onMouseEnter={start} onMouseLeave={stop}>
+    <div className="group">
       <button
         type="button"
         onClick={open}

@@ -32,6 +32,8 @@ export default function Studio() {
   const componentCategories = COMPONENT_CATEGORIES.filter((cat) => STUDIO_COMPONENTS.some((c) => c.category === cat.id));
   const filteredComponents = componentFilter ? STUDIO_COMPONENTS.filter((c) => c.category === componentFilter) : STUDIO_COMPONENTS;
   const firstRows = componentCols * 2;
+  // Fila bajo el cursor: sus previews se reproducen juntas (desktop y tablet); las demás quedan quietas
+  const [hoveredRow, setHoveredRow] = useState<number | null>(null);
   const shownComponents = showAllComponents ? filteredComponents : filteredComponents.slice(0, firstRows);
 
   return (
@@ -86,15 +88,16 @@ export default function Studio() {
           <p className="text-sm text-muted-foreground py-12 text-center">{(i18n.language || "es").startsWith("en") ? "Coming soon" : "Muy pronto"}</p>
         ) : (
           // Tres columnas en desktop, dos en tablet y en móvil (los marcos de celular son angostos)
-          <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-10 pt-2">
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-10 pt-2" onMouseLeave={() => setHoveredRow(null)}>
             {shownComponents.map((c, i) => (
               <motion.div
                 key={`${componentFilter ?? "all"}-${c.slug}`}
                 initial={i >= firstRows ? { y: 12, opacity: 0 } : false}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: i >= firstRows ? (i - firstRows) * 0.06 : 0, duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
+                onMouseEnter={() => setHoveredRow(Math.floor(i / componentCols))}
               >
-                <StudioComponentCard c={c} />
+                <StudioComponentCard c={c} playing={hoveredRow === Math.floor(i / componentCols)} />
               </motion.div>
             ))}
           </div>
