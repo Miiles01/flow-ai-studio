@@ -9,7 +9,7 @@ import { DiscoveriesBoard } from "@/components/discoveries/DiscoveriesBoard";
 import StudioLibraryCard from "@/components/studio/StudioLibraryCard";
 import MyPages from "@/components/studio/MyPages";
 import StudioComponentCard from "@/components/studio/StudioComponentCard";
-import { STUDIO_COMPONENTS } from "@/lib/studioComponents";
+import { COMPONENT_CATEGORIES, STUDIO_COMPONENTS } from "@/lib/studioComponents";
 import i18n from "@/i18n";
 
 
@@ -26,9 +26,13 @@ export default function Studio() {
     mq.addEventListener("change", on);
     return () => mq.removeEventListener("change", on);
   }, []);
-  const firstRows = componentCols * 2;
-  const shownComponents = showAllComponents ? STUDIO_COMPONENTS : STUDIO_COMPONENTS.slice(0, firstRows);
   const en = (i18n.language || "es").startsWith("en");
+  // Filtros por categoría (solo las que ya tienen componentes)
+  const [componentFilter, setComponentFilter] = useState<string | null>(null);
+  const componentCategories = COMPONENT_CATEGORIES.filter((cat) => STUDIO_COMPONENTS.some((c) => c.category === cat.id));
+  const filteredComponents = componentFilter ? STUDIO_COMPONENTS.filter((c) => c.category === componentFilter) : STUDIO_COMPONENTS;
+  const firstRows = componentCols * 2;
+  const shownComponents = showAllComponents ? filteredComponents : filteredComponents.slice(0, firstRows);
 
   return (
     <div className="p-8 md:px-12 md:pb-12 md:pt-24 max-w-5xl mx-auto space-y-12">
@@ -59,6 +63,25 @@ export default function Studio() {
               : "Animaciones de video listas para copiar y pegar en tu asistente de IA"}
           </p>
         </div>
+        {componentCategories.length > 1 && (
+          // Pills de filtro (mismo estilo que el resto del dashboard)
+          <div className="-mx-8 flex gap-2 overflow-x-auto px-8 pb-1 scrollbar-hide md:mx-0 md:px-0" role="group" aria-label={en ? "Filter by category" : "Filtrar por categoría"}>
+            {[{ id: null as string | null, es: "Todas", en: "All" }, ...componentCategories].map((cat) => {
+              const active = componentFilter === cat.id;
+              return (
+                <button
+                  key={cat.id ?? "all"}
+                  type="button"
+                  aria-pressed={active}
+                  onClick={() => { setComponentFilter(cat.id); setShowAllComponents(false); }}
+                  className={`flex-none rounded-full px-4 py-2 text-sm font-light transition-colors ${active ? "bg-foreground text-background" : "bg-background text-miiles-gray-400 shadow-sm dark:bg-white/10 dark:text-white/60 dark:shadow-none"}`}
+                >
+                  {en ? cat.en : cat.es}
+                </button>
+              );
+            })}
+          </div>
+        )}
         {STUDIO_COMPONENTS.length === 0 ? (
           <p className="text-sm text-muted-foreground py-12 text-center">{(i18n.language || "es").startsWith("en") ? "Coming soon" : "Muy pronto"}</p>
         ) : (
@@ -66,7 +89,7 @@ export default function Studio() {
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-10 pt-2">
             {shownComponents.map((c, i) => (
               <motion.div
-                key={c.slug}
+                key={`${componentFilter ?? "all"}-${c.slug}`}
                 initial={i >= firstRows ? { y: 12, opacity: 0 } : false}
                 animate={{ y: 0, opacity: 1 }}
                 transition={{ delay: i >= firstRows ? (i - firstRows) * 0.06 : 0, duration: 0.4, ease: [0.25, 0.1, 0.25, 1] }}
@@ -76,7 +99,7 @@ export default function Studio() {
             ))}
           </div>
         )}
-        {STUDIO_COMPONENTS.length > firstRows && (
+        {filteredComponents.length > firstRows && (
           // A la derecha, debajo de la última tarjeta de la fila
           <div className="flex justify-end">
             <button

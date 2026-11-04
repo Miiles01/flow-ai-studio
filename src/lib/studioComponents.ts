@@ -6,7 +6,7 @@ import i18n from "@/i18n";
 export type StudioComponent = {
   slug: string;
   title: string;
-  category: string; // p. ej. "Texto animado", "Transición"
+  category: string; // uno de COMPONENT_CATEGORIES (Carrusel, Galería, Texto, Elemento, Transición)
   description: string;
   preview_video_url: string; // formato vertical 9:16
   poster_url?: string | null;
@@ -19,6 +19,15 @@ export type StudioComponent = {
 };
 
 export const STUDIO_COMPONENTS = repoComponents as StudioComponent[];
+
+/** Categorías para los filtros, en este orden (solo se muestran las que tienen componentes). */
+export const COMPONENT_CATEGORIES: { id: string; es: string; en: string }[] = [
+  { id: "Carrusel", es: "Carruseles", en: "Carousels" },
+  { id: "Galería", es: "Galerías", en: "Galleries" },
+  { id: "Texto", es: "Texto", en: "Text" },
+  { id: "Elemento", es: "Elementos", en: "Elements" },
+  { id: "Transición", es: "Transiciones", en: "Transitions" },
+];
 
 /** Trae el código del componente desde wearemiiles. */
 export async function fetchComponentCode(c: StudioComponent): Promise<string> {
