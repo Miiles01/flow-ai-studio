@@ -11,6 +11,17 @@ import { defineTool } from "npm:@lovable.dev/mcp-js@3.1.1";
 // src/data/studio-templates.json
 var studio_templates_default = [
   {
+    slug: "portafolio-ugc-v25",
+    title: "Bloom",
+    kind: "portfolio",
+    description: "Plantilla de portafolio UGC en blanco con acentos morado, azul y azul claro, y la palabra Portafolio gigante. Incluye un carrusel de fotos que cambian de tama\xF1o mientras avanzan, secciones que se quedan fijas y la siguiente sube encima como en una presentaci\xF3n, frase con subrayados a l\xE1piz, n\xFAmeros que ruedan, Mi trabajo en una fila de videos que avanza con el scroll, marcas, nichos en una rueda de c\xE1psulas, precios, rese\xF1as en carrusel y un footer con tu nombre en movimiento.",
+    thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v25.jpg",
+    preview_url: "https://wearemiiles.com/ugc-v25/",
+    download_url: "https://wearemiiles.com/studio/descargas/ugc-v25.zip",
+    template_number: 25,
+    preview_video_url: "https://wearemiiles.com/studio/previews/ugc-v25.mp4"
+  },
+  {
     slug: "portafolio-ugc-v19",
     title: "Coral",
     kind: "portfolio",

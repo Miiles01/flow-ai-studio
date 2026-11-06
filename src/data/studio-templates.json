@@ -1,5 +1,16 @@
 [
   {
+    "slug": "portafolio-ugc-v25",
+    "title": "Bloom",
+    "kind": "portfolio",
+    "description": "Plantilla de portafolio UGC en blanco con acentos morado, azul y azul claro, y la palabra Portafolio gigante. Incluye un carrusel de fotos que cambian de tamaño mientras avanzan, secciones que se quedan fijas y la siguiente sube encima como en una presentación, frase con subrayados a lápiz, números que ruedan, Mi trabajo en una fila de videos que avanza con el scroll, marcas, nichos en una rueda de cápsulas, precios, reseñas en carrusel y un footer con tu nombre en movimiento.",
+    "thumbnail_url": "https://wearemiiles.com/studio/thumbs/ugc-v25.jpg",
+    "preview_url": "https://wearemiiles.com/ugc-v25/",
+    "download_url": "https://wearemiiles.com/studio/descargas/ugc-v25.zip",
+    "template_number": 25,
+    "preview_video_url": "https://wearemiiles.com/studio/previews/ugc-v25.mp4"
+  },
+  {
     "slug": "portafolio-ugc-v19",
     "title": "Coral",
     "kind": "portfolio",
