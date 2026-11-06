@@ -1,0 +1,89 @@
+/* ============================================================================
+   CÓMO USAR ESTE COMPONENTE (instrucciones para tu asistente de IA:
+   Claude, Codex, Gemini, Cursor, Antigravity o cualquier otro)
+   ----------------------------------------------------------------------------
+   - Componente de Remotion (React) para video vertical 1080×1920 a 30 fps.
+     Si el proyecto no tiene Remotion, créalo (npx create-video@latest), copia este
+     archivo en src/ y registra una <Composition>. Duración: flipGrowDuration(props).
+   - Un recuadro chico al centro donde las fotos cambian rápido; mientras siguen
+     cambiando, el recuadro crece hasta llenar la pantalla y la última foto se queda
+     fija a pantalla completa (ideal para abrir un video o presentar un producto).
+   - Ajustes:
+     · images: rutas en public/ (la ÚLTIMA es la que se queda a pantalla completa)
+     · background: fondo detrás del recuadro (blanco por defecto)
+     · startWidth / startHeight: tamaño del recuadro al inicio (px)
+     · frameEvery: cuadros que dura cada foto al inicio (se va haciendo más lento
+       mientras crece, para que la última llegue con calma)
+     · leftWord / rightWord: palabras a los lados del recuadro (salen empujadas al crecer)
+     · color, font, fontSize: estilo de las palabras (negro y Manrope por defecto)
+     · wait: cuadros chico antes de crecer; grow: cuadros que tarda en crecer;
+       hold: cuadros con la última foto a pantalla completa
+   - Para renderizar: npx remotion render src/index.ts <Id> out/video.mp4
+   ========================================================================== */
+// Fotos que crecen a pantalla completa (Remotion) · Miiles Estudio
+import React, { useEffect, useState } from "react";
+import { AbsoluteFill, Easing, Img, continueRender, delayRender, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
+
+export type FlipGrowProps = {
+  images: string[];
+  background?: string;
+  startWidth?: number;
+  startHeight?: number;
+  frameEvery?: number;
+  wait?: number;
+  grow?: number;
+  hold?: number;
+  leftWord?: string;   // palabra a la izquierda del recuadro ("" para quitarla)
+  rightWord?: string;  // palabra a la derecha
+  color?: string;
+  font?: string;
+  fontSize?: number;
+};
+
+const IN_OUT = Easing.bezier(0.76, 0, 0.24, 1);
+const clamp = (v: number) => Math.max(0, Math.min(1, v));
+export const flipGrowDuration = (p: FlipGrowProps) => (p.wait ?? 24) + (p.grow ?? 48) + (p.hold ?? 60);
+
+export const FlipGrow: React.FC<FlipGrowProps> = ({
+  images, background = "#FFFFFF", startWidth = 300, startHeight = 400, frameEvery = 4, wait = 24, grow = 48, hold = 60,
+  leftWord = "Crea", rightWord = "estilo", color = "#111111", font = "fonts/Manrope.woff2", fontSize = 104,
+}) => {
+  const frame = useCurrentFrame();
+  const [handle] = useState(() => delayRender("Cargando tipografía"));
+  const isFile = /\.(woff2?|otf|ttf)$/.test(font);
+  useEffect(() => {
+    if (!isFile) { continueRender(handle); return; }
+    new FontFace("FG-Font", `url(${staticFile(font)})`).load().then((f) => { document.fonts.add(f); continueRender(handle); }).catch(() => continueRender(handle));
+  }, [font, handle, isFile]);
+  const { width, height } = useVideoConfig();
+  const g = IN_OUT(clamp((frame - wait) / grow));
+  const w = startWidth + (width - startWidth) * g;
+  const h = startHeight + (height - startHeight) * g;
+  // Qué foto se ve: cambia cada "frameEvery" cuadros y se va frenando mientras crece;
+  // la última llega justo cuando el recuadro termina de crecer y ahí se queda
+  const last = images.length - 1;
+  const end = wait + grow;
+  let idx = last;
+  if (frame < end) {
+    // tiempo "deformado": avanza normal al inicio y más lento al final del crecimiento
+    const u = frame / end;
+    const warped = 1 - Math.pow(1 - u, 1.6);
+    idx = Math.min(last - 1, Math.floor((warped * end) / frameEvery) % Math.max(1, last));
+  }
+  const src = images[idx];
+  return (
+    <AbsoluteFill style={{ background, alignItems: "center", justifyContent: "center" }}>
+      {/* Las palabras van pegadas a los lados del recuadro: al crecer, lo empuja hacia afuera y salen de la pantalla */}
+      {[leftWord, rightWord].map((word, side) => word ? (
+        <div key={side} style={{
+          position: "absolute", top: height / 2, transform: "translateY(-50%)",
+          ...(side === 0 ? { right: width / 2 + w / 2 + 34 } : { left: width / 2 + w / 2 + 34 }),
+          color, fontFamily: `${isFile ? "FG-Font" : font}, Helvetica, Arial, sans-serif`, fontWeight: 600, fontSize, letterSpacing: "-0.04em", whiteSpace: "nowrap",
+        }}>{word}</div>
+      ) : null)}
+      <div style={{ width: w, height: h, borderRadius: 18 * (1 - g), overflow: "hidden", position: "relative" }}>
+        <Img src={src.startsWith("http") ? src : staticFile(src)} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
+      </div>
+    </AbsoluteFill>
+  );
+};

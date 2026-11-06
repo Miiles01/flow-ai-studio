@@ -1,0 +1,91 @@
+/* ============================================================================
+   CÓMO USAR ESTE COMPONENTE (instrucciones para tu asistente de IA:
+   Claude, Codex, Gemini, Cursor, Antigravity o cualquier otro)
+   ----------------------------------------------------------------------------
+   - Es un componente de Remotion (React). Si el proyecto no tiene Remotion,
+     créalo (npx create-video@latest), copia este archivo en src/
+     y registra una <Composition> de 1080×1920 a 30 fps con estas props.
+   - Fotos e íconos van en public/ y se pasan en "items":
+       { src: "carpeta/foto.jpg" }                       → tarjeta con foto
+       { color: "#4059F1", icon: "icono.svg", iconColor: "#FFF" } → tarjeta de color con un ícono SVG de una tinta
+   - Personaliza SOLO con las props de abajo; no cambies las curvas de movimiento
+     salvo que el usuario lo pida.
+   - background: color de fondo (por defecto blanco).
+   - cardWidth / cardHeight: tamaño de cada tarjeta.
+   - hold / move: cuadros que se queda cada tarjeta y que dura el giro.
+   - Para renderizar: npx remotion render src/index.ts <Id> out/video.mp4
+   ========================================================================== */
+// Abanico de tarjetas para video (Remotion) · Miiles Estudio · inspirado en "Carousel with drag and wheel" de supah
+// La tarjeta activa queda al centro; las demás se abren en abanico hacia abajo y a los lados, girando desde su esquina,
+// y se van apagando según se alejan. Cada pocos cuadros avanza a la siguiente tarjeta.
+import React from "react";
+import { AbsoluteFill, Easing, interpolate, useCurrentFrame, Img, staticFile } from "remotion";
+
+export type Card = { src?: string; color?: string; icon?: string; iconColor?: string };
+
+/** Contenido de una tarjeta: foto, o color sólido con un ícono SVG de una tinta. */
+export const CardFace: React.FC<{ item: Card; iconSize?: string }> = ({ item, iconSize = "40%" }) => (
+  <>
+    {item.src && <Img src={item.src.startsWith("http") ? item.src : staticFile(item.src)} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />}
+    {item.icon && (
+      <div
+        style={{
+          position: "absolute", left: "50%", top: "50%", width: iconSize, aspectRatio: "1 / 1",
+          transform: "translate(-50%, -50%)", background: item.iconColor ?? "#fff",
+          WebkitMaskImage: `url(${staticFile(item.icon)})`, maskImage: `url(${staticFile(item.icon)})`,
+          WebkitMaskSize: "contain", maskSize: "contain", WebkitMaskRepeat: "no-repeat", maskRepeat: "no-repeat",
+          WebkitMaskPosition: "center", maskPosition: "center",
+        }}
+      />
+    )}
+  </>
+);
+
+// Tarjetas de ejemplo (cámbialas por tus fotos e íconos en public/)
+export const exampleItems: Card[] = [
+  { src: "carrusel/foto.jpg" },
+  { color: "#4059F1", icon: "carrusel/estrella.svg", iconColor: "#FCB5B9" },
+  { src: "carrusel/rosa.jpg" },
+  { color: "#FCB5B9", icon: "carrusel/flor.svg", iconColor: "#4059F1" },
+  { src: "carrusel/azul.jpg" },
+  { color: "#1C1E2A", icon: "carrusel/miiles.svg", iconColor: "#FCB5B9" },
+  { color: "#4059F1", icon: "carrusel/flor.svg", iconColor: "#FFFFFF" },
+  { src: "carrusel/gorra.jpg" },
+  { color: "#FCB5B9", icon: "carrusel/estrella.svg", iconColor: "#1C1E2A" },
+  { src: "carrusel/azul.jpg" },
+];
+
+export type FanCarouselProps = { items: Card[]; background?: string; cardWidth?: number; cardHeight?: number; hold?: number; move?: number };
+
+const EASE = Easing.bezier(0, 0.02, 0, 1); // la misma curva del original: arranca rápido y frena largo
+
+export const FanCarousel: React.FC<FanCarouselProps> = ({ items, background = "#FFFFFF", cardWidth = 560, cardHeight = 760, hold = 18, move = 26 }) => {
+  const frame = useCurrentFrame();
+  const n = items.length;
+  const cycle = hold + move;
+  const step = Math.floor(frame / cycle);
+  const t = frame - step * cycle;
+  const active = step + (t < hold ? 0 : EASE(interpolate(t, [hold, cycle], [0, 1], { extrapolateRight: "clamp" })));
+  return (
+    <AbsoluteFill style={{ background, overflow: "hidden" }}>
+      {items.map((item, i) => {
+        let d = ((i - active) % n + n) % n;
+        if (d > n / 2) d -= n;
+        const a = d / n;                       // igual que --active del original
+        const z = n - Math.abs(d);
+        const opacity = Math.max(0, Math.min(1, z / n * 3 - 2));
+        return (
+          <div key={i} style={{
+            position: "absolute", left: "50%", top: "50%", width: cardWidth, height: cardHeight,
+            marginLeft: -cardWidth / 2, marginTop: -cardHeight / 2, borderRadius: 24, overflow: "hidden",
+            zIndex: Math.round(z * 10), transformOrigin: "0% 100%",
+            transform: `translate(${a * 800}%, ${a * 200}%) rotate(${a * 120}deg)`,
+            background: item.color ?? "#EEEFF2", opacity: 0.15 + 0.85 * opacity,
+          }}>
+            <CardFace item={item} />
+          </div>
+        );
+      })}
+    </AbsoluteFill>
+  );
+};

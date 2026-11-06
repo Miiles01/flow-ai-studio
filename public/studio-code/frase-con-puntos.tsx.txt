@@ -1,0 +1,113 @@
+/* ============================================================================
+   CÓMO USAR ESTE COMPONENTE (instrucciones para tu asistente de IA:
+   Claude, Codex, Gemini, Cursor, Antigravity o cualquier otro)
+   ----------------------------------------------------------------------------
+   - Componente de Remotion (React) para video vertical 1080×1920 a 30 fps.
+     Si el proyecto no tiene Remotion, créalo (npx create-video@latest), copia este
+     archivo en src/ y registra una <Composition> con estas props.
+   - Una frase al centro y alrededor una cuadrícula de puntos: "cursores" invisibles
+     cruzan la pantalla (uno arriba y otro abajo) y los puntos cercanos se iluminan y se apartan;
+     al salir de la pantalla entra otro por un camino distinto.
+   - Ajustes:
+     · text: la frase (líneas separadas con "\n", máximo 3)
+     · background, color: fondo blanco y texto negro por defecto
+     · dotColor / glowColor: puntos en reposo (gris) e iluminados (azul de Miiles)
+     · dot, gap: tamaño y separación de los puntos (px)
+     · holeWidth, holeHeight: espacio libre alrededor de la frase (px)
+     · passSeconds: segundos que tarda cada cruce de un lado al otro
+     · font: archivo en public/ (por defecto Manrope.woff2) o nombre de una fuente
+   - La frase queda dentro de la zona segura de TikTok, Reels, Shorts y Facebook.
+   - Para renderizar: npx remotion render src/index.ts <Id> out/video.mp4
+   ========================================================================== */
+// Frase con puntos (Remotion) · Miiles Estudio · inspirado en "Glowing Interactive Dots Grid" de Osmo
+import React, { useEffect, useState } from "react";
+import { AbsoluteFill, continueRender, delayRender, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
+
+export type DotsPhraseProps = {
+  text: string;
+  background?: string;
+  color?: string;
+  dotColor?: string;
+  glowColor?: string;
+  dot?: number;
+  gap?: number;
+  holeWidth?: number;
+  holeHeight?: number;
+  passSeconds?: number; // segundos que tarda cada cruce
+  font?: string;
+  fontSize?: number;
+};
+
+const hex = (h: string) => [1, 3, 5].map((i) => parseInt(h.slice(i, i + 2), 16));
+const mixColor = (a: string, b: string, t: number) => {
+  const A = hex(a), B = hex(b);
+  return `rgb(${A.map((v, i) => Math.round(v + (B[i] - v) * t)).join(",")})`;
+};
+// elastic.out(1, 0.75) del original para el regreso de los puntos
+const elasticOut = (t: number, a = 1, p = 0.75) => {
+  if (t <= 0) return 0; if (t >= 1) return 1;
+  const s = (p / (2 * Math.PI)) * Math.asin(1 / a);
+  return a * Math.pow(2, -10 * t) * Math.sin(((t - s) * (2 * Math.PI)) / p) + 1;
+};
+
+export const DotsPhrase: React.FC<DotsPhraseProps> = ({
+  text, background = "#FFFFFF", color = "#111111", dotColor = "#D9DBE3", glowColor = "#4059F1",
+  dot = 16, gap = 30, holeWidth = 760, holeHeight = 560, passSeconds = 3.2, font = "fonts/Manrope.woff2", fontSize = 104,
+}) => {
+  const frame = useCurrentFrame();
+  const { fps, width, height } = useVideoConfig();
+  const [handle] = useState(() => delayRender("Cargando tipografía"));
+  const isFile = /\.(woff2?|otf|ttf)$/.test(font);
+  useEffect(() => {
+    if (!isFile) { continueRender(handle); return; }
+    new FontFace("DP-Font", `url(${staticFile(font)})`).load().then((f) => { document.fonts.add(f); continueRender(handle); }).catch(() => continueRender(handle));
+  }, [font, handle, isFile]);
+
+  const sec = frame / fps;
+  // "Cursores" invisibles que cruzan la pantalla: entran desde fuera de un lado, la atraviesan y salen por el
+  // otro; al salir entra otro por un camino distinto. Hay dos carriles: uno arriba y otro abajo de la frase.
+  const threshold = 400, push = 90;
+  const rand = (n: number) => { const x = Math.sin(n * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+  const cursors: { x: number; y: number }[] = [];
+  [0, 1].forEach((lane) => {
+    const t = sec / passSeconds + lane * 0.5;               // los carriles van desfasados
+    const pass = Math.floor(t), q = t - pass;               // q: 0 → 1 dentro de cada pasada
+    const r1 = rand(pass * 2 + lane * 31), r2 = rand(pass * 2 + 1 + lane * 31);
+    const ltr = r1 > 0.5;                                   // de izquierda a derecha o al revés
+    const off = threshold + 40;                             // empieza y termina donde no se ve
+    const x0 = ltr ? -off : width + off, x1 = ltr ? width + off : -off;
+    const band = lane === 0 ? [0.08, 0.3] : [0.7, 0.92];    // arriba o abajo de la frase
+    const y0 = height * (band[0] + (band[1] - band[0]) * r2);
+    const y1 = height * (band[0] + (band[1] - band[0]) * (1 - r2));
+    const e = q * q * (3 - 2 * q);                          // movimiento suave, sin tirones
+    cursors.push({ x: x0 + (x1 - x0) * e, y: y0 + (y1 - y0) * e });
+  });
+  const step = dot + gap;
+  const cols = Math.floor((width + gap) / step), rows = Math.floor((height + gap) / step);
+  const ox = (width - (cols * step - gap)) / 2 + dot / 2, oy = (height - (rows * step - gap)) / 2 + dot / 2;
+  const circles: React.ReactNode[] = [];
+  for (let r = 0; r < rows; r++) {
+    for (let c = 0; c < cols; c++) {
+      const x = ox + c * step, y = oy + r * step;
+      if (Math.abs(x - width / 2) < holeWidth / 2 && Math.abs(y - height / 2) < holeHeight / 2) continue; // hueco de la frase
+      let mx = 0, my = 0, near = 0;
+      for (const cur of cursors) {
+        const dx = x - cur.x, dy = y - cur.y, dist = Math.hypot(dx, dy) || 1;
+        const n = Math.max(0, 1 - dist / threshold);
+        mx += (dx / dist) * push * n * n; my += (dy / dist) * push * n * n; near = Math.max(near, n);
+      }
+      const glow = near;
+      circles.push(<circle key={`${r}-${c}`} cx={x + mx} cy={y + my} r={dot / 2} fill={mixColor(dotColor, glowColor, glow)} />);
+    }
+  }
+  return (
+    <AbsoluteFill style={{ background }}>
+      <svg width={width} height={height} style={{ position: "absolute", inset: 0 }}>{circles}</svg>
+      <AbsoluteFill style={{ alignItems: "center", justifyContent: "center" }}>
+        <div style={{ width: holeWidth - 80, textAlign: "center", color, fontFamily: `${isFile ? "DP-Font" : font}, Helvetica, Arial, sans-serif`, fontWeight: 600, fontSize, lineHeight: 1.02, letterSpacing: "-0.04em" }}>
+          {text.split("\n").map((l, i) => <div key={i}>{l}</div>)}
+        </div>
+      </AbsoluteFill>
+    </AbsoluteFill>
+  );
+};

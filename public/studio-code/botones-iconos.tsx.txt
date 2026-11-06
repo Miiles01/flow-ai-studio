@@ -1,0 +1,99 @@
+/* ============================================================================
+   CÓMO USAR ESTE COMPONENTE (instrucciones para tu asistente de IA:
+   Claude, Codex, Gemini, Cursor, Antigravity o cualquier otro)
+   ----------------------------------------------------------------------------
+   - Componente de Remotion (React) para video vertical 1080×1920 a 30 fps.
+     Necesita "lucide-react" (npm i lucide-react) para los íconos.
+     Si el proyecto no tiene Remotion, créalo (npx create-video@latest), copia este
+     archivo en src/ y registra una <Composition> con estas props.
+   - Filas de botones redondos con un ícono. Uno por uno, cada botón se estira con
+     efecto resorte y revela su nombre; luego se cierra y sigue el siguiente.
+   - Ajustes:
+     · rows: filas de opciones { icon: nombre de un ícono de lucide, label: texto }
+       (íconos: https://lucide.dev/icons, por ejemplo "Video", "Camera", "Heart")
+     · background (blanco por defecto), activeBg / activeColor (azul claro y azul de
+       Miiles), idleBg / idleColor (gris)
+     · font: archivo en public/ (por defecto Manrope.woff2) o nombre de una fuente
+     · every: cuadros que dura activo cada botón
+     · keepOpen: true deja abiertos los que ya se revelaron
+   - Para renderizar: npx remotion render src/index.ts <Id> out/video.mp4
+   ========================================================================== */
+// Botones que se revelan (Remotion) · Miiles Estudio · inspirado en "animated filter options" de vii120
+import React, { useEffect, useState } from "react";
+import { AbsoluteFill, continueRender, delayRender, spring, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
+import * as Icons from "lucide-react";
+
+export type Pill = { icon: string; label: string };
+export type IconPillsProps = {
+  rows: Pill[][];
+  background?: string;
+  activeBg?: string;
+  activeColor?: string;
+  idleBg?: string;
+  idleColor?: string;
+  font?: string;
+  fontSize?: number;
+  every?: number;
+  keepOpen?: boolean;
+};
+
+export const IconPills: React.FC<IconPillsProps> = ({
+  rows, background = "#FFFFFF", activeBg = "#E8ECFE", activeColor = "#4059F1", idleBg = "#EEEFF2", idleColor = "#9499AE",
+  font = "fonts/Manrope.woff2", fontSize = 76, every = 22, keepOpen = false,
+}) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const [handle] = useState(() => delayRender("Cargando tipografía"));
+  const isFile = /\.(woff2?|otf|ttf)$/.test(font);
+  useEffect(() => {
+    if (!isFile) { continueRender(handle); return; }
+    new FontFace("IP-Font", `url(${staticFile(font)})`).load().then((f) => { document.fonts.add(f); continueRender(handle); }).catch(() => continueRender(handle));
+  }, [font, handle, isFile]);
+
+  const flat = rows.flat();
+  const total = flat.length;
+  const h = fontSize * 2.1, pad = fontSize * 0.75, iconSize = fontSize * 0.95, gapIn = fontSize * 0.45;
+  // Qué tan abierto está cada botón (resorte con un poco de rebote, como el original: bounce 0.3)
+  const openness = (index: number) => {
+    const cycleLen = every * total;
+    const local = frame % (cycleLen + every * 2);
+    const start = index * every;
+    const opened = spring({ frame: local - start, fps, config: { damping: 14, stiffness: 170, mass: 0.8 } });
+    if (keepOpen) return local >= start ? opened : 0;
+    const closed = spring({ frame: local - start - every, fps, config: { damping: 14, stiffness: 170, mass: 0.8 } });
+    return Math.max(0, opened - closed);
+  };
+  let k = -1;
+  return (
+    <AbsoluteFill style={{ background, alignItems: "center", justifyContent: "center", gap: fontSize * 0.55, fontFamily: `${isFile ? "IP-Font" : font}, Helvetica, Arial, sans-serif` }}>
+      {rows.map((row, r) => (
+        <div key={r} style={{ display: "flex", gap: fontSize * 0.4, justifyContent: "center" }}>
+          {row.map((p) => {
+            k++;
+            const o = openness(k);
+            const Icon = (Icons as unknown as Record<string, React.FC<{ size?: number; strokeWidth?: number }>>)[p.icon] ?? Icons.Sparkles;
+            const labelW = p.label.length * fontSize * 0.56;
+            const mix = Math.max(0, Math.min(1, o));
+            return (
+              <div key={p.label} style={{
+                height: h, borderRadius: 999, display: "flex", alignItems: "center", overflow: "hidden",
+                padding: `0 ${pad}px`, gap: gapIn * mix, width: pad * 2 + iconSize + (labelW + gapIn) * Math.max(0, o),
+                background: mix > 0.5 ? activeBg : idleBg, color: mix > 0.5 ? activeColor : idleColor,
+              }}>
+                <span style={{ flexShrink: 0, display: "flex" }}><Icon size={iconSize} strokeWidth={2} /></span>
+                <span style={{ fontSize, fontWeight: 600, letterSpacing: "-0.02em", whiteSpace: "nowrap", opacity: mix }}>{p.label}</span>
+              </div>
+            );
+          })}
+        </div>
+      ))}
+    </AbsoluteFill>
+  );
+};
+
+export const examplePills: Pill[][] = [
+  [{ icon: "Video", label: "Reels" }, { icon: "Camera", label: "Fotos" }, { icon: "Mic", label: "Voz" }],
+  [{ icon: "TrendingUp", label: "Tendencias" }, { icon: "Heart", label: "Likes" }],
+  [{ icon: "ShoppingBag", label: "Ventas" }, { icon: "MessageCircle", label: "Comentarios" }],
+  [{ icon: "Sparkles", label: "Ideas" }, { icon: "Clapperboard", label: "Guion" }, { icon: "Send", label: "Envío" }],
+];

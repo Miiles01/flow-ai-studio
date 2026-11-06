@@ -1,0 +1,270 @@
+/* ============================================================================
+   CÓMO USAR ESTE COMPONENTE (instrucciones para tu asistente de IA:
+   Claude, Codex, Gemini, Cursor, Antigravity o cualquier otro)
+   ----------------------------------------------------------------------------
+   - Transiciones de Remotion (React) para video vertical 1080×1920 a 30 fps.
+     Si el proyecto no tiene Remotion, créalo (npx create-video@latest), copia este
+     archivo en src/ y registra una <Composition>. Duración: pageTransitionDuration(props).
+   - Pasa de una escena "from" a una escena "to". Cada escena es un texto centrado
+     (respeta la zona segura de TikTok / Reels / Shorts) sobre un color o una foto.
+   - variant (elige una):
+     · "scale"    la escena se aleja, la nueva se descubre de abajo hacia arriba y crece
+     · "dissolve" la escena se deshace con un ruido orgánico y un borde de color
+     · "curve"    una cortina con curva sube, cubre todo y se va hacia arriba
+     · "line"     una línea cruza el centro, se abre con un título y se recoge hacia arriba
+     · "spiral"   una espiral se dibuja con un trazo que engorda hasta cubrir la pantalla
+     · "window"   la nueva escena se abre desde una franja abajo, con una capa de color encima
+   - Para usarla ENCIMA de tus clips: deja el texto de la escena en "" y su background
+     en "transparent"; la transición tapa tu video y muestra el siguiente.
+   - Ajustes:
+     · from / to: { text, background, color, image } (image = archivo en public/ o URL)
+     · overlayColor: color de la cortina, espiral, borde o capa (azul Miiles por defecto)
+     · overlayText: título dentro de la línea (variant "line")
+     · stage: color de fondo detrás de las escenas en "scale"
+     · font: archivo en public/ (Manrope.woff2 por defecto) · fontSize
+     · speed: 1 = como el original; 0.8 más lento, 1.2 más rápido
+     · hold: cuadros de pausa al inicio y al final
+   - No cambies las curvas (expo.inOut, power3.inOut, sine.inOut, "hop") salvo que el
+     usuario lo pida: son las del original.
+   - Para renderizar: npx remotion render src/index.ts <Id> out/video.mp4
+   ========================================================================== */
+// Transiciones de página (Remotion) · Miiles Estudio · inspirado en "Barba.js Page Transitions" de Ibaliqbal (Codrops)
+import React, { useEffect, useMemo, useState } from "react";
+import { AbsoluteFill, Easing, Img, continueRender, delayRender, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
+
+type Scene = { text?: string; background?: string; color?: string; image?: string };
+export type PageTransitionProps = {
+  variant: "scale" | "dissolve" | "curve" | "line" | "spiral" | "window";
+  from?: Scene;
+  to?: Scene;
+  overlayColor?: string;
+  overlayText?: string;
+  overlayTextColor?: string;
+  stage?: string;
+  font?: string;
+  fontSize?: number;
+  speed?: number;
+  hold?: number;
+};
+
+const EXPO = Easing.bezier(0.87, 0, 0.13, 1);       // expo.inOut
+const POWER3 = Easing.bezier(0.65, 0, 0.35, 1);     // power3.inOut
+const SINE = Easing.bezier(0.37, 0, 0.63, 1);       // sine.inOut
+const HOP = Easing.bezier(0.56, 0, 0.35, 0.98);     // CustomEase "hop"
+const ELASTIC_IN = (t: number) => (t <= 0 ? 0 : t >= 1 ? 1 : -Math.pow(2, 10 * t - 10) * Math.sin((t * 10 - 10.75) * ((2 * Math.PI) / 3)));
+const clamp = (v: number) => Math.max(0, Math.min(1, v));
+const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+
+// Duración de la parte animada de cada variante (segundos, como en el original)
+const LENGTH: Record<PageTransitionProps["variant"], number> = { scale: 2.6, dissolve: 2.2, curve: 2.4, line: 3.6, spiral: 3.4, window: 2.6 };
+
+export function pageTransitionDuration(p: Partial<PageTransitionProps>) {
+  const hold = p.hold ?? 36;
+  return Math.ceil(hold * 2 + (LENGTH[p.variant ?? "scale"] * 30) / (p.speed ?? 1));
+}
+
+const src = (s: string) => (s.startsWith("http") ? s : staticFile(s));
+
+const SPIRAL = "m0 0c3.36 0.06 6.6-2.82 7.07-7.07 0.59-4.19-1.79-9.6-7.07-12.93-5.18-3.4-13.27-4.43-21.21-1.21-7.92 3.09-15.48 10.7-18.79 21.21-3.42 10.46-2.3 23.68 4.64 35.36 6.83 11.64 19.57 21.35 35.36 24.64 15.69 3.43 34.14 0.2 49.5-10.5 15.38-10.52 27.21-28.47 30.5-49.5 3.43-20.92-1.92-44.6-16.36-63.64-14.2-19.1-37.37-33.1-63.64-36.36-26.16-3.45-55.05 4.06-77.78 22.22-22.82 17.9-38.98 46.25-42.22 77.78-3.48 31.43 6.2 65.49 28.08 91.92 21.58 26.55 55.16 44.87 91.92 48.08 36.66 3.5 75.94-8.33 106.07-33.93 30.27-25.28 50.74-64.07 53.93-106.07 3.53-41.9-10.46-86.4-39.79-120.21-28.97-33.99-72.97-56.62-120.21-59.79-47.13-3.56-96.85 12.6-134.35 45.65-37.71 32.65-62.51 81.88-65.65 134.35-3.55 52.4 14.72 107.29 51.51 148.49 36.35 41.41 90.75 68.41 148.49 71.51 57.63 3.58 117.75-16.86 162.63-57.37 45.14-40.03 74.29-99.66 77.37-162.63 3.62-62.86-19.02-128.21-63.22-176.78-43.73-48.85-108.57-80.17-176.78-83.22-68.13-3.64-138.65 21.15-190.92 69.08-52.57 47.43-86.06 117.45-89.08 190.92-3.66 73.36 23.29 149.1 74.94 205.06 51.12 56.3 126.35 91.94 205.06 94.94 78.6 3.69 159.56-25.42 219.2-80.8 60.03-54.8 97.82-135.26 100.8-219.2 3.72-83.84-27.56-170.01-86.65-233.35-58.51-63.77-144.14-103.69-233.35-106.65-89.07-3.71-180.46 29.68-247.49 92.51-67.51 62.18-109.54 153.08-112.51 247.49-3.74 94.33 31.82 190.91 98.37 261.63 65.88 71.23 161.96 115.43 261.63 118.37 99.57 3.76 201.36-33.95 275.77-104.23 74.96-69.57 121.31-170.86 124.23-275.77";
+
+// Ruido suave (value noise en capas) para la variante "dissolve"
+function noiseField(w: number, h: number, seed = 3) {
+  const hash = (x: number, y: number) => { const s = Math.sin(x * 127.1 + y * 311.7 + seed * 74.7) * 43758.5453; return s - Math.floor(s); };
+  const smooth = (t: number) => t * t * (3 - 2 * t);
+  const value = (x: number, y: number) => {
+    const xi = Math.floor(x), yi = Math.floor(y), xf = smooth(x - xi), yf = smooth(y - yi);
+    return lerp(lerp(hash(xi, yi), hash(xi + 1, yi), xf), lerp(hash(xi, yi + 1), hash(xi + 1, yi + 1), xf), yf);
+  };
+  const f = new Float32Array(w * h);
+  let mn = 1, mx = 0;
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+    const v = value(x / 22, y / 22) * 0.55 + value(x / 9, y / 9) * 0.3 + value(x / 4, y / 4) * 0.15;
+    f[y * w + x] = v; mn = Math.min(mn, v); mx = Math.max(mx, v);
+  }
+  for (let i = 0; i < f.length; i++) f[i] = (f[i] - mn) / (mx - mn);
+  return f;
+}
+
+export const PageTransition: React.FC<PageTransitionProps> = ({
+  variant,
+  from = { text: "Tu marca\nmerece\nser vista", background: "#FFFFFF", color: "#111111" },
+  to = { text: "Contenido\nque se\nsiente real", background: "#4059F1", color: "#FFFFFF" },
+  overlayColor = "#4059F1", overlayText = "Miiles", overlayTextColor = "#FFFFFF", stage = "#1C1E2A",
+  font = "fonts/Manrope.woff2", fontSize = 116, speed = 1, hold = 36,
+}) => {
+  const frame = useCurrentFrame();
+  const { width: W, height: H, fps } = useVideoConfig();
+  const [handle] = useState(() => delayRender("Cargando tipografía"));
+  const isFile = /\.(woff2?|otf|ttf)$/.test(font);
+  useEffect(() => {
+    if (!isFile) { continueRender(handle); return; }
+    new FontFace("PT-Font", `url(${staticFile(font)})`).load().then((f) => { document.fonts.add(f); continueRender(handle); }).catch(() => continueRender(handle));
+  }, [font, handle, isFile]);
+  const family = `${isFile ? "PT-Font" : font}, Manrope, Helvetica, Arial, sans-serif`;
+
+  // s = segundos dentro de la transición (como la línea de tiempo de GSAP)
+  const s = ((frame - hold) / fps) * speed;
+  const seg = (start: number, dur: number, ease: (t: number) => number) => ease(clamp((s - start) / dur));
+
+  // Escena: texto centrado dentro de la zona segura; "reveal" sube las líneas desde una máscara
+  const SceneView: React.FC<{ sc: Scene; reveal?: number }> = ({ sc, reveal = 1 }) => {
+    const lines = (sc.text ?? "").split("\n").filter((l) => l !== "" || sc.text);
+    const longest = Math.max(1, ...lines.map((l) => l.length));
+    const size = Math.min(fontSize, Math.floor((W - 400) / (longest * 0.55)));
+    return (
+      <AbsoluteFill style={{ background: sc.background ?? "#FFFFFF" }}>
+        {sc.image && <Img src={src(sc.image)} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />}
+        {sc.text && (
+          <div style={{ position: "absolute", left: 200, right: 200, top: 480, bottom: 480, display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <div style={{ textAlign: "center", color: sc.color ?? "#111111", fontFamily: family, fontWeight: 600, fontSize: size, lineHeight: 1.04, letterSpacing: "-0.04em" }}>
+              {lines.map((l, i) => {
+                const k = POWER3(clamp(reveal * (1 + lines.length * 0.25) - i * 0.25));
+                return (
+                  <div key={i} style={{ overflow: "hidden", paddingBottom: "0.08em" }}>
+                    <div style={{ transform: `translateY(${(1 - k) * 110}%)` }}>{l}</div>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        )}
+      </AbsoluteFill>
+    );
+  };
+
+  // ---------------------------------------------------------------- variantes
+  if (variant === "scale") {
+    // actual: escala .6 y se apaga a .45 · nueva: entra en .6 recortada desde abajo, se descubre y crece a 1
+    const out = seg(0, 0.8, POWER3), clip = seg(0.55, 0.8, POWER3), grow = seg(1.35, 0.8, POWER3);
+    const nextScale = lerp(0.6, 1, grow);
+    return (
+      <AbsoluteFill style={{ background: stage }}>
+        <AbsoluteFill style={{ transform: `scale(${lerp(1, 0.6, out)})`, opacity: lerp(1, 0.45, clip) }}><SceneView sc={from} /></AbsoluteFill>
+        {s > 0.5 && (
+          <AbsoluteFill style={{ transform: `scale(${nextScale})`, clipPath: `inset(${(1 - clip) * 100}% 0 0 0)` }}>
+            <SceneView sc={to} reveal={seg(1.6, 1, (t) => t)} />
+          </AbsoluteFill>
+        )}
+      </AbsoluteFill>
+    );
+  }
+
+  if (variant === "dissolve") {
+    // la escena actual se deshace con ruido; un borde de color marca el frente
+    const GW = 108, GH = 192;
+    const field = useMemo(() => noiseField(GW, GH), []);
+    const t = seg(0, 1.6, SINE);
+    const masks = useMemo(() => {
+      const mk = (fn: (n: number) => number) => {
+        const c = document.createElement("canvas"); c.width = GW; c.height = GH;
+        const ctx = c.getContext("2d")!; const img = ctx.createImageData(GW, GH);
+        for (let i = 0; i < field.length; i++) { const a = fn(field[i]); img.data[i * 4 + 3] = Math.round(a * 255); }
+        ctx.putImageData(img, 0, 0); return c.toDataURL();
+      };
+      const edge = 0.185, soft = 0.03, th = lerp(-edge - soft, 1 + soft, t);
+      const st = (a: number, b: number, x: number) => { const k = clamp((x - a) / (b - a)); return k * k * (3 - 2 * k); };
+      return { keep: mk((n) => st(th + edge, th + edge + soft, n)), band: mk((n) => st(th, th + soft, n)) };
+    }, [t, field]);
+    const m = (u: string): React.CSSProperties => ({ WebkitMaskImage: `url(${u})`, maskImage: `url(${u})`, WebkitMaskSize: "100% 100%", maskSize: "100% 100%" });
+    return (
+      <AbsoluteFill>
+        <SceneView sc={to} reveal={seg(1.1, 1, (x) => x)} />
+        {t < 1 && <AbsoluteFill style={{ background: overlayColor, ...m(masks.band) }} />}
+        {t < 1 && <AbsoluteFill style={m(masks.keep)}><SceneView sc={from} /></AbsoluteFill>}
+      </AbsoluteFill>
+    );
+  }
+
+  if (variant === "curve") {
+    // cortina con curva: sube (in), cubre, cambia la escena y se va hacia arriba (sine)
+    const a = seg(0, 0.5, Easing.in(Easing.sin)), b = seg(0.5, 0.35, Easing.out(Easing.sin));
+    const c = seg(1.05, 0.35, Easing.in(Easing.sin)), d = seg(1.4, 0.5, Easing.out(Easing.sin));
+    let path: string;
+    if (s < 1.05) {
+      const y = s < 0.5 ? lerp(100, 50, a) : lerp(50, 0, b), q = s < 0.5 ? lerp(100, 0, a) : 0;
+      path = `M 0 100 V ${y} Q 50 ${q} 100 ${y} V 100 z`;
+    } else {
+      const y = s < 1.4 ? lerp(100, 50, c) : lerp(50, 0, d), q = s < 1.4 ? lerp(100, 0, c) : 0;
+      path = `M 0 0 V ${y} Q 50 ${q} 100 ${y} V 0 z`;
+    }
+    return (
+      <AbsoluteFill>
+        {s < 0.9 ? <SceneView sc={from} /> : <SceneView sc={to} reveal={seg(1.3, 1, (x) => x)} />}
+        {s > 0 && s < 1.95 && (
+          <svg viewBox="0 0 100 100" preserveAspectRatio="none" style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }}>
+            <path d={path} fill={overlayColor} />
+          </svg>
+        )}
+      </AbsoluteFill>
+    );
+  }
+
+  if (variant === "line") {
+    // una franja del alto del título cruza el centro (expo), se abre a pantalla completa,
+    // el título sale hacia arriba (elastic.in) y la capa se recoge hacia arriba ("hop")
+    const titleSize = Math.round(fontSize * 1.25);
+    const band = (titleSize * 1.15) / 2 / H * 100; // medio alto de la franja en %
+    const wGrow = seg(0, 1, EXPO), hGrow = seg(1, 1, EXPO);
+    const words = overlayText.split(" ");
+    const exit0 = 2.15, up = seg(exit0 + 0.25, 1, HOP);
+    const top = lerp(50 - band, 0, hGrow);
+    const clipBottom = lerp(lerp(50 + band, 100, hGrow), 0, up);
+    return (
+      <AbsoluteFill>
+        {s < 2 ? <SceneView sc={from} /> : <SceneView sc={to} reveal={seg(exit0 + 0.6, 1, (x) => x)} />}
+        {s > 0 && up < 1 && (
+          <AbsoluteFill style={{ background: overlayColor, clipPath: `polygon(0% ${lerp(top, 0, up)}%, ${wGrow * 100}% ${lerp(top, 0, up)}%, ${wGrow * 100}% ${clipBottom}%, 0% ${clipBottom}%)` }}>
+            <AbsoluteFill style={{ alignItems: "center", justifyContent: "center" }}>
+              <div style={{ display: "flex", gap: "0.25em", color: overlayTextColor, fontFamily: family, fontWeight: 600, fontSize: titleSize, letterSpacing: "-0.04em", lineHeight: 1.1 }}>
+                {words.map((w, i) => {
+                  const k = seg(exit0 + (words.length > 1 ? (0.25 * i) / (words.length - 1) : 0), 0.5, ELASTIC_IN);
+                  return <span key={i} style={{ display: "inline-block", overflow: "hidden" }}><span style={{ display: "inline-block", transform: `translateY(${-120 * k}%)` }}>{w}</span></span>;
+                })}
+              </div>
+            </AbsoluteFill>
+          </AbsoluteFill>
+        )}
+      </AbsoluteFill>
+    );
+  }
+
+  if (variant === "spiral") {
+    // espiral: se dibuja (sine 1.4 s) mientras su trazo engorda de 100 a 400 y cubre todo;
+    // luego adelgaza y se borra desde el inicio
+    const op = seg(0, 0.5, SINE), draw = seg(0, 1.4, SINE), fat = seg(0.18, 1.4, SINE);
+    const thin = seg(1.7, 1, SINE), erase = seg(2.15, 1, SINE);
+    const a = erase, b = draw;
+    const sw = s < 1.7 ? lerp(100, 400, fat) : lerp(400, 100, thin);
+    return (
+      <AbsoluteFill>
+        {s < 1.6 ? <SceneView sc={from} /> : <SceneView sc={to} reveal={seg(2.3, 1, (x) => x)} />}
+        {s > 0 && erase < 1 && (
+          <AbsoluteFill style={{ alignItems: "center", justifyContent: "center", overflow: "hidden" }}>
+            <svg viewBox="-360 -360 760 760" preserveAspectRatio="xMidYMid slice" style={{ width: "125%", height: "100%", flex: "none" }}>
+              <path d={SPIRAL} pathLength={1} fill="none" stroke={overlayColor} strokeWidth={sw} strokeLinecap="butt"
+                strokeDasharray={`${Math.max(0, b - a)} 2`} strokeDashoffset={-a} opacity={op} />
+              {/* tapa el hueco del centro donde nace la espiral (mientras no se borra) */}
+              {a === 0 && <circle cx={0} cy={0} r={sw * 0.75 * clamp(draw * 8)} fill={overlayColor} opacity={op} />}
+            </svg>
+          </AbsoluteFill>
+        )}
+      </AbsoluteFill>
+    );
+  }
+
+  // "window": la nueva escena se abre desde una franja abajo (15%–85% a 75% de alto)
+  // y una capa de color encima se recoge hacia arriba ("hop", 1.25 s)
+  const open = seg(0, 1.25, HOP), lift = seg(0.285, 1.25, HOP);
+  const poly = `polygon(${lerp(15, 0, open)}% ${lerp(75, 100, open)}%, ${lerp(85, 100, open)}% ${lerp(75, 100, open)}%, ${lerp(85, 100, open)}% ${lerp(75, 0, open)}%, ${lerp(15, 0, open)}% ${lerp(75, 0, open)}%)`;
+  return (
+    <AbsoluteFill>
+      <SceneView sc={from} />
+      {s > 0 && (
+        <AbsoluteFill style={{ clipPath: poly }}>
+          <SceneView sc={to} reveal={seg(0.67, 1, (x) => x)} />
+          <AbsoluteFill style={{ background: overlayColor, clipPath: `inset(0 0 ${lift * 100}% 0)` }} />
+        </AbsoluteFill>
+      )}
+    </AbsoluteFill>
+  );
+};

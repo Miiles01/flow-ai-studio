@@ -29,11 +29,43 @@ export const COMPONENT_CATEGORIES: { id: string; es: string; en: string }[] = [
   { id: "Transición", es: "Transiciones", en: "Transitions" },
 ];
 
-/** Trae el código del componente desde wearemiiles. */
-export async function fetchComponentCode(c: StudioComponent): Promise<string> {
-  const res = await fetch(c.code_url);
-  if (!res.ok) throw new Error(`No se pudo cargar el código (${res.status})`);
-  return res.text();
+/**
+ * Trae el código del componente. Primero desde la misma app (public/studio-code/): así no
+ * depende de que wearemiiles permita CORS; si no está ahí, lo intenta en wearemiiles.
+ */
+const codeCache = new Map<string, Promise<string>>();
+export function fetchComponentCode(c: StudioComponent): Promise<string> {
+  const cached = codeCache.get(c.slug);
+  if (cached) return cached;
+  const file = c.code_url.split("/").pop() ?? "";
+  const get = async (url: string) => {
+    const res = await fetch(url);
+    if (!res.ok) throw new Error(`No se pudo cargar el código (${res.status})`);
+    return res.text();
+  };
+  const p = get(`/studio-code/${file}`).catch(() => get(c.code_url));
+  p.catch(() => codeCache.delete(c.slug));
+  codeCache.set(c.slug, p);
+  return p;
+}
+
+/** Copia texto al portapapeles; si el navegador lo bloquea (p. ej. dentro de un iframe), usa un textarea. */
+export async function copyText(text: string): Promise<void> {
+  try {
+    await navigator.clipboard.writeText(text);
+    return;
+  } catch {
+    const ta = document.createElement("textarea");
+    ta.value = text;
+    ta.setAttribute("readonly", "");
+    ta.style.position = "fixed";
+    ta.style.opacity = "0";
+    document.body.appendChild(ta);
+    ta.select();
+    const ok = document.execCommand("copy");
+    ta.remove();
+    if (!ok) throw new Error("No se pudo copiar");
+  }
 }
 
 /** Prompt listo para pegar: instrucción breve + el código completo. */

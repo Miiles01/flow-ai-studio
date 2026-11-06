@@ -1,0 +1,106 @@
+/* ============================================================================
+   CÓMO USAR ESTE COMPONENTE (instrucciones para tu asistente de IA:
+   Claude, Codex, Gemini, Cursor, Antigravity o cualquier otro)
+   ----------------------------------------------------------------------------
+   - Es un componente de Remotion (React). Si el proyecto no tiene Remotion,
+     créalo (npx create-video@latest), copia este archivo en src/
+     y registra una <Composition> de 1080×1920 a 30 fps con estas props.
+   - Fotos e íconos van en public/ y se pasan en "items":
+       { src: "carpeta/foto.jpg" }                       → tarjeta con foto
+       { color: "#4059F1", icon: "icono.svg", iconColor: "#FFF" } → tarjeta de color con un ícono SVG de una tinta
+   - Personaliza SOLO con las props de abajo; no cambies las curvas de movimiento
+     salvo que el usuario lo pida.
+   - background: color de fondo. El desvanecido (fade, 0 a 1) se funde con el fondo,
+     así que con fondo negro queda oscuro automáticamente.
+   - cardWidth / gap: tamaño y separación. zoom: qué tan cerca está la cámara.
+   - turnSeconds: segundos por vuelta. perspective: profundidad 3D.
+   - Para renderizar: npx remotion render src/index.ts <Id> out/video.mp4
+   ========================================================================== */
+// Anillo interior para video (Remotion) · Miiles Estudio · inspirado en "Pure CSS 3D animated carousel" de thebabydino
+// Las tarjetas forman un cilindro y la cámara está adentro: el anillo gira de arriba a abajo sin parar
+// (vertical, para Reels). Solo se ven las tarjetas de enfrente; se desvanece arriba y abajo hacia el color de fondo.
+import React from "react";
+import { AbsoluteFill, useCurrentFrame, useVideoConfig, Img, staticFile } from "remotion";
+
+export type Card = { src?: string; color?: string; icon?: string; iconColor?: string };
+
+/** Contenido de una tarjeta: foto, o color sólido con un ícono SVG de una tinta. */
+export const CardFace: React.FC<{ item: Card; iconSize?: string }> = ({ item, iconSize = "40%" }) => (
+  <>
+    {item.src && <Img src={item.src.startsWith("http") ? item.src : staticFile(item.src)} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />}
+    {item.icon && (
+      <div
+        style={{
+          position: "absolute", left: "50%", top: "50%", width: iconSize, aspectRatio: "1 / 1",
+          transform: "translate(-50%, -50%)", background: item.iconColor ?? "#fff",
+          WebkitMaskImage: `url(${staticFile(item.icon)})`, maskImage: `url(${staticFile(item.icon)})`,
+          WebkitMaskSize: "contain", maskSize: "contain", WebkitMaskRepeat: "no-repeat", maskRepeat: "no-repeat",
+          WebkitMaskPosition: "center", maskPosition: "center",
+        }}
+      />
+    )}
+  </>
+);
+
+// Tarjetas de ejemplo (cámbialas por tus fotos e íconos en public/)
+export const exampleItems: Card[] = [
+  { src: "carrusel/foto.jpg" },
+  { color: "#4059F1", icon: "carrusel/estrella.svg", iconColor: "#FCB5B9" },
+  { src: "carrusel/rosa.jpg" },
+  { color: "#FCB5B9", icon: "carrusel/flor.svg", iconColor: "#4059F1" },
+  { src: "carrusel/azul.jpg" },
+  { color: "#1C1E2A", icon: "carrusel/miiles.svg", iconColor: "#FCB5B9" },
+  { color: "#4059F1", icon: "carrusel/flor.svg", iconColor: "#FFFFFF" },
+  { src: "carrusel/gorra.jpg" },
+  { color: "#FCB5B9", icon: "carrusel/estrella.svg", iconColor: "#1C1E2A" },
+  { src: "carrusel/azul.jpg" },
+];
+
+export type InnerRingProps = {
+  items: Card[];
+  background?: string;   // color de fondo (el desvanecido se funde con este color)
+  cardWidth?: number;    // px; el alto sale de la proporción 7:10
+  gap?: number;          // px entre tarjetas
+  perspective?: number;  // px; más chico = efecto 3D más marcado
+  turnSeconds?: number;  // segundos que tarda en dar una vuelta completa
+  fade?: number;         // 0 = sin desvanecido, 1 = desvanecido completo arriba y abajo
+  zoom?: number;         // acerca la cámara al centro (1 = sin zoom)
+};
+
+export const InnerRing: React.FC<InnerRingProps> = ({
+  items, background = "#FFFFFF", cardWidth = 620, gap = 30, perspective = 1100, turnSeconds = 24, fade = 0.5, zoom = 2.3,
+}) => {
+  const frame = useCurrentFrame();
+  const { fps, width, height } = useVideoConfig();
+  const n = items.length;
+  const cardHeight = (cardWidth * 10) / 7;
+  const base = 360 / n;
+  // Radio para que las tarjetas queden pegadas con "gap" de separación (misma fórmula que el original, girada a vertical)
+  const radius = (cardHeight / 2 + gap / 2) / Math.tan((base / 2) * (Math.PI / 180));
+  const turn = (frame / (fps * turnSeconds)) * 360;
+  const edge = `rgba(0,0,0,${1 - fade})`;
+  const mask = `linear-gradient(to bottom, ${edge}, #000 22%, #000 78%, ${edge})`;
+  return (
+    <AbsoluteFill style={{ background, overflow: "hidden" }}>
+      <AbsoluteFill style={{ WebkitMaskImage: mask, maskImage: mask }}>
+      <AbsoluteFill style={{ transform: `scale(${zoom})` }}>
+      {items.map((item, i) => {
+        const ang = ((i * base - turn) % 360 + 540) % 360 - 180; // -180..180, 0 = de frente
+        if (Math.abs(ang) > 80) return null;                     // las de atrás no se ven (como backface-visibility: hidden)
+        return (
+          <div key={i} style={{
+            position: "absolute", left: width / 2 - cardWidth / 2, top: height / 2 - cardHeight / 2,
+            width: cardWidth, height: cardHeight, borderRadius: 40, overflow: "hidden",
+            background: item.color ?? "#EEEFF2", zIndex: Math.round(100 - Math.abs(ang)),
+            // Cámara adentro del cilindro: la tarjeta se aleja "radius" y gira alrededor del eje horizontal
+            transform: `perspective(${perspective}px) rotateX(${-ang}deg) translateZ(${-radius}px)`,
+          }}>
+            <CardFace item={item} />
+          </div>
+        );
+      })}
+      </AbsoluteFill>
+      </AbsoluteFill>
+    </AbsoluteFill>
+  );
+};

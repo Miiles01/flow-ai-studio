@@ -1,0 +1,162 @@
+/* ============================================================================
+   CÓMO USAR ESTE COMPONENTE (instrucciones para tu asistente de IA:
+   Claude, Codex, Gemini, Cursor, Antigravity o cualquier otro)
+   ----------------------------------------------------------------------------
+   - Componente de Remotion (React) para video vertical 1080×1920 a 30 fps.
+     Si el proyecto no tiene Remotion, créalo (npx create-video@latest), copia este
+     archivo en src/ y registra una <Composition>. Duración: gridFlipDuration(props).
+   - Empieza con UNA foto al centro. Luego aparecen más y la cuadrícula se reacomoda:
+     2 columnas, después 3 columnas; cada foto viaja a su nuevo lugar (efecto "Flip").
+     Al final regresa a la foto sola, así el video puede repetirse en bucle.
+   - "items": fotos (src) o tarjetas de color con ícono. Se repiten si faltan.
+   - Ajustes:
+     · layouts: pasos de la cuadrícula, cada uno { cols, rows, width }
+       (width = ancho total de la cuadrícula en px; deja aire alrededor)
+     · flow: true = versión "todas las fotos ya están": desde el inicio se ven todas y solo
+       cambia el número de columnas (rows se ignora); count = cuántas fotos (15)
+     · focus: índice de la foto protagonista (siempre se queda al centro)
+     · background (blanco), gap (px), ratio (alto ÷ ancho, 1.2 = vertical), radius
+     · move: cuadros de cada reacomodo (24 = 0.8 s como el original), hold: pausa
+   - No cambies la curva expo.inOut del original salvo que el usuario lo pida.
+   - Para renderizar: npx remotion render src/index.ts <Id> out/video.mp4
+   ========================================================================== */
+// Cuadrícula que se reacomoda (Remotion) · Miiles Estudio · inspirado en "Grid Layout Transition" de Ibaliqbal
+import React from "react";
+import { AbsoluteFill, Easing, useCurrentFrame, useVideoConfig, Img, staticFile } from "remotion";
+
+// ---- Tarjetas (foto, o color con ícono SVG) ----
+export type Card = { src?: string; color?: string; icon?: string; iconColor?: string };
+
+/** Contenido de una tarjeta: foto, o color sólido con un ícono SVG de una tinta. */
+export const CardFace: React.FC<{ item: Card; iconSize?: string }> = ({ item, iconSize = "40%" }) => (
+  <>
+    {item.src && <Img src={item.src.startsWith("http") ? item.src : staticFile(item.src)} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />}
+    {item.icon && (
+      <div
+        style={{
+          position: "absolute", left: "50%", top: "50%", width: iconSize, aspectRatio: "1 / 1",
+          transform: "translate(-50%, -50%)", background: item.iconColor ?? "#fff",
+          WebkitMaskImage: `url(${staticFile(item.icon)})`, maskImage: `url(${staticFile(item.icon)})`,
+          WebkitMaskSize: "contain", maskSize: "contain", WebkitMaskRepeat: "no-repeat", maskRepeat: "no-repeat",
+          WebkitMaskPosition: "center", maskPosition: "center",
+        }}
+      />
+    )}
+  </>
+);
+
+export const exampleItems: Card[] = [
+  { src: "carrusel/foto.jpg" },
+  { color: "#4059F1", icon: "carrusel/estrella.svg", iconColor: "#FCB5B9" },
+  { src: "carrusel/rosa.jpg" },
+  { color: "#FCB5B9", icon: "carrusel/flor.svg", iconColor: "#4059F1" },
+  { src: "carrusel/azul.jpg" },
+  { color: "#1C1E2A", icon: "carrusel/miiles.svg", iconColor: "#FCB5B9" },
+  { color: "#4059F1", icon: "carrusel/flor.svg", iconColor: "#FFFFFF" },
+  { src: "carrusel/gorra.jpg" },
+  { color: "#FCB5B9", icon: "carrusel/estrella.svg", iconColor: "#1C1E2A" },
+  { src: "carrusel/azul.jpg" },
+];
+
+
+type Layout = { cols: number; rows: number; width: number };
+export type GridFlipProps = {
+  items: Card[];
+  layouts?: Layout[];
+  focus?: number;
+  background?: string;
+  gap?: number;
+  ratio?: number;
+  radius?: number;
+  move?: number;
+  hold?: number;
+  flow?: boolean;   // true: todas las fotos visibles desde el inicio, solo cambian las columnas
+  count?: number;   // cuántas fotos en modo flow (por defecto 15)
+};
+
+const EXPO = Easing.bezier(0.87, 0, 0.13, 1); // expo.inOut
+const clamp = (v: number) => Math.max(0, Math.min(1, v));
+const DEFAULT_LAYOUTS: Layout[] = [
+  { cols: 1, rows: 1, width: 620 },
+  { cols: 2, rows: 3, width: 720 },
+  { cols: 3, rows: 4, width: 840 },
+];
+
+export function gridFlipDuration(p: Partial<GridFlipProps>) {
+  const steps = (p.layouts ?? DEFAULT_LAYOUTS).length; // ida + regreso a la primera
+  return Math.ceil(steps * ((p.hold ?? 40) + (p.move ?? 30)));
+}
+
+type Rect = { x: number; y: number; w: number; h: number; on: boolean };
+
+export const GridFlip: React.FC<GridFlipProps> = ({
+  items, layouts = DEFAULT_LAYOUTS, focus = 0, background = "#FFFFFF", gap = 18, ratio = 1.2, radius = 10, move = 30, hold = 40, flow = false, count = 15,
+}) => {
+  const frame = useCurrentFrame();
+  const { width, height } = useVideoConfig();
+  const total = flow ? count : Math.max(...layouts.map((l) => l.cols * l.rows));
+
+  // Calcula dónde va cada foto en cada paso. La protagonista ocupa la celda central;
+  // las demás llenan el resto en orden, así el reacomodo se ve natural.
+  const place = (L: Layout): Rect[] => {
+    if (flow) {
+      // como una cuadrícula CSS: las fotos van en orden, fila por fila
+      const rows = Math.ceil(total / L.cols);
+      const cw = (L.width - gap * (L.cols - 1)) / L.cols, ch = cw * ratio;
+      const gh = rows * ch + gap * (rows - 1);
+      const x0 = (width - L.width) / 2, y0 = (height - gh) / 2;
+      return Array.from({ length: total }, (_, i) => ({ x: x0 + (i % L.cols) * (cw + gap), y: y0 + Math.floor(i / L.cols) * (ch + gap), w: cw, h: ch, on: true }));
+    }
+    const cw = (L.width - gap * (L.cols - 1)) / L.cols, ch = cw * ratio;
+    const gh = L.rows * ch + gap * (L.rows - 1);
+    const x0 = (width - L.width) / 2, y0 = (height - gh) / 2;
+    const fc = Math.floor((L.cols - 1) / 2), fr = Math.floor((L.rows - 1) / 2);
+    const cells: [number, number][] = [];
+    for (let r = 0; r < L.rows; r++) for (let c = 0; c < L.cols; c++) if (!(r === fr && c === fc)) cells.push([c, r]);
+    const out: Rect[] = [];
+    let k = 0;
+    for (let i = 0; i < total; i++) {
+      const [c, r] = i === 0 ? [fc, fr] : cells[Math.min(k++, cells.length - 1)] ?? [fc, fr];
+      const on = i === 0 || k <= cells.length;
+      out.push({ x: x0 + c * (cw + gap), y: y0 + r * (ch + gap), w: cw, h: ch, on });
+    }
+    return out;
+  };
+  const rects = layouts.map(place);
+
+  // Paso actual: espera "hold", luego se mueve "move" cuadros hacia el siguiente (el último vuelve al primero)
+  const cycle = hold + move;
+  const n = layouts.length;
+  const step = Math.floor(frame / cycle) % n;
+  const t = frame % cycle;
+  const A = rects[step], B = rects[(step + 1) % n];
+
+  return (
+    <AbsoluteFill style={{ background, overflow: "hidden" }}>
+      {Array.from({ length: total }, (_, i) => {
+        const a = A[i], b = B[i];
+        // pequeño desfase según la distancia a la protagonista (se siente más orgánico)
+        const dist = Math.hypot(a.x - A[0].x, a.y - A[0].y) + Math.hypot(b.x - B[0].x, b.y - B[0].y);
+        const delay = Math.min(6, dist / 260);
+        const p = t < hold ? 0 : EXPO(clamp((t - hold - delay) / (move - 6)));
+        // las que no están en un paso aparecen/desaparecen en el lugar del otro paso
+        const from = a.on ? a : b, to = b.on ? b : a;
+        const x = from.x + (to.x - from.x) * p, y = from.y + (to.y - from.y) * p;
+        const w = from.w + (to.w - from.w) * p, h = from.h + (to.h - from.h) * p;
+        const vis = (a.on ? 1 : 0) + ((b.on ? 1 : 0) - (a.on ? 1 : 0)) * clamp(p * 1.4 - (b.on ? 0.2 : 0));
+        if (vis <= 0.001) return null;
+        const s = 0.85 + 0.15 * vis;
+        const L = items.length, mix = [7, 3, 9, 11, 13].find((m) => { let a = m, b = L; while (b) [a, b] = [b, a % b]; return a === 1; }) ?? 1;
+        const item = items[(focus + (flow ? i * mix : i)) % L]; // en flow se revuelven para que las columnas no se repitan
+        return (
+          <div key={i} style={{
+            position: "absolute", left: x, top: y, width: w, height: h, borderRadius: radius, overflow: "hidden",
+            opacity: vis, transform: `scale(${s})`, zIndex: i === 0 ? 2 : 1, background: item.color ?? "#EEEFF2",
+          }}>
+            <CardFace item={item} />
+          </div>
+        );
+      })}
+    </AbsoluteFill>
+  );
+};

@@ -1,0 +1,103 @@
+/* ============================================================================
+   CÓMO USAR ESTE COMPONENTE (instrucciones para tu asistente de IA:
+   Claude, Codex, Gemini, Cursor, Antigravity o cualquier otro)
+   ----------------------------------------------------------------------------
+   - Es un componente de Remotion (React). Si el proyecto no tiene Remotion,
+     créalo (npx create-video@latest), copia este archivo en src/
+     y registra una <Composition> de 1080×1920 a 30 fps con estas props.
+   - Fotos e íconos van en public/ y se pasan en "items":
+       { src: "carpeta/foto.jpg" }                       → tarjeta con foto
+       { color: "#4059F1", icon: "icono.svg", iconColor: "#FFF" } → tarjeta de color con un ícono SVG de una tinta
+   - Personaliza SOLO con las props de abajo; no cambies las curvas de movimiento
+     salvo que el usuario lo pida.
+   - background: color de fondo. El desvanecido es una máscara: se funde con el fondo,
+     así que con fondo negro el desvanecido queda oscuro automáticamente.
+   - direction: "vertical" (pasa de arriba a abajo, con desvanecido) u "horizontal" (de lado a lado).
+   - cardSize / radius: tamaño de las tarjetas y separación (más radio = más separadas).
+   - perspective: profundidad 3D. hold / move: pausa y giro.
+   - Para renderizar: npx remotion render src/index.ts <Id> out/video.mp4
+   ========================================================================== */
+// Rueda 3D para video (Remotion) · Miiles Estudio · inspirado en "GSAP ScrollTrigger - Carousel" de creativeocean
+// Las tarjetas forman una rueda que gira sobre un eje (horizontal = la rueda pasa de arriba a abajo; vertical = de lado a lado).
+// La tarjeta del centro queda enfocada y la rueda se desvanece hacia los extremos.
+import React from "react";
+import { AbsoluteFill, Easing, interpolate, useCurrentFrame, useVideoConfig, Img, staticFile } from "remotion";
+
+export type Card = { src?: string; color?: string; icon?: string; iconColor?: string };
+
+/** Contenido de una tarjeta: foto, o color sólido con un ícono SVG de una tinta. */
+export const CardFace: React.FC<{ item: Card; iconSize?: string }> = ({ item, iconSize = "40%" }) => (
+  <>
+    {item.src && <Img src={item.src.startsWith("http") ? item.src : staticFile(item.src)} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />}
+    {item.icon && (
+      <div
+        style={{
+          position: "absolute", left: "50%", top: "50%", width: iconSize, aspectRatio: "1 / 1",
+          transform: "translate(-50%, -50%)", background: item.iconColor ?? "#fff",
+          WebkitMaskImage: `url(${staticFile(item.icon)})`, maskImage: `url(${staticFile(item.icon)})`,
+          WebkitMaskSize: "contain", maskSize: "contain", WebkitMaskRepeat: "no-repeat", maskRepeat: "no-repeat",
+          WebkitMaskPosition: "center", maskPosition: "center",
+        }}
+      />
+    )}
+  </>
+);
+
+// Tarjetas de ejemplo (cámbialas por tus fotos e íconos en public/)
+export const exampleItems: Card[] = [
+  { src: "carrusel/foto.jpg" },
+  { color: "#4059F1", icon: "carrusel/estrella.svg", iconColor: "#FCB5B9" },
+  { src: "carrusel/rosa.jpg" },
+  { color: "#FCB5B9", icon: "carrusel/flor.svg", iconColor: "#4059F1" },
+  { src: "carrusel/azul.jpg" },
+  { color: "#1C1E2A", icon: "carrusel/miiles.svg", iconColor: "#FCB5B9" },
+  { color: "#4059F1", icon: "carrusel/flor.svg", iconColor: "#FFFFFF" },
+  { src: "carrusel/gorra.jpg" },
+  { color: "#FCB5B9", icon: "carrusel/estrella.svg", iconColor: "#1C1E2A" },
+  { src: "carrusel/azul.jpg" },
+];
+
+export type WheelCarouselProps = {
+  items: Card[]; background?: string; direction?: "vertical" | "horizontal";
+  cardSize?: number; radius?: number; perspective?: number; hold?: number; move?: number;
+};
+const EASE = Easing.bezier(0.65, 0, 0.25, 1);
+
+export const WheelCarousel: React.FC<WheelCarouselProps> = ({
+  items, background = "#FFFFFF", direction = "vertical", cardSize = 440, radius = 900, perspective = 2000, hold = 22, move = 20,
+}) => {
+  const frame = useCurrentFrame();
+  const { width, height } = useVideoConfig();
+  const n = items.length;
+  const cycle = hold + move;
+  const step = Math.floor(frame / cycle);
+  const t = frame - step * cycle;
+  const p = step + (t < hold ? 0 : EASE(interpolate(t, [hold, cycle], [0, 1], { extrapolateRight: "clamp" })));
+  const vertical = direction === "vertical";
+  const stepDeg = 360 / n;
+  // Desvanecido arriba y abajo solo en la rueda vertical; la horizontal va sin desvanecer
+  const fadeMask = vertical ? "linear-gradient(to bottom, rgba(0,0,0,.5) 4%, #000 22%, #000 78%, rgba(0,0,0,.5) 96%)" : "none";
+  return (
+    <AbsoluteFill style={{ background, overflow: "hidden" }}>
+      <AbsoluteFill style={{ WebkitMaskImage: fadeMask, maskImage: fadeMask }}>
+        {items.map((item, i) => {
+          let d = ((i - p) % n + n) % n;
+          if (d > n / 2) d -= n;
+          const ang = d * stepDeg;
+          if (Math.abs(ang) > 92) return null;
+          const front = Math.cos((ang * Math.PI) / 180);
+          const rot = vertical ? `rotateX(${-ang}deg)` : `rotateY(${ang}deg)`;
+          return (
+            <div key={i} style={{
+              position: "absolute", left: width / 2 - cardSize / 2, top: height / 2 - cardSize / 2, width: cardSize, height: cardSize,
+              borderRadius: "18%", overflow: "hidden", background: item.color ?? "#EEEFF2", zIndex: Math.round(front * 100),
+              transform: `perspective(${perspective}px) translateZ(${-radius}px) ${rot} translateZ(${radius}px)`,
+            }}>
+              <CardFace item={item} />
+            </div>
+          );
+        })}
+      </AbsoluteFill>
+    </AbsoluteFill>
+  );
+};

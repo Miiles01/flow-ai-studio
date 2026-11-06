@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, Check, Copy, Download } from "lucide-react";
 import { toast } from "sonner";
@@ -7,7 +7,7 @@ import { useTheme } from "@/contexts/ThemeContext";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
 import { usePageSeo } from "@/hooks/usePageSeo";
-import { STUDIO_COMPONENTS, buildComponentPrompt, fetchComponentCode } from "@/lib/studioComponents";
+import { STUDIO_COMPONENTS, buildComponentPrompt, copyText, fetchComponentCode } from "@/lib/studioComponents";
 import antigravityLogo from "@/assets/ai-logos/antigravity.png.asset.json";
 import codexLogo from "@/assets/ai-logos/codex.png.asset.json";
 import cursorLogo from "@/assets/ai-logos/cursor.png.asset.json";
@@ -62,12 +62,15 @@ export default function StudioComponentPage() {
 
   usePageSeo({ title: c ? `${c.title} — Miiles Estudio` : "Miiles Estudio", description: c?.description || "" });
 
+  // Carga el código desde que se abre la página: al dar clic ya está listo y el copiado no se pierde
+  useEffect(() => { if (c) fetchComponentCode(c).catch(() => {}); }, [c]);
+
   async function copyPrompt() {
     if (!c || busy) return;
     setBusy("copy");
     try {
       const code = await fetchComponentCode(c);
-      await navigator.clipboard.writeText(buildComponentPrompt(c, code));
+      await copyText(buildComponentPrompt(c, code));
       setCopied(true);
       setTimeout(() => setCopied(false), 1800);
     } catch { toast.error(t.copyError); }

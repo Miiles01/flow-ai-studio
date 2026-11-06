@@ -1,0 +1,127 @@
+/* ============================================================================
+   CÓMO USAR ESTE COMPONENTE (instrucciones para tu asistente de IA:
+   Claude, Codex, Gemini, Cursor, Antigravity o cualquier otro)
+   ----------------------------------------------------------------------------
+   - Es un componente de Remotion (React). Si el proyecto no tiene Remotion,
+     créalo (npx create-video@latest), copia este archivo en src/
+     y registra una <Composition> de 1080×1920 a 30 fps con estas props.
+   - Fotos e íconos van en public/ y se pasan en "items":
+       { src: "carpeta/foto.jpg" }                       → tarjeta con foto
+       { color: "#4059F1", icon: "icono.svg", iconColor: "#FFF" } → tarjeta de color con un ícono SVG de una tinta
+   - Personaliza SOLO con las props de abajo; no cambies las curvas de movimiento
+     salvo que el usuario lo pida.
+   - background: color de fondo (por defecto blanco).
+   - radius / stepAngle / rise: forma de la espiral.
+   - Las 3 tarjetas de enfrente van al 100%; las de atrás bajan su opacidad (mínimo 30%).
+   - hold / move: cuadros que se queda cada tarjeta y que dura el giro.
+   - Para renderizar: npx remotion render src/index.ts <Id> out/video.mp4
+   ========================================================================== */
+// Espiral 3D para video (Remotion) · Miiles Estudio
+// Las tarjetas van en una hélice alrededor de un eje vertical. La espiral gira y sube para que una tarjeta
+// quede siempre de frente y al centro; se detiene un momento en ella y pasa a la siguiente.
+import React from "react";
+import { AbsoluteFill, Easing, Img, interpolate, staticFile, useCurrentFrame } from "remotion";
+
+export type SpiralItem = { src?: string; color?: string; icon?: string; iconColor?: string };
+
+export type SpiralCarouselProps = {
+  items: SpiralItem[];
+  background?: string;
+  cardWidth?: number;   // px
+  cardHeight?: number;  // px
+  radius?: number;      // radio de la espiral, en px
+  stepAngle?: number;   // grados entre una tarjeta y la siguiente
+  rise?: number;        // cuánto sube cada tarjeta, en px
+  perspective?: number; // px
+  hold?: number;        // cuadros que se queda enfocada cada tarjeta
+  move?: number;        // cuadros que dura cada giro
+};
+
+const EASE = Easing.bezier(0.65, 0, 0.25, 1);
+
+export const SpiralCarousel: React.FC<SpiralCarouselProps> = ({
+  items,
+  background = "#FFFFFF",
+  cardWidth = 520,
+  cardHeight = 700,
+  radius = 760,
+  stepAngle = 42,
+  rise = 260,
+  perspective = 2200,
+  hold = 24,
+  move = 22,
+}) => {
+  const frame = useCurrentFrame();
+  const cycle = hold + move;
+  const step = Math.floor(frame / cycle);
+  const t = frame - step * cycle;
+  const p = step + (t < hold ? 0 : EASE(interpolate(t, [hold, cycle], [0, 1], { extrapolateRight: "clamp" })));
+
+  return (
+    <AbsoluteFill style={{ background, overflow: "hidden" }}>
+      <div style={{ position: "absolute", left: "50%", top: "50%" }}>
+        {items.map((item, i) => {
+          // Distancia a la tarjeta enfocada (0 = al centro); la lista da la vuelta para que siempre haya tarjetas arriba y abajo
+          let d = ((i - p) % items.length + items.length) % items.length;
+          if (d > items.length / 2) d -= items.length;
+          if (Math.abs(d) > 7) return null;           // solo se quita cuando ya salió del cuadro
+          const angle = d * stepAngle;
+          const y = d * rise;
+          const focus = Math.max(0, 1 - Math.abs(d));       // 1 en el centro
+          // Las tres de enfrente (centro y sus vecinas) al 100%; las de atrás se van apagando, sin desaparecer
+          const opacity = Math.abs(d) <= 1 ? 1 : Math.max(0.3, 1 - (Math.abs(d) - 1) * 0.22);
+          return (
+            <div
+              key={i}
+              style={{
+                position: "absolute",
+                left: -cardWidth / 2,
+                top: -cardHeight / 2,
+                width: cardWidth,
+                height: cardHeight,
+                borderRadius: 28,
+                overflow: "hidden",
+                background: item.color ?? "#EEEFF2",
+                zIndex: Math.round(100 - Math.abs(d) * 10),
+                opacity,
+                // Cada tarjeta lleva su propia perspectiva y se ordena por cercanía al centro (más estable que preserve-3d al renderizar)
+                transform: `perspective(${perspective}px) translateY(${y}px) translateZ(${-radius}px) rotateY(${angle}deg) translateZ(${radius}px) scale(${0.9 + 0.1 * focus})`,
+              }}
+            >
+              {item.src && <Img src={item.src.startsWith("http") ? item.src : staticFile(item.src)} style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
+              {item.icon && (
+                <div
+                  style={{
+                    position: "absolute", left: "50%", top: "50%", width: "40%", aspectRatio: "1 / 1",
+                    transform: "translate(-50%, -50%)", background: item.iconColor ?? "#fff",
+                    WebkitMaskImage: `url(${staticFile(item.icon)})`, maskImage: `url(${staticFile(item.icon)})`,
+                    WebkitMaskSize: "contain", maskSize: "contain", WebkitMaskRepeat: "no-repeat", maskRepeat: "no-repeat",
+                    WebkitMaskPosition: "center", maskPosition: "center",
+                  }}
+                />
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </AbsoluteFill>
+  );
+};
+
+// Ejemplo con los colores de marca de Miiles
+export const spiralItems: SpiralItem[] = [
+  { color: "#4059F1", icon: "carrusel/estrella.svg", iconColor: "#FCB5B9" },
+  { src: "carrusel/foto.jpg" },
+  { color: "#FCB5B9", icon: "carrusel/flor.svg", iconColor: "#4059F1" },
+  { src: "carrusel/gorra.jpg" },
+  { color: "#1C1E2A", icon: "carrusel/miiles.svg", iconColor: "#FCB5B9" },
+  { src: "carrusel/rosa.jpg" },
+  { color: "#4059F1", icon: "carrusel/flor.svg", iconColor: "#FFFFFF" },
+  { src: "carrusel/azul.jpg" },
+  { color: "#FCB5B9", icon: "carrusel/estrella.svg", iconColor: "#1C1E2A" },
+  { src: "carrusel/gorra.jpg" },
+  { color: "#1C1E2A", icon: "carrusel/estrella.svg", iconColor: "#4059F1" },
+  { src: "carrusel/foto.jpg" },
+  { color: "#4059F1", icon: "carrusel/miiles.svg", iconColor: "#FCB5B9" },
+  { src: "carrusel/rosa.jpg" },
+];

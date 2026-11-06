@@ -1,0 +1,78 @@
+/* ============================================================================
+   CÓMO USAR ESTE COMPONENTE (instrucciones para tu asistente de IA:
+   Claude, Codex, Gemini, Cursor, Antigravity o cualquier otro)
+   ----------------------------------------------------------------------------
+   - Componente de Remotion (React) para video vertical 1080×1920 a 30 fps.
+     Si el proyecto no tiene Remotion, créalo (npx create-video@latest), copia este
+     archivo en src/ y registra una <Composition> de "seconds" × 30 cuadros.
+   - Galería en bucle: pocas fotos, alternadas izquierda/derecha y bien separadas,
+     suben sin parar; varían un poco de tamaño para dar profundidad, sin amontonarse.
+     El último cuadro empalma con el primero (bucle perfecto) si la duración de la
+     composición es exactamente "seconds".
+   - "items": fotos (src) o tarjetas de color con ícono.
+   - Ajustes: background (blanco), count (cuántas fotos; 6 por defecto, mejor pocas), seconds (duración del bucle),
+     size (tamaño de las fotos de enfrente, px), seed (cambia la acomodada).
+   - Para renderizar: npx remotion render src/index.ts <Id> out/video.mp4
+   ========================================================================== */
+// Galería con profundidad en bucle (Remotion) · Miiles Estudio · inspirado en "Infinite Scroll GSAP Gallery" de Codrops
+import React from "react";
+import { AbsoluteFill, Img, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
+
+type Card = { src?: string; color?: string; icon?: string; iconColor?: string };
+export type DepthGalleryProps = { items: Card[]; background?: string; count?: number; seconds?: number; size?: number; seed?: number };
+
+export const DepthGallery: React.FC<DepthGalleryProps> = ({ items, background = "#FFFFFF", count = 6, seconds = 12, size = 440, seed = 7 }) => {
+  const frame = useCurrentFrame();
+  const { fps, width, height } = useVideoConfig();
+  const rnd = (k: number) => { const x = Math.sin((k + seed) * 91.345) * 47453.5453; return x - Math.floor(x); };
+  const n = count % 2 ? count + 1 : count;      // par: así alternan izquierda/derecha sin repetirse
+  const loop = (frame / (fps * seconds)) % 1;   // 0 → 1 en cada vuelta
+  const span = height + size * 1.6;             // recorrido completo: sale por arriba antes de volver a entrar por abajo
+  const DEPTHS = [1, 0.72, 0.9, 0.66, 0.84, 0.78];
+  const cards = Array.from({ length: n }, (_, i) => {
+    const depth = DEPTHS[i % DEPTHS.length];    // pocas, separadas, todas suben a la misma velocidad
+    const s = size * depth;
+    const left = i % 2 === 0;                   // carriles alternados: nunca se amontonan
+    const jitter = rnd(i) * 70;
+    const x = left ? 60 + jitter : width - 60 - s - jitter;
+    const y0 = (i / n) * span;                  // separación pareja entre una y otra
+    const y = ((y0 - loop * span) % span + span) % span - size * 1.3; // ya fuera de cuadro cuando reaparece abajo
+    return { i, depth, s, x, y };
+  }).sort((a, b) => a.depth - b.depth);
+  return (
+    <AbsoluteFill style={{ background, overflow: "hidden" }}>
+      {cards.map(({ i, depth, s, x, y }) => {
+        const item = items[i % items.length];
+        return (
+          <div key={i} style={{
+            position: "absolute", left: x, top: y, width: s, height: s * 1.25, borderRadius: 10 * depth, overflow: "hidden",
+            background: item.color ?? "#EEEFF2", opacity: 0.55 + 0.45 * depth,
+          }}>
+            {item.src && <Img src={item.src.startsWith("http") ? item.src : staticFile(item.src)} style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
+            {item.icon && (
+              <div style={{
+                position: "absolute", left: "50%", top: "50%", width: "40%", aspectRatio: "1 / 1", transform: "translate(-50%, -50%)", background: item.iconColor ?? "#fff",
+                WebkitMaskImage: `url(${staticFile(item.icon)})`, maskImage: `url(${staticFile(item.icon)})`, WebkitMaskSize: "contain", maskSize: "contain",
+                WebkitMaskRepeat: "no-repeat", maskRepeat: "no-repeat", WebkitMaskPosition: "center", maskPosition: "center",
+              }} />
+            )}
+          </div>
+        );
+      })}
+    </AbsoluteFill>
+  );
+};
+
+// Ejemplo de tarjetas (cámbialas por tus fotos o colores con ícono en public/)
+export const exampleItems: Card[] = [
+  { src: "carrusel/foto.jpg" },
+  { color: "#4059F1", icon: "carrusel/estrella.svg", iconColor: "#FCB5B9" },
+  { src: "carrusel/rosa.jpg" },
+  { color: "#FCB5B9", icon: "carrusel/flor.svg", iconColor: "#4059F1" },
+  { src: "carrusel/azul.jpg" },
+  { color: "#1C1E2A", icon: "carrusel/miiles.svg", iconColor: "#FCB5B9" },
+  { color: "#4059F1", icon: "carrusel/flor.svg", iconColor: "#FFFFFF" },
+  { src: "carrusel/gorra.jpg" },
+  { color: "#FCB5B9", icon: "carrusel/estrella.svg", iconColor: "#1C1E2A" },
+  { src: "carrusel/azul.jpg" },
+];

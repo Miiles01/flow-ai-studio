@@ -1,0 +1,120 @@
+/* ============================================================================
+   CÓMO USAR ESTE COMPONENTE (instrucciones para tu asistente de IA:
+   Claude, Codex, Gemini, Cursor, Antigravity o cualquier otro)
+   ----------------------------------------------------------------------------
+   - Componente de Remotion (React) para video vertical 1080×1920 a 30 fps.
+     Si el proyecto no tiene Remotion, créalo (npx create-video@latest), copia este
+     archivo en src/ y registra una <Composition>. Duración: orbitZoomDuration(props).
+   - Las fotos nacen pequeñas al centro y forman un círculo que gira sin parar; la cámara
+     se acerca a un lado del círculo, vemos pasar las fotos, se aleja y repite.
+   - "items": fotos (src) o tarjetas de color con un ícono SVG, como en los carruseles.
+   - Ajustes:
+     · focus: lados del círculo a los que se acerca la cámara (0 abajo, 1 derecha, 2 arriba, 3 izquierda)
+     · background: fondo (blanco por defecto)
+     · radius, cardSize: tamaño del círculo y de las fotos
+     · zoom: cuánto se acerca la cámara (2.6 = la foto llena casi todo el ancho)
+     · overview, zoomIn, hold, zoomOut: cuadros de cada momento
+   - No cambies las curvas de movimiento salvo que el usuario lo pida.
+   - Para renderizar: npx remotion render src/index.ts <Id> out/video.mp4
+   ========================================================================== */
+// Órbita con zoom (Remotion) · Miiles Estudio · inspirado en "Proximity Orbit" de donotfold
+import React from "react";
+import { AbsoluteFill, Easing, Img, spring, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
+
+type Card = { src?: string; color?: string; icon?: string; iconColor?: string };
+export type OrbitZoomProps = {
+  items: Card[];
+  focus?: number[];
+  background?: string;
+  radius?: number;
+  cardSize?: number;
+  zoom?: number;
+  overview?: number;
+  zoomIn?: number;
+  hold?: number;
+  zoomOut?: number;
+  turnSeconds?: number; // segundos por vuelta del círculo
+  intro?: number;       // cuadros de la entrada: las fotos nacen pequeñas al centro y crecen hasta formar el círculo
+};
+
+const IN_OUT = Easing.bezier(0.76, 0, 0.24, 1);
+const TILTS = [-12, 8, -4, 14, -8, 5, -15, 10, -6, 12, -10, 6];
+
+export function orbitZoomDuration(p: OrbitZoomProps) {
+  const f = p.focus ?? [0, 1];
+  const o = p.overview ?? 30, i = p.zoomIn ?? 36, h = p.hold ?? 70, z = p.zoomOut ?? 30;
+  return (p.intro ?? 40) + f.length * (o + i + h + z) + o;
+}
+
+export const OrbitZoom: React.FC<OrbitZoomProps> = ({
+  items, focus = [0, 1], background = "#FFFFFF", radius = 420, cardSize = 210, zoom = 2.2,
+  overview = 30, zoomIn = 36, hold = 70, zoomOut = 30, turnSeconds = 8, intro = 40,
+}) => {
+  const raw = useCurrentFrame();
+  const frame = Math.max(0, raw - intro);
+  const { fps, width, height } = useVideoConfig();
+  const n = items.length;
+  // El círculo nunca se detiene: gira todo el tiempo, también con zoom
+  const spin = (raw / (fps * turnSeconds)) * 360;
+
+  // Momento actual: k = 0 (vista completa) … 1 (cerca de un lado del círculo)
+  const cycle = overview + zoomIn + hold + zoomOut;
+  const step = Math.min(focus.length - 1, Math.floor(frame / cycle));
+  const t = frame - step * cycle;
+  let k = 0;
+  if (raw >= intro && frame < focus.length * cycle) {
+    if (t < overview) k = 0;
+    else if (t < overview + zoomIn) k = IN_OUT((t - overview) / zoomIn);
+    else if (t < overview + zoomIn + hold) k = 1;
+    else k = 1 - IN_OUT((t - overview - zoomIn - hold) / zoomOut);
+  }
+  // La cámara se acerca a un punto FIJO del círculo (focus: 0 abajo, 1 derecha, 2 arriba, 3 izquierda);
+  // las fotos siguen girando y van pasando por ahí
+  const sideAngle = [90, 0, -90, 180][focus[step] % 4] * (Math.PI / 180);
+  const fx = radius * Math.cos(sideAngle), fy = radius * Math.sin(sideAngle);
+  const z = 1 + (zoom - 1) * k;
+
+  return (
+    <AbsoluteFill style={{ background, overflow: "hidden" }}>
+      <div style={{ position: "absolute", left: width / 2, top: height / 2, transform: `scale(${z}) translate(${-fx * k}px, ${-fy * k}px)` }}>
+        {items.map((item, i) => {
+          // Entrada: cada foto nace pequeña al centro y sale hasta su lugar en el círculo, una tras otra
+          const g = spring({ frame: raw - i * 3, fps, config: { damping: 16, stiffness: 110, mass: 0.9 } });
+          const a = ((360 * i) / n + spin - 90) * (Math.PI / 180);
+          const p = { x: radius * Math.cos(a) * g, y: radius * Math.sin(a) * g };
+          // Todas del mismo tamaño siempre: solo cambia la cámara
+          return (
+            <div key={i} style={{
+              position: "absolute", left: p.x - cardSize / 2, top: p.y - cardSize / 2, width: cardSize, height: cardSize,
+              transform: `rotate(${TILTS[i % TILTS.length] * g}deg) scale(${0.15 + 0.85 * g})`, opacity: Math.min(1, g * 3),
+              zIndex: Math.round(50 + 40 * Math.sin(a)), overflow: "hidden", borderRadius: 14, background: item.color ?? "#EEEFF2",
+            }}>
+              {item.src && <Img src={item.src.startsWith("http") ? item.src : staticFile(item.src)} style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
+              {item.icon && (
+                <div style={{
+                  position: "absolute", left: "50%", top: "50%", width: "42%", aspectRatio: "1 / 1", transform: "translate(-50%, -50%)", background: item.iconColor ?? "#fff",
+                  WebkitMaskImage: `url(${staticFile(item.icon)})`, maskImage: `url(${staticFile(item.icon)})`, WebkitMaskSize: "contain", maskSize: "contain",
+                  WebkitMaskRepeat: "no-repeat", maskRepeat: "no-repeat", WebkitMaskPosition: "center", maskPosition: "center",
+                }} />
+              )}
+            </div>
+          );
+        })}
+      </div>
+    </AbsoluteFill>
+  );
+};
+
+// Ejemplo de tarjetas (cámbialas por tus fotos o colores con ícono en public/)
+export const exampleItems: Card[] = [
+  { src: "carrusel/foto.jpg" },
+  { color: "#4059F1", icon: "carrusel/estrella.svg", iconColor: "#FCB5B9" },
+  { src: "carrusel/rosa.jpg" },
+  { color: "#FCB5B9", icon: "carrusel/flor.svg", iconColor: "#4059F1" },
+  { src: "carrusel/azul.jpg" },
+  { color: "#1C1E2A", icon: "carrusel/miiles.svg", iconColor: "#FCB5B9" },
+  { color: "#4059F1", icon: "carrusel/flor.svg", iconColor: "#FFFFFF" },
+  { src: "carrusel/gorra.jpg" },
+  { color: "#FCB5B9", icon: "carrusel/estrella.svg", iconColor: "#1C1E2A" },
+  { src: "carrusel/azul.jpg" },
+];

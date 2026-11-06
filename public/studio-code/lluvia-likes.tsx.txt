@@ -1,0 +1,121 @@
+/* ============================================================================
+   CÓMO USAR ESTE COMPONENTE (instrucciones para tu asistente de IA:
+   Claude, Codex, Gemini, Cursor, Antigravity o cualquier otro)
+   ----------------------------------------------------------------------------
+   - Componente de Remotion (React) para video vertical 1080×1920 a 30 fps.
+     Necesita "lucide-react" (npm i lucide-react) para los íconos.
+     Si el proyecto no tiene Remotion, créalo (npx create-video@latest), copia este
+     archivo en src/ y registra una <Composition> con estas props.
+   - Una frase al centro y un "cursor" invisible que va soltando fotos, íconos y
+     burbujas de likes: cada una aparece con un rebote, cae hasta abajo, rebota y sale.
+   - Ajustes:
+     · text: frase (líneas separadas con "\n"); la última línea va en gris
+     · drops: lo que va cayendo, en orden:
+         { src: "foto.jpg" } | { icon: "Heart", bg: "#FCB5B9", color: "#111" }
+         | { likes: "2.4K" } (burbuja con corazón y número)
+     · background, color: fondo blanco y texto negro por defecto
+     · every: cuadros entre una caída y la siguiente; size: tamaño (px)
+     · fromTop + sources: en vez del cursor, las cosas caen desde arriba de la pantalla
+       desde varias fuentes que se mueven de lado a lado (p. ej. fromTop: true, sources: 2)
+     · font: archivo en public/ (por defecto Manrope.woff2) o nombre de una fuente
+   - Para renderizar: npx remotion render src/index.ts <Id> out/video.mp4
+   ========================================================================== */
+// Cosas que caen y rebotan (Remotion) · Miiles Estudio · inspirado en "Made With GSAP" de Codrops (imágenes que caen y rebotan)
+import React, { useEffect, useState } from "react";
+import { AbsoluteFill, Img, continueRender, delayRender, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
+import * as Icons from "lucide-react";
+
+export type Drop = { src?: string; icon?: string; bg?: string; color?: string; likes?: string };
+export type FallingItemsProps = { text: string; drops: Drop[]; background?: string; color?: string; every?: number; size?: number; font?: string; fontSize?: number; fromTop?: boolean; sources?: number };
+
+const clamp = (v: number) => Math.max(0, Math.min(1, v));
+const power1In = (t: number) => t * t;
+const backIn = (t: number, s: number) => t * t * ((s + 1) * t - s);
+const elasticOut = (t: number, a = 2, p = 0.6) => {
+  if (t <= 0) return 0; if (t >= 1) return 1;
+  const s = (p / (2 * Math.PI)) * Math.asin(1 / a);
+  return a * Math.pow(2, -10 * t) * Math.sin(((t - s) * (2 * Math.PI)) / p) + 1;
+};
+
+export const FallingItems: React.FC<FallingItemsProps> = ({
+  text, drops, background = "#FFFFFF", color = "#111111", every = 6, size = 260, font = "fonts/Manrope.woff2", fontSize = 92, fromTop = false, sources = 1,
+}) => {
+  const frame = useCurrentFrame();
+  const { fps, width, height } = useVideoConfig();
+  const [handle] = useState(() => delayRender("Cargando tipografía"));
+  const isFile = /\.(woff2?|otf|ttf)$/.test(font);
+  useEffect(() => {
+    if (!isFile) { continueRender(handle); return; }
+    new FontFace("FI-Font", `url(${staticFile(font)})`).load().then((f) => { document.fonts.add(f); continueRender(handle); }).catch(() => continueRender(handle));
+  }, [font, handle, isFile]);
+  const family = `${isFile ? "FI-Font" : font}, Helvetica, Arial, sans-serif`;
+
+  // Cursor invisible (curva suave) por la parte de arriba y media de la pantalla
+  // fromTop: varias fuentes justo arriba de la pantalla que se mueven de lado a lado (cada una en su franja)
+  const cursor = (f: number, j = 0) => {
+    const s = f / fps;
+    if (fromTop) {
+      const lane = (j + 0.5) / sources;
+      return { x: width * (0.12 + 0.76 * lane) + Math.sin(s * (1.3 + j * 0.4) + j * 2.1) * width * (0.3 / sources), y: -size * 0.6 };
+    }
+    return { x: width / 2 + Math.sin(s * 1.7) * width * 0.36, y: height * 0.42 + Math.sin(s * 1.1 + 0.6) * height * 0.26 };
+  };
+  const rnd = (k: number) => { const x = Math.sin(k * 12.9898) * 43758.5453; return x - Math.floor(x); };
+  const life1 = Math.round(fps * (fromTop ? 0.75 : 0.4)), life2 = Math.round(fps * 0.3); // desde arriba recorre más pantalla
+
+  const items: React.ReactNode[] = [];
+  for (let k = 0; ; k++) {
+    const born = k * every;
+    if (born > frame) break;
+    const t = frame - born;
+    if (t > life1 + life2) continue;
+    const j = k % Math.max(1, sources);
+    const a = cursor(born, j), b = cursor(born - 2, j);
+    const dx = (a.x - b.x) * 1.5;
+    const d = drops[k % drops.length];
+    const ox = (rnd(k) - 0.5) * 0.8 * size, rot0 = (rnd(k + 9) - 0.5) * 20, rot1 = (rnd(k + 17) - 0.5) * 40;
+    let x: number, y: number, sc: number, rot: number;
+    if (t <= life1) {
+      const p = t / life1;
+      sc = fromTop ? 1 - 0.1 * p : 1.3 - 0.3 * elasticOut(p) - 0.1 * p;                        // aparece grande y se acomoda con rebote
+      x = a.x + ox + dx * 2 * power1In(p);
+      y = a.y + (height - size * 0.95 - a.y) * backIn(p, 1.1);          // cae hasta tocar el borde de abajo
+      rot = rot0 * (1 - p);
+    } else {
+      const p = (t - life1) / life2;
+      sc = 0.9;
+      x = a.x + ox + dx * 2 + dx * 1.6 * power1In(p);
+      y = height - size * 0.95 + size * 1.6 * backIn(p, 1.5 + (1 - a.y / height));  // rebota y sale por abajo
+      rot = rot1 * p;
+    }
+    const box: React.CSSProperties = { position: "absolute", left: x - size / 2, top: y - size / 2, width: size, height: size, transform: `rotate(${rot}deg) scale(${sc})`, zIndex: 5 };
+    if (d.likes) {
+      items.push(
+        <div key={k} style={{ ...box, height: size * 0.42, top: y - size * 0.21, borderRadius: 999, background: "#111111", color: "#FFFFFF", display: "flex", alignItems: "center", justifyContent: "center", gap: size * 0.06, fontFamily: family, fontWeight: 700, fontSize: size * 0.17 }}>
+          <Icons.Heart size={size * 0.17} fill="#FCB5B9" color="#FCB5B9" />{d.likes}
+        </div>);
+    } else if (d.icon) {
+      const Icon = (Icons as unknown as Record<string, React.FC<{ size?: number; strokeWidth?: number }>>)[d.icon] ?? Icons.Heart;
+      items.push(<div key={k} style={{ ...box, borderRadius: "22%", background: d.bg ?? "#4059F1", color: d.color ?? "#FFFFFF", display: "flex", alignItems: "center", justifyContent: "center" }}><Icon size={size * 0.42} strokeWidth={2} /></div>);
+    } else if (d.src) {
+      items.push(<div key={k} style={{ ...box, borderRadius: "4%", overflow: "hidden" }}><Img src={d.src.startsWith("http") ? d.src : staticFile(d.src)} style={{ width: "100%", height: "100%", objectFit: "cover" }} /></div>);
+    }
+  }
+  const lines = text.split("\n");
+  return (
+    <AbsoluteFill style={{ background, overflow: "hidden" }}>
+      <AbsoluteFill style={{ alignItems: "center", justifyContent: "center" }}>
+        <div style={{ textAlign: "center", fontFamily: family, fontWeight: 600, fontSize, lineHeight: 1.05, letterSpacing: "-0.04em", color }}>
+          {lines.map((l, i) => <div key={i} style={{ color: i === lines.length - 1 && lines.length > 1 ? "#9499AE" : color }}>{l}</div>)}
+        </div>
+      </AbsoluteFill>
+      {items}
+    </AbsoluteFill>
+  );
+};
+
+export const exampleDrops: Drop[] = [
+  { src: "carrusel/foto.jpg" }, { icon: "Heart", bg: "#FCB5B9", color: "#111111" }, { likes: "2.4K" },
+  { src: "carrusel/gorra.jpg" }, { icon: "MessageCircle", bg: "#4059F1" }, { src: "carrusel/rosa.jpg" },
+  { icon: "Send", bg: "#1C1E2A" }, { likes: "18K" }, { src: "carrusel/azul.jpg" }, { icon: "Bookmark", bg: "#E8ECFE", color: "#4059F1" },
+];

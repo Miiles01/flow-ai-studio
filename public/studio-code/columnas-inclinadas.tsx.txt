@@ -1,0 +1,101 @@
+/* ============================================================================
+   CÓMO USAR ESTE COMPONENTE (instrucciones para tu asistente de IA:
+   Claude, Codex, Gemini, Cursor, Antigravity o cualquier otro)
+   ----------------------------------------------------------------------------
+   - Es un componente de Remotion (React). Si el proyecto no tiene Remotion,
+     créalo (npx create-video@latest), copia este archivo en src/
+     y registra una <Composition> de 1080×1920 a 30 fps con estas props.
+   - Fotos e íconos van en public/ y se pasan en "items":
+       { src: "carpeta/foto.jpg" }                       → tarjeta con foto
+       { color: "#4059F1", icon: "icono.svg", iconColor: "#FFF" } → tarjeta de color con un ícono SVG de una tinta
+   - Personaliza SOLO con las props de abajo; no cambies las curvas de movimiento
+     salvo que el usuario lo pida.
+   - background: color de fondo (por defecto negro).
+   - shadeColor: color de la sombra de arriba (por defecto el mismo del fondo).
+   - shadeReach: hasta dónde baja la sombra (0.62 = un poco más de la mitad).
+   - columns / cardSize / gap / speed: columnas, tamaño, separación y velocidad.
+   - Para renderizar: npx remotion render src/index.ts <Id> out/video.mp4
+   ========================================================================== */
+// Columnas inclinadas en 3D para video (Remotion) · Miiles Estudio · inspirado en "Vertical Auto-Slider Up / Down 3D Animate" de timhjellum
+// Cinco columnas de tarjetas sobre un plano inclinado; las columnas pares suben y las impares bajan, sin parar.
+// Va sobre negro: la oscuridad hace que las tarjetas resalten. Se desvanece arriba y abajo.
+import React from "react";
+import { AbsoluteFill, useCurrentFrame, Img, staticFile } from "remotion";
+
+export type Card = { src?: string; color?: string; icon?: string; iconColor?: string };
+
+/** Contenido de una tarjeta: foto, o color sólido con un ícono SVG de una tinta. */
+export const CardFace: React.FC<{ item: Card; iconSize?: string }> = ({ item, iconSize = "40%" }) => (
+  <>
+    {item.src && <Img src={item.src.startsWith("http") ? item.src : staticFile(item.src)} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />}
+    {item.icon && (
+      <div
+        style={{
+          position: "absolute", left: "50%", top: "50%", width: iconSize, aspectRatio: "1 / 1",
+          transform: "translate(-50%, -50%)", background: item.iconColor ?? "#fff",
+          WebkitMaskImage: `url(${staticFile(item.icon)})`, maskImage: `url(${staticFile(item.icon)})`,
+          WebkitMaskSize: "contain", maskSize: "contain", WebkitMaskRepeat: "no-repeat", maskRepeat: "no-repeat",
+          WebkitMaskPosition: "center", maskPosition: "center",
+        }}
+      />
+    )}
+  </>
+);
+
+// Tarjetas de ejemplo (cámbialas por tus fotos e íconos en public/)
+export const exampleItems: Card[] = [
+  { src: "carrusel/foto.jpg" },
+  { color: "#4059F1", icon: "carrusel/estrella.svg", iconColor: "#FCB5B9" },
+  { src: "carrusel/rosa.jpg" },
+  { color: "#FCB5B9", icon: "carrusel/flor.svg", iconColor: "#4059F1" },
+  { src: "carrusel/azul.jpg" },
+  { color: "#1C1E2A", icon: "carrusel/miiles.svg", iconColor: "#FCB5B9" },
+  { color: "#4059F1", icon: "carrusel/flor.svg", iconColor: "#FFFFFF" },
+  { src: "carrusel/gorra.jpg" },
+  { color: "#FCB5B9", icon: "carrusel/estrella.svg", iconColor: "#1C1E2A" },
+  { src: "carrusel/azul.jpg" },
+];
+
+export type TiltedColumnsProps = { items: Card[]; background?: string; shadeColor?: string; shadeReach?: number; columns?: number; cardSize?: number; gap?: number; speed?: number };
+
+export const TiltedColumns: React.FC<TiltedColumnsProps> = ({ items, background = "#000000", shadeColor, shadeReach = 0.62, columns = 5, cardSize = 360, gap = 22, speed = 2.2 }) => {
+  const frame = useCurrentFrame();
+  const rows = 9;
+  const pitch = cardSize + gap;
+  const loop = pitch * items.length;
+  const fade = "linear-gradient(to bottom, transparent 0%, #000 22%, #000 78%, transparent 100%)";
+  return (
+    <AbsoluteFill style={{ background, overflow: "hidden" }}>
+      {/* La máscara va solo sobre las columnas; el fondo queda sólido, así el desvanecido toma el color del fondo */}
+      <AbsoluteFill style={{ WebkitMaskImage: fade, maskImage: fade }}>
+      <div style={{
+        position: "absolute", left: "50%", top: "50%", width: columns * pitch, height: rows * pitch,
+        marginLeft: -(columns * pitch) / 2, marginTop: -(rows * pitch) / 2,
+        transform: "perspective(1800px) rotateX(40deg) rotateY(14deg) rotate(-22deg)", transformStyle: "preserve-3d",
+        display: "flex", gap,
+      }}>
+        {Array.from({ length: columns }, (_, c) => {
+          const dir = c % 2 === 0 ? -1 : 1;
+          const offset = (((frame * speed * dir) % loop) + loop) % loop - loop;
+          return (
+            <div key={c} style={{ position: "relative", width: cardSize, height: "100%", overflow: "visible", paddingTop: c % 2 ? pitch / 2 : 0 }}>
+              <div style={{ transform: `translateY(${offset}px)`, display: "flex", flexDirection: "column", gap }}>
+                {Array.from({ length: items.length * 3 }, (_, k) => {
+                  const item = items[(k + c * 3) % items.length];
+                  return (
+                    <div key={k} style={{ position: "relative", width: cardSize, height: cardSize, borderRadius: 18, overflow: "hidden", background: item.color ?? "#222" }}>
+                      <CardFace item={item} iconSize="44%" />
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+          );
+        })}
+      </div>
+      </AbsoluteFill>
+      {/* Sombra oscura que cubre la mitad de arriba: el movimiento se ve sobre todo abajo */}
+      <AbsoluteFill style={{ background: `linear-gradient(to bottom, ${shadeColor ?? background} 0%, ${shadeColor ?? background}eb ${shadeReach * 48}%, ${shadeColor ?? background}8c ${shadeReach * 74}%, ${shadeColor ?? background}00 ${shadeReach * 100}%)` }} />
+    </AbsoluteFill>
+  );
+};
