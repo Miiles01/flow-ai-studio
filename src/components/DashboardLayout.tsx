@@ -13,7 +13,7 @@ import { NavLink } from "@/components/NavLink";
 import { toast } from "sonner";
 import { ThemeProvider, useTheme } from "@/contexts/ThemeContext";
 import { QuickSettings } from "@/components/QuickSettings";
-import { InstallAppBanner } from "@/components/InstallAppBanner";
+// import { InstallAppBanner } from "@/components/InstallAppBanner"; // oculto a pedido de Manuel: el aviso "Instala Miiles" no debe aparecer
 import {
   Sidebar,
   SidebarContent,
@@ -245,8 +245,8 @@ function DashboardContent({ children }: { children: ReactNode }) {
           <div className="fixed top-5 right-6 z-50">
             <QuickSettings />
           </div>
-          <main className="dashboard-scope flex-1 overflow-y-auto">
-            <InstallAppBanner />
+            <main className="dashboard-scope flex-1 overflow-y-auto">
+            {/* <InstallAppBanner /> // oculto a pedido de Manuel */}
             {children}
           </main>
         </div>

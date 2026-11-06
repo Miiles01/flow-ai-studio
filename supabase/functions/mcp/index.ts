@@ -18,7 +18,8 @@ var studio_templates_default = [
     thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v19.jpg",
     preview_url: "https://wearemiiles.com/ugc-v19/",
     download_url: "https://wearemiiles.com/studio/descargas/ugc-v19.zip",
-    template_number: 19
+    template_number: 19,
+    preview_video_url: "https://wearemiiles.com/studio/previews/ugc-v19.mp4"
   },
   {
     slug: "portafolio-ugc-v22",
@@ -28,7 +29,8 @@ var studio_templates_default = [
     thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v22.jpg",
     preview_url: "https://wearemiiles.com/ugc-v22/",
     download_url: "https://wearemiiles.com/studio/descargas/ugc-v22.zip",
-    template_number: 22
+    template_number: 22,
+    preview_video_url: "https://wearemiiles.com/studio/previews/ugc-v22.mp4"
   },
   {
     slug: "portafolio-ugc-v21",
@@ -38,7 +40,8 @@ var studio_templates_default = [
     thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v21.jpg",
     preview_url: "https://wearemiiles.com/ugc-v21/",
     download_url: "https://wearemiiles.com/studio/descargas/ugc-v21.zip",
-    template_number: 21
+    template_number: 21,
+    preview_video_url: "https://wearemiiles.com/studio/previews/ugc-v21.mp4"
   },
   {
     slug: "portafolio-ugc-v20",
@@ -48,7 +51,8 @@ var studio_templates_default = [
     thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v20.jpg",
     preview_url: "https://wearemiiles.com/ugc-v20/",
     download_url: "https://wearemiiles.com/studio/descargas/ugc-v20.zip",
-    template_number: 20
+    template_number: 20,
+    preview_video_url: "https://wearemiiles.com/studio/previews/ugc-v20.mp4"
   },
   {
     slug: "portafolio-ugc-v23",
@@ -58,7 +62,8 @@ var studio_templates_default = [
     thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v23.jpg",
     preview_url: "https://wearemiiles.com/ugc-v23/",
     download_url: "https://wearemiiles.com/studio/descargas/ugc-v23.zip",
-    template_number: 23
+    template_number: 23,
+    preview_video_url: "https://wearemiiles.com/studio/previews/ugc-v23.mp4"
   },
   {
     slug: "portafolio-ugc-v18",
@@ -68,7 +73,8 @@ var studio_templates_default = [
     thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v18.jpg",
     preview_url: "https://wearemiiles.com/ugc-v18/",
     download_url: "https://wearemiiles.com/studio/descargas/ugc-v18.zip",
-    template_number: 18
+    template_number: 18,
+    preview_video_url: "https://wearemiiles.com/studio/previews/ugc-v18.mp4"
   },
   {
     slug: "portafolio-ugc-v17",
@@ -78,7 +84,8 @@ var studio_templates_default = [
     thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v17.jpg",
     preview_url: "https://wearemiiles.com/ugc-v17/",
     download_url: "https://wearemiiles.com/studio/descargas/ugc-v17.zip",
-    template_number: 17
+    template_number: 17,
+    preview_video_url: "https://wearemiiles.com/studio/previews/ugc-v17.mp4"
   },
   {
     slug: "portafolio-ugc-v16",
@@ -88,7 +95,8 @@ var studio_templates_default = [
     thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v16.jpg",
     preview_url: "https://wearemiiles.com/ugc-v16/",
     download_url: "https://wearemiiles.com/studio/descargas/ugc-v16.zip",
-    template_number: 16
+    template_number: 16,
+    preview_video_url: "https://wearemiiles.com/studio/previews/ugc-v16.mp4"
   },
   {
     slug: "portafolio-ugc-v15",
@@ -98,7 +106,8 @@ var studio_templates_default = [
     thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v15.jpg",
     preview_url: "https://wearemiiles.com/ugc-v15/",
     download_url: "https://wearemiiles.com/studio/descargas/ugc-v15.zip",
-    template_number: 15
+    template_number: 15,
+    preview_video_url: "https://wearemiiles.com/studio/previews/ugc-v15.mp4"
   },
   {
     slug: "portafolio-ugc-v14",
@@ -108,7 +117,8 @@ var studio_templates_default = [
     thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v14.jpg",
     preview_url: "https://wearemiiles.com/ugc-v14/",
     download_url: "https://wearemiiles.com/studio/descargas/ugc-v14.zip",
-    template_number: 14
+    template_number: 14,
+    preview_video_url: "https://wearemiiles.com/studio/previews/ugc-v14.mp4"
   },
   {
     slug: "portafolio-ugc-v13",
@@ -118,7 +128,8 @@ var studio_templates_default = [
     thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v13.jpg",
     preview_url: "https://wearemiiles.com/ugc-v13/",
     download_url: "https://wearemiiles.com/studio/descargas/ugc-v13.zip",
-    template_number: 13
+    template_number: 13,
+    preview_video_url: "https://wearemiiles.com/studio/previews/ugc-v13.mp4"
   },
   {
     slug: "portafolio-ugc-v12",
@@ -128,7 +139,8 @@ var studio_templates_default = [
     thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v12.jpg",
     preview_url: "https://ugc12.lovable.app/",
     download_url: "https://wearemiiles.com/studio/descargas/ugc-v12.zip",
-    template_number: 12
+    template_number: 12,
+    preview_video_url: "https://wearemiiles.com/studio/previews/ugc-v12.mp4"
   },
   {
     slug: "portafolio-ugc-v11",
@@ -138,7 +150,8 @@ var studio_templates_default = [
     thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v11.jpg",
     preview_url: "https://ugc11.lovable.app/",
     download_url: "https://wearemiiles.com/studio/descargas/ugc-v11.zip",
-    template_number: 11
+    template_number: 11,
+    preview_video_url: "https://wearemiiles.com/studio/previews/ugc-v11.mp4"
   },
   {
     slug: "portafolio-ugc-v10",
@@ -148,7 +161,8 @@ var studio_templates_default = [
     thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v10.jpg",
     preview_url: "https://ugc10.lovable.app/",
     download_url: "https://wearemiiles.com/studio/descargas/ugc-v10.zip",
-    template_number: 10
+    template_number: 10,
+    preview_video_url: "https://wearemiiles.com/studio/previews/ugc-v10.mp4"
   },
   {
     slug: "portafolio-ugc-v9",
@@ -158,7 +172,8 @@ var studio_templates_default = [
     thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v9.jpg",
     preview_url: "https://wearemiiles.com/ugc-v9/",
     download_url: "https://wearemiiles.com/studio/descargas/ugc-v9.zip",
-    template_number: 9
+    template_number: 9,
+    preview_video_url: "https://wearemiiles.com/studio/previews/ugc-v9.mp4"
   },
   {
     slug: "portafolio-ugc-v8",
@@ -168,7 +183,8 @@ var studio_templates_default = [
     thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v8.jpg",
     preview_url: "https://wearemiiles.com/ugc-v8/",
     download_url: "https://wearemiiles.com/studio/descargas/ugc-v8.zip",
-    template_number: 8
+    template_number: 8,
+    preview_video_url: "https://wearemiiles.com/studio/previews/ugc-v8.mp4"
   },
   {
     slug: "portafolio-ugc-v7",
@@ -178,7 +194,8 @@ var studio_templates_default = [
     thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v7.jpg",
     preview_url: "https://wearemiiles.com/ugc-v7/",
     download_url: "https://wearemiiles.com/studio/descargas/ugc-v7.zip",
-    template_number: 7
+    template_number: 7,
+    preview_video_url: "https://wearemiiles.com/studio/previews/ugc-v7.mp4"
   },
   {
     slug: "portafolio-ugc-v6",
@@ -188,7 +205,8 @@ var studio_templates_default = [
     thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v6.jpg",
     preview_url: "https://wearemiiles.com/ugc-v6/",
     download_url: "https://wearemiiles.com/studio/descargas/ugc-v6.zip",
-    template_number: 6
+    template_number: 6,
+    preview_video_url: "https://wearemiiles.com/studio/previews/ugc-v6.mp4"
   },
   {
     slug: "portafolio-ugc-v5",
@@ -198,7 +216,8 @@ var studio_templates_default = [
     thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v5.jpg",
     preview_url: "https://wearemiiles.com/ugc-v5/",
     download_url: "https://wearemiiles.com/studio/descargas/ugc-v5.zip",
-    template_number: 5
+    template_number: 5,
+    preview_video_url: "https://wearemiiles.com/studio/previews/ugc-v5.mp4"
   },
   {
     slug: "portafolio-ugc-v4",
@@ -208,7 +227,8 @@ var studio_templates_default = [
     thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v4.jpg",
     preview_url: "https://wearemiiles.com/ugc-v4/",
     download_url: "https://wearemiiles.com/studio/descargas/ugc-v4.zip",
-    template_number: 4
+    template_number: 4,
+    preview_video_url: "https://wearemiiles.com/studio/previews/ugc-v4.mp4"
   },
   {
     slug: "portafolio-ugc-v3",
@@ -218,7 +238,8 @@ var studio_templates_default = [
     thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v3.jpg",
     preview_url: "https://wearemiiles.com/ugc-v3/",
     download_url: "https://wearemiiles.com/studio/descargas/ugc-v3.zip",
-    template_number: 3
+    template_number: 3,
+    preview_video_url: "https://wearemiiles.com/studio/previews/ugc-v3.mp4"
   },
   {
     slug: "portafolio-ugc-v2",
@@ -228,7 +249,8 @@ var studio_templates_default = [
     thumbnail_url: "https://wearemiiles.com/studio/thumbs/ugc-v2.jpg",
     preview_url: "https://wearemiiles.com/ugc-v2/",
     download_url: "https://wearemiiles.com/studio/descargas/ugc-v2.zip",
-    template_number: 2
+    template_number: 2,
+    preview_video_url: "https://wearemiiles.com/studio/previews/ugc-v2.mp4"
   }
 ];
 
