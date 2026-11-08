@@ -22,6 +22,11 @@
 import React from "react";
 import { AbsoluteFill, Easing, Img, interpolate, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 
+// Archivos: si la ruta empieza con http se usa tal cual (los ejemplos viven en wearemiiles.com y funcionan sin copiar nada);
+// si es una ruta local (p. ej. "fotos/mia.jpg"), se busca en la carpeta public/ de tu proyecto.
+const archivo = (p: string) => (/^https?:\/\//.test(p) ? p : staticFile(p));
+
+
 // icon: un SVG de una sola tinta (se pinta del color iconColor con una máscara)
 export type CarouselItem = { src?: string; color?: string; icon?: string; iconColor?: string };
 
@@ -90,14 +95,14 @@ export const CircularCarousel: React.FC<CircularCarouselProps> = ({
               transform: `rotate(${angle}rad)`,
             }}
           >
-            {item.src && <Img src={item.src.startsWith("http") ? item.src : staticFile(item.src)} style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
+            {item.src && <Img src={item.src.startsWith("http") ? item.src : archivo(item.src)} style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
             {item.icon && (
               <div
                 style={{
                   position: "absolute", left: "50%", top: "50%", width: "42%", aspectRatio: "1 / 1",
                   transform: "translate(-50%, -50%)",
                   background: item.iconColor ?? "#fff",
-                  WebkitMaskImage: `url(${staticFile(item.icon)})`, maskImage: `url(${staticFile(item.icon)})`,
+                  WebkitMaskImage: `url(${archivo(item.icon)})`, maskImage: `url(${archivo(item.icon)})`,
                   WebkitMaskSize: "contain", maskSize: "contain",
                   WebkitMaskRepeat: "no-repeat", maskRepeat: "no-repeat",
                   WebkitMaskPosition: "center", maskPosition: "center",
@@ -113,14 +118,14 @@ export const CircularCarousel: React.FC<CircularCarouselProps> = ({
 
 // Ejemplo con los colores de marca de Miiles (azul #4059F1, rosa #FCB5B9, azul claro #E8ECFE, rosa claro #FEEDED)
 export const defaultItems: CarouselItem[] = [
-  { src: "carrusel/foto.jpg" },
-  { color: "#4059F1", icon: "carrusel/estrella.svg", iconColor: "#FCB5B9" },
-  { src: "carrusel/rosa.jpg" },
-  { color: "#FCB5B9", icon: "carrusel/flor.svg", iconColor: "#4059F1" },
-  { src: "carrusel/azul.jpg" },
-  { color: "#1C1E2A", icon: "carrusel/miiles.svg", iconColor: "#FCB5B9" },
-  { src: "carrusel/foto.jpg" },
-  { color: "#4059F1", icon: "carrusel/flor.svg", iconColor: "#FFFFFF" },
-  { src: "carrusel/rosa.jpg" },
-  { color: "#FCB5B9", icon: "carrusel/estrella.svg", iconColor: "#1C1E2A" },
+  { src: "https://wearemiiles.com/studio/componentes/assets/foto.jpg" },
+  { color: "#4059F1", icon: "https://wearemiiles.com/studio/componentes/assets/estrella.svg", iconColor: "#FCB5B9" },
+  { src: "https://wearemiiles.com/studio/componentes/assets/rosa.jpg" },
+  { color: "#FCB5B9", icon: "https://wearemiiles.com/studio/componentes/assets/flor.svg", iconColor: "#4059F1" },
+  { src: "https://wearemiiles.com/studio/componentes/assets/azul.jpg" },
+  { color: "#1C1E2A", icon: "https://wearemiiles.com/studio/componentes/assets/miiles.svg", iconColor: "#FCB5B9" },
+  { src: "https://wearemiiles.com/studio/componentes/assets/foto.jpg" },
+  { color: "#4059F1", icon: "https://wearemiiles.com/studio/componentes/assets/flor.svg", iconColor: "#FFFFFF" },
+  { src: "https://wearemiiles.com/studio/componentes/assets/rosa.jpg" },
+  { color: "#FCB5B9", icon: "https://wearemiiles.com/studio/componentes/assets/estrella.svg", iconColor: "#1C1E2A" },
 ];

@@ -24,6 +24,11 @@
 import React, { useEffect, useState } from "react";
 import { AbsoluteFill, continueRender, delayRender, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 
+// Archivos: si la ruta empieza con http se usa tal cual (los ejemplos viven en wearemiiles.com y funcionan sin copiar nada);
+// si es una ruta local (p. ej. "fotos/mia.jpg"), se busca en la carpeta public/ de tu proyecto.
+const archivo = (p: string) => (/^https?:\/\//.test(p) ? p : staticFile(p));
+
+
 export type ElasticStackProps = {
   text: string;
   copies?: number;
@@ -40,7 +45,7 @@ export type ElasticStackProps = {
 const inOut = (x: number) => (x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2);
 
 export const ElasticStack: React.FC<ElasticStackProps> = ({
-  text, copies = 3, background = "#FFFFFF", color = "#111111", font = "fonts/Anton.woff2",
+  text, copies = 3, background = "#FFFFFF", color = "#111111", font = "https://wearemiiles.com/studio/componentes/assets/Anton.woff2",
   stretch = 0.75, seconds = 2.5, gap = 14, safeArea = true,
 }) => {
   const frame = useCurrentFrame();
@@ -65,7 +70,7 @@ export const ElasticStack: React.FC<ElasticStackProps> = ({
       continueRender(handle);
     };
     if (!isFile) { measure(); return; }
-    new FontFace("ES-Font", `url(${staticFile(font)})`).load().then((f) => { document.fonts.add(f); measure(); }).catch(() => continueRender(handle));
+    new FontFace("ES-Font", `url(${archivo(font)})`).load().then((f) => { document.fonts.add(f); measure(); }).catch(() => continueRender(handle));
   }, [font, handle, isFile]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const left = safeArea ? 200 : 60, top = safeArea ? 300 : 60;

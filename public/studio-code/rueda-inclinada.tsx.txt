@@ -1,0 +1,148 @@
+/* ============================================================================
+   CÓMO USAR ESTE COMPONENTE (instrucciones para tu asistente de IA:
+   Claude, Codex, Gemini, Cursor, Antigravity o cualquier otro)
+   ----------------------------------------------------------------------------
+   - Componente de Remotion (React) para video vertical 1080×1920 a 30 fps.
+     Si el proyecto no tiene Remotion, créalo (npx create-video@latest), copia este
+     archivo en src/ y registra una <Composition> con estas props.
+   - Rueda 3D inclinada de fotos: las fotos viajan sobre un aro que se ve como una
+     elipse (todas miran de frente a la cámara y se encimen según su profundidad).
+     Al inicio está quieta y muy cerca: se ve una sola foto en grande. Luego la cámara
+     se aleja y el aro queda al centro como anillo: gira, se inclina más y menos, se
+     ladea apenas y se voltea con calma (se ve desde abajo) y luego regresa; siempre
+     centrado y como óvalo, y de lejos se ve completo sin cortar tarjetas (lejos).
+     Al acercarse al final las fotos siguen pasando hasta detenerse en la primera. Al final se acerca de
+     nuevo a una foto, así el video hace un bucle perfecto.
+   - "items": fotos (src) o tarjetas de color con ícono (ver el bloque de tarjetas en este archivo).
+   - Ajustes: background, cardWidth / cardHeight (px), radius (px del aro), tilt
+     (inclinación en grados; bajo = óvalo más aplastado), hold (cuadros quieta al inicio), zoomIn (acercamiento
+     inicial), spread (cuánto se separan al girar, 0-1), turns (vueltas en el video).
+   - Duración recomendada: tiltWheelDuration(props).
+   - Para renderizar: npx remotion render src/index.ts TiltWheel out/video.mp4
+   ========================================================================== */
+// Rueda inclinada (Remotion) · Miiles Estudio · inspirado en el efecto 106 "3D Tilt Wheel" de Made With GSAP
+import React from "react";
+import { AbsoluteFill, Easing, interpolate, useCurrentFrame, useVideoConfig, Img, staticFile } from "remotion";
+
+// Archivos: si la ruta empieza con http se usa tal cual (los ejemplos viven en wearemiiles.com y funcionan sin copiar nada);
+// si es una ruta local (p. ej. "fotos/mia.jpg"), se busca en la carpeta public/ de tu proyecto.
+const archivo = (p: string) => (/^https?:\/\//.test(p) ? p : staticFile(p));
+
+
+// ---- Tarjetas (foto, o color con ícono SVG) ----
+export type Card = { src?: string; color?: string; icon?: string; iconColor?: string };
+
+/** Contenido de una tarjeta: foto, o color sólido con un ícono SVG de una tinta. */
+export const CardFace: React.FC<{ item: Card; iconSize?: string }> = ({ item, iconSize = "40%" }) => (
+  <>
+    {item.src && <Img src={item.src.startsWith("http") ? item.src : archivo(item.src)} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />}
+    {item.icon && (
+      <div
+        style={{
+          position: "absolute", left: "50%", top: "50%", width: iconSize, aspectRatio: "1 / 1",
+          transform: "translate(-50%, -50%)", background: item.iconColor ?? "#fff",
+          WebkitMaskImage: `url(${archivo(item.icon)})`, maskImage: `url(${archivo(item.icon)})`,
+          WebkitMaskSize: "contain", maskSize: "contain", WebkitMaskRepeat: "no-repeat", maskRepeat: "no-repeat",
+          WebkitMaskPosition: "center", maskPosition: "center",
+        }}
+      />
+    )}
+  </>
+);
+
+export const exampleItems: Card[] = [
+  { src: "https://wearemiiles.com/studio/componentes/assets/foto.jpg" },
+  { color: "#4059F1", icon: "https://wearemiiles.com/studio/componentes/assets/estrella.svg", iconColor: "#FCB5B9" },
+  { src: "https://wearemiiles.com/studio/componentes/assets/rosa.jpg" },
+  { color: "#FCB5B9", icon: "https://wearemiiles.com/studio/componentes/assets/flor.svg", iconColor: "#4059F1" },
+  { src: "https://wearemiiles.com/studio/componentes/assets/azul.jpg" },
+  { color: "#1C1E2A", icon: "https://wearemiiles.com/studio/componentes/assets/miiles.svg", iconColor: "#FCB5B9" },
+  { color: "#4059F1", icon: "https://wearemiiles.com/studio/componentes/assets/flor.svg", iconColor: "#FFFFFF" },
+  { src: "https://wearemiiles.com/studio/componentes/assets/gorra.jpg" },
+  { color: "#FCB5B9", icon: "https://wearemiiles.com/studio/componentes/assets/estrella.svg", iconColor: "#1C1E2A" },
+  { src: "https://wearemiiles.com/studio/componentes/assets/azul.jpg" },
+];
+
+
+export type TiltWheelProps = {
+  items: Card[];
+  background?: string;
+  cardWidth?: number;
+  cardHeight?: number;
+  radius?: number;
+  tilt?: number;
+  hold?: number;
+  zoomIn?: number;
+  spread?: number;
+  turns?: number;
+  lejos?: number;
+};
+
+export function tiltWheelDuration(p: Partial<TiltWheelProps>) {
+  return 330 + (p.hold ?? 36);
+}
+
+const SUAVE = Easing.bezier(0.65, 0, 0.35, 1);
+const PERSPECTIVA = 2200;
+
+export const TiltWheel: React.FC<TiltWheelProps> = ({
+  items, background = "#FFFFFF", cardWidth = 300, cardHeight = 380, radius = 520, tilt = 22, hold = 36, zoomIn = 2.6, spread = 0.25, turns = 2, lejos = 0.58,
+}) => {
+  const frame = useCurrentFrame();
+  const { width, height, durationInFrames } = useVideoConfig();
+  const n = items.length;
+
+  // fases: quieta y cerca → se aleja girando → gira → se acerca otra vez (bucle)
+  const salida = 60, entrada = 66;
+  const fin = durationInFrames - entrada;
+  const alejar = frame < hold ? 0 : frame < hold + salida ? SUAVE((frame - hold) / salida) : frame < fin ? 1 : 1 - SUAVE((frame - fin) / entrada);
+
+  // giro total: vueltas completas → termina con la misma foto al frente (bucle). La curva frena
+  // tarde: mientras la cámara se acerca las fotos siguen pasando y solo se detienen al final.
+  const GIRO = Easing.bezier(0.42, 0, 0.78, 1);
+  const g = frame < hold ? 0 : GIRO(Math.min(1, (frame - hold) / (durationInFrames - hold)));
+  const giro = 2 * Math.PI * turns * g;
+
+  // de lejos el anillo se ve completo y más chico, sin cortar tarjetas
+  const camara = interpolate(alejar, [0, 1], [zoomIn, lejos]);
+
+  // el aro se voltea de repente: la inclinación se invierte (se ve desde abajo) mientras sube,
+  // luego se voltea de nuevo y baja, y vuelve al centro al acercarse
+  const D = durationInFrames;
+  // volteos tranquilos (≈1.5 s cada uno); siempre centrado
+  const v1 = D * 0.34, v2 = D * 0.60, rapido = 46;
+  const marcas = [0, v1, v1 + rapido, v2, v2 + rapido, D];
+  const signo = interpolate(frame, marcas, [1, 1, -1, -1, 1, 1], { easing: SUAVE, extrapolateLeft: "clamp", extrapolateRight: "clamp" });
+  const flota = 0;
+  const ola = (vel: number, fase = 0) => Math.sin((frame / D) * Math.PI * 2 * vel + fase);
+  const inclinacionGrados = (tilt + ola(2) * 5) * signo;      // 17°–27°: siempre óvalo aplastado (al voltear pasa por una línea, nunca por círculo)
+  const inclinacion = ((inclinacionGrados * alejar) * Math.PI) / 180;
+  const r = radius * (1 + spread * alejar);
+  const deriva = ola(1, 0.6) * 5 * alejar;                      // se ladea apenas
+
+  const fichas = items.map((item, i) => {
+    const th = (i / n) * 2 * Math.PI - giro;
+    const x = r * Math.sin(th);
+    const z0 = r * Math.cos(th);                              // de frente = z positivo (más cerca)
+    const y = -z0 * Math.sin(inclinacion) + 0;                // el aro inclinado: lo cercano baja, lo lejano sube
+    const z = z0 * Math.cos(inclinacion);
+    const k = PERSPECTIVA / (PERSPECTIVA - z);               // proyección
+    return { item, i, x: x * k, y: (y * -1) * k, z, k };
+  }).sort((a, b) => a.z - b.z);
+
+  return (
+    <AbsoluteFill style={{ background, overflow: "hidden" }}>
+      <div style={{ position: "absolute", left: width / 2, top: height / 2 + flota, transform: `scale(${camara}) rotate(${deriva}deg)` }}>
+        {fichas.map(({ item, i, x, y, k }) => (
+          <div key={i} style={{
+            position: "absolute", left: x - (cardWidth * k) / 2, top: y - (cardHeight * k) / 2,
+            width: cardWidth * k, height: cardHeight * k, borderRadius: 16 * k, overflow: "hidden",
+            background: item.color ?? "#EEEFF2",
+          }}>
+            <CardFace item={item} />
+          </div>
+        ))}
+      </div>
+    </AbsoluteFill>
+  );
+};

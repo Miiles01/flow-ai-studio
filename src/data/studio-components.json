@@ -9,7 +9,7 @@
     "code_url": "https://wearemiiles.com/studio/componentes/carrusel-circular.tsx.txt",
     "code_filename": "CircularCarousel.tsx",
     "stack": "Remotion + React, 1080×1920 a 30 fps",
-    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps, pon mis fotos e íconos SVG en public/ y cámbialos en la lista de tarjetas. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "instruction": "Pon mis fotos e íconos SVG en public/ y cámbialos en la lista de tarjetas. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
     "customize": [
       "Cambia las fotos y las tarjetas de color con ícono en la lista de tarjetas",
       "Cambia el color de fondo: los desvanecidos toman ese mismo color",
@@ -27,7 +27,7 @@
     "code_url": "https://wearemiiles.com/studio/componentes/espiral-3d.tsx.txt",
     "code_filename": "SpiralCarousel.tsx",
     "stack": "Remotion + React, 1080×1920 a 30 fps",
-    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps, pon mis fotos e íconos SVG en public/ y cámbialos en la lista de tarjetas. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "instruction": "Pon mis fotos e íconos SVG en public/ y cámbialos en la lista de tarjetas. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
     "customize": [
       "Cambia las fotos y las tarjetas de color con ícono en la lista de tarjetas",
       "Cambia el color de fondo: los desvanecidos toman ese mismo color",
@@ -45,7 +45,7 @@
     "code_url": "https://wearemiiles.com/studio/componentes/abanico.tsx.txt",
     "code_filename": "FanCarousel.tsx",
     "stack": "Remotion + React, 1080×1920 a 30 fps",
-    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps, pon mis fotos e íconos SVG en public/ y cámbialos en la lista de tarjetas. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "instruction": "Pon mis fotos e íconos SVG en public/ y cámbialos en la lista de tarjetas. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
     "customize": [
       "Cambia las fotos y las tarjetas de color con ícono en la lista de tarjetas",
       "Cambia el color de fondo: los desvanecidos toman ese mismo color",
@@ -63,7 +63,7 @@
     "code_url": "https://wearemiiles.com/studio/componentes/rueda-3d.tsx.txt",
     "code_filename": "WheelCarousel.tsx",
     "stack": "Remotion + React, 1080×1920 a 30 fps",
-    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps, pon mis fotos e íconos SVG en public/ y cámbialos en la lista de tarjetas. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "instruction": "Pon mis fotos e íconos SVG en public/ y cámbialos en la lista de tarjetas. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
     "customize": [
       "Cambia las fotos y las tarjetas de color con ícono en la lista de tarjetas",
       "Cambia el color de fondo: los desvanecidos toman ese mismo color",
@@ -81,7 +81,7 @@
     "code_url": "https://wearemiiles.com/studio/componentes/rueda-3d.tsx.txt",
     "code_filename": "WheelCarousel.tsx",
     "stack": "Remotion + React, 1080×1920 a 30 fps",
-    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps, pon mis fotos e íconos SVG en public/ y cámbialos en la lista de tarjetas. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "instruction": "Pon mis fotos e íconos SVG en public/ y cámbialos en la lista de tarjetas. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
     "customize": [
       "Cambia las fotos y las tarjetas de color con ícono en la lista de tarjetas",
       "Cambia el color de fondo: los desvanecidos toman ese mismo color",
@@ -99,7 +99,7 @@
     "code_url": "https://wearemiiles.com/studio/componentes/pila-3d.tsx.txt",
     "code_filename": "StackSlider.tsx",
     "stack": "Remotion + React, 1080×1920 a 30 fps",
-    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps, pon mis fotos e íconos SVG en public/ y cámbialos en la lista de tarjetas. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "instruction": "Pon mis fotos e íconos SVG en public/ y cámbialos en la lista de tarjetas. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
     "customize": [
       "Cambia las fotos y las tarjetas de color con ícono en la lista de tarjetas",
       "Cambia el color de fondo: los desvanecidos toman ese mismo color",
@@ -117,7 +117,7 @@
     "code_url": "https://wearemiiles.com/studio/componentes/columnas-inclinadas.tsx.txt",
     "code_filename": "TiltedColumns.tsx",
     "stack": "Remotion + React, 1080×1920 a 30 fps",
-    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps, pon mis fotos e íconos SVG en public/ y cámbialos en la lista de tarjetas. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "instruction": "Pon mis fotos e íconos SVG en public/ y cámbialos en la lista de tarjetas. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
     "customize": [
       "Cambia las fotos y las tarjetas de color con ícono en la lista de tarjetas",
       "Cambia el color de fondo: los desvanecidos toman ese mismo color",
@@ -135,7 +135,7 @@
     "code_url": "https://wearemiiles.com/studio/componentes/anillo-interior.tsx.txt",
     "code_filename": "InnerRing.tsx",
     "stack": "Remotion + React, 1080×1920 a 30 fps",
-    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps, pon mis fotos e íconos SVG en public/ y cámbialos en la lista de tarjetas. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "instruction": "Pon mis fotos e íconos SVG en public/ y cámbialos en la lista de tarjetas. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
     "customize": [
       "Cambia las fotos y las tarjetas de color con ícono en la lista de tarjetas",
       "Cambia el color de fondo: los desvanecidos toman ese mismo color",
@@ -153,7 +153,7 @@
     "code_url": "https://wearemiiles.com/studio/componentes/frase-clave.tsx.txt",
     "code_filename": "KeyPhrase.tsx",
     "stack": "Remotion + React, 1080×1920 a 30 fps",
-    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps y usa estas props: split: \"letters\", stagger: 1; pon la tipografía en public/fonts/Manrope.woff2 y cambia examplePhrases por mis frases. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "instruction": "Usa estas props: split: \"letters\", stagger: 1; la tipografía de ejemplo ya carga sola; cambia examplePhrases por mis frases. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
     "customize": [
       "Cambia las frases en phrases (una línea por renglón)",
       "Elige split: \"lines\", \"words\" o \"letters\"",
@@ -171,7 +171,7 @@
     "code_url": "https://wearemiiles.com/studio/componentes/frase-clave.tsx.txt",
     "code_filename": "KeyPhrase.tsx",
     "stack": "Remotion + React, 1080×1920 a 30 fps",
-    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps y usa estas props: split: \"lines\", transition: \"swap\", stagger: 2, enter: 12, exit: 12; pon la tipografía en public/fonts/Manrope.woff2 y cambia examplePhrases por mis frases. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "instruction": "Usa estas props: split: \"lines\", transition: \"swap\", stagger: 2, enter: 12, exit: 12; la tipografía de ejemplo ya carga sola; cambia examplePhrases por mis frases. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
     "customize": [
       "Cambia las frases en phrases (una línea por renglón)",
       "Elige split: \"lines\", \"words\" o \"letters\"",
@@ -189,7 +189,7 @@
     "code_url": "https://wearemiiles.com/studio/componentes/frase-clave.tsx.txt",
     "code_filename": "KeyPhrase.tsx",
     "stack": "Remotion + React, 1080×1920 a 30 fps",
-    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps y usa estas props: split: \"letters\", from: \"start\", stagger: 1.5; pon la tipografía en public/fonts/Manrope.woff2 y cambia examplePhrases por mis frases. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "instruction": "Usa estas props: split: \"letters\", from: \"start\", stagger: 1.5; la tipografía de ejemplo ya carga sola; cambia examplePhrases por mis frases. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
     "customize": [
       "Cambia las frases en phrases (una línea por renglón)",
       "Elige split: \"lines\", \"words\" o \"letters\"",
@@ -207,7 +207,7 @@
     "code_url": "https://wearemiiles.com/studio/componentes/frase-clave.tsx.txt",
     "code_filename": "KeyPhrase.tsx",
     "stack": "Remotion + React, 1080×1920 a 30 fps",
-    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps y usa estas props: split: \"letters\", from: \"center\", stagger: 1.5; pon la tipografía en public/fonts/Manrope.woff2 y cambia examplePhrases por mis frases. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "instruction": "Usa estas props: split: \"letters\", from: \"center\", stagger: 1.5; la tipografía de ejemplo ya carga sola; cambia examplePhrases por mis frases. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
     "customize": [
       "Cambia las frases en phrases (una línea por renglón)",
       "Elige split: \"lines\", \"words\" o \"letters\"",
@@ -225,7 +225,7 @@
     "code_url": "https://wearemiiles.com/studio/componentes/frase-clave.tsx.txt",
     "code_filename": "KeyPhrase.tsx",
     "stack": "Remotion + React, 1080×1920 a 30 fps",
-    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps y usa estas props: split: \"letters\", from: \"end\", stagger: 1.5; pon la tipografía en public/fonts/Manrope.woff2 y cambia examplePhrases por mis frases. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "instruction": "Usa estas props: split: \"letters\", from: \"end\", stagger: 1.5; la tipografía de ejemplo ya carga sola; cambia examplePhrases por mis frases. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
     "customize": [
       "Cambia las frases en phrases (una línea por renglón)",
       "Elige split: \"lines\", \"words\" o \"letters\"",
@@ -243,7 +243,7 @@
     "code_url": "https://wearemiiles.com/studio/componentes/frase-clave.tsx.txt",
     "code_filename": "KeyPhrase.tsx",
     "stack": "Remotion + React, 1080×1920 a 30 fps",
-    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps y usa estas props: split: \"letters\", from: \"edges\", stagger: 1.5; pon la tipografía en public/fonts/Manrope.woff2 y cambia examplePhrases por mis frases. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "instruction": "Usa estas props: split: \"letters\", from: \"edges\", stagger: 1.5; la tipografía de ejemplo ya carga sola; cambia examplePhrases por mis frases. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
     "customize": [
       "Cambia las frases en phrases (una línea por renglón)",
       "Elige split: \"lines\", \"words\" o \"letters\"",
@@ -261,7 +261,7 @@
     "code_url": "https://wearemiiles.com/studio/componentes/frase-clave.tsx.txt",
     "code_filename": "KeyPhrase.tsx",
     "stack": "Remotion + React, 1080×1920 a 30 fps",
-    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps y usa estas props: split: \"letters\", from: \"random\", stagger: 1.5; pon la tipografía en public/fonts/Manrope.woff2 y cambia examplePhrases por mis frases. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "instruction": "Usa estas props: split: \"letters\", from: \"random\", stagger: 1.5; la tipografía de ejemplo ya carga sola; cambia examplePhrases por mis frases. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
     "customize": [
       "Cambia las frases en phrases (una línea por renglón)",
       "Elige split: \"lines\", \"words\" o \"letters\"",
@@ -279,7 +279,7 @@
     "code_url": "https://wearemiiles.com/studio/componentes/letras-elasticas.tsx.txt",
     "code_filename": "ElasticStack.tsx",
     "stack": "Remotion + React, 1080×1920 a 30 fps",
-    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps pon la tipografía en public/fonts/Anton.woff2 y cambia text por mi palabra. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "instruction": "La tipografía de ejemplo ya carga sola; cambia text por mi palabra. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
     "customize": [
       "Cambia text por tu palabra (corta funciona mejor)",
       "Cambia el color del texto y el fondo",
@@ -296,7 +296,7 @@
     "code_url": "https://wearemiiles.com/studio/componentes/linea-que-resuena.tsx.txt",
     "code_filename": "ResonantLine.tsx",
     "stack": "Remotion + React, 1080×1920 a 30 fps",
-    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps y úsala como detalle encima o debajo de mis textos. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "instruction": "Úsala como detalle encima o debajo de mis textos. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
     "customize": [
       "Cambia el color y el grosor (thickness)",
       "Ajusta cada cuánto vibra",
@@ -313,7 +313,7 @@
     "code_url": "https://wearemiiles.com/studio/componentes/orbita-zoom.tsx.txt",
     "code_filename": "OrbitZoom.tsx",
     "stack": "Remotion + React, 1080×1920 a 30 fps",
-    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps pon mis fotos en public/ y cámbialas en exampleItems. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "instruction": "Pon mis fotos en public/ y cámbialas en exampleItems. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
     "customize": [
       "Cambia las fotos o tarjetas de color con ícono en items",
       "Ajusta radius y cardSize para separar las fotos",
@@ -331,7 +331,7 @@
     "code_url": "https://wearemiiles.com/studio/componentes/botones-iconos.tsx.txt",
     "code_filename": "IconPills.tsx",
     "stack": "Remotion + React, 1080×1920 a 30 fps",
-    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps pon la tipografía en public/fonts/Manrope.woff2 y cambia examplePills por mis botones (íconos de lucide-react). Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "instruction": "La tipografía de ejemplo ya carga sola; cambia examplePills por mis botones (íconos de lucide-react). Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
     "customize": [
       "Cambia los textos e íconos en rows",
       "Cambia colores de fondo y de los botones",
@@ -348,7 +348,7 @@
     "code_url": "https://wearemiiles.com/studio/componentes/botones-iconos.tsx.txt",
     "code_filename": "IconPills.tsx",
     "stack": "Remotion + React, 1080×1920 a 30 fps",
-    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps y usa rows con un botón por fila, fontSize: 92 y every: 26; pon la tipografía en public/fonts/Manrope.woff2. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "instruction": "Usa rows con un botón por fila, fontSize: 92 y every: 26; la tipografía de ejemplo ya carga sola. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
     "customize": [
       "Pon un botón por fila en rows",
       "Cambia íconos (lucide-react) y textos",
@@ -365,7 +365,7 @@
     "code_url": "https://wearemiiles.com/studio/componentes/frase-con-puntos.tsx.txt",
     "code_filename": "DotsPhrase.tsx",
     "stack": "Remotion + React, 1080×1920 a 30 fps",
-    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps pon la tipografía en public/fonts/Manrope.woff2 y cambia text por mi frase. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "instruction": "La tipografía de ejemplo ya carga sola; cambia text por mi frase. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
     "customize": [
       "Cambia text por tu frase",
       "Cambia el color de los puntos y del texto",
@@ -382,7 +382,7 @@
     "code_url": "https://wearemiiles.com/studio/componentes/tarjetas-apiladas.tsx.txt",
     "code_filename": "StackCards.tsx",
     "stack": "Remotion + React, 1080×1920 a 30 fps",
-    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps pon la tipografía en public/fonts/Manrope.woff2 y cambia exampleTasks por mis tarjetas. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "instruction": "La tipografía de ejemplo ya carga sola; cambia exampleTasks por mis tarjetas. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
     "customize": [
       "Cambia títulos, etiquetas y colores en cards",
       "Ajusta el tiempo entre tarjetas",
@@ -399,7 +399,7 @@
     "code_url": "https://wearemiiles.com/studio/componentes/fotos-que-crecen.tsx.txt",
     "code_filename": "FlipGrow.tsx",
     "stack": "Remotion + React, 1080×1920 a 30 fps",
-    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps pon la tipografía en public/fonts/Manrope.woff2, pon mis fotos en public/ y cámbialas en images. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "instruction": "La tipografía de ejemplo ya carga sola; pon mis fotos en public/ y cámbialas en images. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
     "customize": [
       "Cambia las fotos en images",
       "Cambia las dos palabras de los lados",
@@ -416,7 +416,7 @@
     "code_url": "https://wearemiiles.com/studio/componentes/galeria-profundidad.tsx.txt",
     "code_filename": "DepthGallery.tsx",
     "stack": "Remotion + React, 1080×1920 a 30 fps",
-    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps pon mis fotos en public/ y cámbialas en exampleItems; usa una duración de seconds × 30 cuadros. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "instruction": "Pon mis fotos en public/ y cámbialas en exampleItems; usa una duración de seconds × 30 cuadros. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
     "customize": [
       "Cambia las fotos en items",
       "count: cuántas fotos (mejor pocas)",
@@ -434,7 +434,7 @@
     "code_url": "https://wearemiiles.com/studio/componentes/cuadricula-reacomoda.tsx.txt",
     "code_filename": "GridFlip.tsx",
     "stack": "Remotion + React, 1080×1920 a 30 fps",
-    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps pon mis fotos en public/ y cámbialas en exampleItems. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "instruction": "Pon mis fotos en public/ y cámbialas en exampleItems. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
     "customize": [
       "Cambia las fotos en items",
       "layouts define los pasos (columnas, filas y ancho)",
@@ -452,7 +452,7 @@
     "code_url": "https://wearemiiles.com/studio/componentes/lluvia-likes.tsx.txt",
     "code_filename": "FallingItems.tsx",
     "stack": "Remotion + React, 1080×1920 a 30 fps",
-    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps pon la tipografía en public/fonts/Manrope.woff2 y cambia exampleDrops por mis fotos, íconos (lucide-react) y likes. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "instruction": "La tipografía de ejemplo ya carga sola; cambia exampleDrops por mis fotos, íconos (lucide-react) y likes. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
     "customize": [
       "Cambia la frase en text",
       "Cambia lo que cae en drops",
@@ -469,7 +469,7 @@
     "code_url": "https://wearemiiles.com/studio/componentes/lluvia-likes.tsx.txt",
     "code_filename": "FallingItems.tsx",
     "stack": "Remotion + React, 1080×1920 a 30 fps",
-    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps y usa fromTop: true, sources: 2, every: 5; pon la tipografía en public/fonts/Manrope.woff2 y cambia exampleDrops. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "instruction": "Usa fromTop: true, sources: 2, every: 5; la tipografía de ejemplo ya carga sola; cambia exampleDrops. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
     "customize": [
       "Cambia la frase en text",
       "sources: cuántas fuentes",
@@ -486,7 +486,7 @@
     "code_url": "https://wearemiiles.com/studio/componentes/transiciones-pagina.tsx.txt",
     "code_filename": "PageTransition.tsx",
     "stack": "Remotion + React, 1080×1920 a 30 fps",
-    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps y usa variant: \"scale\"; pon la tipografía en public/fonts/Manrope.woff2 y cambia los textos de from y to. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "instruction": "Usa variant: \"scale\"; la tipografía de ejemplo ya carga sola; cambia los textos de from y to. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
     "customize": [
       "Cambia from y to (texto, color o foto)",
       "stage: color detrás de las escenas",
@@ -503,7 +503,7 @@
     "code_url": "https://wearemiiles.com/studio/componentes/transiciones-pagina.tsx.txt",
     "code_filename": "PageTransition.tsx",
     "stack": "Remotion + React, 1080×1920 a 30 fps",
-    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps y usa variant: \"curve\"; pon la tipografía en public/fonts/Manrope.woff2 y cambia los textos de from y to. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "instruction": "Usa variant: \"curve\"; la tipografía de ejemplo ya carga sola; cambia los textos de from y to. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
     "customize": [
       "Cambia from y to",
       "overlayColor: color de la cortina",
@@ -520,7 +520,7 @@
     "code_url": "https://wearemiiles.com/studio/componentes/transiciones-pagina.tsx.txt",
     "code_filename": "PageTransition.tsx",
     "stack": "Remotion + React, 1080×1920 a 30 fps",
-    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps y usa variant: \"dissolve\"; pon la tipografía en public/fonts/Manrope.woff2 y cambia los textos de from y to. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "instruction": "Usa variant: \"dissolve\"; la tipografía de ejemplo ya carga sola; cambia los textos de from y to. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
     "customize": [
       "Cambia from y to",
       "overlayColor: color del borde",
@@ -537,7 +537,7 @@
     "code_url": "https://wearemiiles.com/studio/componentes/transiciones-pagina.tsx.txt",
     "code_filename": "PageTransition.tsx",
     "stack": "Remotion + React, 1080×1920 a 30 fps",
-    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps y usa variant: \"spiral\"; pon la tipografía en public/fonts/Manrope.woff2 y cambia los textos de from y to. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "instruction": "Usa variant: \"spiral\"; la tipografía de ejemplo ya carga sola; cambia los textos de from y to. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
     "customize": [
       "Cambia from y to",
       "overlayColor: color de la espiral",
@@ -554,7 +554,7 @@
     "code_url": "https://wearemiiles.com/studio/componentes/foto-repeticion.tsx.txt",
     "code_filename": "RepetitionImage.tsx",
     "stack": "Remotion + React, 1080×1920 a 30 fps",
-    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps pon mi foto en public/ y úsala en image, con shape: \"pill\". Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "instruction": "Pon mi foto en public/ y úsala en image, con shape: \"pill\". Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
     "customize": [
       "Cambia image por tu foto",
       "elems: cuántas copias",
@@ -571,11 +571,641 @@
     "code_url": "https://wearemiiles.com/studio/componentes/foto-repeticion.tsx.txt",
     "code_filename": "RepetitionImage.tsx",
     "stack": "Remotion + React, 1080×1920 a 30 fps",
-    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps pon mi foto en public/ y úsala en image, con shape: \"arch\", origin: \"50% 100%\", elems: 6, initialScale: 2.5. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "instruction": "Pon mi foto en public/ y úsala en image, con shape: \"arch\", origin: \"50% 100%\", elems: 6, initialScale: 2.5. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
     "customize": [
       "Cambia image por tu foto",
       "origin: hacia dónde se encogen",
       "elems e initialScale"
+    ]
+  },
+  {
+    "slug": "texto-que-rueda",
+    "title": "Texto que rueda en 3D",
+    "category": "Texto",
+    "description": "Frases cortas y enormes enrolladas en un cilindro: cada línea sube, pasa de frente por el centro y se dobla hacia atrás. Entre palabras pueden ir fotos.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/texto-que-rueda.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/texto-que-rueda.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/texto-que-rueda.tsx.txt",
+    "code_filename": "TextRoll.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "La tipografía de ejemplo ya carga sola; pon mis fotos en public/ y cambia exampleRollLines por mis frases. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia las líneas en lines: texto o { src } para meter una foto entre palabras",
+      "fontSize: el tamaño de las letras (pueden salirse de los lados)",
+      "framesPerLine: la velocidad del giro",
+      "Cambia color y background"
+    ]
+  },
+  {
+    "slug": "rueda-inclinada",
+    "title": "Rueda inclinada",
+    "category": "Carrusel",
+    "description": "Empieza con una sola foto en grande; la cámara se aleja y las fotos giran en un aro inclinado que se ve como óvalo, se voltea con calma y regresa a la primera foto.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/rueda-inclinada.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/rueda-inclinada.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/rueda-inclinada.tsx.txt",
+    "code_filename": "TiltWheel.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Pon mis fotos en public/ y cámbialas en exampleItems. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia las fotos o tarjetas de color con ícono en items",
+      "tilt: inclinación (bajo = óvalo más aplastado)",
+      "lejos: qué tan chico se ve el anillo completo",
+      "turns: vueltas en el video"
+    ]
+  },
+  {
+    "slug": "pila-con-bisagra",
+    "title": "Pila con bisagra",
+    "category": "Galería",
+    "description": "Una pila de tarjetas sobre el mismo piso: la de enfrente cae sobre su borde de abajo, muestra su cara de atrás y se desliza al fondo mientras las demás avanzan.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/pila-con-bisagra.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/pila-con-bisagra.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/pila-con-bisagra.tsx.txt",
+    "code_filename": "HingeStack.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "La tipografía de ejemplo ya carga sola; pon mis fotos en public/ y cámbialas en items. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia las fotos o tarjetas de color en items (cada una usa la siguiente atrás)",
+      "Cambia los textos de arriba en left y right",
+      "hold y flip: tiempo quieta y duración del giro",
+      "cardWidth y cardHeight: tamaño de las tarjetas"
+    ]
+  },
+  {
+    "slug": "cambio-de-pagina-channel",
+    "title": "Cambio de página: cambio de canal",
+    "category": "Transición",
+    "description": "La página cambia como un canal de TV: interferencia de color y aparece la siguiente.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina-channel.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina-channel.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina.tsx.txt",
+    "code_filename": "PageChange.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Usa variant: \"channel\"; la tipografía de ejemplo ya carga sola; cambia from y to por mis textos y fotos (en public/). Renderiza con --gl=angle. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia título y foto de cada página en from y to",
+      "variant elige la transición (20 en el mismo archivo)",
+      "Cambia cover y accent para los colores de la transición",
+      "holdFrom y holdTo: cuánto se ve cada página"
+    ]
+  },
+  {
+    "slug": "cambio-de-pagina-velvet",
+    "title": "Cambio de página: telón de terciopelo",
+    "category": "Transición",
+    "description": "Un telón de terciopelo de color cae suave y deja ver la nueva página.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina-velvet.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina-velvet.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina.tsx.txt",
+    "code_filename": "PageChange.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Usa variant: \"velvet\"; la tipografía de ejemplo ya carga sola; cambia from y to por mis textos y fotos (en public/). Renderiza con --gl=angle. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia título y foto de cada página en from y to",
+      "variant elige la transición (20 en el mismo archivo)",
+      "Cambia cover y accent para los colores de la transición",
+      "holdFrom y holdTo: cuánto se ve cada página"
+    ]
+  },
+  {
+    "slug": "cambio-de-pagina-spiral",
+    "title": "Cambio de página: espiral",
+    "category": "Transición",
+    "description": "Una espiral de color gira, cubre la pantalla y descubre la nueva página.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina-spiral.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina-spiral.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina.tsx.txt",
+    "code_filename": "PageChange.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Usa variant: \"spiral\"; la tipografía de ejemplo ya carga sola; cambia from y to por mis textos y fotos (en public/). Renderiza con --gl=angle. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia título y foto de cada página en from y to",
+      "variant elige la transición (20 en el mismo archivo)",
+      "Cambia cover y accent para los colores de la transición",
+      "holdFrom y holdTo: cuánto se ve cada página"
+    ]
+  },
+  {
+    "slug": "cambio-de-pagina-ink",
+    "title": "Cambio de página: tinta",
+    "category": "Transición",
+    "description": "Una mancha de tinta crece y se lleva la página para mostrar la siguiente.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina-ink.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina-ink.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina.tsx.txt",
+    "code_filename": "PageChange.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Usa variant: \"ink\"; la tipografía de ejemplo ya carga sola; cambia from y to por mis textos y fotos (en public/). Renderiza con --gl=angle. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia título y foto de cada página en from y to",
+      "variant elige la transición (20 en el mismo archivo)",
+      "Cambia cover y accent para los colores de la transición",
+      "holdFrom y holdTo: cuánto se ve cada página"
+    ]
+  },
+  {
+    "slug": "cambio-de-pagina-dissolve",
+    "title": "Cambio de página: quemado",
+    "category": "Transición",
+    "description": "La página se quema desde adentro con un borde de color y aparece la siguiente.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina-dissolve.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina-dissolve.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina.tsx.txt",
+    "code_filename": "PageChange.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Usa variant: \"dissolve\"; la tipografía de ejemplo ya carga sola; cambia from y to por mis textos y fotos (en public/). Renderiza con --gl=angle. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia título y foto de cada página en from y to",
+      "variant elige la transición (20 en el mismo archivo)",
+      "Cambia cover y accent para los colores de la transición",
+      "holdFrom y holdTo: cuánto se ve cada página"
+    ]
+  },
+  {
+    "slug": "cambio-de-pagina-dither",
+    "title": "Cambio de página: pixeles",
+    "category": "Transición",
+    "description": "La página se deshace en pixeles y se arma la siguiente.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina-dither.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina-dither.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina.tsx.txt",
+    "code_filename": "PageChange.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Usa variant: \"dither\"; la tipografía de ejemplo ya carga sola; cambia from y to por mis textos y fotos (en public/). Renderiza con --gl=angle. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia título y foto de cada página en from y to",
+      "variant elige la transición (20 en el mismo archivo)",
+      "Cambia cover y accent para los colores de la transición",
+      "holdFrom y holdTo: cuánto se ve cada página"
+    ]
+  },
+  {
+    "slug": "cambio-de-pagina-tear",
+    "title": "Cambio de página: hoja rota",
+    "category": "Transición",
+    "description": "La página se rompe como papel y deja ver la siguiente.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina-tear.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina-tear.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina.tsx.txt",
+    "code_filename": "PageChange.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Usa variant: \"tear\"; la tipografía de ejemplo ya carga sola; cambia from y to por mis textos y fotos (en public/). Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia título y foto de cada página en from y to",
+      "variant elige la transición (20 en el mismo archivo)",
+      "Cambia cover y accent para los colores de la transición",
+      "holdFrom y holdTo: cuánto se ve cada página"
+    ]
+  },
+  {
+    "slug": "cambio-de-pagina-corner",
+    "title": "Cambio de página: esquina",
+    "category": "Transición",
+    "description": "La página se dobla desde una esquina y da paso a la siguiente.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina-corner.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina-corner.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina.tsx.txt",
+    "code_filename": "PageChange.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Usa variant: \"corner\"; la tipografía de ejemplo ya carga sola; cambia from y to por mis textos y fotos (en public/). Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia título y foto de cada página en from y to",
+      "variant elige la transición (20 en el mismo archivo)",
+      "Cambia cover y accent para los colores de la transición",
+      "holdFrom y holdTo: cuánto se ve cada página"
+    ]
+  },
+  {
+    "slug": "cambio-de-pagina-slices",
+    "title": "Cambio de página: rebanadas",
+    "category": "Transición",
+    "description": "La página se corta en rebanadas que se deslizan y muestran la siguiente.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina-slices.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina-slices.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina.tsx.txt",
+    "code_filename": "PageChange.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Usa variant: \"slices\"; la tipografía de ejemplo ya carga sola; cambia from y to por mis textos y fotos (en public/). Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia título y foto de cada página en from y to",
+      "variant elige la transición (20 en el mismo archivo)",
+      "Cambia cover y accent para los colores de la transición",
+      "holdFrom y holdTo: cuánto se ve cada página"
+    ]
+  },
+  {
+    "slug": "cambio-de-pagina-frame",
+    "title": "Cambio de página: marco",
+    "category": "Transición",
+    "description": "La página se encoge dentro de un marco de color y entra la siguiente.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina-frame.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina-frame.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina.tsx.txt",
+    "code_filename": "PageChange.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Usa variant: \"frame\"; la tipografía de ejemplo ya carga sola; cambia from y to por mis textos y fotos (en public/). Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia título y foto de cada página en from y to",
+      "variant elige la transición (20 en el mismo archivo)",
+      "Cambia cover y accent para los colores de la transición",
+      "holdFrom y holdTo: cuánto se ve cada página"
+    ]
+  },
+  {
+    "slug": "cambio-de-pagina-stack",
+    "title": "Cambio de página: pila",
+    "category": "Transición",
+    "description": "La página se va al fondo de una pila y la siguiente queda encima.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina-stack.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina-stack.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina.tsx.txt",
+    "code_filename": "PageChange.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Usa variant: \"stack\"; la tipografía de ejemplo ya carga sola; cambia from y to por mis textos y fotos (en public/). Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia título y foto de cada página en from y to",
+      "variant elige la transición (20 en el mismo archivo)",
+      "Cambia cover y accent para los colores de la transición",
+      "holdFrom y holdTo: cuánto se ve cada página"
+    ]
+  },
+  {
+    "slug": "cambio-de-pagina-slide-over",
+    "title": "Cambio de página: deslizar encima",
+    "category": "Transición",
+    "description": "La nueva página se desliza encima de la anterior.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina-slide-over.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina-slide-over.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina.tsx.txt",
+    "code_filename": "PageChange.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Usa variant: \"slide-over\"; la tipografía de ejemplo ya carga sola; cambia from y to por mis textos y fotos (en public/). Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia título y foto de cada página en from y to",
+      "variant elige la transición (20 en el mismo archivo)",
+      "Cambia cover y accent para los colores de la transición",
+      "holdFrom y holdTo: cuánto se ve cada página"
+    ]
+  },
+  {
+    "slug": "cambio-de-pagina-peel",
+    "title": "Cambio de página: hoja que se voltea",
+    "category": "Transición",
+    "description": "La página se voltea como una hoja y muestra la siguiente.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina-peel.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina-peel.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina.tsx.txt",
+    "code_filename": "PageChange.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Usa variant: \"peel\"; la tipografía de ejemplo ya carga sola; cambia from y to por mis textos y fotos (en public/). Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia título y foto de cada página en from y to",
+      "variant elige la transición (20 en el mismo archivo)",
+      "Cambia cover y accent para los colores de la transición",
+      "holdFrom y holdTo: cuánto se ve cada página"
+    ]
+  },
+  {
+    "slug": "cambio-de-pagina-columns",
+    "title": "Cambio de página: columnas",
+    "category": "Transición",
+    "description": "Columnas de color cubren la pantalla y se retiran con la nueva página.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina-columns.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina-columns.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina.tsx.txt",
+    "code_filename": "PageChange.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Usa variant: \"columns\"; la tipografía de ejemplo ya carga sola; cambia from y to por mis textos y fotos (en public/). Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia título y foto de cada página en from y to",
+      "variant elige la transición (20 en el mismo archivo)",
+      "Cambia cover y accent para los colores de la transición",
+      "holdFrom y holdTo: cuánto se ve cada página"
+    ]
+  },
+  {
+    "slug": "cambio-de-pagina-circle",
+    "title": "Cambio de página: círculo",
+    "category": "Transición",
+    "description": "Un círculo crece desde el centro y se abre con la nueva página.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina-circle.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina-circle.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina.tsx.txt",
+    "code_filename": "PageChange.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Usa variant: \"circle\"; la tipografía de ejemplo ya carga sola; cambia from y to por mis textos y fotos (en public/). Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia título y foto de cada página en from y to",
+      "variant elige la transición (20 en el mismo archivo)",
+      "Cambia cover y accent para los colores de la transición",
+      "holdFrom y holdTo: cuánto se ve cada página"
+    ]
+  },
+  {
+    "slug": "cambio-de-pagina-typewriter",
+    "title": "Cambio de página: máquina de escribir",
+    "category": "Transición",
+    "description": "Entre una página y otra se escribe una frase letra por letra.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina-typewriter.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina-typewriter.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina.tsx.txt",
+    "code_filename": "PageChange.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Usa variant: \"typewriter\"; la tipografía de ejemplo ya carga sola; cambia from y to por mis textos y fotos (en public/). Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia título y foto de cada página en from y to",
+      "variant elige la transición (20 en el mismo archivo)",
+      "Cambia cover y accent para los colores de la transición",
+      "holdFrom y holdTo: cuánto se ve cada página"
+    ]
+  },
+  {
+    "slug": "cambio-de-pagina-curtain",
+    "title": "Cambio de página: telón",
+    "category": "Transición",
+    "description": "Un telón de color sube, cubre todo y deja ver la nueva página.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina-curtain.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina-curtain.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina.tsx.txt",
+    "code_filename": "PageChange.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Usa variant: \"curtain\"; la tipografía de ejemplo ya carga sola; cambia from y to por mis textos y fotos (en public/). Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia título y foto de cada página en from y to",
+      "variant elige la transición (20 en el mismo archivo)",
+      "Cambia cover y accent para los colores de la transición",
+      "holdFrom y holdTo: cuánto se ve cada página"
+    ]
+  },
+  {
+    "slug": "cambio-de-pagina-wipe",
+    "title": "Cambio de página: barrido",
+    "category": "Transición",
+    "description": "Un barrido de color cruza la pantalla y cambia de página.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina-wipe.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina-wipe.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/cambio-de-pagina.tsx.txt",
+    "code_filename": "PageChange.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Usa variant: \"wipe\"; la tipografía de ejemplo ya carga sola; cambia from y to por mis textos y fotos (en public/). Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia título y foto de cada página en from y to",
+      "variant elige la transición (20 en el mismo archivo)",
+      "Cambia cover y accent para los colores de la transición",
+      "holdFrom y holdTo: cuánto se ve cada página"
+    ]
+  },
+  {
+    "slug": "letras-con-scroll-arco",
+    "title": "Letras con scroll: arco 3D",
+    "category": "Galería",
+    "description": "Fotos con una palabra encima que suben como scroll; las letras se doblan en arco y la foto gira en 3D al entrar y salir.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/letras-con-scroll-arco.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/letras-con-scroll-arco.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/letras-con-scroll.tsx.txt",
+    "code_filename": "ScrollLetters.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Usa demo: 4; la tipografía de ejemplo ya carga sola; pon mis fotos en public/ y cambia slides por mis fotos y palabras. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia fotos y palabras en slides (palabras cortas)",
+      "demo elige el estilo (1 a 4)",
+      "intensity: cuánto se deforman las letras",
+      "hold y move: tiempo quieta y velocidad del scroll"
+    ]
+  },
+  {
+    "slug": "letras-con-scroll-onda",
+    "title": "Letras con scroll: onda",
+    "category": "Galería",
+    "description": "Fotos con una palabra encima que suben como scroll; las letras de en medio se estiran como una onda.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/letras-con-scroll-onda.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/letras-con-scroll-onda.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/letras-con-scroll.tsx.txt",
+    "code_filename": "ScrollLetters.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Usa demo: 1; la tipografía de ejemplo ya carga sola; pon mis fotos en public/ y cambia slides por mis fotos y palabras. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia fotos y palabras en slides (palabras cortas)",
+      "demo elige el estilo (1 a 4)",
+      "intensity: cuánto se deforman las letras",
+      "hold y move: tiempo quieta y velocidad del scroll"
+    ]
+  },
+  {
+    "slug": "letras-con-scroll-giro",
+    "title": "Letras con scroll: giro",
+    "category": "Galería",
+    "description": "Fotos con una palabra encima que suben como scroll; las letras giran y se encogen y la foto se inclina.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/letras-con-scroll-giro.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/letras-con-scroll-giro.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/letras-con-scroll.tsx.txt",
+    "code_filename": "ScrollLetters.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Usa demo: 2; la tipografía de ejemplo ya carga sola; pon mis fotos en public/ y cambia slides por mis fotos y palabras. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia fotos y palabras en slides (palabras cortas)",
+      "demo elige el estilo (1 a 4)",
+      "intensity: cuánto se deforman las letras",
+      "hold y move: tiempo quieta y velocidad del scroll"
+    ]
+  },
+  {
+    "slug": "letras-con-scroll-estirar",
+    "title": "Letras con scroll: estirar",
+    "category": "Galería",
+    "description": "Fotos con una palabra encima que suben como scroll; la palabra se estira a lo alto y cada letra va a su velocidad.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/letras-con-scroll-estirar.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/letras-con-scroll-estirar.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/letras-con-scroll.tsx.txt",
+    "code_filename": "ScrollLetters.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Usa demo: 3; la tipografía de ejemplo ya carga sola; pon mis fotos en public/ y cambia slides por mis fotos y palabras. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia fotos y palabras en slides (palabras cortas)",
+      "demo elige el estilo (1 a 4)",
+      "intensity: cuánto se deforman las letras",
+      "hold y move: tiempo quieta y velocidad del scroll"
+    ]
+  },
+  {
+    "slug": "palabras-que-se-deslizan",
+    "title": "Palabras que se deslizan",
+    "category": "Texto",
+    "description": "Palabras grandes que pasan de lado una tras otra sobre fotos tenues que se mueven más despacio.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/palabras-que-se-deslizan.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/palabras-que-se-deslizan.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/palabras-que-se-deslizan.tsx.txt",
+    "code_filename": "SlideWords.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "La tipografía de ejemplo ya carga sola; pon mis fotos en public/ y cambia words e items. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia las palabras en words",
+      "Cambia las fotos de fondo en items",
+      "imageOpacity: qué tan tenues se ven las fotos",
+      "hold y move: tiempo quieta y velocidad"
+    ]
+  },
+  {
+    "slug": "subrayado-onda",
+    "title": "Subrayado: onda",
+    "category": "Texto",
+    "description": "Una frase centrada donde las palabras marcadas se subrayan con una onda dibujado a mano.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/subrayado-onda.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/subrayado-onda.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/subrayados.tsx.txt",
+    "code_filename": "UnderlineWords.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Usa underline: \"wave\"; la tipografía de ejemplo ya carga sola; escribe mi frase en text y marca con *asteriscos* las palabras a subrayar. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Escribe tu frase en text (\\n para cambiar de renglón)",
+      "Marca con *asteriscos* las palabras a subrayar",
+      "underline elige el trazo: line, double, strike, arc, scribble o wave",
+      "Cambia color, lineColor y background"
+    ]
+  },
+  {
+    "slug": "subrayado-garabato",
+    "title": "Subrayado: garabato",
+    "category": "Texto",
+    "description": "Una frase centrada donde las palabras marcadas se subrayan con un garabato dibujado a mano.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/subrayado-garabato.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/subrayado-garabato.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/subrayados.tsx.txt",
+    "code_filename": "UnderlineWords.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Usa underline: \"scribble\"; la tipografía de ejemplo ya carga sola; escribe mi frase en text y marca con *asteriscos* las palabras a subrayar. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Escribe tu frase en text (\\n para cambiar de renglón)",
+      "Marca con *asteriscos* las palabras a subrayar",
+      "underline elige el trazo: line, double, strike, arc, scribble o wave",
+      "Cambia color, lineColor y background"
+    ]
+  },
+  {
+    "slug": "subrayado-arco",
+    "title": "Subrayado: arco",
+    "category": "Texto",
+    "description": "Una frase centrada donde las palabras marcadas se subrayan con un arco dibujado a mano.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/subrayado-arco.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/subrayado-arco.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/subrayados.tsx.txt",
+    "code_filename": "UnderlineWords.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Usa underline: \"arc\"; la tipografía de ejemplo ya carga sola; escribe mi frase en text y marca con *asteriscos* las palabras a subrayar. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Escribe tu frase en text (\\n para cambiar de renglón)",
+      "Marca con *asteriscos* las palabras a subrayar",
+      "underline elige el trazo: line, double, strike, arc, scribble o wave",
+      "Cambia color, lineColor y background"
+    ]
+  },
+  {
+    "slug": "subrayado-tachado",
+    "title": "Subrayado: tachado",
+    "category": "Texto",
+    "description": "Una frase centrada donde las palabras marcadas se subrayan con un tachado dibujado a mano.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/subrayado-tachado.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/subrayado-tachado.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/subrayados.tsx.txt",
+    "code_filename": "UnderlineWords.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Usa underline: \"strike\"; la tipografía de ejemplo ya carga sola; escribe mi frase en text y marca con *asteriscos* las palabras a subrayar. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Escribe tu frase en text (\\n para cambiar de renglón)",
+      "Marca con *asteriscos* las palabras a subrayar",
+      "underline elige el trazo: line, double, strike, arc, scribble o wave",
+      "Cambia color, lineColor y background"
+    ]
+  },
+  {
+    "slug": "subrayado-doble",
+    "title": "Subrayado: doble",
+    "category": "Texto",
+    "description": "Una frase centrada donde las palabras marcadas se subrayan con una línea doble dibujado a mano.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/subrayado-doble.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/subrayado-doble.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/subrayados.tsx.txt",
+    "code_filename": "UnderlineWords.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Usa underline: \"double\"; la tipografía de ejemplo ya carga sola; escribe mi frase en text y marca con *asteriscos* las palabras a subrayar. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Escribe tu frase en text (\\n para cambiar de renglón)",
+      "Marca con *asteriscos* las palabras a subrayar",
+      "underline elige el trazo: line, double, strike, arc, scribble o wave",
+      "Cambia color, lineColor y background"
+    ]
+  },
+  {
+    "slug": "subrayado-linea",
+    "title": "Subrayado: línea",
+    "category": "Texto",
+    "description": "Una frase centrada donde las palabras marcadas se subrayan con una línea dibujado a mano.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/subrayado-linea.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/subrayado-linea.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/subrayados.tsx.txt",
+    "code_filename": "UnderlineWords.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Usa underline: \"line\"; la tipografía de ejemplo ya carga sola; escribe mi frase en text y marca con *asteriscos* las palabras a subrayar. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Escribe tu frase en text (\\n para cambiar de renglón)",
+      "Marca con *asteriscos* las palabras a subrayar",
+      "underline elige el trazo: line, double, strike, arc, scribble o wave",
+      "Cambia color, lineColor y background"
+    ]
+  },
+  {
+    "slug": "foto-repeticion-franjas",
+    "title": "Foto con repetición: franjas",
+    "category": "Galería",
+    "description": "Una foto rectangular con copias que se encogen hacia un lado como franjas mientras la de adentro hace zoom.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/foto-repeticion-franjas.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/foto-repeticion-franjas.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/foto-repeticion.tsx.txt",
+    "code_filename": "RepetitionImage.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Usa shape: \"rect\", animate: \"scaleX\", origin: \"0% 50%\", elems: 5; pon mi foto en public/ y cámbiala en image. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia la foto en image",
+      "shape: pill, arch o rect",
+      "elems: cuántas copias",
+      "origin: hacia dónde se encogen"
+    ]
+  },
+  {
+    "slug": "busqueda",
+    "title": "Búsqueda",
+    "category": "Elemento",
+    "description": "Una barra de búsqueda que escribe una palabra y despliega los resultados con un efecto líquido.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/busqueda.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/busqueda.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/busqueda.tsx.txt",
+    "code_filename": "GooeySearch.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "La tipografía de ejemplo ya carga sola; cambia query y results por mi búsqueda. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia lo que se escribe en query",
+      "Cambia los resultados en results",
+      "Cambia los colores: pill, accent y resultColor",
+      "scale: tamaño de la barra"
+    ]
+  },
+  {
+    "slug": "transicion-linea",
+    "title": "Transición: línea",
+    "category": "Transición",
+    "description": "Una línea gruesa cruza la pantalla con un título adentro y deja ver la nueva escena.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/transicion-linea.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/transicion-linea.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/transiciones-pagina.tsx.txt",
+    "code_filename": "PageTransition.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Usa variant: \"line\"; la tipografía de ejemplo ya carga sola; cambia from y to por mis escenas y overlayText por mi título. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia el título dentro de la línea en overlayText",
+      "Cambia overlayColor para el color de la línea",
+      "Cambia las escenas en from y to",
+      "speed: velocidad de la transición"
     ]
   }
 ]

@@ -71,8 +71,23 @@ export async function copyText(text: string): Promise<void> {
 /** Prompt listo para pegar: instrucción breve + el código completo. */
 export function buildComponentPrompt(c: StudioComponent, code: string): string {
   const en = (i18n.language || "es").startsWith("en");
+  const file = c.code_filename;
   const head = en
-    ? `Implement this video animation ("${c.title}") in my project${c.stack ? ` (${c.stack})` : ""}. ${c.instruction}\nKeep the timing and easing; adapt texts, colors and sizes to what I ask you.`
-    : `Implementa esta animación de video («${c.title}») en mi proyecto${c.stack ? ` (${c.stack})` : ""}. ${c.instruction}\nRespeta los tiempos y las curvas de movimiento; adapta textos, colores y tamaños a lo que te pida.`;
+    ? `Implement this video animation ("${c.title}") in my project${c.stack ? ` (${c.stack})` : ""}.\n` +
+      `Steps:\n` +
+      `1. If I don't have a Remotion project, create one with \`npx create-video@latest --blank\`.\n` +
+      `2. Save the code below exactly as it is in src/${file}. Do not rewrite or simplify it: the animation depends on its exact timing and math.\n` +
+      `3. Register it in src/Root.tsx with a <Composition> of 1080×1920 at 30 fps (the "how to use" block in the code says which props and duration to use).\n` +
+      `4. Check it first without changes with \`npx remotion studio\`: the example photos, icons and fonts load from wearemiiles.com, so it works as is.\n` +
+      `5. Then replace the examples with my texts and photos (put my files in public/ and use their path, e.g. "photos/mine.jpg").\n` +
+      `${c.instruction}\nKeep the timing and easing; adapt texts, colors and sizes to what I ask you.`
+    : `Implementa esta animación de video («${c.title}») en mi proyecto${c.stack ? ` (${c.stack})` : ""}.\n` +
+      `Pasos:\n` +
+      `1. Si no tengo un proyecto de Remotion, créalo con \`npx create-video@latest --blank\`.\n` +
+      `2. Guarda el código de abajo tal cual en src/${file}. No lo reescribas ni lo simplifiques: la animación depende de sus tiempos y cálculos exactos.\n` +
+      `3. Regístralo en src/Root.tsx con una <Composition> de 1080×1920 a 30 fps (el bloque «Cómo usar este componente» del código dice qué props y qué duración usar).\n` +
+      `4. Pruébalo primero sin cambios con \`npx remotion studio\`: las fotos, íconos y tipografías de ejemplo cargan desde wearemiiles.com, así que funciona tal cual.\n` +
+      `5. Después cambia los ejemplos por mis textos y fotos (pon mis archivos en public/ y usa su ruta, p. ej. "fotos/mia.jpg").\n` +
+      `${c.instruction}\nRespeta los tiempos y las curvas de movimiento; adapta textos, colores y tamaños a lo que te pida.`;
   return `${head}\n\n\`\`\`${c.code_filename.split(".").pop() || ""}\n// ${c.code_filename}\n${code.trim()}\n\`\`\`\n`;
 }

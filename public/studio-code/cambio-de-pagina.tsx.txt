@@ -1,0 +1,553 @@
+/* ============================================================================
+   CÓMO USAR ESTE COMPONENTE (instrucciones para tu asistente de IA:
+   Claude, Codex, Gemini, Cursor, Antigravity o cualquier otro)
+   ----------------------------------------------------------------------------
+   - Componente de Remotion (React) para video vertical 1080×1920 a 30 fps.
+     Si el proyecto no tiene Remotion, créalo (npx create-video@latest), copia este
+     archivo en src/ y registra una <Composition> de pageChangeDuration(props) cuadros.
+   - Un cambio de página: se ve la página "from", corre la transición y queda la
+     página "to". Cada página es solo un texto y una foto.
+   - variant (20 transiciones):
+     · cortinas: "curtain", "wipe", "columns", "circle", "typewriter"
+     · la página se mueve: "stack", "slide-over", "peel", "slices", "frame",
+       "carousel", "cube", "corner", "tear"
+     · shaders (WebGL): "dither", "dissolve", "ink", "spiral", "velvet", "channel"
+   - Para usarla ENCIMA de tus clips: cambia Page por tu propio contenido (o pon
+     image con un cuadro de tu video) en from y to.
+   - Ajustes:
+     · from / to: { title, image, background, color, layout } (layout "a": texto arriba,
+       "b": foto arriba)
+     · cover: color de las cortinas (#111111) · accent: color de acento (azul Miiles)
+       que usan ink, frame, corner, velvet, spiral y dissolve
+     · phrase: lo que escribe "typewriter" · labels: tarjetas de "carousel"
+     · font: archivo en public/ (Manrope.woff2 por defecto)
+     · holdFrom / holdTo: segundos que se ve cada página
+   - Las curvas y tiempos son los del original; no los cambies salvo que el usuario lo pida.
+   - Para renderizar: npx remotion render src/index.ts <Id> out/video.mp4
+     (las variantes de shaders necesitan WebGL: agrega --gl=angle si salen vacías)
+   ========================================================================== */
+// Cambios de página (Remotion) · Miiles Estudio · inspirado en "Interlude" de Codrops
+import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { AbsoluteFill, Img, continueRender, delayRender, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
+
+// Archivos: si la ruta empieza con http se usa tal cual (los ejemplos viven en wearemiiles.com y funcionan sin copiar nada);
+// si es una ruta local (p. ej. "fotos/mia.jpg"), se busca en la carpeta public/ de tu proyecto.
+const archivo = (p: string) => (/^https?:\/\//.test(p) ? p : staticFile(p));
+
+
+export type PageChangeVariant =
+  | "curtain" | "wipe" | "columns" | "circle" | "typewriter"
+  | "stack" | "slide-over" | "peel" | "slices" | "frame" | "carousel" | "cube" | "corner" | "tear"
+  | "dither" | "dissolve" | "ink" | "spiral" | "velvet" | "channel";
+
+type PageData = { title: string; image?: string; background?: string; color?: string; layout?: "a" | "b" };
+export type PageChangeProps = {
+  variant: PageChangeVariant;
+  from?: PageData;
+  to?: PageData;
+  cover?: string;
+  accent?: string;
+  phrase?: string;
+  labels?: [string, string];
+  font?: string;
+  holdFrom?: number;
+  holdTo?: number;
+};
+
+// ---------------------------------------------------------------- curvas (GSAP)
+const clamp = (v: number, a = 0, b = 1) => Math.max(a, Math.min(b, v));
+const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+const pIn = (n: number) => (t: number) => Math.pow(t, n + 1);
+const pOut = (n: number) => (t: number) => 1 - Math.pow(1 - t, n + 1);
+const pInOut = (n: number) => (t: number) => (t < 0.5 ? Math.pow(2 * t, n + 1) / 2 : 1 - Math.pow(2 - 2 * t, n + 1) / 2);
+const expoIn = (t: number) => (t <= 0 ? 0 : Math.pow(2, 10 * (t - 1)));
+const expoOut = (t: number) => (t >= 1 ? 1 : 1 - Math.pow(2, -10 * t));
+const expoInOut = (t: number) => (t <= 0 ? 0 : t >= 1 ? 1 : t < 0.5 ? Math.pow(2, 20 * t - 10) / 2 : (2 - Math.pow(2, -20 * t + 10)) / 2);
+const E = { p1i: pIn(1), p1o: pOut(1), p1io: pInOut(1), p2o: pOut(2), p2io: pInOut(2), p3o: pOut(3), p3io: pInOut(3), xi: expoIn, xo: expoOut, xio: expoInOut };
+
+// leave: segundos que cubre · gap: tapado mientras "carga" · enter: segundos que revela
+const TIMING: Record<PageChangeVariant, { leave: number; gap: number; enter: number }> = {
+  curtain: { leave: 1, gap: 0.3, enter: 1 }, wipe: { leave: 0.9, gap: 0.3, enter: 0.9 },
+  columns: { leave: 0.7 + 0.24, gap: 0.3, enter: 0.7 + 0.24 }, circle: { leave: 0.7, gap: 0.3, enter: 0.7 },
+  typewriter: { leave: 1.65, gap: 0.5, enter: 1.55 },
+  stack: { leave: 1.4, gap: 0.2, enter: 0.6 }, "slide-over": { leave: 0, gap: 0, enter: 1.1 },
+  peel: { leave: 0, gap: 0, enter: 1.2 }, slices: { leave: 0, gap: 0, enter: 0.9 + 0.32 },
+  frame: { leave: 0, gap: 0, enter: 1.35 }, carousel: { leave: 0.9, gap: 0.3, enter: 0.9 + 0.37 },
+  cube: { leave: 0.5, gap: 0.3, enter: 1.4 }, corner: { leave: 0, gap: 0, enter: 0.9 + 0.24 },
+  tear: { leave: 0.7, gap: 0.3, enter: 1.2 },
+  dither: { leave: 1.1, gap: 0.3, enter: 1.1 }, dissolve: { leave: 1.2, gap: 0.3, enter: 1.2 },
+  ink: { leave: 1.1, gap: 0.3, enter: 1.1 }, spiral: { leave: 1.4, gap: 0.3, enter: 1.2 },
+  velvet: { leave: 1.2, gap: 0.6, enter: 1.2 }, channel: { leave: 0.45, gap: 0.6, enter: 0.5 },
+};
+
+export function pageChangeDuration(p: Partial<PageChangeProps>) {
+  const t = TIMING[p.variant ?? "curtain"];
+  return Math.ceil(((p.holdFrom ?? 1) + t.leave + t.gap + t.enter + (p.holdTo ?? 1.4)) * 30);
+}
+
+const DEFAULT_FROM: PageData = { title: "Tu marca,\nen movimiento", image: "https://wearemiiles.com/studio/componentes/assets/foto.jpg", background: "#FFFFFF", color: "#111111", layout: "a" };
+const DEFAULT_TO: PageData = { title: "Contenido\nque conecta", image: "https://wearemiiles.com/studio/componentes/assets/gorra.jpg", background: "#FEEDED", color: "#111111", layout: "b" };
+const ORIGIN = { x: 540, y: 1100 }; // de dónde nacen circle, ink y spiral: el centro de la foto
+
+const src = (s: string) => (s.startsWith("http") ? s : archivo(s));
+const rnd = (k: number) => { const x = Math.sin(k * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+
+// ---------------------------------------------------------------- la página decorada
+const Page: React.FC<{ d: PageData; family: string; content?: React.CSSProperties }> = ({ d, family, content }) => {
+  const c = d.color ?? "#111111";
+  const title = (
+    <div style={{ textAlign: "center", fontSize: 112, fontWeight: 600, lineHeight: 1.02, letterSpacing: "-0.045em" }}>
+      {d.title.split("\n").map((l, i) => <div key={i}>{l}</div>)}
+    </div>
+  );
+  const image = d.image && (
+    <div style={{ width: 660, height: 760, borderRadius: 24, overflow: "hidden" }}><Img src={src(d.image)} style={{ width: "100%", height: "100%", objectFit: "cover" }} /></div>
+  );
+  return (
+    <AbsoluteFill style={{ background: d.background ?? "#fff", fontFamily: family, color: c, overflow: "hidden" }}>
+      <AbsoluteFill style={{ alignItems: "center", justifyContent: "center", gap: 56, ...content }}>
+        {d.layout !== "b" ? <>{title}{image}</> : <>{image}{title}</>}
+      </AbsoluteFill>
+    </AbsoluteFill>
+  );
+};
+
+// ---------------------------------------------------------------- shaders (WebGL 2)
+const GLSL_COMMON = `#version 300 es
+precision highp float;
+uniform float uProgress, uReveal, uTime, uAspect;
+uniform vec2 uOrigin, uRes;
+uniform vec3 uColor, uAccent;
+out vec4 outColor;
+vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x,289.0);}
+vec4 taylorInvSqrt(vec4 r){return 1.79284291400159-0.85373472095314*r;}
+float snoise(vec3 v){const vec2 C=vec2(1.0/6.0,1.0/3.0);const vec4 D=vec4(0.0,0.5,1.0,2.0);
+vec3 i=floor(v+dot(v,C.yyy));vec3 x0=v-i+dot(i,C.xxx);vec3 g=step(x0.yzx,x0.xyz);vec3 l=1.0-g;vec3 i1=min(g.xyz,l.zxy);vec3 i2=max(g.xyz,l.zxy);
+vec3 x1=x0-i1+C.xxx;vec3 x2=x0-i2+2.0*C.xxx;vec3 x3=x0-1.0+3.0*C.xxx;i=mod(i,289.0);
+vec4 p=permute(permute(permute(i.z+vec4(0.0,i1.z,i2.z,1.0))+i.y+vec4(0.0,i1.y,i2.y,1.0))+i.x+vec4(0.0,i1.x,i2.x,1.0));
+float n_=1.0/7.0;vec3 ns=n_*D.wyz-D.xzx;vec4 j=p-49.0*floor(p*ns.z*ns.z);vec4 x_=floor(j*ns.z);vec4 y_=floor(j-7.0*x_);
+vec4 x=x_*ns.x+ns.yyyy;vec4 y=y_*ns.x+ns.yyyy;vec4 h=1.0-abs(x)-abs(y);vec4 b0=vec4(x.xy,y.xy);vec4 b1=vec4(x.zw,y.zw);
+vec4 s0=floor(b0)*2.0+1.0;vec4 s1=floor(b1)*2.0+1.0;vec4 sh=-step(h,vec4(0.0));vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy;vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;
+vec3 p0=vec3(a0.xy,h.x);vec3 p1=vec3(a0.zw,h.y);vec3 p2=vec3(a1.xy,h.z);vec3 p3=vec3(a1.zw,h.w);
+vec4 norm=taylorInvSqrt(vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3)));p0*=norm.x;p1*=norm.y;p2*=norm.z;p3*=norm.w;
+vec4 m=max(0.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.0);m=m*m;
+return 42.0*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));}
+float fbm(vec3 p,int oct){float s=0.0,a=1.0;for(int i=0;i<6;i++){if(i>=oct)break;s+=snoise(p)*a*0.6;p*=2.0;a*=0.5;}return s;}
+float below(float f,float t,float soft){float h=max(fwidth(f),soft)*0.5;return 1.0-smoothstep(t-h,t+h,f);}
+float reach(vec2 o){return length(max(o,vec2(uAspect,1.0)-o));}
+float hash1(float n){return fract(sin(n*0.1234+1.7)*43758.5453);}
+float hash2(vec2 p){return fract(sin(dot(p,vec2(12.9898,78.233)))*43758.5453);}
+`;
+// position: como en el original, en "alturas de pantalla" y con y = 0 arriba
+const MAIN_HEAD = `void main(){vec2 uv=vec2(gl_FragCoord.x/uRes.x,1.0-gl_FragCoord.y/uRes.y);vec2 position=uv*vec2(uAspect,1.0);
+float progress=uProgress,reveal=uReveal,time=uTime,aspect=uAspect;vec2 origin=uOrigin;vec3 color=uColor;float alpha;vec3 col=color;\n`;
+const MAIN_TAIL = `\nfloat a=progress>=0.999?1.0:clamp(alpha,0.0,1.0)*step(0.001,progress);outColor=vec4(col*a,a);}`;
+
+const SHADERS: Partial<Record<PageChangeVariant, string>> = {
+  dither: `
+    float bayer(float x,float y){float f=mod(mod(x,2.0)*2.0+mod(y,2.0)*3.0,4.0);float c=mod(mod(floor(x/2.0),2.0)*2.0+mod(floor(y/2.0),2.0)*3.0,4.0);return (f*4.0+c+0.5)/16.0;}
+    #define BODY \\
+    float span=1.0-0.16*2.0-0.2;float density=0.0; \\
+    for(int lv=0;lv<3;lv++){float size=lv==0?1.0/8.0:lv==1?1.0/16.0:1.0/32.0;float share=lv==0?0.4:lv==1?0.5:1.0; \\
+      vec2 cell=floor(position/size);float id=cell.x+cell.y*997.0+float(lv)*7919.0+reveal*104729.0; \\
+      float takes=step(hash1(id),share);float moment=hash1(id+50021.0)*span+float(lv)*0.16; \\
+      density=max(density,takes*clamp((progress-moment)/0.2,0.0,1.0));} \\
+    vec2 dot_=floor(position*256.0);alpha=step(bayer(dot_.x,dot_.y),density);`,
+  dissolve: `#define BODY \\
+    float scale=mix(3.0,5.5,reveal);float field=clamp(fbm(vec3(position*scale,reveal*7.0),4)*0.7+0.5,0.0,1.0); \\
+    float thr=mix(-0.15,1.0+0.06+0.02,progress);float covered=below(field,thr,0.0); \\
+    float rim=(1.0-smoothstep(thr,thr+0.06,field))*(1.0-covered);alpha=covered+rim;col=mix(color,uAccent,rim);`,
+  ink: `#define BODY \\
+    float dist=distance(position,origin)/reach(origin);float n=fbm(vec3(position*2.5,reveal*5.0),3); \\
+    float field=clamp(dist+n*0.25,-0.08,1.15);float blot=below(field,mix(-0.1,1.2,progress),0.02); \\
+    float hole=below(field,mix(1.2,-0.1,progress),0.02);alpha=mix(blot,1.0-hole,reveal);col=uAccent;`,
+  spiral: `#define BODY \\
+    vec2 away=position-origin;float dist=length(away)/reach(origin);float ang=atan(away.y,away.x); \\
+    float turned=ang+time*0.15+0.9/(dist+0.2); \\
+    float smoke=fbm(vec3(cos(turned)*dist*3.0,sin(turned)*dist*3.0,time*0.1+reveal*7.0),3); \\
+    float field=dist+smoke*0.2+sin(turned*3.0)*0.07; \\
+    float level=mix(mix(-0.3,1.3,progress),mix(1.3,-0.3,progress),reveal); \\
+    float dark=below(field,level,0.01);float covered=mix(dark,1.0-dark,reveal); \\
+    float outside=max(mix(field-level,level-field,reveal),0.0); \\
+    float side=cos(ang-0.6+time*0.2)*0.3+0.7;float flicker=smoke*0.6+0.9; \\
+    float env=smoothstep(0.0,0.1,progress)*smoothstep(0.0,0.1,1.0-progress); \\
+    float streaks=sin(turned*6.0-outside*30.0)*0.25+0.75; \\
+    float ring=exp(-outside/0.1)+exp(-outside/0.4)*0.2; \\
+    float light=clamp(ring*side*streaks*flicker*env*0.5,0.0,1.0);float line=exp(-outside/0.006); \\
+    vec3 glow=mix(uAccent,vec3(1.0,0.93,0.95),line);float open=1.0-covered; \\
+    alpha=clamp(covered+light*open,0.0,1.0);col=mix(color,glow,open);`,
+  velvet: `#define BODY \\
+    float x=position.x,y=position.y;float PAD=0.08; \\
+    float travel=mix(aspect+PAD,-PAD,progress);float moving=sin(progress*3.14159265); \\
+    float way=mix(1.0,-1.0,reveal);float trail=pow(y,1.5)*0.3*moving*way; \\
+    float ripple=snoise(vec3(y*2.5,time*0.4,0.0))*0.008;float edge=travel+trail+ripple; \\
+    float inside=x-edge;float across=inside/max(aspect-edge,0.05); \\
+    float uneven=snoise(vec3(across*4.0,y*0.8,time*0.25))*0.35; \\
+    float phase=(across+uneven/10.0)*10.0*6.2831853;float sharp=1.0-smoothstep(0.6,1.6,fwidth(phase)); \\
+    float slope=(sin(phase)+sin(phase*2.0+1.0)*0.35)*0.5*sharp; \\
+    vec3 normal=vec3(slope,0.0,1.0)/sqrt(slope*slope+1.0);float lit=clamp(dot(normal,vec3(-0.5,-0.3,0.81)),0.0,1.0); \\
+    float sheen=pow(1.0-normal.z,1.2)*0.35*(lit*0.6+0.4);float stage=mix(1.1,0.7,y); \\
+    float hem=mix(0.55,1.0,smoothstep(0.0,0.014,inside)); \\
+    vec3 body=mix(uAccent*0.2,uAccent*1.05,lit)*stage*hem;vec3 glowc=mix(uAccent,vec3(1.0,0.85,0.8),0.35)*sheen; \\
+    vec3 cloth=body+glowc;float fw=fwidth(inside);float covered=smoothstep(-fw,fw,inside); \\
+    float shadow=(1.0-smoothstep(0.0,0.05,-inside))*0.35; \\
+    float edges=length(position-vec2(aspect*0.5,0.5))/(aspect*0.6); \\
+    float dim=smoothstep(0.0,1.0,progress)*0.55*mix(0.9,1.1,clamp(edges,0.0,1.0)); \\
+    float darkv=1.0-(1.0-shadow)*(1.0-dim);alpha=covered+darkv*(1.0-covered);col=mix(vec3(0.0),cloth,covered);`,
+  channel: `#define BODY \\
+    float picture=mod(floor(time*30.0),97.0);vec2 grain=floor(position*vec2(260.0*0.6,260.0)); \\
+    float snow=mix(0.06,0.92,hash2(grain+picture*vec2(13.7,7.3))); \\
+    float deal=mod(floor(time*14.0),97.0)+reveal*50.0; \\
+    float wide=hash2(vec2(floor(position.y*6.0),deal));float thin=hash2(vec2(floor(position.y*40.0),deal+3.1)); \\
+    float row=mix(wide,thin,0.5);float level=progress*1.2-0.1;float snowy=step(row,level); \\
+    float signal=smoothstep(0.0,0.2,progress);float scan=step(0.5,fract(position.y*280.0))*0.12; \\
+    float roll=(position.y-fract(time*1.2))/0.08;float bar=exp(-roll*roll)*0.18; \\
+    float line=step(0.985,hash2(vec2(floor(position.y*300.0),deal+7.0)));float light=max(bar,line); \\
+    float overlay=max(scan,light)*signal;float oc=step(scan,light); \\
+    alpha=mix(overlay,1.0,snowy);col=mix(vec3(oc),vec3(snow+bar*0.5),snowy);`,
+};
+
+const VERT = `#version 300 es
+in vec2 p;void main(){gl_Position=vec4(p,0.0,1.0);}`;
+const hex = (h: string) => { const n = parseInt(h.replace("#", ""), 16); return [((n >> 16) & 255) / 255, ((n >> 8) & 255) / 255, (n & 255) / 255]; };
+
+const ShaderCover: React.FC<{ variant: PageChangeVariant; progress: number; reveal: number; time: number; cover: string; accent: string }> = ({ variant, progress, reveal, time, cover, accent }) => {
+  const { width, height } = useVideoConfig();
+  const ref = useRef<HTMLCanvasElement>(null);
+  const glRef = useRef<{ gl: WebGL2RenderingContext; prog: WebGLProgram } | null>(null);
+  useLayoutEffect(() => {
+    const canvas = ref.current;
+    if (!canvas) return;
+    if (!glRef.current) {
+      const gl = canvas.getContext("webgl2", { premultipliedAlpha: true, preserveDrawingBuffer: true, antialias: false });
+      if (!gl) return;
+      const body = SHADERS[variant]!;
+      const fs = GLSL_COMMON + body + "\n" + MAIN_HEAD + "BODY\n" + MAIN_TAIL;
+      const mk = (type: number, s: string) => { const sh = gl.createShader(type)!; gl.shaderSource(sh, s); gl.compileShader(sh); if (!gl.getShaderParameter(sh, gl.COMPILE_STATUS)) console.error(gl.getShaderInfoLog(sh)); return sh; };
+      const prog = gl.createProgram()!;
+      gl.attachShader(prog, mk(gl.VERTEX_SHADER, VERT)); gl.attachShader(prog, mk(gl.FRAGMENT_SHADER, fs)); gl.linkProgram(prog);
+      const buf = gl.createBuffer(); gl.bindBuffer(gl.ARRAY_BUFFER, buf);
+      gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1, -1, 1, -1, -1, 1, -1, 1, 1, -1, 1, 1]), gl.STATIC_DRAW);
+      const loc = gl.getAttribLocation(prog, "p"); gl.enableVertexAttribArray(loc); gl.vertexAttribPointer(loc, 2, gl.FLOAT, false, 0, 0);
+      glRef.current = { gl, prog };
+    }
+    const { gl, prog } = glRef.current;
+    gl.viewport(0, 0, canvas.width, canvas.height);
+    gl.useProgram(prog);
+    const u = (n: string) => gl.getUniformLocation(prog, n);
+    gl.uniform1f(u("uProgress"), progress); gl.uniform1f(u("uReveal"), reveal); gl.uniform1f(u("uTime"), time);
+    gl.uniform1f(u("uAspect"), width / height); gl.uniform2f(u("uOrigin"), ORIGIN.x / height, ORIGIN.y / height);
+    gl.uniform2f(u("uRes"), canvas.width, canvas.height);
+    gl.uniform3fv(u("uColor"), hex(cover)); gl.uniform3fv(u("uAccent"), hex(accent));
+    gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT); gl.drawArrays(gl.TRIANGLES, 0, 6); gl.finish();
+  });
+  return <canvas ref={ref} width={width / 2} height={height / 2} style={{ position: "absolute", inset: 0, width: "100%", height: "100%" }} />;
+};
+
+// ---------------------------------------------------------------- peel: polígonos del doblez
+type Pt = [number, number];
+function cut(poly: Pt[], a: number, b: number, c: number) {
+  const side = ([u, v]: Pt) => a * u + b * v + c;
+  const kept: Pt[] = [];
+  poly.forEach((p, i) => {
+    const n = poly[(i + 1) % poly.length];
+    const [h, t] = [side(p), side(n)];
+    if (h >= 0) kept.push(p);
+    if (h >= 0 !== t >= 0) { const k = h / (h - t); kept.push([p[0] + (n[0] - p[0]) * k, p[1] + (n[1] - p[1]) * k]); }
+  });
+  return kept;
+}
+const poly = (pts: Pt[], w: number, h: number) => (pts.length < 3 ? "polygon(0px 0px,0px 0px,0px 0px)" : `polygon(${pts.map(([u, v]) => `${w - u}px ${h - v}px`).join(",")})`);
+
+// ---------------------------------------------------------------- componente
+export const PageChange: React.FC<PageChangeProps> = ({
+  variant, from = DEFAULT_FROM, to = DEFAULT_TO, cover = "#111111", accent = "#4059F1",
+  phrase = "CONTENIDO QUE SE SIENTE REAL", labels = ["Inicio", "Contacto"], font = "https://wearemiiles.com/studio/componentes/assets/Manrope.woff2", holdFrom = 1, holdTo = 1.4,
+}) => {
+  const frame = useCurrentFrame();
+  const { fps, width: W, height: H } = useVideoConfig();
+  const [handle] = useState(() => delayRender("Cargando tipografía"));
+  const isFile = /\.(woff2?|otf|ttf)$/.test(font);
+  useEffect(() => {
+    if (!isFile) { continueRender(handle); return; }
+    new FontFace("PC-Font", `url(${archivo(font)})`).load().then((f) => { document.fonts.add(f); continueRender(handle); }).catch(() => continueRender(handle));
+  }, [font, handle, isFile]);
+  const family = `${isFile ? "PC-Font" : font}, Helvetica, Arial, sans-serif`;
+
+  const T = TIMING[variant];
+  const t = frame / fps;
+  const leaveStart = holdFrom, enterStart = holdFrom + T.leave + T.gap;
+  const ls = t - leaveStart, es = t - enterStart; // segundos dentro de leave / enter
+  const lp = T.leave > 0 ? clamp(ls / T.leave) : 1;
+  const covered = ls >= 0 && es < 0;
+  const entering = es >= 0;
+  const seg = (s: number, start: number, dur: number, ease: (x: number) => number) => ease(clamp((s - start) / dur));
+
+  const A = (style?: React.CSSProperties) => <Page d={from} family={family} content={style} />;
+  const B = (style?: React.CSSProperties) => <Page d={to} family={family} content={style} />;
+  // entrada del contenido nuevo (entrance: 0.2 s después de empezar a revelar)
+  const entrance = (start = 0.2): React.CSSProperties => {
+    const k = seg(es, start, 0.9, E.xo);
+    return { transform: `translateY(${(1 - k) * 60}px)`, opacity: k };
+  };
+  const panel = (style: React.CSSProperties) => <AbsoluteFill style={{ background: cover, ...style }} />;
+
+  switch (variant) {
+    case "curtain": {
+      if (!entering) {
+        const k = seg(ls, 0, 1, pInOut(1));
+        return <AbsoluteFill>{A({ transform: `translateY(${-100 * k}px)`, opacity: 1 - k })}{ls >= 0 && panel({ transformOrigin: "50% 100%", transform: `scaleY(${k})` })}</AbsoluteFill>;
+      }
+      const k = seg(es, 0, 1, pOut(1));
+      return <AbsoluteFill>{B({ transform: `translateY(${100 * (1 - k)}px)`, opacity: k })}{panel({ transformOrigin: "50% 0%", transform: `scaleY(${1 - k})` })}</AbsoluteFill>;
+    }
+    case "wipe": {
+      if (!entering) {
+        const k = seg(ls, 0, 0.9, pInOut(1));
+        return <AbsoluteFill>{A({ transform: `translateX(${-80 * k}px)`, opacity: 1 - k })}{ls >= 0 && panel({ transform: `translateX(${100 * (1 - k)}%)` })}</AbsoluteFill>;
+      }
+      const k = seg(es, 0, 0.9, pOut(1));
+      return <AbsoluteFill>{B({ transform: `translateX(${80 * (1 - k)}px)`, opacity: k })}{panel({ transform: `translateX(${-100 * k}%)` })}</AbsoluteFill>;
+    }
+    case "columns": {
+      const bars = 5;
+      return (
+        <AbsoluteFill>
+          {entering ? B(entrance()) : A()}
+          {ls >= 0 && Array.from({ length: bars }, (_, i) => {
+            const y = !entering ? 100 * (1 - seg(ls, i * 0.06, 0.7, pInOut(1))) : -100 * seg(es, i * 0.06, 0.7, pOut(1));
+            return <div key={i} style={{ position: "absolute", top: 0, bottom: 0, left: `${(i / bars) * 100}%`, width: `calc(${100 / bars}% + 1px)`, background: cover, transform: `translateY(${y}%)` }} />;
+          })}
+        </AbsoluteFill>
+      );
+    }
+    case "circle": {
+      const far = Math.max(Math.hypot(ORIGIN.x, ORIGIN.y), Math.hypot(W - ORIGIN.x, ORIGIN.y), Math.hypot(ORIGIN.x, H - ORIGIN.y), Math.hypot(W - ORIGIN.x, H - ORIGIN.y));
+      if (!entering) {
+        const r = far * seg(ls, 0, 0.7, pInOut(2));
+        return <AbsoluteFill>{A()}{ls >= 0 && panel({ clipPath: `circle(${r}px at ${ORIGIN.x}px ${ORIGIN.y}px)` })}</AbsoluteFill>;
+      }
+      const hole = far * seg(es, 0, 0.7, pOut(2));
+      const mask = `radial-gradient(circle at ${ORIGIN.x}px ${ORIGIN.y}px, transparent ${hole}px, #000 ${hole + 1}px)`;
+      return <AbsoluteFill>{B()}{panel({ WebkitMaskImage: mask, maskImage: mask })}</AbsoluteFill>;
+    }
+    case "typewriter": {
+      // una hoja negra con una cuadrícula de celdas que escriben la frase y luego la borran
+      const cols = 3, cellW = W / cols;
+      const words = phrase.split(" "), linesP: string[] = [];
+      for (const w of words) { const last = linesP[linesP.length - 1]; if (last !== undefined && `${last} ${w}`.length <= 12) linesP[linesP.length - 1] = `${last} ${w}`; else linesP.push(w); }
+      const text = linesP.join("\n"), N = text.length;
+      const fs = (cellW * 0.9) / (Math.max(...linesP.map((l) => l.length)) * 0.6);
+      const rowH = fs * (1.1 * linesP.length + 0.9), rows = Math.ceil(H / rowH) + 1;
+      const typeTime = N * 0.022, eraseTime = N * 0.015;
+      const sheetIn = clamp(ls / 0.15), sheetOut = seg(es, Math.max(0.75 + eraseTime, 1.2), 0.35, pInOut(1));
+      if (ls < 0) return A();
+      const cells: React.ReactNode[] = [];
+      let k = 0;
+      for (let c = 0; c <= cols; c++) for (let r = 0; r < rows; r++) {
+        k++;
+        if (rnd(k * 3.1) < 0.2) continue;
+        const wave = (c / cols) * 0.5 + rnd(k * 7.7) * 0.25;
+        const typed = Math.round(N * clamp((ls - 0.15 - wave) / typeTime));
+        const erased = entering ? Math.round(N * clamp((es - wave) / eraseTime)) : 0;
+        const blinkOn = Math.floor(t / 0.5) % 2 === 0;
+        const caret = typed > 0 && erased === 0 ? "_" : "";
+        cells.push(
+          <div key={k} style={{ position: "absolute", left: (c - 0.3) * cellW, top: r * rowH, whiteSpace: "pre" }}>
+            <span style={{ visibility: "hidden" }}>{text.slice(0, erased)}</span>
+            <span>{text.slice(erased, typed)}</span>
+            <span style={{ opacity: typed === N && !blinkOn ? 0 : 1 }}>{caret}</span>
+          </div>,
+        );
+      }
+      return (
+        <AbsoluteFill>
+          {entering ? B() : A()}
+          <AbsoluteFill style={{ background: "#0c0c0c", opacity: sheetIn * (1 - sheetOut), color: "#fff", fontFamily: "'Courier New', ui-monospace, monospace", fontSize: fs, lineHeight: 1.1, overflow: "hidden" }}>{cells}</AbsoluteFill>
+        </AbsoluteFill>
+      );
+    }
+    case "stack": {
+      if (ls < 0) return A();
+      const k = seg(ls, 0, 1.4, E.xio);
+      if (!entering) {
+        return (
+          <AbsoluteFill style={{ background: cover }}>
+            <AbsoluteFill style={{ transform: `scale(${1 - 0.1 * k})` }}>{A()}<AbsoluteFill style={{ background: "#000", opacity: 0.5 * k }} /></AbsoluteFill>
+            <AbsoluteFill style={{ background: from.background, transform: `translateY(${100 * (1 - k)}%)` }} />
+          </AbsoluteFill>
+        );
+      }
+      return <AbsoluteFill>{B(entrance())}<AbsoluteFill style={{ background: from.background, opacity: 1 - seg(es, 0, 0.6, E.xo) }} /></AbsoluteFill>;
+    }
+    case "slide-over": {
+      if (es < 0) return A();
+      const k = seg(es, 0, 1.1, E.xio);
+      return (
+        <AbsoluteFill style={{ background: cover }}>
+          <AbsoluteFill style={{ clipPath: `inset(0px 0px ${H * k}px 0px)` }}>
+            <AbsoluteFill style={{ transform: `scale(${1 - 0.1 * k})` }}>{A()}<AbsoluteFill style={{ background: cover, opacity: 0.6 * k }} /></AbsoluteFill>
+          </AbsoluteFill>
+          <AbsoluteFill style={{ transform: `translateY(${H * (1 - k)}px)` }}>{B()}</AbsoluteFill>
+        </AbsoluteFill>
+      );
+    }
+    case "peel": {
+      if (es < 0) return A();
+      const s = (W + H) * seg(es, 0, 1.2, pInOut(1));
+      const page: Pt[] = [[0, 0], [W, 0], [W, H], [0, H]];
+      const flat = cut(page, 1, 1, -s), turned = cut(page, -1, -1, s);
+      let flap = cut(flat, -1, 0, s); flap = cut(flap, 0, -1, s); flap = cut(flap, 1, 0, H - s); flap = cut(flap, 0, 1, W - s);
+      const travelled = s / (W + H), dark = 0.05 * Math.sqrt(travelled);
+      return (
+        <AbsoluteFill>
+          {B()}
+          <AbsoluteFill style={{ background: "#000", opacity: 0.5 * (1 - travelled), clipPath: poly(turned, W, H) }} />
+          <AbsoluteFill style={{ clipPath: poly(flat, W, H) }}>{A()}</AbsoluteFill>
+          <AbsoluteFill style={{ background: "#000", opacity: dark, clipPath: poly(flat, W, H) }} />
+          <AbsoluteFill style={{ background: `color-mix(in srgb, ${from.background}, #000 10%)`, clipPath: poly(flap, W, H) }} />
+          <AbsoluteFill style={{ background: "#000", opacity: dark, clipPath: poly(flap, W, H) }} />
+        </AbsoluteFill>
+      );
+    }
+    case "slices": {
+      if (es < 0) return A();
+      const n = 5, cw = W / n;
+      return (
+        <AbsoluteFill>
+          {Array.from({ length: n }, (_, i) => {
+            const k = seg(es, i * 0.08, 0.9, pInOut(2));
+            return (
+              <div key={i} style={{ position: "absolute", top: 0, bottom: 0, left: i * cw, width: cw + 1, overflow: "hidden" }}>
+                <div style={{ position: "absolute", top: 0, left: -i * cw, width: W, height: H, transform: `translateY(${-H * k}px)` }}>{A()}</div>
+                <div style={{ position: "absolute", top: 0, left: -i * cw, width: W, height: H, transform: `translateY(${H * (1 - k)}px)` }}>{B()}</div>
+              </div>
+            );
+          })}
+        </AbsoluteFill>
+      );
+    }
+    case "frame": {
+      if (es < 0) return A();
+      const clip = (k: number) => { const side = lerp(35, 0, k), mid = lerp(50, 0, k); return `inset(${mid}% ${side}% ${mid}% ${side}%)`; };
+      return (
+        <AbsoluteFill>
+          {A()}
+          <AbsoluteFill style={{ background: accent, clipPath: clip(seg(es, 0, 1.2, E.xo)) }} />
+          <AbsoluteFill style={{ clipPath: clip(seg(es, 0.15, 1.2, E.xo)) }}>{B()}</AbsoluteFill>
+        </AbsoluteFill>
+      );
+    }
+    case "corner": {
+      if (es < 0) return A();
+      const clip = (k: number) => `inset(0% ${100 * (1 - k)}% ${100 * (1 - k)}% 0%)`;
+      const kv = seg(es, 0.24, 0.9, E.xio);
+      return (
+        <AbsoluteFill>
+          {A()}
+          <AbsoluteFill style={{ background: accent, clipPath: clip(seg(es, 0, 0.9, E.xio)) }} />
+          <AbsoluteFill style={{ background: "#0c0c0c", clipPath: clip(seg(es, 0.12, 0.9, E.xio)) }} />
+          <AbsoluteFill style={{ clipPath: clip(kv), overflow: "hidden" }}>
+            <AbsoluteFill style={{ transform: `translate(${-W * 0.1 * (1 - kv)}px, ${-H * 0.1 * (1 - kv)}px)` }}>{B()}</AbsoluteFill>
+          </AbsoluteFill>
+        </AbsoluteFill>
+      );
+    }
+    case "carousel": {
+      if (ls < 0) return A();
+      const gap = W * 0.04, spacing = W + gap, here = 1, target = 2;
+      const zoomOut = seg(ls, 0, 0.9, E.xio);
+      const slideDur = 0.37;
+      const slide = entering ? seg(es, 0, slideDur, pInOut(0)) : 0;
+      const zoomIn = entering ? seg(es, Math.max(0, slideDur - 0.6), 0.9, E.xio) : 0;
+      const scale = lerp(1, 1 / 1.5, zoomOut) + (1 - 1 / 1.5) * zoomIn;
+      const camX = lerp(here, target, slide) * spacing + W / 2;
+      const nameCard = (label: string) => (
+        <AbsoluteFill style={{ background: from.background, display: "grid", placeItems: "center", fontFamily: family, fontSize: W * 0.11, fontWeight: 600, letterSpacing: "-0.045em", color: from.color }}>{label}</AbsoluteFill>
+      );
+      const cards = [nameCard(labels[0]), A(), <AbsoluteFill key="b" style={{ opacity: entering ? clamp(es / 0.3) : 0 }}>{B()}</AbsoluteFill>, nameCard(labels[1])];
+      return (
+        <AbsoluteFill style={{ background: cover, overflow: "hidden" }}>
+          <div style={{ position: "absolute", left: 0, top: 0, width: 4 * spacing, height: H, transformOrigin: "0 0", transform: `translate(${W / 2 - scale * camX}px, ${(H / 2) * (1 - scale)}px) scale(${scale})` }}>
+            {cards.map((c, i) => <div key={i} style={{ position: "absolute", left: i * spacing, top: 0, width: W, height: H, overflow: "hidden" }}>{c}</div>)}
+          </div>
+        </AbsoluteFill>
+      );
+    }
+    case "cube": {
+      if (ls < 0) return A();
+      const half = H / 2, back = H * 1.8 * (1 / 0.38 - 1);
+      let lift = seg(ls, 0, 0.5, E.xi), turn = 0;
+      if (entering) { turn = seg(es, 0, 0.5, pInOut(2)); lift = 1 - seg(es, 0.5, 0.9, E.xo); }
+      return (
+        <AbsoluteFill style={{ background: cover, overflow: "hidden" }}>
+          <AbsoluteFill style={{ perspective: H * 1.8 }}>
+            <AbsoluteFill style={{ transformStyle: "preserve-3d", transform: `translateZ(${-half - back * lift}px) rotateX(${-90 * turn}deg)` }}>
+              <AbsoluteFill style={{ transform: `translateZ(${half}px)`, backfaceVisibility: "hidden" }}>{A()}<AbsoluteFill style={{ background: cover, opacity: 0.55 * turn }} /></AbsoluteFill>
+              <AbsoluteFill style={{ transform: `rotateX(90deg) translateZ(${half}px)`, backfaceVisibility: "hidden" }}>{B()}<AbsoluteFill style={{ background: cover, opacity: 0.55 * (1 - turn) }} /></AbsoluteFill>
+            </AbsoluteFill>
+          </AbsoluteFill>
+        </AbsoluteFill>
+      );
+    }
+    case "tear":
+      return <Tear A={A} B={B} ls={ls} es={es} W={W} H={H} />;
+    default: {
+      // shaders: dither, dissolve, ink, spiral, velvet, channel
+      if (ls < 0) return A();
+      const leaveEase = variant === "dither" ? pInOut(0) : variant === "spiral" ? pInOut(2) : variant === "channel" ? pIn(0) : pInOut(1);
+      const enterEase = variant === "dither" ? pInOut(0) : variant === "spiral" ? pOut(2) : variant === "velvet" ? pInOut(1) : pOut(1);
+      const progress = entering ? 1 - enterEase(clamp(es / T.enter)) : leaveEase(lp);
+      const reveal = entering ? 1 : 0;
+      // channel: la página brinca de lado mientras pierde / recupera la señal
+      const jump = (s: number, dur: number, worse: boolean, seed: number) => {
+        if (variant !== "channel" || s < 0 || s > dur) return {};
+        const i = Math.floor(s / 0.05), amount = worse ? s / dur : 1 - s / dur, big = rnd(i * 3 + seed) < 0.3;
+        return { transform: `translate(${(rnd(i * 5 + seed) * 2 - 1) * 4 * amount * (big ? 1 : 0.3)}%, ${big ? (rnd(i * 9 + seed) * 2 - 1) * 2 * amount : 0}%)` };
+      };
+      return (
+        <AbsoluteFill style={{ background: cover }}>
+          {entering ? <AbsoluteFill style={jump(es, T.enter * 0.8, false, 7)}>{B()}</AbsoluteFill> : <AbsoluteFill style={jump(ls, T.leave, true, 3)}>{A()}</AbsoluteFill>}
+          <ShaderCover variant={variant} progress={covered && lp >= 1 ? 1 : progress} reveal={reveal} time={t} cover={cover} accent={accent} />
+        </AbsoluteFill>
+      );
+    }
+  }
+};
+
+// ---------------------------------------------------------------- tear: la hoja se rompe en dos
+const Tear: React.FC<{ A: (s?: React.CSSProperties) => React.ReactNode; B: (s?: React.CSSProperties) => React.ReactNode; ls: number; es: number; W: number; H: number }> = ({ A, B, ls, es, W, H }) => {
+  const ROWS = 80;
+  const line = useMemo(() => {
+    const x = clamp(ORIGIN.x, W * 0.25, W * 0.75);
+    const waves = [1, 2.3, 5.1].map((f, i) => ({ f, ph: rnd(i + 4) * Math.PI * 2, size: (W * 0.09) / (i + 1) / 1.6 }));
+    const xs: number[] = [], rims: number[] = [];
+    for (let i = 0; i <= ROWS; i++) {
+      const t = i / ROWS;
+      xs.push(x + waves.reduce((s, w) => s + Math.sin(t * w.f * Math.PI + w.ph) * w.size, 0) + (rnd(i * 2.3) - 0.5) * 6);
+      rims.push(3 + rnd(i * 5.1) * 4 + (rnd(i * 8.7) < 0.12 ? 6 + rnd(i) * 6 : 0));
+    }
+    return { xs, rims };
+  }, [W]);
+  if (ls < 0) return <>{A()}</>;
+  const px = (x: number, y: number) => `${x.toFixed(1)}px ${y.toFixed(1)}px`;
+  const rowY = (i: number) => (i / ROWS) * H;
+  const halfPoly = (side: -1 | 1) => `polygon(${[...line.xs.map((x, i) => px(x, rowY(i))), ...(side < 0 ? [px(0, H), px(0, 0)] : [px(W, H), px(W, 0)])].join(",")})`;
+  const reach = (ROWS + 3) * pIn(0)(clamp(ls / 0.7));
+  const rim = (side: -1 | 1) => {
+    const along = line.xs.map((x, i) => px(x + side * line.rims[i] * clamp((reach - i) / 3), rowY(i)));
+    const back = line.xs.map((x, i) => px(x, rowY(i))).reverse();
+    return `polygon(${[...along, ...back].join(",")})`;
+  };
+  const k = es >= 0 ? pInOut(2)(clamp(es / 1.2)) : 0;
+  const apart = Math.max(Math.max(...line.xs) + 80, W - Math.min(...line.xs) + 80);
+  const sh = es >= 0 ? clamp(es / 0.36) : 0;
+  const origin = px(line.xs[ROWS], H);
+  const half = (side: -1 | 1) => (
+    <AbsoluteFill style={{ transformOrigin: origin, transform: `translateX(${side * apart * k}px) rotate(${side * 4 * k}deg)`, filter: `drop-shadow(0 ${18 * sh}px ${30 * sh}px rgba(0,0,0,${0.3 * sh}))` }}>
+      <AbsoluteFill style={{ clipPath: halfPoly(side) }}>{A()}</AbsoluteFill>
+      <AbsoluteFill style={{ filter: "drop-shadow(0 0 1px rgba(0,0,0,0.35))" }}><AbsoluteFill style={{ background: "#f6f3ec", clipPath: rim(side === -1 ? 1 : -1) }} /></AbsoluteFill>
+    </AbsoluteFill>
+  );
+  return <AbsoluteFill>{es >= 0 && B()}{half(-1)}{half(1)}</AbsoluteFill>;
+};

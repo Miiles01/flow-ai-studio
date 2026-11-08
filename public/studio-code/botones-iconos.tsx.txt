@@ -23,6 +23,11 @@ import React, { useEffect, useState } from "react";
 import { AbsoluteFill, continueRender, delayRender, spring, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import * as Icons from "lucide-react";
 
+// Archivos: si la ruta empieza con http se usa tal cual (los ejemplos viven en wearemiiles.com y funcionan sin copiar nada);
+// si es una ruta local (p. ej. "fotos/mia.jpg"), se busca en la carpeta public/ de tu proyecto.
+const archivo = (p: string) => (/^https?:\/\//.test(p) ? p : staticFile(p));
+
+
 export type Pill = { icon: string; label: string };
 export type IconPillsProps = {
   rows: Pill[][];
@@ -39,7 +44,7 @@ export type IconPillsProps = {
 
 export const IconPills: React.FC<IconPillsProps> = ({
   rows, background = "#FFFFFF", activeBg = "#E8ECFE", activeColor = "#4059F1", idleBg = "#EEEFF2", idleColor = "#9499AE",
-  font = "fonts/Manrope.woff2", fontSize = 76, every = 22, keepOpen = false,
+  font = "https://wearemiiles.com/studio/componentes/assets/Manrope.woff2", fontSize = 76, every = 22, keepOpen = false,
 }) => {
   const frame = useCurrentFrame();
   const { fps } = useVideoConfig();
@@ -47,7 +52,7 @@ export const IconPills: React.FC<IconPillsProps> = ({
   const isFile = /\.(woff2?|otf|ttf)$/.test(font);
   useEffect(() => {
     if (!isFile) { continueRender(handle); return; }
-    new FontFace("IP-Font", `url(${staticFile(font)})`).load().then((f) => { document.fonts.add(f); continueRender(handle); }).catch(() => continueRender(handle));
+    new FontFace("IP-Font", `url(${archivo(font)})`).load().then((f) => { document.fonts.add(f); continueRender(handle); }).catch(() => continueRender(handle));
   }, [font, handle, isFile]);
 
   const flat = rows.flat();

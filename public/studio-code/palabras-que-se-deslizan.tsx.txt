@@ -1,0 +1,167 @@
+/* ============================================================================
+   CÓMO USAR ESTE COMPONENTE (instrucciones para tu asistente de IA:
+   Claude, Codex, Gemini, Cursor, Antigravity o cualquier otro)
+   ----------------------------------------------------------------------------
+   - Componente de Remotion (React) para video vertical 1080×1920 a 30 fps.
+     Si el proyecto no tiene Remotion, créalo (npx create-video@latest), copia este
+     archivo en src/ y registra una <Composition> de slideWordsDuration(props) cuadros.
+   - Palabras gigantes en fila, como un carrusel. Cada cierto tiempo la fila se desliza
+     a la siguiente palabra. Detrás hay una "pizarra" de fotos (arriba y abajo de las
+     palabras, sin encimarse) que se mueve junto con ellas, un poco más lento. Da la
+     vuelta sin fin.
+   - Ajustes:
+     · words: las palabras (cortas se ven mejor)
+     · items: fotos (src) o tarjetas de color con ícono para el fondo (se repiten en la pizarra)
+     · imageOpacity: qué tan visibles son las fotos (0.7 por defecto)
+     · parallax: qué tan rápido se mueve la pizarra respecto a las palabras (0.6)
+     · color (texto), background (blanco) · font: archivo en public/ · fontSize · weight
+     · hold: cuadros quieta en cada palabra · move: cuadros del deslizamiento
+   - Para renderizar: npx remotion render src/index.ts <Id> out/video.mp4
+   ========================================================================== */
+// Palabras que se deslizan (Remotion) · Miiles Estudio · inspirado en "Draggable Menu" de Codrops
+import React, { useEffect, useMemo, useState } from "react";
+import { AbsoluteFill, Easing, Img, continueRender, delayRender, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
+
+// Archivos: si la ruta empieza con http se usa tal cual (los ejemplos viven en wearemiiles.com y funcionan sin copiar nada);
+// si es una ruta local (p. ej. "fotos/mia.jpg"), se busca en la carpeta public/ de tu proyecto.
+const archivo = (p: string) => (/^https?:\/\//.test(p) ? p : staticFile(p));
+
+
+type Card = { src?: string; color?: string; icon?: string; iconColor?: string };
+export type SlideWordsProps = {
+  words: string[];
+  items: Card[];
+  imageOpacity?: number;
+  parallax?: number;
+  color?: string;
+  background?: string;
+  font?: string;
+  fontSize?: number;
+  weight?: number;
+  hold?: number;
+  move?: number;
+};
+
+const CUBIC_OUT = Easing.out(Easing.cubic);   // menú y letras (0.8 s)
+
+export function slideWordsDuration(p: Partial<SlideWordsProps>) {
+  return (p.words?.length ?? 5) * ((p.hold ?? 40) + (p.move ?? 30));
+}
+
+export const SlideWords: React.FC<SlideWordsProps> = ({
+  words, items, imageOpacity = 0.7, parallax = 0.6, color = "#111111", background = "#FFFFFF",
+  font = "https://wearemiiles.com/studio/componentes/assets/Manrope.woff2", fontSize = 240, weight = 700, hold = 40, move = 30,
+}) => {
+  const frame = useCurrentFrame();
+  const { width, height } = useVideoConfig();
+  const [handle] = useState(() => delayRender("Cargando tipografía"));
+  const [ready, setReady] = useState(false);
+  const isFile = /\.(woff2?|otf|ttf)$/.test(font);
+  useEffect(() => {
+    const done = () => { setReady(true); continueRender(handle); };
+    if (!isFile) { done(); return; }
+    new FontFace("SW-Font", `url(${archivo(font)})`).load().then((f) => { document.fonts.add(f); done(); }).catch(done);
+  }, [font, handle, isFile]);
+  const family = `${isFile ? "SW-Font" : font}, Helvetica, Arial, sans-serif`;
+
+  // Ancho real de cada palabra (para separarlas como en el original: 10vw entre una y otra)
+  const widthsOf = useMemo(() => {
+    const ctx = document.createElement("canvas").getContext("2d")!;
+    ctx.font = `${weight} ${fontSize}px ${family}`;
+    return words.map((w) => ctx.measureText(w).width);
+  }, [words, fontSize, weight, family, ready]);
+  const gap = width * 0.1;
+
+  const n = words.length, cycle = hold + move;
+  const step = Math.floor(frame / cycle);
+  const t = frame - step * cycle;
+  const cur = step % n, next = (cur + 1) % n;
+  const moving = t >= hold;
+  const k = moving ? (t - hold) / move : 0;
+  // un pequeño "arrastre" (lento) y luego se suelta con cubic out, como al soltar el mouse
+  const p = moving ? (k < 0.25 ? 0.12 * (k / 0.25) ** 2 : 0.12 + 0.88 * CUBIC_OUT((k - 0.25) / 0.75)) : 0;
+
+  // Posición x del centro de la palabra a "d" lugares del actual
+  const xOf = (d: number) => {
+    let x = 0;
+    const idx = (j: number) => ((j % n) + n) % n;
+    if (d > 0) for (let j = 0; j < d; j++) x += widthsOf[idx(cur + j)] / 2 + gap + widthsOf[idx(cur + j + 1)] / 2;
+    if (d < 0) for (let j = 0; j > d; j--) x -= widthsOf[idx(cur + j)] / 2 + gap + widthsOf[idx(cur + j - 1)] / 2;
+    return x;
+  };
+  const shift = xOf(1) * p;
+
+  // Pizarra de fondo: las fotos están repartidas en una tira ancha (arriba y abajo de las
+  // palabras, sin encimarse) que se mueve junto con las palabras, un poco más lento (paralaje)
+  const idxW = (j: number) => ((j % n) + n) % n;
+  const stepLen = (j: number) => widthsOf[idxW(j)] / 2 + gap + widthsOf[idxW(j + 1)] / 2;
+  const loopLen = words.reduce((acc, _, j) => acc + stepLen(j), 0);
+  let travel = 0;
+  for (let j = 0; j < step % n; j++) travel += stepLen(j);
+  travel += shift;
+  const boardLen = loopLen * parallax;
+  const slots = Math.max(3, Math.round(boardLen / 400));
+  const slotW = boardLen / slots;
+  const rnd = (v: number) => { const x = Math.sin(v * 91.73) * 43758.55; return x - Math.floor(x); };
+  const textTop = height / 2 - fontSize * 0.75, textBottom = height / 2 + fontSize * 0.75;
+  const board: React.ReactNode[] = [];
+  for (let j = 0; j < slots; j++) {
+    for (const band of [0, 1]) {
+      const bw = Math.min(slotW - 50, 230 + rnd(j * 7 + band) * 110), bh = bw * 1.25;
+      const xIn = rnd(j * 3 + band * 5) * Math.max(0, slotW - 40 - bw);
+      const top = band === 0
+        ? 140 + rnd(j * 11 + 1) * Math.max(0, textTop - 80 - bh - 140)
+        : textBottom + 80 + rnd(j * 13 + 2) * Math.max(0, height - 140 - (textBottom + 80) - bh);
+      let x = j * slotW + 20 + xIn - ((travel * parallax) % boardLen);
+      if (x + bw < 0) x += boardLen;
+      const item = items[(j * 2 + band) % items.length];
+      for (const xx of [x, x - boardLen, x + boardLen]) {
+        if (xx + bw < -10 || xx > width + 10) continue;
+        board.push(
+          <div key={`${j}-${band}-${xx > x ? 1 : xx < x ? -1 : 0}`} style={{ position: "absolute", left: xx, top, width: bw, height: bh, overflow: "hidden", borderRadius: 8,
+            background: item.color ?? "#EEEFF2", opacity: imageOpacity }}>
+            {item.src && <Img src={item.src.startsWith("http") ? item.src : archivo(item.src)} style={{ width: "100%", height: "100%", objectFit: "cover" }} />}
+            {item.icon && <div style={{ position: "absolute", left: "30%", top: "30%", width: "40%", height: "40%", background: item.iconColor ?? "#fff",
+              WebkitMaskImage: `url(${archivo(item.icon)})`, maskImage: `url(${archivo(item.icon)})`, WebkitMaskSize: "contain", maskSize: "contain",
+              WebkitMaskRepeat: "no-repeat", maskRepeat: "no-repeat", WebkitMaskPosition: "center", maskPosition: "center" }} />}
+          </div>,
+        );
+      }
+    }
+  }
+
+  const Word: React.FC<{ word: string }> = ({ word }) => (
+    <div style={{ fontFamily: family, fontWeight: weight, fontSize, lineHeight: 1.2, letterSpacing: "-0.03em", whiteSpace: "pre", color }}>{word}</div>
+  );
+
+  return (
+    <AbsoluteFill style={{ background, overflow: "hidden" }}>
+      {board}
+      {[-2, -1, 0, 1, 2, 3].map((d) => {
+        const wi = (((cur + d) % n) + n) % n;
+        const w = widthsOf[wi];
+        const cx = width / 2 + xOf(d) - shift;
+        if (cx + w / 2 < -50 || cx - w / 2 > width + 50) return null;
+        return (
+          <div key={d} style={{ position: "absolute", left: cx - w / 2, top: height / 2 - fontSize * 0.6 }}>
+            <Word word={words[wi]} />
+          </div>
+        );
+      })}
+    </AbsoluteFill>
+  );
+};
+
+// Ejemplo de tarjetas (cámbialas por tus fotos o colores con ícono en public/)
+export const exampleItems: Card[] = [
+  { src: "https://wearemiiles.com/studio/componentes/assets/foto.jpg" },
+  { color: "#4059F1", icon: "https://wearemiiles.com/studio/componentes/assets/estrella.svg", iconColor: "#FCB5B9" },
+  { src: "https://wearemiiles.com/studio/componentes/assets/rosa.jpg" },
+  { color: "#FCB5B9", icon: "https://wearemiiles.com/studio/componentes/assets/flor.svg", iconColor: "#4059F1" },
+  { src: "https://wearemiiles.com/studio/componentes/assets/azul.jpg" },
+  { color: "#1C1E2A", icon: "https://wearemiiles.com/studio/componentes/assets/miiles.svg", iconColor: "#FCB5B9" },
+  { color: "#4059F1", icon: "https://wearemiiles.com/studio/componentes/assets/flor.svg", iconColor: "#FFFFFF" },
+  { src: "https://wearemiiles.com/studio/componentes/assets/gorra.jpg" },
+  { color: "#FCB5B9", icon: "https://wearemiiles.com/studio/componentes/assets/estrella.svg", iconColor: "#1C1E2A" },
+  { src: "https://wearemiiles.com/studio/componentes/assets/azul.jpg" },
+];

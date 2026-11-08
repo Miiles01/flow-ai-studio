@@ -25,6 +25,11 @@ import React, { useEffect, useState } from "react";
 import { AbsoluteFill, Img, continueRender, delayRender, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 import * as Icons from "lucide-react";
 
+// Archivos: si la ruta empieza con http se usa tal cual (los ejemplos viven en wearemiiles.com y funcionan sin copiar nada);
+// si es una ruta local (p. ej. "fotos/mia.jpg"), se busca en la carpeta public/ de tu proyecto.
+const archivo = (p: string) => (/^https?:\/\//.test(p) ? p : staticFile(p));
+
+
 export type Drop = { src?: string; icon?: string; bg?: string; color?: string; likes?: string };
 export type FallingItemsProps = { text: string; drops: Drop[]; background?: string; color?: string; every?: number; size?: number; font?: string; fontSize?: number; fromTop?: boolean; sources?: number };
 
@@ -38,7 +43,7 @@ const elasticOut = (t: number, a = 2, p = 0.6) => {
 };
 
 export const FallingItems: React.FC<FallingItemsProps> = ({
-  text, drops, background = "#FFFFFF", color = "#111111", every = 6, size = 260, font = "fonts/Manrope.woff2", fontSize = 92, fromTop = false, sources = 1,
+  text, drops, background = "#FFFFFF", color = "#111111", every = 6, size = 260, font = "https://wearemiiles.com/studio/componentes/assets/Manrope.woff2", fontSize = 92, fromTop = false, sources = 1,
 }) => {
   const frame = useCurrentFrame();
   const { fps, width, height } = useVideoConfig();
@@ -46,7 +51,7 @@ export const FallingItems: React.FC<FallingItemsProps> = ({
   const isFile = /\.(woff2?|otf|ttf)$/.test(font);
   useEffect(() => {
     if (!isFile) { continueRender(handle); return; }
-    new FontFace("FI-Font", `url(${staticFile(font)})`).load().then((f) => { document.fonts.add(f); continueRender(handle); }).catch(() => continueRender(handle));
+    new FontFace("FI-Font", `url(${archivo(font)})`).load().then((f) => { document.fonts.add(f); continueRender(handle); }).catch(() => continueRender(handle));
   }, [font, handle, isFile]);
   const family = `${isFile ? "FI-Font" : font}, Helvetica, Arial, sans-serif`;
 
@@ -98,7 +103,7 @@ export const FallingItems: React.FC<FallingItemsProps> = ({
       const Icon = (Icons as unknown as Record<string, React.FC<{ size?: number; strokeWidth?: number }>>)[d.icon] ?? Icons.Heart;
       items.push(<div key={k} style={{ ...box, borderRadius: "22%", background: d.bg ?? "#4059F1", color: d.color ?? "#FFFFFF", display: "flex", alignItems: "center", justifyContent: "center" }}><Icon size={size * 0.42} strokeWidth={2} /></div>);
     } else if (d.src) {
-      items.push(<div key={k} style={{ ...box, borderRadius: "4%", overflow: "hidden" }}><Img src={d.src.startsWith("http") ? d.src : staticFile(d.src)} style={{ width: "100%", height: "100%", objectFit: "cover" }} /></div>);
+      items.push(<div key={k} style={{ ...box, borderRadius: "4%", overflow: "hidden" }}><Img src={d.src.startsWith("http") ? d.src : archivo(d.src)} style={{ width: "100%", height: "100%", objectFit: "cover" }} /></div>);
     }
   }
   const lines = text.split("\n");
@@ -115,7 +120,7 @@ export const FallingItems: React.FC<FallingItemsProps> = ({
 };
 
 export const exampleDrops: Drop[] = [
-  { src: "carrusel/foto.jpg" }, { icon: "Heart", bg: "#FCB5B9", color: "#111111" }, { likes: "2.4K" },
-  { src: "carrusel/gorra.jpg" }, { icon: "MessageCircle", bg: "#4059F1" }, { src: "carrusel/rosa.jpg" },
-  { icon: "Send", bg: "#1C1E2A" }, { likes: "18K" }, { src: "carrusel/azul.jpg" }, { icon: "Bookmark", bg: "#E8ECFE", color: "#4059F1" },
+  { src: "https://wearemiiles.com/studio/componentes/assets/foto.jpg" }, { icon: "Heart", bg: "#FCB5B9", color: "#111111" }, { likes: "2.4K" },
+  { src: "https://wearemiiles.com/studio/componentes/assets/gorra.jpg" }, { icon: "MessageCircle", bg: "#4059F1" }, { src: "https://wearemiiles.com/studio/componentes/assets/rosa.jpg" },
+  { icon: "Send", bg: "#1C1E2A" }, { likes: "18K" }, { src: "https://wearemiiles.com/studio/componentes/assets/azul.jpg" }, { icon: "Bookmark", bg: "#E8ECFE", color: "#4059F1" },
 ];

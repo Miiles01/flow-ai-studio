@@ -23,6 +23,11 @@
 import React, { useEffect, useState } from "react";
 import { AbsoluteFill, continueRender, delayRender, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 
+// Archivos: si la ruta empieza con http se usa tal cual (los ejemplos viven en wearemiiles.com y funcionan sin copiar nada);
+// si es una ruta local (p. ej. "fotos/mia.jpg"), se busca en la carpeta public/ de tu proyecto.
+const archivo = (p: string) => (/^https?:\/\//.test(p) ? p : staticFile(p));
+
+
 export type DotsPhraseProps = {
   text: string;
   background?: string;
@@ -52,7 +57,7 @@ const elasticOut = (t: number, a = 1, p = 0.75) => {
 
 export const DotsPhrase: React.FC<DotsPhraseProps> = ({
   text, background = "#FFFFFF", color = "#111111", dotColor = "#D9DBE3", glowColor = "#4059F1",
-  dot = 16, gap = 30, holeWidth = 760, holeHeight = 560, passSeconds = 3.2, font = "fonts/Manrope.woff2", fontSize = 104,
+  dot = 16, gap = 30, holeWidth = 760, holeHeight = 560, passSeconds = 3.2, font = "https://wearemiiles.com/studio/componentes/assets/Manrope.woff2", fontSize = 104,
 }) => {
   const frame = useCurrentFrame();
   const { fps, width, height } = useVideoConfig();
@@ -60,7 +65,7 @@ export const DotsPhrase: React.FC<DotsPhraseProps> = ({
   const isFile = /\.(woff2?|otf|ttf)$/.test(font);
   useEffect(() => {
     if (!isFile) { continueRender(handle); return; }
-    new FontFace("DP-Font", `url(${staticFile(font)})`).load().then((f) => { document.fonts.add(f); continueRender(handle); }).catch(() => continueRender(handle));
+    new FontFace("DP-Font", `url(${archivo(font)})`).load().then((f) => { document.fonts.add(f); continueRender(handle); }).catch(() => continueRender(handle));
   }, [font, handle, isFile]);
 
   const sec = frame / fps;

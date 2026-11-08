@@ -1,0 +1,144 @@
+/* ============================================================================
+   CÓMO USAR ESTE COMPONENTE (instrucciones para tu asistente de IA:
+   Claude, Codex, Gemini, Cursor, Antigravity o cualquier otro)
+   ----------------------------------------------------------------------------
+   - Componente de Remotion (React) para video vertical 1080×1920 a 30 fps.
+     Si el proyecto no tiene Remotion, créalo (npx create-video@latest), copia este
+     archivo en src/ y registra una <Composition> de scrollLettersDuration(props) cuadros.
+   - Fotos grandes con una palabra encima, una debajo de otra. La página "hace scroll":
+     se queda en una foto, sube rápido a la siguiente y así en bucle. Mientras sube, las
+     letras de la palabra se deforman según la velocidad y luego se acomodan.
+   - demo (elige uno, son los 4 del original):
+     · 1  las letras de en medio se estiran hacia arriba/abajo (onda)
+     · 2  además giran y se encogen; la foto se inclina un poco
+     · 3  la palabra se estira a lo alto y cada letra va a su propia velocidad; foto tenue
+     · 4  las letras se doblan en arco y la foto gira en 3D al entrar y salir
+   - Ajustes:
+     · slides: [{ image, word }] (image en public/ o URL; palabras cortas)
+     · textColor, background · font: archivo en public/ (Anton.woff2 por defecto) · fontSize
+     · imageWidth, imageHeight (px) · hold: cuadros quieta en cada foto · move: cuadros
+       que tarda en subir a la siguiente · intensity: cuánto se deforman las letras (1.8)
+     · blend: modo de fusión de la capa del texto ("difference" por defecto: el texto
+       invierte los colores de la foto, así se distingue en fotos claras u oscuras;
+       "normal" para quitarlo) · overlay: capa oscura opcional sobre la foto (0 = sin capa)
+   - Para renderizar: npx remotion render src/index.ts <Id> out/video.mp4
+   ========================================================================== */
+// Letras con scroll (Remotion) · Miiles Estudio · inspirado en "On-Scroll Letter Animations" de Codrops
+import React, { useEffect, useState } from "react";
+import { AbsoluteFill, Easing, Img, continueRender, delayRender, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
+
+// Archivos: si la ruta empieza con http se usa tal cual (los ejemplos viven en wearemiiles.com y funcionan sin copiar nada);
+// si es una ruta local (p. ej. "fotos/mia.jpg"), se busca en la carpeta public/ de tu proyecto.
+const archivo = (p: string) => (/^https?:\/\//.test(p) ? p : staticFile(p));
+
+
+type Slide = { image: string; word: string };
+export type ScrollLettersProps = {
+  slides: Slide[];
+  demo?: 1 | 2 | 3 | 4;
+  textColor?: string;
+  background?: string;
+  font?: string;
+  fontSize?: number;
+  imageWidth?: number;
+  imageHeight?: number;
+  hold?: number;
+  move?: number;
+  intensity?: number;
+  overlay?: number;
+  blend?: React.CSSProperties["mixBlendMode"];
+};
+
+const EASE = Easing.inOut(Easing.cubic);
+const map = (x: number, a: number, b: number, c: number, d: number) => ((x - a) * (d - c)) / (b - a) + c;
+const clamp = (v: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, v));
+
+export function scrollLettersDuration(p: Partial<ScrollLettersProps>) {
+  return (p.slides?.length ?? 4) * ((p.hold ?? 36) + (p.move ?? 26));
+}
+
+export const ScrollLetters: React.FC<ScrollLettersProps> = ({
+  slides, demo = 1, textColor = "#FFFFFF", background = "#FFFFFF", font = "https://wearemiiles.com/studio/componentes/assets/Anton.woff2", fontSize = 270,
+  imageWidth = 760, imageHeight = 1080, hold = 36, move = 26, intensity = 1.8, overlay = 0, blend = "difference",
+}) => {
+  const frame = useCurrentFrame();
+  const { height, width } = useVideoConfig();
+  const [handle] = useState(() => delayRender("Cargando tipografía"));
+  const isFile = /\.(woff2?|otf|ttf)$/.test(font);
+  useEffect(() => {
+    if (!isFile) { continueRender(handle); return; }
+    new FontFace("SL-Font", `url(${archivo(font)})`).load().then((f) => { document.fonts.add(f); continueRender(handle); }).catch(() => continueRender(handle));
+  }, [font, handle, isFile]);
+  const family = `${isFile ? "SL-Font" : font}, Impact, Helvetica, Arial, sans-serif`;
+
+  const n = slides.length, H = height, cycle = hold + move;
+  // posición del scroll (en "pantallas") y su velocidad en px por cuadro
+  const pos = (f: number) => {
+    const step = Math.floor(f / cycle), t = f - step * cycle;
+    return step + (t < hold ? 0 : EASE((t - hold) / move));
+  };
+  const scrollY = pos(frame) * H;
+  // "distance" del original: cuánto se movió el scroll desde el cuadro anterior (60 fps → la mitad)
+  const distance = ((pos(frame) - pos(frame - 1)) * H) / 2 * intensity;
+
+  return (
+    <AbsoluteFill style={{ background, overflow: "hidden", perspective: demo === 4 ? 1000 : undefined }}>
+      {[-1, 0, 1, 2].map((off) => {
+        const base = Math.floor(scrollY / H) + off;
+        const s = slides[((base % n) + n) % n];
+        const y = base * H - scrollY;           // posición de la sección respecto a la pantalla
+        if (y <= -H || y >= H) return null;
+        const progress = clamp((H - y) / (2 * H), 0, 1); // 0 entra por abajo · 0.5 centro · 1 sale por arriba
+        const chars = [...s.word], total = chars.length;
+        // factor de cada letra: crece hacia el centro de la palabra (fórmula del original)
+        const factor = (j: number) => (j < Math.ceil(total / 2) ? j : Math.ceil(total / 2) - Math.abs(Math.floor(total / 2) - j) - 1);
+
+        // ---- foto
+        let imgT = "";
+        let imgOrigin = "50% 50%";
+        let imgOpacity = 1;
+        if (demo === 2) { imgT = `rotate(${map(progress, 0, 1, -5, 5)}deg)`; imgOrigin = "100% 50%"; }
+        if (demo === 3) { const sc = map(Math.abs(distance), 0, 150, 1, 0.8); imgT = `scale(${clamp(sc, 0.8, 1)})`; imgOpacity = 0.4; }
+        if (demo === 4) { imgT = `rotateX(${progress < 0.5 ? map(progress, 0, 0.5, -20, 0) : map(progress, 0.5, 1, 0, 20)}deg)`; imgOrigin = "50% 100%"; }
+
+        // ---- letras
+        const letterStyle = (j: number): React.CSSProperties => {
+          const f = factor(j);
+          if (demo === 1) return { transform: `translateY(${f * map(distance, 150, -150, -50, 50)}px)` };
+          if (demo === 2) {
+            const ty = map(distance, 150, -150, -90, 90), rot = map(distance, 150, -150, -15, 15);
+            const sc = clamp(map(Math.abs(distance), 0, 50, 1, 0.5), 0.5, 1);
+            const r = (j < total / 2 ? 1 : -1) * Math.abs(f - total / 2) * rot;
+            return { transform: `scale(${sc}) rotate(${r}deg) translateY(${f * ty}px)` };
+          }
+          if (demo === 3) {
+            // cada letra con su propia velocidad de scroll (1 + factor): se separan al moverse
+            const speed = 1 + f;
+            return { transform: `translateY(${-y * speed * 0.06}px)` };
+          }
+          const ty = map(distance, 150, -150, 50, -50), rot = map(distance, 150, -150, 10, -10);
+          const r = (j < total / 2 ? 1 : -1) * Math.abs(f - total / 2) * rot;
+          return { transform: `translateY(${f * ty}px) rotate(${r}deg)`, transformOrigin: "50% 100%" };
+        };
+        const wordT = demo === 3 ? `scaleY(${clamp(map(distance / intensity, 0, 150, 1, 3), 1, 2.2)})` : "";
+        const size = Math.min(fontSize, Math.floor((width - 100) / (total * 0.46)));
+
+        return (
+          <div key={base} style={{ position: "absolute", left: 0, top: y, width, height: H, display: "grid", placeItems: "center" }}>
+            <div style={{ gridArea: "1 / 1", position: "relative", width: imageWidth, height: imageHeight, borderRadius: 18, overflow: "hidden", transform: imgT, transformOrigin: imgOrigin, opacity: imgOpacity }}>
+              <Img src={s.image.startsWith("http") ? s.image : archivo(s.image)} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+              {/* capa oscura para que el texto blanco se lea aunque la foto sea clara */}
+              {demo !== 3 && overlay > 0 && (
+                <div style={{ position: "absolute", inset: 0, background: `radial-gradient(ellipse 80% 45% at 50% 50%, rgba(0,0,0,${overlay * 1.4}) 0%, rgba(0,0,0,${overlay}) 55%, rgba(0,0,0,${overlay * 0.6}) 100%)` }} />
+              )}
+            </div>
+            <div style={{ gridArea: "1 / 1", display: "flex", transform: wordT, transformOrigin: "50% 0%", mixBlendMode: demo === 3 ? "multiply" : blend,
+              color: textColor, fontFamily: family, fontSize: size, lineHeight: 1, textTransform: "uppercase", letterSpacing: "0.01em" }}>
+              {chars.map((c, j) => <span key={j} style={{ display: "inline-block", whiteSpace: "pre", ...letterStyle(j) }}>{c}</span>)}
+            </div>
+          </div>
+        );
+      })}
+    </AbsoluteFill>
+  );
+};

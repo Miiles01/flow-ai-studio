@@ -6,10 +6,9 @@
      Si el proyecto no tiene Remotion, créalo (npx create-video@latest), copia este
      archivo en src/ y registra una <Composition> de 1080×1920 a 30 fps.
      La duración se calcula con keyPhraseDuration(props).
-   - Tipografías: pon los archivos en public/fonts/ (Manrope.woff2 para el texto y
-     Advercase-Regular.otf para las palabras resaltadas) o cambia "font" y
-     "highlightFont" por las que quieras. Advercase gratis no trae acentos: úsala
-     solo en palabras sin acento.
+   - Tipografías: ya cargan solas desde wearemiiles.com (Manrope para el texto y
+     Gambarino para las palabras resaltadas). Para usar otras, pon el archivo en
+     public/fonts/ y cambia "font" y "highlightFont" (p. ej. "https://wearemiiles.com/studio/componentes/assets/MiLetra.woff2").
    - "phrases" es la lista de escenas. Cada frase va en máximo 3 líneas, separadas
      con "\n". Si la frase es más larga, pártela en dos escenas.
        { text: "Contenido que\nse siente\nreal", highlight: ["real"] }
@@ -31,6 +30,11 @@
 // y "Stagger Direction Visualizer" de snorkltv (orden de entrada: inicio, centro, final, extremos, aleatorio).
 import React, { useEffect, useState } from "react";
 import { AbsoluteFill, Easing, continueRender, delayRender, staticFile, useCurrentFrame } from "remotion";
+
+// Archivos: si la ruta empieza con http se usa tal cual (los ejemplos viven en wearemiiles.com y funcionan sin copiar nada);
+// si es una ruta local (p. ej. "fotos/mia.jpg"), se busca en la carpeta public/ de tu proyecto.
+const archivo = (p: string) => (/^https?:\/\//.test(p) ? p : staticFile(p));
+
 
 export type Phrase = { text: string; highlight?: string[] };
 export type KeyPhraseProps = {
@@ -96,7 +100,7 @@ function useFonts(font: string, highlightFont: string) {
   const [handle] = useState(() => delayRender("Cargando tipografías"));
   useEffect(() => {
     const load = (name: string, file: string) =>
-      /\.(woff2?|otf|ttf)$/.test(file) ? new FontFace(name, `url(${staticFile(file)})`).load().then((f) => { document.fonts.add(f); }) : Promise.resolve();
+      /\.(woff2?|otf|ttf)$/.test(file) ? new FontFace(name, `url(${archivo(file)})`).load().then((f) => { document.fonts.add(f); }) : Promise.resolve();
     Promise.all([load("KP-Text", font), load("KP-Highlight", highlightFont)]).then(() => continueRender(handle)).catch(() => continueRender(handle));
   }, [font, highlightFont, handle]);
 }
@@ -104,7 +108,7 @@ function useFonts(font: string, highlightFont: string) {
 export const KeyPhrase: React.FC<KeyPhraseProps> = (props) => {
   const {
     phrases, background = "#FFFFFF", color = "#111111", highlightColor = "#111111", safeArea = true,
-    font = "fonts/Manrope.woff2", highlightFont = "fonts/Advercase-Regular.otf",
+    font = "https://wearemiiles.com/studio/componentes/assets/Manrope.woff2", highlightFont = "https://wearemiiles.com/studio/componentes/assets/Gambarino-Regular.woff2",
     fontSize = 150, lineHeight = 1.0, align = "center",
   } = props;
   const split = props.split ?? DEFAULTS.split, from = props.from ?? DEFAULTS.from, transition = props.transition ?? DEFAULTS.transition;

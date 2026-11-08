@@ -1,0 +1,165 @@
+/* ============================================================================
+   CÓMO USAR ESTE COMPONENTE (instrucciones para tu asistente de IA:
+   Claude, Codex, Gemini, Cursor, Antigravity o cualquier otro)
+   ----------------------------------------------------------------------------
+   - Componente de Remotion (React) para video vertical 1080×1920 a 30 fps.
+     Necesita "lucide-react" (npm i lucide-react) para los íconos.
+     Si el proyecto no tiene Remotion, créalo (npx create-video@latest), copia este
+     archivo en src/ y registra una <Composition> de gooeySearchDuration(props) cuadros.
+   - Un botón "Buscar" se presiona, se estira y suelta una burbuja con la lupa (efecto
+     gooey: las formas se funden como líquido). Se escribe la búsqueda, gira el ícono de
+     carga, la barra sube y abajo aparecen los resultados (solo texto e ícono, sin fondo). Al final todo regresa
+     (bucle).
+   - Ajustes:
+     · label: texto del botón ("Buscar") · query: lo que se escribe ("Miiles")
+     · results: [{ text, icon }] (icon = nombre de un ícono de lucide-react)
+     · background (blanco), pill (negro), textColor (texto de la barra), resultColor (texto de
+       los resultados, negro), accent (color de los íconos de resultados, azul Miiles)
+     · scale: tamaño general (3.8 = pensado para 1080×1920)
+     · font: archivo en public/ (Manrope.woff2 por defecto)
+     · hold: cuadros que se quedan los resultados
+   - El filtro "goo" (desenfoque + contraste del canal alfa) es lo que funde las formas;
+     no lo quites. Si el fondo no es liso, sigue funcionando (solo afecta a las píldoras).
+   - Para renderizar: npx remotion render src/index.ts <Id> out/video.mp4
+   ========================================================================== */
+// Búsqueda (Remotion) · Miiles Estudio · inspirado en "Gooey Search Interaction" de Oğuzhan Tüfenk (Codrops)
+import React, { useEffect, useState } from "react";
+import { AbsoluteFill, continueRender, delayRender, spring, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
+import * as Icons from "lucide-react";
+
+// Archivos: si la ruta empieza con http se usa tal cual (los ejemplos viven en wearemiiles.com y funcionan sin copiar nada);
+// si es una ruta local (p. ej. "fotos/mia.jpg"), se busca en la carpeta public/ de tu proyecto.
+const archivo = (p: string) => (/^https?:\/\//.test(p) ? p : staticFile(p));
+
+
+type Result = { text: string; icon?: string };
+export type GooeySearchProps = {
+  label?: string;
+  query?: string;
+  results?: Result[];
+  background?: string;
+  pill?: string;
+  textColor?: string;
+  accent?: string;
+  resultColor?: string;
+  scale?: number;
+  font?: string;
+  hold?: number;
+};
+
+const clamp = (v: number) => Math.max(0, Math.min(1, v));
+const lerp = (a: number, b: number, t: number) => a + (b - a) * t;
+
+// Momentos (cuadros)
+const T = { press: 22, open: 28, type: 48, perChar: 4, load: 14, drop: 0, stagger: 4 };
+
+export function gooeySearchDuration(p: Partial<GooeySearchProps>) {
+  const q = (p.query ?? "Miiles").length, n = (p.results ?? DEFAULT_RESULTS).length;
+  const drop = T.type + q * T.perChar + 6 + T.load;
+  return Math.ceil(drop + n * T.stagger + 24 + (p.hold ?? 60) + n * 3 + 60);
+}
+
+const DEFAULT_RESULTS: Result[] = [
+  { text: "Miiles Estudio", icon: "Sparkles" },
+  { text: "Portafolios UGC", icon: "LayoutGrid" },
+  { text: "Creadoras y creadores", icon: "Users" },
+  { text: "Marcas que buscan UGC", icon: "BadgeCheck" },
+];
+
+export const GooeySearch: React.FC<GooeySearchProps> = ({
+  label = "Buscar", query = "Miiles", results = DEFAULT_RESULTS, background = "#FFFFFF", pill = "#111111",
+  textColor = "#DDDDDD", accent = "#4059F1", resultColor = "#111111", scale: S = 3.8, font = "https://wearemiiles.com/studio/componentes/assets/Manrope.woff2", hold = 60,
+}) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const [handle] = useState(() => delayRender("Cargando tipografía"));
+  const isFile = /\.(woff2?|otf|ttf)$/.test(font);
+  useEffect(() => {
+    if (!isFile) { continueRender(handle); return; }
+    new FontFace("GS-Font", `url(${archivo(font)})`).load().then((f) => { document.fonts.add(f); continueRender(handle); }).catch(() => continueRender(handle));
+  }, [font, handle, isFile]);
+  const family = `${isFile ? "GS-Font" : font}, Inter, Helvetica, Arial, sans-serif`;
+
+  const n = results.length;
+  const typed = T.type, typeEnd = typed + query.length * T.perChar + 6;
+  const loadEnd = typeEnd + T.load;
+  const dropEnd = loadEnd + n * T.stagger + 24;
+  const exitAt = dropEnd + hold;                 // los resultados regresan a la barra
+  const closeAt = exitAt + n * 3 + 14;           // la barra vuelve a ser el botón
+
+  // springs al estilo Framer Motion (bounce .15 y .35)
+  const sp = (from: number, bounce = 0.15, dur = 22) =>
+    spring({ frame: frame - from, fps, durationInFrames: dur, config: { damping: bounce > 0.3 ? 11 : 16, stiffness: 140, mass: 1 } });
+
+  const open = frame < closeAt ? sp(T.open) : 1 - sp(closeAt);
+  const iconIn = frame < closeAt ? sp(T.open + 3, 0.15, 26) : 1 - sp(closeAt - 4, 0.15, 20);
+  const press = frame >= T.press && frame < T.open + 4 ? 1 - 0.05 * Math.sin(clamp((frame - T.press) / 10) * Math.PI) : 1;
+  const intro = sp(0, 0.35, 20);
+  const lift = frame < exitAt + n * 3 ? sp(loadEnd - 4, 0.15, 24) : 1 - sp(exitAt + n * 3, 0.15, 22); // sube para dejar lugar a los resultados
+
+  const btnW = lerp(100, 180, open) * S, btnX = lerp(0, -30, open) * S, btnH = 44 * S;
+  const typedChars = frame < exitAt ? Math.max(0, Math.min(query.length, Math.floor((frame - typed) / T.perChar) + 1)) : query.length;
+  const loading = frame >= typeEnd && frame < loadEnd;
+
+  return (
+    <AbsoluteFill style={{ background, alignItems: "center", justifyContent: "center" }}>
+      <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true">
+        <defs>
+          <filter id="gs-goo">
+            <feGaussianBlur in="SourceGraphic" stdDeviation={5 * S} result="blur" />
+            <feColorMatrix in="blur" type="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 18 -7" result="goo" />
+            <feComposite in="SourceGraphic" in2="goo" operator="atop" />
+          </filter>
+        </defs>
+      </svg>
+      {/* Todo el grupo va centrado; un poco más arriba para dejar espacio a los resultados */}
+      {/* La barra empieza al centro; cuando ya está la palabra sube y abajo salen los resultados */}
+      <div style={{ position: "relative", width: btnW, height: btnH, transform: `translate(${btnX}px, ${-n * 25 * S * lift}px) scale(${press * intro})`, fontFamily: family }}>
+        {/* resultados: solo texto e ícono (sin fondo), caen desde la barra con resorte */}
+        {results.map((r, i) => {
+          const born = loadEnd + 6 + i * T.stagger;
+          const inP = sp(born, 0.35, 24);
+          const outP = frame >= exitAt ? sp(exitAt + (n - 1 - i) * 3, 0.15, 16) : 0;
+          const k = inP * (1 - outP);
+          if (frame < born || k <= 0.001 && frame > exitAt) return null;
+          const Icon = (Icons as unknown as Record<string, React.FC<{ size?: number; color?: string; strokeWidth?: number }>>)[r.icon ?? "Search"] ?? Icons.Search;
+          const blur = 10 * S * (1 - clamp(inP));
+          return (
+            <div key={i} style={{
+              position: "absolute", left: 0, top: 0, width: "max-content", height: btnH, transformOrigin: "0% 50%",
+              display: "flex", alignItems: "center", gap: 8 * S, padding: `0 ${20 * S}px`, color: resultColor, fontSize: 16 * S, letterSpacing: -0.3 * S, whiteSpace: "nowrap",
+              transform: `translateY(${(i + 1) * 50 * S * k}px) scale(${lerp(0.3, 1, k)})`, filter: blur > 0.5 ? `blur(${blur}px)` : undefined, opacity: clamp(k * 1.4),
+            }}>
+              <span style={{ display: "flex", opacity: 1 }}><Icon size={20 * S} color={accent} strokeWidth={2} /></span>
+              <span style={{ opacity: 1 }}>{r.text}</span>
+            </div>
+          );
+        })}
+        <div style={{ position: "absolute", inset: 0, filter: "url(#gs-goo)" }}>
+          {/* barra */}
+          <div style={{
+            position: "absolute", inset: 0, borderRadius: 9999, background: pill, display: "flex", alignItems: "center",
+            padding: `0 ${20 * S}px`, fontSize: 16 * S, letterSpacing: -0.5 * S, color: textColor, whiteSpace: "nowrap", overflow: "hidden",
+          }}>
+            {open < 0.5 && frame < T.open + 6 || frame >= closeAt + 6
+              ? <span style={{ width: "100%", textAlign: "center", opacity: 0.69 }}>{label}</span>
+              : <span style={{ color: "#DDDDDD" }}>
+                  {query.slice(0, Math.max(0, frame >= typed ? typedChars : 0))}
+                  {frame < exitAt && Math.floor(frame / 15) % 2 === 0 && <span style={{ display: "inline-block", width: 1.5 * S, height: 18 * S, marginLeft: 2 * S, background: textColor, verticalAlign: "middle" }} />}
+                </span>}
+          </div>
+          {/* burbuja con la lupa: se separa de la barra */}
+          <div style={{
+            position: "absolute", right: -5 * S, top: -1 * S, width: 46 * S, height: 46 * S, borderRadius: 9999, background: pill,
+            display: "flex", alignItems: "center", justifyContent: "center",
+            transform: `translateX(${lerp(-50, 16, iconIn) * S - btnX}px)`, opacity: clamp(iconIn * 1.5),
+          }}>
+            {loading
+              ? <Icons.LoaderCircle size={20 * S} color={textColor} style={{ transform: `rotate(${(frame - typeEnd) * 18}deg)` }} />
+              : <Icons.Search size={20 * S} color={textColor} strokeWidth={2.2} />}
+          </div>
+        </div>
+      </div>
+    </AbsoluteFill>
+  );
+};

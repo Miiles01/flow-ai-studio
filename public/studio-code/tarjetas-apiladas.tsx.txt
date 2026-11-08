@@ -18,6 +18,11 @@
 import React, { useEffect, useState } from "react";
 import { AbsoluteFill, Easing, continueRender, delayRender, staticFile, useCurrentFrame } from "remotion";
 
+// Archivos: si la ruta empieza con http se usa tal cual (los ejemplos viven en wearemiiles.com y funcionan sin copiar nada);
+// si es una ruta local (p. ej. "fotos/mia.jpg"), se busca en la carpeta public/ de tu proyecto.
+const archivo = (p: string) => (/^https?:\/\//.test(p) ? p : staticFile(p));
+
+
 export type TaskCard = { title: string; text: string; bg: string; color: string };
 export type StackCardsProps = { cards: TaskCard[]; background?: string; font?: string; enter?: number; hold?: number };
 
@@ -25,13 +30,13 @@ const EASE = Easing.bezier(0.22, 1, 0.36, 1);
 const clamp = (v: number) => Math.max(0, Math.min(1, v));
 export const stackCardsDuration = (p: StackCardsProps) => p.cards.length * ((p.enter ?? 22) + (p.hold ?? 42)) + 20;
 
-export const StackCards: React.FC<StackCardsProps> = ({ cards, background = "#FFFFFF", font = "fonts/Manrope.woff2", enter = 22, hold = 42 }) => {
+export const StackCards: React.FC<StackCardsProps> = ({ cards, background = "#FFFFFF", font = "https://wearemiiles.com/studio/componentes/assets/Manrope.woff2", enter = 22, hold = 42 }) => {
   const frame = useCurrentFrame();
   const [handle] = useState(() => delayRender("Cargando tipografía"));
   const isFile = /\.(woff2?|otf|ttf)$/.test(font);
   useEffect(() => {
     if (!isFile) { continueRender(handle); return; }
-    new FontFace("SC-Font", `url(${staticFile(font)})`).load().then((f) => { document.fonts.add(f); continueRender(handle); }).catch(() => continueRender(handle));
+    new FontFace("SC-Font", `url(${archivo(font)})`).load().then((f) => { document.fonts.add(f); continueRender(handle); }).catch(() => continueRender(handle));
   }, [font, handle, isFile]);
   const step = enter + hold;
   const W = 680, H = 760, top = 500; // dentro de la zona segura

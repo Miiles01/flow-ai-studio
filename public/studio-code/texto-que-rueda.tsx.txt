@@ -1,0 +1,114 @@
+/* ============================================================================
+   CÓMO USAR ESTE COMPONENTE (instrucciones para tu asistente de IA:
+   Claude, Codex, Gemini, Cursor, Antigravity o cualquier otro)
+   ----------------------------------------------------------------------------
+   - Componente de Remotion (React) para video vertical 1080×1920 a 30 fps.
+     Si el proyecto no tiene Remotion, créalo (npx create-video@latest), copia este
+     archivo en src/ y registra una <Composition> con estas props.
+   - Frases cortas enrolladas en un cilindro invisible: cada línea sube desde abajo,
+     pasa de frente por el centro y se dobla hacia atrás por arriba. Las letras son muy
+     grandes (pueden salirse de los lados) y entre palabras puede ir una foto.
+   - "lines": arreglo de líneas; cada línea es un arreglo de piezas: texto (string) o
+     foto ({ src }). Ej.: ["Videos", { src: "https://wearemiiles.com/studio/componentes/assets/foto.jpg" }, "que"].
+   - Ajustes: color (texto), background (blanco), font (archivo en public/ o nombre),
+     fontSize (px, grande a propósito), weight, step (grados entre líneas en el
+     cilindro), framesPerLine (velocidad: cuadros por línea).
+   - La duración que hace un bucle perfecto es textRollDuration(props).
+   - Para renderizar: npx remotion render src/index.ts TextRoll out/video.mp4
+   ========================================================================== */
+// Text Roll 3D (Remotion) · Miiles Estudio · inspirado en el efecto 115 "3D Text Roll" de Made With GSAP
+import React, { useEffect, useState } from "react";
+import { AbsoluteFill, Img, continueRender, delayRender, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
+
+// Archivos: si la ruta empieza con http se usa tal cual (los ejemplos viven en wearemiiles.com y funcionan sin copiar nada);
+// si es una ruta local (p. ej. "fotos/mia.jpg"), se busca en la carpeta public/ de tu proyecto.
+const archivo = (p: string) => (/^https?:\/\//.test(p) ? p : staticFile(p));
+
+
+type Pieza = string | { src: string };
+export type TextRollProps = {
+  lines: Pieza[][];
+  color?: string;
+  background?: string;
+  font?: string;
+  fontSize?: number;
+  weight?: number;
+  step?: number;
+  framesPerLine?: number;
+};
+
+export const exampleRollLines: Pieza[][] = [
+  ["Contenido"],
+  ["que se", { src: "https://wearemiiles.com/studio/componentes/assets/foto.jpg" }, "siente"],
+  ["real"],
+  ["Ideas", { src: "https://wearemiiles.com/studio/componentes/assets/rosa.jpg" }, "que"],
+  ["venden"],
+  ["Videos", { src: "https://wearemiiles.com/studio/componentes/assets/gorra.jpg" }, "que"],
+  ["conectan"],
+  ["Marcas", { src: "https://wearemiiles.com/studio/componentes/assets/azul.jpg" }, "que"],
+  ["crecen"],
+  ["Historias"],
+  ["que se", { src: "https://wearemiiles.com/studio/componentes/assets/foto.jpg" }, "guardan"],
+  ["y se"],
+  ["comparten", { src: "https://wearemiiles.com/studio/componentes/assets/rosa.jpg" }],
+];
+
+export function textRollDuration(p: Partial<TextRollProps>) {
+  return (p.lines?.length ?? exampleRollLines.length) * (p.framesPerLine ?? 34);
+}
+
+export const TextRoll: React.FC<TextRollProps> = ({
+  lines, color = "#111111", background = "#FFFFFF", font = "https://wearemiiles.com/studio/componentes/assets/Manrope.woff2",
+  fontSize = 250, weight = 700, step = 15.5, framesPerLine = 30,
+}) => {
+  const frame = useCurrentFrame();
+  const { width, height } = useVideoConfig();
+  const [handle] = useState(() => delayRender("Cargando tipografía"));
+  const isFile = /\.(woff2?|otf|ttf)$/.test(font);
+  useEffect(() => {
+    const done = () => continueRender(handle);
+    if (!isFile) { done(); return; }
+    new FontFace("TR-Font", `url(${archivo(font)})`).load().then((f) => { document.fonts.add(f); done(); }).catch(done);
+  }, [font, handle, isFile]);
+  const family = `${isFile ? "TR-Font" : font}, Helvetica, Arial, sans-serif`;
+
+  const n = lines.length;
+  const p = frame / framesPerLine;                 // avance continuo, como el scroll
+  const lineH = fontSize * 1.02;
+  const radius = lineH / (2 * Math.sin((step * Math.PI) / 360));   // las líneas vecinas quedan pegadas sobre el cilindro
+
+  return (
+    <AbsoluteFill style={{ background, overflow: "hidden", perspective: radius * 2.6, perspectiveOrigin: "50% 50%" }}>
+      {Array.from({ length: n * 2 }).map((_, k) => {
+        // dos vueltas de la lista para que no haya hueco al hacer bucle
+        const i = k % n;
+        let d = k - (p % (n * 2));
+        if (d < -n) d += n * 2;
+        if (d > n) d -= n * 2;
+        const ang = -d * step;                     // 0 = de frente; las que vienen (d > 0) quedan abajo y las que ya pasaron se doblan por arriba
+        if (Math.abs(ang) > 95) return null;
+        const facing = Math.cos((ang * Math.PI) / 180);
+        return (
+          <div key={k} style={{
+            position: "absolute", left: "50%", top: height / 2 - lineH / 2, height: lineH,
+            display: "flex", alignItems: "center", gap: fontSize * 0.12, whiteSpace: "nowrap",
+            transform: `translateX(-50%) translateZ(${-radius}px) rotateX(${ang}deg) translateZ(${radius}px)`,
+            backfaceVisibility: "hidden", opacity: Math.max(0, Math.min(1, facing * 2.2)),
+            fontFamily: family, fontSize, fontWeight: weight, letterSpacing: "-0.045em", lineHeight: 1, color,
+          }}>
+            {lines[i].map((pieza, j) =>
+              typeof pieza === "string" ? (
+                <span key={j}>{pieza}</span>
+              ) : (
+                <Img key={j} src={pieza.src.startsWith("http") ? pieza.src : archivo(pieza.src)} style={{
+                  height: fontSize * 0.78, width: fontSize * 1.15, objectFit: "cover", borderRadius: fontSize * 0.16, flex: "none",
+                }} />
+              ),
+            )}
+          </div>
+        );
+      })}
+      <AbsoluteFill style={{ pointerEvents: "none", background: `linear-gradient(to bottom, ${background} 0%, ${background} 9%, ${background}b3 15%, ${background}4d 21%, transparent 28%, transparent 72%, ${background}4d 79%, ${background}b3 85%, ${background} 91%, ${background} 100%)` }} />
+    </AbsoluteFill>
+  );
+};

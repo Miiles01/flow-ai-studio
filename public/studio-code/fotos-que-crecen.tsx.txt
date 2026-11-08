@@ -24,6 +24,11 @@
 import React, { useEffect, useState } from "react";
 import { AbsoluteFill, Easing, Img, continueRender, delayRender, staticFile, useCurrentFrame, useVideoConfig } from "remotion";
 
+// Archivos: si la ruta empieza con http se usa tal cual (los ejemplos viven en wearemiiles.com y funcionan sin copiar nada);
+// si es una ruta local (p. ej. "fotos/mia.jpg"), se busca en la carpeta public/ de tu proyecto.
+const archivo = (p: string) => (/^https?:\/\//.test(p) ? p : staticFile(p));
+
+
 export type FlipGrowProps = {
   images: string[];
   background?: string;
@@ -46,14 +51,14 @@ export const flipGrowDuration = (p: FlipGrowProps) => (p.wait ?? 24) + (p.grow ?
 
 export const FlipGrow: React.FC<FlipGrowProps> = ({
   images, background = "#FFFFFF", startWidth = 300, startHeight = 400, frameEvery = 4, wait = 24, grow = 48, hold = 60,
-  leftWord = "Crea", rightWord = "estilo", color = "#111111", font = "fonts/Manrope.woff2", fontSize = 104,
+  leftWord = "Crea", rightWord = "estilo", color = "#111111", font = "https://wearemiiles.com/studio/componentes/assets/Manrope.woff2", fontSize = 104,
 }) => {
   const frame = useCurrentFrame();
   const [handle] = useState(() => delayRender("Cargando tipografía"));
   const isFile = /\.(woff2?|otf|ttf)$/.test(font);
   useEffect(() => {
     if (!isFile) { continueRender(handle); return; }
-    new FontFace("FG-Font", `url(${staticFile(font)})`).load().then((f) => { document.fonts.add(f); continueRender(handle); }).catch(() => continueRender(handle));
+    new FontFace("FG-Font", `url(${archivo(font)})`).load().then((f) => { document.fonts.add(f); continueRender(handle); }).catch(() => continueRender(handle));
   }, [font, handle, isFile]);
   const { width, height } = useVideoConfig();
   const g = IN_OUT(clamp((frame - wait) / grow));
@@ -82,7 +87,7 @@ export const FlipGrow: React.FC<FlipGrowProps> = ({
         }}>{word}</div>
       ) : null)}
       <div style={{ width: w, height: h, borderRadius: 18 * (1 - g), overflow: "hidden", position: "relative" }}>
-        <Img src={src.startsWith("http") ? src : staticFile(src)} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
+        <Img src={src.startsWith("http") ? src : archivo(src)} style={{ position: "absolute", inset: 0, width: "100%", height: "100%", objectFit: "cover" }} />
       </div>
     </AbsoluteFill>
   );
