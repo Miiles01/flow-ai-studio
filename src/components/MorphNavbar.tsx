@@ -99,6 +99,7 @@ const MorphNavbar = ({ isLanding }: MorphNavbarProps) => {
     { label: t("home.navbar.about"), href: localePath("/acerca-de") },
     { label: t("home.navbar.functions"), href: localePath("/funciones") },
     { label: t("home.navbar.pricing"), href: localePath("/precios") },
+    { label: t("home.navbar.affiliates"), href: localePath("/afiliados") },
   ];
   const socialLinks = [
     { label: "Instagram", href: "https://www.instagram.com/miiles.studio/" },
@@ -106,7 +107,7 @@ const MorphNavbar = ({ isLanding }: MorphNavbarProps) => {
     { label: "Youtube", href: "https://www.youtube.com/@MiilesAI/shorts" },
   ];
   const legalLinks = [
-    { label: t("home.navbar.affiliates"), href: localePath("/afiliados") },
+    { label: "Blog", href: localePath("/blog") },
     { label: t("home.navbar.terms"), href: localePath("/terminos") },
     { label: t("home.navbar.privacy"), href: localePath("/privacidad") },
   ];
