@@ -1,25 +1,36 @@
 {
   "items": [
     {
-      "id": "colaboraciones",
-      "badge": "Collaborations",
-      "title": "Collaborate with brands",
-      "description": "Find leading brands and collaborate on creative social media projects and high-impact digital strategies. Connect with global audiences with ease.",
+      "id": "portafolio",
+      "badge": "Portfolio",
+      "title": "Design your professional portfolio with AI",
+      "description": "Describe who you are, what you create and which brands you work with. Miiles builds your portfolio with templates made for content creators, UGC creators, designers and freelancers, and publishes it with your own link.",
       "bullets": [
-        "Direct access to world-class brands.",
-        "Creative projects and social media campaigns.",
-        "Exclusive opportunities to monetize your portfolio."
+        "Portfolio templates for UGC creators, editors and freelancers.",
+        "Edit text, photos and colors with a prompt, no coding needed.",
+        "Publish with your own link, ready to send to brands."
+      ]
+    },
+    {
+      "id": "creatividad",
+      "badge": "Creativity",
+      "title": "Create, edit and animate your content",
+      "description": "60+ assets for video editing, animation and motion graphics: carousels, animated text, transitions and effects in vertical format for Reels, TikTok and Shorts. Everything you need to speed up your creative process.",
+      "bullets": [
+        "9:16 video components for Reels, TikTok and YouTube Shorts.",
+        "Animated text, transitions and motion graphics ready to use.",
+        "Copy the prompt and build the animation with your AI: Claude, Codex, Gemini or Cursor."
       ]
     },
     {
       "id": "ai-studio",
       "badge": "Artificial Intelligence",
       "title": "Design business models with the power of AI",
-      "description": "Describe your idea, build a complete business structure, and discover new opportunities to develop scalable projects.",
+      "description": "Connect Miiles to Claude or the AI you already use. It works like a skill: your assistant builds your boards, structures your business model and manages your clients, campaigns and income for you.",
       "bullets": [
-        "Instant business structures generated from your vision.",
-        "A clear view of your value chain and revenue streams.",
-        "Smart AI suggestions to validate and scale your project."
+        "Connects with Claude, Codex, Gemini, Cursor and other AI tools.",
+        "Boards with clients, campaigns, contracts and income from a single conversation.",
+        "AI Business Model Canvas to validate and scale your project."
       ]
     },
     {
@@ -69,5 +80,8 @@
   "plansDescription": "Choose the right plan to automate and scale your business.",
   "aiAlt": "AI",
   "collaborator": "Collaborator {{number}}",
-  "heroAlt": "Person comfortably using Miiles on a tablet on their sofa"
+  "heroAlt": "Person comfortably using Miiles on a tablet on their sofa",
+  "seoTitle": "Miiles features: AI portfolio builder, video assets and boards",
+  "seoDescription": "Build your professional portfolio with AI, edit and animate with 60+ video and motion graphics assets, and manage clients and campaigns by connecting Miiles to Claude or your AI.",
+  "templateAlt": "Portfolio template"
 }

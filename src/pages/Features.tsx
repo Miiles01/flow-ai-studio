@@ -23,24 +23,19 @@ if (!CustomEase.get("osmo-ease")) {
   CustomEase.create("osmo-ease", "0.625, 0.05, 0, 1");
 }
 
-import brand1 from "@/assets/miiles/brands/brand1.svg";
-import brand2 from "@/assets/miiles/brands/brand2.svg";
-import brand3 from "@/assets/miiles/brands/brand3.svg";
-import brand4 from "@/assets/miiles/brands/brand4.svg";
-import brand5 from "@/assets/miiles/brands/brand5.svg";
-import brand6 from "@/assets/miiles/brands/brand6.svg";
+import studioTemplates from "@/data/studio-templates.json";
+import { STUDIO_COMPONENTS } from "@/lib/studioComponents";
+import { usePageSeo } from "@/hooks/usePageSeo";
+import { useHeadTags } from "@/hooks/useHeadTags";
 
-const BRANDS = [
-  { name: "TikTok", logo: brand1 },
-  { name: "L'Oréal", logo: brand2 },
-  { name: "Amazon", logo: brand3 },
-  { name: "Airbnb", logo: brand4 },
-  { name: "Shopify", logo: brand5 },
-  { name: "Zara", logo: brand6 },
-];
-
-const brandsRow1 = [...BRANDS, ...BRANDS, ...BRANDS, ...BRANDS];
-const brandsRow2 = [...BRANDS.slice().reverse(), ...BRANDS.slice().reverse(), ...BRANDS.slice().reverse(), ...BRANDS.slice().reverse()];
+// Portafolio: miniaturas de las plantillas de la Librería (dos filas que se mueven en sentidos opuestos)
+const TEMPLATE_THUMBS = (studioTemplates as { title: string; thumbnail_url: string }[]).map((t) => ({ name: t.title, src: t.thumbnail_url }));
+const thumbsRow1 = [...TEMPLATE_THUMBS.slice(0, 8), ...TEMPLATE_THUMBS.slice(0, 8)];
+const thumbsRow2 = [...TEMPLATE_THUMBS.slice(8, 16), ...TEMPLATE_THUMBS.slice(8, 16)];
+// Creatividad: tres componentes de video del Estudio
+const CREATIVE_PICKS = ["espiral-3d", "lluvia-de-likes", "frase-letras"]
+  .map((slug) => STUDIO_COMPONENTS.find((c) => c.slug === slug))
+  .filter((c): c is (typeof STUDIO_COMPONENTS)[number] => !!c);
 
 type Feature = { id: string; badge: string; title: string; description: string; bullets: string[] };
 
@@ -781,6 +776,33 @@ const CollaborationMockup = () => {
 const Features = () => {
   const { t, i18n } = useTranslation();
   const featuresData = t("features.items", { returnObjects: true }) as Feature[];
+  const lang = i18n.language?.startsWith("en") ? "en" : "es";
+  const pageUrl = `https://miiles.app/${lang}/funciones`;
+  usePageSeo({ title: t("features.seoTitle"), description: t("features.seoDescription"), robots: "index, follow" });
+  useHeadTags({
+    canonical: pageUrl,
+    alternates: [
+      { hreflang: "es", href: "https://miiles.app/es/funciones" },
+      { hreflang: "en", href: "https://miiles.app/en/funciones" },
+      { hreflang: "x-default", href: "https://miiles.app/es/funciones" },
+    ],
+    meta: [
+      { attr: "property", key: "og:url", content: pageUrl },
+      { attr: "property", key: "og:locale", content: lang === "en" ? "en_US" : "es_MX" },
+    ],
+    jsonLd: {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      name: "Miiles",
+      url: "https://miiles.app",
+      applicationCategory: "BusinessApplication",
+      operatingSystem: "Web",
+      description: t("features.seoDescription"),
+      inLanguage: lang === "en" ? "en-US" : "es-MX",
+      featureList: featuresData.map((f) => f.title),
+      offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
+    },
+  }, [lang]);
   const smootherRef = useRef<ScrollSmoother | null>(null);
 
   useEffect(() => {
@@ -851,9 +873,9 @@ const Features = () => {
       <div id="smooth-wrapper-features" style={{ overflow: "hidden", position: "fixed", width: "100%", height: "100%", top: 0, left: 0 }}>
         <div id="smooth-content-features" className="bg-white text-black font-sans pb-0">
           <section className="min-h-[60vh] flex flex-col items-center justify-center text-center px-6 pt-40 pb-12">
-            <h3 className="text-[22px] font-normal mb-4 tracking-tight">
+            <p className="text-[22px] font-normal mb-4 tracking-tight">
               {t("features.intro")}
-            </h3>
+            </p>
             <h1 className="text-5xl md:text-7xl font-normal leading-tight tracking-tight mb-8 max-w-4xl">
               {t("features.title")}
             </h1>
@@ -876,17 +898,17 @@ const Features = () => {
 
           {/* Detailed Features Sections */}
           <section className="horizontal-section-wrapper md:h-screen md:overflow-hidden md:relative pb-32 md:pb-0">
-            <div className="horizontal-track flex flex-col md:flex-row md:flex-nowrap md:w-[440vw] md:h-full gap-36 md:gap-0">
+            <div className="horizontal-track flex flex-col md:flex-row md:flex-nowrap md:w-[540vw] md:h-full gap-36 md:gap-0">
               {featuresData.map((f) => (
                 <div
                   key={f.id}
                   className={`horizontal-slide w-full md:w-[100vw] md:h-full md:flex-shrink-0 md:flex md:items-center md:justify-center px-6 ${
-                    f.id === "colaboraciones" ? "md:pl-32 md:pr-20 lg:pl-44 lg:pr-20" : "md:px-20"
+                    f.id === "portafolio" ? "md:pl-32 md:pr-20 lg:pl-44 lg:pr-20" : "md:px-20"
                   }`}
                 >
                   <div className="max-w-6xl mx-auto w-full grid grid-cols-1 md:grid-cols-2 gap-16 items-center">
                     {/* Left Column: Text Content */}
-                    <div className={`flex flex-col text-left ${f.id === "colaboraciones" ? "md:pl-6 lg:pl-12" : ""}`}>
+                    <div className={`flex flex-col text-left ${f.id === "portafolio" ? "md:pl-6 lg:pl-12" : ""}`}>
                       <span className="text-xs font-semibold tracking-wider text-miiles-blue mb-3 font-sans">
                         {f.badge}
                       </span>
@@ -911,7 +933,7 @@ const Features = () => {
                     {/* Right Column: Mockup Container (Responsive Aspect Ratio and Padding for Mobile) */}
                     <div 
                       className={`w-full aspect-[4/5] md:aspect-square rounded-[2.5rem] overflow-hidden border border-neutral-100 flex items-center justify-center hover:scale-[1.01] transition-transform duration-500 ${
-                        f.id === "colaboraciones" ? "p-0" : "p-6 md:p-10"
+                        f.id === "portafolio" || f.id === "creatividad" ? "p-0" : "p-6 md:p-10"
                       }`}
                       style={{
                         background: "linear-gradient(to bottom, #FDFDFD, #F8F9FD)"
@@ -921,7 +943,7 @@ const Features = () => {
                         <TypewriterInput />
                       )}
 
-                      {f.id === "colaboraciones" && (
+                      {f.id === "portafolio" && (
                         <div className="w-full h-full relative flex flex-col justify-center gap-5 overflow-hidden bg-white/30 backdrop-blur-sm rounded-[2.5rem]">
                           {/* Grid Pattern Background */}
                           <svg
@@ -934,7 +956,7 @@ const Features = () => {
                           >
                             <defs>
                               <pattern
-                                id="features-colab-grid"
+                                id="features-portfolio-grid"
                                 width="32"
                                 height="32"
                                 patternUnits="userSpaceOnUse"
@@ -947,15 +969,15 @@ const Features = () => {
                                 />
                               </pattern>
                             </defs>
-                            <rect width="100%" height="100%" fill="url(#features-colab-grid)" />
+                            <rect width="100%" height="100%" fill="url(#features-portfolio-grid)" />
                           </svg>
 
                           {/* Row 1: Left to right marquee */}
                           <div className="w-full overflow-hidden relative z-10" style={{ maskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)" }}>
                             <div className="flex w-max gap-3.5 animate-marquee">
-                              {brandsRow1.map((b, idx) => (
-                                <div key={idx} className="flex items-center justify-center px-6 sm:px-8 h-16 sm:h-20 rounded-[20px] border border-neutral-200 bg-white shrink-0">
-                                  <img src={b.logo} alt={b.name} className="h-6 sm:h-8 w-auto object-contain opacity-70 shrink-0" />
+                              {thumbsRow1.map((tpl, idx) => (
+                                <div key={idx} className="w-48 sm:w-60 aspect-[16/10] rounded-[16px] overflow-hidden border border-neutral-200 bg-white shrink-0">
+                                  <img src={tpl.src} alt={idx < thumbsRow1.length / 2 ? `${t("features.templateAlt")} ${tpl.name}` : ""} loading="lazy" className="w-full h-full object-cover object-top" />
                                 </div>
                               ))}
                             </div>
@@ -964,15 +986,25 @@ const Features = () => {
                           {/* Row 2: Right to left marquee */}
                           <div className="w-full overflow-hidden relative z-10" style={{ maskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)", WebkitMaskImage: "linear-gradient(to right, transparent, black 8%, black 92%, transparent)" }}>
                             <div className="flex w-max gap-3.5 animate-marquee" style={{ animationDirection: "reverse" }}>
-                              {brandsRow2.map((b, idx) => (
-                                <div key={idx} className="flex items-center justify-center px-6 sm:px-8 h-16 sm:h-20 rounded-[20px] border border-neutral-200 bg-white shrink-0">
-                                  <img src={b.logo} alt={b.name} className="h-6 sm:h-8 w-auto object-contain opacity-70 shrink-0" />
+                              {thumbsRow2.map((tpl, idx) => (
+                                <div key={idx} className="w-48 sm:w-60 aspect-[16/10] rounded-[16px] overflow-hidden border border-neutral-200 bg-white shrink-0">
+                                  <img src={tpl.src} alt={idx < thumbsRow2.length / 2 ? `${t("features.templateAlt")} ${tpl.name}` : ""} loading="lazy" className="w-full h-full object-cover object-top" />
                                 </div>
                               ))}
                             </div>
                           </div>
                         </div>
                       )}
+
+                        {f.id === "creatividad" && (
+                          <div className="w-full h-full flex items-center justify-center gap-3 sm:gap-4 px-4">
+                            {CREATIVE_PICKS.map((c, i) => (
+                              <div key={c.slug} className={`aspect-[9/16] w-[30%] overflow-hidden rounded-[12px] bg-white shadow-[0_8px_24px_-10px_rgba(28,30,42,0.10)] ${i === 1 ? "-translate-y-6" : "translate-y-6"}`}>
+                                <video src={c.preview_video_url} poster={c.poster_url ?? undefined} autoPlay muted loop playsInline preload="metadata" aria-label={c.title} className="block w-full h-full object-cover scale-[1.01]" />
+                              </div>
+                            ))}
+                          </div>
+                        )}
 
                         {f.id === "collab" && (
                           <CollaborationMockup />

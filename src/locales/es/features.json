@@ -1,25 +1,36 @@
 {
   "items": [
     {
-      "id": "colaboraciones",
-      "badge": "Colaboraciones",
-      "title": "Colabora con marcas",
-      "description": "Encuentra marcas líderes y colabora con ellas en proyectos creativos para redes sociales y estrategias digitales de alto impacto. Conéctate con audiencias globales de forma sencilla.",
+      "id": "portafolio",
+      "badge": "Portafolio",
+      "title": "Diseña tu portafolio profesional con IA",
+      "description": "Describe quién eres, qué creas y con qué marcas trabajas. Miiles arma tu portafolio con plantillas hechas para creadores de contenido, creadores UGC, diseñadores y freelancers, y lo publica con tu propio enlace.",
       "bullets": [
-        "Conexión directa con marcas de primer nivel mundial.",
-        "Proyectos creativos y campañas para redes sociales.",
-        "Oportunidades exclusivas para monetizar tu portafolio."
+        "Plantillas de portafolio para creadores UGC, editores y freelancers.",
+        "Edita textos, fotos y colores con un prompt, sin saber programar.",
+        "Publica con tu propio enlace, listo para enviar a marcas."
+      ]
+    },
+    {
+      "id": "creatividad",
+      "badge": "Creatividad",
+      "title": "Crea, edita y anima tu contenido",
+      "description": "Más de 60 assets para edición de video, animación y motion graphics: carruseles, textos animados, transiciones y efectos en formato vertical para Reels, TikTok y Shorts. Todo lo que necesitas para acelerar tu proceso creativo.",
+      "bullets": [
+        "Componentes de video en formato 9:16 para Reels, TikTok y YouTube Shorts.",
+        "Textos animados, transiciones y motion graphics listos para usar.",
+        "Copia el prompt y crea la animación con tu IA: Claude, Codex, Gemini o Cursor."
       ]
     },
     {
       "id": "ai-studio",
       "badge": "Inteligencia Artificial",
-      "title": "Diseña modelos de negocios con la potencia de la IA",
-      "description": "Describe tu idea y desarrolla toda una estructura de negocio y descubre nuevas oportunidades para desarrollar proyectos escalables.",
+      "title": "Diseña modelos de negocio con la potencia de la IA",
+      "description": "Conecta Miiles con Claude o con la IA que ya usas. Funciona como una skill: tu asistente crea tus tableros, estructura tu modelo de negocio y gestiona tus clientes, campañas e ingresos por ti.",
       "bullets": [
-        "Generación instantánea de estructuras comerciales a partir de tu visión.",
-        "Visualización clara de tu cadena de valor y flujos de ingresos.",
-        "Sugerencias inteligentes de la IA para validar y escalar tu proyecto."
+        "Se conecta con Claude, Codex, Gemini, Cursor y otras IA.",
+        "Tableros con clientes, campañas, contratos e ingresos desde una conversación.",
+        "Business Model Canvas con IA para validar y escalar tu proyecto."
       ]
     },
     {
@@ -69,5 +80,8 @@
   "plansDescription": "Elige el plan ideal para automatizar y escalar tu negocio.",
   "aiAlt": "AI",
   "collaborator": "Colaborador {{number}}",
-  "heroAlt": "Persona usando Miiles en una tablet, cómoda en su sofá"
+  "heroAlt": "Persona usando Miiles en una tablet, cómoda en su sofá",
+  "seoTitle": "Funciones de Miiles: portafolio con IA, assets de video y tableros",
+  "seoDescription": "Crea tu portafolio profesional con IA, edita y anima con más de 60 assets de video y motion graphics, y gestiona clientes y campañas conectando Miiles con Claude o tu IA.",
+  "templateAlt": "Plantilla de portafolio"
 }

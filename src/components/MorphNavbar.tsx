@@ -72,6 +72,15 @@ const MorphNavbar = ({ isLanding }: MorphNavbarProps) => {
     measure();
     const fonts = (document as Document & { fonts?: { ready: Promise<unknown> } }).fonts;
     fonts?.ready.then(measure);
+    // Al cambiar de página el logo (SVG) a veces aún no carga y mide 0: la píldora quedaba
+    // angosta y "Unirse" cortado. Se vuelve a medir cada vez que una pieza cambia de tamaño.
+    const ro = typeof ResizeObserver !== "undefined" ? new ResizeObserver(measure) : null;
+    Array.from(el.children).forEach((child) => ro?.observe(child));
+    el.querySelectorAll("img").forEach((img) => img.addEventListener("load", measure));
+    return () => {
+      ro?.disconnect();
+      el.querySelectorAll("img").forEach((img) => img.removeEventListener("load", measure));
+    };
   }, [i18n.language]);
 
   const close = useCallback(() => {
@@ -153,6 +162,8 @@ const MorphNavbar = ({ isLanding }: MorphNavbarProps) => {
               <img
                 src="/logotipo.svg"
                 alt="Miiles"
+                width={83}
+                height={20}
                 className={`h-5 w-auto transition-[filter] ${morph} ${dark ? "brightness-0 invert" : ""}`}
               />
             </Link>
