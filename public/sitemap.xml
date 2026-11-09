@@ -80,4 +80,16 @@
     <xhtml:link rel="alternate" hreflang="es" href="https://miiles.app/es/privacidad"/>
     <xhtml:link rel="alternate" hreflang="en" href="https://miiles.app/en/privacidad"/>
   </url>
+  <url>
+    <loc>https://miiles.app/es/blog/miiles-herramienta-ia-creadores-2026</loc>
+    <lastmod>2026-11-09</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://miiles.app/es/blog/miiles-herramienta-ia-creadores-2026"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://miiles.app/en/blog/miiles-ai-tool-for-creators-2026"/>
+  </url>
+  <url>
+    <loc>https://miiles.app/en/blog/miiles-ai-tool-for-creators-2026</loc>
+    <lastmod>2026-11-09</lastmod>
+    <xhtml:link rel="alternate" hreflang="es" href="https://miiles.app/es/blog/miiles-herramienta-ia-creadores-2026"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://miiles.app/en/blog/miiles-ai-tool-for-creators-2026"/>
+  </url>
 </urlset>
