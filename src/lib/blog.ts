@@ -6,7 +6,8 @@ export type BlogLang = "es" | "en";
 export type BlogBlock =
   | { type: "p" | "h2"; text: string }
   | { type: "ul" | "ol"; items: string[] }
-  | { type: "img"; src: string; alt: string };
+  | { type: "img"; src: string; alt: string }
+  | { type: "cta"; title: string; text?: string; button: string; href: string };
 export type BlogLocale = { slug: string; title: string; metaTitle?: string; description: string; author: string; body: BlogBlock[] };
 export type BlogPost = { id: string; date: string; published: boolean; cover?: string } & Record<BlogLang, BlogLocale>;
 
@@ -35,7 +36,7 @@ export function formatDate(date: string, lang: BlogLang) {
 /** Tiempo de lectura aproximado (200 palabras por minuto). */
 export function readingMinutes(body: BlogBlock[]) {
   const words = body
-    .map((b) => ("text" in b ? b.text : "items" in b ? b.items.join(" ") : ""))
+    .map((b) => (b.type === "cta" ? "" : "text" in b ? b.text : "items" in b ? b.items.join(" ") : ""))
     .join(" ")
     .split(/\s+/).length;
   return Math.max(1, Math.round(words / 200));

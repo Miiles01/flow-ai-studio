@@ -47,7 +47,7 @@
           "Comparte tu portafolio o invita a tu equipo a tu tablero."
         ] },
         { "type": "p", "text": "El plan gratuito incluye un proyecto y hasta 10 colaboraciones. Cuando necesites más, el plan Pro abre proyectos y colaboraciones ilimitadas." },
-        { "type": "p", "text": "No es a quién conoces. Es con quién construyes. [Prueba Miiles](https://miiles.app)." }
+        { "type": "cta", "title": "No es a quién conoces.\nEs con quién construyes.", "text": "Crea tu cuenta gratis y arma tu portafolio, tus tableros y tus páginas con IA.", "button": "Prueba Miiles", "href": "https://miiles.app/register" }
       ]
     },
     "en": {
@@ -93,7 +93,7 @@
           "Share your portfolio or invite your team to your board."
         ] },
         { "type": "p", "text": "The free plan includes one project and up to 10 collaborations. When you need more, the Pro plan unlocks unlimited projects and collaborations." },
-        { "type": "p", "text": "It's not who you know. It's who you build with. [Try Miiles](https://miiles.app)." }
+        { "type": "cta", "title": "It's not who you know.\nIt's who you build with.", "text": "Create your free account and build your portfolio, boards and pages with AI.", "button": "Try Miiles", "href": "https://miiles.app/register" }
       ]
     }
   }

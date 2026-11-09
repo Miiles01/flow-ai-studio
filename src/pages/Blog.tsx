@@ -58,6 +58,20 @@ function Inline({ text }: { text: string }) {
 }
 
 function Block({ b }: { b: BlogBlock }) {
+  if (b.type === "cta") {
+    // Llamado a la acción grande al final del artículo
+    return (
+      <aside className="!mt-16 rounded-[24px] bg-miiles-blue px-8 py-12 md:px-14 md:py-16 text-center text-white">
+        <p className="text-3xl md:text-5xl font-normal leading-tight">
+          {b.title.split("\n").map((l, i) => <span key={i} className="block">{l}</span>)}
+        </p>
+        {b.text && <p className="mx-auto mt-5 max-w-md text-sm md:text-base font-light text-white/80">{b.text}</p>}
+        <a href={b.href} className="mt-8 inline-flex rounded-full bg-black px-8 py-4 text-base font-normal text-white transition-colors hover:bg-miiles-pink hover:text-black">
+          {b.button}
+        </a>
+      </aside>
+    );
+  }
   if (b.type === "h2") return <h2 className="pt-6 text-2xl md:text-3xl font-normal leading-tight text-black">{b.text}</h2>;
   if (b.type === "p") return <p className="text-base md:text-lg font-light leading-relaxed text-miiles-gray-600"><Inline text={b.text} /></p>;
   if (b.type === "ul" || b.type === "ol") {
