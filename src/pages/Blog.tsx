@@ -61,12 +61,12 @@ function Block({ b }: { b: BlogBlock }) {
   if (b.type === "cta") {
     // Llamado a la acción grande al final del artículo
     return (
-      <aside className="!mt-16 rounded-[24px] bg-miiles-blue px-8 py-12 md:px-14 md:py-16 text-center text-white">
+      <aside className="!mt-16 rounded-[24px] border border-miiles-gray-100 bg-white px-8 py-12 md:px-14 md:py-16 text-center text-black">
         <p className="text-3xl md:text-5xl font-normal leading-tight">
           {b.title.split("\n").map((l, i) => <span key={i} className="block">{l}</span>)}
         </p>
-        {b.text && <p className="mx-auto mt-5 max-w-md text-sm md:text-base font-light text-white/80">{b.text}</p>}
-        <a href={b.href} className="mt-8 inline-flex rounded-full bg-black px-8 py-4 text-base font-normal text-white transition-colors hover:bg-miiles-pink hover:text-black">
+        {b.text && <p className="mx-auto mt-5 max-w-md text-sm md:text-base font-light text-miiles-gray-400">{b.text}</p>}
+        <a href={b.href} className="mt-8 inline-flex rounded-full bg-black px-8 py-4 text-base font-normal text-white transition-colors hover:bg-miiles-pink">
           {b.button}
         </a>
       </aside>
