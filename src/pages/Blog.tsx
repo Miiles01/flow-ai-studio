@@ -86,7 +86,7 @@ function Block({ b }: { b: BlogBlock }) {
   if (b.type !== "img" || !b.src) return null;
   return (
     <figure className="py-2">
-      <img src={b.src} alt={b.alt} loading="lazy" className="w-full rounded-[24px] bg-miiles-gray-50" />
+      <img src={b.src} alt={b.alt} loading="lazy" width={1440} height={698} className="h-auto w-full rounded-[16px] border border-miiles-gray-100 bg-miiles-gray-50" />
     </figure>
   );
 }
