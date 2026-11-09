@@ -3,10 +3,10 @@
 // supabase function: mcp
 // Bundled from src/lib/mcp/index.ts by @lovable.dev/mcp-js.
 // src/lib/mcp/index.ts
-import { auth, defineMcp } from "npm:@lovable.dev/mcp-js@3.1.1";
+import { auth, defineMcp } from "npm:@lovable.dev/mcp-js@3.4.0";
 
 // src/lib/mcp/tools/list-studio-templates.ts
-import { defineTool } from "npm:@lovable.dev/mcp-js@3.1.1";
+import { defineTool } from "npm:@lovable.dev/mcp-js@3.4.0";
 
 // src/data/studio-templates.json
 var studio_templates_default = [
@@ -276,7 +276,7 @@ var list_studio_templates_default = defineTool({
 });
 
 // src/lib/mcp/tools/get-studio-template.ts
-import { defineTool as defineTool2, ToolError } from "npm:@lovable.dev/mcp-js@3.1.1";
+import { defineTool as defineTool2, ToolError } from "npm:@lovable.dev/mcp-js@3.4.0";
 import { z } from "npm:zod@^3.25.76";
 var get_studio_template_default = defineTool2({
   name: "get_studio_template",
@@ -292,10 +292,10 @@ var get_studio_template_default = defineTool2({
 });
 
 // src/lib/mcp/tools/list-my-pages.ts
-import { defineTool as defineTool3, ToolError as ToolError3 } from "npm:@lovable.dev/mcp-js@3.1.1";
+import { defineTool as defineTool3, ToolError as ToolError3 } from "npm:@lovable.dev/mcp-js@3.4.0";
 
 // src/lib/mcp/tools/sites-shared.ts
-import { ToolError as ToolError2 } from "npm:@lovable.dev/mcp-js@3.1.1";
+import { ToolError as ToolError2 } from "npm:@lovable.dev/mcp-js@3.4.0";
 
 // src/lib/mcp/supabase.ts
 import { createClient } from "npm:@supabase/supabase-js@^2.101.0";
@@ -434,7 +434,7 @@ var list_my_pages_default = defineTool3({
 });
 
 // src/lib/mcp/tools/save-page-files.ts
-import { defineTool as defineTool4, ToolError as ToolError4 } from "npm:@lovable.dev/mcp-js@3.1.1";
+import { defineTool as defineTool4, ToolError as ToolError4 } from "npm:@lovable.dev/mcp-js@3.4.0";
 import { z as z2 } from "npm:zod@^3.25.76";
 var save_page_files_default = defineTool4({
   name: "save_page_files",
@@ -489,7 +489,7 @@ var save_page_files_default = defineTool4({
 });
 
 // src/lib/mcp/tools/publish-page.ts
-import { defineTool as defineTool5, ToolError as ToolError5 } from "npm:@lovable.dev/mcp-js@3.1.1";
+import { defineTool as defineTool5, ToolError as ToolError5 } from "npm:@lovable.dev/mcp-js@3.4.0";
 import { z as z3 } from "npm:zod@^3.25.76";
 var publish_page_default = defineTool5({
   name: "publish_page",
@@ -510,7 +510,7 @@ var publish_page_default = defineTool5({
 });
 
 // src/lib/mcp/tools/unpublish-page.ts
-import { defineTool as defineTool6, ToolError as ToolError6 } from "npm:@lovable.dev/mcp-js@3.1.1";
+import { defineTool as defineTool6, ToolError as ToolError6 } from "npm:@lovable.dev/mcp-js@3.4.0";
 import { z as z4 } from "npm:zod@^3.25.76";
 var unpublish_page_default = defineTool6({
   name: "unpublish_page",
@@ -539,5 +539,5 @@ var mcp_default = defineMcp({
 });
 
 // lovable-mcp-supabase-entry.ts
-import { createSupabaseHandler } from "npm:@lovable.dev/mcp-js@3.1.1/stacks/supabase";
+import { createSupabaseHandler } from "npm:@lovable.dev/mcp-js@3.4.0/stacks/supabase";
 Deno.serve(createSupabaseHandler(mcp_default, { functionName: "mcp" }));

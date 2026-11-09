@@ -1,0 +1,100 @@
+[
+  {
+    "id": "lanzamiento-miiles-2026",
+    "date": "2026-11-09",
+    "published": false,
+    "cover": "/og-image.png",
+    "es": {
+      "slug": "miiles-herramienta-ia-creadores-2026",
+      "title": "Miiles: la nueva herramienta de IA para creadores de contenido en 2026",
+      "metaTitle": "Miiles: nueva herramienta de IA para creadores (2026)",
+      "description": "Miiles es la herramienta de IA para creadores de contenido, freelancers y marcas propias: portafolios, clientes, campañas y plantillas en un solo lugar.",
+      "author": "Equipo Miiles",
+      "body": [
+        { "type": "p", "text": "Hoy lanzamos Miiles, una herramienta de inteligencia artificial para creadores de contenido, community managers, editores, diseñadores, freelancers y personas con un proyecto o una marca propia. Miiles reúne en un solo lugar lo que hoy vive repartido en cinco apps: tu portafolio, tus clientes, tus campañas, tus ideas y las páginas con las que vendes." },
+        { "type": "p", "text": "Todo creador necesita una base. Miiles es esa base." },
+        { "type": "img", "src": "", "alt": "Dashboard de Miiles" },
+        { "type": "h2", "text": "Por qué creamos Miiles" },
+        { "type": "p", "text": "Un creador independiente cambia de herramienta todo el día. Arma el portafolio en un sitio, lleva a los clientes en una hoja de cálculo, guarda los contratos en una carpeta y planea el contenido en otra app. Cada cambio cuesta tiempo y deja datos sueltos." },
+        { "type": "p", "text": "Creamos Miiles en Ciudad de México para resolver eso. Escribes lo que necesitas como se lo contarías a alguien, y la IA de Miiles lo convierte en algo que puedes usar: un portafolio, un tablero de trabajo o una página lista para compartir." },
+        { "type": "h2", "text": "Para quién es Miiles" },
+        { "type": "ul", "items": [
+          "**Creadores de contenido y creadores UGC:** muestran su trabajo y las marcas con las que colaboran en un portafolio profesional.",
+          "**Community managers:** organizan clientes, campañas y entregables (reels, posts, stories, TikToks) en un mismo tablero.",
+          "**Editores y diseñadores:** presentan proyectos con plantillas y componentes listos para adaptar.",
+          "**Freelancers:** llevan clientes, contratos e ingresos sin cambiar de herramienta.",
+          "**Personas con proyectos o marcas propias:** estructuran su idea de negocio con un Business Model Canvas generado por IA."
+        ] },
+        { "type": "h2", "text": "Crea tu portafolio con IA" },
+        { "type": "p", "text": "Describe quién eres, qué haces y para quién trabajas. Miiles genera un portafolio profesional con un solo prompt y lo deja listo para compartir. Puedes publicarlo con tu propio enlace en wearemiiles.com." },
+        { "type": "img", "src": "", "alt": "Estudio de Miiles" },
+        { "type": "h2", "text": "Estudio: plantillas y componentes" },
+        { "type": "p", "text": "Estudio es la sección de Miiles para crear una mejor presentación. Reúne plantillas de portafolios y páginas web, además de componentes sueltos para armar la tuya. Abres una plantilla, la ves en vivo y la copias o la descargas para adaptarla." },
+        { "type": "img", "src": "", "alt": "Plantillas de portafolio en Miiles" },
+        { "type": "img", "src": "", "alt": "Componentes de video en Miiles" },
+        { "type": "h2", "text": "Clientes, campañas e ingresos en un tablero" },
+        { "type": "p", "text": "Los tableros de Miiles organizan tu negocio con widgets: clientes, campañas, contratos, fechas de pago e ingresos. Ves todo a la vista y lo trabajas con tu equipo. Si prefieres empezar desde cero, la IA te propone un plan y construye el tablero cuando lo apruebas." },
+        { "type": "img", "src": "", "alt": "Librería de tableros de Miiles" },
+        { "type": "h2", "text": "Entiende los algoritmos de redes" },
+        { "type": "p", "text": "En Descubrimientos explicamos cómo deciden TikTok, Instagram, YouTube y Facebook qué mostrar, y qué estrategias usan los creadores que están creciendo. Cada red tiene un diagrama de su arquitectura algorítmica para que entiendas qué señales importan." },
+        { "type": "img", "src": "", "alt": "Arquitectura algorítmica en Miiles" },
+        { "type": "h2", "text": "En español y en inglés" },
+        { "type": "p", "text": "Miiles funciona en español y en inglés. Lo diseñamos desde México para creadores de Latinoamérica y para quienes trabajan con marcas de otros países. También puedes conectar tu propia IA, como Claude, para trabajar con tus datos de Miiles." },
+        { "type": "h2", "text": "Cómo empezar" },
+        { "type": "ol", "items": [
+          "Entra a [miiles.app](https://miiles.app) y crea tu cuenta gratis.",
+          "Escribe tu primera idea o elige una plantilla en Estudio.",
+          "Comparte tu portafolio o invita a tu equipo a tu tablero."
+        ] },
+        { "type": "p", "text": "El plan gratuito incluye un proyecto y hasta 10 colaboraciones. Cuando necesites más, el plan Pro abre proyectos y colaboraciones ilimitadas." },
+        { "type": "p", "text": "No es a quién conoces. Es con quién construyes. [Prueba Miiles](https://miiles.app)." }
+      ]
+    },
+    "en": {
+      "slug": "miiles-ai-tool-for-creators-2026",
+      "title": "Miiles: the new AI tool for content creators in 2026",
+      "metaTitle": "Miiles: the new AI tool for content creators (2026)",
+      "description": "Miiles is the new AI tool for content creators, freelancers and personal brands: portfolios, clients, campaigns and templates in one workspace.",
+      "author": "Miiles Team",
+      "body": [
+        { "type": "p", "text": "Today we launch Miiles, an AI tool for content creators, social media managers, editors, designers, freelancers and anyone building a project or a personal brand. Miiles brings together what usually lives across five apps: your portfolio, your clients, your campaigns, your ideas and the pages you sell with." },
+        { "type": "p", "text": "Every creator needs a base. Miiles is that base." },
+        { "type": "img", "src": "", "alt": "Miiles dashboard" },
+        { "type": "h2", "text": "Why we built Miiles" },
+        { "type": "p", "text": "Independent creators switch tools all day. The portfolio lives on one site, clients in a spreadsheet, contracts in a folder and the content plan in another app. Every switch costs time and leaves data behind." },
+        { "type": "p", "text": "We built Miiles in Mexico City to fix that. You write what you need the way you would tell a friend, and the Miiles AI turns it into something you can use: a portfolio, a workspace board or a page ready to share." },
+        { "type": "h2", "text": "Who Miiles is for" },
+        { "type": "ul", "items": [
+          "**Content creators and UGC creators:** show their work and the brands they partner with in a professional portfolio.",
+          "**Social media managers:** keep clients, campaigns and deliverables (reels, posts, stories, TikToks) on one board.",
+          "**Editors and designers:** present projects with templates and components ready to adapt.",
+          "**Freelancers:** track clients, contracts and income without switching tools.",
+          "**Founders with their own project or brand:** structure the business idea with an AI-generated Business Model Canvas."
+        ] },
+        { "type": "h2", "text": "Build your portfolio with AI" },
+        { "type": "p", "text": "Describe who you are, what you do and who you work for. Miiles generates a professional portfolio from a single prompt, ready to share. You can publish it with your own link on wearemiiles.com." },
+        { "type": "img", "src": "", "alt": "Miiles Studio" },
+        { "type": "h2", "text": "Studio: templates and components" },
+        { "type": "p", "text": "Studio is the part of Miiles built to help you present your work. It holds portfolio and website templates, plus standalone components to build your own. Open a template, preview it live, then copy or download it to make it yours." },
+        { "type": "img", "src": "", "alt": "Portfolio templates in Miiles" },
+        { "type": "img", "src": "", "alt": "Video components in Miiles" },
+        { "type": "h2", "text": "Clients, campaigns and income on one board" },
+        { "type": "p", "text": "Miiles boards organize your business with widgets: clients, campaigns, contracts, payment dates and income. You see everything at once and work on it with your team. If you start from scratch, the AI proposes a plan and builds the board once you approve it." },
+        { "type": "img", "src": "", "alt": "Miiles board library" },
+        { "type": "h2", "text": "Understand social media algorithms" },
+        { "type": "p", "text": "In Discoveries we explain how TikTok, Instagram, YouTube and Facebook decide what to show, and which strategies growing creators use. Each network comes with a diagram of its algorithm architecture, so you know which signals matter." },
+        { "type": "img", "src": "", "alt": "Algorithm architecture in Miiles" },
+        { "type": "h2", "text": "In English and Spanish" },
+        { "type": "p", "text": "Miiles works in English and Spanish. We designed it in Mexico for creators across Latin America and for anyone who works with brands in other countries. You can also connect your own AI, such as Claude, to work with your Miiles data." },
+        { "type": "h2", "text": "Get started" },
+        { "type": "ol", "items": [
+          "Go to [miiles.app](https://miiles.app) and create a free account.",
+          "Write your first idea or pick a template in Studio.",
+          "Share your portfolio or invite your team to your board."
+        ] },
+        { "type": "p", "text": "The free plan includes one project and up to 10 collaborations. When you need more, the Pro plan unlocks unlimited projects and collaborations." },
+        { "type": "p", "text": "It's not who you know. It's who you build with. [Try Miiles](https://miiles.app)." }
+      ]
+    }
+  }
+]

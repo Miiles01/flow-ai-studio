@@ -26,6 +26,7 @@ const LandingFooter = () => {
               <div className="flex flex-col gap-4 text-sm font-light text-black">
                 <Link to={localePath("/terminos")} className="hover:opacity-50 transition-opacity">{t("home.footer.terms")}</Link>
                 <Link to={localePath("/privacidad")} className="hover:opacity-50 transition-opacity">{t("home.footer.privacy")}</Link>
+                <Link to={localePath("/blog")} className="hover:opacity-50 transition-opacity">Blog</Link>
               </div>
             </div>
             <div className="space-y-6">

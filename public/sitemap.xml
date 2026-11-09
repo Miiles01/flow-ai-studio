@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://miiles.app/es/</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://miiles.app/es/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://miiles.app/en/"/>
+  </url>
+  <url>
+    <loc>https://miiles.app/en/</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://miiles.app/es/"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://miiles.app/en/"/>
+  </url>
+  <url>
+    <loc>https://miiles.app/es/funciones</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://miiles.app/es/funciones"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://miiles.app/en/funciones"/>
+  </url>
+  <url>
+    <loc>https://miiles.app/en/funciones</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://miiles.app/es/funciones"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://miiles.app/en/funciones"/>
+  </url>
+  <url>
+    <loc>https://miiles.app/es/precios</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://miiles.app/es/precios"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://miiles.app/en/precios"/>
+  </url>
+  <url>
+    <loc>https://miiles.app/en/precios</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://miiles.app/es/precios"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://miiles.app/en/precios"/>
+  </url>
+  <url>
+    <loc>https://miiles.app/es/acerca-de</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://miiles.app/es/acerca-de"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://miiles.app/en/acerca-de"/>
+  </url>
+  <url>
+    <loc>https://miiles.app/en/acerca-de</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://miiles.app/es/acerca-de"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://miiles.app/en/acerca-de"/>
+  </url>
+  <url>
+    <loc>https://miiles.app/es/afiliados</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://miiles.app/es/afiliados"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://miiles.app/en/afiliados"/>
+  </url>
+  <url>
+    <loc>https://miiles.app/en/afiliados</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://miiles.app/es/afiliados"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://miiles.app/en/afiliados"/>
+  </url>
+  <url>
+    <loc>https://miiles.app/es/blog</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://miiles.app/es/blog"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://miiles.app/en/blog"/>
+  </url>
+  <url>
+    <loc>https://miiles.app/en/blog</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://miiles.app/es/blog"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://miiles.app/en/blog"/>
+  </url>
+  <url>
+    <loc>https://miiles.app/es/terminos</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://miiles.app/es/terminos"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://miiles.app/en/terminos"/>
+  </url>
+  <url>
+    <loc>https://miiles.app/en/terminos</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://miiles.app/es/terminos"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://miiles.app/en/terminos"/>
+  </url>
+  <url>
+    <loc>https://miiles.app/es/privacidad</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://miiles.app/es/privacidad"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://miiles.app/en/privacidad"/>
+  </url>
+  <url>
+    <loc>https://miiles.app/en/privacidad</loc>
+    <xhtml:link rel="alternate" hreflang="es" href="https://miiles.app/es/privacidad"/>
+    <xhtml:link rel="alternate" hreflang="en" href="https://miiles.app/en/privacidad"/>
+  </url>
+</urlset>
