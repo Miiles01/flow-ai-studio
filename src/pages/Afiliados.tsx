@@ -50,7 +50,13 @@ const ChecklistItem = ({ checked, label, isPlaceholder = false }: { checked: boo
 /* ─── Demo: portafolio generado con Miiles ─────────────────────────────────
    Video grabado de la plantilla UGC V25 «Bloom» (recorrido con cursor, sin
    marco de navegador). Solo empieza a descargarse cuando la sección se acerca. */
-const PORTFOLIO_DEMO_VIDEO = "/demos/v25-recorrido.mp4";
+const PORTFOLIO_DEMO_MP4 = "/demos/v25-recorrido.mp4";
+const PORTFOLIO_DEMO_WEBM = "/demos/v25-recorrido.webm";
+const pickDemoVideo = () => {
+  if (typeof document === "undefined") return PORTFOLIO_DEMO_MP4;
+  const probe = document.createElement("video");
+  return probe.canPlayType('video/webm; codecs="vp9"') ? PORTFOLIO_DEMO_WEBM : PORTFOLIO_DEMO_MP4;
+};
 const PORTFOLIO_DEMO_POSTER = "/demos/v25-recorrido.jpg";
 
 const PortfolioDemo = () => {
@@ -81,7 +87,7 @@ const PortfolioDemo = () => {
       <div ref={boxRef} className="relative w-full aspect-[4/3] overflow-hidden bg-white">
         <video
           ref={videoRef}
-          src={load ? PORTFOLIO_DEMO_VIDEO : undefined}
+          src={load ? pickDemoVideo() : undefined}
           poster={PORTFOLIO_DEMO_POSTER}
           aria-label={t("affiliates.portfolioTitle")}
           className="absolute inset-0 w-full h-full object-cover"
