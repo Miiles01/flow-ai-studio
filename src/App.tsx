@@ -18,7 +18,6 @@ import BusinessInquiry from "./pages/BusinessInquiry";
 import BusinessInquiryThanks from "./pages/BusinessInquiryThanks";
 import Features from "./pages/Features";
 import Terms from "./pages/Terms";
-import Propuesta from "./pages/Propuesta";
 import { BlogArticle, BlogIndex } from "./pages/Blog";
 import Privacy from "./pages/Privacy";
 import ConectaIA from "./pages/ConectaIA";
@@ -175,7 +174,7 @@ const App = () => (
 
               <Route path="/admin" element={<Admin />} />
               <Route path="/ventas" element={<Ventas />} />
-              <Route path="/propuesta" element={<Propuesta />} />
+              <Route path="/propuesta" element={<Navigate to="/es/afiliados" replace />} />
               <Route path="/blog" element={<LangRedirect />} />
               <Route path="/blog/:slug" element={<LangRedirect />} />
               <Route path="/shopify-tutorial" element={<LangRedirect />} />
@@ -200,7 +199,7 @@ const App = () => (
                 <Route path="clinicas" element={<Clinicas />} />
                 <Route path="shopify-tutorial" element={<ShopifyTutorial />} />
                 <Route path="conecta-tu-ia" element={<ConectaIA />} />
-                <Route path="propuesta" element={<Propuesta />} />
+                <Route path="propuesta" element={<Navigate to="../afiliados" replace />} />
                 <Route path="blog" element={<BlogIndex />} />
                 <Route path="blog/:slug" element={<BlogArticle />} />
               </Route>
