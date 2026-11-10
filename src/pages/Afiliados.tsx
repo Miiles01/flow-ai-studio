@@ -1117,7 +1117,10 @@ const Afiliados = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-16">
                 {([1, 2] as const).map((n) => {
-                  const items = t(`affiliates.phases.phase${n}Items`, { returnObjects: true }) as { title: string; desc: string }[];
+                  const rawItems = t(`affiliates.phases.phase${n}Items`, { returnObjects: true });
+                  const items: { title: string; desc: string }[] = Array.isArray(rawItems)
+                    ? rawItems.map((i: unknown) => (typeof i === "string" ? { title: i, desc: "" } : (i as { title: string; desc: string })))
+                    : [];
                   const isTwo = n === 2;
                   return (
                     <div
@@ -1136,7 +1139,7 @@ const Afiliados = () => {
                             <Check className={`w-4 h-4 mt-1 shrink-0 ${isTwo ? 'text-white/50' : 'text-black'}`} strokeWidth={3} />
                             <span>
                               {b.title}
-                              <span className={`block text-[13px] font-light mt-1 ${isTwo ? 'text-white/55' : 'text-zinc-500'}`}>{b.desc}</span>
+                              {b.desc && <span className={`block text-[13px] font-light mt-1 ${isTwo ? 'text-white/55' : 'text-zinc-500'}`}>{b.desc}</span>}
                             </span>
                           </li>
                         ))}
