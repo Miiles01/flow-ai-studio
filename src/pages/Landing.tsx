@@ -221,7 +221,7 @@ const Landing = () => {
             <div className="relative z-10 w-full max-w-6xl flex flex-col items-center justify-center">
 
               <h1 className="hero-title text-[44px] leading-[1.08] sm:text-6xl md:text-7xl lg:text-[84px] font-normal tracking-[-0.035em] text-black max-w-6xl [text-wrap:balance]">
-                {t("home.landing.hero_h1_before")}{" "}
+                {t("home.landing.hero_h1_before") && <>{t("home.landing.hero_h1_before")}{" "}</>}
                 <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic", letterSpacing: "-0.01em", marginRight: "0.07em" }}>
                   {t("home.landing.hero_h1_accent")}
                 </span>{" "}
