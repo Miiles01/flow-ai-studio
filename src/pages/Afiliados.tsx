@@ -48,68 +48,25 @@ const ChecklistItem = ({ checked, label, isPlaceholder = false }: { checked: boo
 
 /* ─── Mockup: Tablero con flujo — UI fiel al app real ──────────────────── */
 /* ─── Demo: portafolio generado con Miiles ─────────────────────────────────
-   Muestra la plantilla UGC V4 (public/demos/portafolio-ale) dentro de una ventana
-   de navegador, a escala de escritorio, en bucle: loader "Hola, soy Ale", la sección
-   de inicio, dos pasos de scroll hasta "Marcas que confiaron en mí" y de regreso
-   arriba. El demo avisa por postMessage a dónde va el cursor (en coordenadas de su
-   ventana de 1440 × 900) y cuándo termina; aquí se dibuja el cursor encima y se
-   reinicia. Solo corre mientras la sección está a la vista. */
-const PORTFOLIO_DEMO_SRC = "/demos/portafolio-ale/index.html";
-const DEMO_WIDTH = 1440;
-const DEMO_HEIGHT = 900;
+   Muestra el recorrido grabado de la plantilla UGC V25 «Bloom»
+   (miiles.app/studio/portafolio-ugc-v25) dentro de una ventana de navegador, en
+   bucle. Solo se reproduce mientras la sección está a la vista. */
+const PORTFOLIO_DEMO_VIDEO = "https://wearemiiles.com/studio/previews/ugc-v25.mp4";
+const PORTFOLIO_DEMO_POSTER = "https://wearemiiles.com/studio/thumbs/ugc-v25.jpg";
 
 const PortfolioDemo = () => {
   const { t } = useTranslation();
-  const frameRef = useRef<HTMLDivElement>(null);
-  const [scale, setScale] = useState(0.6);
-  // 0 = todavía no se ha visto; cada valor nuevo monta otro iframe y la animación empieza de cero
-  const [run, setRun] = useState(0);
-  const iframeRef = useRef<HTMLIFrameElement>(null);
-  const inViewRef = useRef(false);
-  const [cursor, setCursor] = useState({ x: 0, y: 0, dur: 0, show: false });
-
-  // Cursor y reinicio, según los avisos del demo
-  useEffect(() => {
-    const onMessage = (e: MessageEvent) => {
-      if (e.source !== iframeRef.current?.contentWindow) return;
-      const data = e.data as { type?: string; cursor?: { x: number; y: number; dur: number; show: boolean }; done?: boolean };
-      if (data?.type !== "miiles-demo") return;
-      if (data.cursor) setCursor(data.cursor);
-      if (data.done) {
-        setCursor((c) => ({ ...c, show: false }));
-        if (inViewRef.current) setRun((n) => n + 1);
-      }
-    };
-    window.addEventListener("message", onMessage);
-    return () => window.removeEventListener("message", onMessage);
-  }, []);
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   useEffect(() => {
-    const el = frameRef.current;
+    const el = videoRef.current;
     if (!el) return;
-    const resize = () => setScale(el.getBoundingClientRect().width / DEMO_WIDTH);
-    resize();
-    const ro = new ResizeObserver(resize);
-    ro.observe(el);
-    return () => ro.disconnect();
-  }, []);
-
-  useEffect(() => {
-    const el = frameRef.current;
-    if (!el) return;
-    let outOfView = true;
     const io = new IntersectionObserver(
       ([entry]) => {
-        inViewRef.current = entry.isIntersecting;
-        if (entry.intersectionRatio >= 0.5 && outOfView) {
-          outOfView = false;
-          setRun((n) => n + 1);
-        } else if (!entry.isIntersecting) {
-          outOfView = true;
-          setCursor((c) => ({ ...c, show: false }));
-        }
+        if (entry.isIntersecting) el.play().catch(() => {});
+        else el.pause();
       },
-      { threshold: [0, 0.5] }
+      { threshold: 0.25 }
     );
     io.observe(el);
     return () => io.disconnect();
@@ -125,39 +82,22 @@ const PortfolioDemo = () => {
           <div className="w-3 h-3 rounded-full bg-[#28C840]" />
         </div>
         <div className="flex-1 flex justify-center">
-          <div className="bg-black/5 rounded-md px-6 py-1 text-[9px] text-black/30 font-light">miiles.app/ale</div>
+          <div className="bg-black/5 rounded-md px-6 py-1 text-[9px] text-black/30 font-light">miiles.app/laura</div>
         </div>
       </div>
-      <div
-        ref={frameRef}
-        className="relative w-full overflow-hidden bg-[#4059F1]"
-        style={{ height: DEMO_HEIGHT * scale }}
-      >
-        {run > 0 && (
-          <iframe
-            key={run}
-            ref={iframeRef}
-            src={`${PORTFOLIO_DEMO_SRC}#${encodeURIComponent(JSON.stringify(t("affiliates.portfolioCopy", { returnObjects: true })))}`}
-            title={t("affiliates.portfolioTitle")}
-            tabIndex={-1}
-            aria-hidden="true"
-            scrolling="no"
-            className="absolute top-0 left-0 border-0 pointer-events-none"
-            style={{ width: DEMO_WIDTH, height: DEMO_HEIGHT, transform: `scale(${scale})`, transformOrigin: "top left" }}
-          />
-        )}
-        {/* Cursor que explora el portafolio (el mismo del mockup de Tableros) */}
-        <motion.div
-          className="absolute pointer-events-none z-10"
-          style={{ top: 0, left: 0 }}
-          initial={false}
-          animate={{ x: cursor.x * scale, y: cursor.y * scale, opacity: cursor.show ? 1 : 0 }}
-          transition={{ x: { duration: cursor.dur, ease: [0.25, 0.1, 0.25, 1] }, y: { duration: cursor.dur, ease: [0.25, 0.1, 0.25, 1] }, opacity: { duration: 0.3 } }}
-        >
-          <svg width="20" height="24" viewBox="0 0 20 24" fill="none">
-            <path d="M0 0L0 20L5.5 14.5L9 22L11.5 21L8 13.5L15 13.5L0 0Z" fill="#111" stroke="white" strokeWidth="1.5" strokeLinejoin="round"/>
-          </svg>
-        </motion.div>
+      <div className="relative w-full aspect-[4/3] overflow-hidden bg-white">
+        <video
+          ref={videoRef}
+          src={PORTFOLIO_DEMO_VIDEO}
+          poster={PORTFOLIO_DEMO_POSTER}
+          title={t("affiliates.portfolioTitle")}
+          aria-hidden="true"
+          muted
+          loop
+          playsInline
+          preload="metadata"
+          className="absolute inset-0 w-full h-full object-cover pointer-events-none"
+        />
       </div>
     </div>
   );
