@@ -195,5 +195,25 @@
       "original": "Portafolio de Ale, creadora de contenido UGC: videos y fotos para marcas de belleza, moda y bienestar.",
       "text": "Portafolio de Ale, creadora de contenido UGC: videos y fotos para marcas de belleza, moda y bienestar."
     }
-  ]
+  ],
+  "phases": {
+    "phase1": "Fase 1",
+    "phase1Title": "Iniciación",
+    "phase1Items": [
+      "Plan Pro permanente",
+      "Tu portafolio 24/7",
+      "Acceso anticipado a herramientas, skills y componentes",
+      "25% de comisión sin límite"
+    ],
+    "phase2": "Fase 2",
+    "phase2Title": "Lealtad",
+    "phase2Note": "Los mismos beneficios de la fase 1, más:",
+    "phase2Items": [
+      "Plan Pro permanente",
+      "Tu portafolio 24/7",
+      "Acceso anticipado a todas las funciones",
+      "25% de comisión sin límite"
+    ],
+    "bonus": "Bonos negociables"
+  }
 }
