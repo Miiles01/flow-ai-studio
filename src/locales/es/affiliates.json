@@ -200,21 +200,22 @@
     "phase1": "Fase 1",
     "phase1Title": "Iniciación",
     "phase1Items": [
-      "Plan Pro permanente",
-      "Tu portafolio 24/7",
-      "Acceso anticipado a herramientas, skills y componentes",
-      "25% de comisión sin límite"
+      { "title": "Plan Pro permanente", "desc": "Todas las funciones Pro activas desde el día uno, sin cuota mensual." },
+      { "title": "Tu portafolio 24/7", "desc": "Una página propia con tu nombre, siempre en línea y lista para compartir." },
+      { "title": "Acceso anticipado a herramientas, skills y componentes", "desc": "Lo nuevo de Miiles llega a ti antes que al resto." },
+      { "title": "25% de comisión sin límite", "desc": "Ganas el 25% de cada venta que traigas, cuantas veces quieras." }
     ],
     "phase2": "Fase 2",
     "phase2Title": "Lealtad",
     "phase2Note": "Los mismos beneficios de la fase 1, más:",
     "phase2Items": [
-      "Plan Pro permanente",
-      "Tu portafolio 24/7",
-      "Acceso anticipado a todas las funciones",
-      "25% de comisión sin límite"
+      { "title": "Plan Pro permanente", "desc": "Sigue activo sin costo mientras sigas con nosotros." },
+      { "title": "Tu portafolio 24/7", "desc": "Tu página sigue en línea, con tu nombre y tu enlace." },
+      { "title": "Acceso anticipado a todas las funciones", "desc": "Entras a todo lo que estamos construyendo, sin listas de espera." },
+      { "title": "25% de comisión sin límite", "desc": "La misma comisión, sin tope, en cada venta que traigas." }
     ],
-    "bonus": "Bonos negociables"
+    "bonus": "Bonos negociables",
+    "bonusDesc": "Comisiones extra y acuerdos directos cuando tu volumen lo pide."
   },
   "headlineAccent": "Crear",
   "headlineMid": "nunca fue",

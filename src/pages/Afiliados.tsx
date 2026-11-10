@@ -1117,7 +1117,10 @@ const Afiliados = () => {
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-16">
                 {([1, 2] as const).map((n) => {
-                  const items = t(`affiliates.phases.phase${n}Items`, { returnObjects: true }) as string[];
+                  const rawItems = t(`affiliates.phases.phase${n}Items`, { returnObjects: true });
+                  const items: { title: string; desc: string }[] = Array.isArray(rawItems)
+                    ? rawItems.map((i: unknown) => (typeof i === "string" ? { title: i, desc: "" } : (i as { title: string; desc: string })))
+                    : [];
                   const isTwo = n === 2;
                   return (
                     <div
@@ -1130,17 +1133,23 @@ const Afiliados = () => {
                       </span>
                       <div className="mt-4 text-3xl font-normal tracking-tight">{t(`affiliates.phases.phase${n}Title`)}</div>
                       {isTwo && <p className="mt-3 text-sm font-light text-white/60">{t("affiliates.phases.phase2Note")}</p>}
-                      <ul className="mt-6 space-y-3">
+                      <ul className="mt-6 space-y-4">
                         {items.map((b) => (
-                          <li key={b} className="flex items-start gap-3 text-[15px] font-light">
+                          <li key={b.title} className="flex items-start gap-3 text-[15px] font-light">
                             <Check className={`w-4 h-4 mt-1 shrink-0 ${isTwo ? 'text-white/50' : 'text-black'}`} strokeWidth={3} />
-                            <span>{b}</span>
+                            <span>
+                              {b.title}
+                              {b.desc && <span className={`block text-[13px] font-light mt-1 ${isTwo ? 'text-white/55' : 'text-zinc-500'}`}>{b.desc}</span>}
+                            </span>
                           </li>
                         ))}
                         {isTwo && (
                           <li className="flex items-start gap-3 text-[15px] font-normal">
                             <Check className="w-4 h-4 mt-1 shrink-0 text-miiles-pink" strokeWidth={3} />
-                            <span className="text-miiles-pink">{t("affiliates.phases.bonus")}</span>
+                            <span>
+                              <span className="text-miiles-pink">{t("affiliates.phases.bonus")}</span>
+                              <span className="block text-[13px] font-light mt-1 text-white/55">{t("affiliates.phases.bonusDesc")}</span>
+                            </span>
                           </li>
                         )}
                       </ul>
