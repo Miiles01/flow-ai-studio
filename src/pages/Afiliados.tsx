@@ -972,7 +972,7 @@ const Afiliados = () => {
 
             <div className="relative z-10 w-full flex flex-col items-center justify-center">
               <h1 className="text-5xl md:text-7xl lg:text-[90px] font-normal leading-[1.05] tracking-tight mb-8 max-w-4xl mx-auto">
-              <span className="block"><span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic", marginRight: "0.07em" }} className="font-light">{t("affiliates.headlineAccent")}</span>{" "}<br className="hidden md:block" />{t("affiliates.headlineAfter")}</span>
+              <span className="block"><span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic", marginRight: "0.07em" }} className="font-light">{t("affiliates.headlineAccent")}</span>{" "}{t("affiliates.headlineMid")}<br className="hidden md:block" />{t("affiliates.headlineAfter")}</span>
             </h1>
 
             <p data-fade className="text-[17px] md:text-xl font-light text-black max-w-xl mx-auto mb-10 leading-relaxed px-2 md:px-0">
