@@ -1116,21 +1116,37 @@ const Afiliados = () => {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-5 mb-16">
-                {steps.map((s, i) => (
-                  <div
-                    key={i}
-                    data-fade
-                    className="flex gap-6 items-start border border-black/8 rounded-3xl p-7 hover:-translate-y-2 hover:shadow-[0_16px_40px_rgba(0,0,0,0.06)] transition-all duration-300"
-                  >
-                    <div className="shrink-0 w-12 h-12 flex items-center justify-center bg-zinc-100 rounded-xl mt-1">
-                      <s.icon className="w-5 h-5 text-zinc-700" />
+                {([1, 2] as const).map((n) => {
+                  const items = t(`affiliates.phases.phase${n}Items`, { returnObjects: true }) as string[];
+                  const isTwo = n === 2;
+                  return (
+                    <div
+                      key={n}
+                      data-fade
+                      className={`rounded-3xl p-8 md:p-10 transition-all duration-300 hover:-translate-y-2 ${isTwo ? 'bg-black text-white' : 'border border-black/8 hover:shadow-[0_16px_40px_rgba(0,0,0,0.06)]'}`}
+                    >
+                      <span className={`inline-flex rounded-full px-3 py-1 text-xs font-normal ${isTwo ? 'bg-miiles-pink-light text-black' : 'bg-miiles-blue-light text-miiles-blue'}`}>
+                        {t(`affiliates.phases.phase${n}`)}
+                      </span>
+                      <div className="mt-4 text-3xl font-normal tracking-tight">{t(`affiliates.phases.phase${n}Title`)}</div>
+                      {isTwo && <p className="mt-3 text-sm font-light text-white/60">{t("affiliates.phases.phase2Note")}</p>}
+                      <ul className="mt-6 space-y-3">
+                        {items.map((b) => (
+                          <li key={b} className="flex items-start gap-3 text-[15px] font-light">
+                            <Check className={`w-4 h-4 mt-1 shrink-0 ${isTwo ? 'text-white/50' : 'text-black'}`} strokeWidth={3} />
+                            <span>{b}</span>
+                          </li>
+                        ))}
+                        {isTwo && (
+                          <li className="flex items-start gap-3 text-[15px] font-normal">
+                            <Check className="w-4 h-4 mt-1 shrink-0 text-miiles-pink" strokeWidth={3} />
+                            <span className="text-miiles-pink">{t("affiliates.phases.bonus")}</span>
+                          </li>
+                        )}
+                      </ul>
                     </div>
-                    <div>
-                      <div className="text-xl font-normal mb-2">{s.label}</div>
-                      <div className="text-sm font-light text-zinc-600">{s.detail}</div>
-                    </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
 
               {/* Dashboard mockup */}
