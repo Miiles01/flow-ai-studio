@@ -1,5 +1,5 @@
 {
-  "headline": "Todo creador necesita una base",
+  "headline": "Crear nunca fue más fácil",
   "createAccount": "Crear cuenta",
   "trustedBy": "Elegido por",
   "affiliates": "Afiliados",
@@ -215,5 +215,7 @@
       "25% de comisión sin límite"
     ],
     "bonus": "Bonos negociables"
-  }
+  },
+  "headlineAccent": "Crear",
+  "headlineAfter": "nunca fue más fácil"
 }

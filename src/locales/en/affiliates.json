@@ -1,5 +1,5 @@
 {
-  "headline": "Every creator needs a home base",
+  "headline": "Creating has never been easier",
   "createAccount": "Create your account",
   "trustedBy": "Trusted by",
   "affiliates": "Affiliates",
@@ -215,5 +215,7 @@
       "25% commission, no limit"
     ],
     "bonus": "Negotiable bonuses"
-  }
+  },
+  "headlineAccent": "Creating",
+  "headlineAfter": "has never been easier"
 }
