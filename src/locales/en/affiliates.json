@@ -200,21 +200,22 @@
     "phase1": "Phase 1",
     "phase1Title": "Onboarding",
     "phase1Items": [
-      "Permanent Pro plan",
-      "Your portfolio 24/7",
-      "Early access to tools, skills and components",
-      "25% commission, no limit"
+      { "title": "Permanent Pro plan", "desc": "Every Pro feature active from day one, with no monthly fee." },
+      { "title": "Your portfolio 24/7", "desc": "Your own page with your name on it, always online and ready to share." },
+      { "title": "Early access to tools, skills and components", "desc": "New Miiles tools reach you before anyone else." },
+      { "title": "25% commission, no limit", "desc": "You earn 25% of every sale you bring, as many times as you want." }
     ],
     "phase2": "Phase 2",
     "phase2Title": "Loyalty",
     "phase2Note": "The same benefits as phase 1, plus:",
     "phase2Items": [
-      "Permanent Pro plan",
-      "Your portfolio 24/7",
-      "Early access to every feature",
-      "25% commission, no limit"
+      { "title": "Permanent Pro plan", "desc": "Stays active at no cost while you're with us." },
+      { "title": "Your portfolio 24/7", "desc": "Your page stays online, with your name and your link." },
+      { "title": "Early access to every feature", "desc": "You get into everything we're building, with no waiting lists." },
+      { "title": "25% commission, no limit", "desc": "The same commission, uncapped, on every sale you bring." }
     ],
-    "bonus": "Negotiable bonuses"
+    "bonus": "Negotiable bonuses",
+    "bonusDesc": "Extra commissions and direct deals as your volume grows."
   },
   "headlineAccent": "Creating",
   "headlineMid": "has",
