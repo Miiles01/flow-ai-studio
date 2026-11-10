@@ -74,17 +74,6 @@ const PortfolioDemo = () => {
 
   return (
     <div className="w-full rounded-3xl overflow-hidden border border-black/8 shadow-[0_24px_80px_rgba(0,0,0,0.10)] bg-white flex flex-col">
-      {/* window chrome */}
-      <div className="flex items-center gap-2 px-4 py-3 bg-white border-b border-black/6 flex-shrink-0">
-        <div className="flex gap-1.5">
-          <div className="w-3 h-3 rounded-full bg-[#FF5F57]" />
-          <div className="w-3 h-3 rounded-full bg-[#FEBC2E]" />
-          <div className="w-3 h-3 rounded-full bg-[#28C840]" />
-        </div>
-        <div className="flex-1 flex justify-center">
-          <div className="bg-black/5 rounded-md px-6 py-1 text-[9px] text-black/30 font-light">miiles.app/laura</div>
-        </div>
-      </div>
       <div className="relative w-full aspect-[4/3] overflow-hidden bg-white">
         <video
           ref={videoRef}
@@ -270,18 +259,6 @@ const AnimatedDashboardMockup = () => {
           style={{ transformOrigin: "center center" }}
         >
           <div id="animated-dashboard-mockup" className="flex flex-col w-full h-full rounded-3xl overflow-hidden border border-black/8 shadow-[0_24px_80px_rgba(0,0,0,0.10)] relative" style={{ background: '#fff', transform: 'translate3d(0,0,0)', isolation: 'isolate' }}>
-    {/* window chrome */}
-    <div className="flex items-center gap-2 px-4 py-3 bg-white border-b border-black/6">
-      <div className="flex gap-1.5">
-        <div className="w-3 h-3 rounded-full bg-[#FF5F57]" />
-        <div className="w-3 h-3 rounded-full bg-[#FEBC2E]" />
-        <div className="w-3 h-3 rounded-full bg-[#28C840]" />
-      </div>
-      <div className="flex-1 flex justify-center">
-        <div className="bg-black/5 rounded-md px-6 py-1 text-[9px] text-black/30 font-light">miiles.app/boards</div>
-      </div>
-    </div>
-
     <div className="flex flex-1 relative rounded-b-3xl overflow-hidden" style={{ transform: 'translate3d(0,0,0)', isolation: 'isolate' }}>
       {/* sidebar */}
       <div className="p-4 flex-shrink-0 h-full" style={{ width: 230 }}>
