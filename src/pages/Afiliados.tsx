@@ -48,148 +48,48 @@ const ChecklistItem = ({ checked, label, isPlaceholder = false }: { checked: boo
 
 /* ─── Mockup: Tablero con flujo — UI fiel al app real ──────────────────── */
 /* ─── Demo: portafolio generado con Miiles ─────────────────────────────────
-   Muestra la plantilla UGC V25 «Bloom» en vivo (copiada del repo miiles-briefs
-   a public/demos/ugc-v25) con sus animaciones originales. Se pinta a ancho de
-   escritorio y se escala para caber en la tarjeta 4:3; solo se carga cuando la
-   sección se acerca a la vista. */
-const PORTFOLIO_DEMO_SRC = "/demos/ugc-v25/index.html";
-const PORTFOLIO_DEMO_W = 1280;
-const PORTFOLIO_DEMO_H = 960;
-/* Recorrido automático: la página se desplaza sola (como un video) para que
-   corran sus animaciones de scroll; se detiene al pasar el cursor o tocarla. */
-const DEMO_SPEED = 420; // px por segundo (en píxeles del iframe)
-const DEMO_HOLD_TOP = 2500; // ms quieta en la portada
-const DEMO_HOLD_END = 1800; // ms quieta al final antes de reiniciar
-
-type SmootherWin = Window & {
-  ScrollSmoother?: { get?: () => { scrollTo: (y: number, smooth?: boolean) => void } | undefined };
-};
+   Video grabado de la plantilla UGC V25 «Bloom» (recorrido con cursor, sin
+   marco de navegador). Solo empieza a descargarse cuando la sección se acerca. */
+const PORTFOLIO_DEMO_VIDEO = "/demos/v25-recorrido.mp4";
+const PORTFOLIO_DEMO_POSTER = "/demos/v25-recorrido.jpg";
 
 const PortfolioDemo = () => {
   const { t } = useTranslation();
   const boxRef = useRef<HTMLDivElement>(null);
-  const frameRef = useRef<HTMLIFrameElement>(null);
-  const pausedRef = useRef(false);
-  const visibleRef = useRef(false);
-  const resumeTimer = useRef<number | null>(null);
-  const [scale, setScale] = useState(0);
+  const videoRef = useRef<HTMLVideoElement>(null);
   const [load, setLoad] = useState(false);
-  const [ready, setReady] = useState(false);
-  const [fade, setFade] = useState(false);
 
   useEffect(() => {
     const el = boxRef.current;
     if (!el) return;
-    const ro = new ResizeObserver(([entry]) => {
-      setScale(entry.contentRect.width / PORTFOLIO_DEMO_W);
-    });
-    ro.observe(el);
     const io = new IntersectionObserver(
       ([entry]) => {
-        visibleRef.current = entry.isIntersecting;
         if (entry.isIntersecting) setLoad(true);
+        const v = videoRef.current;
+        if (!v) return;
+        if (entry.isIntersecting) v.play().catch(() => {});
+        else v.pause();
       },
-      { rootMargin: "400px" }
+      { rootMargin: "300px" }
     );
     io.observe(el);
-    return () => {
-      ro.disconnect();
-      io.disconnect();
-    };
+    return () => io.disconnect();
   }, []);
-
-  // Bucle del recorrido automático
-  useEffect(() => {
-    if (!ready) return;
-    const win = frameRef.current?.contentWindow as SmootherWin | null;
-    if (!win) return;
-    let raf = 0;
-    let last = performance.now();
-    let y = 0;
-    let holdUntil = last + DEMO_HOLD_TOP;
-    let restarting = false;
-
-    const jumpTop = () => {
-      const sm = win.ScrollSmoother?.get?.();
-      if (sm) sm.scrollTo(0, false);
-      else win.scrollTo(0, 0);
-    };
-
-    const tick = (now: number) => {
-      const dt = Math.min(now - last, 100);
-      last = now;
-      if (pausedRef.current || !visibleRef.current || restarting) {
-        // Si la persona desplazó la página, seguimos desde donde la dejó
-        y = win.scrollY;
-        raf = requestAnimationFrame(tick);
-        return;
-      }
-      if (now < holdUntil) {
-        raf = requestAnimationFrame(tick);
-        return;
-      }
-      const max = win.document.documentElement.scrollHeight - win.innerHeight;
-      if (y >= max - 1) {
-        restarting = true;
-        setFade(true);
-        window.setTimeout(() => {
-          jumpTop();
-          y = 0;
-          window.setTimeout(() => {
-            setFade(false);
-            holdUntil = performance.now() + DEMO_HOLD_TOP;
-            restarting = false;
-          }, 350);
-        }, DEMO_HOLD_END);
-        raf = requestAnimationFrame(tick);
-        return;
-      }
-      y = Math.min(max, y + (DEMO_SPEED * dt) / 1000);
-      win.scrollTo(0, y);
-      raf = requestAnimationFrame(tick);
-    };
-    raf = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(raf);
-  }, [ready]);
-
-  const pause = () => {
-    if (resumeTimer.current) window.clearTimeout(resumeTimer.current);
-    pausedRef.current = true;
-  };
-  const resumeLater = (ms: number) => {
-    if (resumeTimer.current) window.clearTimeout(resumeTimer.current);
-    resumeTimer.current = window.setTimeout(() => {
-      pausedRef.current = false;
-    }, ms);
-  };
 
   return (
     <div className="w-full rounded-3xl overflow-hidden border border-black/8 shadow-[0_24px_80px_rgba(0,0,0,0.10)] bg-white flex flex-col">
-      <div
-        ref={boxRef}
-        className="relative w-full aspect-[4/3] overflow-hidden bg-white"
-        onMouseEnter={pause}
-        onMouseLeave={() => resumeLater(600)}
-        onTouchStart={pause}
-        onTouchEnd={() => resumeLater(4000)}
-      >
-        {load && scale > 0 && (
-          <iframe
-            ref={frameRef}
-            src={PORTFOLIO_DEMO_SRC}
-            title={t("affiliates.portfolioTitle")}
-            onLoad={() => window.setTimeout(() => setReady(true), 600)}
-            className="absolute top-0 left-0 border-0 origin-top-left"
-            style={{
-              width: PORTFOLIO_DEMO_W,
-              height: PORTFOLIO_DEMO_H,
-              transform: `scale(${scale})`,
-            }}
-          />
-        )}
-        <div
-          aria-hidden
-          className={`pointer-events-none absolute inset-0 bg-white transition-opacity duration-300 ${fade ? "opacity-100" : "opacity-0"}`}
+      <div ref={boxRef} className="relative w-full aspect-[4/3] overflow-hidden bg-white">
+        <video
+          ref={videoRef}
+          src={load ? PORTFOLIO_DEMO_VIDEO : undefined}
+          poster={PORTFOLIO_DEMO_POSTER}
+          aria-label={t("affiliates.portfolioTitle")}
+          className="absolute inset-0 w-full h-full object-cover"
+          autoPlay
+          muted
+          loop
+          playsInline
+          preload="none"
         />
       </div>
     </div>
