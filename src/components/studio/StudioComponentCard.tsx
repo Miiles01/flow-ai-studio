@@ -6,7 +6,7 @@ import type { StudioComponent } from "@/lib/studioComponents";
 
 // Tarjeta de Componentes: mismo contenedor con degradado que la Librería, pero con un marco de celular (Reel 9:16).
 // El video se reproduce cuando "playing" es true: la sección activa toda la fila sobre la que está el cursor
-// (y se queda en su primer cuadro el resto del tiempo).
+// (el resto del tiempo se ve su portada, el momento clave de la animación).
 export default function StudioComponentCard({ c, playing = false }: { c: StudioComponent; playing?: boolean }) {
   const navigate = useNavigate();
   const { isDark } = useTheme();
@@ -47,6 +47,17 @@ export default function StudioComponentCard({ c, playing = false }: { c: StudioC
             aria-hidden="true"
             className="block h-full w-full scale-[1.01] object-cover"
           />
+          {/* Portada encima del video mientras no se reproduce: muestra el momento clave de la animación
+              (el video, al pausarse, regresa a su primer cuadro, que no siempre representa la animación). */}
+          {c.poster_url && (
+            <img
+              src={c.poster_url}
+              alt=""
+              aria-hidden="true"
+              loading="lazy"
+              className={`pointer-events-none absolute inset-0 h-full w-full scale-[1.01] object-cover transition-opacity duration-300 ${playing ? "opacity-0" : "opacity-100"}`}
+            />
+          )}
         </div>
       </button>
 
