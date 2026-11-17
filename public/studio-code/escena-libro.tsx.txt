@@ -1,0 +1,201 @@
+/* ============================================================================
+   CÓMO USAR ESTA ESCENA (instrucciones para tu asistente de IA:
+   Claude, Codex, Gemini, Cursor, Antigravity o cualquier otro)
+   ----------------------------------------------------------------------------
+   - Es una ESCENA de Remotion: una parte de un Reel (1080×1920 a 30 fps) sobre el video de
+     una creadora hablando a cámara. Funciona tal cual: el video, las fotos y las tipografías
+     de ejemplo cargan desde wearemiiles.com.
+   - Para usarla con TU video:
+       1. Pon tu video en public/ (p. ej. "mi-video.mp4") y cambia la ruta del video de ejemplo
+          (busca "https://wearemiiles.com/studio/componentes/assets/creadora-hook.mp4") por la tuya.
+       2. Transcribe el audio CON TIEMPOS POR PALABRA (p. ej. faster-whisper con word_timestamps)
+          y reemplaza la lista P (palabra, segundo en que empieza). Ajusta INICIO al segundo
+          de tu video donde empieza la escena.
+       3. Los momentos de la animación están atados a palabras (ini(i)): revisa que caigan
+          en las palabras correctas de tu guion.
+   - Reglas: captions en una línea y al ritmo de la voz; nada de texto arriba de y≈300 ni abajo
+     de y≈1450 (interfaz de Reels/TikTok).
+   ========================================================================== */
+/* ============================================================================
+   ESCENA · LIBRO "Página por página" · Miiles Estudio
+   ----------------------------------------------------------------------------
+   Toma de apoyo (B-roll) dentro del video: se oye a la creadora (de 8.95 s a 13.0 s) pero no se le ve.
+   Libro estilo dither-book de Amicro, recreado aquí cuadro por cuadro:
+   1. Fondo de cuadrícula clara y el libro PEQUEÑO al centro; entra y pasa varias hojas rápido.
+   2. Mientras pasan las hojas, la cámara hace ZOOM lento a la página derecha (llega en "una pregunta").
+   3. En "algo que sorprenda" y en "el resultado final" se pasa la hoja (con el zoom puesto) y vemos la
+      siguiente página.
+   4. La cámara se aleja.
+   Arriba, frases clave en Advercase y minúsculas (sin acentos): una pregunta · algo que sorprenda · el resultado final.
+   ========================================================================== */
+import React, { useEffect, useState } from "react";
+import { AbsoluteFill, Audio, Easing, Img, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig, continueRender, delayRender } from "remotion";
+
+// Archivos: si la ruta empieza con http se usa tal cual (los ejemplos viven en wearemiiles.com);
+// si es una ruta local (p. ej. "mi-video.mp4"), se busca en la carpeta public/ de tu proyecto.
+const archivo = (p: string) => (/^https?:\/\//.test(p) ? p : staticFile(p));
+
+
+// ---- Base de las escenas Miiles (tipografías, colores y curvas) ----
+const EASE = Easing.bezier(0.22, 1, 0.36, 1);
+const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
+const SANS = "UM-Manrope, Helvetica, Arial, sans-serif";
+const DISPLAY = "UM-Advercase, UM-Manrope, sans-serif";   // Advercase/Gambarino SOLO en palabras sin acento
+const AZUL = "#4059F1";
+const CREMA = "#F4F3EF";
+const Fuentes: React.FC = () => {
+  const [h] = useState(() => delayRender("Fuentes"));
+  useEffect(() => {
+    Promise.all([
+      new FontFace("UM-Manrope", `url(${archivo("https://wearemiiles.com/studio/componentes/assets/Manrope.woff2")})`, { weight: "200 800" }).load(),
+      new FontFace("UM-Advercase", `url(${archivo("https://wearemiiles.com/studio/componentes/assets/Gambarino-Regular.woff2")})`).load(),
+    ]).then((fs) => { fs.forEach((x) => document.fonts.add(x)); continueRender(h); }).catch(() => continueRender(h));
+  }, [h]);
+  return null;
+};
+
+
+const FPS = 30;
+const INICIO = 8.95;
+export const ESCENA_LIBRO_FRAMES = Math.round((13.0 - INICIO) * FPS);   // ≈ 122 cuadros
+const f = (seg: number) => Math.round((seg - INICIO) * FPS);
+const MONO = "ui-monospace, 'SF Mono', Menlo, monospace";
+const PAPEL = "#FCFBF9";
+
+// Páginas (las 4 primeras pasan rápido en la intro; 4, 5 y 6 son las que vemos con zoom)
+const PAGINAS = [
+  { src: "https://wearemiiles.com/studio/componentes/assets/gorra.jpg", t: "" }, { src: "https://wearemiiles.com/studio/componentes/assets/azul.jpg", t: "" }, { src: "https://wearemiiles.com/studio/componentes/assets/rosa.jpg", t: "" },
+  { src: "https://wearemiiles.com/studio/componentes/assets/foto.jpg", t: "" }, { src: "https://wearemiiles.com/studio/componentes/assets/avatar.jpg", t: "01 — Una pregunta" },
+  { src: "https://wearemiiles.com/studio/componentes/assets/rosa.jpg", t: "02 — Algo que sorprenda" }, { src: "https://wearemiiles.com/studio/componentes/assets/azul.jpg", t: "03 — El resultado final" },
+  { src: "https://wearemiiles.com/studio/componentes/assets/gorra.jpg", t: "" },
+];
+// Momentos (cuadros de la escena)
+const UNA = f(9.78), ALGO = f(10.76), RESULTADO = f(11.9), ALEJA = f(12.45);
+const PASES = [
+  { de: 6, dur: 6 }, { de: 11, dur: 6 }, { de: 16, dur: 6 }, { de: 21, dur: 7 },   // intro: hojas rápidas
+  { de: ALGO - 4, dur: 13 }, { de: RESULTADO - 4, dur: 13 },                       // con zoom
+];
+const FRASES = [
+  { txt: ["una", "pregunta"], de: UNA, a: ALGO - 3 },
+  { txt: ["algo que", "sorprenda"], de: ALGO, a: RESULTADO - 3 },
+  { txt: ["el resultado", "final"], de: RESULTADO, a: ESCENA_LIBRO_FRAMES },
+];
+
+// Libro (coordenadas propias): doble página 16:10
+const BW = 900, BH = 562, PW = BW / 2, PAD = 14, RAD = 22;
+
+const Pagina: React.FC<{ i: number; lado: "izq" | "der" }> = ({ i, lado }) => {
+  const p = PAGINAS[((i % PAGINAS.length) + PAGINAS.length) % PAGINAS.length];
+  const pliegue = lado === "izq"
+    ? "linear-gradient(to left, rgba(0,0,0,.11), rgba(0,0,0,.03) 30%, transparent 60%)"
+    : "linear-gradient(to right, rgba(0,0,0,.11), rgba(0,0,0,.03) 30%, transparent 60%)";
+  return (
+    <div style={{ position: "absolute", inset: 0, background: PAPEL, overflow: "hidden", borderRadius: lado === "izq" ? "8px 0 0 8px" : "0 8px 8px 0" }}>
+      <div style={{ position: "absolute", left: PAD, right: PAD, top: PAD, bottom: p.t ? 52 : PAD, borderRadius: RAD, overflow: "hidden" }}>
+        <Img src={archivo(p.src)} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+      </div>
+      {p.t && <div style={{ position: "absolute", left: PAD + 6, bottom: 16, fontFamily: MONO, fontSize: 18, letterSpacing: "0.04em", color: "#3F3F46" }}>{p.t}</div>}
+      <div style={{ position: "absolute", top: 0, bottom: 0, width: 60, [lado === "izq" ? "right" : "left"]: 0, background: pliegue }} />
+    </div>
+  );
+};
+
+const Libro: React.FC = () => {
+  const frame = useCurrentFrame();
+  // cuántas hojas ya pasaron y cuál está pasando ahora
+  let idx = 0, activo: { p: number } | null = null;
+  for (const ps of PASES) {
+    if (frame >= ps.de + ps.dur) idx++;
+    else if (frame >= ps.de) {
+      const rapido = ps.dur <= 7;
+      activo = { p: interpolate(frame, [ps.de, ps.de + ps.dur], [0, 1], { ...clamp, easing: rapido ? (t) => t : Easing.bezier(0.33, 1, 0.68, 1) }) };
+      break;
+    }
+  }
+  const izq = idx - 1, der = activo ? idx + 1 : idx;
+  return (
+    <div style={{ position: "relative", width: BW, height: BH, transformStyle: "preserve-3d" }}>
+      <div style={{ position: "absolute", left: 0, top: 0, width: PW, height: BH }}><Pagina i={izq} lado="izq" /></div>
+      <div style={{ position: "absolute", left: PW, top: 0, width: PW, height: BH }}><Pagina i={der} lado="der" /></div>
+      {/* la hoja que pasa: gira sobre el lomo; de frente es la página actual, por detrás la siguiente izquierda */}
+      {activo && (
+        <div style={{ position: "absolute", left: PW, top: 0, width: PW, height: BH, transformOrigin: "0 50%", transformStyle: "preserve-3d", transform: `rotateY(${-180 * activo.p}deg)` }}>
+          <div style={{ position: "absolute", inset: 0, backfaceVisibility: "hidden" }}>
+            <Pagina i={idx} lado="der" />
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to right, transparent, #000)", opacity: 0.4 * activo.p }} />
+          </div>
+          <div style={{ position: "absolute", inset: 0, backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}>
+            <Pagina i={idx} lado="izq" />
+            <div style={{ position: "absolute", inset: 0, background: "linear-gradient(to left, transparent, #000)", opacity: 0.4 * (1 - activo.p) }} />
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+const Frases: React.FC = () => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  return (
+    <>
+      {FRASES.map((fr, k) => {
+        if (frame < fr.de || frame >= fr.a) return null;
+        const sale = interpolate(frame, [fr.a - 4, fr.a], [1, 0], clamp);
+        return (
+          <div key={k} style={{ position: "absolute", left: 0, right: 0, top: 300, textAlign: "center", fontFamily: DISPLAY, color: "#111111", fontSize: 128, lineHeight: 0.92, letterSpacing: "-0.02em", opacity: sale }}>
+            {fr.txt.map((l, j) => {
+              const p = spring({ frame: frame - fr.de - j * 3, fps, config: { damping: 14, stiffness: 150, mass: 0.7 } });
+              return (
+                <div key={j} style={{ overflow: "hidden", paddingBottom: "0.34em", marginBottom: "-0.28em" }}>   {/* espacio para las letras que bajan (p, g, q) */}
+                  <div style={{ transform: `translateY(${(1 - p) * 105}%)` }}>{l}</div>
+                </div>
+              );
+            })}
+          </div>
+        );
+      })}
+    </>
+  );
+};
+
+export const EscenaLibro: React.FC = () => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  // cámara: libro pequeño → zoom a la página derecha → se aleja
+  const entra = spring({ frame, fps, config: { damping: 15, stiffness: 120, mass: 0.9 } });
+  const zIn = Easing.inOut(Easing.cubic)(interpolate(frame, [UNA - 16, UNA + 32], [0, 1], clamp));   // zoom lento (≈1.6 s), mientras pasan las hojas
+  const zOut = Easing.inOut(Easing.cubic)(interpolate(frame, [ALEJA, ALEJA + 16], [0, 1], clamp));
+  const zoom = zIn * (1 - zOut);
+  const zPeq = 0.62 * (0.85 + 0.15 * entra), zGrande = 1.75, zFin = 0.8;
+  const z = zOut > 0 ? zGrande + (zFin - zGrande) * zOut : zPeq + (zGrande - zPeq) * zIn;
+  // foco: centro del libro → centro de la página derecha (desplazado un poco a la izquierda para ver el giro)
+  const fx = (BW / 2) + (PW / 2 - 40) * zoom;
+  const fy = BH / 2;
+  const centroY = 1060;                                   // el libro vive debajo de las frases clave
+  const camX = 540 - fx * z, camY = centroY - fy * z;
+  // la cuadrícula se mueve con la cámara pero menos (profundidad)
+  const zg = 1 + (z - 0.62) * 0.35, gx = -(fx - BW / 2) * 0.35 * zoom;
+  const celda = 64 * zg;
+  return (
+    <AbsoluteFill style={{ background: "#FAFAF7", overflow: "hidden" }}>
+      <Fuentes />
+      <Audio src={archivo("https://wearemiiles.com/studio/componentes/assets/creadora-hook.mp4")} trimBefore={Math.round(INICIO * FPS)} />
+      {/* fondo de cuadrícula */}
+      <AbsoluteFill style={{
+        backgroundImage: `linear-gradient(rgba(64,89,241,.16) 2px, transparent 2px), linear-gradient(90deg, rgba(64,89,241,.16) 2px, transparent 2px)`,
+        backgroundSize: `${celda}px ${celda}px`, backgroundPosition: `${540 + gx}px ${centroY}px`,
+      }} />
+      <AbsoluteFill style={{ background: "radial-gradient(ellipse at 50% 55%, transparent 55%, rgba(250,250,247,.9) 100%)" }} />
+      {/* libro con su inclinación 3D */}
+      <div style={{ position: "absolute", left: 0, top: 0, transformOrigin: "0 0", transform: `translate(${camX}px, ${camY}px) scale(${z})`, opacity: Math.min(1, entra * 1.5) }}>
+        <div style={{ perspective: 2400 }}>
+          <div style={{ transformStyle: "preserve-3d", transform: `rotateX(${6 + 6 * (1 - entra)}deg) rotateY(${-4 * (1 - zoom)}deg) rotateZ(${-2 * (1 - entra)}deg)`, borderRadius: 8 }}>
+            <Libro />
+          </div>
+        </div>
+      </div>
+      <Frases />
+    </AbsoluteFill>
+  );
+};

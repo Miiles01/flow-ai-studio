@@ -1,0 +1,261 @@
+/* ============================================================================
+   CÓMO USAR ESTA ESCENA (instrucciones para tu asistente de IA:
+   Claude, Codex, Gemini, Cursor, Antigravity o cualquier otro)
+   ----------------------------------------------------------------------------
+   - Es una ESCENA de Remotion: una parte de un Reel (1080×1920 a 30 fps) sobre el video de
+     una creadora hablando a cámara. Funciona tal cual: el video, las fotos y las tipografías
+     de ejemplo cargan desde wearemiiles.com.
+   - Para usarla con TU video:
+       1. Pon tu video en public/ (p. ej. "mi-video.mp4") y cambia la ruta del video de ejemplo
+          (busca "https://wearemiiles.com/studio/componentes/assets/creadora-hook.mp4") por la tuya.
+       2. Transcribe el audio CON TIEMPOS POR PALABRA (p. ej. faster-whisper con word_timestamps)
+          y reemplaza la lista P (palabra, segundo en que empieza). Ajusta INICIO al segundo
+          de tu video donde empieza la escena.
+       3. Los momentos de la animación están atados a palabras (ini(i)): revisa que caigan
+          en las palabras correctas de tu guion.
+   - Reglas: captions en una línea y al ritmo de la voz; nada de texto arriba de y≈300 ni abajo
+     de y≈1450 (interfaz de Reels/TikTok).
+   ========================================================================== */
+/* ============================================================================
+   ESCENA · GRÁFICA "La curva que crece" · Miiles Estudio
+   ----------------------------------------------------------------------------
+   Parte de un video (mismo video del hook, de 9.25 s a 14.06 s). Mientras ella habla aparece una
+   "pantalla" con una gráfica de área (estilo mono-rounded-area de Amicro, recreado aquí cuadro por
+   cuadro para poder animarlo con la cámara):
+   1. Ella habla a pantalla completa; entra la tarjeta (spring) y ella se desenfoca detrás.
+   2. La curva empieza a dibujarse; la cámara hace ZOOM a la punta y la SIGUE mientras sube.
+      Un marcador con el número acompaña la punta.
+   3. Al final la cámara se aleja y se ve la curva completa; la tarjeta sale y ella vuelve.
+   Captions en una línea: ARRIBA mientras está la gráfica; debajo de su cara cuando no.
+   Video: public/creadora-hook.mp4. Guion con tiempos por palabra (faster-whisper).
+   ========================================================================== */
+import React, { useEffect, useState } from "react";
+import { AbsoluteFill, Easing, OffthreadVideo, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig, continueRender, delayRender } from "remotion";
+
+// Archivos: si la ruta empieza con http se usa tal cual (los ejemplos viven en wearemiiles.com);
+// si es una ruta local (p. ej. "mi-video.mp4"), se busca en la carpeta public/ de tu proyecto.
+const archivo = (p: string) => (/^https?:\/\//.test(p) ? p : staticFile(p));
+
+
+// ---- Base de las escenas Miiles (tipografías, colores y curvas) ----
+const EASE = Easing.bezier(0.22, 1, 0.36, 1);
+const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
+const SANS = "UM-Manrope, Helvetica, Arial, sans-serif";
+const DISPLAY = "UM-Advercase, UM-Manrope, sans-serif";   // Advercase/Gambarino SOLO en palabras sin acento
+const AZUL = "#4059F1";
+const CREMA = "#F4F3EF";
+const Fuentes: React.FC = () => {
+  const [h] = useState(() => delayRender("Fuentes"));
+  useEffect(() => {
+    Promise.all([
+      new FontFace("UM-Manrope", `url(${archivo("https://wearemiiles.com/studio/componentes/assets/Manrope.woff2")})`, { weight: "200 800" }).load(),
+      new FontFace("UM-Advercase", `url(${archivo("https://wearemiiles.com/studio/componentes/assets/Gambarino-Regular.woff2")})`).load(),
+    ]).then((fs) => { fs.forEach((x) => document.fonts.add(x)); continueRender(h); }).catch(() => continueRender(h));
+  }, [h]);
+  return null;
+};
+
+
+const FPS = 30;
+const INICIO = 8.95;   // se ve a ella ~0.8 s antes de que salga la gráfica
+export const ESCENA_GRAFICA_FRAMES = Math.round((14.06 - INICIO) * FPS);   // ≈ 144 cuadros
+const f = (seg: number) => Math.round((seg - INICIO) * FPS);
+const MONO = "ui-monospace, 'SF Mono', Menlo, monospace";
+
+const P: [string, number][] = [
+  ["Empieza", 9.42], ["con", 9.62], ["una", 9.78], ["pregunta", 10.08], ["con", 10.7], ["algo", 10.76], ["que", 10.9], ["sorprenda", 11.08],
+  ["o", 11.6], ["con", 11.72], ["el", 11.9], ["resultado", 12.08], ["final", 12.36], ["Pruébenlo", 13.04], ["y", 13.44], ["me", 13.58], ["cuentan", 13.72],
+];
+const ini = (i: number) => f(P[i][1]);
+const GRUPOS: [number, number][] = [[0, 3], [4, 7], [8, 12], [13, 16]];
+
+// ---------------------------------------------------------------------------
+// Tiempos de la pantalla
+const ENTRA = ini(0) + 4;          // la tarjeta entra
+const ZOOM_IN = ENTRA + 14;        // empieza el zoom a la punta
+const ZOOM_OUT = f(11.9);          // se aleja (lento) para ver la curva completa y se queda así antes de salir
+const SALE = f(13.4);              // la gráfica se va (corte de regreso a ella)
+const DIBUJA = [ENTRA + 6, ZOOM_OUT + 2] as const;   // la curva se dibuja de principio a fin
+
+// Datos: vistas (miles) por semana — crecen cada vez más rápido
+const DATOS = [1.2, 1.5, 1.4, 2.1, 2.8, 2.6, 4.2, 6.0, 9.1, 14.5, 24.8];
+const ETIQ = DATOS.map((_, i) => `S${i + 1}`);
+
+// Escenario de la gráfica (coordenadas internas del SVG)
+const SW = 920, SH = 700, PADX = 44, PADT = 110, PADB = 74;   // PADT deja aire arriba para la punta y su etiqueta
+const MAXV = 26;
+const px = (i: number) => PADX + (i / (DATOS.length - 1)) * (SW - PADX * 2);
+const py = (v: number) => PADT + (1 - v / MAXV) * (SH - PADT - PADB);
+
+/** Curva suave (Catmull-Rom) muestreada en muchos puntos: sirve para dibujarla y para saber dónde va la punta. */
+const MUESTRAS = (() => {
+  const pts = DATOS.map((v, i) => [px(i), py(v)] as [number, number]);
+  const out: [number, number, number][] = [];   // x, y, valor
+  for (let i = 0; i < pts.length - 1; i++) {
+    const p0 = pts[Math.max(0, i - 1)], p1 = pts[i], p2 = pts[i + 1], p3 = pts[Math.min(pts.length - 1, i + 2)];
+    for (let k = 0; k < 24; k++) {
+      const t = k / 24, t2 = t * t, t3 = t2 * t;
+      const x = 0.5 * ((2 * p1[0]) + (-p0[0] + p2[0]) * t + (2 * p0[0] - 5 * p1[0] + 4 * p2[0] - p3[0]) * t2 + (-p0[0] + 3 * p1[0] - 3 * p2[0] + p3[0]) * t3);
+      const y = 0.5 * ((2 * p1[1]) + (-p0[1] + p2[1]) * t + (2 * p0[1] - 5 * p1[1] + 4 * p2[1] - p3[1]) * t2 + (-p0[1] + 3 * p1[1] - 3 * p2[1] + p3[1]) * t3);
+      out.push([x, y, DATOS[i] + (DATOS[i + 1] - DATOS[i]) * t]);
+    }
+  }
+  out.push([pts[pts.length - 1][0], pts[pts.length - 1][1], DATOS[DATOS.length - 1]]);
+  return out;
+})();
+const enProgreso = (p: number) => {
+  const pos = p * (MUESTRAS.length - 1), i = Math.floor(pos), r = pos - i;
+  const a = MUESTRAS[i], b = MUESTRAS[Math.min(MUESTRAS.length - 1, i + 1)];
+  return { x: a[0] + (b[0] - a[0]) * r, y: a[1] + (b[1] - a[1]) * r, v: a[2] + (b[2] - a[2]) * r, i };
+};
+
+// ---------------------------------------------------------------------------
+const Grafica: React.FC<{ libre?: boolean }> = ({ libre }) => {   // libre: sin contenedor gris; empieza con zoom
+  const tinta = libre ? AZUL : "#09090B";   // versión con corte: azul Miiles (menos oscura)
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  // la curva crece lento al principio y más rápido al final (como los datos)
+  const p = interpolate(frame, [DIBUJA[0], DIBUJA[1]], [0.02, 1], { ...clamp, easing: Easing.bezier(0.35, 0.05, 0.6, 1) });
+  const punta = enProgreso(p);
+  // cámara dentro del escenario: zoom a la punta y la sigue; al final se aleja
+  const zIn = libre ? 1 : EASE(interpolate(frame, [ZOOM_IN, ZOOM_IN + 16], [0, 1], clamp));
+  const zOut = Easing.inOut(Easing.cubic)(interpolate(frame, [ZOOM_OUT, ZOOM_OUT + (libre ? 30 : 14)], [0, 1], clamp));
+  // libre: el zoom va creciendo despacio mientras la seguimos (más movimiento)
+  const z = 1 + (libre ? 1.35 + 0.45 * p : 1.7) * zIn * (1 - zOut);
+  const foco = { x: SW * 0.58, y: SH * 0.5 };                       // dónde queda la punta en pantalla mientras la seguimos
+  const mezcla = zIn * (1 - zOut);
+  const tx = (foco.x - punta.x * z) * mezcla + (1 - mezcla) * (SW / 2 - (SW / 2) * z);
+  const ty = (foco.y - punta.y * z) * mezcla + (1 - mezcla) * (SH / 2 - (SH / 2) * z);
+  const clampT = (t: number, lado: number) => Math.min(0, Math.max(lado - lado * z, t));   // no salir del escenario
+  const X = libre ? tx : clampT(tx, SW), Y = libre ? ty : clampT(ty, SH);   // libre: puede salirse del cuadro
+  const linea = MUESTRAS.slice(0, punta.i + 1).map(([x, y]) => `${x},${y}`).concat(`${punta.x},${punta.y}`).join(" ");
+  const area = `${PADX},${SH - PADB} ${linea} ${punta.x},${SH - PADB}`;
+  const pulso = (frame % 24) / 24;
+  const tipX = X + punta.x * z, tipY = Y + punta.y * z;              // punta en coordenadas del escenario (para la etiqueta)
+  const etiqueta = spring({ frame: frame - ZOOM_IN, fps, config: { damping: 14, stiffness: 170, mass: 0.6 } });
+  return (
+    <div style={{ position: "relative", width: SW, height: SH, borderRadius: libre ? 0 : 30, overflow: libre ? "visible" : "hidden", background: libre ? "transparent" : "#F4F4F6" }}>
+      <svg width={SW} height={SH} style={{ position: "absolute", inset: 0, overflow: "visible" }}>
+        <defs>
+          <linearGradient id="g-area" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor={tinta} stopOpacity={libre ? 0.28 : 0.22} />
+            <stop offset="100%" stopColor={tinta} stopOpacity={0} />
+          </linearGradient>
+        </defs>
+        <g transform={`translate(${X} ${Y}) scale(${z})`}>
+          {[0, 6.5, 13, 19.5, 26].map((v) => (
+            <line key={v} x1={PADX} x2={SW - PADX} y1={py(v)} y2={py(v)} stroke="rgba(0,0,0,.07)" strokeDasharray="5 5" vectorEffect="non-scaling-stroke" strokeWidth={1.5} />
+          ))}
+          {ETIQ.map((t, i) => (
+            <text key={t} x={px(i)} y={SH - PADB + 40} textAnchor="middle" fontFamily={MONO} fontSize={20} fill="#A1A1AA">{t}</text>
+          ))}
+          <polygon points={area} fill="url(#g-area)" />
+          <polyline points={linea} fill="none" stroke={tinta} strokeWidth={7} strokeLinecap="round" strokeLinejoin="round" vectorEffect="non-scaling-stroke" />
+        </g>
+        {/* punta: punto con pulso (en coordenadas de pantalla, para que no crezca con el zoom) */}
+        <circle cx={tipX} cy={tipY} r={14 + 26 * pulso} fill={AZUL} opacity={0.25 * (1 - pulso)} />
+        <circle cx={tipX} cy={tipY} r={13} fill="#FFFFFF" stroke={tinta} strokeWidth={6} />
+      </svg>
+      {/* etiqueta que acompaña a la punta */}
+      <div style={{ position: "absolute", left: tipX, top: tipY - 30, transform: `translate(${tipX > SW - 150 ? -88 : -50}%, -100%) scale(${0.6 + 0.4 * etiqueta})`, transformOrigin: "50% 100%", opacity: Math.min(1, etiqueta * 1.5), background: tinta, color: "#FFFFFF", fontFamily: SANS, fontWeight: 800, fontSize: 38, letterSpacing: "-0.03em", padding: "10px 20px", borderRadius: 16, whiteSpace: "nowrap", fontVariantNumeric: "tabular-nums" }}>
+        {punta.v.toFixed(1)}K
+      </div>
+    </div>
+  );
+};
+
+/** La "pantalla": tarjeta blanca estilo mono-rounded-area con encabezado y la gráfica. */
+const Pantalla: React.FC<{ corte?: boolean }> = ({ corte }) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const entra = spring({ frame: frame - ENTRA, fps, config: { damping: 15, stiffness: 120, mass: 0.9 } });
+  const sale = interpolate(frame, [SALE - 9, SALE], [0, 1], { ...clamp, easing: Easing.in(Easing.cubic) });
+  if (frame < ENTRA || frame >= SALE) return null;
+  const p = interpolate(frame, [DIBUJA[0], DIBUJA[1]], [0.02, 1], { ...clamp, easing: Easing.bezier(0.35, 0.05, 0.6, 1) });
+  const v = enProgreso(p).v;
+  if (corte) {
+    // corte: SOLO la gráfica, en todo el escenario (sin contenedor ni datos de arriba). Empieza con zoom a la
+    // curva y, al final, la cámara se aleja y la vemos chiquita al centro.
+    const lejos = Easing.inOut(Easing.cubic)(interpolate(frame, [ZOOM_OUT, ZOOM_OUT + 30], [0, 1], clamp));
+    const sc = 1.17 - (1.17 - 0.74) * lejos;
+    const giro = interpolate(frame, [ENTRA, SALE], [-2.5, 1.5]);           // inclinación lenta de cámara (motion)
+    return (
+      <div style={{ position: "absolute", left: 540 - SW / 2, top: 1000 - SH / 2, width: SW, height: SH, transformOrigin: "50% 50%", transform: `scale(${sc}) rotate(${giro * (1 - lejos)}deg)`, opacity: Math.min(1, entra * 1.6) }}>
+        <Grafica libre />
+      </div>
+    );
+  }
+  return (
+    <div style={corte
+      // corte: escena blanca completa; la gráfica aparece grande (sin tarjeta flotando), con un pop suave
+      ? { position: "absolute", left: 40, top: 520, width: 1000, padding: "34px 40px 40px", boxSizing: "border-box", fontFamily: SANS, opacity: Math.min(1, entra * 1.6), transform: `translateY(${(1 - entra) * 60}px) scale(${0.94 + 0.06 * entra})` }
+      : { position: "absolute", left: 40, top: 450, width: 1000, borderRadius: 48, background: "#FFFFFF", padding: "34px 40px 40px", boxSizing: "border-box", fontFamily: SANS, opacity: Math.min(1, entra * 1.4) * (1 - sale), transform: `translateY(${(1 - entra) * 140 + sale * 80}px) scale(${(0.9 + 0.1 * entra) * (1 - 0.06 * sale)})` }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 22 }}>
+        <div style={{ display: "flex", alignItems: "baseline", gap: 16 }}>
+          <span style={{ fontSize: 66, fontWeight: 800, letterSpacing: "-0.04em", fontVariantNumeric: "tabular-nums", color: "#09090B" }}>{v.toFixed(1)}K</span>
+          <span style={{ fontFamily: MONO, fontSize: 26, color: "#52525B" }}>vistas</span>
+          <span style={{ fontFamily: MONO, fontSize: 22, color: "#A1A1AA" }}>+{Math.round((v / DATOS[0] - 1) * 100)}%</span>
+        </div>
+        <div style={{ display: "flex", padding: 4, borderRadius: 14, background: "#F4F4F5", fontFamily: MONO, fontSize: 21 }}>
+          <span style={{ padding: "6px 16px", borderRadius: 11, background: "#09090B", color: "#FFFFFF", fontWeight: 600 }}>Spline</span>
+          <span style={{ padding: "6px 16px", color: "#71717A" }}>Linear</span>
+        </div>
+      </div>
+      <Grafica />
+    </div>
+  );
+};
+
+// ---------------------------------------------------------------------------
+const Palabra: React.FC<{ i: number }> = ({ i }) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const p = spring({ frame: frame - ini(i), fps, config: { damping: 13, stiffness: 190, mass: 0.6 } });
+  return <span style={{ display: "inline-block", marginRight: "0.26em", opacity: frame < ini(i) ? 0 : Math.min(1, p * 1.4), transform: `translateY(${(1 - p) * 20}px) scale(${0.86 + 0.14 * p})` }}>{P[i][0]}</span>;
+};
+const Captions: React.FC<{ corte?: boolean }> = ({ corte }) => {
+  const frame = useCurrentFrame();
+  const enBlanco = !!corte && frame >= ENTRA && frame < SALE;   // escena blanca: captions negros arriba
+  return (
+    <>
+      {GRUPOS.map(([a, b], k) => {
+        const desde = ini(a);
+        const hasta = k + 1 < GRUPOS.length ? ini(GRUPOS[k + 1][0]) : ESCENA_GRAFICA_FRAMES;
+        if (frame < desde || frame >= hasta) return null;
+        const arriba = desde < SALE - 4;           // con la gráfica en pantalla, los captions van arriba
+        const sale = interpolate(frame, [hasta - 4, hasta], [1, 0], clamp);
+        const idx = Array.from({ length: b - a + 1 }, (_, j) => a + j);
+        return (
+          <div key={k} style={{ position: "absolute", left: 0, right: 0, top: (corte ? enBlanco : arriba) ? 330 : 1130, textAlign: "center", color: enBlanco ? "#111111" : "#FFFFFF", textShadow: enBlanco ? "none" : "0 2px 18px rgba(0,0,0,.4)", fontFamily: SANS, fontWeight: 800, fontSize: (corte ? enBlanco : arriba) ? 60 : 66, letterSpacing: "-0.035em", whiteSpace: "nowrap", opacity: sale }}>
+            {idx.map((i) => <Palabra key={i} i={i} />)}
+          </div>
+        );
+      })}
+    </>
+  );
+};
+
+// ---------------------------------------------------------------------------
+export const EscenaGrafica: React.FC<{ modo?: "tarjeta" | "corte" }> = ({ modo = "tarjeta" }) => {
+  const corte = modo === "corte";
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  // tarjeta: ella se desenfoca y oscurece un poco mientras la gráfica está en pantalla (en corte no hace falta)
+  const fondo = corte ? 0 : spring({ frame: frame - ENTRA, fps, config: { damping: 20, stiffness: 120 } }) * (1 - interpolate(frame, [SALE - 9, SALE + 4], [0, 1], { ...clamp, easing: EASE }));
+  const escala = 1 + 0.03 * EASE(interpolate(frame, [0, ESCENA_GRAFICA_FRAMES], [0, 1], clamp)) + 0.04 * fondo;
+  return (
+    <AbsoluteFill style={{ background: "#111", overflow: "hidden" }}>
+      <Fuentes />
+      <AbsoluteFill style={{ transform: `scale(${escala})`, transformOrigin: "50% 30%", filter: fondo > 0.01 ? `blur(${14 * fondo}px) brightness(${1 - 0.18 * fondo})` : undefined }}>
+        <OffthreadVideo src={archivo("https://wearemiiles.com/studio/componentes/assets/creadora-hook.mp4")} trimBefore={Math.round(INICIO * FPS)} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+      </AbsoluteFill>
+      {/* corte: a partir de ENTRA la toma cambia de golpe a una escena blanca (su voz sigue) y regresa en SALE */}
+      {corte && frame >= ENTRA && frame < SALE && <AbsoluteFill style={{ background: "#FFFFFF" }} />}
+      <Pantalla corte={corte} />
+      <Captions corte={corte} />
+    </AbsoluteFill>
+  );
+};
+
+/** Versión con corte: primero ella, corte a escena blanca con la gráfica completa, y corte de regreso a ella. */
+export const EscenaGraficaCorte: React.FC = () => <EscenaGrafica modo="corte" />;

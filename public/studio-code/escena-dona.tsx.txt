@@ -1,0 +1,255 @@
+/* ============================================================================
+   CÓMO USAR ESTA ESCENA (instrucciones para tu asistente de IA:
+   Claude, Codex, Gemini, Cursor, Antigravity o cualquier otro)
+   ----------------------------------------------------------------------------
+   - Es una ESCENA de Remotion: una parte de un Reel (1080×1920 a 30 fps) sobre el video de
+     una creadora hablando a cámara. Funciona tal cual: el video, las fotos y las tipografías
+     de ejemplo cargan desde wearemiiles.com.
+   - Para usarla con TU video:
+       1. Pon tu video en public/ (p. ej. "mi-video.mp4") y cambia la ruta del video de ejemplo
+          (busca "https://wearemiiles.com/studio/componentes/assets/creadora-hook.mp4") por la tuya.
+       2. Transcribe el audio CON TIEMPOS POR PALABRA (p. ej. faster-whisper con word_timestamps)
+          y reemplaza la lista P (palabra, segundo en que empieza). Ajusta INICIO al segundo
+          de tu video donde empieza la escena.
+       3. Los momentos de la animación están atados a palabras (ini(i)): revisa que caigan
+          en las palabras correctas de tu guion.
+   - Reglas: captions en una línea y al ritmo de la voz; nada de texto arriba de y≈300 ni abajo
+     de y≈1450 (interfaz de Reels/TikTok).
+   ========================================================================== */
+/* ============================================================================
+   ESCENA · GRÁFICA DE DONA "Zoom a cada parte" · Miiles Estudio
+   ----------------------------------------------------------------------------
+   Parte de un video (mismo video del hook, de 9.25 s a 14.06 s). Estilo mono-rounded-donut de Amicro,
+   recreado aquí cuadro por cuadro:
+   1. Sale la tarjeta al centro con la dona COMPLETA (los segmentos se dibujan en barrido).
+   2. Cuando ella dice "una pregunta", la cámara hace zoom a ese segmento: la dona gira para traerlo
+      arriba, al centro de la toma, y abajo aparece su porcentaje y su nombre.
+   3. En "algo que sorprenda" y en "el resultado final" la dona gira (con zoom) al siguiente segmento.
+   4. La cámara se aleja, se ve la dona completa y la tarjeta sale; ella vuelve.
+   Captions en una línea: ARRIBA mientras está la gráfica; debajo de su cara cuando no.
+   ========================================================================== */
+import React, { useEffect, useState } from "react";
+import { AbsoluteFill, Easing, OffthreadVideo, interpolate, spring, staticFile, useCurrentFrame, useVideoConfig, continueRender, delayRender } from "remotion";
+
+// Archivos: si la ruta empieza con http se usa tal cual (los ejemplos viven en wearemiiles.com);
+// si es una ruta local (p. ej. "mi-video.mp4"), se busca en la carpeta public/ de tu proyecto.
+const archivo = (p: string) => (/^https?:\/\//.test(p) ? p : staticFile(p));
+
+
+// ---- Base de las escenas Miiles (tipografías, colores y curvas) ----
+const EASE = Easing.bezier(0.22, 1, 0.36, 1);
+const clamp = { extrapolateLeft: "clamp", extrapolateRight: "clamp" } as const;
+const SANS = "UM-Manrope, Helvetica, Arial, sans-serif";
+const DISPLAY = "UM-Advercase, UM-Manrope, sans-serif";   // Advercase/Gambarino SOLO en palabras sin acento
+const AZUL = "#4059F1";
+const CREMA = "#F4F3EF";
+const Fuentes: React.FC = () => {
+  const [h] = useState(() => delayRender("Fuentes"));
+  useEffect(() => {
+    Promise.all([
+      new FontFace("UM-Manrope", `url(${archivo("https://wearemiiles.com/studio/componentes/assets/Manrope.woff2")})`, { weight: "200 800" }).load(),
+      new FontFace("UM-Advercase", `url(${archivo("https://wearemiiles.com/studio/componentes/assets/Gambarino-Regular.woff2")})`).load(),
+    ]).then((fs) => { fs.forEach((x) => document.fonts.add(x)); continueRender(h); }).catch(() => continueRender(h));
+  }, [h]);
+  return null;
+};
+
+
+const FPS = 30;
+const INICIO = 8.95;   // se ve a ella ~0.8 s antes de que salga la gráfica
+export const ESCENA_DONA_FRAMES = Math.round((14.06 - INICIO) * FPS);
+const f = (seg: number) => Math.round((seg - INICIO) * FPS);
+const MONO = "ui-monospace, 'SF Mono', Menlo, monospace";
+
+const P: [string, number][] = [
+  ["Empieza", 9.42], ["con", 9.62], ["una", 9.78], ["pregunta", 10.08], ["con", 10.7], ["algo", 10.76], ["que", 10.9], ["sorprenda", 11.08],
+  ["o", 11.6], ["con", 11.72], ["el", 11.9], ["resultado", 12.08], ["final", 12.36], ["Pruébenlo", 13.04], ["y", 13.44], ["me", 13.58], ["cuentan", 13.72],
+];
+const ini = (i: number) => f(P[i][1]);
+const GRUPOS: [number, number][] = [[0, 3], [4, 7], [8, 12], [13, 16]];
+
+// Segmentos (tonos mono como el original)
+const SEG = [
+  { nombre: "Una pregunta", v: 40, color: "#09090B" },
+  { nombre: "Algo que sorprenda", v: 30, color: "rgba(9,9,11,0.72)" },
+  { nombre: "El resultado final", v: 20, color: "rgba(9,9,11,0.42)" },
+  { nombre: "Otros", v: 10, color: "rgba(9,9,11,0.2)" },
+];
+const TOTAL = SEG.reduce((a, s) => a + s.v, 0);
+
+// Tiempos
+const ENTRA = ini(0) + 4;
+const DIBUJA = [ENTRA + 4, ENTRA + 22] as const;
+const VISITAS = [ini(2) + 6, ini(5) - 2, ini(10) - 2];   // "una pregunta", "algo que sorprenda", "el resultado final"
+const ALEJA = f(12.55);
+const SALE = f(13.6);
+
+// Geometría del anillo (coordenadas del escenario)
+const SS = 860;                         // escenario cuadrado
+const C = SS / 2, R = 250, T = 96;      // centro, radio medio, grosor
+const GAP = 5;                          // grados de separación (más lo que ocupan las puntas redondas)
+const CAP = (T / 2 / R) * (180 / Math.PI);
+const angulos = (() => {
+  let a = 0;
+  return SEG.map((s) => { const d = (s.v / TOTAL) * 360; const r = { de: a, a: a + d, medio: a + d / 2 }; a += d; return r; });
+})();
+const punto = (ang: number, r = R) => [C + r * Math.cos(((ang - 90) * Math.PI) / 180), C + r * Math.sin(((ang - 90) * Math.PI) / 180)];
+const arco = (de: number, a: number) => {
+  if (a - de <= 0.01) return "";
+  const [x1, y1] = punto(de), [x2, y2] = punto(a);
+  return `M ${x1} ${y1} A ${R} ${R} 0 ${a - de > 180 ? 1 : 0} 1 ${x2} ${y2}`;
+};
+
+/** Cuál segmento se ve y cuánto zoom hay en este cuadro. */
+const camara = (frame: number, libre = false) => {
+  const zIn = libre ? (frame >= ENTRA ? 1 : 0) : EASE(interpolate(frame, [VISITAS[0], VISITAS[0] + 16], [0, 1], clamp));
+  const zOut = Easing.inOut(Easing.cubic)(interpolate(frame, [ALEJA, ALEJA + (libre ? 28 : 16)], [0, 1], clamp));
+  const zoom = zIn * (1 - zOut);
+  // giro: lleva el centro del segmento activo arriba (0°); entre visitas gira suave
+  let giro = -angulos[0].medio * (libre ? 1 : EASE(interpolate(frame, [VISITAS[0] - 6, VISITAS[0] + 14], [0, 1], clamp)));
+  for (let k = 1; k < VISITAS.length; k++) {
+    const t = Easing.inOut(Easing.cubic)(interpolate(frame, [VISITAS[k] - (libre ? 6 : 0), VISITAS[k] + (libre ? 24 : 16)], [0, 1], clamp));
+    giro += (angulos[k - 1].medio - angulos[k].medio) * t;
+  }
+  if (libre) giro += interpolate(frame, [ENTRA, SALE], [0, 10]);   // la dona gira despacio todo el tiempo (motion)
+  const activo = frame < (libre ? ENTRA : VISITAS[0]) ? -1 : frame < VISITAS[0] ? 0 : frame < VISITAS[1] ? 0 : frame < VISITAS[2] ? 1 : 2;
+  return { zoom, giro, activo: zoom > 0.5 ? activo : -1 };
+};
+
+const Dona: React.FC<{ libre?: boolean }> = ({ libre }) => {   // libre: sin contenedor gris; empieza con zoom
+  // versión con corte: azul Miiles en cuatro tonos (menos oscura)
+  const AZULES = ["#4059F1", "rgba(64,89,241,0.66)", "rgba(64,89,241,0.4)", "rgba(64,89,241,0.2)"];
+  const tinta = libre ? "#4059F1" : "#09090B";
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const dib = EASE(interpolate(frame, [DIBUJA[0], DIBUJA[1]], [0, 1], clamp));
+  const { zoom, giro, activo } = camara(frame, libre);
+  const z = 1 + 0.75 * zoom;   // zoom moderado: se ve el segmento y sus vecinos
+  // el punto de foco (arriba del anillo) baja al centro de la toma mientras hay zoom
+  const focoY = C - 150;                                                // la parte de arriba del anillo queda aquí con zoom
+  const ty = (focoY - z * (C - R)) * zoom + (C - z * C) * (1 - zoom);   // sin zoom: escala centrada
+  const trans = `translate(${C - C * z} ${ty}) scale(${z}) rotate(${giro} ${C} ${C})`;
+  return (
+    <div style={{ position: "relative", width: SS, height: SS * 0.82, borderRadius: libre ? 0 : 30, overflow: libre ? "visible" : "hidden", background: libre ? "transparent" : "#F4F4F6" }}>
+      <svg width={SS} height={SS} style={{ position: "absolute", left: 0, top: -SS * 0.09, overflow: "visible" }}>
+        <g transform={trans}>
+          {SEG.map((s, k) => {
+            const g = angulos[k];
+            const fin = g.de + (g.a - g.de) * dib;                        // barrido al aparecer
+            const resalta = activo === k;
+            const otro = activo !== -1 && !resalta;
+            return (
+              <path key={k} d={arco(g.de + GAP / 2 + CAP, Math.max(g.de + GAP / 2 + CAP, fin - GAP / 2 - CAP))} fill="none" stroke={libre ? AZULES[k] : s.color} strokeWidth={T} strokeLinecap="round" opacity={otro ? 0.35 : 1} />
+            );
+          })}
+        </g>
+      </svg>
+      {/* lectura al centro (solo con la dona completa) */}
+      <div style={{ position: "absolute", left: 0, right: 0, top: SS * 0.41 - SS * 0.09 - 60, textAlign: "center", opacity: 1 - Math.min(1, zoom * 2) }}>
+        <div style={{ fontFamily: MONO, fontWeight: 700, fontSize: 58, letterSpacing: "-0.03em", color: tinta }}>100%</div>
+        <div style={{ fontFamily: MONO, fontSize: 20, letterSpacing: "0.12em", color: "#71717A" }}>DE TUS HOOKS</div>
+      </div>
+      {/* tarjeta del segmento que estamos viendo */}
+      {SEG.slice(0, 3).map((s, k) => {
+        const desde = (k === 0 && libre ? ENTRA : VISITAS[k]) + 8, hasta = k < 2 ? VISITAS[k + 1] + 4 : ALEJA + 4;
+        if (frame < desde || frame >= hasta) return null;
+        const p = spring({ frame: frame - desde, fps, config: { damping: 14, stiffness: 170, mass: 0.6 } });
+        const sale = interpolate(frame, [hasta - 5, hasta], [1, 0], clamp);
+        return (
+          <div key={k} style={{ position: "absolute", left: 0, right: 0, bottom: 46, textAlign: "center", opacity: Math.min(1, p * 1.5) * sale, transform: `translateY(${(1 - p) * 40}px)` }}>
+            <div style={{ fontFamily: SANS, fontWeight: 800, fontSize: 120, letterSpacing: "-0.05em", color: tinta, lineHeight: 1, fontVariantNumeric: "tabular-nums" }}>{Math.round(s.v * Math.min(1, p))}%</div>
+            <div style={{ fontFamily: MONO, fontSize: 30, color: "#52525B", marginTop: 8 }}>{s.nombre}</div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};
+
+const Pantalla: React.FC<{ corte?: boolean }> = ({ corte }) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const entra = spring({ frame: frame - ENTRA, fps, config: { damping: 15, stiffness: 120, mass: 0.9 } });
+  const sale = interpolate(frame, [SALE - 9, SALE], [0, 1], { ...clamp, easing: Easing.in(Easing.cubic) });
+  if (frame < ENTRA || frame >= SALE) return null;
+  if (corte) {
+    // corte: SOLO la dona, en todo el escenario (sin contenedor ni títulos). Empieza con zoom a la primera parte
+    // y, al final, la cámara se aleja y la vemos chiquita al centro.
+    const lejos = Easing.inOut(Easing.cubic)(interpolate(frame, [ALEJA, ALEJA + 28], [0, 1], clamp));
+    const sc = 1.26 - (1.26 - 0.8) * lejos;
+    const W = SS, H = SS * 0.82;
+    return (
+      <div style={{ position: "absolute", left: 540 - (W * sc) / 2, top: 1000 - (H * sc) / 2, width: W, height: H, transformOrigin: "0 0", transform: `scale(${sc})`, opacity: Math.min(1, entra * 1.6) }}>
+        <Dona libre />
+      </div>
+    );
+  }
+  const { activo } = camara(frame);
+  const titulo = activo === -1 ? "3 tipos de hook" : `${SEG[activo].nombre} (${SEG[activo].v}%)`;
+  return (
+    <div style={corte
+      // corte: escena blanca completa; la gráfica aparece grande (sin tarjeta flotando), con un pop suave
+      ? { position: "absolute", left: 50, top: 520, width: 980, padding: "34px 60px 50px", boxSizing: "border-box", fontFamily: SANS, opacity: Math.min(1, entra * 1.6), transform: `translateY(${(1 - entra) * 60}px) scale(${0.94 + 0.06 * entra})` }
+      : { position: "absolute", left: 50, top: 460, width: 980, borderRadius: 48, background: "#FFFFFF", padding: "34px 60px 50px", boxSizing: "border-box", fontFamily: SANS, opacity: Math.min(1, entra * 1.4) * (1 - sale), transform: `translateY(${(1 - entra) * 140 + sale * 80}px) scale(${(0.9 + 0.1 * entra) * (1 - 0.06 * sale)})` }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 22 }}>
+        <div style={{ display: "flex", alignItems: "baseline", gap: 14 }}>
+          <span style={{ fontSize: 50, fontWeight: 800, letterSpacing: "-0.035em", color: "#09090B", whiteSpace: "nowrap" }}>{titulo}</span>
+        </div>
+        <div style={{ padding: "6px 16px", borderRadius: 11, background: "#F4F4F5", border: "1.5px solid #E4E4E7", fontFamily: MONO, fontSize: 21, color: "#3F3F46", whiteSpace: "nowrap" }}>4 tipos</div>
+      </div>
+      <Dona />
+    </div>
+  );
+};
+
+// ---------------------------------------------------------------------------
+const Palabra: React.FC<{ i: number }> = ({ i }) => {
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const p = spring({ frame: frame - ini(i), fps, config: { damping: 13, stiffness: 190, mass: 0.6 } });
+  return <span style={{ display: "inline-block", marginRight: "0.26em", opacity: frame < ini(i) ? 0 : Math.min(1, p * 1.4), transform: `translateY(${(1 - p) * 20}px) scale(${0.86 + 0.14 * p})` }}>{P[i][0]}</span>;
+};
+const Captions: React.FC<{ corte?: boolean }> = ({ corte }) => {
+  const frame = useCurrentFrame();
+  const enBlanco = !!corte && frame >= ENTRA && frame < SALE;   // escena blanca: captions negros arriba
+  return (
+    <>
+      {GRUPOS.map(([a, b], k) => {
+        const desde = ini(a);
+        const hasta = k + 1 < GRUPOS.length ? ini(GRUPOS[k + 1][0]) : ESCENA_DONA_FRAMES;
+        if (frame < desde || frame >= hasta) return null;
+        const arriba = desde < SALE - 4;
+        const sale = interpolate(frame, [hasta - 4, hasta], [1, 0], clamp);
+        const idx = Array.from({ length: b - a + 1 }, (_, j) => a + j);
+        return (
+          <div key={k} style={{ position: "absolute", left: 0, right: 0, top: (corte ? enBlanco : arriba) ? 330 : 1130, textAlign: "center", color: enBlanco ? "#111111" : "#FFFFFF", textShadow: enBlanco ? "none" : "0 2px 18px rgba(0,0,0,.4)", fontFamily: SANS, fontWeight: 800, fontSize: (corte ? enBlanco : arriba) ? 60 : 66, letterSpacing: "-0.035em", whiteSpace: "nowrap", opacity: sale }}>
+            {idx.map((i) => <Palabra key={i} i={i} />)}
+          </div>
+        );
+      })}
+    </>
+  );
+};
+
+export const EscenaDona: React.FC<{ modo?: "tarjeta" | "corte" }> = ({ modo = "tarjeta" }) => {
+  const corte = modo === "corte";
+  const frame = useCurrentFrame();
+  const { fps } = useVideoConfig();
+  const fondo = corte ? 0 : spring({ frame: frame - ENTRA, fps, config: { damping: 20, stiffness: 120 } }) * (1 - interpolate(frame, [SALE - 9, SALE + 4], [0, 1], { ...clamp, easing: EASE }));
+  const escala = 1 + 0.03 * EASE(interpolate(frame, [0, ESCENA_DONA_FRAMES], [0, 1], clamp)) + 0.04 * fondo;
+  return (
+    <AbsoluteFill style={{ background: "#111", overflow: "hidden" }}>
+      <Fuentes />
+      <AbsoluteFill style={{ transform: `scale(${escala})`, transformOrigin: "50% 30%", filter: fondo > 0.01 ? `blur(${14 * fondo}px) brightness(${1 - 0.18 * fondo})` : undefined }}>
+        <OffthreadVideo src={archivo("https://wearemiiles.com/studio/componentes/assets/creadora-hook.mp4")} trimBefore={Math.round(INICIO * FPS)} style={{ width: "100%", height: "100%", objectFit: "cover" }} />
+      </AbsoluteFill>
+      {/* corte: a partir de ENTRA la toma cambia de golpe a una escena blanca (su voz sigue) y regresa en SALE */}
+      {corte && frame >= ENTRA && frame < SALE && <AbsoluteFill style={{ background: "#FFFFFF" }} />}
+      <Pantalla corte={corte} />
+      <Captions corte={corte} />
+    </AbsoluteFill>
+  );
+};
+
+/** Versión con corte: primero ella, corte a escena blanca con la gráfica completa, y corte de regreso a ella. */
+export const EscenaDonaCorte: React.FC = () => <EscenaDona modo="corte" />;

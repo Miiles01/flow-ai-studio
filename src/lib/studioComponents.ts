@@ -6,7 +6,7 @@ import i18n from "@/i18n";
 export type StudioComponent = {
   slug: string;
   title: string;
-  category: string; // uno de COMPONENT_CATEGORIES (Carrusel, Galería, Texto, Elemento, Transición)
+  category: string; // uno de COMPONENT_CATEGORIES (Carrusel, Galería, Texto, Elemento, Transición, Escena)
   description: string;
   preview_video_url: string; // formato vertical 9:16
   poster_url?: string | null;
@@ -27,6 +27,7 @@ export const COMPONENT_CATEGORIES: { id: string; es: string; en: string }[] = [
   { id: "Texto", es: "Texto", en: "Text" },
   { id: "Elemento", es: "Elementos", en: "Elements" },
   { id: "Transición", es: "Transiciones", en: "Transitions" },
+  { id: "Escena", es: "Escenas", en: "Scenes" },
 ];
 
 /**

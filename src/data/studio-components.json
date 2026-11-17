@@ -1207,5 +1207,141 @@
       "Cambia las escenas en from y to",
       "speed: velocidad de la transición"
     ]
+  },
+  {
+    "slug": "escena-split-rebote",
+    "title": "Pantalla dividida · Entra y sale",
+    "category": "Escena",
+    "description": "La pantalla dividida cae con un rebote, parallax y desenfoque de movimiento, y sale disparada jalando a la creadora. Arriba solo pasa un carrusel de fotos.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/escena-split-rebote.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/escena-split-rebote.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/escena-split.tsx.txt",
+    "code_filename": "EscenaSplit.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Usa mi video (ponlo en public/) en lugar del video de ejemplo y transcribe su audio con tiempos por palabra para reemplazar la lista P; los captions y los momentos de la animación siguen esas palabras. Usa la variante \"rebote\" (la de por defecto).",
+    "customize": [
+      "Cambia las fotos del carrusel de arriba",
+      "Ajusta ABRE y CIERRA para decidir en qué palabras entra y sale la pantalla dividida",
+      "Cambia BAJA si tu cara queda muy arriba o muy abajo en la mitad de abajo"
+    ]
+  },
+  {
+    "slug": "escena-split-suave",
+    "title": "Pantalla dividida · Suave",
+    "category": "Escena",
+    "description": "La pantalla dividida entra y sale lenta y sin rebote: el panel y la creadora se mueven juntos con una curva suave.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/escena-split-suave.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/escena-split-suave.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/escena-split.tsx.txt",
+    "code_filename": "EscenaSplit.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Usa mi video (ponlo en public/) en lugar del video de ejemplo y transcribe su audio con tiempos por palabra para reemplazar la lista P; los captions y los momentos de la animación siguen esas palabras. Usa <EscenaSplit variante=\"suave\" /> (o EscenaSplitSuave).",
+    "customize": [
+      "Cambia las fotos del carrusel de arriba",
+      "Ajusta ABRE y CIERRA para decidir en qué palabras entra y sale la pantalla dividida",
+      "Cambia BAJA si tu cara queda muy arriba o muy abajo en la mitad de abajo"
+    ]
+  },
+  {
+    "slug": "escena-split-tiras",
+    "title": "Pantalla dividida · Tiras",
+    "category": "Escena",
+    "description": "El panel de arriba cae en cuatro tiras, una tras otra, y al salir sube en orden inverso.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/escena-split-tiras.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/escena-split-tiras.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/escena-split.tsx.txt",
+    "code_filename": "EscenaSplit.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Usa mi video (ponlo en public/) en lugar del video de ejemplo y transcribe su audio con tiempos por palabra para reemplazar la lista P; los captions y los momentos de la animación siguen esas palabras. Usa <EscenaSplit variante=\"tiras\" /> (o EscenaSplitTiras).",
+    "customize": [
+      "Cambia las fotos del carrusel de arriba",
+      "Ajusta ABRE y CIERRA para decidir en qué palabras entra y sale la pantalla dividida",
+      "Cambia BAJA si tu cara queda muy arriba o muy abajo en la mitad de abajo"
+    ]
+  },
+  {
+    "slug": "escena-split-tarjeta",
+    "title": "Pantalla dividida · Tarjeta",
+    "category": "Escena",
+    "description": "El panel nace como una pastilla al centro y crece hasta llenar la mitad de arriba; al salir se encoge.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/escena-split-tarjeta.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/escena-split-tarjeta.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/escena-split.tsx.txt",
+    "code_filename": "EscenaSplit.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Usa mi video (ponlo en public/) en lugar del video de ejemplo y transcribe su audio con tiempos por palabra para reemplazar la lista P; los captions y los momentos de la animación siguen esas palabras. Usa <EscenaSplit variante=\"tarjeta\" /> (o EscenaSplitTarjeta).",
+    "customize": [
+      "Cambia las fotos del carrusel de arriba",
+      "Ajusta ABRE y CIERRA para decidir en qué palabras entra y sale la pantalla dividida",
+      "Cambia BAJA si tu cara queda muy arriba o muy abajo en la mitad de abajo"
+    ]
+  },
+  {
+    "slug": "escena-split-linea",
+    "title": "Pantalla dividida · Línea",
+    "category": "Escena",
+    "description": "Se dibuja una línea en el corte y desde ahí el panel se despliega hacia arriba mientras la creadora baja.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/escena-split-linea.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/escena-split-linea.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/escena-split.tsx.txt",
+    "code_filename": "EscenaSplit.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Usa mi video (ponlo en public/) en lugar del video de ejemplo y transcribe su audio con tiempos por palabra para reemplazar la lista P; los captions y los momentos de la animación siguen esas palabras. Usa <EscenaSplit variante=\"linea\" /> (o EscenaSplitLinea).",
+    "customize": [
+      "Cambia las fotos del carrusel de arriba",
+      "Ajusta ABRE y CIERRA para decidir en qué palabras entra y sale la pantalla dividida",
+      "Cambia BAJA si tu cara queda muy arriba o muy abajo en la mitad de abajo"
+    ]
+  },
+  {
+    "slug": "escena-grafica-curva",
+    "title": "Gráfica · Curva con corte a blanco",
+    "category": "Escena",
+    "description": "Primero la creadora; corte a una escena blanca donde la curva azul crece y la cámara la sigue con zoom; al final se aleja y se ve completa; corte de regreso.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/escena-grafica-curva.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/escena-grafica-curva.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/escena-grafica.tsx.txt",
+    "code_filename": "EscenaGrafica.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Usa mi video (ponlo en public/) en lugar del video de ejemplo y transcribe su audio con tiempos por palabra para reemplazar la lista P; los captions y los momentos de la animación siguen esas palabras. Usa la versión con corte: EscenaGraficaCorte (o <EscenaGrafica modo=\"corte\" />).",
+    "customize": [
+      "Cambia los datos de la curva en DATOS y sus etiquetas en ETIQ",
+      "Ajusta ENTRA, ZOOM_OUT y SALE para el corte a blanco, el alejamiento y el regreso",
+      "La gráfica puede salirse del cuadro: la atención va al centro"
+    ]
+  },
+  {
+    "slug": "escena-grafica-dona",
+    "title": "Gráfica · Dona con corte a blanco",
+    "category": "Escena",
+    "description": "Primero la creadora; corte a una escena blanca con la dona azul: la cámara gira y hace zoom a cada parte cuando ella la nombra; al final se ve completa; corte de regreso.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/escena-grafica-dona.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/escena-grafica-dona.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/escena-dona.tsx.txt",
+    "code_filename": "EscenaDona.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Usa mi video (ponlo en public/) en lugar del video de ejemplo y transcribe su audio con tiempos por palabra para reemplazar la lista P; los captions y los momentos de la animación siguen esas palabras. Usa la versión con corte: EscenaDonaCorte (o <EscenaDona modo=\"corte\" />).",
+    "customize": [
+      "Cambia las partes de la dona en SEG (nombre y porcentaje)",
+      "Ajusta VISITAS para que el zoom llegue a cada parte en la palabra correcta",
+      "La dona puede salirse del cuadro: la atención va al centro"
+    ]
+  },
+  {
+    "slug": "escena-libro",
+    "title": "Libro · Página por página",
+    "category": "Escena",
+    "description": "Toma de apoyo sobre fondo de cuadrícula: el libro aparece pequeño, pasa hojas, hace zoom lento a una página y luego a otra; arriba van frases clave.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/escena-libro.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/escena-libro.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/escena-libro.tsx.txt",
+    "code_filename": "EscenaLibro.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Usa mi video (ponlo en public/) en lugar del video de ejemplo y transcribe su audio con tiempos por palabra para reemplazar la lista P; los captions y los momentos de la animación siguen esas palabras. Aquí no se ve a la creadora: solo se oye su voz mientras pasan las páginas.",
+    "customize": [
+      "Cambia las fotos de las páginas en PAGINAS",
+      "Cambia las frases clave en FRASES (sin acentos si usas Gambarino o Advercase)",
+      "Ajusta UNA, ALGO y RESULTADO para las palabras en que pasa cada hoja"
+    ]
   }
 ]
