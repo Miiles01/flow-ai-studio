@@ -50,6 +50,13 @@
       "when": 1793647204579,
       "tag": "0006_user_events",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1794954884608,
+      "tag": "0007_lock_templates_program_tokens_avatars",
+      "breakpoints": true
     }
   ]
 }

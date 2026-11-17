@@ -25,20 +25,28 @@ export default function ProgramApplicants() {
       // Get program info with banner fields
       const { data: prog } = await supabase
         .from("brand_programs")
-        .select("name, public_token, banner_url, banner_position")
+        .select("name, banner_url, banner_position")
         .eq("id", id)
         .single();
 
       if (!prog) { setLoading(false); return; }
       setProgramName(prog.name);
-      setPublicToken(prog.public_token);
       setBannerUrl(prog.banner_url);
       setBannerPosition(prog.banner_position);
 
-      // Use RPC with public_token to get applicants (works for anon)
-      if (prog.public_token) {
+      // The share token lives in an admin-only table
+      const { data: tokenRow } = await supabase
+        .from("brand_program_tokens")
+        .select("public_token")
+        .eq("program_id", id)
+        .maybeSingle();
+      const token = tokenRow?.public_token ?? null;
+      setPublicToken(token);
+
+      // Use RPC with the share token to get applicants (works for anon)
+      if (token) {
         const { data: apps } = await supabase.rpc("get_program_applicants_by_token", {
-          p_token: prog.public_token,
+          p_token: token,
         });
 
         if (apps && apps.length > 0) {

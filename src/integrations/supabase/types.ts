@@ -91,6 +91,32 @@ export type Database = {
           },
         ]
       }
+      brand_program_tokens: {
+        Row: {
+          created_at: string
+          program_id: string
+          public_token: string
+        }
+        Insert: {
+          created_at?: string
+          program_id: string
+          public_token?: string
+        }
+        Update: {
+          created_at?: string
+          program_id?: string
+          public_token?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "brand_program_tokens_program_id_fkey"
+            columns: ["program_id"]
+            isOneToOne: true
+            referencedRelation: "brand_programs"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       brand_programs: {
         Row: {
           avg_sales: number
