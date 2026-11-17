@@ -9,15 +9,20 @@ import { DiscoveriesBoard } from "@/components/discoveries/DiscoveriesBoard";
 import StudioLibraryCard from "@/components/studio/StudioLibraryCard";
 import MyPages from "@/components/studio/MyPages";
 import StudioComponentCard from "@/components/studio/StudioComponentCard";
-import { COMPONENT_CATEGORIES, STUDIO_COMPONENTS } from "@/lib/studioComponents";
+import { COMPONENT_CATEGORIES, STUDIO_COMPONENTS, type StudioComponent } from "@/lib/studioComponents";
 import i18n from "@/i18n";
 
 
-export default function Studio() {
-  useTranslation();
-  const { templates, loading } = useStudioTemplates();
-  const list = templates;
-  // Componentes: solo dos filas al inicio (3 columnas en desktop, 2 en tablet y móvil); «Ver más» muestra el resto
+type SeccionProps = {
+  items: StudioComponent[];
+  categorias: { id: string; es: string; en: string }[];
+  titulo: { es: string; en: string };
+  subtitulo: { es: string; en: string };
+};
+
+/** Sección de animaciones (Escenas o Componentes): pills por categoría, dos filas y «Ver más». */
+function SeccionAnimaciones({ items, categorias, titulo, subtitulo }: SeccionProps) {
+  // Solo dos filas al inicio (3 columnas en desktop, 2 en tablet y móvil); «Ver más» muestra el resto
   const [showAllComponents, setShowAllComponents] = useState(false);
   const [componentCols, setComponentCols] = useState(() => (window.matchMedia("(min-width: 1024px)").matches ? 3 : 2));
   useEffect(() => {
@@ -27,43 +32,24 @@ export default function Studio() {
     return () => mq.removeEventListener("change", on);
   }, []);
   const en = (i18n.language || "es").startsWith("en");
-  // Filtros por categoría (solo las que ya tienen componentes)
+  // Filtros por categoría (solo las que ya tienen elementos)
   const [componentFilter, setComponentFilter] = useState<string | null>(null);
-  const componentCategories = COMPONENT_CATEGORIES.filter((cat) => STUDIO_COMPONENTS.some((c) => c.category === cat.id));
-  const filteredComponents = componentFilter ? STUDIO_COMPONENTS.filter((c) => c.category === componentFilter) : STUDIO_COMPONENTS;
+  const componentCategories = categorias.filter((cat) => items.some((c) => c.category === cat.id));
+  const filteredComponents = componentFilter ? items.filter((c) => c.category === componentFilter) : items;
   const firstRows = componentCols * 2;
   // Fila bajo el cursor: sus previews se reproducen juntas (desktop y tablet); las demás quedan quietas
   const [hoveredRow, setHoveredRow] = useState<number | null>(null);
   const shownComponents = showAllComponents ? filteredComponents : filteredComponents.slice(0, firstRows);
+  if (items.length === 0) return null;
 
   return (
-    <div className="p-8 md:px-12 md:pb-12 md:pt-24 max-w-5xl mx-auto space-y-12">
-      <div>
-        <h1 className="text-2xl md:text-3xl font-normal text-foreground">{dt("dashboard.text65")}</h1>
-      </div>
-
-      <MyPages />
-
-      {/* Arquitectura logarítmica */}
-      <section className="space-y-6">
-        <div className="mb-2">
-          <h2 className="text-xl md:text-2xl font-medium text-foreground">{dt("dashboard.text66")}</h2>
-        </div>
-        <DiscoveriesBoard />
-      </section>
-
-      {/* Componentes: animaciones de video y otros assets que se copian como prompt */}
       <section className="space-y-6">
         <div>
           <span className="mb-3 inline-flex rounded-full bg-black px-3 py-1 text-xs font-normal text-white dark:border dark:border-white/10">
             {(i18n.language || "es").startsWith("en") ? "Coming soon" : "Próximo lanzamiento"}
           </span>
-          <h2 className="text-xl md:text-2xl font-medium text-foreground">{(i18n.language || "es").startsWith("en") ? "Components" : "Componentes"}</h2>
-          <p className="mt-1 text-sm font-light text-muted-foreground">
-            {(i18n.language || "es").startsWith("en")
-              ? "Video animations ready to copy and paste into your AI assistant"
-              : "Animaciones de video listas para copiar y pegar en tu asistente de IA"}
-          </p>
+          <h2 className="text-xl md:text-2xl font-medium text-foreground">{en ? titulo.en : titulo.es}</h2>
+          <p className="mt-1 text-sm font-light text-muted-foreground">{en ? subtitulo.en : subtitulo.es}</p>
         </div>
         {componentCategories.length > 1 && (
           // Pills de filtro (mismo estilo que el resto del dashboard)
@@ -84,7 +70,7 @@ export default function Studio() {
             })}
           </div>
         )}
-        {STUDIO_COMPONENTS.length === 0 ? (
+        {items.length === 0 ? (
           <p className="text-sm text-muted-foreground py-12 text-center">{(i18n.language || "es").startsWith("en") ? "Coming soon" : "Muy pronto"}</p>
         ) : (
           // Tres columnas en desktop, dos en tablet y en móvil (los marcos de celular son angostos)
@@ -116,6 +102,49 @@ export default function Studio() {
           </div>
         )}
       </section>
+
+  );
+}
+
+export default function Studio() {
+  useTranslation();
+  const { templates, loading } = useStudioTemplates();
+  const list = templates;
+  // Escenas (partes de un Reel) van en su propia sección, antes de Componentes
+  const escenas = STUDIO_COMPONENTS.filter((c) => c.category === "Escena");
+  const componentes = STUDIO_COMPONENTS.filter((c) => c.category !== "Escena");
+
+  return (
+    <div className="p-8 md:px-12 md:pb-12 md:pt-24 max-w-5xl mx-auto space-y-12">
+      <div>
+        <h1 className="text-2xl md:text-3xl font-normal text-foreground">{dt("dashboard.text65")}</h1>
+      </div>
+
+      <MyPages />
+
+      {/* Arquitectura logarítmica */}
+      <section className="space-y-6">
+        <div className="mb-2">
+          <h2 className="text-xl md:text-2xl font-medium text-foreground">{dt("dashboard.text66")}</h2>
+        </div>
+        <DiscoveriesBoard />
+      </section>
+
+      {/* Escenas: partes de un Reel (pantalla dividida, gráficas, libro…) que se copian como prompt */}
+      <SeccionAnimaciones
+        items={escenas}
+        categorias={COMPONENT_CATEGORIES.filter((cat) => cat.id === "Escena")}
+        titulo={{ es: "Escenas", en: "Scenes" }}
+        subtitulo={{ es: "Partes de un Reel listas para copiar y pegar en tu asistente de IA", en: "Reel parts ready to copy and paste into your AI assistant" }}
+      />
+
+      {/* Componentes: animaciones de video y otros assets que se copian como prompt */}
+      <SeccionAnimaciones
+        items={componentes}
+        categorias={COMPONENT_CATEGORIES.filter((cat) => cat.id !== "Escena")}
+        titulo={{ es: "Componentes", en: "Components" }}
+        subtitulo={{ es: "Animaciones de video listas para copiar y pegar en tu asistente de IA", en: "Video animations ready to copy and paste into your AI assistant" }}
+      />
 
       {/* Librería */}
       <section className="space-y-6">
