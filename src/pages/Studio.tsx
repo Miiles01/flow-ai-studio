@@ -18,10 +18,11 @@ type SeccionProps = {
   categorias: { id: string; es: string; en: string }[];
   titulo: { es: string; en: string };
   subtitulo: { es: string; en: string };
+  etiqueta: { es: string; en: string };
 };
 
 /** Sección de animaciones (Escenas o Componentes): pills por categoría, dos filas y «Ver más». */
-function SeccionAnimaciones({ items, categorias, titulo, subtitulo }: SeccionProps) {
+function SeccionAnimaciones({ items, categorias, titulo, subtitulo, etiqueta }: SeccionProps) {
   // Solo dos filas al inicio (3 columnas en desktop, 2 en tablet y móvil); «Ver más» muestra el resto
   const [showAllComponents, setShowAllComponents] = useState(false);
   const [componentCols, setComponentCols] = useState(() => (window.matchMedia("(min-width: 1024px)").matches ? 3 : 2));
@@ -46,7 +47,7 @@ function SeccionAnimaciones({ items, categorias, titulo, subtitulo }: SeccionPro
       <section className="space-y-6">
         <div>
           <span className="mb-3 inline-flex rounded-full bg-black px-3 py-1 text-xs font-normal text-white dark:border dark:border-white/10">
-            {(i18n.language || "es").startsWith("en") ? "Coming soon" : "Próximo lanzamiento"}
+            {en ? etiqueta.en : etiqueta.es}
           </span>
           <h2 className="text-xl md:text-2xl font-medium text-foreground">{en ? titulo.en : titulo.es}</h2>
           <p className="mt-1 text-sm font-light text-muted-foreground">{en ? subtitulo.en : subtitulo.es}</p>
@@ -136,6 +137,7 @@ export default function Studio() {
         categorias={COMPONENT_CATEGORIES.filter((cat) => cat.id === "Escena")}
         titulo={{ es: "Escenas", en: "Scenes" }}
         subtitulo={{ es: "Partes de un Reel listas para copiar y pegar en tu asistente de IA", en: "Reel parts ready to copy and paste into your AI assistant" }}
+        etiqueta={{ es: "Nuevo", en: "New" }}
       />
 
       {/* Componentes: animaciones de video y otros assets que se copian como prompt */}
@@ -144,6 +146,7 @@ export default function Studio() {
         categorias={COMPONENT_CATEGORIES.filter((cat) => cat.id !== "Escena")}
         titulo={{ es: "Componentes", en: "Components" }}
         subtitulo={{ es: "Animaciones de video listas para copiar y pegar en tu asistente de IA", en: "Video animations ready to copy and paste into your AI assistant" }}
+        etiqueta={{ es: "Próximo lanzamiento", en: "Coming soon" }}
       />
 
       {/* Librería */}
