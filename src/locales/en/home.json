@@ -101,9 +101,9 @@
       },
       {
         "name": "Pro plan from",
-        "price": "$19",
+        "price": "$24",
         "unit": "USD/mo",
-        "note": "*Billed annually (USD 230 per year)",
+        "note": "*Or USD 230 per year (save 20%)",
         "intro": "Grow without limits, with more features and more support.",
         "features": [
           "Unlimited projects",

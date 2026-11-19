@@ -224,7 +224,9 @@ const Landing = () => {
                 {t("home.landing.hero_h1_before") && <>{t("home.landing.hero_h1_before")}{" "}</>}
                 <span style={{ fontFamily: "'Welth Catritz', serif", fontStyle: "italic", letterSpacing: "-0.01em", marginRight: "0.07em" }}>
                   {t("home.landing.hero_h1_accent")}
-                </span>{" "}
+                </span>
+                {/* dos líneas: "Every creator / needs a base" (y "Todo creador / necesita una base") */}
+                <br />
                 {t("home.landing.hero_h1_after")}
               </h1>
 
