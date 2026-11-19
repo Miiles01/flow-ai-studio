@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import logotipoSvg from "@/assets/miiles/logotipo.svg";
 import { useAuth } from "@/contexts/AuthContext";
 import { PRO_TRIAL_PATH, claimProTrial, clearProTrialCode, getStoredProTrialCode } from "@/lib/proTrial";
-import ProTrialCodeForm from "@/components/ProTrialCodeForm";
+import { getStoredLang } from "@/i18n";
 
 type Mode = "signup" | "login";
 
@@ -58,6 +58,11 @@ const ProTrial = () => {
       navigate("/dashboard", { replace: true });
     })();
   }, [authLoading, user, code, navigate, t, i18n.language]);
+
+  // The gift is only offered from the Afiliados page: without a code entered there, go back to it.
+  useEffect(() => {
+    if (!code) navigate(`/${getStoredLang() || "es"}/afiliados`, { replace: true });
+  }, [code, navigate]);
 
   const returnUrl = new URL(PRO_TRIAL_PATH, window.location.origin).href;
 
@@ -122,9 +127,7 @@ const ProTrial = () => {
         ))}
       </ul>
 
-      {!code ? (
-        <ProTrialCodeForm onValid={(c) => setCode(c.trim().toUpperCase())} />
-      ) : user ? null : checkEmail ? (
+      {!code || user ? null : checkEmail ? (
         <div className="text-center rounded-2xl bg-miiles-gray-50 px-6 py-8">
           <Mail size={22} className="mx-auto mb-3 text-black" />
           <p className="text-[15px] text-black font-normal">{t("protrial.checkEmailTitle")}</p>
