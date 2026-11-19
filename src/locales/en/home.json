@@ -90,7 +90,7 @@
       {
         "name": "Start for free",
         "price": "$0",
-        "unit": "MXN/mo",
+        "unit": "USD/mo",
         "intro": "Includes:",
         "features": [
           "1 project",
@@ -101,9 +101,9 @@
       },
       {
         "name": "Pro plan from",
-        "price": "$309",
-        "unit": "MXN/mo",
-        "note": "*Billed annually (MXN 3,712 per year)",
+        "price": "$19",
+        "unit": "USD/mo",
+        "note": "*Billed annually (USD 230 per year)",
         "intro": "Grow without limits, with more features and more support.",
         "features": [
           "Unlimited projects",
@@ -154,7 +154,7 @@
       {
         "q": "How much does it cost?",
         "a": [
-          "You can start for free. The Pro plan costs MXN 386 per month or MXN 3,712 per year (save 20%) and includes unlimited projects and collaborations, advanced analytics and priority support.",
+          "You can start for free. The Pro plan costs USD 24 per month or USD 230 per year (save 20%) and includes unlimited projects and collaborations, advanced analytics and priority support.",
           "For teams and companies there's a custom Business plan."
         ]
       }
