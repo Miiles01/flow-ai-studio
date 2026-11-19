@@ -36,6 +36,7 @@ const Pricing = () => {
       { hreflang: "es", href: "https://miiles.app/es/precios" },
       { hreflang: "en", href: "https://miiles.app/en/precios" },
       { hreflang: "pt", href: "https://miiles.app/pt/precios" },
+      { hreflang: "fr", href: "https://miiles.app/fr/precios" },
       { hreflang: "x-default", href: "https://miiles.app/es/precios" },
     ],
     meta: [

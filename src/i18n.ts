@@ -4,8 +4,9 @@ import { initReactI18next } from 'react-i18next';
 import enTranslation from './locales/en.json';
 import esTranslation from './locales/es.json';
 import ptTranslation from './locales/pt.json';
+import frTranslation from './locales/fr.json';
 
-export const SUPPORTED_LANGS = ['es', 'en', 'pt'] as const;
+export const SUPPORTED_LANGS = ['es', 'en', 'pt', 'fr'] as const;
 export type Lang = (typeof SUPPORTED_LANGS)[number];
 export const isLang = (v: unknown): v is Lang => typeof v === 'string' && (SUPPORTED_LANGS as readonly string[]).includes(v);
 /** Normalizes any i18next language code (en-US, pt-BR…) to one of the supported languages. */
@@ -14,17 +15,19 @@ export const langOf = (lng?: string | null): Lang => {
   return isLang(base) ? base : 'es';
 };
 /** BCP 47 locale for dates/numbers and SEO tags. */
-export const LOCALE_OF: Record<Lang, string> = { es: 'es-MX', en: 'en-US', pt: 'pt-BR' };
-/** Picks inline copy written as { es, en, pt? }; Portuguese falls back to Spanish when missing. */
-export const pickLang = <T,>(o: { es: T; en: T; pt?: T }, lng?: string | null): T => {
+export const LOCALE_OF: Record<Lang, string> = { es: 'es-MX', en: 'en-US', pt: 'pt-BR', fr: 'fr-FR' };
+/** Picks inline copy written as { es, en, pt?, fr? }; Portuguese falls back to Spanish and French to English. */
+export const pickLang = <T,>(o: { es: T; en: T; pt?: T; fr?: T }, lng?: string | null): T => {
   const l = langOf(lng ?? i18n.language);
-  return l === 'pt' ? (o.pt ?? o.es) : o[l];
+  if (l === 'pt') return o.pt ?? o.es;
+  if (l === 'fr') return o.fr ?? o.en;
+  return o[l];
 };
 export const LANG_STORAGE_KEY = 'miiles-lang';
 
 // Per-page translation files: src/locales/<lang>/<section>.json → t("<section>.key")
 const sectionFiles = import.meta.glob('./locales/*/*.json', { eager: true }) as Record<string, { default: Record<string, unknown> }>;
-const sections: Record<string, Record<string, unknown>> = { es: {}, en: {}, pt: {} };
+const sections: Record<string, Record<string, unknown>> = { es: {}, en: {}, pt: {}, fr: {} };
 for (const [path, mod] of Object.entries(sectionFiles)) {
   const m = path.match(/\.\/locales\/(\w+)\/([\w-]+)\.json$/);
   if (m && sections[m[1]]) sections[m[1]][m[2]] = mod.default;
@@ -53,6 +56,7 @@ i18n.use(initReactI18next).init({
     en: { translation: { ...enTranslation, ...sections.en } },
     es: { translation: { ...esTranslation, ...sections.es } },
     pt: { translation: { ...ptTranslation, ...sections.pt } },
+    fr: { translation: { ...frTranslation, ...sections.fr } },
   },
   lng: getInitialLang(),
   fallbackLng: 'es',

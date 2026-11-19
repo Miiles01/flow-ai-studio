@@ -1,0 +1,87 @@
+{
+  "items": [
+    {
+      "id": "portafolio",
+      "badge": "Portfolio",
+      "title": "Créez votre portfolio professionnel avec l'IA",
+      "description": "Décrivez qui vous êtes, ce que vous créez et avec quelles marques vous travaillez. Miiles construit votre portfolio avec des modèles pensés pour les créateurs de contenu, créateurs UGC, designers et freelances, et le publie avec votre propre lien.",
+      "bullets": [
+        "Modèles de portfolio pour créateurs UGC, monteurs et freelances.",
+        "Modifiez textes, photos et couleurs avec un prompt, sans coder.",
+        "Publiez avec votre propre lien, prêt à envoyer aux marques."
+      ]
+    },
+    {
+      "id": "creatividad",
+      "badge": "Créativité",
+      "title": "Créez, montez et animez votre contenu",
+      "description": "Plus de 60 éléments pour le montage vidéo, l'animation et le motion design : carrousels, textes animés, transitions et effets au format vertical pour Reels, TikTok et Shorts. Tout ce qu'il faut pour accélérer votre processus créatif.",
+      "bullets": [
+        "Composants vidéo 9:16 pour Reels, TikTok et YouTube Shorts.",
+        "Textes animés, transitions et motion design prêts à l'emploi.",
+        "Copiez le prompt et créez l'animation avec votre IA : Claude, Codex, Gemini ou Cursor."
+      ]
+    },
+    {
+      "id": "ai-studio",
+      "badge": "Intelligence artificielle",
+      "title": "Concevez des modèles d'affaires avec la puissance de l'IA",
+      "description": "Connectez Miiles à Claude ou à l'IA que vous utilisez déjà. Il fonctionne comme une compétence : votre assistant crée vos tableaux, structure votre modèle d'affaires et gère pour vous vos clients, campagnes et revenus.",
+      "bullets": [
+        "Se connecte à Claude, Codex, Gemini, Cursor et d'autres outils d'IA.",
+        "Des tableaux avec clients, campagnes, contrats et revenus en une seule conversation.",
+        "Business Model Canvas avec l'IA pour valider et faire grandir votre projet."
+      ]
+    },
+    {
+      "id": "collab",
+      "badge": "Collaboration en direct",
+      "title": "Co-créez et connectez-vous en temps réel",
+      "description": "Invitez votre équipe à travailler sur le même canevas. Voyez les avatars des personnes connectées et modifiez ensemble sans conflits.",
+      "bullets": [
+        "Présence visuelle interactive avec avatars empilés dans l'en-tête.",
+        "Synchronisation instantanée des mouvements, couleurs et connecteurs.",
+        "Partage rapide via des liens publics de consultation."
+      ]
+    },
+    {
+      "id": "canvas",
+      "badge": "Canevas avancé",
+      "title": "Canevas infini, personnalisation complète",
+      "description": "Structurez vos idées sans limites physiques. Reliez n'importe quelles formes grâce à des poignées bidirectionnelles et naviguez avec un large zoom de 5 % à 400 %.",
+      "bullets": [
+        "Connecteurs courbes avec des étiquettes de texte modifiables au milieu.",
+        "Déconnectez rapidement des nœuds en les faisant glisser par leur moitié gauche.",
+        "Formes géométriques personnalisables aux couleurs vives de la marque."
+      ]
+    }
+  ],
+  "phrases": [
+    "Crée un tunnel de vente pour ma formation en ligne...",
+    "Conçois une campagne marketing sur les réseaux sociaux...",
+    "Cartographie le parcours d'onboarding de l'app...",
+    "Planifie une stratégie de contenu Instagram...",
+    "Organise le processus de support et de tickets B2B..."
+  ],
+  "apps": "Apps",
+  "select": "Sélectionner",
+  "pan": "Déplacer",
+  "shapes": "Formes",
+  "text": "Texte",
+  "todo": "Liste de tâches",
+  "image": "Image",
+  "section": "Section",
+  "mateo": "Mateo",
+  "sofia": "Sofía",
+  "intro": "Découvrez Miiles",
+  "title": "Donnez vie à vos idées",
+  "subtitle": "Un lieu conçu pour découvrir des opportunités",
+  "plansTitle": "Nos forfaits",
+  "plansDescription": "Choisissez le forfait idéal pour automatiser et faire grandir votre activité.",
+  "aiAlt": "IA",
+  "collaborator": "Collaborateur {{number}}",
+  "heroAlt": "Personne utilisant Miiles confortablement sur une tablette dans son canapé",
+  "seoTitle": "Fonctionnalités de Miiles : portfolio avec IA, éléments vidéo et tableaux",
+  "seoDescription": "Créez votre portfolio professionnel avec l'IA, montez et animez avec plus de 60 éléments vidéo et motion design, et gérez clients et campagnes en connectant Miiles à Claude ou à votre IA.",
+  "templateAlt": "Modèle de portfolio"
+}

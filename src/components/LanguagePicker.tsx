@@ -6,6 +6,7 @@ const LANGS = [
   { value: "es", label: "Español", short: "ES" },
   { value: "en", label: "English", short: "EN" },
   { value: "pt", label: "Português", short: "PT" },
+  { value: "fr", label: "Français", short: "FR" },
 ] as const;
 
 function useLang() {
@@ -18,7 +19,7 @@ function useLang() {
 export function LanguageOptions({ isDark, label }: { isDark: boolean; label: string }) {
   const { current, change } = useLang();
   return (
-    <div role="radiogroup" aria-label={label} className="grid gap-3 sm:grid-cols-3">
+    <div role="radiogroup" aria-label={label} className="grid grid-cols-2 gap-3 lg:grid-cols-4">
       {LANGS.map((l) => {
         const selected = current === l.value;
         return (

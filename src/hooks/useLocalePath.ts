@@ -10,7 +10,7 @@ export const useLocalePath = () => {
 
   return (path: string) => {
     // Si la ruta ya empieza con /es/ o /en/, no agregar prefijo
-    if (/^\/(es|en|pt)\//.test(path)) return path;
+    if (/^\/(es|en|pt|fr)\//.test(path)) return path;
     // Si es la raíz, devolver /{lang}/
     if (path === "/" || path === "") return `/${currentLang}/`;
     // Limpiar doble slash

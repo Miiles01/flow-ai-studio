@@ -9,8 +9,8 @@ const FOLLOW = 0.33;
 const isLandingPath = (path: string) => {
   const parts = path.replace(/\/+$/, "").split("/").filter(Boolean);
   if (parts.length === 0) return true;
-  if (parts.length === 1) return PAGES.includes(parts[0]) || /^(es|en|pt)$/.test(parts[0]);
-  if (parts.length === 2) return /^(es|en|pt)$/.test(parts[0]) && PAGES.includes(parts[1]);
+  if (parts.length === 1) return PAGES.includes(parts[0]) || /^(es|en|pt|fr)$/.test(parts[0]);
+  if (parts.length === 2) return /^(es|en|pt|fr)$/.test(parts[0]) && PAGES.includes(parts[1]);
   return false;
 };
 
@@ -77,7 +77,7 @@ const LandingCursor = () => {
         className="absolute left-[16px] top-[18px] whitespace-nowrap rounded-full px-2.5 py-1 text-[11px] font-normal leading-none"
         style={{ background: COLOR, color: "#fff" }}
       >
-        {pickLang({ es: "Invitado", en: "Guest", pt: "Convidado" }, i18n.language)}
+        {pickLang({ es: "Invitado", en: "Guest", pt: "Convidado", fr: "Invité" }, i18n.language)}
       </span>
     </div>
   );

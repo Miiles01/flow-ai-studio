@@ -1,0 +1,189 @@
+{
+  "landing": {
+    "hero_badge": "Miiles",
+    "hero_title_hoy": "Aujourd'hui",
+    "hero_title_es": "est",
+    "hero_title_un": "un",
+    "hero_title_buen": "beau",
+    "hero_title_dia": "jour",
+    "hero_title_para": "pour",
+    "hero_title_crear": "créer",
+    "hero_subtitle": "Imaginez un projet. Rendez-le réel.",
+    "hero_cta": "Rejoindre maintenant",
+    "explore_templates": "Explorer les modèles",
+    "hero_cta_gratis": "Commencer gratuitement",
+    "seo_title": "Business Model Canvas avec l'IA pour entrepreneurs | Miiles",
+    "seo_description": "Structurez vos idées d'entreprise avec l'intelligence artificielle : créez votre Business Model Canvas, validez vos idées avec l'IA et utilisez des prompts de stratégie en quelques minutes.",
+    "hero_h1": "Chaque créateur a besoin d'une base",
+    "hero_h1_before": "Chaque",
+    "hero_h1_accent": "créateur",
+    "hero_h1_after": "a besoin d'une base",
+    "hero_desc": "Découvrez comment les créateurs construisent des systèmes qui fonctionnent.",
+    "hero_examples": [
+      {
+        "label": "Tableaux",
+        "prompt": "Un plan de lancement pour ma marque de vêtements"
+      },
+      {
+        "label": "Flux",
+        "prompt": "Le processus de vente de mon entreprise, étape par étape"
+      },
+      {
+        "label": "Tâches",
+        "prompt": "Les tâches pour ouvrir mon café ce mois-ci"
+      },
+      {
+        "label": "Contenu",
+        "prompt": "Mon calendrier de contenu pour TikTok et Instagram"
+      }
+    ],
+    "orbit_title_1": "Découvrez",
+    "orbit_title_2": "des connexions",
+    "scroll_text_1_1": "Réunissez vos idées",
+    "scroll_text_1_2": "en un seul endroit",
+    "scroll_text_1_3": "et commencez à créer",
+    "scroll_text_2_1": "Un espace pour",
+    "scroll_text_2_2": "se connecter et co-créer",
+    "scroll_text_2_3": "sans limites",
+    "mobile_title_1": "Réunissez vos idées",
+    "mobile_title_2": "et commencez à",
+    "mobile_title_3": "créer",
+    "trusted_by": "Ils nous font confiance",
+    "system_title_1": "Un seul système.",
+    "system_title_2": "Plus de",
+    "system_title_3": "bénéfices.",
+    "colab_title": "Trouvez des collaborations",
+    "colab_desc": "Sur Miiles, vous trouverez des opportunités uniques pour faire grandir votre marque.",
+    "sales_title": "Faites résonner votre idée avec la force de vente",
+    "sales_desc": "Si votre marque vend des services ou des produits, faites-les proposer aussi par d'autres vendeurs partout dans le monde.",
+    "testim_quote": "Vraiment incroyable",
+    "testim_name": "Karol Wegner",
+    "testim_role": "PDG de BeeSpeaker",
+    "curve_text": "C'est l'heuuuure de crééééer",
+    "cta_title": "C'est le moment de créer",
+    "cta_subtitle": "Créez votre compte aujourd'hui",
+    "cta_button": "Essayer Miiles",
+    "build_title": "Qu’allez-vous créer ?",
+    "build_subtitle": "Tout ce que vous imaginez pour votre entreprise, l'intelligence artificielle de Miiles vous aide à le structurer.",
+    "build_cards": [
+      {
+        "title": "Créer un portfolio",
+        "desc": "Créez un portfolio professionnel avec un seul prompt : montrez qui vous êtes, ce que vous vendez et comment vous le vendez, prêt à partager.",
+        "image": "/home-portafolio.webp",
+        "alt": "Portfolio généré par l'IA de Miiles avec la photo et le nom de la créatrice"
+      },
+      {
+        "title": "Clients et campagnes",
+        "desc": "Organisez clients, campagnes, contrats et revenus avec des widgets sur le même tableau. Toute votre activité sous les yeux, sans changer d'outil.",
+        "image": "/home-clientes.webp",
+        "alt": "Widgets de clients et de campagnes sur un tableau Miiles"
+      },
+      {
+        "title": "Algorithmes des réseaux",
+        "desc": "Comprenez comment TikTok, Instagram, YouTube et Facebook décident quoi montrer, et quelles stratégies utilisent les créateurs qui grandissent.",
+        "image": "/home-algoritmos.webp",
+        "alt": "Schéma du fonctionnement de l'algorithme d'un réseau social"
+      }
+    ],
+    "plans_title": "Choisissez votre forfait",
+    "plans_subtitle": "Pensé pour là où vous en êtes, et là où vous allez.",
+    "plans": [
+      {
+        "name": "Commencer gratuitement",
+        "price": "$0",
+        "unit": "USD/mois",
+        "intro": "Comprend :",
+        "features": [
+          "1 projet",
+          "Jusqu'à 10 collaborations",
+          "Assistance par e-mail"
+        ],
+        "cta": "Commencer gratuitement"
+      },
+      {
+        "name": "Forfait Pro à partir de",
+        "price": "$24",
+        "unit": "USD/mois",
+        "note": "*Ou 230 USD par an (20 % d'économie)",
+        "intro": "Grandissez sans limites, avec plus de fonctionnalités et plus d'assistance.",
+        "features": [
+          "Projets illimités",
+          "Collaborations illimitées",
+          "Analyses avancées",
+          "Assistance prioritaire"
+        ],
+        "cta": "Voir tous les forfaits"
+      }
+    ],
+    "faq_title": "Questions fréquentes",
+    "faq_items": [
+      {
+        "q": "Qu'est-ce que Miiles ?",
+        "a": [
+          "Miiles est une plateforme d'intelligence artificielle pour les entrepreneurs qui transforme les idées en modèles d'affaires. Décrivez votre idée et Miiles génère votre Business Model Canvas, vos flux et vos listes de tâches sur un tableau visuel que vous pouvez modifier avec votre équipe.",
+          "Dans Découvertes, vous apprenez aussi comment fonctionnent les algorithmes de TikTok, Instagram, YouTube et Facebook, et quelles stratégies utilisent les créateurs qui grandissent."
+        ]
+      },
+      {
+        "q": "Comment fonctionne Miiles ?",
+        "a": [
+          "Vous écrivez votre idée comme vous la raconteriez à quelqu'un. Si besoin, l'IA vous pose quelques questions pour comprendre votre objectif, propose un plan stratégique et, une fois que vous l'approuvez, construit le tableau avec la structure de votre entreprise.",
+          "Ensuite, vous pouvez modifier, déplacer et développer chaque partie, ou demander à l'IA de développer une section à partir de ce que vous avez déjà."
+        ]
+      },
+      {
+        "q": "Qu'est-ce qu'un Business Model Canvas ?",
+        "a": [
+          "C'est un outil de stratégie créé par Alexander Osterwalder qui résume une entreprise en neuf blocs : segments de clientèle, proposition de valeur, canaux, relations clients, sources de revenus, ressources clés, activités clés, partenaires clés et structure de coûts.",
+          "Miiles le génère à partir de votre idée pour que vous puissiez le revoir, l'ajuster et le partager en quelques minutes."
+        ]
+      },
+      {
+        "q": "Puis-je valider mon idée d'entreprise avec l'IA ?",
+        "a": [
+          "Miiles vous aide à structurer votre idée et à voir clairement ce que vous devez tester : qui est votre client, quel problème vous résolvez, quel canal permet de l'atteindre et comment vous gagnez de l'argent.",
+          "La vraie validation se fait en parlant à vos clients ; Miiles vous donne la carte pour le faire dans l'ordre."
+        ]
+      },
+      {
+        "q": "Dois-je connaître la stratégie ou savoir écrire des prompts ?",
+        "a": [
+          "Non. Vous n'avez pas besoin de maîtriser les prompts de stratégie d'entreprise : vous écrivez en langage courant et Miiles s'occupe des questions et de la structure.",
+          "Si vous connaissez déjà la stratégie, vous pouvez demander des cadres précis, comme le Business Model Canvas, et ajuster chaque bloc à votre façon."
+        ]
+      },
+      {
+        "q": "Combien ça coûte ?",
+        "a": [
+          "Vous pouvez commencer gratuitement. Le forfait Pro coûte 24 USD par mois ou 230 USD par an (20 % d'économie) et comprend des projets et collaborations illimités, des analyses avancées et une assistance prioritaire.",
+          "Pour les équipes et les entreprises, il existe un forfait Entreprise sur mesure."
+        ]
+      }
+    ]
+  },
+  "navbar": {
+    "home": "Accueil",
+    "about": "À propos",
+    "functions": "Fonctionnalités",
+    "pricing": "Tarifs",
+    "join": "Rejoindre",
+    "language": "Langue",
+    "close": "Fermer",
+    "menu": "Menu",
+    "affiliates": "Affiliés",
+    "terms": "Conditions",
+    "privacy": "Politique de confidentialité",
+    "spanish": "Español",
+    "english": "English",
+    "portuguese": "Português",
+    "french": "Français"
+  },
+  "footer": {
+    "slogan": "Conçu pour les esprits créatifs",
+    "copyright": "© Miiles, tous droits réservés, 2026",
+    "company": "Entreprise",
+    "terms": "Conditions générales",
+    "privacy": "Politique de confidentialité",
+    "social": "Réseaux sociaux"
+  }
+}

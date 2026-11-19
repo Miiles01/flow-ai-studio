@@ -63,6 +63,20 @@ const COPY = {
       { q: "Posso usar em conteúdo para marcas?", a: "Sim. É para você usar no seu conteúdo, próprio ou dos seus clientes." },
     ],
   },
+  fr: {
+    back: "Studio", notFound: "Ce composant est introuvable", toStudio: "Retour au Studio", kind: "Composant vidéo",
+    copyPrompt: "Copier le prompt", copied: "Prompt copié", download: "Télécharger le code", loading: "Chargement…",
+    copyError: "Impossible de copier. Essayez de télécharger le code.",
+    promptNote: "Le prompt contient le code complet et une courte instruction pour que votre IA l'implémente.",
+    compatible: "Compatible avec votre assistant", compatibleText: "Collez le prompt dans n'importe quelle IA qui écrit du code.",
+    howTo: "Comment l'utiliser", steps: ["Copiez le prompt.", "Collez-le dans votre assistant IA (Claude, Codex, Gemini…).", "Demandez les modifications : textes, couleurs, durée.", "Faites le rendu de votre vidéo et publiez-la en Reel ou sur TikTok."],
+    customize: "Comment la personnaliser", faq: "Questions fréquentes",
+    baseFaq: [
+      { q: "Dois-je savoir coder ?", a: "Non. Vous copiez le prompt, le collez dans votre IA et demandez les modifications avec vos mots ; elle écrit le code." },
+      { q: "Dans quel format sort la vidéo ?", a: "Elle est pensée en vertical 9:16 pour les Reels, TikTok et Shorts, mais vous pouvez demander une autre taille à votre IA." },
+      { q: "Puis-je l'utiliser pour du contenu de marque ?", a: "Oui. Elle est faite pour votre contenu, le vôtre ou celui de vos clients." },
+    ],
+  },
 } as const;
 
 export default function StudioComponentPage() {

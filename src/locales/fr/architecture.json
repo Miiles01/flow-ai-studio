@@ -1,0 +1,842 @@
+{
+  "flows": {
+    "tiktok": {
+      "title": "Algorithme de TikTok (FYP)",
+      "videos": {
+        "0": {
+          "title": "Comment fonctionnent les algorithmes des réseaux aujourd'hui (Víctor Heras Media)",
+          "ariaLabel": "Lire la vidéo : Comment fonctionnent les algorithmes des réseaux aujourd'hui (Víctor Heras Media)"
+        },
+        "1": {
+          "title": "Comment fonctionne le nouvel algorithme de TikTok en 2026 (Alex Arano)",
+          "ariaLabel": "Lire la vidéo : Comment fonctionne le nouvel algorithme de TikTok en 2026 (Alex Arano)"
+        },
+        "2": {
+          "title": "Comment fonctionne l'algorithme de TikTok en 2026 (Daniel Aguillón)",
+          "ariaLabel": "Lire la vidéo : Comment fonctionne l'algorithme de TikTok en 2026 (Daniel Aguillón)"
+        }
+      },
+      "nodes": {
+        "A_TRIAL": {
+          "data": {
+            "tag": "Test",
+            "label": "Il n'existe pas de « mode test » manuel",
+            "sublabel": "TikTok teste automatiquement TOUTES les vidéos auprès de petits groupes de spectateurs (Phase 1).",
+            "details": {
+              "tr1": {
+                "tag": "Fait",
+                "label": "Test automatique",
+                "sublabel": "Pas besoin de bouton de test : l'algorithme traite déjà chaque publication comme un test indépendant."
+              }
+            }
+          }
+        },
+        "A": {
+          "data": {
+            "tag": "Début",
+            "label": "Type de publication",
+            "sublabel": "Est-ce une publicité payante ou du contenu organique ?"
+          }
+        },
+        "A_ADS": {
+          "data": {
+            "tag": "Pub",
+            "label": "Publicité payante (Ads)",
+            "sublabel": "Indépendante de l'algorithme organique. Elle se développe grâce au budget (CPA / enchères).",
+            "details": {
+              "ads1": {
+                "tag": "Indicateur",
+                "label": "CPA et ROAS",
+                "sublabel": "Coût par acquisition et retour sur dépenses publicitaires : les indicateurs clés pour passer à l'échelle."
+              },
+              "ads2": {
+                "tag": "Indicateur",
+                "label": "CTR et CPM",
+                "sublabel": "Le taux de clics et le coût pour mille impressions déterminent l'efficacité de la publicité."
+              },
+              "ads3": {
+                "tag": "Astuce",
+                "label": "Ciblage",
+                "sublabel": "L'algorithme publicitaire cherche des conversions, pas seulement la rétention comme l'algorithme organique."
+              }
+            }
+          }
+        },
+        "A_ORG": {
+          "data": {
+            "tag": "Organique",
+            "label": "Contenu organique",
+            "sublabel": "Entre dans le mode test de l'algorithme pour être évalué."
+          }
+        },
+        "S": {
+          "data": {
+            "tag": "Stratégies",
+            "label": "Ce qui fonctionne en ce moment",
+            "sublabel": "Voir les détails pour connaître les stratégies actuelles",
+            "details": {
+              "s1": {
+                "tag": "Stratégie",
+                "label": "Vidéos de 7 à 15 secondes",
+                "sublabel": "Maximisent le taux de complétion et les boucles. Idéal pour la croissance initiale."
+              },
+              "s2": {
+                "tag": "Stratégie",
+                "label": "Boucle parfaite",
+                "sublabel": "Reliez la fin au début : les spectateurs regardent 2 à 3 fois sans s'en rendre compte."
+              },
+              "s3": {
+                "tag": "Stratégie",
+                "label": "Séries de contenu",
+                "sublabel": "Parties 1, 2, 3… génèrent des recherches de profil et des sessions plus longues."
+              },
+              "s4": {
+                "tag": "Stratégie",
+                "label": "Les 3 premiers mots",
+                "sublabel": "Dites-les à voix haute et affichez-les en texte : TikTok les indexe pour la recherche (SEO)."
+              }
+            }
+          }
+        },
+        "B": {
+          "data": {
+            "tag": "Phase 1",
+            "label": "L'algorithme la classe",
+            "sublabel": "L'audio, le texte à l'écran, les hashtags et le sujet déterminent qui la voit"
+          }
+        },
+        "C": {
+          "data": {
+            "tag": "Phase 2 · Tour 1",
+            "label": "Montrée à ~100–500 personnes",
+            "sublabel": "Un petit échantillon de spectateurs pertinents la voit dans son FYP. Tout se mesure ici.",
+            "details": {
+              "c1": {
+                "tag": "Signal",
+                "label": "Rétention à 3 secondes",
+                "sublabel": "Les spectateurs passent-ils ou restent-ils ? Si la plupart défilent avant la 3e seconde, il n'y a pas de tour 2."
+              },
+              "c2": {
+                "tag": "Signal",
+                "label": "Premiers j'aime et commentaires",
+                "sublabel": "Les réactions de ce petit échantillon pèsent plus : chaque j'aime compte."
+              },
+              "c3": {
+                "tag": "Signal",
+                "label": "Partages et enregistrements",
+                "sublabel": "Les signaux les plus difficiles à obtenir : ils valent plus que n'importe quel j'aime."
+              }
+            }
+          }
+        },
+        "D": {
+          "data": {
+            "tag": "Décision",
+            "label": "L'échantillon a-t-il mieux réagi que pour des vidéos similaires ?",
+            "details": {
+              "d1_tk": {
+                "tag": "Dérive des intérêts",
+                "label": "Intérêts éphémères",
+                "sublabel": "TikTok part du principe que les intérêts d'un utilisateur changent en quelques minutes. Si votre vidéo colle exactement à la tendance du moment, elle décolle vite."
+              }
+            }
+          }
+        },
+        "E": {
+          "data": {
+            "tag": "Résultat",
+            "label": "La diffusion s'arrête",
+            "sublabel": "Votre compte n'est pas pénalisé : la vidéo suivante repart de zéro"
+          }
+        },
+        "F": {
+          "data": {
+            "tag": "Phase 3 · Tour 2",
+            "label": "Passe à ~1 000–5 000 personnes",
+            "sublabel": "Une audience plus large et plus variée ; les mêmes mesures se répètent"
+          }
+        },
+        "G": {
+          "data": {
+            "tag": "Décision",
+            "label": "Les signaux tiennent-ils quand la portée augmente ?",
+            "details": {
+              "g1": {
+                "tag": "Indicateur",
+                "label": "Repère d'engagement",
+                "sublabel": "Au-dessus de 6–8 % d'engagement au premier tour, la vidéo décolle souvent. En dessous de 3 %, c'est plus difficile."
+              },
+              "g2": {
+                "tag": "Astuce",
+                "label": "Répondre aux commentaires en vidéo",
+                "sublabel": "Chaque réponse relance le cycle de diffusion de la vidéo d'origine."
+              }
+            }
+          }
+        },
+        "H": {
+          "data": {
+            "tag": "Résultat",
+            "label": "Tours croissants : 10K → 100K → 1M",
+            "sublabel": "Chaque tour répète le test. Tant qu'elle gagne, elle continue de grandir."
+          }
+        }
+      },
+      "edges": {
+        "eA-ADS": {
+          "label": "Publicité payante"
+        },
+        "eA-TRIAL": {
+          "label": "Mode test"
+        },
+        "eA-ORG": {
+          "label": "Organique"
+        },
+        "eD-E": {
+          "label": "Non"
+        },
+        "eD-F": {
+          "label": "Oui"
+        },
+        "eG-E": {
+          "label": "Non"
+        },
+        "eG-H": {
+          "label": "Oui"
+        },
+        "eH-G": {
+          "label": "Boucle"
+        }
+      }
+    },
+    "instagram": {
+      "title": "Reels d'essai (Instagram)",
+      "videos": {
+        "0": {
+          "title": "Le nouvel algorithme d'Instagram 2026 dévoilé (Víctor Heras Media)",
+          "ariaLabel": "Lire la vidéo : Le nouvel algorithme d'Instagram 2026 dévoilé (Víctor Heras Media)"
+        },
+        "1": {
+          "title": "La seule façon de battre l'algorithme en 2026 (Víctor Heras Media)",
+          "ariaLabel": "Lire la vidéo : La seule façon de battre l'algorithme en 2026 (Víctor Heras Media)"
+        },
+        "2": {
+          "title": "La dernière mise à jour de l'algorithme, septembre 2026 (Robert Benjamin)",
+          "ariaLabel": "Lire la vidéo : La dernière mise à jour de l'algorithme, septembre 2026 (Robert Benjamin)"
+        }
+      },
+      "nodes": {
+        "A": {
+          "data": {
+            "tag": "Début",
+            "label": "Type de publication",
+            "sublabel": "Est-ce une publicité payante ou du contenu organique ?"
+          }
+        },
+        "A_ADS": {
+          "data": {
+            "tag": "Pub",
+            "label": "Publicité payante (Ads)",
+            "sublabel": "Indépendante de l'algorithme organique. Elle se développe grâce au budget (CPA / enchères).",
+            "details": {
+              "ads1": {
+                "tag": "Indicateur",
+                "label": "CPA et ROAS",
+                "sublabel": "Coût par acquisition et retour sur dépenses publicitaires : les indicateurs clés pour passer à l'échelle."
+              },
+              "ads2": {
+                "tag": "Indicateur",
+                "label": "CTR et CPM",
+                "sublabel": "Le taux de clics et le coût pour mille impressions déterminent l'efficacité de la publicité."
+              },
+              "ads3": {
+                "tag": "Astuce",
+                "label": "Ciblage",
+                "sublabel": "L'algorithme publicitaire cherche des conversions, pas seulement la rétention comme l'algorithme organique."
+              }
+            }
+          }
+        },
+        "A_ORG": {
+          "data": {
+            "tag": "Organique",
+            "label": "Contenu organique",
+            "sublabel": "Entre dans le mode test de l'algorithme pour être évalué."
+          }
+        },
+        "S": {
+          "data": {
+            "tag": "Stratégies",
+            "label": "Ce qui fonctionne en ce moment",
+            "sublabel": "Voir les détails pour connaître les stratégies actuelles",
+            "details": {
+              "s1": {
+                "tag": "Stratégie",
+                "label": "Publiez 3 à 5 reels d'essai par semaine",
+                "sublabel": "Les essais ne lassent pas votre audience : testez des variantes en toute confiance."
+              },
+              "s2": {
+                "tag": "Stratégie",
+                "label": "Déclinez vos réussites",
+                "sublabel": "Quand un essai décolle, créez 2 à 3 variantes du même angle."
+              },
+              "s3": {
+                "tag": "Stratégie",
+                "label": "Gros texte + b-roll",
+                "sublabel": "Un format qui marche bien : une affirmation forte sur des images en mouvement."
+              },
+              "s4": {
+                "tag": "Stratégie",
+                "label": "Audio tendance",
+                "sublabel": "Utilisez-le dans les 24 premières heures de la tendance ; l'élan retombe ensuite."
+              }
+            }
+          }
+        },
+        "PLUS": {
+          "data": {
+            "tag": "Abonnement",
+            "label": "Instagram Plus",
+            "sublabel": "Abonnement payant avec des outils exclusifs de visibilité et de contrôle.",
+            "details": {
+              "p1": {
+                "tag": "Portée",
+                "label": "Stories mises en avant",
+                "sublabel": "Vos stories apparaissent en premier dans le fil et durent 48 heures (24 heures de plus)."
+              },
+              "p2": {
+                "tag": "Confidentialité",
+                "label": "Aperçu discret",
+                "sublabel": "Regardez les stories des autres sans apparaître dans leur liste de spectateurs."
+              },
+              "p3": {
+                "tag": "Données",
+                "label": "Statistiques avancées",
+                "sublabel": "Voyez exactement combien de fois et qui a revu votre story."
+              },
+              "p4": {
+                "tag": "Contrôle",
+                "label": "Audiences et profil",
+                "sublabel": "Listes d'audience illimitées, épingles supplémentaires et polices exclusives."
+              }
+            }
+          }
+        },
+        "B": {
+          "data": {
+            "tag": "Phase 1 · Tour 1",
+            "label": "Audience d'essai : ~100–1 000 non-abonnés",
+            "sublabel": "Instagram la montre à des personnes pertinentes qui ne vous suivent PAS"
+          }
+        },
+        "C": {
+          "data": {
+            "tag": "Phase 2",
+            "label": "Fenêtre critique : ~90 minutes",
+            "sublabel": "Les premières performances déterminent si le reel décolle ou stagne"
+          }
+        },
+        "D": {
+          "data": {
+            "tag": "Décision",
+            "label": "Retient-il les spectateurs et génère-t-il de l'engagement pendant l'essai ?",
+            "details": {
+              "d1": {
+                "tag": "Signal",
+                "label": "Rétention à 3 secondes",
+                "sublabel": "Pourcentage de personnes qui regardent au-delà de la 3e seconde. Un bon repère : 60 % ou plus."
+              },
+              "d2": {
+                "tag": "Signal",
+                "label": "Engagement initial",
+                "sublabel": "J'aime et commentaires de l'échantillon ; Instagram les compare à ceux de reels similaires."
+              },
+              "d3": {
+                "tag": "Astuce",
+                "label": "Comment améliorer l'accroche",
+                "sublabel": "Du mouvement + un gros texte dès la première image. Pas d'intro : allez droit à la valeur."
+              }
+            }
+          }
+        },
+        "E": {
+          "data": {
+            "tag": "Résultat",
+            "label": "Diffusion limitée",
+            "sublabel": "Le reel reste dans le groupe test. Ajustez l'accroche et réessayez."
+          }
+        },
+        "F": {
+          "data": {
+            "tag": "Décision · Tour 2",
+            "label": "Génère-t-il des messages privés et des partages ? (dark social)",
+            "details": {
+              "f1": {
+                "tag": "Signal",
+                "label": "Dark social",
+                "sublabel": "Les messages privés et les partages pèsent plus que les j'aime : un signe de vraie valeur entre amis."
+              },
+              "f2": {
+                "tag": "Indicateur",
+                "label": "Ratio partages / portée",
+                "sublabel": "1 partage pour 100 vues est déjà un signal fort pour élargir la diffusion."
+              },
+              "f3": {
+                "tag": "Astuce",
+                "label": "Un CTA efficace",
+                "sublabel": "« Envoie ça à quelqu'un qui… » — demander directement un partage amplifie le dark social."
+              }
+            }
+          }
+        },
+        "G": {
+          "data": {
+            "tag": "Résultat",
+            "label": "Explorer et recommandations",
+            "sublabel": "Entre dans le système de ML à grande échelle : réseau neuronal à deux tours (FAISS) + classement MTML.",
+            "details": {
+              "g1": {
+                "tag": "Architecture",
+                "label": "Modèle à deux tours",
+                "sublabel": "Deux réseaux neuronaux (un pour vous, un pour la publication) cartographient le contenu avec des embeddings calculés hors ligne."
+              },
+              "g2": {
+                "tag": "Calcul",
+                "label": "Modèle de valeur (VM)",
+                "sublabel": "Score = W_click × P(click) + W_like × P(like) − W_seeless × P(see less)."
+              },
+              "g3": {
+                "tag": "Intégrité",
+                "label": "Diversité du fil",
+                "sublabel": "Règle stricte : jamais plus de 3 publications consécutives du même compte."
+              }
+            }
+          }
+        }
+      },
+      "edges": {
+        "eA-ADS": {
+          "label": "Publicité payante"
+        },
+        "eA-TRIAL": {
+          "label": "Mode test"
+        },
+        "eA-ORG": {
+          "label": "Organique"
+        },
+        "eD-E": {
+          "label": "Non"
+        },
+        "eD-F": {
+          "label": "Oui"
+        },
+        "eF-E": {
+          "label": "Faible"
+        },
+        "eF-G": {
+          "label": "Fort"
+        }
+      }
+    },
+    "facebook": {
+      "title": "EdgeRank de Facebook",
+      "videos": {
+        "0": {
+          "title": "Comment fonctionnent les algorithmes des réseaux aujourd'hui (Víctor Heras Media)",
+          "ariaLabel": "Lire la vidéo : Comment fonctionnent les algorithmes des réseaux aujourd'hui (Víctor Heras Media)"
+        }
+      },
+      "nodes": {
+        "A_TRIAL": {
+          "data": {
+            "tag": "Test",
+            "label": "Tests A/B pour Reels / publications",
+            "sublabel": "Facebook vous permet de tester des variantes (texte, vidéo) via Creator Studio.",
+            "details": {
+              "tr1": {
+                "tag": "Creator Studio",
+                "label": "Tests contrôlés",
+                "sublabel": "Vous pouvez lancer jusqu'à 4 variantes et Facebook diffuse la gagnante."
+              }
+            }
+          }
+        },
+        "A": {
+          "data": {
+            "tag": "Début",
+            "label": "Vous publiez du contenu",
+            "sublabel": "Entre dans l'inventaire disponible pour votre communauté"
+          }
+        },
+        "A_ADS": {
+          "data": {
+            "tag": "Pub",
+            "label": "Publicité payante (Meta Ads)",
+            "sublabel": "Participe aux enchères via l'algorithme de Meta, qui évalue la valeur totale de chaque candidat.",
+            "details": {
+              "ads1": {
+                "tag": "Enchère",
+                "label": "Formule de la valeur totale",
+                "sublabel": "Valeur totale = (Enchère × Taux d'action estimé) + Qualité de la publicité."
+              },
+              "ads2": {
+                "tag": "IA",
+                "label": "Phase d'apprentissage",
+                "sublabel": "L'ensemble de publicités a besoin d'environ 50 conversions stables en 7 jours pour s'optimiser."
+              },
+              "ads3": {
+                "tag": "Astuce",
+                "label": "Advantage+ et liquidité",
+                "sublabel": "Meta recommande des audiences larges et des budgets au niveau de la campagne pour donner de la flexibilité au ML."
+              }
+            }
+          }
+        },
+        "A_ORG": {
+          "data": {
+            "tag": "Organique",
+            "label": "Contenu organique",
+            "sublabel": "Entre dans le mode test de l'algorithme pour être évalué."
+          }
+        },
+        "S": {
+          "data": {
+            "tag": "Stratégies",
+            "label": "Ce qui fonctionne en ce moment",
+            "sublabel": "Voir les détails pour connaître les stratégies actuelles",
+            "details": {
+              "s1": {
+                "tag": "Stratégie",
+                "label": "Du contenu qui lance des conversations",
+                "sublabel": "Les interactions significatives (longs commentaires) augmentent la portée."
+              },
+              "s2": {
+                "tag": "Stratégie",
+                "label": "Vidéo native + Reels Facebook",
+                "sublabel": "Facebook favorise fortement son propre lecteur par rapport aux liens externes."
+              },
+              "s3": {
+                "tag": "Stratégie",
+                "label": "Groupes et communauté",
+                "sublabel": "Le contenu des groupes actifs apparaît presque toujours en haut du fil."
+              }
+            }
+          }
+        },
+        "B": {
+          "data": {
+            "tag": "Phase 1",
+            "label": "Inventaire du réseau",
+            "sublabel": "Publications d'amis, de Pages et de Groupes. Exclut le contenu qui enfreint les règles. Les publicités et recommandations sont gérées à part."
+          }
+        },
+        "C": {
+          "data": {
+            "tag": "Phase 2",
+            "label": "Présélection légère (~500 publications)",
+            "sublabel": "Un modèle rapide réduit des milliers de publications aux 500 plus pertinentes grâce à des signaux clés.",
+            "details": {
+              "c1": {
+                "tag": "Signal",
+                "label": "Signaux actifs",
+                "sublabel": "Commentaires, partages et réactions : les signaux qui pèsent le plus."
+              },
+              "c2": {
+                "tag": "Signal",
+                "label": "Signaux passifs",
+                "sublabel": "Temps de visionnage et clics : moins de poids, mais ils comptent quand même."
+              }
+            }
+          }
+        },
+        "D": {
+          "data": {
+            "tag": "Phase 3",
+            "label": "Classement génératif (GEM)",
+            "sublabel": "Un grand modèle de fondation prédit la valeur précise d'engagement et de conversion de cette présélection."
+          }
+        },
+        "E": {
+          "data": {
+            "tag": "Phase 4",
+            "label": "Score de pertinence",
+            "sublabel": "Chaque publication reçoit un score personnalisé pour chaque utilisateur"
+          }
+        },
+        "F": {
+          "data": {
+            "tag": "Résultat",
+            "label": "Fil classé",
+            "sublabel": "Trié du score le plus élevé au plus bas, mélangé aux publicités"
+          }
+        }
+      },
+      "edges": {
+        "eA-ADS": {
+          "label": "Publicité payante"
+        },
+        "eA-TRIAL": {
+          "label": "Mode test"
+        },
+        "eA-ORG": {
+          "label": "Organique"
+        }
+      }
+    },
+    "youtube": {
+      "title": "YouTube Shorts",
+      "videos": {
+        "0": {
+          "title": "YouTube a changé son algorithme en 2026 : comment il fonctionne aujourd'hui (Edu Serrano)",
+          "ariaLabel": "Lire la vidéo : YouTube a changé son algorithme en 2026 : comment il fonctionne aujourd'hui (Edu Serrano)"
+        },
+        "1": {
+          "title": "Guide complet de l'algorithme de YouTube en 2026 (vidIQ)",
+          "ariaLabel": "Lire la vidéo : Guide complet de l'algorithme de YouTube en 2026 (vidIQ)"
+        },
+        "2": {
+          "title": "Comment fonctionne le nouvel algorithme de YouTube en 2026 (Pol Tenas)",
+          "ariaLabel": "Lire la vidéo : Comment fonctionne le nouvel algorithme de YouTube en 2026 (Pol Tenas)"
+        }
+      },
+      "nodes": {
+        "A": {
+          "data": {
+            "tag": "Début",
+            "label": "Type de publication",
+            "sublabel": "Est-ce une publicité payante ou du contenu organique ?"
+          }
+        },
+        "A_ADS": {
+          "data": {
+            "tag": "Pub",
+            "label": "Publicité payante (Ads)",
+            "sublabel": "Indépendante de l'algorithme organique. Elle se développe grâce au budget (CPA / enchères).",
+            "details": {
+              "ads1": {
+                "tag": "Indicateur",
+                "label": "CPA et ROAS",
+                "sublabel": "Coût par acquisition et retour sur dépenses publicitaires : les indicateurs clés pour passer à l'échelle."
+              },
+              "ads2": {
+                "tag": "Indicateur",
+                "label": "CTR et CPM",
+                "sublabel": "Le taux de clics et le coût pour mille impressions déterminent l'efficacité de la publicité."
+              },
+              "ads3": {
+                "tag": "Astuce",
+                "label": "Ciblage",
+                "sublabel": "L'algorithme publicitaire cherche des conversions, pas seulement la rétention comme l'algorithme organique."
+              }
+            }
+          }
+        },
+        "A_ORG": {
+          "data": {
+            "tag": "Organique",
+            "label": "Contenu organique",
+            "sublabel": "La diffusion repose sur le CTR initial (vu vs. passé)."
+          }
+        },
+        "S": {
+          "data": {
+            "tag": "Stratégies",
+            "label": "Ce qui fonctionne en ce moment",
+            "sublabel": "Voir les détails pour connaître les stratégies actuelles",
+            "details": {
+              "s1": {
+                "tag": "Stratégie",
+                "label": "50 à 60 secondes",
+                "sublabel": "Une durée qui performe : une histoire complète sans remplissage."
+              },
+              "s2": {
+                "tag": "Stratégie",
+                "label": "Reliez vos Shorts à votre chaîne",
+                "sublabel": "Les Shorts qui mènent à des vidéos longues transforment les spectateurs en abonnés."
+              },
+              "s3": {
+                "tag": "Stratégie",
+                "label": "Titres pensés pour la recherche",
+                "sublabel": "Les Shorts sont indexés : utilisez la phrase exacte que votre audience chercherait."
+              }
+            }
+          }
+        },
+        "B": {
+          "data": {
+            "tag": "Phase 1 · Tour 1",
+            "label": "Génération de candidats (Recall)",
+            "sublabel": "Un réseau neuronal réduit des millions de vidéos à des centaines de candidates grâce à l'historique de visionnage, aux recherches et aux données démographiques.",
+            "details": {
+              "b1_yt": {
+                "tag": "ML",
+                "label": "Recherche des plus proches voisins",
+                "sublabel": "Trouve des vidéos pertinentes pour vous dans un immense espace d'embeddings, très rapidement."
+              }
+            }
+          }
+        },
+        "C": {
+          "data": {
+            "tag": "Décision",
+            "label": "Vu ou passé ?",
+            "details": {
+              "c1": {
+                "tag": "Indicateur",
+                "label": "Vu vs. passé",
+                "sublabel": "L'indicateur clé des Shorts : le pourcentage de personnes qui restent après la première image."
+              },
+              "c2": {
+                "tag": "Astuce",
+                "label": "La première image",
+                "sublabel": "Traitez-la comme une miniature : composition claire et texte lisible."
+              }
+            }
+          }
+        },
+        "D": {
+          "data": {
+            "tag": "Résultat",
+            "label": "Le Short stagne",
+            "sublabel": "Taux de passage élevé : le fil cesse de le montrer"
+          }
+        },
+        "E": {
+          "data": {
+            "tag": "Phase 2 · Tour 2",
+            "label": "Classement approfondi (Precision)",
+            "sublabel": "Un second réseau neuronal classe les candidates. Il optimise le temps de visionnage attendu, pas les clics.",
+            "details": {
+              "e1_yt": {
+                "tag": "ML",
+                "label": "Bonus de fraîcheur",
+                "sublabel": "Le modèle utilise l'âge de la vidéo comme critère pour éviter de ne recommander que des vidéos anciennes très vues."
+              }
+            }
+          }
+        },
+        "F": {
+          "data": {
+            "tag": "Décision",
+            "label": "Grande satisfaction des spectateurs ?",
+            "details": {
+              "f1": {
+                "tag": "Indicateur",
+                "label": "Enquêtes de satisfaction",
+                "sublabel": "YouTube interroge directement les spectateurs et ajuste la diffusion selon leurs réponses."
+              },
+              "f2": {
+                "tag": "Indicateur",
+                "label": "Session de visionnage prolongée",
+                "sublabel": "Si les spectateurs continuent à regarder après votre Short, le système vous récompense."
+              }
+            }
+          }
+        },
+        "G": {
+          "data": {
+            "tag": "Résultat",
+            "label": "Bibliothèque intemporelle",
+            "sublabel": "Refait surface pendant des mois grâce aux pics saisonniers et aux recherches"
+          }
+        }
+      },
+      "edges": {
+        "eA-ADS": {
+          "label": "Publicité payante"
+        },
+        "eA-TRIAL": {
+          "label": "Mode test"
+        },
+        "eA-ORG": {
+          "label": "Organique"
+        },
+        "eC-D": {
+          "label": "≥70 % passent"
+        },
+        "eC-E": {
+          "label": "Retient les spectateurs"
+        },
+        "eF-D": {
+          "label": "Non"
+        },
+        "eF-G": {
+          "label": "Oui"
+        }
+      }
+    }
+  },
+  "patterns": {
+    "1": {
+      "badge": "Cas 1",
+      "title": "Accroche faible",
+      "desc": "Une forte chute dans les 1 à 3 premières secondes, puis la courbe se stabilise.",
+      "meaning": "Les spectateurs restés après l'ouverture sont engagés et continuent à regarder.",
+      "cause": "Une accroche faible, une longue introduction ou un titre confus.",
+      "action": "Coupez l'intro. Passez directement à l'action dès la première seconde."
+    },
+    "2": {
+      "badge": "Cas 2",
+      "title": "Accroche faible + structure faible",
+      "desc": "Une forte chute initiale, suivie d'une baisse continue sans palier.",
+      "meaning": "En plus de l'accroche faible, le contenu ne retient pas non plus ceux qui sont restés.",
+      "cause": "Rythme lent, digressions ou manque d'accroches tout au long de la vidéo.",
+      "action": "Corrigez d'abord l'ouverture, puis restructurez le reste."
+    },
+    "3": {
+      "badge": "Cas 3",
+      "title": "Fin faible",
+      "desc": "Rétention stable sur la majeure partie de la vidéo, puis une chute brutale à la fin.",
+      "meaning": "Le contenu fonctionne bien jusqu'à un certain point, mais la fin déçoit.",
+      "cause": "Un CTA générique, un récapitulatif terne ou une chute décevante.",
+      "action": "Testez des fins qui donnent envie de voir votre prochain contenu."
+    },
+    "4": {
+      "badge": "Cas 4",
+      "title": "Attentes non tenues",
+      "desc": "Une baisse régulière tout au long de la vidéo, sans palier net.",
+      "meaning": "L'accroche promettait quelque chose que le reste du contenu ne tient pas au même niveau.",
+      "cause": "Un écart entre la promesse de l'accroche et la valeur réelle.",
+      "action": "Alignez l'accroche sur ce que vous allez vraiment apporter."
+    },
+    "5": {
+      "badge": "Cas 5",
+      "title": "Vidéo solide",
+      "desc": "Une petite chute initiale et une courbe presque plate pour le reste de la vidéo.",
+      "meaning": "L'accroche a fonctionné et le contenu retient l'intérêt du début à la fin.",
+      "cause": "Une promesse claire dès la première seconde + un rythme et une valeur constants.",
+      "action": "Identifiez exactement ce qui a marché et répétez la formule."
+    }
+  },
+  "ui": {
+    "title": "Architecture algorithmique",
+    "description": "Schéma interactif qui explique comment fonctionne l'algorithme de {{network}}.",
+    "selectedNetwork": "réseau sélectionné",
+    "close": "Fermer",
+    "suggest": "Proposer des idées",
+    "unavailable": "Le schéma d'architecture n'est pas disponible pour ce réseau",
+    "showDetails": "Voir les détails",
+    "hideDetails": "Masquer les détails",
+    "playVideo": "Lire la vidéo : {{title}}",
+    "video": "Vidéo",
+    "closeExpanded": "Fermer la vue agrandie",
+    "expandVideo": "Agrandir la vidéo",
+    "reduceVideo": "Réduire la vidéo",
+    "closeVideo": "Fermer la vidéo",
+    "suggestionDescription": "Partagez une idée ou une observation pour améliorer l'architecture algorithmique.",
+    "suggestionDescriptionNetwork": "Partagez une idée ou une observation pour améliorer l'architecture algorithmique de {{network}}.",
+    "suggestionPlaceholder": "Écrivez ici votre suggestion, idée ou observation…",
+    "sendSuggestion": "Envoyer la suggestion",
+    "cancel": "Annuler",
+    "signInSuggestion": "Connectez-vous pour envoyer votre suggestion",
+    "suggestionError": "Votre suggestion n'a pas pu être envoyée",
+    "suggestionSuccess": "Merci ! Nous avons bien reçu votre suggestion",
+    "retention": "Rétention",
+    "retentionTitle": "Diagnostic de rétention",
+    "retentionPrompt": "Choisissez un modèle de courbe pour comprendre pourquoi votre vidéo perd des spectateurs.",
+    "meaning": "Ce que ça signifie",
+    "cause": "Cause fréquente",
+    "action": "Que faire",
+    "back": "Retour aux modèles"
+  }
+}

@@ -786,6 +786,7 @@ const Features = () => {
       { hreflang: "es", href: "https://miiles.app/es/funciones" },
       { hreflang: "en", href: "https://miiles.app/en/funciones" },
       { hreflang: "pt", href: "https://miiles.app/pt/funciones" },
+      { hreflang: "fr", href: "https://miiles.app/fr/funciones" },
       { hreflang: "x-default", href: "https://miiles.app/es/funciones" },
     ],
     meta: [

@@ -1,0 +1,15 @@
+{
+  "copy": [
+    "Bonjour, j'ai besoin que tu te connectes à ma boutique Shopify pour que je puisse la modifier d'ici.\n\nInformations :\n\n•  Site :\n\n•  Thème publié :\n\n•  Dossier de travail :\n\nFais-le étape par étape, en expliquant brièvement chaque étape :\n\n1.  Vérifie si Shopify CLI est installé (shopify version). S'il ne l'est pas, ou si la mise à jour échoue pour des raisons de permissions, donne-moi la commande sudo pour que je l'exécute.\n\n2.  Télécharge le thème avec shopify theme pull dans le dossier de travail. Je me connecterai depuis le navigateur ; ne saisis jamais d'identifiants toi-même.\n\n3.  Dis-moi quelles sections contient la page d'accueil (templates/index.json).\n\n4.  Fais ce changement : dans le titre du hero, remplace \"made for you\" par \"made for everyone\".\n\n5.  Lance shopify theme dev pour que je puisse le prévisualiser sans toucher à la boutique publiée.\n\n6.  Quand je confirme, envoie UNIQUEMENT le fichier modifié vers le thème publié avec :\n\n   shopify theme push --only templates/index.json --allow-live --nodelete\n\n7.  Ne fais aucun push sans ma confirmation explicite. Consulte https://shopify.dev/docs/api/shopify-cli pour plus d'informations",
+    "Accueil",
+    "Connectez Shopify à votre assistant",
+    "Gérez votre boutique en ligne plus facilement : cet assistant vous aide à la modifier et à faire n'importe quel changement. Plus besoin de faire les changements à la main ; donnez-lui simplement une instruction et c'est fait.",
+    "Tutoriel : comment connecter Shopify à votre assistant Miiles",
+    "Prompt à copier",
+    "Copiez ce prompt, complétez vos informations (site, thème et dossier) et collez-le dans votre assistant.",
+    "Copié !",
+    "Copier le prompt",
+    "©",
+    "Miiles"
+  ]
+}

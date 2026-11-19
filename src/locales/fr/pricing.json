@@ -1,0 +1,85 @@
+{
+  "copy": {
+    "text1": "Tous les outils.",
+    "text2": "Un seul paiement.",
+    "text3": "Donnez de l'élan à votre marque avec la flexibilité dont vous avez besoin. Pas de petites lignes, juste l'élan que vous méritez."
+  },
+  "monthly": "Mensuel",
+  "annually": "Annuel",
+  "letsTalk": "Parlons-en !",
+  "perMonth": "/mois",
+  "perYear": "/an",
+  "plans": [
+    {
+      "id": "Gratis",
+      "name": "Gratuit",
+      "monthlyPrice": "0",
+      "annualPrice": "0",
+      "description": "Pour découvrir Miiles",
+      "features": [
+        "1 projet",
+        "Jusqu'à 10 collaborations",
+        "Assistance par e-mail"
+      ],
+      "cta": "Commencer gratuitement",
+      "prices": {
+        "MXN": {
+          "monthly": "0",
+          "annual": "0"
+        },
+        "USD": {
+          "monthly": "0",
+          "annual": "0"
+        }
+      }
+    },
+    {
+      "id": "Pro",
+      "name": "Pro",
+      "monthlyPrice": "24",
+      "annualPrice": "230",
+      "description": "Pour les créateurs en pleine croissance",
+      "features": [
+        "Projets illimités",
+        "Collaborations illimitées",
+        "Analyses avancées",
+        "Assistance prioritaire"
+      ],
+      "cta": "Passer au Pro",
+      "highlighted": true,
+      "annualBadge": "Économisez 20 % avec le forfait annuel",
+      "prices": {
+        "MXN": {
+          "monthly": "386",
+          "annual": "3712"
+        },
+        "USD": {
+          "monthly": "24",
+          "annual": "230"
+        }
+      }
+    },
+    {
+      "id": "Negocios",
+      "name": "Entreprise",
+      "monthlyPrice": "Parlons-en !",
+      "annualPrice": "Parlons-en !",
+      "description": "Pour les équipes et les entreprises",
+      "features": [
+        "Tout le forfait Pro",
+        "Comptes multi-utilisateurs",
+        "Accès à l'API",
+        "Gestionnaire de compte"
+      ],
+      "cta": "Nous contacter",
+      "customPrice": true
+    }
+  ],
+  "currency": "USD",
+  "currencies": {
+    "MXN": "Pesos",
+    "USD": "Dollars"
+  },
+  "seoTitle": "Tarifs de Miiles : forfaits Gratuit et Pro pour les créateurs",
+  "seoDescription": "Commencez gratuitement ou passez au Pro pour 24 USD par mois (230 USD par an, 20 % d'économie) : projets et collaborations illimités, analyses avancées et assistance prioritaire."
+}

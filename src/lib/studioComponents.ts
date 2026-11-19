@@ -21,13 +21,13 @@ export type StudioComponent = {
 export const STUDIO_COMPONENTS = repoComponents as StudioComponent[];
 
 /** Categorías para los filtros, en este orden (solo se muestran las que tienen componentes). */
-export const COMPONENT_CATEGORIES: { id: string; es: string; en: string; pt: string }[] = [
-  { id: "Carrusel", es: "Carruseles", en: "Carousels", pt: "Carrosséis" },
-  { id: "Galería", es: "Galerías", en: "Galleries", pt: "Galerias" },
-  { id: "Texto", es: "Texto", en: "Text", pt: "Texto" },
-  { id: "Elemento", es: "Elementos", en: "Elements", pt: "Elementos" },
-  { id: "Transición", es: "Transiciones", en: "Transitions", pt: "Transições" },
-  { id: "Escena", es: "Escenas", en: "Scenes", pt: "Cenas" },
+export const COMPONENT_CATEGORIES: { id: string; es: string; en: string; pt: string; fr: string }[] = [
+  { id: "Carrusel", es: "Carruseles", en: "Carousels", pt: "Carrosséis", fr: "Carrousels" },
+  { id: "Galería", es: "Galerías", en: "Galleries", pt: "Galerias", fr: "Galeries" },
+  { id: "Texto", es: "Texto", en: "Text", pt: "Texto", fr: "Texte" },
+  { id: "Elemento", es: "Elementos", en: "Elements", pt: "Elementos", fr: "Éléments" },
+  { id: "Transición", es: "Transiciones", en: "Transitions", pt: "Transições", fr: "Transitions" },
+  { id: "Escena", es: "Escenas", en: "Scenes", pt: "Cenas", fr: "Scènes" },
 ];
 
 /**
@@ -71,7 +71,7 @@ export async function copyText(text: string): Promise<void> {
 
 /** Prompt listo para pegar: instrucción breve + el código completo. */
 export function buildComponentPrompt(c: StudioComponent, code: string): string {
-  const en = (i18n.language || "es").startsWith("en");
+  const en = ["en", "fr"].includes((i18n.language || "es").slice(0, 2));   // en francés el prompt va en inglés
   const file = c.code_filename;
   const head = en
     ? `Implement this video animation ("${c.title}") in my project${c.stack ? ` (${c.stack})` : ""}.\n` +

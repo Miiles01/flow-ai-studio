@@ -247,6 +247,7 @@ const MorphNavbar = ({ isLanding }: MorphNavbarProps) => {
                             { code: "es", label: t("home.navbar.spanish"), active: langOf(i18n.language) === "es" },
                             { code: "en", label: t("home.navbar.english"), active: langOf(i18n.language) === "en" },
                             { code: "pt", label: t("home.navbar.portuguese"), active: langOf(i18n.language) === "pt" },
+                            { code: "fr", label: t("home.navbar.french"), active: langOf(i18n.language) === "fr" },
                           ].map((lang) => (
                             <button
                               key={lang.code}

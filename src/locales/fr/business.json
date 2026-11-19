@@ -1,0 +1,30 @@
+{
+  "inquiry": {
+    "text1": "Le nom et l'e-mail sont obligatoires",
+    "text2": "Votre demande n'a pas pu être envoyée. Veuillez réessayer.",
+    "text3": "Parlons de votre",
+    "text4": "équipe.",
+    "text5": "Parlez-nous de votre entreprise et nous vous contacterons pour créer un forfait Entreprise adapté à vos besoins.",
+    "text6": "Nom *",
+    "text7": "Votre nom",
+    "text8": "E-mail *",
+    "text9": "vous@entreprise.com",
+    "text10": "Entreprise",
+    "text11": "Nom de l'entreprise",
+    "text12": "Téléphone",
+    "text13": "+33 ...",
+    "text14": "Taille de l'équipe",
+    "text15": "Ex. 5–20 personnes",
+    "text16": "Site web ou réseaux sociaux",
+    "text17": "siteweb.com / @utilisateur",
+    "text18": "Comment pouvons-nous vous aider ?",
+    "text19": "Dites-nous en un peu plus...",
+    "text20": "Envoyer la demande"
+  },
+  "thanks": {
+    "text1": "Merci !",
+    "text2": "Nous vous recontactons très vite.",
+    "text3": "Nous avons bien reçu votre demande de forfait Entreprise. Notre équipe vous contactera prochainement à l'adresse e-mail indiquée.",
+    "text4": "Retour à l'accueil"
+  }
+}

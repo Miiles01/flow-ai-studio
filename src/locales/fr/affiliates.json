@@ -1,0 +1,236 @@
+{
+  "headline": "Créer n'a jamais été aussi simple",
+  "getPro": "Obtenir le forfait Pro",
+  "trustedBy": "Ils nous font confiance",
+  "affiliates": "Affiliés",
+  "shareCommission": "Partagez votre lien. Gagnez des commissions.",
+  "proPlan": "Forfait Pro",
+  "boardsTitle": "Mes tableaux",
+  "newBoard": "Nouveau tableau",
+  "generateLink": "Générez votre lien",
+  "noForms": "Pas de formulaires compliqués.",
+  "noWaiting": "Pas de longue validation.",
+  "start": "Commencez",
+  "journey": "votre parcours",
+  "today": "aujourd'hui",
+  "portfolioTitle": "Le portfolio d’Ale, créé avec Miiles",
+  "heroAlt": "Trois créatrices de contenu souriantes",
+  "ariana": "Ariana",
+  "copied": "Lien copié !",
+  "shareEarn": "Partagez-le et commencez à gagner",
+  "mission": "Nous sommes Miiles. Nous créons une technologie qui aide les créateurs à créer sans limites.",
+  "heroBefore": "Rejoignez le programme d'affiliation Miiles. Partagez votre lien et gagnez ",
+  "heroAfter": " de commission sur les abonnements.",
+  "commission": "25 %",
+  "aiBefore": "Créez avec la ",
+  "aiPower": "puissance",
+  "aiAfter": "de l'IA",
+  "anyBefore": "Commencez de",
+  "any": "n'importe où",
+  "anyAfter": "",
+  "mobileBefore": "Commencez ",
+  "mobileAccent": "aujourd'hui",
+  "steps": [
+    {
+      "label": "Forfait Pro gratuit",
+      "detail": "Devenez affilié et débloquez gratuitement tous les outils de Miiles. Utilisez-les, partagez-les, gagnez de l'argent."
+    },
+    {
+      "label": "Votre lien d'affiliation",
+      "detail": "Ouvrez Affiliés dans votre barre latérale et créez votre lien unique en un clic."
+    },
+    {
+      "label": "Gagnez 25 %",
+      "detail": "Partagez-le sur les réseaux, dans vos stories ou votre bio. Chaque abonnement vendu via votre lien vous rapporte 25 %."
+    },
+    {
+      "label": "Communauté exclusive",
+      "detail": "Accédez à une communauté privée, à des contenus et à des événements que vous ne trouverez nulle part ailleurs."
+    }
+  ],
+  "boards": [
+    "Nouveau",
+    "Campagne T3",
+    "UGC d'été",
+    "Stratégie",
+    "Lancement",
+    "Branding"
+  ],
+  "navigation": [
+    {
+      "label": "Accueil",
+      "active": false
+    },
+    {
+      "label": "Tableaux",
+      "active": true
+    },
+    {
+      "label": "Studio",
+      "active": false
+    }
+  ],
+  "buildCards": [
+    {
+      "title": "Créer un portfolio",
+      "desc": "Créez un portfolio professionnel avec un seul prompt : montrez qui vous êtes, ce que vous vendez et comment vous le vendez, prêt à partager.",
+      "image": "/home-portafolio.webp",
+      "alt": "Portfolio généré par l'IA de Miiles avec la photo et le nom de la créatrice"
+    },
+    {
+      "title": "Clients et campagnes",
+      "desc": "Organisez clients, campagnes, contrats et revenus avec des widgets sur le même tableau. Toute votre activité sous les yeux, sans changer d'outil.",
+      "image": "/home-clientes.webp",
+      "alt": "Widgets de clients et de campagnes sur un tableau Miiles"
+    },
+    {
+      "title": "Algorithmes des réseaux",
+      "desc": "Comprenez comment TikTok, Instagram, YouTube et Facebook décident quoi montrer, et quelles stratégies utilisent les créateurs qui grandissent.",
+      "image": "/home-algoritmos.webp",
+      "alt": "Schéma du fonctionnement de l'algorithme d'un réseau social"
+    }
+  ],
+  "portfolioCopy": [
+    {
+      "original": "Hola,",
+      "text": "Bonjour,"
+    },
+    {
+      "original": "soy",
+      "text": "je suis"
+    },
+    {
+      "original": "Principal",
+      "text": "Navigation principale"
+    },
+    {
+      "original": "Marcas",
+      "text": "Marques"
+    },
+    {
+      "original": "Contenido",
+      "text": "Contenu"
+    },
+    {
+      "original": "Nichos",
+      "text": "Niches"
+    },
+    {
+      "original": "Sobre mí",
+      "text": "À propos"
+    },
+    {
+      "original": "Testimonios",
+      "text": "Témoignages"
+    },
+    {
+      "original": "Contacto",
+      "text": "Contact"
+    },
+    {
+      "original": "Menú",
+      "text": "Menu"
+    },
+    {
+      "original": "Cerrar ✕",
+      "text": "Fermer ✕"
+    },
+    {
+      "original": "Menú móvil",
+      "text": "Menu mobile"
+    },
+    {
+      "original": "Visor de contenido",
+      "text": "Visionneuse de contenu"
+    },
+    {
+      "original": "Cerrar",
+      "text": "Fermer"
+    },
+    {
+      "original": "Portafolio",
+      "text": "Portfolio"
+    },
+    {
+      "original": "Ale, creadora de contenido UGC",
+      "text": "Ale, créatrice de contenu UGC"
+    },
+    {
+      "original": "Soy Ale, creadora de contenido UGC. Hago videos y fotos que se sienten como la recomendación de una amiga.",
+      "text": "Je suis Ale, créatrice de contenu UGC. Je fais des vidéos et des photos qui ressemblent à la recommandation d'une amie."
+    },
+    {
+      "original": "Trabajo con marcas de belleza, moda y bienestar que quieren conectar con su audiencia de forma natural.",
+      "text": "J'aide les marques de beauté, de mode et de bien-être à toucher leur audience de façon naturelle."
+    },
+    {
+      "original": "Creadora de contenido UGC",
+      "text": "Créatrice de contenu UGC"
+    },
+    {
+      "original": "Marcas que confiaron en mí",
+      "text": "Des marques qui m'ont fait confiance"
+    },
+    {
+      "original": "Hagamos algo juntas",
+      "text": "Créons quelque chose ensemble"
+    },
+    {
+      "original": "Mis redes",
+      "text": "Mes réseaux"
+    },
+    {
+      "original": "Escríbeme directo",
+      "text": "Écrivez-moi directement"
+    },
+    {
+      "original": "© 2026 Ale · Plantilla UGC de We Are Miiles",
+      "text": "© 2026 Ale · Modèle UGC de We Are Miiles"
+    },
+    {
+      "original": "Ale · Portafolio (demo)",
+      "text": "Ale · Portfolio (démo)"
+    },
+    {
+      "original": "Portafolio de Ale, creadora de contenido UGC: videos y fotos para marcas de belleza, moda y bienestar.",
+      "text": "Portfolio UGC d'Ale : vidéos et photos pour des marques de beauté, de mode et de bien-être."
+    }
+  ],
+  "phases": {
+    "phase1": "Phase 1",
+    "phase1Title": "Intégration",
+    "phase1Note": "Pour ceux qui débutent et veulent essayer Miiles. Nous vous conseillons d'enregistrer au moins une vidéo pour vos réseaux afin de voir comment votre audience réagit.",
+    "phase1Items": [
+      {
+        "title": "Forfait Pro permanent",
+        "desc": "Toutes les fonctionnalités Pro actives dès le premier jour, sans abonnement mensuel."
+      },
+      {
+        "title": "Votre portfolio 24 h/24",
+        "desc": "Votre propre page à votre nom, toujours en ligne et prête à partager."
+      },
+      {
+        "title": "Accès anticipé aux outils, skills et composants",
+        "desc": "Les nouveaux outils de Miiles vous arrivent avant tout le monde."
+      },
+      {
+        "title": "25 % de commission, sans limite",
+        "desc": "Vous gagnez 25 % de chaque vente que vous apportez, autant de fois que vous voulez."
+      }
+    ],
+    "phase2": "Phase 2",
+    "phase2Title": "Fidélité",
+    "phase2Note": "Pour ceux qui veulent grandir avec Miiles.",
+    "phase2Items": [
+      {
+        "title": "Tous les avantages de la Phase 1",
+        "desc": "Forfait Pro, portfolio 24 h/24, accès anticipé et 25 % de commission illimitée, tant que vous restez avec nous."
+      }
+    ],
+    "bonus": "Bonus négociables",
+    "bonusDesc": "Des accords directs quand votre volume le justifie."
+  },
+  "headlineAccent": "Créer",
+  "headlineMid": "n'a",
+  "headlineAfter": "jamais été aussi simple"
+}
