@@ -4,6 +4,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import { trackEvent } from "@/lib/trackEvent";
 import { motion } from "framer-motion";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 
 // Checkbox Icon Component
 const CheckIcon = ({ highlighted }: { highlighted?: boolean }) => {
@@ -92,24 +93,17 @@ export default function PricingTable({ onPlanSelect, isModal }: PricingTableProp
     <>
       {/* Selector de Moneda (arriba) y de Ciclo (Mensual / Anual) */}
       <section className="flex flex-col items-center justify-center gap-3 text-center px-6 pb-12">
-        <div className="relative flex w-48 p-1 bg-[#F5F5F8] rounded-full mx-auto cursor-pointer border border-gray-100" role="group" aria-label="Moneda">
-          <motion.div
-            className="absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] bg-white rounded-full ring-1 ring-black/10"
-            animate={{ x: moneda === "MXN" ? 0 : "100%" }}
-            transition={{ type: "spring", stiffness: 350, damping: 30 }}
-          />
-          {(["MXN", "USD"] as Moneda[]).map((m) => (
-            <button
-              key={m}
-              type="button"
-              aria-pressed={moneda === m}
-              onClick={() => setMoneda(m)}
-              className={`relative z-10 flex-1 py-1.5 text-[11px] font-normal transition-colors duration-300 ${moneda === m ? "text-black" : "text-gray-400"}`}
-            >
-              {(monedas?.[m] ?? m) + " " + m}
-            </button>
-          ))}
-        </div>
+        {/* Moneda: menú desplegable */}
+        <Select value={moneda} onValueChange={(v) => setMoneda(v as Moneda)}>
+          <SelectTrigger aria-label="Moneda" className="h-9 w-auto gap-2 rounded-full border border-gray-100 bg-[#F5F5F8] px-4 text-xs font-normal text-black shadow-none focus:ring-0 focus:ring-offset-0">
+            <SelectValue />
+          </SelectTrigger>
+          <SelectContent className="rounded-2xl">
+            {(["MXN", "USD"] as Moneda[]).map((m) => (
+              <SelectItem key={m} value={m} className="text-xs">{(monedas?.[m] ?? m) + " (" + m + ")"}</SelectItem>
+            ))}
+          </SelectContent>
+        </Select>
         <div className="relative flex w-64 p-1 bg-[#F5F5F8] rounded-full mx-auto cursor-pointer border border-gray-100 shadow-inner">
           <motion.div
             className="absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] bg-black rounded-full"
