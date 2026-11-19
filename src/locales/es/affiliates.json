@@ -199,6 +199,7 @@
   "phases": {
     "phase1": "Fase 1",
     "phase1Title": "Iniciación",
+    "phase1Note": "Para quienes van empezando y quieren probar Miiles. Te recomendamos grabar al menos un video para tus redes y ver cómo responde tu audiencia.",
     "phase1Items": [
       {
         "title": "Plan Pro permanente",
@@ -219,7 +220,7 @@
     ],
     "phase2": "Fase 2",
     "phase2Title": "Lealtad",
-    "phase2Note": "Para quienes siguen con nosotros:",
+    "phase2Note": "Para quienes quieren escalar con Miiles.",
     "phase2Items": [
       {
         "title": "Todos los beneficios de la Fase 1",

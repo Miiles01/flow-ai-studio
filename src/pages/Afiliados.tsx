@@ -1108,7 +1108,8 @@ const Afiliados = () => {
                         {t(`affiliates.phases.phase${n}`)}
                       </span>
                       <div className="mt-4 text-3xl font-normal tracking-tight">{t(`affiliates.phases.phase${n}Title`)}</div>
-                      {isTwo && <p className="mt-3 text-sm font-light text-white/60">{t("affiliates.phases.phase2Note")}</p>}
+                      {/* Subtítulo: para quién es cada fase */}
+                      <p className={`mt-3 text-sm font-light ${isTwo ? 'text-white/60' : 'text-gray-500'}`}>{t(`affiliates.phases.phase${n}Note`)}</p>
                       <ul className="mt-6 space-y-4">
                         {items.map((b) => (
                           <li key={b.title} className="flex items-start gap-3 text-[15px] font-light">
