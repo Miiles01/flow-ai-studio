@@ -1,6 +1,6 @@
 # Objetivo actual
-- [ ] Afiliados: «Crear cuenta» → «Obtener Plan Pro», que abre un acceso especial que da Plan Pro gratis 30 días.
-- [ ] Ese botón abre primero un pop-up que pide el código de invitación 20CREATOR26; con el código correcto se entra o registra; regalo una vez por cuenta.
+- [x] Afiliados: «Crear cuenta» → «Obtener Plan Pro», que abre un acceso especial que da Plan Pro gratis 30 días.
+- [x] Ese botón abre primero un pop-up que pide el código de invitación 20CREATOR26; con el código correcto se entra o registra; regalo una vez por cuenta.
 - [x] Completar español e inglés en Arquitectura algorítmica: cuatro diagramas, detalles, títulos y controles de video, retención y sugerencias; selector probado con sesión y 16 pruebas pasando.
 - [x] Titular de la home: «Todo creador necesita una base» + «Descubre cómo los creadores crean sistemas que funcionan.»; verificado en español e inglés y con espacio visible tras la palabra en cursiva.
 - [x] En la home principal (no Afiliados), ocultar temporalmente el input, poner Explorar plantillas y añadir debajo un carrusel de fotografías de Studio con pausa al pasar el cursor; imágenes, movimiento, pausa e idiomas verificados.

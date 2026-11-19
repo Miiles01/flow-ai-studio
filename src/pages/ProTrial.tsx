@@ -102,10 +102,10 @@ const ProTrial = () => {
       className="bg-white w-full py-8 px-4 md:py-12 md:px-8 rounded-[32px] flex flex-col justify-center shadow-[0_10px_40px_-15px_rgba(28,30,42,0.15)]"
     >
       <div className="text-center mb-8">
-        <Link to="/" className="inline-block mb-6 hover:opacity-80 transition-opacity">
+        <Link to="/" className="block w-fit mx-auto mb-6 hover:opacity-80 transition-opacity">
           <img src={logotipoSvg} alt="miiles" className="h-6 mx-auto" />
         </Link>
-        <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-miiles-pink-light text-black text-xs font-normal mb-4">
+        <span className="w-fit mx-auto flex items-center gap-1.5 px-3 py-1 rounded-full bg-miiles-pink-light text-black text-xs font-normal mb-4">
           <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C12.3 8.8 15.2 11.7 24 12C15.2 12.3 12.3 15.2 12 24C11.7 15.2 8.8 12.3 0 12C8.8 11.7 11.7 8.8 12 0Z" /></svg>
           {t("protrial.badge")}
         </span>
