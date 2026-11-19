@@ -1,12 +1,6 @@
 {
   "badge": "1 month free",
   "title": "Get the Pro plan",
-  "subtitle": "Sign in or create your account and use Miiles Pro free for one month.",
-  "perks": [
-    "Unlimited boards and widgets",
-    "Unlimited portfolio pages",
-    "Every Studio template"
-  ],
   "tabSignup": "Create account",
   "tabLogin": "I have an account",
   "name": "Your name",

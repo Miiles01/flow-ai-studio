@@ -5,7 +5,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { lovable } from "@/integrations/lovable/index";
 import { toast } from "sonner";
 import { motion } from "framer-motion";
-import { Mail, Lock, User, Loader2, Eye, EyeOff, Check } from "lucide-react";
+import { Mail, Lock, User, Loader2, Eye, EyeOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import logotipoSvg from "@/assets/miiles/logotipo.svg";
@@ -89,8 +89,6 @@ const ProTrial = () => {
     if (result.error) toast.error(t("protrial.googleError"));
   };
 
-  const perks = t("protrial.perks", { returnObjects: true }) as string[];
-
   if (user && code) {
     return (
       <div className="bg-white w-full py-16 px-8 rounded-[32px] flex flex-col items-center justify-center gap-4 shadow-[0_10px_40px_-15px_rgba(28,30,42,0.15)]">
@@ -115,17 +113,7 @@ const ProTrial = () => {
           {t("protrial.badge")}
         </span>
         <h1 className="text-[28px] font-medium text-black leading-tight">{code ? t("protrial.title") : t("protrial.codeTitle")}</h1>
-        <p className="text-sm text-miiles-gray-400 font-light mt-2">{code ? t("protrial.subtitle") : t("protrial.codeSubtitle")}</p>
       </div>
-
-      <ul className="grid gap-2 mb-8 mx-auto">
-        {Array.isArray(perks) && perks.map((p) => (
-          <li key={p} className="flex items-center gap-2 text-sm text-black font-light">
-            <Check size={16} className="text-miiles-blue shrink-0" />
-            {p}
-          </li>
-        ))}
-      </ul>
 
       {!code || user ? null : checkEmail ? (
         <div className="text-center rounded-2xl bg-miiles-gray-50 px-6 py-8">

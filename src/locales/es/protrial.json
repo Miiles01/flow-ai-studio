@@ -1,12 +1,6 @@
 {
   "badge": "1 mes gratis",
   "title": "Obtén Plan Pro",
-  "subtitle": "Entra o crea tu cuenta y usa Miiles Pro gratis durante un mes.",
-  "perks": [
-    "Tableros y widgets sin límite",
-    "Páginas de portafolio ilimitadas",
-    "Todas las plantillas de Studio"
-  ],
   "tabSignup": "Crear cuenta",
   "tabLogin": "Ya tengo cuenta",
   "name": "Tu nombre",
