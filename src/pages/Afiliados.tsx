@@ -957,11 +957,11 @@ const Afiliados = () => {
 
             <div data-fade className="flex items-center justify-center gap-4 flex-wrap">
               <Link
-                to={localePath("/register")}
+                to="/obtener-pro"
                 className="px-8 py-4 rounded-full bg-black text-white text-[15px] font-normal hover:-translate-y-2 transition-transform duration-300 flex items-center gap-2"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C12.3 8.8 15.2 11.7 24 12C15.2 12.3 12.3 15.2 12 24C11.7 15.2 8.8 12.3 0 12C8.8 11.7 11.7 8.8 12 0Z" /></svg>
-                {t("affiliates.createAccount")}
+                {t("affiliates.getPro")}
               </Link>
             </div>
 
@@ -1181,13 +1181,13 @@ const Afiliados = () => {
                 {t("affiliates.mobileBefore")}<span style={{ fontFamily: "'Welth Catritz', serif", overflow: 'visible' }} className="pr-1 italic tracking-normal font-light">{t("affiliates.mobileAccent")}</span>
               </h2>
               <Link
-                to={localePath("/register")}
+                to="/obtener-pro"
                 className="px-8 py-4 rounded-full bg-black text-white text-[15px] font-normal inline-flex items-center justify-center gap-2 hover:-translate-y-1 transition-transform duration-300"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
                   <path d="M12 0C12.3 8.8 15.2 11.7 24 12C15.2 12.3 12.3 15.2 12 24C11.7 15.2 8.8 12.3 0 12C8.8 11.7 11.7 8.8 12 0Z" />
                 </svg>
-                {t("affiliates.createAccount")}
+                {t("affiliates.getPro")}
               </Link>
             </div>
           </div>

@@ -41,6 +41,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     return () => subscription.unsubscribe();
   }, []);
 
+  // Move accounts back to Free once their 30-day Pro trial ends (server decides).
+  const userId = user?.id;
+  useEffect(() => {
+    if (!userId) return;
+    supabase.rpc("refresh_my_plan").then(({ error }) => {
+      if (error) console.warn("refresh_my_plan:", error.message);
+    });
+  }, [userId]);
+
   const signOut = async () => {
     await supabase.auth.signOut();
   };

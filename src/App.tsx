@@ -49,6 +49,7 @@ import OAuthConsent from "./pages/OAuthConsent";
 import { oauthReturnPath } from "@/lib/oauth-return-path";
 
 import AuthLayout from "./components/AuthLayout";
+import ProTrial from "./pages/ProTrial";
 import LanguageLayout from "./components/LanguageLayout";
 import { useEffect, useState } from "react";
 import { capturePendingReferral, registerPendingReferral } from "@/lib/referral";
@@ -170,6 +171,7 @@ const App = () => (
               <Route element={<AuthLayout />}>
                 <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />
                 <Route path="/register" element={<PublicRoute><Register /></PublicRoute>} />
+                <Route path="/obtener-pro" element={<ProTrial />} />
               </Route>
 
               <Route path="/admin" element={<Admin />} />

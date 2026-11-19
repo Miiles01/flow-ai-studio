@@ -470,6 +470,27 @@ export type Database = {
         }
         Relationships: []
       }
+      pro_trials: {
+        Row: {
+          expires_at: string
+          source: string
+          started_at: string
+          user_id: string
+        }
+        Insert: {
+          expires_at: string
+          source?: string
+          started_at?: string
+          user_id: string
+        }
+        Update: {
+          expires_at?: string
+          source?: string
+          started_at?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           avatar_url: string | null
@@ -1109,6 +1130,7 @@ export type Database = {
       can_access_flow: { Args: { _flow_id: string }; Returns: boolean }
       can_access_flow_topic: { Args: { _topic: string }; Returns: boolean }
       can_edit_flow: { Args: { _flow_id: string }; Returns: boolean }
+      claim_pro_trial: { Args: never; Returns: Json }
       find_user_by_email: {
         Args: { p_email: string }
         Returns: {
@@ -1183,6 +1205,7 @@ export type Database = {
           total_referrals: number
         }[]
       }
+      has_active_pro_trial: { Args: { _user_id: string }; Returns: boolean }
       has_active_subscription: {
         Args: { check_env?: string; user_uuid: string }
         Returns: boolean
@@ -1201,6 +1224,7 @@ export type Database = {
         Args: { p_user_id: string }
         Returns: undefined
       }
+      refresh_my_plan: { Args: never; Returns: string }
       register_referral: { Args: { p_username: string }; Returns: boolean }
       show_limit: { Args: never; Returns: number }
       show_trgm: { Args: { "": string }; Returns: string[] }

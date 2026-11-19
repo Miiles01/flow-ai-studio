@@ -25,6 +25,11 @@ function isActiveStatus(status: string, periodEnd?: number | null): boolean {
 }
 
 async function syncProfilePlan(userId: string, plan: string) {
+  // Keep Pro while a free 30-day trial is still running.
+  if (plan === "free") {
+    const { data: trial } = await getSupabase().rpc("has_active_pro_trial", { _user_id: userId });
+    if (trial === true) plan = "pro";
+  }
   await getSupabase().from("profiles").update({ plan }).eq("user_id", userId);
 }
 
