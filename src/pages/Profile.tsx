@@ -89,6 +89,13 @@ const Profile = () => {
     supabase.from("user_sites").select("path").eq("owner_id", user.id).eq("status", "published").order("created_at")
       .then(({ data }) => setMySites((data ?? []).map((r: { path: string }) => r.path)));
   }, [user]);
+  // Free Pro trial (claimed with an invitation code): Pro plan without a paid subscription.
+  const [trialExpiresAt, setTrialExpiresAt] = useState<string | null>(null);
+  useEffect(() => {
+    if (!user || plan !== "pro" || (isActive && subscription)) { setTrialExpiresAt(null); return; }
+    supabase.from("pro_trials").select("expires_at").eq("user_id", user.id).gt("expires_at", new Date().toISOString()).maybeSingle()
+      .then(({ data }) => setTrialExpiresAt(data?.expires_at ?? null));
+  }, [user, plan, isActive, subscription]);
   const [videoUrl1, setVideoUrl1] = useState("");
   const [videoUrl2, setVideoUrl2] = useState("");
   const [videoUrl3, setVideoUrl3] = useState("");
@@ -327,25 +334,31 @@ const Profile = () => {
                     <span className="text-xs font-light text-muted-foreground block">
                       {plan === "free"
                         ? dt("dashboard.text143")
-                        : subscription?.cancel_at_period_end && subscription?.current_period_end
-                          ? dt("dashboard.dynamic265", { value1: new Date(subscription.current_period_end).toLocaleDateString(dashboardI18n.language) })
-                          : subscription?.current_period_end
-                            ? dt("dashboard.dynamic266", { value1: new Date(subscription.current_period_end).toLocaleDateString(dashboardI18n.language) })
-                            : dt("dashboard.text144")}
+                        : trialExpiresAt
+                          ? dt("dashboard.dynamicTrial", { value1: new Date(trialExpiresAt).toLocaleDateString(dashboardI18n.language) })
+                          : subscription?.cancel_at_period_end && subscription?.current_period_end
+                            ? dt("dashboard.dynamic265", { value1: new Date(subscription.current_period_end).toLocaleDateString(dashboardI18n.language) })
+                            : subscription?.current_period_end
+                              ? dt("dashboard.dynamic266", { value1: new Date(subscription.current_period_end).toLocaleDateString(dashboardI18n.language) })
+                              : dt("dashboard.text144")}
                     </span>
                   </div>
                   
                   <div className="text-right">
                     <span className="text-2xl font-semibold block">
                       {plan === "pro"
-                        ? ({ pro_yearly: "$3,712", pro_monthly_usd: "$24", pro_yearly_usd: "$230" } as Record<string, string>)[subscription?.price_id ?? ""] ?? "$386"
+                        ? trialExpiresAt
+                          ? dt("dashboard.trialLabel")
+                          : ({ pro_yearly: "$3,712", pro_monthly_usd: "$24", pro_yearly_usd: "$230" } as Record<string, string>)[subscription?.price_id ?? ""] ?? "$386"
                         : plan === "business" || plan === "negocios" ? "Custom" : "$0"}
                     </span>
                     <span className="text-[10px] font-light text-muted-foreground block">
                       {plan === "free"
                         ? dt("dashboard.text143")
                         : plan === "pro"
-                          ? (subscription?.price_id === "pro_yearly" ? dt("dashboard.text145") : subscription?.price_id === "pro_yearly_usd" ? "USD / year" : subscription?.price_id === "pro_monthly_usd" ? "USD / month" : "MXN / mes")
+                          ? trialExpiresAt
+                            ? dt("dashboard.trialSub")
+                            : (subscription?.price_id === "pro_yearly" ? dt("dashboard.text145") : subscription?.price_id === "pro_yearly_usd" ? "USD / year" : subscription?.price_id === "pro_monthly_usd" ? "USD / month" : "MXN / mes")
                           : dt("dashboard.text146")}
                     </span>
                   </div>
