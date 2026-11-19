@@ -95,12 +95,12 @@ export default function PricingTable({ onPlanSelect, isModal }: PricingTableProp
       <section className="flex flex-col items-center justify-center gap-3 text-center px-6 pb-12">
         {/* Moneda: menú desplegable */}
         <Select value={moneda} onValueChange={(v) => setMoneda(v as Moneda)}>
-          <SelectTrigger aria-label="Moneda" className="h-9 w-auto gap-2 rounded-full border border-gray-100 bg-[#F5F5F8] px-4 text-xs font-normal text-black shadow-none focus:ring-0 focus:ring-offset-0">
+          <SelectTrigger aria-label="Moneda" className="h-9 w-auto gap-2 rounded-full border border-gray-200 bg-white px-4 text-xs font-normal text-black shadow-none focus:ring-0 focus:ring-offset-0">
             <SelectValue />
           </SelectTrigger>
-          <SelectContent className="rounded-2xl">
+          <SelectContent className="rounded-2xl border border-gray-200 bg-white shadow-none">
             {(["MXN", "USD"] as Moneda[]).map((m) => (
-              <SelectItem key={m} value={m} className="text-xs">{(monedas?.[m] ?? m) + " (" + m + ")"}</SelectItem>
+              <SelectItem key={m} value={m} className="text-xs text-black focus:bg-gray-100 focus:text-black data-[state=checked]:bg-transparent">{(monedas?.[m] ?? m) + " (" + m + ")"}</SelectItem>
             ))}
           </SelectContent>
         </Select>

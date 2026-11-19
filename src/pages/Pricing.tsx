@@ -11,6 +11,8 @@ import LandingFooter from "@/components/LandingFooter";
 import PricingTable from "@/components/PricingTable";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
+import { usePageSeo } from "@/hooks/usePageSeo";
+import { useHeadTags } from "@/hooks/useHeadTags";
 
 // Registro de plugins de GSAP
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText, CustomEase);
@@ -20,7 +22,46 @@ if (!CustomEase.get("osmo-ease")) {
 }
 
 const Pricing = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  // SEO propio de la página de precios (antes heredaba el título de otra página)
+  const lang = i18n.language?.startsWith("en") ? "en" : "es";
+  const pageUrl = `https://miiles.app/${lang}/precios`;
+  usePageSeo({ title: t("pricing.seoTitle"), description: t("pricing.seoDescription"), robots: "index, follow" });
+  const planesSeo = t("pricing.plans", { returnObjects: true }) as { id: string; name: string; description: string; prices?: Record<"MXN" | "USD", { monthly: string; annual: string }> }[];
+  const monedaSeo = lang === "en" ? "USD" : "MXN";
+  useHeadTags({
+    canonical: pageUrl,
+    alternates: [
+      { hreflang: "es", href: "https://miiles.app/es/precios" },
+      { hreflang: "en", href: "https://miiles.app/en/precios" },
+      { hreflang: "x-default", href: "https://miiles.app/es/precios" },
+    ],
+    meta: [
+      { attr: "property", key: "og:url", content: pageUrl },
+      { attr: "property", key: "og:locale", content: lang === "en" ? "en_US" : "es_MX" },
+    ],
+    // Planes con precio (Gratis y Pro, mensual y anual) para que Google entienda la página
+    jsonLd: {
+      "@context": "https://schema.org",
+      "@type": "SoftwareApplication",
+      name: "Miiles",
+      url: "https://miiles.app",
+      applicationCategory: "BusinessApplication",
+      operatingSystem: "Web",
+      description: t("pricing.seoDescription"),
+      inLanguage: lang === "en" ? "en-US" : "es-MX",
+      offers: planesSeo.filter((p) => p.prices).flatMap((p) => {
+        const pr = p.prices![monedaSeo];
+        const base = { "@type": "Offer", priceCurrency: monedaSeo, url: pageUrl, description: p.description };
+        return pr.monthly === "0"
+          ? [{ ...base, name: p.name, price: "0" }]
+          : [
+              { ...base, name: `${p.name} · ${t("pricing.monthly")}`, price: pr.monthly.replace(/\D/g, "") },
+              { ...base, name: `${p.name} · ${t("pricing.annually")}`, price: pr.annual.replace(/\D/g, "") },
+            ];
+      }),
+    },
+  }, [lang]);
   const localePath = useLocalePath();
   const smootherRef = useRef<ScrollSmoother | null>(null);
   const navigate = useNavigate();
