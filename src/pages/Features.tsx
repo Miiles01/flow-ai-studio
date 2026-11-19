@@ -40,6 +40,7 @@ const CREATIVE_PICKS = ["espiral-3d", "lluvia-de-likes", "frase-letras"]
 type Feature = { id: string; badge: string; title: string; description: string; bullets: string[] };
 
 import isotipoImg from "@/assets/isotipo.webp";
+import { langOf, LOCALE_OF } from "@/i18n";
 
 const TypewriterInput = () => {
   const { t, i18n } = useTranslation();
@@ -776,7 +777,7 @@ const CollaborationMockup = () => {
 const Features = () => {
   const { t, i18n } = useTranslation();
   const featuresData = t("features.items", { returnObjects: true }) as Feature[];
-  const lang = i18n.language?.startsWith("en") ? "en" : "es";
+  const lang = langOf(i18n.language);
   const pageUrl = `https://miiles.app/${lang}/funciones`;
   usePageSeo({ title: t("features.seoTitle"), description: t("features.seoDescription"), robots: "index, follow" });
   useHeadTags({
@@ -784,11 +785,12 @@ const Features = () => {
     alternates: [
       { hreflang: "es", href: "https://miiles.app/es/funciones" },
       { hreflang: "en", href: "https://miiles.app/en/funciones" },
+      { hreflang: "pt", href: "https://miiles.app/pt/funciones" },
       { hreflang: "x-default", href: "https://miiles.app/es/funciones" },
     ],
     meta: [
       { attr: "property", key: "og:url", content: pageUrl },
-      { attr: "property", key: "og:locale", content: lang === "en" ? "en_US" : "es_MX" },
+      { attr: "property", key: "og:locale", content: LOCALE_OF[lang].replace("-", "_") },
     ],
     jsonLd: {
       "@context": "https://schema.org",
@@ -798,7 +800,7 @@ const Features = () => {
       applicationCategory: "BusinessApplication",
       operatingSystem: "Web",
       description: t("features.seoDescription"),
-      inLanguage: lang === "en" ? "en-US" : "es-MX",
+      inLanguage: LOCALE_OF[lang],
       featureList: featuresData.map((f) => f.title),
       offers: { "@type": "Offer", price: "0", priceCurrency: "USD" },
     },

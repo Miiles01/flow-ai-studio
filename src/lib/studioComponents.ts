@@ -21,13 +21,13 @@ export type StudioComponent = {
 export const STUDIO_COMPONENTS = repoComponents as StudioComponent[];
 
 /** Categorías para los filtros, en este orden (solo se muestran las que tienen componentes). */
-export const COMPONENT_CATEGORIES: { id: string; es: string; en: string }[] = [
-  { id: "Carrusel", es: "Carruseles", en: "Carousels" },
-  { id: "Galería", es: "Galerías", en: "Galleries" },
-  { id: "Texto", es: "Texto", en: "Text" },
-  { id: "Elemento", es: "Elementos", en: "Elements" },
-  { id: "Transición", es: "Transiciones", en: "Transitions" },
-  { id: "Escena", es: "Escenas", en: "Scenes" },
+export const COMPONENT_CATEGORIES: { id: string; es: string; en: string; pt: string }[] = [
+  { id: "Carrusel", es: "Carruseles", en: "Carousels", pt: "Carrosséis" },
+  { id: "Galería", es: "Galerías", en: "Galleries", pt: "Galerias" },
+  { id: "Texto", es: "Texto", en: "Text", pt: "Texto" },
+  { id: "Elemento", es: "Elementos", en: "Elements", pt: "Elementos" },
+  { id: "Transición", es: "Transiciones", en: "Transitions", pt: "Transições" },
+  { id: "Escena", es: "Escenas", en: "Scenes", pt: "Cenas" },
 ];
 
 /**

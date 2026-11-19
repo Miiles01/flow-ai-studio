@@ -1,0 +1,15 @@
+{
+  "copy": [
+    "Olá, preciso que você se conecte à minha loja da Shopify para editá-la por aqui.\n\nDados:\n\n•  Site:\n\n•  Tema publicado:\n\n•  Pasta de trabalho:\n\nQuero que você faça o seguinte passo a passo, explicando brevemente cada etapa:\n\n1.  Verifique se a Shopify CLI está instalada (shopify version). Se não estiver ou se a atualização falhar por falta de permissões, me informe o comando com sudo para eu executar.\n\n2.  Baixe o tema com shopify theme pull na pasta de trabalho. Eu faço login no navegador; você nunca deve inserir credenciais.\n\n3.  Diga quais seções a página inicial tem (templates/index.json).\n\n4.  Faça esta alteração: no título do hero, troque \"feito para você\" por \"feito para todos\".\n\n5.  Execute shopify theme dev para eu ver a prévia, sem alterar a loja publicada.\n\n6.  Quando eu confirmar, envie SOMENTE o arquivo modificado para o tema publicado com:\n\n   shopify theme push --only templates/index.json --allow-live --nodelete\n\n7.  Não faça push sem minha confirmação explícita. Consulte https://shopify.dev/docs/api/shopify-cli para entender melhor",
+    "Início",
+    "Conecte a Shopify ao seu assistente",
+    "Gerencie sua loja virtual com mais facilidade: este assistente ajuda você a editar a loja e fazer qualquer alteração. Não é mais preciso fazer mudanças manualmente: basta dar a instrução e ela é executada.",
+    "Tutorial: como conectar a Shopify ao seu assistente da Miiles",
+    "Prompt para copiar",
+    "Copie este prompt, preencha seus dados (site, tema e pasta) e cole no seu assistente.",
+    "Copiado!",
+    "Copiar prompt",
+    "©",
+    "Miiles"
+  ]
+}

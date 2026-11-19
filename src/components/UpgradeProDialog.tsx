@@ -1,5 +1,5 @@
 import { useTranslation } from "react-i18next";
-import dashboardI18n from "@/i18n";
+import dashboardI18n, { langOf } from "@/i18n";
 const dt = (key: string, options?: Record<string, unknown>): string => dashboardI18n.t(key, options) as string;
 import { useState } from "react";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -25,7 +25,7 @@ export function UpgradeProDialog({ open, onOpenChange }: UpgradeProDialogProps) 
   const [cycle, setCycle] = useState<"monthly" | "yearly">("monthly");
   const [started, setStarted] = useState(false);
 
-  const usd = (dashboardI18n.language || "es").startsWith("en");
+  const usd = langOf(dashboardI18n.language) !== "es";
   const priceId = (cycle === "monthly" ? "pro_monthly" : "pro_yearly") + (usd ? "_usd" : "");
 
   const handleClose = (v: boolean) => {

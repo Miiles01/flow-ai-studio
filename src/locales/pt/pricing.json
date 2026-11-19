@@ -1,0 +1,85 @@
+{
+  "copy": {
+    "text1": "Todas as ferramentas.",
+    "text2": "Um só pagamento.",
+    "text3": "Impulsione sua marca com a flexibilidade de que você precisa. Sem letras miúdas, só o incentivo que você merece."
+  },
+  "monthly": "Mensal",
+  "annually": "Anual",
+  "letsTalk": "Vamos conversar!",
+  "perMonth": "/mês",
+  "perYear": "/ano",
+  "plans": [
+    {
+      "id": "Gratis",
+      "name": "Grátis",
+      "monthlyPrice": "0",
+      "annualPrice": "0",
+      "description": "Para explorar a Miiles",
+      "features": [
+        "1 projeto",
+        "Até 10 colaborações",
+        "Suporte por e-mail"
+      ],
+      "cta": "Comece grátis",
+      "prices": {
+        "MXN": {
+          "monthly": "0",
+          "annual": "0"
+        },
+        "USD": {
+          "monthly": "0",
+          "annual": "0"
+        }
+      }
+    },
+    {
+      "id": "Pro",
+      "name": "Pro",
+      "monthlyPrice": "24",
+      "annualPrice": "230",
+      "description": "Para criadores em crescimento",
+      "features": [
+        "Projetos ilimitados",
+        "Colaborações ilimitadas",
+        "Análises avançadas",
+        "Suporte prioritário"
+      ],
+      "cta": "Assinar Pro",
+      "highlighted": true,
+      "annualBadge": "Economize 20% com o plano anual",
+      "prices": {
+        "MXN": {
+          "monthly": "386",
+          "annual": "3712"
+        },
+        "USD": {
+          "monthly": "24",
+          "annual": "230"
+        }
+      }
+    },
+    {
+      "id": "Negocios",
+      "name": "Negócios",
+      "monthlyPrice": "Vamos conversar!",
+      "annualPrice": "Vamos conversar!",
+      "description": "Para equipes e empresas",
+      "features": [
+        "Tudo do Pro",
+        "Contas com vários usuários",
+        "Acesso à API",
+        "Gerente de conta"
+      ],
+      "cta": "Fale com a gente",
+      "customPrice": true
+    }
+  ],
+  "currency": "USD",
+  "currencies": {
+    "MXN": "Pesos mexicanos",
+    "USD": "Dólares americanos"
+  },
+  "seoTitle": "Preços da Miiles: planos Grátis e Pro para criadores",
+  "seoDescription": "Comece grátis ou assine o Pro por US$ 24 por mês (US$ 230 por ano, economia de 20%): projetos e colaborações ilimitados, análises avançadas e suporte prioritário."
+}

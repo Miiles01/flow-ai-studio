@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { ArrowLeft, Check, Copy, Download } from "lucide-react";
 import { toast } from "sonner";
-import i18n from "@/i18n";
+import i18n, { langOf } from "@/i18n";
 import { useTheme } from "@/contexts/ThemeContext";
 import { Button } from "@/components/ui/button";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
@@ -49,6 +49,20 @@ const COPY = {
       { q: "Can I use it in brand content?", a: "Yes. It is meant for your content, your own or your clients'." },
     ],
   },
+  pt: {
+    back: "Estúdio", notFound: "Não encontramos este componente", toStudio: "Voltar ao Estúdio", kind: "Componente de vídeo",
+    copyPrompt: "Copiar prompt", copied: "Prompt copiado", download: "Baixar código", loading: "Carregando…",
+    copyError: "Não foi possível copiar. Tente baixar o código.",
+    promptNote: "O prompt inclui o código completo e uma instrução breve para a sua IA implementá-lo.",
+    compatible: "Compatível com o seu assistente", compatibleText: "Cole o prompt em qualquer IA que escreva código.",
+    howTo: "Como usar", steps: ["Copie o prompt.", "Cole no seu assistente de IA (Claude, Codex, Gemini…).", "Peça as mudanças: textos, cores, duração.", "Renderize seu vídeo e publique como Reel ou TikTok."],
+    customize: "Como personalizar", faq: "Perguntas frequentes",
+    baseFaq: [
+      { q: "Preciso saber programar?", a: "Não. Você copia o prompt, cola na sua IA e pede as mudanças com suas palavras; ela escreve o código." },
+      { q: "Em que formato sai o vídeo?", a: "Foi pensado na vertical 9:16 para Reels, TikTok e Shorts, mas você pode pedir outro tamanho à sua IA." },
+      { q: "Posso usar em conteúdo para marcas?", a: "Sim. É para você usar no seu conteúdo, próprio ou dos seus clientes." },
+    ],
+  },
 } as const;
 
 export default function StudioComponentPage() {
@@ -56,7 +70,7 @@ export default function StudioComponentPage() {
   const navigate = useNavigate();
   const { isDark } = useTheme();
   const c = STUDIO_COMPONENTS.find((x) => x.slug === slug) ?? null;
-  const t = COPY[(i18n.language || "es").startsWith("en") ? "en" : "es"];
+  const t = COPY[langOf(i18n.language)];
   const [busy, setBusy] = useState<"" | "copy" | "download">("");
   const [copied, setCopied] = useState(false);
 

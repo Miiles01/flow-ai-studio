@@ -10,14 +10,18 @@ const keys = (o: unknown, p = ""): string[] =>
 const load = (f: string) => JSON.parse(readFileSync(f, "utf8"));
 
 describe("translations", () => {
-  it("es.json and en.json have the same keys", () => {
-    expect(keys(load(join(root, "en.json"))).sort()).toEqual(keys(load(join(root, "es.json"))).sort());
-  });
+  for (const lang of ["en", "pt"]) {
+    it(`es.json and ${lang}.json have the same keys`, () => {
+      expect(keys(load(join(root, `${lang}.json`))).sort()).toEqual(keys(load(join(root, "es.json"))).sort());
+    });
+  }
   const files = existsSync(join(root, "es")) ? readdirSync(join(root, "es")) : [];
   for (const f of files) {
-    it(`${f} exists in English with the same keys`, () => {
-      expect(existsSync(join(root, "en", f))).toBe(true);
-      expect(keys(load(join(root, "en", f))).sort()).toEqual(keys(load(join(root, "es", f))).sort());
-    });
+    for (const lang of ["en", "pt"]) {
+      it(`${f} exists in ${lang} with the same keys`, () => {
+        expect(existsSync(join(root, lang, f))).toBe(true);
+        expect(keys(load(join(root, lang, f))).sort()).toEqual(keys(load(join(root, "es", f))).sort());
+      });
+    }
   }
 });

@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
-import i18n from "@/i18n";
+import i18n, { pickLang } from "@/i18n";
 
 const PAGES = ["", "acerca-de", "funciones", "afiliados"];
 const COLOR = "#4059F1";
@@ -9,8 +9,8 @@ const FOLLOW = 0.33;
 const isLandingPath = (path: string) => {
   const parts = path.replace(/\/+$/, "").split("/").filter(Boolean);
   if (parts.length === 0) return true;
-  if (parts.length === 1) return PAGES.includes(parts[0]) || /^(es|en)$/.test(parts[0]);
-  if (parts.length === 2) return /^(es|en)$/.test(parts[0]) && PAGES.includes(parts[1]);
+  if (parts.length === 1) return PAGES.includes(parts[0]) || /^(es|en|pt)$/.test(parts[0]);
+  if (parts.length === 2) return /^(es|en|pt)$/.test(parts[0]) && PAGES.includes(parts[1]);
   return false;
 };
 
@@ -77,7 +77,7 @@ const LandingCursor = () => {
         className="absolute left-[16px] top-[18px] whitespace-nowrap rounded-full px-2.5 py-1 text-[11px] font-normal leading-none"
         style={{ background: COLOR, color: "#fff" }}
       >
-        {(i18n.language || "es").startsWith("en") ? "Guest" : "Invitado"}
+        {pickLang({ es: "Invitado", en: "Guest", pt: "Convidado" }, i18n.language)}
       </span>
     </div>
   );

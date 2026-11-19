@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { useTranslation } from "react-i18next";
 import { useLocalePath } from "@/hooks/useLocalePath";
+import { isLang, langOf } from "@/i18n";
 
 /* Apertura como en el portafolio (manuel-herrera, PortfolioHeader): la píldora se
    ensancha y su cuerpo crece de 0 a su alto real (0.5s, cubic-bezier(.4,0,.2,1));
@@ -97,7 +98,7 @@ const MorphNavbar = ({ isLanding }: MorphNavbarProps) => {
 
   const changeLanguage = (lng: string) => {
     const segments = window.location.pathname.split("/").filter(Boolean);
-    if (segments[0] === "es" || segments[0] === "en") segments.shift();
+    if (isLang(segments[0])) segments.shift();
     i18n.changeLanguage(lng);
     navigate(`/${lng}/${segments.join("/")}${window.location.search}${window.location.hash}`);
     close();
@@ -243,8 +244,9 @@ const MorphNavbar = ({ isLanding }: MorphNavbarProps) => {
                           className="mt-4 md:mt-0 md:absolute md:bottom-0 md:left-64 bg-white rounded-3xl p-3 w-max min-w-[220px] shadow-[0_20px_40px_rgba(0,0,0,0.2)] z-10 flex flex-col gap-2"
                         >
                           {[
-                            { code: "es", label: t("home.navbar.spanish"), active: i18n.language === "es" },
-                            { code: "en", label: t("home.navbar.english"), active: i18n.language?.startsWith("en") },
+                            { code: "es", label: t("home.navbar.spanish"), active: langOf(i18n.language) === "es" },
+                            { code: "en", label: t("home.navbar.english"), active: langOf(i18n.language) === "en" },
+                            { code: "pt", label: t("home.navbar.portuguese"), active: langOf(i18n.language) === "pt" },
                           ].map((lang) => (
                             <button
                               key={lang.code}

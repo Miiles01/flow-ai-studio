@@ -10,15 +10,15 @@ import StudioLibraryCard from "@/components/studio/StudioLibraryCard";
 import MyPages from "@/components/studio/MyPages";
 import StudioComponentCard from "@/components/studio/StudioComponentCard";
 import { COMPONENT_CATEGORIES, STUDIO_COMPONENTS, type StudioComponent } from "@/lib/studioComponents";
-import i18n from "@/i18n";
+import i18n, { pickLang } from "@/i18n";
 
 
 type SeccionProps = {
   items: StudioComponent[];
-  categorias: { id: string; es: string; en: string }[];
-  titulo: { es: string; en: string };
-  subtitulo: { es: string; en: string };
-  etiqueta?: { es: string; en: string };   // opcional: si no hay, no se muestra
+  categorias: { id: string; es: string; en: string; pt?: string }[];
+  titulo: { es: string; en: string; pt?: string };
+  subtitulo: { es: string; en: string; pt?: string };
+  etiqueta?: { es: string; en: string; pt?: string };   // opcional: si no hay, no se muestra
 };
 
 /** Sección de animaciones (Escenas o Componentes): pills por categoría, dos filas y «Ver más». */
@@ -32,7 +32,7 @@ function SeccionAnimaciones({ items, categorias, titulo, subtitulo, etiqueta }: 
     mq.addEventListener("change", on);
     return () => mq.removeEventListener("change", on);
   }, []);
-  const en = (i18n.language || "es").startsWith("en");
+  const L = <T,>(o: { es: T; en: T; pt?: T }) => pickLang(o, i18n.language);
   // Filtros por categoría (solo las que ya tienen elementos)
   const [componentFilter, setComponentFilter] = useState<string | null>(null);
   const componentCategories = categorias.filter((cat) => items.some((c) => c.category === cat.id));
@@ -48,16 +48,16 @@ function SeccionAnimaciones({ items, categorias, titulo, subtitulo, etiqueta }: 
         <div>
           {etiqueta && (
             <span className="mb-3 inline-flex rounded-full bg-black px-3 py-1 text-xs font-normal text-white dark:border dark:border-white/10">
-              {en ? etiqueta.en : etiqueta.es}
+              {L(etiqueta)}
             </span>
           )}
-          <h2 className="text-xl md:text-2xl font-medium text-foreground">{en ? titulo.en : titulo.es}</h2>
-          <p className="mt-1 text-sm font-light text-muted-foreground">{en ? subtitulo.en : subtitulo.es}</p>
+          <h2 className="text-xl md:text-2xl font-medium text-foreground">{L(titulo)}</h2>
+          <p className="mt-1 text-sm font-light text-muted-foreground">{L(subtitulo)}</p>
         </div>
         {componentCategories.length > 1 && (
           // Pills de filtro (mismo estilo que el resto del dashboard)
-          <div className="-mx-8 flex gap-2 overflow-x-auto px-8 pb-1 scrollbar-hide md:mx-0 md:px-0" role="group" aria-label={en ? "Filter by category" : "Filtrar por categoría"}>
-            {[{ id: null as string | null, es: "Todas", en: "All" }, ...componentCategories].map((cat) => {
+          <div className="-mx-8 flex gap-2 overflow-x-auto px-8 pb-1 scrollbar-hide md:mx-0 md:px-0" role="group" aria-label={L({ es: "Filtrar por categoría", en: "Filter by category", pt: "Filtrar por categoria" })}>
+            {[{ id: null as string | null, es: "Todas", en: "All", pt: "Todas" }, ...componentCategories].map((cat) => {
               const active = componentFilter === cat.id;
               return (
                 <button
@@ -67,14 +67,14 @@ function SeccionAnimaciones({ items, categorias, titulo, subtitulo, etiqueta }: 
                   onClick={() => { setComponentFilter(cat.id); setShowAllComponents(false); }}
                   className={`flex-none rounded-full px-4 py-2 text-sm font-light transition-colors ${active ? "border border-foreground bg-foreground text-background" : "border border-miiles-gray-200 bg-transparent text-black dark:border-white/15 dark:text-white"}`}
                 >
-                  {en ? cat.en : cat.es}
+                  {L(cat)}
                 </button>
               );
             })}
           </div>
         )}
         {items.length === 0 ? (
-          <p className="text-sm text-muted-foreground py-12 text-center">{(i18n.language || "es").startsWith("en") ? "Coming soon" : "Muy pronto"}</p>
+          <p className="text-sm text-muted-foreground py-12 text-center">{pickLang({ es: "Muy pronto", en: "Coming soon", pt: "Em breve" }, i18n.language)}</p>
         ) : (
           // Tres columnas en desktop, dos en tablet y en móvil (los marcos de celular son angostos)
           <div className="grid grid-cols-2 lg:grid-cols-3 gap-x-5 gap-y-10 pt-2" onMouseLeave={() => setHoveredRow(null)}>
@@ -100,7 +100,7 @@ function SeccionAnimaciones({ items, categorias, titulo, subtitulo, etiqueta }: 
               aria-expanded={showAllComponents}
               className="rounded-full bg-black px-6 py-2.5 text-sm font-normal text-white transition-colors hover:bg-miiles-pink dark:border dark:border-white/10 dark:hover:bg-zinc-900"
             >
-              {showAllComponents ? (en ? "Show less" : "Ver menos") : (en ? "Show more" : "Ver más")}
+              {showAllComponents ? L({ es: "Ver menos", en: "Show less", pt: "Ver menos" }) : L({ es: "Ver más", en: "Show more", pt: "Ver mais" })}
             </button>
           </div>
         )}
@@ -137,17 +137,17 @@ export default function Studio() {
       <SeccionAnimaciones
         items={escenas}
         categorias={COMPONENT_CATEGORIES.filter((cat) => cat.id === "Escena")}
-        titulo={{ es: "Escenas", en: "Scenes" }}
-        subtitulo={{ es: "Partes de un Reel listas para copiar y pegar en tu asistente de IA", en: "Reel parts ready to copy and paste into your AI assistant" }}
-        etiqueta={{ es: "Nuevo", en: "New" }}
+        titulo={{ es: "Escenas", en: "Scenes", pt: "Cenas" }}
+        subtitulo={{ es: "Partes de un Reel listas para copiar y pegar en tu asistente de IA", en: "Reel parts ready to copy and paste into your AI assistant", pt: "Partes de um Reel prontas para copiar e colar no seu assistente de IA" }}
+        etiqueta={{ es: "Nuevo", en: "New", pt: "Novo" }}
       />
 
       {/* Componentes: animaciones de video y otros assets que se copian como prompt */}
       <SeccionAnimaciones
         items={componentes}
         categorias={COMPONENT_CATEGORIES.filter((cat) => cat.id !== "Escena")}
-        titulo={{ es: "Componentes", en: "Components" }}
-        subtitulo={{ es: "Animaciones de video listas para copiar y pegar en tu asistente de IA", en: "Video animations ready to copy and paste into your AI assistant" }}
+        titulo={{ es: "Componentes", en: "Components", pt: "Componentes" }}
+        subtitulo={{ es: "Animaciones de video listas para copiar y pegar en tu asistente de IA", en: "Video animations ready to copy and paste into your AI assistant", pt: "Animações de vídeo prontas para copiar e colar no seu assistente de IA" }}
       />
 
       {/* Librería */}

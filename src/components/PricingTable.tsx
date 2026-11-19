@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { trackEvent } from "@/lib/trackEvent";
 import { motion } from "framer-motion";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { langOf } from "@/i18n";
 
 // Checkbox Icon Component
 const CheckIcon = ({ highlighted }: { highlighted?: boolean }) => {
@@ -78,8 +79,8 @@ export default function PricingTable({ onPlanSelect, isModal }: PricingTableProp
   const localePath = useLocalePath();
   const plans = t("pricing.plans", { returnObjects: true }) as { id: string; name: string; monthlyPrice: string; annualPrice: string; description: string; features: string[]; cta: string; highlighted?: boolean; annualBadge?: string; customPrice?: boolean; prices?: Record<Moneda, { monthly: string; annual: string }> }[];
   const [cycle, setCycle] = useState<"monthly" | "annually">("monthly");
-  // Moneda: pesos en español, dólares en inglés (se puede cambiar con el selector de arriba)
-  const [moneda, setMoneda] = useState<Moneda>(() => ((i18n.language || "es").startsWith("en") ? "USD" : "MXN"));
+  // Moneda: pesos en español, dólares en inglés y portugués (se puede cambiar con el selector de arriba)
+  const [moneda, setMoneda] = useState<Moneda>(() => (langOf(i18n.language) === "es" ? "MXN" : "USD"));
   const monedas = t("pricing.currencies", { returnObjects: true }) as Record<Moneda, string>;
   const precio = (plan: (typeof plans)[number]) => {
     const pr = plan.prices?.[moneda];

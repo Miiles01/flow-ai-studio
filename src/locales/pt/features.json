@@ -1,0 +1,87 @@
+{
+  "items": [
+    {
+      "id": "portafolio",
+      "badge": "Portfólio",
+      "title": "Crie seu portfólio profissional com IA",
+      "description": "Descreva quem você é, o que cria e com quais marcas trabalha. A Miiles monta seu portfólio com templates feitos para criadores de conteúdo, criadores UGC, designers e freelancers, e publica tudo com um link só seu.",
+      "bullets": [
+        "Templates de portfólio para criadores UGC, editores e freelancers.",
+        "Edite textos, fotos e cores com um prompt, sem precisar programar.",
+        "Publique com seu próprio link, pronto para enviar às marcas."
+      ]
+    },
+    {
+      "id": "creatividad",
+      "badge": "Criatividade",
+      "title": "Crie, edite e anime seu conteúdo",
+      "description": "Mais de 60 recursos para edição de vídeo, animação e motion graphics: carrosséis, textos animados, transições e efeitos em formato vertical para Reels, TikTok e Shorts. Tudo para acelerar seu processo criativo.",
+      "bullets": [
+        "Componentes de vídeo no formato 9:16 para Reels, TikTok e YouTube Shorts.",
+        "Textos animados, transições e motion graphics prontos para usar.",
+        "Copie o prompt e crie a animação com sua IA: Claude, Codex, Gemini ou Cursor."
+      ]
+    },
+    {
+      "id": "ai-studio",
+      "badge": "Inteligência artificial",
+      "title": "Crie modelos de negócio com o poder da IA",
+      "description": "Conecte a Miiles ao Claude ou à IA que você já usa. Funciona como uma skill: seu assistente cria seus quadros, estrutura seu modelo de negócio e gerencia seus clientes, campanhas e receitas por você.",
+      "bullets": [
+        "Conecta com Claude, Codex, Gemini, Cursor e outras IAs.",
+        "Quadros com clientes, campanhas, contratos e receitas a partir de uma conversa.",
+        "Business Model Canvas com IA para validar e expandir seu projeto."
+      ]
+    },
+    {
+      "id": "collab",
+      "badge": "Colaboração ao vivo",
+      "title": "Criação conjunta e presença em tempo real",
+      "description": "Convide sua equipe para trabalhar no mesmo canvas. Veja os avatares de quem está online e edite em conjunto, sem conflitos entre alterações.",
+      "bullets": [
+        "Presença visual interativa com avatares agrupados no cabeçalho.",
+        "Sincronização instantânea de movimentos, cores e conectores.",
+        "Compartilhamento rápido por URLs públicas de visualização."
+      ]
+    },
+    {
+      "id": "canvas",
+      "badge": "Canvas avançado",
+      "title": "Canvas infinito e personalização total",
+      "description": "Estruture suas ideias sem limites físicos. Conecte formas de qualquer tipo por pontos de conexão bidirecionais e navegue com um amplo zoom de 5% a 400%.",
+      "bullets": [
+        "Linhas de conexão curvas com rótulos de texto editáveis no centro.",
+        "Desconecte nós rapidamente arrastando a partir da metade esquerda.",
+        "Formas geométricas personalizáveis com as cores vibrantes da sua marca."
+      ]
+    }
+  ],
+  "phrases": [
+    "Crie um funil de vendas para meu curso online...",
+    "Crie uma campanha de marketing nas redes sociais...",
+    "Estruture o fluxo de integração do app...",
+    "Planeje a estratégia de conteúdo para o Instagram...",
+    "Organize o processo de suporte e chamados B2B..."
+  ],
+  "apps": "Apps",
+  "select": "Selecionar",
+  "pan": "Navegar",
+  "shapes": "Formas",
+  "text": "Texto",
+  "todo": "Lista de tarefas",
+  "image": "Imagem",
+  "section": "Seção",
+  "mateo": "Mateo",
+  "sofia": "Sofía",
+  "intro": "Conheça a Miiles",
+  "title": "Tire suas ideias do papel",
+  "subtitle": "Um lugar pensado para descobrir oportunidades",
+  "plansTitle": "Nossos planos",
+  "plansDescription": "Escolha o plano ideal para automatizar e expandir seu negócio.",
+  "aiAlt": "IA",
+  "collaborator": "Colaborador {{number}}",
+  "heroAlt": "Pessoa usando a Miiles em um tablet, confortável no sofá",
+  "seoTitle": "Recursos da Miiles: portfólio com IA, recursos de vídeo e quadros",
+  "seoDescription": "Crie seu portfólio profissional com IA, edite e anime com mais de 60 recursos de vídeo e motion graphics e gerencie clientes e campanhas conectando a Miiles ao Claude ou à sua IA.",
+  "templateAlt": "Template de portfólio"
+}

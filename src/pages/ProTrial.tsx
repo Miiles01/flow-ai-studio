@@ -11,7 +11,7 @@ import { Input } from "@/components/ui/input";
 import logotipoSvg from "@/assets/miiles/logotipo.svg";
 import { useAuth } from "@/contexts/AuthContext";
 import { PRO_TRIAL_PATH, claimProTrial, clearProTrialCode, getStoredProTrialCode } from "@/lib/proTrial";
-import { getStoredLang } from "@/i18n";
+import { getStoredLang, langOf, LOCALE_OF } from "@/i18n";
 
 type Mode = "signup" | "login";
 
@@ -47,7 +47,7 @@ const ProTrial = () => {
         toast.error(t("protrial.error"));
       } else if (result.granted) {
         const until = result.expires_at
-          ? new Date(result.expires_at).toLocaleDateString(i18n.language === "en" ? "en-US" : "es-MX", { day: "numeric", month: "long" })
+          ? new Date(result.expires_at).toLocaleDateString(LOCALE_OF[langOf(i18n.language)], { day: "numeric", month: "long" })
           : "";
         toast.success(t("protrial.granted", { date: until }));
       } else if (result.reason === "already_claimed") {

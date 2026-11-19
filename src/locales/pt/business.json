@@ -1,0 +1,30 @@
+{
+  "inquiry": {
+    "text1": "Nome e e-mail são obrigatórios",
+    "text2": "Não foi possível enviar sua solicitação. Tente novamente.",
+    "text3": "Vamos falar sobre sua",
+    "text4": "equipe.",
+    "text5": "Conte sobre sua empresa e entraremos em contato para montar um plano Negócios sob medida para você.",
+    "text6": "Nome *",
+    "text7": "Seu nome",
+    "text8": "E-mail *",
+    "text9": "tu@empresa.com",
+    "text10": "Empresa",
+    "text11": "Nome da empresa",
+    "text12": "Telefone",
+    "text13": "+52 ...",
+    "text14": "Tamanho da equipe",
+    "text15": "Ex.: 5–20 pessoas",
+    "text16": "Site ou redes sociais",
+    "text17": "site.com / @usuario",
+    "text18": "Como podemos ajudar?",
+    "text19": "Conte um pouco mais...",
+    "text20": "Enviar solicitação"
+  },
+  "thanks": {
+    "text1": "Agradecemos!",
+    "text2": "Entraremos em contato.",
+    "text3": "Recebemos sua solicitação do plano Negócios. Nossa equipe entrará em contato em breve pelo e-mail que você informou.",
+    "text4": "Voltar ao início"
+  }
+}

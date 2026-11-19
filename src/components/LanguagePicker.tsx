@@ -1,14 +1,16 @@
 import { useTranslation } from "react-i18next";
 import { Check } from "lucide-react";
+import { langOf } from "@/i18n";
 
 const LANGS = [
   { value: "es", label: "Español", short: "ES" },
   { value: "en", label: "English", short: "EN" },
+  { value: "pt", label: "Português", short: "PT" },
 ] as const;
 
 function useLang() {
   const { i18n } = useTranslation();
-  const current = i18n.language?.startsWith("en") ? "en" : "es";
+  const current = langOf(i18n.language);
   return { current, change: (lng: string) => { if (lng !== current) void i18n.changeLanguage(lng); } };
 }
 
@@ -16,7 +18,7 @@ function useLang() {
 export function LanguageOptions({ isDark, label }: { isDark: boolean; label: string }) {
   const { current, change } = useLang();
   return (
-    <div role="radiogroup" aria-label={label} className="grid gap-3 sm:grid-cols-2">
+    <div role="radiogroup" aria-label={label} className="grid gap-3 sm:grid-cols-3">
       {LANGS.map((l) => {
         const selected = current === l.value;
         return (

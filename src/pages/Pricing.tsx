@@ -13,6 +13,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/contexts/AuthContext";
 import { usePageSeo } from "@/hooks/usePageSeo";
 import { useHeadTags } from "@/hooks/useHeadTags";
+import { langOf, LOCALE_OF } from "@/i18n";
 
 // Registro de plugins de GSAP
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText, CustomEase);
@@ -24,21 +25,22 @@ if (!CustomEase.get("osmo-ease")) {
 const Pricing = () => {
   const { t, i18n } = useTranslation();
   // SEO propio de la página de precios (antes heredaba el título de otra página)
-  const lang = i18n.language?.startsWith("en") ? "en" : "es";
+  const lang = langOf(i18n.language);
   const pageUrl = `https://miiles.app/${lang}/precios`;
   usePageSeo({ title: t("pricing.seoTitle"), description: t("pricing.seoDescription"), robots: "index, follow" });
   const planesSeo = t("pricing.plans", { returnObjects: true }) as { id: string; name: string; description: string; prices?: Record<"MXN" | "USD", { monthly: string; annual: string }> }[];
-  const monedaSeo = lang === "en" ? "USD" : "MXN";
+  const monedaSeo = lang === "es" ? "MXN" : "USD";
   useHeadTags({
     canonical: pageUrl,
     alternates: [
       { hreflang: "es", href: "https://miiles.app/es/precios" },
       { hreflang: "en", href: "https://miiles.app/en/precios" },
+      { hreflang: "pt", href: "https://miiles.app/pt/precios" },
       { hreflang: "x-default", href: "https://miiles.app/es/precios" },
     ],
     meta: [
       { attr: "property", key: "og:url", content: pageUrl },
-      { attr: "property", key: "og:locale", content: lang === "en" ? "en_US" : "es_MX" },
+      { attr: "property", key: "og:locale", content: LOCALE_OF[lang].replace("-", "_") },
     ],
     // Planes con precio (Gratis y Pro, mensual y anual) para que Google entienda la página
     jsonLd: {
@@ -49,7 +51,7 @@ const Pricing = () => {
       applicationCategory: "BusinessApplication",
       operatingSystem: "Web",
       description: t("pricing.seoDescription"),
-      inLanguage: lang === "en" ? "en-US" : "es-MX",
+      inLanguage: LOCALE_OF[lang],
       offers: planesSeo.filter((p) => p.prices).flatMap((p) => {
         const pr = p.prices![monedaSeo];
         const base = { "@type": "Offer", priceCurrency: monedaSeo, url: pageUrl, description: p.description };

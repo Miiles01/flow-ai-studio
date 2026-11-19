@@ -1,0 +1,188 @@
+{
+  "landing": {
+    "hero_badge": "Miiles",
+    "hero_title_hoy": "Hoje",
+    "hero_title_es": "é",
+    "hero_title_un": "um",
+    "hero_title_buen": "ótimo",
+    "hero_title_dia": "dia",
+    "hero_title_para": "para",
+    "hero_title_crear": "criar",
+    "hero_subtitle": "Imagine um projeto. Transforme em realidade.",
+    "hero_cta": "Crie sua conta agora",
+    "explore_templates": "Explore modelos",
+    "hero_cta_gratis": "Comece grátis",
+    "seo_title": "Business Model Canvas com IA para empreendedores | Miiles",
+    "seo_description": "Estruture suas ideias de negócio com inteligência artificial: crie seu Business Model Canvas, valide ideias com IA e use prompts de estratégia em minutos.",
+    "hero_h1": "Todo criador precisa de uma base",
+    "hero_h1_before": "Todo",
+    "hero_h1_accent": "criador",
+    "hero_h1_after": "precisa de uma base",
+    "hero_desc": "Descubra como criadores montam sistemas que funcionam.",
+    "hero_examples": [
+      {
+        "label": "Quadros",
+        "prompt": "Um plano de lançamento para minha marca de roupas"
+      },
+      {
+        "label": "Fluxos",
+        "prompt": "O processo de vendas do meu negócio, passo a passo"
+      },
+      {
+        "label": "Tarefas",
+        "prompt": "As tarefas para abrir minha cafeteria este mês"
+      },
+      {
+        "label": "Conteúdo",
+        "prompt": "Meu calendário de conteúdo para TikTok e Instagram"
+      }
+    ],
+    "orbit_title_1": "Descubra",
+    "orbit_title_2": "conexões",
+    "scroll_text_1_1": "Reúna suas ideias",
+    "scroll_text_1_2": "em um só lugar",
+    "scroll_text_1_3": "e comece a criar",
+    "scroll_text_2_1": "Um espaço para",
+    "scroll_text_2_2": "conectar e cocriar",
+    "scroll_text_2_3": "sem limites",
+    "mobile_title_1": "Reúna suas ideias",
+    "mobile_title_2": "e comece a",
+    "mobile_title_3": "criar",
+    "trusted_by": "A escolha de",
+    "system_title_1": "Um sistema.",
+    "system_title_2": "Mais",
+    "system_title_3": "lucro.",
+    "colab_title": "Encontre parcerias",
+    "colab_desc": "Na Miiles, você encontra oportunidades únicas para impulsionar sua marca.",
+    "sales_title": "Dê mais força de vendas à sua ideia",
+    "sales_desc": "Se sua marca vende serviços ou produtos, permita que outros vendedores pelo mundo também ofereçam o que você vende.",
+    "testim_quote": "É realmente incrível",
+    "testim_name": "Karol Wegner",
+    "testim_role": "CEO da BeeSpeaker",
+    "curve_text": "É hoooora de criaaaaar",
+    "cta_title": "É hora de criar",
+    "cta_subtitle": "Crie sua conta hoje",
+    "cta_button": "Experimente a Miiles",
+    "build_title": "O que você vai criar?",
+    "build_subtitle": "Seja qual for sua ideia para o negócio, a inteligência artificial da Miiles ajuda você a estruturá-la.",
+    "build_cards": [
+      {
+        "title": "Crie um portfólio",
+        "desc": "Crie um portfólio profissional com um único prompt: mostre quem você é, o que vende e como vende, pronto para compartilhar.",
+        "image": "/home-portafolio.webp",
+        "alt": "Portfólio gerado pela IA da Miiles com a foto e o nome da criadora"
+      },
+      {
+        "title": "Clientes e campanhas",
+        "desc": "Organize clientes, campanhas, contratos e receitas com widgets no mesmo quadro. Seu negócio inteiro à vista, sem trocar de ferramenta.",
+        "image": "/home-clientes.webp",
+        "alt": "Widgets de clientes e campanhas em um quadro da Miiles"
+      },
+      {
+        "title": "Algoritmos das redes sociais",
+        "desc": "Entenda como TikTok, Instagram, YouTube e Facebook decidem o que mostrar e quais estratégias os criadores em crescimento estão usando.",
+        "image": "/home-algoritmos.webp",
+        "alt": "Diagrama de como funciona o algoritmo de uma rede social"
+      }
+    ],
+    "plans_title": "Escolha seu plano",
+    "plans_subtitle": "Feito para sua fase atual e para onde você quer chegar.",
+    "plans": [
+      {
+        "name": "Comece grátis",
+        "price": "$0",
+        "unit": "USD/mês",
+        "intro": "Inclui:",
+        "features": [
+          "1 projeto",
+          "Até 10 colaborações",
+          "Suporte por e-mail"
+        ],
+        "cta": "Comece grátis"
+      },
+      {
+        "name": "Plano Pro a partir de",
+        "price": "$24",
+        "unit": "USD/mês",
+        "note": "*Ou USD 230 por ano (economize 20%)",
+        "intro": "Cresça sem limites, com mais recursos e mais suporte.",
+        "features": [
+          "Projetos ilimitados",
+          "Colaborações ilimitadas",
+          "Análises avançadas",
+          "Suporte prioritário"
+        ],
+        "cta": "Veja todos os planos"
+      }
+    ],
+    "faq_title": "Perguntas frequentes",
+    "faq_items": [
+      {
+        "q": "O que é a Miiles?",
+        "a": [
+          "A Miiles é uma plataforma de inteligência artificial para empreendedores que transforma ideias em modelos de negócio. Descreva sua ideia e a Miiles gera seu Business Model Canvas, fluxos e listas de tarefas em um quadro visual que você pode editar com sua equipe.",
+          "Em Descobertas, você também aprende como funcionam os algoritmos do TikTok, Instagram, YouTube e Facebook e quais estratégias os criadores em crescimento estão usando."
+        ]
+      },
+      {
+        "q": "Como a Miiles funciona?",
+        "a": [
+          "Você escreve sua ideia como se estivesse contando para alguém. Se necessário, a IA faz algumas perguntas para entender seu objetivo, propõe um plano estratégico e, quando você aprova, monta o quadro com a estrutura do seu negócio.",
+          "Depois, você pode editar, mover e ampliar cada parte ou pedir à IA que desenvolva uma seção a partir do que você já tem."
+        ]
+      },
+      {
+        "q": "O que é um Business Model Canvas?",
+        "a": [
+          "É uma ferramenta de estratégia criada por Alexander Osterwalder que resume um negócio em nove blocos: segmentos de clientes, proposta de valor, canais, relacionamento com clientes, fontes de receita, recursos principais, atividades principais, parcerias principais e estrutura de custos.",
+          "A Miiles gera esse modelo a partir da sua ideia para você revisar, ajustar e compartilhar em minutos."
+        ]
+      },
+      {
+        "q": "Posso validar minha ideia de negócio com IA?",
+        "a": [
+          "A Miiles ajuda você a estruturar sua ideia e enxergar com clareza o que precisa testar: quem é seu cliente, qual problema você resolve, por qual canal chega até ele e como gera receita.",
+          "A validação de verdade acontece quando você conversa com seus clientes; a Miiles oferece o mapa para fazer isso de forma organizada."
+        ]
+      },
+      {
+        "q": "Preciso entender de estratégia ou saber escrever prompts?",
+        "a": [
+          "Não. Você não precisa dominar prompts de estratégia de negócios: escreva de forma natural e a Miiles cuida das perguntas e da estrutura.",
+          "Se você já entende de estratégia, pode pedir modelos específicos, como o Business Model Canvas, e ajustar cada bloco do seu jeito."
+        ]
+      },
+      {
+        "q": "Quanto custa?",
+        "a": [
+          "Você pode começar grátis. O plano Pro custa USD 24 por mês ou USD 230 por ano (economia de 20%) e inclui projetos e colaborações ilimitados, análises avançadas e suporte prioritário.",
+          "Para equipes e empresas, há um plano Negócios sob medida."
+        ]
+      }
+    ]
+  },
+  "navbar": {
+    "home": "Início",
+    "about": "Sobre",
+    "functions": "Recursos",
+    "pricing": "Preços",
+    "join": "Criar conta",
+    "language": "Idioma",
+    "close": "Fechar",
+    "menu": "Menu",
+    "affiliates": "Afiliados",
+    "terms": "Termos e condições",
+    "privacy": "Política de privacidade",
+    "spanish": "Español",
+    "english": "English",
+    "portuguese": "Português"
+  },
+  "footer": {
+    "slogan": "Feito para mentes criativas",
+    "copyright": "© Miiles, todos os direitos reservados, 2026",
+    "company": "Empresa",
+    "terms": "Termos e condições",
+    "privacy": "Política de privacidade",
+    "social": "Redes sociais"
+  }
+}
