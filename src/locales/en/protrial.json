@@ -1,8 +1,12 @@
 {
-  "badge": "30 days free",
+  "badge": "1 month free",
   "title": "Get the Pro plan",
-  "subtitle": "Sign in or create your account and use Miiles Pro free for 30 days.",
-  "perks": ["Unlimited boards and widgets", "Unlimited portfolio pages", "Every Studio template"],
+  "subtitle": "Sign in or create your account and use Miiles Pro free for one month.",
+  "perks": [
+    "Unlimited boards and widgets",
+    "Unlimited portfolio pages",
+    "Every Studio template"
+  ],
   "tabSignup": "Create account",
   "tabLogin": "I have an account",
   "name": "Your name",
@@ -15,11 +19,19 @@
   "google": "Continue with Google",
   "googleError": "We couldn't sign you in with Google",
   "checkEmailTitle": "Check your email",
-  "checkEmailBody": "We sent a link to {{email}}. Confirming it activates your 30-day Pro plan.",
+  "checkEmailBody": "We sent a link to {{email}}. Confirming it activates your free Pro month.",
   "activating": "Activating your Pro plan…",
   "granted": "Done! You have the Pro plan free until {{date}}.",
-  "alreadyClaimed": "This account already used its 30 free Pro days.",
+  "alreadyClaimed": "This account already used its free Pro month.",
   "alreadyPro": "You already have an active Pro plan.",
   "error": "We couldn't activate your Pro plan. Please try again.",
-  "fineprint": "Once per account. After 30 days you go back to Free, with no charges."
+  "fineprint": "One gift per account. After the month you go back to Free, with no charges.",
+  "codeTitle": "Invitation code",
+  "codeSubtitle": "Enter your code to get one month of the Pro plan for free.",
+  "codeLabel": "Invitation code",
+  "codePlaceholder": "Your code",
+  "codeContinue": "Continue",
+  "codeInvalid": "That code isn't valid. Check it and try again.",
+  "changeCode": "Use another code",
+  "invalidCode": "Your code is no longer valid. Please enter it again."
 }

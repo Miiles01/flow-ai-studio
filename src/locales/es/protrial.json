@@ -1,8 +1,12 @@
 {
-  "badge": "30 días gratis",
+  "badge": "1 mes gratis",
   "title": "Obtén Plan Pro",
-  "subtitle": "Entra o crea tu cuenta y usa Miiles Pro gratis durante 30 días.",
-  "perks": ["Tableros y widgets sin límite", "Páginas de portafolio ilimitadas", "Todas las plantillas de Studio"],
+  "subtitle": "Entra o crea tu cuenta y usa Miiles Pro gratis durante un mes.",
+  "perks": [
+    "Tableros y widgets sin límite",
+    "Páginas de portafolio ilimitadas",
+    "Todas las plantillas de Studio"
+  ],
   "tabSignup": "Crear cuenta",
   "tabLogin": "Ya tengo cuenta",
   "name": "Tu nombre",
@@ -15,11 +19,19 @@
   "google": "Continuar con Google",
   "googleError": "No pudimos entrar con Google",
   "checkEmailTitle": "Revisa tu correo",
-  "checkEmailBody": "Te enviamos un enlace a {{email}}. Al confirmarlo se activa tu Plan Pro de 30 días.",
+  "checkEmailBody": "Te enviamos un enlace a {{email}}. Al confirmarlo se activa tu mes de Plan Pro.",
   "activating": "Activando tu Plan Pro…",
   "granted": "¡Listo! Tienes Plan Pro gratis hasta el {{date}}.",
-  "alreadyClaimed": "Esta cuenta ya usó sus 30 días de Pro gratis.",
+  "alreadyClaimed": "Esta cuenta ya usó su mes de Pro gratis.",
   "alreadyPro": "Ya tienes Plan Pro activo.",
   "error": "No pudimos activar tu Plan Pro. Intenta de nuevo.",
-  "fineprint": "Una vez por cuenta. Al terminar los 30 días vuelves al plan Free, sin cobros."
+  "fineprint": "Un regalo por cuenta. Al terminar el mes vuelves al plan Free, sin cobros.",
+  "codeTitle": "Código de invitación",
+  "codeSubtitle": "Escribe tu código para recibir un mes de Plan Pro gratis.",
+  "codeLabel": "Código de invitación",
+  "codePlaceholder": "Tu código",
+  "codeContinue": "Continuar",
+  "codeInvalid": "Ese código no es válido. Revísalo e intenta de nuevo.",
+  "changeCode": "Usar otro código",
+  "invalidCode": "Tu código ya no es válido. Escríbelo de nuevo."
 }

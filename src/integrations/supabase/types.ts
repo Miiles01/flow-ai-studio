@@ -470,20 +470,44 @@ export type Database = {
         }
         Relationships: []
       }
+      pro_trial_codes: {
+        Row: {
+          active: boolean
+          code: string
+          created_at: string
+          days: number
+        }
+        Insert: {
+          active?: boolean
+          code: string
+          created_at?: string
+          days?: number
+        }
+        Update: {
+          active?: boolean
+          code?: string
+          created_at?: string
+          days?: number
+        }
+        Relationships: []
+      }
       pro_trials: {
         Row: {
+          code: string | null
           expires_at: string
           source: string
           started_at: string
           user_id: string
         }
         Insert: {
+          code?: string | null
           expires_at: string
           source?: string
           started_at?: string
           user_id: string
         }
         Update: {
+          code?: string | null
           expires_at?: string
           source?: string
           started_at?: string
@@ -1130,7 +1154,8 @@ export type Database = {
       can_access_flow: { Args: { _flow_id: string }; Returns: boolean }
       can_access_flow_topic: { Args: { _topic: string }; Returns: boolean }
       can_edit_flow: { Args: { _flow_id: string }; Returns: boolean }
-      claim_pro_trial: { Args: never; Returns: Json }
+      check_pro_trial_code: { Args: { p_code: string }; Returns: boolean }
+      claim_pro_trial: { Args: { p_code: string }; Returns: Json }
       find_user_by_email: {
         Args: { p_email: string }
         Returns: {

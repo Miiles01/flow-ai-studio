@@ -10,7 +10,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import logotipoSvg from "@/assets/miiles/logotipo.svg";
 import { useAuth } from "@/contexts/AuthContext";
-import { PRO_TRIAL_PATH, claimProTrial, clearProTrialIntent, setProTrialIntent } from "@/lib/proTrial";
+import { PRO_TRIAL_PATH, claimProTrial, clearProTrialCode, getStoredProTrialCode } from "@/lib/proTrial";
+import ProTrialCodeForm from "@/components/ProTrialCodeForm";
 
 type Mode = "signup" | "login";
 
@@ -25,15 +26,23 @@ const ProTrial = () => {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [checkEmail, setCheckEmail] = useState(false);
+  const [code, setCode] = useState<string | null>(() => getStoredProTrialCode());
   const claiming = useRef(false);
 
   // Once a session exists on this page, grant the trial and continue to the app.
   useEffect(() => {
-    if (authLoading || !user || claiming.current) return;
+    if (authLoading || !user || !code || claiming.current) return;
     claiming.current = true;
     (async () => {
-      const result = await claimProTrial();
-      clearProTrialIntent();
+      const result = await claimProTrial(code);
+      if (result?.reason === "invalid_code") {
+        clearProTrialCode();
+        setCode(null);
+        claiming.current = false;
+        toast.error(t("protrial.invalidCode"));
+        return;
+      }
+      clearProTrialCode();
       if (!result) {
         toast.error(t("protrial.error"));
       } else if (result.granted) {
@@ -48,14 +57,13 @@ const ProTrial = () => {
       }
       navigate("/dashboard", { replace: true });
     })();
-  }, [authLoading, user, navigate, t, i18n.language]);
+  }, [authLoading, user, code, navigate, t, i18n.language]);
 
   const returnUrl = new URL(PRO_TRIAL_PATH, window.location.origin).href;
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setProTrialIntent();
     if (mode === "signup") {
       const { data, error } = await supabase.auth.signUp({
         email,
@@ -72,14 +80,13 @@ const ProTrial = () => {
   };
 
   const handleGoogle = async () => {
-    setProTrialIntent();
     const result = await lovable.auth.signInWithOAuth("google", { redirect_uri: returnUrl });
     if (result.error) toast.error(t("protrial.googleError"));
   };
 
   const perks = t("protrial.perks", { returnObjects: true }) as string[];
 
-  if (user) {
+  if (user && code) {
     return (
       <div className="bg-white w-full py-16 px-8 rounded-[32px] flex flex-col items-center justify-center gap-4 shadow-[0_10px_40px_-15px_rgba(28,30,42,0.15)]">
         <Loader2 size={22} className="animate-spin text-black" />
@@ -102,8 +109,8 @@ const ProTrial = () => {
           <svg width="10" height="10" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 0C12.3 8.8 15.2 11.7 24 12C15.2 12.3 12.3 15.2 12 24C11.7 15.2 8.8 12.3 0 12C8.8 11.7 11.7 8.8 12 0Z" /></svg>
           {t("protrial.badge")}
         </span>
-        <h1 className="text-[28px] font-medium text-black leading-tight">{t("protrial.title")}</h1>
-        <p className="text-sm text-miiles-gray-400 font-light mt-2">{t("protrial.subtitle")}</p>
+        <h1 className="text-[28px] font-medium text-black leading-tight">{code ? t("protrial.title") : t("protrial.codeTitle")}</h1>
+        <p className="text-sm text-miiles-gray-400 font-light mt-2">{code ? t("protrial.subtitle") : t("protrial.codeSubtitle")}</p>
       </div>
 
       <ul className="grid gap-2 mb-8 mx-auto">
@@ -115,7 +122,9 @@ const ProTrial = () => {
         ))}
       </ul>
 
-      {checkEmail ? (
+      {!code ? (
+        <ProTrialCodeForm onValid={(c) => setCode(c.trim().toUpperCase())} />
+      ) : user ? null : checkEmail ? (
         <div className="text-center rounded-2xl bg-miiles-gray-50 px-6 py-8">
           <Mail size={22} className="mx-auto mb-3 text-black" />
           <p className="text-[15px] text-black font-normal">{t("protrial.checkEmailTitle")}</p>
@@ -194,7 +203,14 @@ const ProTrial = () => {
         </>
       )}
 
-      <p className="text-center text-xs text-miiles-gray-400 font-light mt-8">{t("protrial.fineprint")}</p>
+      {code && !checkEmail && (
+        <div className="flex justify-center mt-6">
+          <button type="button" onClick={() => { clearProTrialCode(); setCode(null); }} className="text-xs text-miiles-gray-400 hover:text-black underline-offset-4 hover:underline">
+            {t("protrial.changeCode")}
+          </button>
+        </div>
+      )}
+      <p className="text-center text-xs text-miiles-gray-400 font-light mt-4">{t("protrial.fineprint")}</p>
     </motion.div>
   );
 };

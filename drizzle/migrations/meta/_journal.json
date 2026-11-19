@@ -64,6 +64,13 @@
       "when": 1795115548627,
       "tag": "0008_pro_trial_30_days",
       "breakpoints": true
+    },
+    {
+      "idx": 9,
+      "version": "7",
+      "when": 1795115872909,
+      "tag": "0009_pro_trial_invite_code",
+      "breakpoints": true
     }
   ]
 }
