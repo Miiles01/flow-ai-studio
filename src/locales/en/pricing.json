@@ -21,7 +21,17 @@
         "Up to 10 collaborations",
         "Email support"
       ],
-      "cta": "Start for free"
+      "cta": "Start for free",
+      "prices": {
+        "MXN": {
+          "monthly": "0",
+          "annual": "0"
+        },
+        "USD": {
+          "monthly": "0",
+          "annual": "0"
+        }
+      }
     },
     {
       "id": "Pro",
@@ -37,7 +47,17 @@
       ],
       "cta": "Get Pro",
       "highlighted": true,
-      "annualBadge": "Save 20% with the annual plan"
+      "annualBadge": "Save 20% with the annual plan",
+      "prices": {
+        "MXN": {
+          "monthly": "386",
+          "annual": "3712"
+        },
+        "USD": {
+          "monthly": "24",
+          "annual": "230"
+        }
+      }
     },
     {
       "id": "Negocios",
@@ -55,5 +75,9 @@
       "customPrice": true
     }
   ],
-  "currency": "USD"
+  "currency": "USD",
+  "currencies": {
+    "MXN": "Pesos",
+    "USD": "Dollars"
+  }
 }

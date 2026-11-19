@@ -1,10 +1,9 @@
 import { useTranslation } from "react-i18next";
 import { useLocalePath } from "@/hooks/useLocalePath";
-import { useEffect, useLayoutEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { Link } from "react-router-dom";
 import { trackEvent } from "@/lib/trackEvent";
 import { motion } from "framer-motion";
-import gsap from "gsap";
 
 // Checkbox Icon Component
 const CheckIcon = ({ highlighted }: { highlighted?: boolean }) => {
@@ -16,65 +15,57 @@ const CheckIcon = ({ highlighted }: { highlighted?: boolean }) => {
   );
 };
 
-// Precio tipo odómetro (Annnimate "pricing"): cada dígito es una columna con las caras 0–9 y rueda
-// hasta el número nuevo, escalonado desde la derecha. Si el precio gana o pierde dígitos, el ancho
-// se anima para que "$" y el periodo se muevan con el número.
-const RollingPrice = ({ value }: { value: string }) => {
-  const wrapRef = useRef<HTMLSpanElement>(null);
-  const prevRef = useRef(value);
-  const prevWidth = useRef<number | null>(null);
-
-  // Antes de pintar el valor nuevo: cada columna arranca en el dígito que tenía en la misma posición (desde la derecha)
-  useLayoutEffect(() => {
-    const wrap = wrapRef.current;
-    if (!wrap) return;
-    const prev = prevRef.current;
-    prevRef.current = value;
-    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const cols = Array.from(wrap.querySelectorAll<HTMLElement>("[data-roller]"));
-    const prevDigits = prev.replace(/[^0-9]/g, "").split("").reverse();
-    const ctx = gsap.context(() => {
-      // Ancho: del valor anterior al nuevo
-      const newW = wrap.scrollWidth;
-      if (prevWidth.current !== null && prevWidth.current !== newW && !reduce) {
-        gsap.fromTo(wrap, { width: prevWidth.current }, { width: newW, duration: 0.6, ease: "expo.out", clearProps: "width" });
-      }
-      prevWidth.current = newW;
-      cols.reverse().forEach((roller, i) => {
-        const to = Number(roller.dataset.roller);
-        const from = prevDigits[i] !== undefined ? Number(prevDigits[i]) : 0;
-        if (reduce || prev === value) { gsap.set(roller, { y: `${-to}em` }); return; }
-        gsap.fromTo(roller, { y: `${-from}em` }, { y: `${-to}em`, duration: 0.6, ease: "expo.inOut", delay: i * 0.05 });
-      });
-      // Separadores (coma) entran suave
-      if (!reduce && prev !== value) gsap.from(wrap.querySelectorAll("[data-sep]"), { opacity: 0, duration: 0.3, delay: 0.15 });
-    }, wrap);
-    return () => ctx.kill();
-  }, [value]);
-
-  // clip-path en lugar de overflow-hidden: recorta igual pero no rompe la línea base, así los dígitos quedan
-  // alineados con "$". Cada columna lleva su dígito invisible en el flujo (con números tabulares) para tomar
-  // ancho y línea base reales, y encima rueda la tira 0–9.
+// Precio tipo odómetro (como "pricing" de Annnimate): columnas FIJAS de dígitos que solo ruedan.
+// - Cada columna es una tira 0–9; cambiar de dígito solo mueve la tira (va hacia arriba o hacia abajo sola).
+// - Ruedan escalonadas desde la derecha, con curva expo-out de 0.6 s.
+// - Siempre existen maxDigits columnas: las que el precio no usa miden 0 de ancho y se abren/cierran suave,
+//   igual que la coma de miles; así "$" y "/mes" se mueven con el número, sin saltos ni re-montajes.
+const ROLL = "0.6s cubic-bezier(0.16, 1, 0.3, 1)";
+const DIGIT_W = "0.57em";   // ancho de un dígito tabular en esta tipografía (más ancho se ven separados)
+const RollingPrice = ({ value, maxDigits }: { value: string; maxDigits: number }) => {
+  const digits = value.replace(/\D/g, "").split("");
+  const n = digits.length;
+  const cols: JSX.Element[] = [];
+  for (let k = maxDigits - 1; k >= 0; k--) {             // k = posición desde la derecha
+    const idx = n - 1 - k;
+    const on = idx >= 0;
+    const d = on ? Number(digits[idx]) : 0;
+    cols.push(
+      <span key={`d${k}`} aria-hidden="true" className="relative inline-block overflow-hidden"
+        style={{ width: on ? DIGIT_W : 0, height: "1em", transition: `width ${ROLL}` }}>
+        <span className="absolute left-0 top-0 flex flex-col" style={{ width: DIGIT_W, transform: `translateY(${-d}em)`, transition: `transform ${ROLL} ${(k * 0.04).toFixed(2)}s` }}>
+          {Array.from({ length: 10 }, (_, f) => (
+            <span key={f} className="block text-center" style={{ height: "1em", lineHeight: "1em" }}>{f}</span>
+          ))}
+        </span>
+      </span>
+    );
+    if (k === 3) {                                         // coma de miles entre la 4.ª y la 3.ª cifra
+      const sep = n > 3;
+      cols.push(
+        <span key="sep" aria-hidden="true" className="inline-block overflow-hidden text-center"
+          style={{ width: sep ? "0.24em" : 0, height: "1em", lineHeight: "1em", opacity: sep ? 1 : 0, transition: `width ${ROLL}, opacity 0.3s ease` }}>,</span>
+      );
+    }
+  }
   return (
-    <span ref={wrapRef} className="relative inline-flex items-baseline whitespace-nowrap tabular-nums" style={{ clipPath: "inset(-0.2em 0)" }} aria-label={value}>
-      {value.split("").map((ch, i) =>
-        /[0-9]/.test(ch) ? (
-          <span key={`d${value.length - i}`} aria-hidden="true" className="relative inline-block" style={{ clipPath: "inset(0 -0.1em)" }}>
-            <span className="invisible">{ch}</span>
-            <span data-roller={ch} className="absolute inset-x-0 top-0 flex flex-col" style={{ transform: `translateY(${-Number(ch)}em)` }}>
-              {Array.from({ length: 10 }, (_, d) => (
-                <span key={d} className="block text-center" style={{ height: "1em", lineHeight: "1em" }}>{d}</span>
-              ))}
-            </span>
-          </span>
-        ) : (
-          <span key={`s${value.length - i}`} data-sep aria-hidden="true" className="inline-block">{ch}</span>
-        )
-      )}
+    <span className="inline-flex items-end whitespace-nowrap tabular-nums" style={{ height: "1em", lineHeight: "1em" }} aria-label={value}>
+      {cols}
     </span>
   );
 };
 
+/** Texto que rueda entre opciones (p. ej. "/mes" ↔ "/año", "MXN" ↔ "USD"): todas las caras viven en una tira. */
+const Swap = ({ options, index }: { options: string[]; index: number }) => (
+  <span className="relative inline-block overflow-hidden align-bottom" style={{ height: "1.25em", lineHeight: "1.25em" }}>
+    <span className="invisible block whitespace-nowrap">{options.reduce((a, b) => (b.length > a.length ? b : a), "")}</span>
+    <span className="absolute left-0 top-0 flex flex-col whitespace-nowrap" style={{ transform: `translateY(${-1.25 * index}em)`, transition: "transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)" }}>
+      {options.map((o, i) => <span key={i} aria-hidden={i !== index} style={{ height: "1.25em" }}>{o}</span>)}
+    </span>
+  </span>
+);
+
+type Moneda = "MXN" | "USD";
 
 interface PricingTableProps {
   onPlanSelect?: (planName: string, cycle: "monthly" | "annually") => void;
@@ -82,15 +73,43 @@ interface PricingTableProps {
 }
 
 export default function PricingTable({ onPlanSelect, isModal }: PricingTableProps = {}) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const localePath = useLocalePath();
-  const plans = t("pricing.plans", { returnObjects: true }) as { id: string; name: string; monthlyPrice: string; annualPrice: string; description: string; features: string[]; cta: string; highlighted?: boolean; annualBadge?: string; customPrice?: boolean }[];
+  const plans = t("pricing.plans", { returnObjects: true }) as { id: string; name: string; monthlyPrice: string; annualPrice: string; description: string; features: string[]; cta: string; highlighted?: boolean; annualBadge?: string; customPrice?: boolean; prices?: Record<Moneda, { monthly: string; annual: string }> }[];
   const [cycle, setCycle] = useState<"monthly" | "annually">("monthly");
+  // Moneda: pesos en español, dólares en inglés (se puede cambiar con el selector de arriba)
+  const [moneda, setMoneda] = useState<Moneda>(() => ((i18n.language || "es").startsWith("en") ? "USD" : "MXN"));
+  const monedas = t("pricing.currencies", { returnObjects: true }) as Record<Moneda, string>;
+  const precio = (plan: (typeof plans)[number]) => {
+    const pr = plan.prices?.[moneda];
+    if (pr) return cycle === "monthly" ? pr.monthly : pr.annual;
+    return cycle === "monthly" ? plan.monthlyPrice : plan.annualPrice;
+  };
+  // columnas del odómetro: las del precio más largo posible (todas las monedas y periodos)
+  const maxDigits = Math.max(1, ...plans.flatMap((p) => (p.prices ? Object.values(p.prices).flatMap((x) => [x.monthly, x.annual]) : [p.monthlyPrice, p.annualPrice]).map((v) => v.replace(/\D/g, "").length)));
 
   return (
     <>
-      {/* Selector de Ciclo (Mensual / Anual) */}
-      <section className="flex flex-col items-center justify-center text-center px-6 pb-12">
+      {/* Selector de Moneda (arriba) y de Ciclo (Mensual / Anual) */}
+      <section className="flex flex-col items-center justify-center gap-3 text-center px-6 pb-12">
+        <div className="relative flex w-48 p-1 bg-[#F5F5F8] rounded-full mx-auto cursor-pointer border border-gray-100" role="group" aria-label="Moneda">
+          <motion.div
+            className="absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] bg-white rounded-full ring-1 ring-black/10"
+            animate={{ x: moneda === "MXN" ? 0 : "100%" }}
+            transition={{ type: "spring", stiffness: 350, damping: 30 }}
+          />
+          {(["MXN", "USD"] as Moneda[]).map((m) => (
+            <button
+              key={m}
+              type="button"
+              aria-pressed={moneda === m}
+              onClick={() => setMoneda(m)}
+              className={`relative z-10 flex-1 py-1.5 text-[11px] font-normal transition-colors duration-300 ${moneda === m ? "text-black" : "text-gray-400"}`}
+            >
+              {(monedas?.[m] ?? m) + " " + m}
+            </button>
+          ))}
+        </div>
         <div className="relative flex w-64 p-1 bg-[#F5F5F8] rounded-full mx-auto cursor-pointer border border-gray-100 shadow-inner">
           <motion.div
             className="absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] bg-black rounded-full"
@@ -140,30 +159,32 @@ export default function PricingTable({ onPlanSelect, isModal }: PricingTableProp
                 {plan.description}
               </p>
               
-              <div className="flex items-baseline gap-1 mb-2">
+              <div className="flex items-end gap-1 mb-2">
                 {plan.customPrice ? (
                   <div className="text-[38px] font-normal tracking-tight font-sans h-[1.1em] flex items-center">
                     {t("pricing.letsTalk")}
                   </div>
                 ) : (
                   <>
-                    <div className="text-5xl font-normal tracking-tight flex items-baseline">
-                      <span>$</span>
-                      <RollingPrice value={cycle === "monthly" ? plan.monthlyPrice : plan.annualPrice} />
+                    <div className="text-5xl font-normal tracking-tight flex items-end" style={{ lineHeight: "1em" }}>
+                      <span style={{ height: "1em", lineHeight: "1em" }}>$</span>
+                      <RollingPrice value={precio(plan)} maxDigits={maxDigits} />
                     </div>
-                    <span className={`text-xs font-light ${plan.highlighted ? "text-white" : "text-gray-400"}`}>
-                      {t("pricing.currency")} {cycle === "monthly" ? t("pricing.perMonth") : t("pricing.perYear")}
+                    <span className={`whitespace-nowrap text-xs font-light ${plan.highlighted ? "text-white" : "text-gray-400"}`}>
+                      <Swap options={["MXN", "USD"]} index={moneda === "MXN" ? 0 : 1} />{" "}
+                      <Swap options={[t("pricing.perMonth"), t("pricing.perYear")]} index={cycle === "monthly" ? 0 : 1} />
                     </span>
                   </>
                 )}
               </div>
               
-              {cycle === "annually" && plan.annualBadge && (
-                <p className={`text-[11px] font-light mb-8 ${plan.highlighted ? "text-white/70" : "text-miiles-blue"}`}>
-                  ✦ {plan.annualBadge}
-                </p>
-              )}
-              {!(cycle === "annually" && plan.annualBadge) && <div className="mb-8" />}
+              {/* La línea de ahorro siempre ocupa su lugar (en todas las tarjetas): mensual y anual miden lo mismo */}
+              <p
+                aria-hidden={!(cycle === "annually" && plan.annualBadge)}
+                className={`text-[11px] font-light mb-8 h-[1.5em] transition-all duration-300 ${plan.highlighted ? "text-white/70" : "text-miiles-blue"} ${cycle === "annually" && plan.annualBadge ? "opacity-100 translate-y-0" : "opacity-0 -translate-y-1"}`}
+              >
+                {plan.annualBadge ? `✦ ${plan.annualBadge}` : "\u00a0"}
+              </p>
 
               <ul className="flex flex-col gap-4 mb-10 flex-1">
                 {plan.features.map((f) => (
