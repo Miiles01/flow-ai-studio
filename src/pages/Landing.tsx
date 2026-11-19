@@ -241,7 +241,7 @@ const Landing = () => {
                 {/* Igual que "Unirse": lleva a /login, que manda al dashboard si ya hay sesión */}
                 <Button asChild size="lg" className="group h-auto py-4 text-[15px]">
                   <Link to="/login">
-                    {t("home.landing.explore_templates")}
+                    {t("home.landing.hero_cta_gratis")}
                     <ArrowUpRight aria-hidden="true" className="transition-transform duration-300 ease-out group-hover:rotate-45" />
                   </Link>
                 </Button>
