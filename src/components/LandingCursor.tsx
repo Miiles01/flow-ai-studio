@@ -1,5 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { useLocation } from "react-router-dom";
+import i18n from "@/i18n";
 
 const PAGES = ["", "acerca-de", "funciones", "afiliados"];
 const COLOR = "#4059F1";
@@ -76,7 +77,7 @@ const LandingCursor = () => {
         className="absolute left-[16px] top-[18px] whitespace-nowrap rounded-full px-2.5 py-1 text-[11px] font-normal leading-none"
         style={{ background: COLOR, color: "#fff" }}
       >
-        Invitado
+        {(i18n.language || "es").startsWith("en") ? "Guest" : "Invitado"}
       </span>
     </div>
   );
