@@ -4,6 +4,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Loader2, RefreshCw } from "lucide-react";
+import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 
 type Row = {
   id: string; email: string; name: string | null; username: string | null;
@@ -24,6 +25,14 @@ const FILTERS = [
   { id: "pro", label: "Pro" },
 ] as const;
 
+const HAS = [
+  { id: "onboarding", label: "Con onboarding", test: (u: Row) => u.onboarding },
+  { id: "boards", label: "Con tableros", test: (u: Row) => u.boards > 0 },
+  { id: "widgets", label: "Con widgets", test: (u: Row) => u.widgets > 0 },
+  { id: "pages", label: "Con páginas", test: (u: Row) => u.pages > 0 },
+] as const;
+const RANGES = [14, 30, 90] as const;
+
 const fmt = (d: string | null) => (d ? new Date(d).toLocaleDateString("es-MX", { day: "2-digit", month: "short", year: "2-digit" }) : "—");
 const NET: Record<string, string> = { tiktok: "TikTok", instagram: "Instagram", facebook: "Facebook", youtube: "YouTube" };
 
@@ -34,6 +43,22 @@ export default function CustomersTab() {
   const [templates, setTemplates] = useState<Tpl[]>([]);
   const [q, setQ] = useState("");
   const [filter, setFilter] = useState<(typeof FILTERS)[number]["id"]>("all");
+  const [has, setHas] = useState<string[]>([]);
+  const [range, setRange] = useState<(typeof RANGES)[number]>(30);
+  const [series, setSeries] = useState<"new" | "total">("new");
+
+  const daily = useMemo(() => {
+    const day = (t: number) => new Date(t).toISOString().slice(0, 10);
+    const counts = new Map<string, number>();
+    users.forEach((u) => { const k = day(Date.parse(u.created_at)); counts.set(k, (counts.get(k) ?? 0) + 1); });
+    const start = Date.now() - (range - 1) * 864e5;
+    let total = users.filter((u) => day(Date.parse(u.created_at)) < day(start)).length;
+    return Array.from({ length: range }, (_, i) => {
+      const k = day(start + i * 864e5); const n = counts.get(k) ?? 0; total += n;
+      return { k, label: new Date(k + "T12:00:00").toLocaleDateString("es-MX", { day: "2-digit", month: "short" }), new: n, total };
+    });
+  }, [users, range]);
+  const periodNew = daily.reduce((a, d) => a + d.new, 0);
 
   const load = async () => {
     setLoading(true);
@@ -48,13 +73,14 @@ export default function CustomersTab() {
     const week = Date.now() - 7 * 864e5;
     return users.filter((u) => {
       if (q && !`${u.email} ${u.name ?? ""} ${u.username ?? ""}`.toLowerCase().includes(q.toLowerCase())) return false;
+      if (!HAS.every((h) => !has.includes(h.id) || h.test(u))) return false;
       if (filter === "new") return Date.parse(u.created_at) >= week;
       if (filter === "noOnb") return !u.onboarding;
       if (filter === "intent") return u.pro_clicks + u.contact_clicks > 0;
       if (filter === "pro") return u.plan !== "free";
       return true;
     });
-  }, [users, q, filter]);
+  }, [users, q, filter, has]);
 
   const cards = summary ? [
     ["Registrados", summary.total], ["Nuevos 7 días", summary.new7], ["Nuevos 30 días", summary.new30],
@@ -73,6 +99,46 @@ export default function CustomersTab() {
           {loading ? <Loader2 className="h-4 w-4 animate-spin" /> : <RefreshCw className="h-4 w-4" />} Actualizar
         </Button>
       </div>
+
+      {users.length > 0 && (
+        <section className="rounded-2xl bg-white/5 border border-white/10 p-5 space-y-4">
+          <div className="flex flex-wrap items-end justify-between gap-3">
+            <div>
+              <p className="text-xs text-white/50 font-light">{series === "new" ? `Usuarios nuevos por día · últimos ${range} días` : "Usuarios registrados en total"}</p>
+              <p className="text-3xl font-normal text-white mt-1">{series === "new" ? periodNew : daily[daily.length - 1]?.total}</p>
+            </div>
+            <div className="flex flex-wrap gap-2">
+              {(["new", "total"] as const).map((v) => (
+                <button key={v} onClick={() => setSeries(v)} className={`rounded-full px-3 py-1.5 text-xs ${series === v ? "bg-white text-black" : "bg-white/10 text-white/60"}`}>{v === "new" ? "Nuevos" : "Total"}</button>
+              ))}
+              <span className="w-px bg-white/10 mx-1" />
+              {RANGES.map((r) => (
+                <button key={r} onClick={() => setRange(r)} className={`rounded-full px-3 py-1.5 text-xs ${range === r ? "bg-white text-black" : "bg-white/10 text-white/60"}`}>{r} días</button>
+              ))}
+            </div>
+          </div>
+          <div className="h-72 text-white">
+            <ResponsiveContainer width="100%" height="100%">
+              <AreaChart data={daily} margin={{ top: 8, right: 8, left: -20, bottom: 0 }}>
+                <defs>
+                  <linearGradient id="adminArea" x1="0" y1="0" x2="0" y2="1">
+                    <stop offset="0%" stopColor="currentColor" stopOpacity={0.35} />
+                    <stop offset="100%" stopColor="currentColor" stopOpacity={0} />
+                  </linearGradient>
+                </defs>
+                <CartesianGrid vertical={false} stroke="currentColor" strokeOpacity={0.08} />
+                <XAxis dataKey="label" tickLine={false} axisLine={false} tick={{ fill: "currentColor", opacity: 0.5, fontSize: 11 }} minTickGap={24} />
+                <YAxis allowDecimals={false} tickLine={false} axisLine={false} tick={{ fill: "currentColor", opacity: 0.5, fontSize: 11 }} />
+                <Tooltip cursor={{ stroke: "currentColor", strokeOpacity: 0.2 }}
+                  contentStyle={{ borderRadius: 12, border: "1px solid rgba(128,128,128,.25)", background: "rgba(20,20,24,.92)", color: "#fff", fontSize: 12 }}
+                  formatter={(v: number) => [v, series === "new" ? "Nuevos" : "Total"]} />
+                <Area type="monotone" dataKey={series} stroke="currentColor" strokeWidth={2} fill="url(#adminArea)"
+                  dot={false} activeDot={{ r: 4, strokeWidth: 0, fill: "currentColor" }} />
+              </AreaChart>
+            </ResponsiveContainer>
+          </div>
+        </section>
+      )}
 
       {summary && (
         <>
@@ -119,6 +185,16 @@ export default function CustomersTab() {
               {f.label}
             </button>
           ))}
+          <span className="w-px h-5 bg-white/10 mx-1" />
+          {HAS.map((h) => {
+            const on = has.includes(h.id);
+            return (
+              <button key={h.id} onClick={() => setHas((p) => on ? p.filter((x) => x !== h.id) : [...p, h.id])}
+                className={`rounded-full px-3 py-1.5 text-xs border ${on ? "bg-white text-black border-transparent" : "border-white/10 text-white/60"}`}>
+                {h.label}
+              </button>
+            );
+          })}
           <span className="text-xs text-white/40 ml-auto">{shown.length} usuarios</span>
         </div>
         <div className="rounded-2xl border border-white/10 overflow-x-auto">

@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import { useAdminAuth } from "@/hooks/useAdminAuth";
 import AdminLogin from "./AdminLogin";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
@@ -9,11 +10,13 @@ import InstructionsTab from "@/components/admin/InstructionsTab";
 import CouponsTab from "@/components/admin/CouponsTab";
 import StudioTab from "@/components/admin/StudioTab";
 import SuggestionsTab from "@/components/admin/SuggestionsTab";
-import { LogOut, Database, FileCode, Loader2, Briefcase, Brain, Ticket, Lightbulb, Palette, Users } from "lucide-react";
+import { LogOut, Database, FileCode, Loader2, Briefcase, Brain, Ticket, Lightbulb, Palette, Users, Sun, Moon } from "lucide-react";
 import CustomersTab from "@/components/admin/CustomersTab";
 
 export default function Admin() {
   const { valid, checking, logout } = useAdminAuth();
+  const [light, setLight] = useState(() => localStorage.getItem("miiles-admin-theme") === "light");
+  useEffect(() => { localStorage.setItem("miiles-admin-theme", light ? "light" : "dark"); }, [light]);
 
   if (checking) {
     return (
@@ -26,15 +29,20 @@ export default function Admin() {
   if (!valid) return <AdminLogin onSuccess={() => window.location.reload()} />;
 
   return (
-    <div className="min-h-screen bg-[#0f0f11] text-white">
+    <div className={`min-h-screen bg-[#0f0f11] text-white ${light ? "admin-light" : "dark"}`}>
       <header className="border-b border-white/10 px-6 md:px-10 py-5 flex items-center justify-between">
         <div>
           <h1 className="text-xl font-normal text-white">Miiles Admin</h1>
           <p className="text-xs text-white/50 font-light">Cerebro de datos e instrucciones</p>
         </div>
+        <div className="flex items-center gap-1">
+        <Button onClick={() => setLight((v) => !v)} variant="ghost" className="text-white/70 hover:text-white hover:bg-white/10" aria-label="Cambiar tema">
+          {light ? <Moon className="h-4 w-4" /> : <Sun className="h-4 w-4" />} {light ? "Modo oscuro" : "Modo claro"}
+        </Button>
         <Button onClick={logout} variant="ghost" className="text-white/70 hover:text-white hover:bg-white/10">
           <LogOut className="h-4 w-4" /> Salir
         </Button>
+        </div>
       </header>
 
       <main className="max-w-6xl mx-auto p-6 md:p-10">

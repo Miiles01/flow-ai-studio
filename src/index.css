@@ -1067,3 +1067,20 @@
 @media (hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference) {
   html.landing-cursor, html.landing-cursor body, html.landing-cursor *:not(a):not(button):not(input):not(textarea):not(select):not([role="button"]) { cursor: none; }
 }
+
+/* Admin panel light mode: remaps the panel's dark-first white utilities */
+.admin-light { background: #f7f7f8 !important; color: #111219 !important; }
+.admin-light .text-white { color: #111219; }
+.admin-light .text-white\/80, .admin-light .text-white\/70 { color: rgb(17 18 25 / .75); }
+.admin-light .text-white\/60, .admin-light .text-white\/50, .admin-light .text-white\/45 { color: rgb(17 18 25 / .58); }
+.admin-light .text-white\/40, .admin-light .text-white\/30, .admin-light .text-white\/25 { color: rgb(17 18 25 / .42); }
+.admin-light .placeholder\:text-white\/30::placeholder { color: rgb(17 18 25 / .4); }
+.admin-light .hover\:text-white:hover, .admin-light .hover\:text-white\/70:hover { color: #111219; }
+.admin-light .bg-white\/5 { background-color: #ffffff; }
+.admin-light .bg-white\/10 { background-color: rgb(17 18 25 / .06); }
+.admin-light .hover\:bg-white\/5:hover, .admin-light .hover\:bg-white\/10:hover, .admin-light .hover\:bg-white\/15:hover, .admin-light .hover\:bg-white\/20:hover { background-color: rgb(17 18 25 / .08); }
+.admin-light .border-white\/5, .admin-light .border-white\/08, .admin-light .border-white\/10, .admin-light .border-white\/15 { border-color: rgb(17 18 25 / .1); }
+.admin-light .border-white\/40 { border-color: rgb(17 18 25 / .35); }
+.admin-light .bg-white, .admin-light .data-\[state\=active\]\:bg-white[data-state="active"] { background-color: #111219; }
+.admin-light .bg-white.text-black, .admin-light .bg-white .text-black, .admin-light .data-\[state\=active\]\:text-black[data-state="active"] { color: #ffffff; }
+.admin-light .hover\:bg-white:hover, .admin-light .hover\:bg-white\/90:hover { background-color: #2a2c38; }
