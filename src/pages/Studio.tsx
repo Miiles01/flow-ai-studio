@@ -9,6 +9,7 @@ import { DiscoveriesBoard } from "@/components/discoveries/DiscoveriesBoard";
 import StudioLibraryCard from "@/components/studio/StudioLibraryCard";
 import MyPages from "@/components/studio/MyPages";
 import StudioComponentCard from "@/components/studio/StudioComponentCard";
+import { ScenesBoard } from "@/components/studio/ScenesBoard";
 import { COMPONENT_CATEGORIES, STUDIO_COMPONENTS, type StudioComponent } from "@/lib/studioComponents";
 import i18n, { pickLang } from "@/i18n";
 
@@ -133,14 +134,21 @@ export default function Studio() {
         <DiscoveriesBoard />
       </section>
 
-      {/* Escenas: partes de un Reel (pantalla dividida, gráficas, libro…) que se copian como prompt */}
-      <SeccionAnimaciones
-        items={escenas}
-        categorias={COMPONENT_CATEGORIES.filter((cat) => cat.id === "Escena")}
-        titulo={{ es: "Escenas", en: "Scenes", pt: "Cenas", fr: "Scènes" }}
-        subtitulo={{ es: "Partes de un Reel listas para copiar y pegar en tu asistente de IA", en: "Reel parts ready to copy and paste into your AI assistant", pt: "Partes de um Reel prontas para copiar e colar no seu assistente de IA", fr: "Des parties de Reel prêtes à copier-coller dans votre assistant IA" }}
-        etiqueta={{ es: "Nuevo", en: "New", pt: "Novo", fr: "Nouveau" }}
-      />
+      {/* Escenas: partes de un Reel, con el mismo panel que Arquitectura algorítmica */}
+      {escenas.length > 0 && (
+        <section className="space-y-6">
+          <div>
+            <span className="mb-3 inline-flex rounded-full bg-black px-3 py-1 text-xs font-normal text-white dark:border dark:border-white/10">
+              {pickLang({ es: "Nuevo", en: "New", pt: "Novo", fr: "Nouveau" }, i18n.language)}
+            </span>
+            <h2 className="text-xl md:text-2xl font-medium text-foreground">{pickLang({ es: "Escenas", en: "Scenes", pt: "Cenas", fr: "Scènes" }, i18n.language)}</h2>
+            <p className="mt-1 text-sm font-light text-muted-foreground">
+              {pickLang({ es: "Partes de un Reel listas para copiar y pegar en tu asistente de IA", en: "Reel parts ready to copy and paste into your AI assistant", pt: "Partes de um Reel prontas para copiar e colar no seu assistente de IA", fr: "Des parties de Reel prêtes à copier-coller dans votre assistant IA" }, i18n.language)}
+            </p>
+          </div>
+          <ScenesBoard items={escenas} />
+        </section>
+      )}
 
       {/* Componentes: animaciones de video y otros assets que se copian como prompt */}
       <SeccionAnimaciones
