@@ -71,22 +71,42 @@ function Dots({ isDark }: { isDark: boolean }) {
 
 const panelBg = (isDark: boolean) => (isDark ? "linear-gradient(180deg, #121212 0%, #0A0A0A 100%)" : "linear-gradient(180deg, #FDFDFD 0%, #F8F9FD 100%)");
 
+const BANNER_CSS = `
+.scenes-banner { container-type: inline-size; }
+.scenes-banner__inner { display: flex; flex-direction: column; gap: 28px; padding: 28px; }
+.scenes-banner__title { font-size: clamp(2rem, 9cqw, 2.75rem); }
+.scenes-banner__video { width: min(100%, 320px); aspect-ratio: 9 / 16; align-self: center; border-radius: 22px;
+  transition: width .45s cubic-bezier(.22,1,.36,1), border-radius .45s cubic-bezier(.22,1,.36,1); }
+@container (min-width: 620px) {
+  .scenes-banner__inner { flex-direction: row; align-items: center; gap: clamp(28px, 6cqw, 56px); padding: clamp(32px, 6cqw, 48px); }
+  .scenes-banner__text { flex: 1; }
+  .scenes-banner__title { font-size: clamp(2.5rem, 6.5cqw, 3.5rem); }
+  .scenes-banner__video { width: clamp(220px, 32cqw, 290px); align-self: auto; border-radius: 24px; }
+}
+`;
+
 /** Banner principal de la sección Escenas (título, etiqueta Nuevo, subtítulo) con el video de referencia UGC · Pro. */
 export function ScenesBanner() {
   const { i18n } = useTranslation();
   const { isDark } = useTheme();
   const t = (o: L) => pickLang(o, i18n.language);
   return (
-    <div className="relative w-full overflow-hidden rounded-[20px] md:rounded-[24px]" style={{ background: panelBg(isDark) }}>
+    // Se acomoda según el ancho real del banner (container query), no el de la ventana:
+    // con el sidebar abierto o en pantallas medianas el video baja y el texto usa todo el ancho.
+    <div className="scenes-banner relative w-full overflow-hidden rounded-[20px] md:rounded-[24px]" style={{ background: panelBg(isDark) }}>
+      <style>{BANNER_CSS}</style>
       <Dots isDark={isDark} />
-      <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 md:gap-12 p-8 md:p-12">
-        <div className="flex-1 min-w-0">
+      <div className="scenes-banner__inner relative z-10">
+        <div className="scenes-banner__text min-w-0">
           <span className={`inline-flex rounded-full px-3 py-1 text-xs font-normal ${isDark ? "bg-white text-black" : "bg-black text-white"}`}>{t(REFERENCIA.tag)}</span>
-          <h2 className="mt-4 text-3xl md:text-5xl font-normal leading-[1.05] text-foreground">{t(REFERENCIA.title)}</h2>
+          <h2 className="scenes-banner__title mt-4 font-normal leading-[1.05] text-foreground">{t(REFERENCIA.title)}</h2>
           <p className="mt-4 max-w-md text-sm md:text-base font-light leading-relaxed text-muted-foreground">{t(REFERENCIA.sub)}</p>
           <p className="mt-3 max-w-md text-xs md:text-sm font-light leading-relaxed text-muted-foreground">{t(REFERENCIA.hint)}</p>
         </div>
-        <div className={`h-[420px] md:h-[480px] aspect-[9/16] shrink-0 rounded-[24px] overflow-hidden border ${isDark ? "bg-black border-white/10" : "bg-[#F4F4F5] border-black/5"}`} style={{ boxShadow: "0 24px 60px rgba(0,0,0,0.15)" }}>
+        <div
+          className={`scenes-banner__video shrink-0 overflow-hidden border ${isDark ? "bg-black border-white/10" : "bg-[#F4F4F5] border-black/5"}`}
+          style={{ boxShadow: "0 24px 60px rgba(0,0,0,0.15)" }}
+        >
           <SceneVideo src={REFERENCIA.src} />
         </div>
       </div>
