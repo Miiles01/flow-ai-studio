@@ -137,9 +137,9 @@ export default function Studio() {
       {/* Escenas: partes de un Reel (cuadrícula como Componentes) y banner principal con el video UGC · Pro */}
       {escenas.length > 0 && (
         <div className="space-y-8">
-          {/* Arriba, las escenas con la misma estructura que Componentes; abajo, el banner con el título */}
-          <SeccionAnimaciones items={escenas} categorias={COMPONENT_CATEGORIES.filter((cat) => cat.id === "Escena")} />
+          {/* Arriba, el banner con el título y el video; abajo, las escenas con la misma estructura que Componentes */}
           <ScenesBanner />
+          <SeccionAnimaciones items={escenas} categorias={COMPONENT_CATEGORIES.filter((cat) => cat.id === "Escena")} />
         </div>
       )}
 
