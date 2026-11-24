@@ -3,7 +3,9 @@ import dashboardI18n from "@/i18n";
 const dt = (key: string, options?: Record<string, unknown>): string => dashboardI18n.t(key, options) as string;
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Settings, Sun, Moon, Laptop, User, ArrowRight, Download } from "lucide-react";
+import { Settings, Sun, Moon, Laptop, User, ArrowRight, Download, Languages, LogOut } from "lucide-react";
+import { useAuth } from "@/contexts/AuthContext";
+import { LANGS, useLang } from "@/components/LanguagePicker";
 import { useTheme } from "@/contexts/ThemeContext";
 import { usePlan } from "@/hooks/usePlan";
 import { useInstallPrompt } from "@/hooks/useInstallPrompt";
@@ -17,6 +19,8 @@ export function QuickSettings({ children }: { children?: React.ReactNode }) {
   const { plan } = usePlan();
   const { canInstall, isIOS, isStandalone, promptInstall } = useInstallPrompt();
   const navigate = useNavigate();
+  const { signOut } = useAuth();
+  const lang = useLang();
   const [isOpen, setIsOpen] = useState(false);
 
   const showInstall = !isStandalone;
@@ -194,6 +198,31 @@ export function QuickSettings({ children }: { children?: React.ReactNode }) {
               </div>
             </div>
 
+            {/* Language selector row */}
+            <div className="flex items-center justify-between px-3 py-2">
+              <div className="flex items-center gap-2.5">
+                <Languages size={16} strokeWidth={1.5} className="opacity-70" />
+                <span className="text-[13px] font-light">{dt("dashboard.language")}</span>
+              </div>
+              <div role="radiogroup" aria-label={dt("dashboard.language")} className="flex items-center gap-0.5 p-0.5 rounded-full border bg-white/5 border-white/10">
+                {LANGS.map((l) => (
+                  <button
+                    key={l.value}
+                    type="button"
+                    role="radio"
+                    aria-checked={lang.current === l.value}
+                    title={l.label}
+                    onClick={() => lang.change(l.value)}
+                    className={`h-7 min-w-7 px-1.5 rounded-full text-[10px] font-semibold tracking-wide transition-all duration-200 ${
+                      lang.current === l.value ? "bg-white text-black shadow-sm" : "text-white/60 hover:text-white"
+                    }`}
+                  >
+                    {l.short}
+                  </button>
+                ))}
+              </div>
+            </div>
+
             {/* Profile Settings row */}
             <button
               onClick={() => {
@@ -221,6 +250,21 @@ export function QuickSettings({ children }: { children?: React.ReactNode }) {
             )}
             */}
           </div>
+          <div className="h-[1px] w-full bg-white/10" />
+
+          {/* Sign out: always the last option */}
+          <button
+            type="button"
+            onClick={async () => {
+              setIsOpen(false);
+              await signOut();
+              navigate("/login");
+            }}
+            className="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl transition-all duration-200 text-red-400 hover:bg-red-500/10"
+          >
+            <LogOut size={16} strokeWidth={1.5} />
+            <span className="text-[13px] font-light">{dt("dashboard.text169")}</span>
+          </button>
         </div>
       </PopoverContent>
     </Popover>
