@@ -9,7 +9,7 @@ import { DiscoveriesBoard } from "@/components/discoveries/DiscoveriesBoard";
 import StudioLibraryCard from "@/components/studio/StudioLibraryCard";
 import MyPages from "@/components/studio/MyPages";
 import StudioComponentCard from "@/components/studio/StudioComponentCard";
-import { ScenesBoard } from "@/components/studio/ScenesBoard";
+import { ScenesBoard, ScenesBanner } from "@/components/studio/ScenesBoard";
 import { COMPONENT_CATEGORIES, STUDIO_COMPONENTS, type StudioComponent } from "@/lib/studioComponents";
 import i18n, { pickLang } from "@/i18n";
 
@@ -147,6 +147,7 @@ export default function Studio() {
             </p>
           </div>
           <ScenesBoard items={escenas} />
+          <ScenesBanner />
         </section>
       )}
 

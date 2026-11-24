@@ -44,8 +44,27 @@ const COPY: Record<string, { title: L; sub: L }> = {
   },
 };
 
+// Video de referencia: una edición completa hecha combinando escenas.
+const REFERENCIA = {
+  src: "/studio/ugc-pro.mp4#t=0.1",
+  tag: { es: "Referencia", en: "Reference", pt: "Referência", fr: "Référence" },
+  title: { es: "UGC · Pro", en: "UGC · Pro", pt: "UGC · Pro", fr: "UGC · Pro" },
+  sub: {
+    es: "Captions al ritmo de su voz, split, carrusel, contadores y texto detrás de ella.",
+    en: "Captions timed to her voice, split screen, carousel, counters and text behind her.",
+    pt: "Legendas no ritmo da voz dela, tela dividida, carrossel, contadores e texto atrás dela.",
+    fr: "Sous-titres au rythme de sa voix, écran partagé, carrousel, compteurs et texte derrière elle.",
+  },
+  hint: {
+    es: "Una edición completa hecha combinando escenas como las de arriba.",
+    en: "A complete edit made by combining scenes like the ones above.",
+    pt: "Uma edição completa feita combinando cenas como as de cima.",
+    fr: "Un montage complet réalisé en combinant des scènes comme celles du dessus.",
+  },
+};
+
 /** Video que solo se reproduce mientras su tarjeta está a la vista (ahorra datos en el carrusel). */
-function SceneVideo({ c }: { c: StudioComponent }) {
+function SceneVideo({ src, poster }: { src: string; poster?: string }) {
   const ref = useRef<HTMLVideoElement>(null);
   useEffect(() => {
     const v = ref.current;
@@ -60,14 +79,57 @@ function SceneVideo({ c }: { c: StudioComponent }) {
   return (
     <video
       ref={ref}
-      src={c.preview_video_url}
-      poster={c.poster_url ?? undefined}
+      src={src}
+      poster={poster}
       muted
       loop
       playsInline
-      preload="none"
+      preload={poster ? "none" : "metadata"}
       className="h-full w-full object-cover"
     />
+  );
+}
+
+/** Mismo fondo de puntos que Arquitectura algorítmica. */
+function Dots({ isDark }: { isDark: boolean }) {
+  return (
+    <div
+      className="absolute inset-0 pointer-events-none"
+      style={{
+        background: isDark
+          ? "radial-gradient(circle at center, #2A2A2A 0%, rgba(140, 134, 162, 0.15) 59%, #121212 100%)"
+          : "radial-gradient(circle at center, #FFFFFF 0%, rgba(140, 134, 162, 0.15) 59%, #FFFFFF 100%)",
+        maskImage: "radial-gradient(circle, black 1px, transparent 1.5px)",
+        maskSize: "20px 20px",
+        WebkitMaskImage: "radial-gradient(circle, black 1px, transparent 1.5px)",
+        WebkitMaskSize: "20px 20px",
+      }}
+    />
+  );
+}
+
+const panelBg = (isDark: boolean) => (isDark ? "linear-gradient(180deg, #121212 0%, #0A0A0A 100%)" : "linear-gradient(180deg, #FDFDFD 0%, #F8F9FD 100%)");
+
+/** Banner principal después de las tarjetas de Escenas: la edición de referencia UGC · Pro. */
+export function ScenesBanner() {
+  const { i18n } = useTranslation();
+  const { isDark } = useTheme();
+  const t = (o: L) => pickLang(o, i18n.language);
+  return (
+    <div className="relative w-full overflow-hidden rounded-[20px] md:rounded-[24px]" style={{ background: panelBg(isDark) }}>
+      <Dots isDark={isDark} />
+      <div className="relative z-10 flex flex-col md:flex-row items-center gap-8 md:gap-12 p-8 md:p-12">
+        <div className="flex-1 min-w-0">
+          <span className={`inline-flex rounded-full px-3 py-1 text-xs font-normal ${isDark ? "bg-white text-black" : "bg-black text-white"}`}>{t(REFERENCIA.tag)}</span>
+          <h3 className="mt-4 text-3xl md:text-5xl font-normal leading-[1.05] text-foreground">{t(REFERENCIA.title)}</h3>
+          <p className="mt-4 max-w-md text-sm md:text-base font-light leading-relaxed text-muted-foreground">{t(REFERENCIA.sub)}</p>
+          <p className="mt-3 max-w-md text-xs md:text-sm font-light leading-relaxed text-muted-foreground">{t(REFERENCIA.hint)}</p>
+        </div>
+        <div className={`h-[420px] md:h-[480px] aspect-[9/16] shrink-0 rounded-[24px] overflow-hidden border ${isDark ? "bg-black border-white/10" : "bg-[#F4F4F5] border-black/5"}`} style={{ boxShadow: "0 24px 60px rgba(0,0,0,0.15)" }}>
+          <SceneVideo src={REFERENCIA.src} />
+        </div>
+      </div>
+    </div>
   );
 }
 
@@ -83,22 +145,10 @@ export function ScenesBoard({ items }: { items: StudioComponent[] }) {
       className="relative w-full overflow-hidden rounded-[20px] md:rounded-[24px]"
       style={{
         height: "443px",
-        background: isDark ? "linear-gradient(180deg, #121212 0%, #0A0A0A 100%)" : "linear-gradient(180deg, #FDFDFD 0%, #F8F9FD 100%)",
+        background: panelBg(isDark),
       }}
     >
-      {/* Mismo fondo de puntos que Arquitectura algorítmica */}
-      <div
-        className="absolute inset-0 pointer-events-none"
-        style={{
-          background: isDark
-            ? "radial-gradient(circle at center, #2A2A2A 0%, rgba(140, 134, 162, 0.15) 59%, #121212 100%)"
-            : "radial-gradient(circle at center, #FFFFFF 0%, rgba(140, 134, 162, 0.15) 59%, #FFFFFF 100%)",
-          maskImage: "radial-gradient(circle, black 1px, transparent 1.5px)",
-          maskSize: "20px 20px",
-          WebkitMaskImage: "radial-gradient(circle, black 1px, transparent 1.5px)",
-          WebkitMaskSize: "20px 20px",
-        }}
-      />
+      <Dots isDark={isDark} />
 
       <div className="relative z-10 h-full w-full flex items-center overflow-x-auto snap-x snap-mandatory scrollbar-hide gap-6 px-8 md:px-12">
         {items.map((c) => {
@@ -122,7 +172,7 @@ export function ScenesBoard({ items }: { items: StudioComponent[] }) {
               </div>
               <div className="py-4 pr-4 shrink-0">
                 <div className={`h-full aspect-[9/16] rounded-[18px] overflow-hidden ${isDark ? "bg-black" : "bg-[#F4F4F5]"}`}>
-                  <SceneVideo c={c} />
+                  <SceneVideo src={c.preview_video_url} poster={c.poster_url ?? undefined} />
                 </div>
               </div>
             </button>
