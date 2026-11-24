@@ -9,7 +9,7 @@ import { DiscoveriesBoard } from "@/components/discoveries/DiscoveriesBoard";
 import StudioLibraryCard from "@/components/studio/StudioLibraryCard";
 import MyPages from "@/components/studio/MyPages";
 import StudioComponentCard from "@/components/studio/StudioComponentCard";
-import { ScenesBoard, ScenesBanner } from "@/components/studio/ScenesBoard";
+import { ScenesBanner } from "@/components/studio/ScenesBanner";
 import { COMPONENT_CATEGORIES, STUDIO_COMPONENTS, type StudioComponent } from "@/lib/studioComponents";
 import i18n, { pickLang } from "@/i18n";
 
@@ -17,8 +17,8 @@ import i18n, { pickLang } from "@/i18n";
 type SeccionProps = {
   items: StudioComponent[];
   categorias: { id: string; es: string; en: string; pt?: string; fr?: string }[];
-  titulo: { es: string; en: string; pt?: string; fr?: string };
-  subtitulo: { es: string; en: string; pt?: string; fr?: string };
+  titulo?: { es: string; en: string; pt?: string; fr?: string };   // opcional: sin título no se muestra el encabezado
+  subtitulo?: { es: string; en: string; pt?: string; fr?: string };
   etiqueta?: { es: string; en: string; pt?: string; fr?: string };   // opcional: si no hay, no se muestra
 };
 
@@ -46,15 +46,15 @@ function SeccionAnimaciones({ items, categorias, titulo, subtitulo, etiqueta }: 
 
   return (
       <section className="space-y-6">
-        <div>
+        {titulo && <div>
           {etiqueta && (
             <span className="mb-3 inline-flex rounded-full bg-black px-3 py-1 text-xs font-normal text-white dark:border dark:border-white/10">
               {L(etiqueta)}
             </span>
           )}
           <h2 className="text-xl md:text-2xl font-medium text-foreground">{L(titulo)}</h2>
-          <p className="mt-1 text-sm font-light text-muted-foreground">{L(subtitulo)}</p>
-        </div>
+          {subtitulo && <p className="mt-1 text-sm font-light text-muted-foreground">{L(subtitulo)}</p>}
+        </div>}
         {componentCategories.length > 1 && (
           // Pills de filtro (mismo estilo que el resto del dashboard)
           <div className="-mx-8 flex gap-2 overflow-x-auto px-8 pb-1 scrollbar-hide md:mx-0 md:px-0" role="group" aria-label={L({ es: "Filtrar por categoría", en: "Filter by category", pt: "Filtrar por categoria", fr: "Filtrer par catégorie" })}>
@@ -134,21 +134,13 @@ export default function Studio() {
         <DiscoveriesBoard />
       </section>
 
-      {/* Escenas: partes de un Reel, con el mismo panel que Arquitectura algorítmica */}
+      {/* Escenas: partes de un Reel (cuadrícula como Componentes) y banner principal con el video UGC · Pro */}
       {escenas.length > 0 && (
-        <section className="space-y-6">
-          <div>
-            <span className="mb-3 inline-flex rounded-full bg-black px-3 py-1 text-xs font-normal text-white dark:border dark:border-white/10">
-              {pickLang({ es: "Nuevo", en: "New", pt: "Novo", fr: "Nouveau" }, i18n.language)}
-            </span>
-            <h2 className="text-xl md:text-2xl font-medium text-foreground">{pickLang({ es: "Escenas", en: "Scenes", pt: "Cenas", fr: "Scènes" }, i18n.language)}</h2>
-            <p className="mt-1 text-sm font-light text-muted-foreground">
-              {pickLang({ es: "Partes de un Reel listas para copiar y pegar en tu asistente de IA", en: "Reel parts ready to copy and paste into your AI assistant", pt: "Partes de um Reel prontas para copiar e colar no seu assistente de IA", fr: "Des parties de Reel prêtes à copier-coller dans votre assistant IA" }, i18n.language)}
-            </p>
-          </div>
-          <ScenesBoard items={escenas} />
+        <div className="space-y-8">
+          {/* Arriba, las escenas con la misma estructura que Componentes; abajo, el banner con el título */}
+          <SeccionAnimaciones items={escenas} categorias={COMPONENT_CATEGORIES.filter((cat) => cat.id === "Escena")} />
           <ScenesBanner />
-        </section>
+        </div>
       )}
 
       {/* Componentes: animaciones de video y otros assets que se copian como prompt */}
