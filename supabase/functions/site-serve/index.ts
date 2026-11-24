@@ -66,6 +66,10 @@ Deno.serve(async (req) => {
       let body = decode(hit.content, hit.encoding);
       if (ext === "html" || ext === "htm") {
         body = new TextEncoder().encode(withFavicon(new TextDecoder().decode(body)));
+        // Cuenta una visita cuando se entrega la portada (index.html) de una página publicada.
+        if (req.method === "GET" && file.endsWith("index.html")) {
+          await sb.rpc("record_site_view", { p_path: path }).then(() => {}, () => {});
+        }
       }
       return new Response(req.method === "HEAD" ? null : new Blob([body as Uint8Array<ArrayBuffer>]), { headers: { ...corsHeaders, "Content-Type": type, "X-Miiles-Content-Type": type, "Cache-Control": "public, max-age=60", "X-Content-Type-Options": "nosniff" } });
     }

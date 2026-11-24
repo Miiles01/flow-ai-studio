@@ -8,7 +8,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
-import { Bell, Heart, ArrowRight, Loader2, Send, X, Trash2, LayoutDashboard } from "lucide-react";
+import { Bell, Heart, ArrowRight, LayoutGrid, Loader2, Send, X, Trash2, LayoutDashboard } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -16,9 +16,9 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import TutorialModal from "@/components/TutorialModal";
-import { DiscoveriesBoard } from "@/components/discoveries/DiscoveriesBoard";
 import tutorialBanner from "@/assets/tablero-banner.webp.asset.json";
 import { UpgradeProDialog } from "@/components/UpgradeProDialog";
+import { SiteVisitsCard } from "@/components/dashboard/SiteVisitsCard";
 
 type Program = {
   id: string;
@@ -69,7 +69,7 @@ export default function Dashboard() {
   const [displayName, setDisplayName] = useState(cached?.displayName ?? "");
   const [flows, setFlows] = useState<any[]>(cached?.flows ?? []);
   const [savedCount, setSavedCount] = useState(cached?.savedCount ?? 0);
-  const showDiscoveries = true;
+  const [boardsCount, setBoardsCount] = useState<number>(cached?.boardsCount ?? 0);
   const [applications, setApplications] = useState<UserApplication[]>(cached?.applications ?? []);
   const [appsOpen, setAppsOpen] = useState(false);
   const [loading, setLoading] = useState(!cached);
@@ -110,13 +110,15 @@ export default function Dashboard() {
       supabase.from("user_applications").select("id", { count: "exact" }).eq("user_id", user.id),
       supabase.from("notifications").select("*").eq("recipient_id", user.id).order("created_at", { ascending: false }).limit(50),
       supabase.from("user_roles").select("role").eq("user_id", user.id).eq("role", "admin").maybeSingle(),
-    ]).then(async ([profileRes, flowsRes, appsRes, notifRes, roleRes]) => {
+      supabase.from("flows").select("id", { count: "exact", head: true }).eq("user_id", user.id),
+    ]).then(async ([profileRes, flowsRes, appsRes, notifRes, roleRes, boardsRes]) => {
       const snap: any = {
         displayName: profileRes.data?.display_name || user.email?.split("@")[0] || "",
         flows: flowsRes.data || [],
         savedCount: appsRes.count || 0,
         notifications: (notifRes.data as Notification[]) || [],
         isAdmin: !!roleRes.data,
+        boardsCount: boardsRes.count || 0,
         applications: [],
       };
       setDisplayName(snap.displayName);
@@ -124,6 +126,7 @@ export default function Dashboard() {
       setSavedCount(snap.savedCount);
       setNotifications(snap.notifications);
       setIsAdmin(snap.isAdmin);
+      setBoardsCount(snap.boardsCount);
 
       // Load applications with program names
       const { data: appsData } = await supabase
@@ -274,7 +277,7 @@ export default function Dashboard() {
            {dt("dashboard.text15")} </p>
       </motion.div>
       {/* Stats */}
-      <motion.div variants={sectionVariants} className="grid grid-cols-2 gap-5">
+      <motion.div variants={sectionVariants} className="grid grid-cols-2 gap-5 md:grid-cols-3">
         {/* Notifications card */}
         <motion.div
           whileHover={{ y: -4, transition: { duration: 0.2 } }}
@@ -293,32 +296,23 @@ export default function Dashboard() {
           <p className="text-xs text-miiles-gray-400 font-light mt-1">{dt("dashboard.text16")}</p>
         </motion.div>
 
-        <motion.div
-          whileHover={{ y: -4, transition: { duration: 0.2 } }}
-          className={`p-5 rounded-lg shadow-md cursor-pointer ${isDark ? 'bg-white/5' : 'bg-white'}`}
-          onClick={() => setAppsOpen(true)}
-        >
-          <div className="w-8 h-8 rounded-sm bg-background shadow-sm flex items-center justify-center mb-3">
-            <Heart size={16} className={isDark ? "text-white" : "text-black"} />
-          </div>
-          <p className="text-2xl font-normal text-foreground">{savedCount}</p>
-          <p className="text-xs text-miiles-gray-400 font-light mt-1">{dt("dashboard.text17")}</p>
-        </motion.div>
+        {/* Boards card */}
+        <Link to="/boards" className="block">
+          <motion.div
+            whileHover={{ y: -4, transition: { duration: 0.2 } }}
+            className={`h-full p-5 rounded-lg shadow-md cursor-pointer ${isDark ? 'bg-white/5' : 'bg-white'}`}
+          >
+            <div className="w-8 h-8 rounded-sm bg-background shadow-sm flex items-center justify-center mb-3">
+              <LayoutGrid size={16} className={isDark ? "text-white" : "text-black"} />
+            </div>
+            <p className="text-2xl font-normal text-foreground">{boardsCount}</p>
+            <p className="text-xs text-miiles-gray-400 font-light mt-1">{dt("dashboard.statBoards")}</p>
+          </motion.div>
+        </Link>
+
+        {/* Visits to the user's published page */}
+        {user && <div className="col-span-2 md:col-span-1"><SiteVisitsCard userId={user.id} isDark={isDark} /></div>}
       </motion.div>
-
-      {/* Descubrimientos preview */}
-      <motion.div variants={sectionVariants}>
-        <div className="mb-6 flex justify-between items-center">
-          <div>
-            <h2 className="text-xl md:text-2xl font-medium text-foreground">{dt("dashboard.text18")}</h2>
-            <p className="text-sm font-light text-miiles-gray-400 mt-1">{dt("dashboard.text19")}</p>
-          </div>
-        </div>
-
-        {showDiscoveries && <DiscoveriesBoard />}
-      </motion.div>
-
-
 
       {/* Admin: send notification button */}
       {isAdmin && (

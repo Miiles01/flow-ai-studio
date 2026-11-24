@@ -324,5 +324,9 @@
     "cancel": "Cancelar",
     "continue": "Continuar",
     "copy": "Copiar"
-  }
+  },
+  "statBoards": "Tableros",
+  "statVisits": "Visitas a tu página · 30 días",
+  "statVisitsShort": "Visitas",
+  "statNoPage": "Publica tu página en Studio para ver sus visitas."
 }
