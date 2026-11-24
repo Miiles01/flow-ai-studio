@@ -5,7 +5,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Settings, Sun, Moon, Laptop, User, ArrowRight, Download, Languages, LogOut } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
-import { LANGS, useLang } from "@/components/LanguagePicker";
+import { LanguageDropdown } from "@/components/LanguagePicker";
 import { useTheme } from "@/contexts/ThemeContext";
 import { usePlan } from "@/hooks/usePlan";
 import { useInstallPrompt } from "@/hooks/useInstallPrompt";
@@ -20,7 +20,6 @@ export function QuickSettings({ children }: { children?: React.ReactNode }) {
   const { canInstall, isIOS, isStandalone, promptInstall } = useInstallPrompt();
   const navigate = useNavigate();
   const { signOut } = useAuth();
-  const lang = useLang();
   const [isOpen, setIsOpen] = useState(false);
 
   const showInstall = !isStandalone;
@@ -204,23 +203,7 @@ export function QuickSettings({ children }: { children?: React.ReactNode }) {
                 <Languages size={16} strokeWidth={1.5} className="opacity-70" />
                 <span className="text-[13px] font-light">{dt("dashboard.language")}</span>
               </div>
-              <div role="radiogroup" aria-label={dt("dashboard.language")} className="flex items-center gap-0.5 p-0.5 rounded-full border bg-white/5 border-white/10">
-                {LANGS.map((l) => (
-                  <button
-                    key={l.value}
-                    type="button"
-                    role="radio"
-                    aria-checked={lang.current === l.value}
-                    title={l.label}
-                    onClick={() => lang.change(l.value)}
-                    className={`h-7 min-w-7 px-1.5 rounded-full text-[10px] font-semibold tracking-wide transition-all duration-200 ${
-                      lang.current === l.value ? "bg-white text-black shadow-sm" : "text-white/60 hover:text-white"
-                    }`}
-                  >
-                    {l.short}
-                  </button>
-                ))}
-              </div>
+              <LanguageDropdown label={dt("dashboard.language")} />
             </div>
 
             {/* Profile Settings row */}
