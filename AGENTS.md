@@ -1,5 +1,7 @@
 # Architecture rules
 
+- Published page visits are stored as owner-scoped UTC daily totals; dashboard aggregation uses the shared 30-day series helper and must not turn failed reads into zero visits.
+
 - Algorithmic architecture keeps stable graph IDs, geometry and media in its data module; all display copy uses locale keys resolved when rendering, so language changes preserve graph structure and expanded details.
 
 - The home template carousel reads the same Studio catalogue hook as the library; keep the prompt component intact while hidden so it can be restored without losing its workflow.

@@ -701,6 +701,27 @@ export type Database = {
         }
         Relationships: []
       }
+      site_view_days: {
+        Row: {
+          day: string
+          owner_id: string
+          path: string
+          views: number
+        }
+        Insert: {
+          day?: string
+          owner_id: string
+          path: string
+          views?: number
+        }
+        Update: {
+          day?: string
+          owner_id?: string
+          path?: string
+          views?: number
+        }
+        Relationships: []
+      }
       studio_templates: {
         Row: {
           created_at: string
@@ -1249,6 +1270,7 @@ export type Database = {
         Args: { p_user_id: string }
         Returns: undefined
       }
+      record_site_view: { Args: { p_path: string }; Returns: undefined }
       refresh_my_plan: { Args: never; Returns: string }
       register_referral: { Args: { p_username: string }; Returns: boolean }
       show_limit: { Args: never; Returns: number }

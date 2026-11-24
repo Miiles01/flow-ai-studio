@@ -71,6 +71,13 @@
       "when": 1795115872909,
       "tag": "0009_pro_trial_invite_code",
       "breakpoints": true
+    },
+    {
+      "idx": 10,
+      "version": "7",
+      "when": 1795545174322,
+      "tag": "0010_enable_published_site_visit_counts",
+      "breakpoints": true
     }
   ]
 }

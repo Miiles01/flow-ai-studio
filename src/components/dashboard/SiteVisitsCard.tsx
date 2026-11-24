@@ -5,9 +5,9 @@ import { Eye } from "lucide-react";
 import { Area, AreaChart, ResponsiveContainer, Tooltip } from "recharts";
 import dashboardI18n from "@/i18n";
 import { supabase } from "@/integrations/supabase/client";
+import { siteVisitSeries } from "@/lib/siteVisits";
 
 const dt = (key: string, options?: Record<string, unknown>): string => dashboardI18n.t(key, options) as string;
-const DAYS = 30;
 const PLACEHOLDER: Point[] = [3, 5, 4, 7, 6, 9, 8, 11, 10, 14].map((views, i) => ({ day: String(i), views }));
 
 type Point = { day: string; views: number };
@@ -17,31 +17,38 @@ export function SiteVisitsCard({ userId, isDark }: { userId: string; isDark: boo
   const navigate = useNavigate();
   const [hasPage, setHasPage] = useState<boolean | null>(null);
   const [rows, setRows] = useState<{ day: string; views: number }[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [failed, setFailed] = useState(false);
 
   useEffect(() => {
     let alive = true;
-    const since = new Date(Date.now() - (DAYS - 1) * 86400000).toISOString().slice(0, 10);
-    Promise.all([
-      supabase.from("user_sites").select("id", { count: "exact", head: true }).eq("owner_id", userId).eq("status", "published"),
-      // site_view_days aún no está en los tipos generados de Supabase.
-      (supabase as any).from("site_view_days").select("day, views").eq("owner_id", userId).gte("day", since),
-    ]).then(([sites, views]) => {
-      if (!alive) return;
-      setHasPage((sites.count ?? 0) > 0);
-      setRows(views.error ? [] : (views.data ?? []));
-    });
-    return () => { alive = false; };
+    const load = async () => {
+      const since = siteVisitSeries([])[0].day;
+      try {
+        const [sites, views] = await Promise.all([
+          supabase.from("user_sites").select("id", { count: "exact", head: true }).eq("owner_id", userId).eq("status", "published"),
+          supabase.from("site_view_days").select("day, views").eq("owner_id", userId).gte("day", since),
+        ]);
+        if (!alive) return;
+        if (sites.error || views.error) throw sites.error ?? views.error;
+        setHasPage((sites.count ?? 0) > 0);
+        setRows(views.data ?? []);
+        setFailed(false);
+      } catch {
+        if (alive) setFailed(true);
+      } finally {
+        if (alive) setLoading(false);
+      }
+    };
+    setLoading(true);
+    setFailed(false);
+    void load();
+    window.addEventListener("focus", load);
+    return () => { alive = false; window.removeEventListener("focus", load); };
   }, [userId]);
 
   // Serie continua de 30 días (los días sin visitas cuentan 0); suma varias páginas del mismo día.
-  const series = useMemo<Point[]>(() => {
-    const byDay = new Map<string, number>();
-    rows.forEach((r) => byDay.set(r.day, (byDay.get(r.day) ?? 0) + r.views));
-    return Array.from({ length: DAYS }, (_, i) => {
-      const day = new Date(Date.now() - (DAYS - 1 - i) * 86400000).toISOString().slice(0, 10);
-      return { day, views: byDay.get(day) ?? 0 };
-    });
-  }, [rows]);
+  const series = useMemo<Point[]>(() => siteVisitSeries(rows), [rows]);
   const total = series.reduce((a, p) => a + p.views, 0);
   // Sin página publicada: gráfica de ejemplo en gris, desactivada.
   const off = hasPage === false;
@@ -59,7 +66,7 @@ export function SiteVisitsCard({ userId, isDark }: { userId: string; isDark: boo
         <div className="w-8 h-8 shrink-0 rounded-sm bg-background shadow-sm flex items-center justify-center">
           <Eye size={16} className={isDark ? "text-white" : "text-black"} />
         </div>
-        {hasPage !== null && (
+        {hasPage !== null && !failed && !loading && (
           <div className={`h-9 w-24 sm:w-28 shrink-0 ${off ? "pointer-events-none" : ""}`} aria-hidden={off} onClick={(e) => e.stopPropagation()}>
             <ResponsiveContainer width="100%" height="100%">
               <AreaChart data={data} margin={{ top: 4, right: 0, bottom: 0, left: 0 }}>
@@ -81,7 +88,7 @@ export function SiteVisitsCard({ userId, isDark }: { userId: string; isDark: boo
           </div>
         )}
       </div>
-      <p className={`text-2xl font-normal ${off ? "text-miiles-gray-400" : "text-foreground"}`}>{off ? "—" : total.toLocaleString(locale)}</p>
+      <p aria-busy={loading} title={failed ? dt("dashboard.text228") : undefined} className={`text-2xl font-normal ${off ? "text-miiles-gray-400" : "text-foreground"}`}>{loading ? "…" : off || failed ? "—" : total.toLocaleString(locale)}</p>
       <p className="text-xs text-miiles-gray-400 font-light mt-1">{off ? dt("dashboard.statNoPage") : dt("dashboard.statVisits")}</p>
     </motion.div>
   );
