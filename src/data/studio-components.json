@@ -390,6 +390,24 @@
     ]
   },
   {
+    "slug": "cascada-de-pasos",
+    "title": "Cascada de pasos",
+    "category": "Elemento",
+    "description": "Tarjetas numeradas abiertas en diagonal que se cierran en cascada hasta apilarse y se vuelven a abrir en orden.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/cascada-de-pasos.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/cascada-de-pasos.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/cascada-de-pasos.tsx.txt",
+    "code_filename": "CardCascade.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps y usa cardCascadeDuration(props) como duración. La tipografía de ejemplo ya carga sola; cambia exampleSteps por mis pasos. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia los pasos en steps (título, color y color del texto)",
+      "spread: cuánto se abre el mazo",
+      "stagger: cuadros entre una tarjeta y otra",
+      "hold: cuánto tiempo queda abierta y cerrada"
+    ]
+  },
+  {
     "slug": "fotos-que-crecen",
     "title": "Fotos que crecen",
     "category": "Galería",
