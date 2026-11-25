@@ -88,7 +88,7 @@ export default function UserFlowDiagram({ refreshKey }: { refreshKey: boolean })
           <p className="text-xs mt-1">{number(data?.completed)} / {number(data?.registered)}</p>
         </div>
         <div className="space-y-3">{Array.from({ length: 7 }, (_, i) => <div key={i}>
-          <div className="flex justify-between gap-3 text-xs mb-1.5"><span>{text(`steps.${i + 1}`)}</span><span>{percent(data?.steps[i])}</span></div>
+          <div className="flex justify-between gap-3 text-xs mb-1.5"><span>{text(`steps.${i + 1}`)}</span><span>{data?.stepCounts ? `${number(data.stepCounts[i])} · ` : ""}{percent(data?.steps[i])}</span></div>
           <div className="user-flow-track h-1 rounded-full overflow-hidden"><div className="user-flow-fill h-full" style={{ width: `${data?.steps[i] ?? 0}%` }} /></div>
         </div>)}</div>
       </> : <dl className="space-y-3 text-sm font-light">

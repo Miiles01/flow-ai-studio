@@ -87,6 +87,15 @@ Deno.serve(async (req) => {
       const { data: pops, error: popError } = await pq.limit(10000);
       if (popError) throw popError;
       data.popup = new Set((pops ?? []).filter((r: any) => !ex.has(r.user_id)).map((r: any) => r.session_id)).size;
+      // Onboarding progress per new account: furthest tracked screen, or all 7 when they finished before tracking existed.
+      const { data: obEv, error: obErr } = await sb.from("user_flow_events").select("user_id, step").eq("route", "onboarding").not("step", "is", null).limit(10000);
+      if (obErr) throw obErr;
+      const furthest = new Map<string, number>();
+      for (const e of obEv ?? []) if (e.user_id) furthest.set(e.user_id, Math.max(furthest.get(e.user_id) ?? 0, e.step));
+      const cohort = users.filter((u) => inRange(u.created_at));
+      const reach = cohort.map((u) => onboarded.has(u.id) ? 7 : furthest.get(u.id) ?? 0);
+      data.steps = [1, 2, 3, 4, 5, 6, 7].map((n) => cohort.length ? Math.round(1000 * reach.filter((r) => r >= n).length / cohort.length) / 10 : 0);
+      data.stepCounts = [1, 2, 3, 4, 5, 6, 7].map((n) => reach.filter((r) => r >= n).length);
       data.people = {
         signup: signedUp.length,
         onboarding: signedUp.filter((u) => onboarded.has(u.id)).length,
