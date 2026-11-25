@@ -1,7 +1,7 @@
 # Objetivo actual
 - [x] Quitar la sección de Prospectos del panel de administración.
 - [x] Integrar recorrido de usuarios encima de Plantillas más vistas: diagrama, filtros, contadores y detalles con datos protegidos.
-- [ ] Registrar visitas anónimas y pasos de onboarding; verificar consultas y recorrido en administración.
+- [x] Registrar visitas anónimas y pasos de onboarding; verificar consultas y recorrido en administración.
 - [x] Afiliados: «Crear cuenta» → «Obtener Plan Pro», que abre un acceso especial que da Plan Pro gratis 30 días.
 - [x] Ese botón abre primero un pop-up que pide el código de invitación 20CREATOR26; con el código correcto se entra o registra; regalo una vez por cuenta.
 - [x] Completar español e inglés en Arquitectura algorítmica: cuatro diagramas, detalles, títulos y controles de video, retención y sugerencias; selector probado con sesión y 16 pruebas pasando.
