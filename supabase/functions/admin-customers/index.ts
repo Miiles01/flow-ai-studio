@@ -82,6 +82,11 @@ Deno.serve(async (req) => {
       // Only real, current customers count as claimed Pro months (deleted test accounts are left out).
       const trials = await fetchAll(sb, "pro_trials", "user_id, started_at");
       data.trials = uniq(trials.filter((t) => inRange(t.started_at)));
+      let pq = sb.from("user_flow_events").select("session_id, user_id").eq("route", "trial_popup");
+      if (since) pq = pq.gte("created_at", since);
+      const { data: pops, error: popError } = await pq.limit(10000);
+      if (popError) throw popError;
+      data.popup = new Set((pops ?? []).filter((r: any) => !ex.has(r.user_id)).map((r: any) => r.session_id)).size;
       data.people = {
         signup: signedUp.length,
         onboarding: signedUp.filter((u) => onboarded.has(u.id)).length,

@@ -85,6 +85,20 @@
       "when": 1795638889405,
       "tag": "0011_admin_user_flow",
       "breakpoints": true
+    },
+    {
+      "idx": 12,
+      "version": "7",
+      "when": 1795639809478,
+      "tag": "0012_user_flow_trial_popup",
+      "breakpoints": true
+    },
+    {
+      "idx": 13,
+      "version": "7",
+      "when": 1795639909972,
+      "tag": "0013_user_flow_allow_trial_popup",
+      "breakpoints": true
     }
   ]
 }

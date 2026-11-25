@@ -1,0 +1,2 @@
+ALTER TABLE public.user_flow_events DROP CONSTRAINT user_flow_events_route_check;
+ALTER TABLE public.user_flow_events ADD CONSTRAINT user_flow_events_route_check CHECK (route = ANY (ARRAY['home','affiliates','signup','onboarding','dashboard','upgrade','boards','programs','studio','architecture','trial','trial_popup']));

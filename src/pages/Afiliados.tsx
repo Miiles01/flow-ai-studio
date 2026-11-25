@@ -12,6 +12,8 @@ import { MorphSVGPlugin } from "gsap/MorphSVGPlugin";
 import LandingNavbar from "@/components/LandingNavbar";
 import LandingFooter from "@/components/LandingFooter";
 import ProTrialDialog from "@/components/ProTrialDialog";
+import { supabase } from "@/integrations/supabase/client";
+import { getFlowSession } from "@/lib/userFlow";
 import logoImg from "@/assets/logo.webp";
 import creadoresHeroImg from "@/assets/creadores-hero-grupo.jpg";
 import brand1 from "@/assets/miiles/brands/brand1.svg";
@@ -608,6 +610,11 @@ const Afiliados = () => {
   const { t } = useTranslation();
   const localePath = useLocalePath();
   const [proTrialOpen, setProTrialOpen] = useState(false);
+  const openProTrial = () => {
+    setProTrialOpen(true);
+    // Counts the pop-up for the admin user flow; never blocks opening it.
+    void supabase.rpc("record_user_flow", { p_session: getFlowSession(), p_route: "trial_popup" }).then(() => {});
+  };
   const steps = (t("affiliates.steps", { returnObjects: true }) as { label: string; detail: string }[]).map((step, i) => ({ ...step, icon: [Gift, Link2, Percent, Users][i] }));
 
   useEffect(() => {
@@ -960,7 +967,7 @@ const Afiliados = () => {
             <div data-fade className="flex items-center justify-center gap-4 flex-wrap">
               <button
                 type="button"
-                onClick={() => setProTrialOpen(true)}
+                onClick={openProTrial}
                 className="px-8 py-4 rounded-full bg-black text-white text-[15px] font-normal hover:-translate-y-2 transition-transform duration-300 flex items-center gap-2"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C12.3 8.8 15.2 11.7 24 12C15.2 12.3 12.3 15.2 12 24C11.7 15.2 8.8 12.3 0 12C8.8 11.7 11.7 8.8 12 0Z" /></svg>
@@ -1185,7 +1192,7 @@ const Afiliados = () => {
               </h2>
               <button
                 type="button"
-                onClick={() => setProTrialOpen(true)}
+                onClick={openProTrial}
                 className="px-8 py-4 rounded-full bg-black text-white text-[15px] font-normal inline-flex items-center justify-center gap-2 hover:-translate-y-1 transition-transform duration-300"
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
