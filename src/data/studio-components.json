@@ -461,6 +461,24 @@
     ]
   },
   {
+    "slug": "cuadricula-de-columnas",
+    "title": "Cuadrícula de columnas",
+    "category": "Galería",
+    "description": "Todas las fotos a la vista: la cuadrícula pasa de 3 filas a 3 columnas y regresa, y cada foto viaja a su nuevo lugar.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/cuadricula-de-columnas.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/cuadricula-de-columnas.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/cuadricula-de-columnas.tsx.txt",
+    "code_filename": "GridFlip.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps y usa gridFlipDuration(props) como duración. Pon mis fotos en public/ y cámbialas en exampleItems. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia las fotos en items",
+      "count: cuántas fotos se ven",
+      "layouts: columnas de cada paso (5 = 3 filas, 3 = 3 columnas)",
+      "move y hold para la velocidad"
+    ]
+  },
+  {
     "slug": "lluvia-de-likes",
     "title": "Lluvia de likes",
     "category": "Galería",
