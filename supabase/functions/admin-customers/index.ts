@@ -57,6 +57,28 @@ Deno.serve(async (req) => {
       if (data.users.length < 1000) break;
     }
     const body = await req.json();
+    if (body.mode === "journey") {
+      // One customer's path in order: screens they opened (including visits just before signing up in the same session) and what they looked at.
+      const uid = String(body.user_id ?? "");
+      if (!/^[0-9a-f-]{36}$/i.test(uid)) return json({ error: "Invalid user" }, 400);
+      const { data: own, error: e1 } = await sb.from("user_flow_events").select("session_id").eq("user_id", uid).limit(5000);
+      if (e1) throw e1;
+      const sessions = [...new Set((own ?? []).map((r: any) => r.session_id))];
+      const flow: any[] = [];
+      for (let i = 0; i < sessions.length; i += 100) {
+        const { data, error } = await sb.from("user_flow_events").select("session_id, user_id, route, step, created_at").in("session_id", sessions.slice(i, i + 100)).order("created_at").limit(5000);
+        if (error) throw error;
+        flow.push(...(data ?? []).filter((r: any) => !r.user_id || r.user_id === uid));
+      }
+      const { data: evs, error: e2 } = await sb.from("user_events").select("event, props, created_at").eq("user_id", uid).order("created_at").limit(5000);
+      if (e2) throw e2;
+      const items = [
+        ...flow.map((r) => ({ at: r.created_at, kind: "screen", route: r.route, step: r.step, session: r.session_id })),
+        ...(evs ?? []).map((e: any) => ({ at: e.created_at, kind: e.event, network: e.props?.network ?? null, title: e.props?.title ?? e.props?.slug ?? null, cta: e.props?.cta ?? null, plan: e.props?.plan ?? null })),
+      ].sort((a, b) => a.at.localeCompare(b.at));
+      const u = authUsers.find((x) => x.id === uid);
+      return json({ items, created_at: u?.created_at ?? null });
+    }
     if (body.mode === "user_flow") {
       const days = body.days === null ? null : Number(body.days ?? 30);
       if (days !== null && ![7, 30].includes(days)) return json({ error: "Invalid range" }, 400);

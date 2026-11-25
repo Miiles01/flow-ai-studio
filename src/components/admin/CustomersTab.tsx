@@ -6,6 +6,7 @@ import { toast } from "sonner";
 import { Loader2, RefreshCw } from "lucide-react";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
 import UserFlowDiagram from "@/components/admin/UserFlowDiagram";
+import CustomerJourney from "@/components/admin/CustomerJourney";
 
 type Row = {
   id: string; email: string; name: string | null; username: string | null;
@@ -47,6 +48,7 @@ export default function CustomersTab() {
   const [has, setHas] = useState<string[]>([]);
   const [range, setRange] = useState<(typeof RANGES)[number]>(30);
   const [series, setSeries] = useState<"new" | "total">("new");
+  const [journey, setJourney] = useState<Row | null>(null);
 
   const daily = useMemo(() => {
     const day = (t: number) => new Date(t).toISOString().slice(0, 10);
@@ -207,7 +209,7 @@ export default function CustomersTab() {
                 <th key={h} className="text-left p-3 font-normal">{h}</th>))}
             </tr></thead>
             <tbody>{shown.map((u) => (
-              <tr key={u.id} className={`border-t border-white/5 ${u.is_admin ? "opacity-50" : ""}`}>
+              <tr key={u.id} onClick={() => setJourney(u)} title="Ver su recorrido" className={`border-t border-white/5 cursor-pointer hover:bg-white/5 ${u.is_admin ? "opacity-50" : ""}`}>
                 <td className="p-3"><div className="text-white">{u.name || u.username || "—"}{u.is_admin && " (admin)"}</div><div className="text-white/40">{u.email}</div></td>
                 <td className="p-3">{fmt(u.created_at)}</td>
                 <td className="p-3">{u.onboarding ? "Sí" : "No"}</td>
@@ -223,6 +225,7 @@ export default function CustomersTab() {
           </table>
         </div>
       </section>
+      <CustomerJourney user={journey} onClose={() => setJourney(null)} />
     </div>
   );
 }
