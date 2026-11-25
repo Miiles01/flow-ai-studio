@@ -11,7 +11,7 @@ type Row = {
   id: string; email: string; name: string | null; username: string | null;
   created_at: string; last_activity: string | null; onboarding: boolean;
   boards: number; widgets: number; pages: number; published_pages: number;
-  plan: "free" | "pro" | "pro_test"; architecture_views: number; networks: string[];
+  plan: "free" | "pro" | "pro_test" | "pro_trial"; architecture_views: number; networks: string[];
   pricing_card_clicks: number; pro_clicks: number; contact_clicks: number;
   template_views: number; template_uses: number; is_admin: boolean;
 };
@@ -86,7 +86,7 @@ export default function CustomersTab() {
   const cards = summary ? [
     ["Registrados", summary.total], ["Nuevos 7 días", summary.new7], ["Nuevos 30 días", summary.new30],
     ["Hicieron onboarding", summary.onboarding], ["Con tableros", summary.withBoards], ["Con páginas", summary.withPages],
-    ["Pro (pago real)", summary.pro], ["Intentaron comprar", summary.buyIntent], ["Vieron Arquitectura", summary.architecture],
+    ["Pro (pago real)", summary.pro], ["Pro gratis (1 mes)", summary.proTrial ?? 0], ["Intentaron comprar", summary.buyIntent], ["Vieron Arquitectura", summary.architecture],
   ] : [];
 
   return (
@@ -214,7 +214,7 @@ export default function CustomersTab() {
                 <td className="p-3">{u.boards}</td>
                 <td className="p-3">{u.widgets}</td>
                 <td className="p-3">{u.pages}{u.published_pages ? ` (${u.published_pages} visibles)` : ""}</td>
-                <td className="p-3">{u.plan === "pro" ? "Pro" : u.plan === "pro_test" ? "Pro (prueba)" : "Free"}</td>
+                <td className="p-3">{u.plan === "pro" ? "Pro" : u.plan === "pro_test" ? "Pro (prueba)" : u.plan === "pro_trial" ? "Pro gratis (1 mes)" : "Free"}</td>
                 <td className="p-3">{u.architecture_views ? u.networks.map((n) => NET[n] ?? n).join(", ") : "No"}</td>
                 <td className="p-3">{u.pricing_card_clicks} / {u.pro_clicks} / {u.contact_clicks}</td>
                 <td className="p-3">{u.template_views} / {u.template_uses}</td>

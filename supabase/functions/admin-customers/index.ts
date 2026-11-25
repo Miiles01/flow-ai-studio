@@ -94,13 +94,15 @@ Deno.serve(async (req) => {
       };
       return json(data);
     }
-    const [profiles, flows, sites, subs, events] = await Promise.all([
+    const [profiles, flows, sites, subs, events, proTrials] = await Promise.all([
       fetchAll(sb, "profiles", "user_id, display_name, username, onboarding_completed"),
       fetchAll(sb, "flows", "user_id, nodes, updated_at"),
       fetchAll(sb, "user_sites", "owner_id, template_slug, status"),
       fetchAll(sb, "subscriptions", "user_id, status, environment, current_period_end, price_id"),
       fetchAll(sb, "user_events", "user_id, event, props, created_at"),
+      fetchAll(sb, "pro_trials", "user_id, expires_at"),
     ]);
+    const activeTrial = new Set(proTrials.filter((t) => Date.parse(t.expires_at) > Date.now()).map((t) => t.user_id));
 
     const adminIds = new Set(authUsers.filter((u) => ADMIN_EMAILS.includes((u.email ?? "").toLowerCase())).map((u) => u.id));
     const profBy = new Map(profiles.map((p) => [p.user_id, p]));
@@ -132,7 +134,7 @@ Deno.serve(async (req) => {
         widgets,
         pages: mySites.length,
         published_pages: mySites.filter((s) => s.status === "published").length,
-        plan: activeSub ? (activeSub.environment === "live" ? "pro" : "pro_test") : "free",
+        plan: activeSub ? (activeSub.environment === "live" ? "pro" : "pro_test") : activeTrial.has(u.id) ? "pro_trial" : "free",
         architecture_views: ev.filter((e) => e.event === "architecture_view").length,
         networks,
         pricing_card_clicks: ev.filter((e) => e.event === "pricing_card_click").length,
@@ -166,6 +168,7 @@ Deno.serve(async (req) => {
       withBoards: customers.filter((r) => r.boards > 0).length,
       pro: customers.filter((r) => r.plan === "pro").length,
       proTest: customers.filter((r) => r.plan === "pro_test").length,
+      proTrial: customers.filter((r) => r.plan === "pro_trial").length,
       buyIntent: customers.filter((r) => r.pro_clicks + r.contact_clicks > 0).length,
       architecture: customers.filter((r) => r.architecture_views > 0).length,
       withPages: customers.filter((r) => r.pages > 0).length,
