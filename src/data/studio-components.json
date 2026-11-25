@@ -651,6 +651,24 @@
     ]
   },
   {
+    "slug": "columna-de-casos",
+    "title": "Columna de casos",
+    "category": "Carrusel",
+    "description": "Una columna de fotos que sube: la que pasa por el centro crece y queda encima de las demás, con una pausa en cada foto y en bucle.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/columna-de-casos.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/columna-de-casos.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/columna-de-casos.tsx.txt",
+    "code_filename": "CasesColumn.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps (480 cuadros hacen un bucle con 10 fotos). Pon mis fotos en public/ y cámbialas en exampleItems. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia las fotos o tarjetas de color en items",
+      "maxWidth y minWidth: tamaño de la foto grande y de las chicas",
+      "ratio: proporción de las fotos (1.25 = vertical)",
+      "hold y move para el ritmo"
+    ]
+  },
+  {
     "slug": "pila-con-bisagra",
     "title": "Pila con bisagra",
     "category": "Galería",
