@@ -1450,5 +1450,23 @@
       "Cambia las frases clave en FRASES (sin acentos si usas Gambarino o Advercase)",
       "Ajusta UNA, ALGO y RESULTADO para las palabras en que pasa cada hoja"
     ]
+  },
+  {
+    "slug": "escena-rueda",
+    "title": "Rueda alrededor de ella",
+    "category": "Escena",
+    "description": "Una fila de fotos entra por detrás de la creadora, se cierra en una rueda inclinada a su alrededor (pasa delante y detrás de ella), frena para mostrar las fotos y sale en línea por detrás hacia el otro lado.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/escena-rueda.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/escena-rueda.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/escena-rueda.tsx.txt",
+    "code_filename": "EscenaRueda.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Usa mi video (ponlo en public/) en lugar del video de ejemplo y haz un recorte de la persona con fondo transparente (.webm con alfa) para reemplazar creadora-hook-foreground.webm; las fotos de atrás quedan detrás de ella y las de enfrente delante. Ajusta INICIO al segundo de mi video donde empieza la escena.",
+    "customize": [
+      "Cambia las fotos en FILA (o pasa items)",
+      "CENTRO_Y: altura de la rueda (pecho o cintura)",
+      "TILT: cuánto se inclina; RADIO: qué tan ancha es",
+      "LENTO: qué tan lento pasa por enfrente; VUELTAS siempre en número entero"
+    ]
   }
 ]
