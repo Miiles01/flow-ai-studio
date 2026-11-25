@@ -1012,6 +1012,33 @@ export type Database = {
         }
         Relationships: []
       }
+      user_flow_events: {
+        Row: {
+          created_at: string
+          id: string
+          route: string
+          session_id: string
+          step: number | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          route: string
+          session_id: string
+          step?: number | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          route?: string
+          session_id?: string
+          step?: number | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           id: string
@@ -1172,6 +1199,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      admin_user_flow_stats: {
+        Args: { p_days?: number; p_excluded?: string[] }
+        Returns: Json
+      }
       can_access_flow: { Args: { _flow_id: string }; Returns: boolean }
       can_access_flow_topic: { Args: { _topic: string }; Returns: boolean }
       can_edit_flow: { Args: { _flow_id: string }; Returns: boolean }
@@ -1271,6 +1302,10 @@ export type Database = {
         Returns: undefined
       }
       record_site_view: { Args: { p_path: string }; Returns: undefined }
+      record_user_flow: {
+        Args: { p_route: string; p_session: string; p_step?: number }
+        Returns: undefined
+      }
       refresh_my_plan: { Args: never; Returns: string }
       register_referral: { Args: { p_username: string }; Returns: boolean }
       show_limit: { Args: never; Returns: number }

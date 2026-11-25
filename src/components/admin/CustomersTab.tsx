@@ -5,6 +5,7 @@ import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import { Loader2, RefreshCw } from "lucide-react";
 import { Area, AreaChart, CartesianGrid, ResponsiveContainer, Tooltip, XAxis, YAxis } from "recharts";
+import UserFlowDiagram from "@/components/admin/UserFlowDiagram";
 
 type Row = {
   id: string; email: string; name: string | null; username: string | null;
@@ -155,6 +156,8 @@ export default function CustomersTab() {
           </p>
         </>
       )}
+
+      <UserFlowDiagram refreshKey={loading} />
 
       <section className="space-y-3">
         <h3 className="text-base font-normal text-white">Plantillas más vistas</h3>

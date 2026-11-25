@@ -13,6 +13,7 @@ import onboardingHero from "@/assets/onboarding-hero.webp";
 import onboardingDone from "@/assets/onboarding-done.webp";
 import { getVideoEmbedUrl } from "@/lib/videoEmbed";
 import { hasPendingHomePrompt } from "@/lib/homePrompt";
+import { getFlowSession } from "@/lib/userFlow";
 
 const TOTAL_STEPS = 7;
 
@@ -187,6 +188,13 @@ const Onboarding = () => {
       .then(({ data }) => { if (data?.onboarding_completed) navigate("/dashboard", { replace: true }); });
   }, [user?.id, navigate]);
   const [step, setStep] = useState(0);
+  useEffect(() => {
+    if (!user) return;
+    window.__lovableEvents?.track?.("project.onboarding_step", { step: step + 1 });
+    try {
+      void supabase.rpc("record_user_flow", { p_session: getFlowSession(), p_route: "onboarding", p_step: step + 1 }).then(() => {});
+    } catch { /* Tracking must not interrupt onboarding. */ }
+  }, [step, user?.id]);
   const [dir, setDir] = useState(1);
   const [saving, setSaving] = useState(false);
 

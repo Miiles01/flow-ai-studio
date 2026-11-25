@@ -1,0 +1,27 @@
+{
+  "schema_version": 1,
+  "events": {
+    "project.onboarding_step": {
+      "event_schema_version": 1,
+      "description": "A signed-in user reaches an onboarding screen.",
+      "privacy": {
+        "contains_pii": false,
+        "purpose": "product_analytics"
+      },
+      "properties_schema": {
+        "additionalProperties": false,
+        "properties": {
+          "step": {
+            "maximum": 7,
+            "minimum": 1,
+            "type": "integer"
+          }
+        },
+        "required": [
+          "step"
+        ],
+        "type": "object"
+      }
+    }
+  }
+}

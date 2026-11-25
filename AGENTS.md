@@ -1,4 +1,5 @@
 # Architecture rules
+- Admin user-flow geometry and locale keys live in one typed catalogue; visits use an allowlisted write-only RPC and aggregate reads require the existing server-verified admin token, so anonymous tracking never exposes customer events.
 
 - Published page visits are stored as owner-scoped UTC daily totals; dashboard aggregation uses the shared 30-day series helper and must not turn failed reads into zero visits.
 

@@ -1,6 +1,6 @@
 import LandingCursor from "@/components/LandingCursor";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { BrowserRouter, Route, Routes, Navigate } from "react-router-dom";
+import { BrowserRouter, Route, Routes, Navigate, useLocation } from "react-router-dom";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -53,11 +53,21 @@ import ProTrial from "./pages/ProTrial";
 import LanguageLayout from "./components/LanguageLayout";
 import { useEffect, useState } from "react";
 import { capturePendingReferral, registerPendingReferral } from "@/lib/referral";
+import { flowRoute, getFlowSession } from "@/lib/userFlow";
 
 const queryClient = new QueryClient();
 
 const ReferralTracker = () => {
-  const { user } = useAuth();
+  const { user, loading } = useAuth();
+  const location = useLocation();
+  useEffect(() => {
+    if (loading) return;
+    const route = flowRoute(location.pathname);
+    if (!route) return;
+    try {
+      void supabase.rpc("record_user_flow", { p_session: getFlowSession(), p_route: route }).then(() => {});
+    } catch { /* Metrics must never interrupt navigation. */ }
+  }, [location.pathname, location.key, loading]);
   useEffect(() => {
     capturePendingReferral();
   }, []);

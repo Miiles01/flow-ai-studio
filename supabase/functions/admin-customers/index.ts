@@ -56,6 +56,15 @@ Deno.serve(async (req) => {
       authUsers.push(...data.users);
       if (data.users.length < 1000) break;
     }
+    const body = await req.json();
+    if (body.mode === "user_flow") {
+      const days = body.days === null ? null : Number(body.days ?? 30);
+      if (days !== null && ![7, 30].includes(days)) return json({ error: "Invalid range" }, 400);
+      const excluded = authUsers.filter((u) => ADMIN_EMAILS.includes((u.email ?? "").toLowerCase())).map((u) => u.id);
+      const { data, error } = await sb.rpc("admin_user_flow_stats", { p_days: days, p_excluded: excluded });
+      if (error) throw error;
+      return json(data);
+    }
     const [profiles, flows, sites, subs, events] = await Promise.all([
       fetchAll(sb, "profiles", "user_id, display_name, username, onboarding_completed"),
       fetchAll(sb, "flows", "user_id, nodes, updated_at"),

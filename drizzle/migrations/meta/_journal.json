@@ -78,6 +78,13 @@
       "when": 1795545174322,
       "tag": "0010_enable_published_site_visit_counts",
       "breakpoints": true
+    },
+    {
+      "idx": 11,
+      "version": "7",
+      "when": 1795638889405,
+      "tag": "0011_admin_user_flow",
+      "breakpoints": true
     }
   ]
 }
