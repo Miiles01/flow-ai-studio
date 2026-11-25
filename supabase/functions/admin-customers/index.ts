@@ -79,6 +79,9 @@ Deno.serve(async (req) => {
       const evUsers = (names: string[]) => uniq(events.filter((e) => names.includes(e.event) && inRange(e.created_at)));
       const onboarded = new Set(profiles.filter((p) => p.onboarding_completed).map((p) => p.user_id));
       const signedUp = users.filter((u) => inRange(u.created_at));
+      // Only real, current customers count as claimed Pro months (deleted test accounts are left out).
+      const trials = await fetchAll(sb, "pro_trials", "user_id, started_at");
+      data.trials = uniq(trials.filter((t) => inRange(t.started_at)));
       data.people = {
         signup: signedUp.length,
         onboarding: signedUp.filter((u) => onboarded.has(u.id)).length,
