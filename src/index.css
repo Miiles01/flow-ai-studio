@@ -1084,3 +1084,86 @@
 .admin-light .bg-white, .admin-light .data-\[state\=active\]\:bg-white[data-state="active"] { background-color: #111219; }
 .admin-light .bg-white.text-black, .admin-light .bg-white .text-black, .admin-light .data-\[state\=active\]\:text-black[data-state="active"] { color: #ffffff; }
 .admin-light .hover\:bg-white:hover, .admin-light .hover\:bg-white\/90:hover { background-color: #2a2c38; }
+
+/* Admin user-flow diagram: one panel, dark by default, light inside .admin-light */
+.user-flow {
+  --uf-bg: #131317;
+  --uf-fg: #ffffff;
+  --uf-muted: rgb(255 255 255 / 0.55);
+  --uf-line: rgb(255 255 255 / 0.8);
+  --uf-dot: #9ca3af;
+  --uf-dot-opacity: 0.28;
+  --uf-explore: #a3a3ab;
+  --uf-border: rgb(255 255 255 / 0.1);
+  --uf-track: rgb(255 255 255 / 0.12);
+  --uf-chip: #ffffff;
+  --uf-chip-fg: #111219;
+  --uf-filter-active-bg: #ffffff;
+  --uf-filter-active-fg: #111219;
+  position: relative;
+  border-radius: 24px;
+  background: var(--uf-bg);
+  border: 1px solid var(--uf-border);
+  color: var(--uf-fg);
+}
+.admin-light .user-flow {
+  --uf-bg: #ffffff;
+  --uf-fg: #111219;
+  --uf-muted: rgb(17 18 25 / 0.55);
+  --uf-line: rgb(17 18 25 / 0.8);
+  --uf-dot-opacity: 0.5;
+  --uf-border: #e5e7eb;
+  --uf-track: #f1eff6;
+  --uf-chip: #ffffff;
+  --uf-chip-fg: #111219;
+  --uf-filter-active-bg: #111219;
+  --uf-filter-active-fg: #ffffff;
+}
+.user-flow-canvas { background: transparent; }
+.user-flow-dots {
+  background-image: radial-gradient(circle, var(--uf-dot) 1.5px, transparent 1.5px);
+  background-size: 32px 32px;
+  opacity: var(--uf-dot-opacity);
+  -webkit-mask-image: radial-gradient(ellipse 72% 72% at 50% 50%, #000 38%, transparent 100%);
+  mask-image: radial-gradient(ellipse 72% 72% at 50% 50%, #000 38%, transparent 100%);
+}
+.user-flow-connectors { color: var(--uf-line); }
+.user-flow-mail {
+  background: var(--uf-bg);
+  border: 1px solid var(--uf-border);
+  color: var(--uf-muted);
+}
+.user-flow-explore { border: 1.5px dashed var(--uf-explore); }
+.user-flow-secondary { color: var(--uf-muted); }
+.user-flow-card { background: transparent; }
+.user-flow-card.tone-black { background: #000000; color: #ffffff; }
+.user-flow-card.tone-gray { background: #2e2e33; color: #ffffff; }
+.user-flow-card.tone-blue { background: #4059f1; color: #ffffff; }
+.user-flow-card.tone-white { background: #ffffff; color: #000000; border: 1px solid #000000; }
+.user-flow-card:hover { filter: brightness(1.12); }
+.user-flow-card:focus-visible { outline: 2px solid #4059f1; outline-offset: 3px; }
+.user-flow-counter {
+  background: var(--uf-chip);
+  color: var(--uf-chip-fg);
+  border: 1px solid var(--uf-border);
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.18);
+}
+.user-flow-counter svg { color: #4059f1; }
+.user-flow-filter { color: var(--uf-muted); }
+.user-flow-filter:hover { background-color: rgb(127 127 127 / 0.14); color: var(--uf-fg); }
+.user-flow-filter.is-active { background: var(--uf-filter-active-bg); color: var(--uf-filter-active-fg); }
+.user-flow-filter.is-active:hover { color: var(--uf-filter-active-fg); }
+.user-flow-track { background: var(--uf-track); }
+.user-flow-fill { background: #4059f1; }
+/* The info card is portalled outside the panel, so it carries its own light palette */
+.user-flow-info {
+  --uf-muted: #6b7280;
+  --uf-line: #111219;
+  --uf-track: #f1eff6;
+  background: #ffffff;
+  color: #111219;
+  border: 1px solid #e5e7eb;
+  box-shadow: 0 14px 38px rgb(17 18 25 / 0.14);
+}
+.user-flow-route { color: #4059f1; }
+.user-flow-completed { background: rgb(64 89 241 / 0.08); }

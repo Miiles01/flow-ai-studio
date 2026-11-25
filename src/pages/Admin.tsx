@@ -3,14 +3,13 @@ import { useAdminAuth } from "@/hooks/useAdminAuth";
 import AdminLogin from "./AdminLogin";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Button } from "@/components/ui/button";
-import ProspectsTab from "@/components/admin/ProspectsTab";
 import TemplatesTab from "@/components/admin/TemplatesTab";
 import BusinessInquiriesTab from "@/components/admin/BusinessInquiriesTab";
 import InstructionsTab from "@/components/admin/InstructionsTab";
 import CouponsTab from "@/components/admin/CouponsTab";
 import StudioTab from "@/components/admin/StudioTab";
 import SuggestionsTab from "@/components/admin/SuggestionsTab";
-import { LogOut, Database, FileCode, Loader2, Briefcase, Brain, Ticket, Lightbulb, Palette, Users, Sun, Moon } from "lucide-react";
+import { LogOut, FileCode, Loader2, Briefcase, Brain, Ticket, Lightbulb, Palette, Users, Sun, Moon } from "lucide-react";
 import CustomersTab from "@/components/admin/CustomersTab";
 
 export default function Admin() {
@@ -51,9 +50,6 @@ export default function Admin() {
             <TabsTrigger value="customers" className="data-[state=active]:bg-white data-[state=active]:text-black">
               <Users className="h-4 w-4" /> Clientes
             </TabsTrigger>
-            <TabsTrigger value="prospects" className="data-[state=active]:bg-white data-[state=active]:text-black">
-              <Database className="h-4 w-4" /> Prospectos
-            </TabsTrigger>
             <TabsTrigger value="templates" className="data-[state=active]:bg-white data-[state=active]:text-black">
               <FileCode className="h-4 w-4" /> Plantillas
             </TabsTrigger>
@@ -76,9 +72,6 @@ export default function Admin() {
 
           <TabsContent value="customers" className="mt-6">
             <CustomersTab />
-          </TabsContent>
-          <TabsContent value="prospects" className="mt-6">
-            <ProspectsTab />
           </TabsContent>
           <TabsContent value="templates" className="mt-6">
             <TemplatesTab />
