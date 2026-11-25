@@ -1298,6 +1298,24 @@
     ]
   },
   {
+    "slug": "barra-que-revela",
+    "title": "Barra que revela",
+    "category": "Transición",
+    "description": "Una línea fina cruza el centro, se abre hasta cubrir la pantalla y revela el texto nuevo línea por línea; al final se cierra y se va.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/barra-que-revela.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/barra-que-revela.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/barra-que-revela.tsx.txt",
+    "code_filename": "BarReveal.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps y usa barRevealDuration(props) como duración. La tipografía de ejemplo ya carga sola; cambia fromText y toText por mis textos (para usarla encima de mi video, fromText vacío y background transparent). Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia fromText y toText (líneas con \\n)",
+      "barColor y revealColor: color de la barra y del texto revelado",
+      "barHeight: grosor de la línea (1 px por defecto)",
+      "step y hold para el ritmo; reverse: false para que no regrese"
+    ]
+  },
+  {
     "slug": "escena-split-rebote",
     "title": "Pantalla dividida · Entra y sale",
     "category": "Escena",
