@@ -21,7 +21,7 @@ export const USER_FLOW: FlowStep[] = [
   { id: "architecture", title: "architecture", route: "/trends", icon: Network, tone: "gray", x: 798, y: 396 },
 ];
 export type UserFlowData = {
-  visits: Record<string, number>; homeSignup: number; affiliatesSignup: number;
+  visits: Record<string, number>; people?: Record<string, number>; homeSignup: number; affiliatesSignup: number;
   homeConversion: number; trials: number; completed: number; registered: number;
   completionRate: number; steps: number[]; trackedSince: string | null;
 };

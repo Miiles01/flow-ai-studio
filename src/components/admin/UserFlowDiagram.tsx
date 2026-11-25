@@ -128,11 +128,11 @@ export default function UserFlowDiagram({ refreshKey }: { refreshKey: boolean })
             className={`user-flow-card tone-${step.tone} absolute h-[112px] w-[112px] rounded-[10px] p-3 block text-left font-normal whitespace-normal`}
             style={{ left: step.x, top: step.y }}
             onFocus={() => step.info && setOpen(step.id)} onBlur={() => setOpen(null)}
-            onClick={() => step.info && setOpen((id) => id === step.id ? null : step.id)} aria-label={`${text(step.title)}: ${text("visits")} ${number(data ? data.visits[step.id] ?? 0 : undefined)}`}>
+            onClick={() => step.info && setOpen((id) => id === step.id ? null : step.id)} aria-label={`${text(step.title)}: ${text("visits")} ${number(data ? Math.max(data.visits[step.id] ?? 0, data.people?.[step.id] ?? 0) : undefined)}`}>
             <span className="block text-[14px] leading-[18px] pr-1">{text(step.title)}</span>
             <span className="block mt-1 text-[11px] opacity-70 font-light">{routeFor(step)}</span>
             <Icon className="h-7 w-7 absolute bottom-3 right-3" />
-            <span className="user-flow-counter absolute -top-3 -right-3 min-w-[54px] h-6 rounded-full flex items-center justify-center gap-1.5 px-2 text-[11px]"><Eye className="h-3.5 w-3.5" /><span>{number(data ? data.visits[step.id] ?? 0 : undefined)}</span></span>
+            <span className="user-flow-counter absolute -top-3 -right-3 min-w-[54px] h-6 rounded-full flex items-center justify-center gap-1.5 px-2 text-[11px]"><Eye className="h-3.5 w-3.5" /><span>{number(data ? Math.max(data.visits[step.id] ?? 0, data.people?.[step.id] ?? 0) : undefined)}</span></span>
           </Button>;
           return step.info ? <HoverCard key={step.id} open={open === step.id} onOpenChange={(v) => setOpen(v ? step.id : null)} openDelay={100} closeDelay={120}>
             <HoverCardTrigger asChild>{card}</HoverCardTrigger>

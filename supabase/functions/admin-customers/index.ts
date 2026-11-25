@@ -63,6 +63,32 @@ Deno.serve(async (req) => {
       const excluded = authUsers.filter((u) => ADMIN_EMAILS.includes((u.email ?? "").toLowerCase())).map((u) => u.id);
       const { data, error } = await sb.rpc("admin_user_flow_stats", { p_days: days, p_excluded: excluded });
       if (error) throw error;
+      // Stage counters also use what each customer already did, so history before page tracking still shows.
+      const since = days === null ? "" : new Date(Date.now() - days * 864e5).toISOString();
+      const ex = new Set(excluded);
+      const inRange = (t?: string | null) => !!t && t >= since;
+      const [profiles, flows, events, apps] = await Promise.all([
+        fetchAll(sb, "profiles", "user_id, onboarding_completed"),
+        fetchAll(sb, "flows", "user_id, created_at, updated_at"),
+        fetchAll(sb, "user_events", "user_id, event, created_at"),
+        fetchAll(sb, "user_applications", "user_id, created_at").catch(() => []),
+      ]);
+      const users = authUsers.filter((u) => !ex.has(u.id));
+      const ids = new Set(users.map((u) => u.id));
+      const uniq = (list: any[]) => new Set(list.filter((r) => ids.has(r.user_id)).map((r) => r.user_id)).size;
+      const evUsers = (names: string[]) => uniq(events.filter((e) => names.includes(e.event) && inRange(e.created_at)));
+      const onboarded = new Set(profiles.filter((p) => p.onboarding_completed).map((p) => p.user_id));
+      const signedUp = users.filter((u) => inRange(u.created_at));
+      data.people = {
+        signup: signedUp.length,
+        onboarding: signedUp.filter((u) => onboarded.has(u.id)).length,
+        dashboard: users.filter((u) => inRange(u.last_sign_in_at)).length,
+        boards: uniq(flows.filter((f) => inRange(f.updated_at ?? f.created_at))),
+        programs: uniq(apps.filter((a) => inRange(a.created_at))),
+        studio: evUsers(["template_view", "template_use"]),
+        architecture: evUsers(["architecture_view"]),
+        upgrade: evUsers(["pricing_card_click", "pricing_cta"]),
+      };
       return json(data);
     }
     const [profiles, flows, sites, subs, events] = await Promise.all([
