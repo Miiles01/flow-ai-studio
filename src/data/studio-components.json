@@ -633,6 +633,24 @@
     ]
   },
   {
+    "slug": "cover-flow",
+    "title": "Cover flow",
+    "category": "Carrusel",
+    "description": "La tarjeta del centro va de frente y las de los lados giran en 3D hacia el centro; avanza una tarjeta con un spring suave, en bucle.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/cover-flow.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/cover-flow.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/cover-flow.tsx.txt",
+    "code_filename": "CoverFlow.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Si no tengo un proyecto de Remotion, créalo; registra la composición en 1080×1920 a 30 fps y usa coverFlowDuration(props) como duración. Pon mis fotos en public/ y cámbialas en exampleItems. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia las fotos o tarjetas de color en items",
+      "angle: cuánto giran las tarjetas de los lados",
+      "gap: separación entre tarjetas",
+      "hold y move para el ritmo"
+    ]
+  },
+  {
     "slug": "pila-con-bisagra",
     "title": "Pila con bisagra",
     "category": "Galería",
