@@ -82,7 +82,14 @@ Deno.serve(async (req) => {
     if (body.mode === "user_flow") {
       const days = body.days === null ? null : Number(body.days ?? 30);
       if (days !== null && ![7, 30].includes(days)) return json({ error: "Invalid range" }, 400);
-      const excluded = authUsers.filter((u) => ADMIN_EMAILS.includes((u.email ?? "").toLowerCase())).map((u) => u.id);
+      const known = new Set(authUsers.map((u) => u.id));
+      const { data: flowUsers, error: fuErr } = await sb.from("user_flow_events").select("user_id").not("user_id", "is", null).limit(10000);
+      if (fuErr) throw fuErr;
+      // Admin visits and deleted (test) accounts never count toward the journey.
+      const excluded = [...new Set([
+        ...authUsers.filter((u) => ADMIN_EMAILS.includes((u.email ?? "").toLowerCase())).map((u) => u.id),
+        ...(flowUsers ?? []).map((r: any) => r.user_id).filter((id: string) => !known.has(id)),
+      ])];
       const { data, error } = await sb.rpc("admin_user_flow_stats", { p_days: days, p_excluded: excluded });
       if (error) throw error;
       // Stage counters also use what each customer already did, so history before page tracking still shows.

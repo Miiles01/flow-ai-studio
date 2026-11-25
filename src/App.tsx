@@ -64,10 +64,12 @@ const ReferralTracker = () => {
     if (loading) return;
     const route = flowRoute(location.pathname);
     if (!route) return;
+    // Signed-in sections redirect visitors to log in, so they only count when someone is signed in.
+    if (!user && ["dashboard", "boards", "programs", "studio", "architecture", "onboarding"].includes(route)) return;
     try {
       void supabase.rpc("record_user_flow", { p_session: getFlowSession(), p_route: route }).then(() => {});
     } catch { /* Metrics must never interrupt navigation. */ }
-  }, [location.pathname, location.key, loading]);
+  }, [location.pathname, location.key, loading, user?.id]);
   useEffect(() => {
     capturePendingReferral();
   }, []);

@@ -33,7 +33,11 @@ export function flowRoute(path: string): string | null {
   if (route === "/") return "home";
   if (route === "/afiliados") return "affiliates";
   if (route === "/obtener-pro") return "trial";
-  return USER_FLOW.find((s) => s.route === route)?.id ?? null;
+  const exact = USER_FLOW.find((s) => s.route === route)?.id;
+  if (exact) return exact;
+  // Opening a board, template or program inside a section counts as a visit to that Explore section.
+  if (/^\/(boards|studio|programs)\//.test(route) && !route.startsWith("/boards/join/")) return route.split("/")[1];
+  return null;
 }
 export function getFlowSession(): string {
   const key = "miiles-flow-session";
