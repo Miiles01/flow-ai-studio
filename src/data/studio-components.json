@@ -1281,6 +1281,23 @@
     ]
   },
   {
+    "slug": "transicion-ventana",
+    "title": "Transición: ventana",
+    "category": "Transición",
+    "description": "Una franja de color cruza el centro, se abre como una ventana y deja ver la nueva escena con tu foto.",
+    "preview_video_url": "https://wearemiiles.com/studio/componentes/transicion-ventana.mp4",
+    "poster_url": "https://wearemiiles.com/studio/componentes/transicion-ventana.jpg",
+    "code_url": "https://wearemiiles.com/studio/componentes/transiciones-pagina.tsx.txt",
+    "code_filename": "PageTransition.tsx",
+    "stack": "Remotion + React, 1080×1920 a 30 fps",
+    "instruction": "Usa variant: \"window\" y overlayColor: \"#4059F1\"; pon mi foto en public/ y úsala en to.image (con to.text vacío), y cambia el texto de from. La tipografía de ejemplo ya carga sola. Sigue el bloque «Cómo usar este componente» del código para personalizarla.",
+    "customize": [
+      "Cambia from (texto, color o foto) y to.image por tu foto",
+      "overlayColor: color de la franja",
+      "speed para la velocidad"
+    ]
+  },
+  {
     "slug": "escena-split-rebote",
     "title": "Pantalla dividida · Entra y sale",
     "category": "Escena",
