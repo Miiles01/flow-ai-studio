@@ -23,8 +23,8 @@
     "hero_title_crear": "créer",
     "hero_subtitle": "Imaginez un projet. Rendez-le réel.",
     "hero_cta": "Rejoindre",
-    "seo_title": "Business Model Canvas avec l'IA pour entrepreneurs | Miiles",
-    "seo_description": "Structurez vos idées d'entreprise avec l'intelligence artificielle : créez votre Business Model Canvas, validez vos idées avec l'IA et utilisez des prompts de stratégie en quelques minutes.",
+    "seo_title": "Miiles | Outils et ressources pour les créateurs",
+    "seo_description": "Portfolios, modèles, ressources de design et vidéo, tableaux et IA pour les créateurs de contenu, designers et créatifs. Créez et organisez tout avec Miiles.",
     "hero_h1": "Chaque créateur a besoin d'une base",
     "hero_h1_before": "Chaque",
     "hero_h1_accent": "créateur",
@@ -62,11 +62,11 @@
     "trusted_by": "Ils nous font confiance",
     "system_title_1": "Un seul système.",
     "system_title_2": "Plus de",
-    "system_title_3": "bénéfices.",
-    "colab_title": "Trouvez des collaborations",
-    "colab_desc": "Sur Miiles, vous trouverez des opportunités uniques pour faire grandir votre marque.",
-    "sales_title": "Faites résonner votre idée avec la force de vente",
-    "sales_desc": "Si votre marque vend des services ou des produits, faites-les proposer aussi par d'autres vendeurs partout dans le monde.",
+    "system_title_3": "créativité.",
+    "colab_title": "Des ressources pour créer",
+    "colab_desc": "Trouvez des modèles, des assets et des outils pour faire grandir vos idées.",
+    "sales_title": "Donnez vie à vos idées",
+    "sales_desc": "Créez, modifiez et partagez votre travail avec des outils pensés pour les créateurs et les créatifs.",
     "testim_quote": "Vraiment incroyable",
     "testim_name": "Karol Wegner",
     "testim_role": "PDG de BeeSpeaker",
@@ -75,7 +75,7 @@
     "cta_subtitle": "Créez votre compte aujourd'hui",
     "cta_button": "Essayer Miiles",
     "build_title": "Qu’allez-vous créer ?",
-    "build_subtitle": "Tout ce que vous imaginez pour votre entreprise, l'intelligence artificielle de Miiles vous aide à le structurer.",
+    "build_subtitle": "Portfolios, contenu, design et organisation : Miiles vous donne les outils et les ressources pour transformer vos idées en un travail prêt à partager.",
     "build_cards": [
       {
         "title": "Créer un portfolio",
@@ -129,44 +129,44 @@
     "faq_title": "Questions fréquentes",
     "faq_items": [
       {
-        "q": "Qu'est-ce que Miiles ?",
+        "q": "Qu’est-ce que Miiles ?",
         "a": [
-          "Miiles est une plateforme d'intelligence artificielle pour les entrepreneurs qui transforme les idées en modèles d'affaires. Décrivez votre idée et Miiles génère votre Business Model Canvas, vos flux et vos listes de tâches sur un tableau visuel que vous pouvez modifier avec votre équipe.",
-          "Dans Découvertes, vous apprenez aussi comment fonctionnent les algorithmes de TikTok, Instagram, YouTube et Facebook, et quelles stratégies utilisent les créateurs qui grandissent."
+          "Miiles est un outil pour les créateurs et les créatifs : il réunit portfolios, modèles, ressources de design et vidéo, tableaux et intelligence artificielle au même endroit.",
+          "Il est conçu pour les créateurs de contenu, créateurs UGC, designers, monteurs, freelances et toutes les personnes qui veulent créer, organiser et partager leur travail."
         ]
       },
       {
-        "q": "Comment fonctionne Miiles ?",
+        "q": "Que puis-je créer avec Miiles ?",
         "a": [
-          "Vous écrivez votre idée comme vous la raconteriez à quelqu'un. Si besoin, l'IA vous pose quelques questions pour comprendre votre objectif, propose un plan stratégique et, une fois que vous l'approuvez, construit le tableau avec la structure de votre entreprise.",
-          "Ensuite, vous pouvez modifier, déplacer et développer chaque partie, ou demander à l'IA de développer une section à partir de ce que vous avez déjà."
+          "Vous pouvez concevoir et publier votre portfolio, organiser vos clients et campagnes sur des tableaux, et utiliser des modèles et ressources pour monter des vidéos, animer et concrétiser vos idées.",
+          "Vous pouvez aussi connecter votre IA pour créer et modifier vos propres pages sans dépendre d’un dépôt de code."
         ]
       },
       {
-        "q": "Qu'est-ce qu'un Business Model Canvas ?",
+        "q": "À qui s’adresse Miiles ?",
         "a": [
-          "C'est un outil de stratégie créé par Alexander Osterwalder qui résume une entreprise en neuf blocs : segments de clientèle, proposition de valeur, canaux, relations clients, sources de revenus, ressources clés, activités clés, partenaires clés et structure de coûts.",
-          "Miiles le génère à partir de votre idée pour que vous puissiez le revoir, l'ajuster et le partager en quelques minutes."
+          "Aux créateurs de contenu, designers, monteurs, créatifs indépendants et équipes qui veulent réunir leurs ressources et leur travail dans un même espace.",
+          "Vous n’avez pas besoin de savoir coder : commencez avec un modèle et adaptez-le à votre style."
         ]
       },
       {
-        "q": "Puis-je valider mon idée d'entreprise avec l'IA ?",
+        "q": "Miiles est-il un marketplace ?",
         "a": [
-          "Miiles vous aide à structurer votre idée et à voir clairement ce que vous devez tester : qui est votre client, quel problème vous résolvez, quel canal permet de l'atteindre et comment vous gagnez de l'argent.",
-          "La vraie validation se fait en parlant à vos clients ; Miiles vous donne la carte pour le faire dans l'ordre."
+          "Non. Miiles n’est pas un marketplace destiné à acheter ou vendre des services entre entreprises.",
+          "C’est un outil pour créer : il vous donne des ressources, des modèles, des tableaux et de l’IA pour développer et présenter votre propre travail."
         ]
       },
       {
-        "q": "Dois-je connaître la stratégie ou savoir écrire des prompts ?",
+        "q": "Dois-je savoir designer ou écrire des prompts ?",
         "a": [
-          "Non. Vous n'avez pas besoin de maîtriser les prompts de stratégie d'entreprise : vous écrivez en langage courant et Miiles s'occupe des questions et de la structure.",
-          "Si vous connaissez déjà la stratégie, vous pouvez demander des cadres précis, comme le Business Model Canvas, et ajuster chaque bloc à votre façon."
+          "Non. Vous pouvez commencer avec un modèle ou décrire ce que vous voulez en langage courant.",
+          "Miiles vous aide avec la structure, et vous décidez du contenu, du style et du résultat final."
         ]
       },
       {
         "q": "Combien ça coûte ?",
         "a": [
-          "Vous pouvez commencer gratuitement. Le forfait Pro coûte 24 USD par mois ou 230 USD par an (20 % d'économie) et comprend des projets et collaborations illimités, des analyses avancées et une assistance prioritaire.",
+          "Vous pouvez commencer gratuitement. Le forfait Pro coûte 24 USD par mois ou 230 USD par an (20 % d’économie) et comprend des projets et collaborations illimités, des analyses avancées et une assistance prioritaire.",
           "Pour les équipes et les entreprises, il existe un forfait Entreprise sur mesure."
         ]
       }

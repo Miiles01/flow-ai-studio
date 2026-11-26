@@ -49,7 +49,7 @@ const Pricing = () => {
       "@type": "SoftwareApplication",
       name: "Miiles",
       url: "https://miiles.app",
-      applicationCategory: "BusinessApplication",
+      applicationCategory: "MultimediaApplication",
       operatingSystem: "Web",
       description: t("pricing.seoDescription"),
       inLanguage: LOCALE_OF[lang],

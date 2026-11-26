@@ -12,8 +12,8 @@
     "hero_cta": "Crie sua conta agora",
     "explore_templates": "Explore modelos",
     "hero_cta_gratis": "Comece grátis",
-    "seo_title": "Business Model Canvas com IA para empreendedores | Miiles",
-    "seo_description": "Estruture suas ideias de negócio com inteligência artificial: crie seu Business Model Canvas, valide ideias com IA e use prompts de estratégia em minutos.",
+    "seo_title": "Miiles | Ferramentas e recursos para criadores",
+    "seo_description": "Portfólios, templates, recursos de design e vídeo, quadros e IA para criadores de conteúdo, designers e criativos. Crie e organize tudo com a Miiles.",
     "hero_h1": "Todo criador precisa de uma base",
     "hero_h1_before": "Todo",
     "hero_h1_accent": "criador",
@@ -51,11 +51,11 @@
     "trusted_by": "A escolha de",
     "system_title_1": "Um sistema.",
     "system_title_2": "Mais",
-    "system_title_3": "lucro.",
-    "colab_title": "Encontre parcerias",
-    "colab_desc": "Na Miiles, você encontra oportunidades únicas para impulsionar sua marca.",
-    "sales_title": "Dê mais força de vendas à sua ideia",
-    "sales_desc": "Se sua marca vende serviços ou produtos, permita que outros vendedores pelo mundo também ofereçam o que você vende.",
+    "system_title_3": "criatividade.",
+    "colab_title": "Recursos para criar",
+    "colab_desc": "Encontre templates, assets e ferramentas para levar suas ideias mais longe.",
+    "sales_title": "Dê vida às suas ideias",
+    "sales_desc": "Crie, edite e compartilhe seu trabalho com ferramentas feitas para criadores e profissionais criativos.",
     "testim_quote": "É realmente incrível",
     "testim_name": "Karol Wegner",
     "testim_role": "CEO da BeeSpeaker",
@@ -64,7 +64,7 @@
     "cta_subtitle": "Crie sua conta hoje",
     "cta_button": "Experimente a Miiles",
     "build_title": "O que você vai criar?",
-    "build_subtitle": "Seja qual for sua ideia para o negócio, a inteligência artificial da Miiles ajuda você a estruturá-la.",
+    "build_subtitle": "Portfólios, conteúdo, design e organização: a Miiles oferece ferramentas e recursos para transformar suas ideias em trabalho pronto para compartilhar.",
     "build_cards": [
       {
         "title": "Crie um portfólio",
@@ -120,36 +120,36 @@
       {
         "q": "O que é a Miiles?",
         "a": [
-          "A Miiles é uma plataforma de inteligência artificial para empreendedores que transforma ideias em modelos de negócio. Descreva sua ideia e a Miiles gera seu Business Model Canvas, fluxos e listas de tarefas em um quadro visual que você pode editar com sua equipe.",
-          "Em Descobertas, você também aprende como funcionam os algoritmos do TikTok, Instagram, YouTube e Facebook e quais estratégias os criadores em crescimento estão usando."
+          "A Miiles é uma ferramenta para criadores e profissionais criativos: reúne portfólios, templates, recursos de design e vídeo, quadros e inteligência artificial em um só lugar.",
+          "Foi feita para criadores de conteúdo, criadores UGC, designers, editores, freelancers e qualquer pessoa que queira criar, organizar e compartilhar seu trabalho."
         ]
       },
       {
-        "q": "Como a Miiles funciona?",
+        "q": "O que posso criar com a Miiles?",
         "a": [
-          "Você escreve sua ideia como se estivesse contando para alguém. Se necessário, a IA faz algumas perguntas para entender seu objetivo, propõe um plano estratégico e, quando você aprova, monta o quadro com a estrutura do seu negócio.",
-          "Depois, você pode editar, mover e ampliar cada parte ou pedir à IA que desenvolva uma seção a partir do que você já tem."
+          "Você pode criar e publicar seu portfólio, organizar clientes e campanhas em quadros e usar templates e recursos para editar vídeos, animar e dar forma às suas ideias.",
+          "Também pode conectar sua IA para criar e editar suas próprias páginas sem depender de um repositório de código."
         ]
       },
       {
-        "q": "O que é um Business Model Canvas?",
+        "q": "Para quem é a Miiles?",
         "a": [
-          "É uma ferramenta de estratégia criada por Alexander Osterwalder que resume um negócio em nove blocos: segmentos de clientes, proposta de valor, canais, relacionamento com clientes, fontes de receita, recursos principais, atividades principais, parcerias principais e estrutura de custos.",
-          "A Miiles gera esse modelo a partir da sua ideia para você revisar, ajustar e compartilhar em minutos."
+          "Para criadores de conteúdo, designers, editores, profissionais criativos independentes e equipes que querem reunir recursos e trabalho em um mesmo espaço.",
+          "Você não precisa saber programar: comece com um template e adapte tudo ao seu estilo."
         ]
       },
       {
-        "q": "Posso validar minha ideia de negócio com IA?",
+        "q": "A Miiles é um marketplace?",
         "a": [
-          "A Miiles ajuda você a estruturar sua ideia e enxergar com clareza o que precisa testar: quem é seu cliente, qual problema você resolve, por qual canal chega até ele e como gera receita.",
-          "A validação de verdade acontece quando você conversa com seus clientes; a Miiles oferece o mapa para fazer isso de forma organizada."
+          "Não. A Miiles não é um marketplace para comprar ou vender serviços entre empresas.",
+          "É uma ferramenta para criar: oferece recursos, templates, quadros e IA para desenvolver e mostrar seu próprio trabalho."
         ]
       },
       {
-        "q": "Preciso entender de estratégia ou saber escrever prompts?",
+        "q": "Preciso saber design ou escrever prompts?",
         "a": [
-          "Não. Você não precisa dominar prompts de estratégia de negócios: escreva de forma natural e a Miiles cuida das perguntas e da estrutura.",
-          "Se você já entende de estratégia, pode pedir modelos específicos, como o Business Model Canvas, e ajustar cada bloco do seu jeito."
+          "Não. Você pode começar com um template ou descrever o que quer em linguagem natural.",
+          "A Miiles ajuda com a estrutura, e você decide o conteúdo, o estilo e o resultado final."
         ]
       },
       {

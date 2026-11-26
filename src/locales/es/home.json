@@ -12,8 +12,8 @@
     "hero_cta": "Unirse ahora",
     "explore_templates": "Explorar plantillas",
     "hero_cta_gratis": "Empieza gratis",
-    "seo_title": "Business Model Canvas con IA para emprendedores | Miiles",
-    "seo_description": "Estructura tus ideas de negocio con inteligencia artificial: crea tu Business Model Canvas, valida tu idea con IA y usa prompts de estrategia en minutos.",
+    "seo_title": "Miiles | Herramientas y recursos para creadores",
+    "seo_description": "Portafolios, plantillas, recursos de diseño y video, tableros e IA para creadores de contenido, diseñadores y creativos. Crea y organiza todo con Miiles.",
     "hero_h1": "Todo creador necesita una base",
     "hero_h1_before": "Todo",
     "hero_h1_accent": "creador",
@@ -51,11 +51,11 @@
     "trusted_by": "Elegido por",
     "system_title_1": "Un sistema.",
     "system_title_2": "Más",
-    "system_title_3": "ganancias.",
-    "colab_title": "Encuentra colaboraciones",
-    "colab_desc": "En Miiles encontrarás oportunidades únicas para impulsar tu marca.",
-    "sales_title": "Haz que tu idea suene con fuerza de ventas",
-    "sales_desc": "Si tu marca vende servicios o productos, haz que otros vendedores en todo el mundo también los ofrezcan.",
+    "system_title_3": "creatividad.",
+    "colab_title": "Recursos para crear",
+    "colab_desc": "Encuentra plantillas, assets y herramientas para llevar tus ideas más lejos.",
+    "sales_title": "Haz que tus ideas cobren vida",
+    "sales_desc": "Crea, edita y comparte tu trabajo con herramientas pensadas para creadores y creativos.",
     "testim_quote": "Luce realmente asombroso",
     "testim_name": "Karol Wegner",
     "testim_role": "CEO de BeeSpeaker",
@@ -64,7 +64,7 @@
     "cta_subtitle": "Crea tu cuenta hoy mismo",
     "cta_button": "Prueba Miiles",
     "build_title": "¿Qué vas a crear?",
-    "build_subtitle": "Lo que imagines para tu negocio, la inteligencia artificial de Miiles te ayuda a estructurarlo.",
+    "build_subtitle": "Portafolios, contenido, diseño y organización: Miiles te da herramientas y recursos para convertir tus ideas en trabajo listo para compartir.",
     "build_cards": [
       {
         "title": "Diseña un portafolio",
@@ -120,36 +120,36 @@
       {
         "q": "¿Qué es Miiles?",
         "a": [
-          "Miiles es una plataforma de inteligencia artificial para emprendedores que convierte ideas en modelos de negocio. Describe tu idea y Miiles genera tu Business Model Canvas, flujos y listas de tareas en un tablero visual que puedes editar con tu equipo.",
-          "Además, en Descubrimientos aprendes cómo funcionan los algoritmos de TikTok, Instagram, YouTube y Facebook, y qué estrategias están usando los creadores que crecen."
+          "Miiles es una herramienta para creadores y creativos: reúne portafolios, plantillas, recursos de diseño y video, tableros e inteligencia artificial en un solo lugar.",
+          "Está pensada para creadores de contenido, creadores UGC, diseñadores, editores, freelancers y cualquier persona que quiera crear, organizar y compartir su trabajo."
         ]
       },
       {
-        "q": "¿Cómo funciona Miiles?",
+        "q": "¿Qué puedo crear con Miiles?",
         "a": [
-          "Escribes tu idea como se la contarías a alguien. Si hace falta, la IA te hace algunas preguntas para entender tu objetivo, te propone un plan estratégico y, cuando lo apruebas, construye el tablero con la estructura de tu negocio.",
-          "Después puedes editar, mover y ampliar cada parte, o pedirle a la IA que desarrolle una sección a partir de lo que ya tienes."
+          "Puedes diseñar y publicar tu portafolio, organizar clientes y campañas en tableros, y usar plantillas y recursos para editar video, animar y dar forma a tus ideas.",
+          "También puedes conectar tu IA para crear y editar tus propias páginas sin depender de un repositorio de código."
         ]
       },
       {
-        "q": "¿Qué es un Business Model Canvas?",
+        "q": "¿Para quién es Miiles?",
         "a": [
-          "Es una herramienta de estrategia, creada por Alexander Osterwalder, que resume un negocio en nueve bloques: segmentos de clientes, propuesta de valor, canales, relación con clientes, fuentes de ingresos, recursos clave, actividades clave, socios clave y estructura de costos.",
-          "Miiles lo genera a partir de tu idea para que puedas revisarlo, ajustarlo y compartirlo en minutos."
+          "Para creadores de contenido, diseñadores, editores, creativos independientes y equipos que quieren tener sus recursos y su trabajo en un mismo espacio.",
+          "No necesitas saber programar: puedes empezar con una plantilla y adaptarla a tu estilo."
         ]
       },
       {
-        "q": "¿Puedo validar mi idea de negocio con IA?",
+        "q": "¿Miiles es un marketplace?",
         "a": [
-          "Miiles te ayuda a estructurar tu idea y a ver con claridad qué necesitas comprobar: quién es tu cliente, qué problema resuelves, por qué canal llegas y cómo generas ingresos.",
-          "La validación real la haces hablando con tus clientes; Miiles te da el mapa para hacerlo con orden."
+          "No. Miiles no es un marketplace para comprar o vender servicios entre empresas.",
+          "Es una herramienta para crear: te da recursos, plantillas, tableros e IA para desarrollar y mostrar tu propio trabajo."
         ]
       },
       {
-        "q": "¿Necesito saber de estrategia o escribir prompts?",
+        "q": "¿Necesito saber diseñar o escribir prompts?",
         "a": [
-          "No. No necesitas dominar prompts para estrategia de negocios: escribes en lenguaje natural y Miiles se encarga de las preguntas y de la estructura.",
-          "Si ya sabes de estrategia, puedes pedir marcos concretos, como el Business Model Canvas, y ajustar cada bloque a tu manera."
+          "No. Puedes empezar con una plantilla o describir lo que quieres en lenguaje natural.",
+          "Miiles te ayuda con la estructura y tú decides el contenido, el estilo y el resultado final."
         ]
       },
       {

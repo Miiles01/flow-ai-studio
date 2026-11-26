@@ -12,8 +12,8 @@
     "hero_cta": "Join now",
     "explore_templates": "Explore templates",
     "hero_cta_gratis": "Start for free",
-    "seo_title": "AI Business Model Canvas for entrepreneurs | Miiles",
-    "seo_description": "Structure your business ideas with artificial intelligence: build your Business Model Canvas, validate ideas with AI and use strategy prompts in minutes.",
+    "seo_title": "Miiles | Tools and resources for creators",
+    "seo_description": "Portfolios, templates, design and video assets, boards and AI for content creators, designers and creatives. Create and organize it all with Miiles.",
     "hero_h1": "Every creator needs a base",
     "hero_h1_before": "Every",
     "hero_h1_accent": "creator",
@@ -51,11 +51,11 @@
     "trusted_by": "Trusted by",
     "system_title_1": "One system.",
     "system_title_2": "More",
-    "system_title_3": "profits.",
-    "colab_title": "Find collaborations",
-    "colab_desc": "In Miiles you'll find unique opportunities to boost your brand.",
-    "sales_title": "Make your idea resonate with sales power",
-    "sales_desc": "If your brand sells services or products, have other sellers around the world offer them too.",
+    "system_title_3": "creativity.",
+    "colab_title": "Resources to create",
+    "colab_desc": "Find templates, assets and tools to take your ideas further.",
+    "sales_title": "Bring your ideas to life",
+    "sales_desc": "Create, edit and share your work with tools designed for creators and creatives.",
     "testim_quote": "Looks truly amazing",
     "testim_name": "Karol Wegner",
     "testim_role": "CEO of BeeSpeaker",
@@ -64,7 +64,7 @@
     "cta_subtitle": "Create your account today",
     "cta_button": "Try Miiles",
     "build_title": "What will you create?",
-    "build_subtitle": "Whatever you imagine for your business, Miiles' artificial intelligence helps you structure it.",
+    "build_subtitle": "Portfolios, content, design and organization: Miiles gives you the tools and resources to turn your ideas into work that is ready to share.",
     "build_cards": [
       {
         "title": "Design a portfolio",
@@ -120,43 +120,43 @@
       {
         "q": "What is Miiles?",
         "a": [
-          "Miiles is an artificial intelligence platform for entrepreneurs that turns ideas into business models. Describe your idea and Miiles generates your Business Model Canvas, flows and to-do lists on a visual board you can edit with your team.",
-          "In Discoveries you also learn how the TikTok, Instagram, YouTube and Facebook algorithms work, and which strategies growing creators are using."
+          "Miiles is a tool for creators and creatives: it brings portfolios, templates, design and video assets, boards and artificial intelligence together in one place.",
+          "It is built for content creators, UGC creators, designers, editors, freelancers and anyone who wants to create, organize and share their work."
         ]
       },
       {
-        "q": "How does Miiles work?",
+        "q": "What can I create with Miiles?",
         "a": [
-          "You write your idea the way you'd tell it to someone. If needed, the AI asks a few questions to understand your goal, proposes a strategic plan and, once you approve it, builds the board with your business structure.",
-          "Then you can edit, move and expand each part, or ask the AI to develop a section from what you already have."
+          "You can design and publish your portfolio, organize clients and campaigns on boards, and use templates and assets to edit video, animate and shape your ideas.",
+          "You can also connect your AI to create and edit your own pages without relying on a code repository."
         ]
       },
       {
-        "q": "What is a Business Model Canvas?",
+        "q": "Who is Miiles for?",
         "a": [
-          "It's a strategy tool created by Alexander Osterwalder that sums up a business in nine blocks: customer segments, value proposition, channels, customer relationships, revenue streams, key resources, key activities, key partners and cost structure.",
-          "Miiles generates it from your idea so you can review, adjust and share it in minutes."
+          "For content creators, designers, editors, independent creatives and teams who want their resources and work in one shared space.",
+          "You do not need to know how to code: start with a template and adapt it to your style."
         ]
       },
       {
-        "q": "Can I validate my business idea with AI?",
+        "q": "Is Miiles a marketplace?",
         "a": [
-          "Miiles helps you structure your idea and see clearly what you need to test: who your customer is, what problem you solve, which channel reaches them and how you make money.",
-          "Real validation happens when you talk to your customers; Miiles gives you the map to do it in order."
+          "No. Miiles is not a marketplace for buying or selling services between businesses.",
+          "It is a tool for creating: it gives you assets, templates, boards and AI to develop and showcase your own work."
         ]
       },
       {
-        "q": "Do I need to know strategy or write prompts?",
+        "q": "Do I need design or prompting skills?",
         "a": [
-          "No. You don't need to master business strategy prompts: you write in plain language and Miiles takes care of the questions and the structure.",
-          "If you already know strategy, you can ask for specific frameworks, like the Business Model Canvas, and adjust each block your way."
+          "No. You can start with a template or describe what you want in plain language.",
+          "Miiles helps with the structure, and you decide the content, style and final result."
         ]
       },
       {
         "q": "How much does it cost?",
         "a": [
           "You can start for free. The Pro plan costs USD 24 per month or USD 230 per year (save 20%) and includes unlimited projects and collaborations, advanced analytics and priority support.",
-          "For teams and companies there's a custom Business plan."
+          "For teams and companies there is a custom Business plan."
         ]
       }
     ]

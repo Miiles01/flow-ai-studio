@@ -22,6 +22,8 @@ import { Button } from "@/components/ui/button";
 import { ArrowUpRight } from "lucide-react";
 import HomeSections from "@/components/landing/HomeSections";
 import { usePageSeo } from "@/hooks/usePageSeo";
+import { useHeadTags } from "@/hooks/useHeadTags";
+import { langOf, LOCALE_OF } from "@/i18n";
 // Graphic assets copied from Downloads
 
 const brandLogos = [brand1, brand2, brand3, brand4, brand5, brand6];
@@ -64,12 +66,28 @@ const renderWord = (word: string, isItalic = false) => {
 };
 
 const Landing = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  const lang = langOf(i18n.language);
+  const pageUrl = `https://miiles.app/${lang}/`;
   usePageSeo({
     title: t("home.landing.seo_title"),
     description: t("home.landing.seo_description"),
     robots: "index, follow",
   });
+  useHeadTags({
+    canonical: pageUrl,
+    alternates: [
+      { hreflang: "es", href: "https://miiles.app/es/" },
+      { hreflang: "en", href: "https://miiles.app/en/" },
+      { hreflang: "pt", href: "https://miiles.app/pt/" },
+      { hreflang: "fr", href: "https://miiles.app/fr/" },
+      { hreflang: "x-default", href: "https://miiles.app/es/" },
+    ],
+    meta: [
+      { attr: "property", key: "og:url", content: pageUrl },
+      { attr: "property", key: "og:locale", content: LOCALE_OF[lang].replace("-", "_") },
+    ],
+  }, [lang]);
   const smootherRef = useRef<ScrollSmoother | null>(null);
   const orbitSectionRef = useRef<HTMLDivElement>(null);
 

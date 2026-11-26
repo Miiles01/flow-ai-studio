@@ -9,6 +9,9 @@ import { SplitText } from "gsap/SplitText";
 import { CustomEase } from "gsap/CustomEase";
 import LandingNavbar from "@/components/LandingNavbar";
 import LandingFooter from "@/components/LandingFooter";
+import { usePageSeo } from "@/hooks/usePageSeo";
+import { useHeadTags } from "@/hooks/useHeadTags";
+import { langOf, LOCALE_OF } from "@/i18n";
 
 gsap.registerPlugin(ScrollTrigger, ScrollSmoother, SplitText, CustomEase);
 
@@ -17,8 +20,25 @@ if (!CustomEase.get("osmo-ease")) {
 }
 
 const About = () => {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const localePath = useLocalePath();
+  const lang = langOf(i18n.language);
+  const pageUrl = `https://miiles.app/${lang}/acerca-de`;
+  usePageSeo({ title: t("about.seoTitle"), description: t("about.seoDescription"), robots: "index, follow" });
+  useHeadTags({
+    canonical: pageUrl,
+    alternates: [
+      { hreflang: "es", href: "https://miiles.app/es/acerca-de" },
+      { hreflang: "en", href: "https://miiles.app/en/acerca-de" },
+      { hreflang: "pt", href: "https://miiles.app/pt/acerca-de" },
+      { hreflang: "fr", href: "https://miiles.app/fr/acerca-de" },
+      { hreflang: "x-default", href: "https://miiles.app/es/acerca-de" },
+    ],
+    meta: [
+      { attr: "property", key: "og:url", content: pageUrl },
+      { attr: "property", key: "og:locale", content: LOCALE_OF[lang].replace("-", "_") },
+    ],
+  }, [lang]);
   const smootherRef = useRef<ScrollSmoother | null>(null);
 
   useEffect(() => {

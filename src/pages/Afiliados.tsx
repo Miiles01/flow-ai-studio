@@ -12,6 +12,9 @@ import { MorphSVGPlugin } from "gsap/MorphSVGPlugin";
 import LandingNavbar from "@/components/LandingNavbar";
 import LandingFooter from "@/components/LandingFooter";
 import ProTrialDialog from "@/components/ProTrialDialog";
+import { usePageSeo } from "@/hooks/usePageSeo";
+import { useHeadTags } from "@/hooks/useHeadTags";
+import { langOf, LOCALE_OF } from "@/i18n";
 import { supabase } from "@/integrations/supabase/client";
 import { getFlowSession } from "@/lib/userFlow";
 import logoImg from "@/assets/logo.webp";
@@ -607,8 +610,25 @@ const AnimatedDashboardMockup = () => {
 /* ─── Page ──────────────────────────────────────────────────────────────── */
 const Afiliados = () => {
   const smootherRef = useRef<ScrollSmoother | null>(null);
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const localePath = useLocalePath();
+  const lang = langOf(i18n.language);
+  const pageUrl = `https://miiles.app/${lang}/afiliados`;
+  usePageSeo({ title: t("affiliates.seoTitle"), description: t("affiliates.seoDescription"), robots: "index, follow" });
+  useHeadTags({
+    canonical: pageUrl,
+    alternates: [
+      { hreflang: "es", href: "https://miiles.app/es/afiliados" },
+      { hreflang: "en", href: "https://miiles.app/en/afiliados" },
+      { hreflang: "pt", href: "https://miiles.app/pt/afiliados" },
+      { hreflang: "fr", href: "https://miiles.app/fr/afiliados" },
+      { hreflang: "x-default", href: "https://miiles.app/es/afiliados" },
+    ],
+    meta: [
+      { attr: "property", key: "og:url", content: pageUrl },
+      { attr: "property", key: "og:locale", content: LOCALE_OF[lang].replace("-", "_") },
+    ],
+  }, [lang]);
   const [proTrialOpen, setProTrialOpen] = useState(false);
   const openProTrial = () => {
     setProTrialOpen(true);
