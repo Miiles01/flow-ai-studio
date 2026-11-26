@@ -148,6 +148,29 @@ const About = () => {
           </section>
 
           <LandingFooter />
+
+          {/* Distintivo de directorio — discreto, al final de la página */}
+          <div className="bg-white pb-10 flex justify-center">
+            <a
+              href="https://affylist.com/products/miiles"
+              title="Listed on AffyList"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-block opacity-45 hover:opacity-100 transition-opacity duration-300"
+            >
+              <img
+                src="https://affylist.com/badge/affylist-v1-light.svg"
+                alt="Listed on AffyList"
+                width={140}
+                height={38}
+                loading="lazy"
+                onError={(e) => {
+                  (e.currentTarget as HTMLImageElement).closest("a")?.setAttribute("hidden", "");
+                }}
+                className="h-auto w-[140px] max-w-full block"
+              />
+            </a>
+          </div>
         </div>
       </div>
     </>
