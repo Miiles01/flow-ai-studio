@@ -11,16 +11,10 @@ const REFERENCIA = {
   tag: { es: "Nuevo", en: "New", pt: "Novo", fr: "Nouveau" },
   title: { es: "Edita tus reels más rápido", en: "Edit your Reels faster", pt: "Edite seus Reels mais rápido", fr: "Montez vos Reels plus vite" },
   sub: {
-    es: "Escenas: partes de un Reel listas para copiar y pegar en tu asistente de IA.",
-    en: "Scenes: Reel parts ready to copy and paste into your AI assistant.",
-    pt: "Cenas: partes de um Reel prontas para copiar e colar no seu assistente de IA.",
-    fr: "Scènes : des parties de Reel prêtes à copier-coller dans votre assistant IA.",
-  },
-  hint: {
-    es: "En el video, UGC · Pro: captions al ritmo de su voz, split, carrusel, contadores y texto detrás de ella.",
-    en: "In the video, UGC · Pro: captions timed to her voice, split screen, carousel, counters and text behind her.",
-    pt: "No vídeo, UGC · Pro: legendas no ritmo da voz dela, tela dividida, carrossel, contadores e texto atrás dela.",
-    fr: "Dans la vidéo, UGC · Pro : sous-titres au rythme de sa voix, écran partagé, carrousel, compteurs et texte derrière elle.",
+    es: "Usa Claude, Gemini o ChatGPT para editar más rápido con estos componentes.",
+    en: "Use Claude, Gemini or ChatGPT to edit faster with these components.",
+    pt: "Use Claude, Gemini ou ChatGPT para editar mais rápido com estes componentes.",
+    fr: "Utilisez Claude, Gemini ou ChatGPT pour monter plus vite avec ces composants.",
   },
 };
 
@@ -101,7 +95,6 @@ export function ScenesBanner() {
           <span className={`inline-flex rounded-full px-3 py-1 text-xs font-normal ${isDark ? "bg-white text-black" : "bg-black text-white"}`}>{t(REFERENCIA.tag)}</span>
           <h2 className="scenes-banner__title mt-4 font-normal leading-[1.05] text-foreground">{t(REFERENCIA.title)}</h2>
           <p className="mt-4 max-w-md text-sm md:text-base font-light leading-relaxed text-muted-foreground">{t(REFERENCIA.sub)}</p>
-          <p className="mt-3 max-w-md text-xs md:text-sm font-light leading-relaxed text-muted-foreground">{t(REFERENCIA.hint)}</p>
         </div>
         <div
           className={`scenes-banner__video shrink-0 overflow-hidden border ${isDark ? "bg-black border-white/10" : "bg-[#F4F4F5] border-black/5"}`}
