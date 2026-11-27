@@ -16,7 +16,6 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import TutorialModal from "@/components/TutorialModal";
-import tutorialBanner from "@/assets/tablero-banner.webp.asset.json";
 import { UpgradeProDialog } from "@/components/UpgradeProDialog";
 import { SiteVisitsCard } from "@/components/dashboard/SiteVisitsCard";
 
@@ -553,11 +552,14 @@ export default function Dashboard() {
         style={{ height: "clamp(260px, 38vw, 380px)" }}
       >
         <img
-          src={tutorialBanner.url}
+          src="/dashboard-que-podemos-crear.webp"
           alt={dt("dashboard.text38")}
           loading="lazy"
-          className="h-full w-full object-cover object-center transition-transform duration-500 group-hover:scale-105"
+          className="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+          style={{ objectPosition: "50% 38%" }}
         />
+        {/* degradado suave detrás del texto (la foto es clara de ese lado): arriba en móvil, a la derecha en desktop */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-black/45 via-black/10 to-transparent md:bg-gradient-to-l md:from-black/50 md:via-black/15 md:to-transparent" />
         {/* Texto flotante — alineado a la izquierda en mobile, a la derecha en desktop */}
         <div className="absolute top-[8%] left-[6%] right-auto md:left-auto md:right-[4%] flex flex-col gap-2 md:gap-3 items-start max-w-[70%] md:max-w-[38%]">
           <span className="inline-flex items-center bg-white text-black text-[10px] md:text-[11px] font-normal px-3 md:px-4 py-1 md:py-1.5 rounded-full">
