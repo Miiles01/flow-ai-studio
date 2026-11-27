@@ -312,7 +312,7 @@ function Plantillas({ c }: { c: P }) {
             src={src}
             alt=""
             loading="eager"
-            className="absolute top-1/2 left-1/2 w-[58%] aspect-[16/10] object-cover object-top rounded-xl"
+            className="absolute top-1/2 left-1/2 w-[58%] aspect-[16/10] object-cover object-top rounded-md"
             style={{ border: `1px solid ${c.line}`, boxShadow: "0 18px 40px rgba(0,0,0,0.09)", zIndex: i === 1 ? 3 : 1 }}
             initial={{ x: "-50%", y: "-50%", rotate: 0 }}
             animate={{ x: `calc(-50% + ${r * 9}px)`, y: i === 1 ? "-54%" : "-46%", rotate: r }}
@@ -334,7 +334,7 @@ function Videos({ c, slugs }: { c: P; slugs: string[] }) {
         return (
           <motion.div
             key={slug}
-            className={`rounded-2xl overflow-hidden aspect-[9/16] ${mid ? "h-[150px] md:h-[230px]" : "h-[125px] md:h-[190px]"}`}
+            className={`rounded-lg overflow-hidden aspect-[9/16] ${mid ? "h-[150px] md:h-[230px]" : "h-[125px] md:h-[190px]"}`}
             style={{ border: `1px solid ${c.line}`, boxShadow: "0 18px 40px rgba(0,0,0,0.09)", background: c.card }}
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
@@ -355,7 +355,7 @@ function Arquitectura({ c, isDark }: { c: P; isDark: boolean }) {
       {cards.map((src, i) => (
         <motion.div
           key={src}
-          className="absolute rounded-2xl overflow-hidden"
+          className="absolute rounded-lg overflow-hidden"
           style={{
             background: c.card, border: `1px solid ${c.line}`, boxShadow: "0 18px 40px rgba(0,0,0,0.06)",
             width: i === 0 ? "62%" : "42%", aspectRatio: "1104 / 693",
