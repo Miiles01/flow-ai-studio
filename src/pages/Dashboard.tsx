@@ -109,6 +109,17 @@ export default function Dashboard() {
 
   const unreadCount = notifications.filter((n) => !n.read).length;
 
+  // si la campana marca algo como leído, el inicio vuelve a cargar sus notificaciones
+  useEffect(() => {
+    if (!user) return;
+    const on = async () => {
+      const { data } = await supabase.from("notifications").select("*").eq("recipient_id", user.id).order("created_at", { ascending: false }).limit(50);
+      if (data) setNotifications(data as Notification[]);
+    };
+    window.addEventListener(NOTIFS_CHANGED, on);
+    return () => window.removeEventListener(NOTIFS_CHANGED, on);
+  }, [user]);
+
   async function markAsRead(notif: Notification) {
     setSelectedNotif(notif);
     if (!notif.read) {

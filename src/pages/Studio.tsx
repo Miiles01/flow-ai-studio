@@ -118,8 +118,25 @@ export default function Studio() {
   const { hash } = useLocation();
   useEffect(() => {
     if (!hash || loading) return;
-    const id = window.setTimeout(() => document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: "smooth", block: "start" }), 120);
-    return () => window.clearTimeout(id);
+    // Arriba siguen cargando cosas (Mis páginas, Descubrimientos, videos) que empujan la sección hacia abajo:
+    // mientras la página cambia de alto (máx. 3 s) se vuelve a acomodar en la sección; si la persona hace
+    // scroll, se deja de acomodar.
+    const ir = () => document.getElementById(hash.slice(1))?.scrollIntoView({ block: "start" });
+    let activo = true;
+    const parar = () => { activo = false; };
+    const ro = new ResizeObserver(() => { if (activo) ir(); });
+    // el contenido hace scroll dentro de <main> del panel: se vigila el alto de su contenido
+    const contenido = document.querySelector("main.dashboard-scope")?.firstElementChild ?? document.body;
+    ro.observe(contenido);
+    const t0 = window.setTimeout(ir, 60);
+    const t1 = window.setTimeout(() => { activo = false; ro.disconnect(); }, 3000);
+    window.addEventListener("wheel", parar, { passive: true });
+    window.addEventListener("touchstart", parar, { passive: true });
+    window.addEventListener("keydown", parar);
+    return () => {
+      window.clearTimeout(t0); window.clearTimeout(t1); ro.disconnect();
+      window.removeEventListener("wheel", parar); window.removeEventListener("touchstart", parar); window.removeEventListener("keydown", parar);
+    };
   }, [hash, loading]);
   const list = templates;
   // Escenas (partes de un Reel) van en su propia sección, antes de Componentes
