@@ -9,12 +9,12 @@ type L = { es: string; en: string; pt: string; fr: string };
 const REFERENCIA = {
   src: "/studio/ugc-pro.mp4#t=0.1",
   tag: { es: "Nuevo", en: "New", pt: "Novo", fr: "Nouveau" },
-  title: { es: "Escenas", en: "Scenes", pt: "Cenas", fr: "Scènes" },
+  title: { es: "Edita tus reels más rápido", en: "Edit your Reels faster", pt: "Edite seus Reels mais rápido", fr: "Montez vos Reels plus vite" },
   sub: {
-    es: "Partes de un Reel listas para copiar y pegar en tu asistente de IA.",
-    en: "Reel parts ready to copy and paste into your AI assistant.",
-    pt: "Partes de um Reel prontas para copiar e colar no seu assistente de IA.",
-    fr: "Des parties de Reel prêtes à copier-coller dans votre assistant IA.",
+    es: "Escenas: partes de un Reel listas para copiar y pegar en tu asistente de IA.",
+    en: "Scenes: Reel parts ready to copy and paste into your AI assistant.",
+    pt: "Cenas: partes de um Reel prontas para copiar e colar no seu assistente de IA.",
+    fr: "Scènes : des parties de Reel prêtes à copier-coller dans votre assistant IA.",
   },
   hint: {
     es: "En el video, UGC · Pro: captions al ritmo de su voz, split, carrusel, contadores y texto detrás de ella.",
