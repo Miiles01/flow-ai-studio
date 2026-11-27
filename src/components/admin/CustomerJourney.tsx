@@ -7,7 +7,7 @@ type Item = { at: string; kind: string; route?: string; step?: number | null; ne
 const SCREEN: Record<string, string> = {
   home: "Inicio", affiliates: "Afiliados", trial_popup: "Abrió el pop-up de Pro gratis", trial: "Acceso especial de Pro gratis",
   signup: "Registro", onboarding: "Onboarding", dashboard: "Panel (Inicio)", upgrade: "Precios", boards: "Tableros",
-  programs: "Programas", studio: "Estudio", architecture: "Arquitectura algorítmica",
+  studio: "Estudio", architecture: "Arquitectura algorítmica",
 };
 const STEP = ["Bienvenida", "Foto de perfil", "Cuéntanos sobre ti", "Medios de contacto", "Portafolio", "Contacto", "Todo listo"];
 const NET: Record<string, string> = { tiktok: "TikTok", instagram: "Instagram", facebook: "Facebook", youtube: "YouTube" };

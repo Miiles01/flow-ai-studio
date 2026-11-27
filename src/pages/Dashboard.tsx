@@ -8,7 +8,7 @@ import { Link, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
-import { Bell, Heart, ArrowRight, LayoutGrid, Loader2, Send, X, Trash2, LayoutDashboard } from "lucide-react";
+import { Bell, Heart, ArrowRight, LayoutGrid, Loader2, Send, X, LayoutDashboard } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -18,18 +18,6 @@ import { toast } from "sonner";
 import TutorialModal from "@/components/TutorialModal";
 import { UpgradeProDialog } from "@/components/UpgradeProDialog";
 import { SiteVisitsCard } from "@/components/dashboard/SiteVisitsCard";
-
-type Program = {
-  id: string;
-  name: string;
-  brand_name: string;
-  description: string;
-  category: string;
-  commission_rate: string | null;
-  is_featured: boolean;
-  banner_url: string | null;
-  banner_position: number;
-};
 
 type Notification = {
   id: string;
@@ -51,15 +39,6 @@ function getGreeting() {
   return dt("dashboard.text2");
 }
 
-type UserApplication = {
-  id: string;
-  program_id: string;
-  status: string;
-  created_at: string;
-  program_name?: string;
-  brand_name?: string;
-};
-
 export default function Dashboard() {
   useTranslation();
   const { user } = useAuth();
@@ -67,17 +46,13 @@ export default function Dashboard() {
   const cached = pageCache.get<any>(`dashboard:${user?.id}`);
   const [displayName, setDisplayName] = useState(cached?.displayName ?? "");
   const [flows, setFlows] = useState<any[]>(cached?.flows ?? []);
-  const [savedCount, setSavedCount] = useState(cached?.savedCount ?? 0);
   const [boardsCount, setBoardsCount] = useState<number>(cached?.boardsCount ?? 0);
-  const [applications, setApplications] = useState<UserApplication[]>(cached?.applications ?? []);
-  const [appsOpen, setAppsOpen] = useState(false);
   const [loading, setLoading] = useState(!cached);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>(cached?.notifications ?? []);
   const [notifOpen, setNotifOpen] = useState(false);
   const [selectedNotif, setSelectedNotif] = useState<Notification | null>(null);
   const [isAdmin, setIsAdmin] = useState<boolean>(cached?.isAdmin ?? false);
-  const [confirmDeleteId, setConfirmDeleteId] = useState<string | null>(null);
   const [tutorialTrigger, setTutorialTrigger] = useState(0);
 
   // Admin send notification state
@@ -106,49 +81,22 @@ export default function Dashboard() {
     Promise.all([
       supabase.from("profiles").select("display_name").eq("user_id", user.id).single(),
       supabase.from("flows").select("id, name, updated_at").eq("user_id", user.id).order("updated_at", { ascending: false }).limit(5),
-      supabase.from("user_applications").select("id", { count: "exact" }).eq("user_id", user.id),
       supabase.from("notifications").select("*").eq("recipient_id", user.id).order("created_at", { ascending: false }).limit(50),
       supabase.from("user_roles").select("role").eq("user_id", user.id).eq("role", "admin").maybeSingle(),
       supabase.from("flows").select("id", { count: "exact", head: true }).eq("user_id", user.id),
-    ]).then(async ([profileRes, flowsRes, appsRes, notifRes, roleRes, boardsRes]) => {
+    ]).then(([profileRes, flowsRes, notifRes, roleRes, boardsRes]) => {
       const snap: any = {
         displayName: profileRes.data?.display_name || user.email?.split("@")[0] || "",
         flows: flowsRes.data || [],
-        savedCount: appsRes.count || 0,
         notifications: (notifRes.data as Notification[]) || [],
         isAdmin: !!roleRes.data,
         boardsCount: boardsRes.count || 0,
-        applications: [],
       };
       setDisplayName(snap.displayName);
       setFlows(snap.flows);
-      setSavedCount(snap.savedCount);
       setNotifications(snap.notifications);
       setIsAdmin(snap.isAdmin);
       setBoardsCount(snap.boardsCount);
-
-      // Load applications with program names
-      const { data: appsData } = await supabase
-        .from("user_applications")
-        .select("id, program_id, status, created_at")
-        .eq("user_id", user.id)
-        .order("created_at", { ascending: false });
-
-      if (appsData && appsData.length > 0) {
-        const programIds = [...new Set(appsData.map((a) => a.program_id))];
-        const { data: programs } = await supabase
-          .from("brand_programs")
-          .select("id, name, brand_name")
-          .in("id", programIds);
-
-        const merged = appsData.map((a) => {
-          const p = programs?.find((pr) => pr.id === a.program_id);
-          return { ...a, program_name: p?.name || "", brand_name: p?.brand_name || "" };
-        });
-        setApplications(merged);
-        snap.applications = merged;
-      }
-
       pageCache.set(`dashboard:${user.id}`, snap);
       setLoading(false);
     });
@@ -386,93 +334,6 @@ export default function Dashboard() {
               ))}
             </div>
           )}
-        </DialogContent>
-      </Dialog>
-
-      {/* Projects / Applications popup */}
-      <Dialog open={appsOpen} onOpenChange={setAppsOpen}>
-        <DialogContent className="sm:max-w-md max-h-[70vh] overflow-y-auto">
-          <DialogHeader>
-            <DialogTitle className="font-normal">{dt("dashboard.text24")}</DialogTitle>
-          </DialogHeader>
-          {applications.length === 0 ? (
-            <p className="text-sm text-miiles-gray-400 font-light py-8 text-center">{dt("dashboard.text25")}</p>
-          ) : (
-            <div className="space-y-2">
-              {applications.map((app) => (
-                <div
-                  key={app.id}
-                  className="flex items-center justify-between p-3 rounded-md hover:bg-muted/50 transition-colors"
-                >
-                  <Link
-                    to={`/programs/${app.program_id}`}
-                    className="flex-1 min-w-0"
-                    onClick={() => setAppsOpen(false)}
-                  >
-                    <p className="text-sm font-normal truncate">{app.brand_name}</p>
-                    <p className="text-[10px] text-miiles-gray-400 font-light mt-0.5">{app.program_name}</p>
-                    <div className="flex items-center gap-2 mt-1">
-                      <span className={`text-[10px] px-2 py-0.5 rounded-full font-light ${
-                        app.status === "applied"
-                          ? "bg-miiles-blue-light text-miiles-blue"
-                          : "bg-muted text-muted-foreground"
-                      }`}>
-                        {app.status === "applied" ? dt("dashboard.label6") : dt("dashboard.label7")}
-                      </span>
-                      <span className="text-[10px] text-miiles-gray-400 font-light">
-                        {new Date(app.created_at).toLocaleDateString(dashboardI18n.language, { day: "numeric", month: "short" })}
-                      </span>
-                    </div>
-                  </Link>
-                  <button
-                    onClick={() => setConfirmDeleteId(app.id)}
-                    className="p-2 text-miiles-gray-400 hover:text-destructive-foreground transition-colors flex-shrink-0"
-                  >
-                    <Trash2 size={14} />
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
-        </DialogContent>
-      </Dialog>
-
-      {/* Confirm delete dialog */}
-      <Dialog open={!!confirmDeleteId} onOpenChange={(v) => !v && setConfirmDeleteId(null)}>
-        <DialogContent className="sm:max-w-sm">
-          <DialogHeader>
-            <DialogTitle className="font-normal text-center">{dt("dashboard.text26")}</DialogTitle>
-          </DialogHeader>
-          <p className="text-sm text-muted-foreground font-light text-center py-2">
-             {dt("dashboard.text27")} </p>
-          <div className="flex gap-3 mt-2">
-            <Button
-              variant="outline"
-              className="flex-1"
-              onClick={() => setConfirmDeleteId(null)}
-            >
-               {dt("dashboard.text28")} </Button>
-            <Button
-              variant="destructive"
-              className="flex-1"
-              onClick={async () => {
-                if (!confirmDeleteId) return;
-                const { error } = await supabase
-                  .from("user_applications")
-                  .delete()
-                  .eq("id", confirmDeleteId);
-                if (!error) {
-                  setApplications((prev) => prev.filter((a) => a.id !== confirmDeleteId));
-                  setSavedCount((c) => Math.max(0, c - 1));
-                  toast.success(dt("dashboard.text29"));
-                } else {
-                  toast.error(dt("dashboard.text30"));
-                }
-                setConfirmDeleteId(null);
-              }}
-            >
-               {dt("dashboard.text31")} </Button>
-          </div>
         </DialogContent>
       </Dialog>
 

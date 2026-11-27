@@ -96,11 +96,10 @@ Deno.serve(async (req) => {
       const since = days === null ? "" : new Date(Date.now() - days * 864e5).toISOString();
       const ex = new Set(excluded);
       const inRange = (t?: string | null) => !!t && t >= since;
-      const [profiles, flows, events, apps] = await Promise.all([
+      const [profiles, flows, events] = await Promise.all([
         fetchAll(sb, "profiles", "user_id, onboarding_completed"),
         fetchAll(sb, "flows", "user_id, created_at, updated_at"),
         fetchAll(sb, "user_events", "user_id, event, created_at"),
-        fetchAll(sb, "user_applications", "user_id, created_at").catch(() => []),
       ]);
       const users = authUsers.filter((u) => !ex.has(u.id));
       const ids = new Set(users.map((u) => u.id));
@@ -140,7 +139,6 @@ Deno.serve(async (req) => {
         onboarding: signedUp.filter((u) => onboarded.has(u.id)).length,
         dashboard: users.filter((u) => inRange(u.last_sign_in_at)).length,
         boards: uniq(flows.filter((f) => inRange(f.updated_at ?? f.created_at))),
-        programs: uniq(apps.filter((a) => inRange(a.created_at))),
         studio: evUsers(["template_view", "template_use"]),
         architecture: evUsers(["architecture_view"]),
         upgrade: evUsers(["pricing_card_click", "pricing_cta"]),

@@ -26,8 +26,6 @@ import Agentes from "./pages/Agentes";
 import Clinicas from "./pages/Clinicas";
 import Dashboard from "./pages/Dashboard";
 import Boards from "./pages/Boards";
-import Programs from "./pages/Programs";
-import ProgramDetail from "./pages/ProgramDetail";
 import SearchAI from "./pages/SearchAI";
 import Trends from "./pages/Trends";
 import Index from "./pages/Index";
@@ -35,8 +33,6 @@ import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import Onboarding from "./pages/Onboarding";
-import ProgramApplicants from "./pages/ProgramApplicants";
-import PublicApplicants from "./pages/PublicApplicants";
 import NotFound from "./pages/NotFound";
 import ContractPublic from "./pages/ContractPublic";
 import JoinFlow from "./pages/JoinFlow";
@@ -65,7 +61,7 @@ const ReferralTracker = () => {
     const route = flowRoute(location.pathname);
     if (!route) return;
     // Signed-in sections redirect visitors to log in, so they only count when someone is signed in.
-    if (!user && ["dashboard", "boards", "programs", "studio", "architecture", "onboarding"].includes(route)) return;
+    if (!user && ["dashboard", "boards", "studio", "architecture", "onboarding"].includes(route)) return;
     // Someone already signed in is bounced off the log-in page, so that visit is not a real log-in attempt.
     if (user && route === "login") return;
     try {
@@ -172,15 +168,10 @@ const App = () => (
               <Route path="/studio" element={<DashboardRoute><Studio /></DashboardRoute>} />
               <Route path="/studio/componentes/:slug" element={<ProtectedRoute><StudioComponentPage /></ProtectedRoute>} />
               <Route path="/studio/:slug" element={<ProtectedRoute><StudioTemplate /></ProtectedRoute>} />
-              <Route path="/programs" element={<DashboardRoute><Programs /></DashboardRoute>} />
-              <Route path="/programs/:id" element={<ProgramDetail />} />
-              <Route path="/p/:slug" element={<ProgramDetail />} />
               <Route path="/search" element={<DashboardRoute><SearchAI /></DashboardRoute>} />
               <Route path="/search/:conversationId" element={<DashboardRoute><SearchAI /></DashboardRoute>} />
               {/* <Route path="/flows" element={<DashboardRoute><Index /></DashboardRoute>} /> */}
               <Route path="/profile" element={<DashboardRoute><Profile /></DashboardRoute>} />
-              <Route path="/programs/:id/applicants" element={<ProgramApplicants />} />
-              <Route path="/applicants/:token" element={<PublicApplicants />} />
               <Route path="/onboarding" element={<ProtectedOnboardingRoute><Onboarding /></ProtectedOnboardingRoute>} />
               <Route element={<AuthLayout />}>
                 <Route path="/login" element={<PublicRoute><Login /></PublicRoute>} />

@@ -1,4 +1,4 @@
-import { Home, Link, UserPlus, LogIn, LayoutDashboard, ArrowUp, Kanban, Briefcase, LayoutTemplate, Network, type LucideIcon } from "lucide-react";
+import { Home, Link, UserPlus, LogIn, LayoutDashboard, ArrowUp, Kanban, LayoutTemplate, Network, type LucideIcon } from "lucide-react";
 import MiilesStar from "@/components/MiilesStar";
 import type { ComponentType } from "react";
 import { SUPPORTED_LANGS } from "@/i18n";
@@ -16,10 +16,9 @@ export const USER_FLOW: FlowStep[] = [
   { id: "onboarding", title: "onboarding", route: "/onboarding", icon: MiilesStar, tone: "gray", info: "onboarding", x: 400, y: 96 },
   { id: "dashboard", title: "dashboard", route: "/dashboard", icon: LayoutDashboard, tone: "blue", x: 584, y: 96 },
   { id: "upgrade", title: "upgrade", route: "/precios", icon: ArrowUp, tone: "white", x: 768, y: 96 },
-  { id: "boards", title: "boards", route: "/boards", icon: Kanban, tone: "gray", x: 330, y: 456 },
-  { id: "programs", title: "programs", route: "/programs", icon: Briefcase, tone: "gray", x: 486, y: 456 },
-  { id: "studio", title: "studio", route: "/studio", icon: LayoutTemplate, tone: "gray", x: 642, y: 456 },
-  { id: "architecture", title: "architecture", route: "/trends", icon: Network, tone: "gray", x: 798, y: 456 },
+  { id: "boards", title: "boards", route: "/boards", icon: Kanban, tone: "gray", x: 408, y: 456 },
+  { id: "studio", title: "studio", route: "/studio", icon: LayoutTemplate, tone: "gray", x: 564, y: 456 },
+  { id: "architecture", title: "architecture", route: "/trends", icon: Network, tone: "gray", x: 720, y: 456 },
 ];
 export type UserFlowData = {
   visits: Record<string, number>; people?: Record<string, number>; popup?: number; stepCounts?: number[]; homeSignup: number; affiliatesSignup: number;
@@ -37,8 +36,8 @@ export function flowRoute(path: string): string | null {
   if (route === "/obtener-pro") return "trial";
   const exact = USER_FLOW.find((s) => s.route === route)?.id;
   if (exact) return exact;
-  // Opening a board, template or program inside a section counts as a visit to that Explore section.
-  if (/^\/(boards|studio|programs)\//.test(route) && !route.startsWith("/boards/join/")) return route.split("/")[1];
+  // Opening a board or template inside a section counts as a visit to that Explore section.
+  if (/^\/(boards|studio)\//.test(route) && !route.startsWith("/boards/join/")) return route.split("/")[1];
   return null;
 }
 export function getFlowSession(): string {
