@@ -264,7 +264,7 @@ export default function Dashboard() {
           className={`col-span-2 md:col-span-1 p-5 rounded-lg shadow-md cursor-pointer text-left ${isDark ? 'bg-white/5' : 'bg-white'}`}
           onClick={() => setNotifOpen(true)}
         >
-          <div className="w-8 h-8 rounded-sm bg-background shadow-sm flex items-center justify-center mb-4 relative">
+          <div className="w-8 h-8 rounded-sm bg-background shadow-sm flex items-center justify-center mb-3 relative">
             <Bell size={16} className={isDark ? "text-white" : "text-black"} />
             {unreadCount > 0 && (
               <span className={`absolute -top-1 -right-1 w-4 h-4 rounded-full text-[9px] flex items-center justify-center ${isDark ? "bg-white text-black" : "bg-black text-white"}`}>
@@ -272,8 +272,8 @@ export default function Dashboard() {
               </span>
             )}
           </div>
-          {/* solo texto, destacado; las no leídas se ven en el globito del ícono */}
-          <p className="text-xl md:text-2xl font-normal leading-tight text-foreground">{dt("dashboard.text16")}</p>
+          <p className="text-2xl font-normal text-foreground">{unreadCount}</p>
+          <p className="text-xs text-miiles-gray-400 font-light mt-1">{dt("dashboard.text16")}</p>
         </motion.button>
       </motion.div>
 
