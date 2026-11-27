@@ -91,7 +91,7 @@ const ProTrial = () => {
 
   if (user && code) {
     return (
-      <div className="bg-white w-full py-16 px-8 rounded-[32px] flex flex-col items-center justify-center gap-4 shadow-[0_10px_40px_-15px_rgba(28,30,42,0.15)]">
+      <div className="bg-white w-full py-16 px-8 rounded-[32px] flex flex-col items-center justify-center gap-4 border border-solid border-[#E5E7EB]">
         <Loader2 size={22} className="animate-spin text-black" />
         <p className="text-sm text-miiles-gray-400 font-light">{t("protrial.activating")}</p>
       </div>
@@ -102,7 +102,7 @@ const ProTrial = () => {
     <motion.div
       initial={{ y: 20, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
-      className="bg-white w-full py-8 px-4 md:py-12 md:px-8 rounded-[32px] flex flex-col justify-center shadow-[0_10px_40px_-15px_rgba(28,30,42,0.15)]"
+      className="bg-white w-full py-8 px-4 md:py-12 md:px-8 rounded-[32px] flex flex-col justify-center border border-solid border-[#E5E7EB]"
     >
       <div className="text-center mb-8">
         <Link to="/" className="block w-fit mx-auto mb-6 hover:opacity-80 transition-opacity">
@@ -181,7 +181,7 @@ const ProTrial = () => {
           </div>
 
           <div className="flex justify-center">
-            <Button variant="outline" className="w-auto px-10 rounded-full h-12 border-border hover:bg-gray-50" onClick={handleGoogle}>
+            <Button variant="outline" className="w-auto px-10 rounded-full h-12 shadow-none border border-solid border-[#E5E7EB] hover:bg-gray-50" onClick={handleGoogle}>
               <svg className="w-5 h-5 mr-3" viewBox="0 0 24 24">
                 <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 01-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z" fill="#4285F4"/>
                 <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
