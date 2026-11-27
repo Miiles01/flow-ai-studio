@@ -204,15 +204,21 @@ export default function TutorialModal({ userId, triggerOpen, isNewUser }: Props)
             <div className="flex flex-col flex-grow overflow-y-auto md:overflow-visible min-h-0">
               <div
                 className="relative m-4 mb-0 h-48 md:h-72 rounded-2xl overflow-hidden flex items-center justify-center flex-shrink-0 select-none"
-                style={{ background: c.stage }}
+                style={{
+                  // mismo fondo que Arquitectura algorítmica: degradado + puntos
+                  background: isDark ? "linear-gradient(180deg, #121212 0%, #0A0A0A 100%)" : "linear-gradient(180deg, #FDFDFD 0%, #F8F9FD 100%)",
+                }}
               >
                 <div
                   className="absolute inset-0 pointer-events-none"
                   style={{
-                    backgroundImage: `radial-gradient(${c.line} 1px, transparent 1px)`,
-                    backgroundSize: "18px 18px",
-                    maskImage: "radial-gradient(ellipse, black 30%, transparent 80%)",
-                    WebkitMaskImage: "radial-gradient(ellipse, black 30%, transparent 80%)",
+                    background: isDark
+                      ? "radial-gradient(circle at center, #2A2A2A 0%, rgba(140, 134, 162, 0.15) 59%, #121212 100%)"
+                      : "radial-gradient(circle at center, #FFFFFF 0%, rgba(140, 134, 162, 0.15) 59%, #FFFFFF 100%)",
+                    maskImage: "radial-gradient(circle, black 1px, transparent 1.5px)",
+                    maskSize: "20px 20px",
+                    WebkitMaskImage: "radial-gradient(circle, black 1px, transparent 1.5px)",
+                    WebkitMaskSize: "20px 20px",
                   }}
                 />
                 <AnimatePresence mode="wait">
