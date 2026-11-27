@@ -102,23 +102,23 @@ export default function MyPages() {
         <p className="rounded-2xl border border-dashed border-border p-6 text-sm font-light text-muted-foreground">
            {dt("dashboard.text232")} </p>
       ) : (
-        // Igual que la Librería: dos columnas en desktop y tablet, una en móvil; las páginas nuevas van bajando en filas
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-10 pt-2">
+        // Mismo tamaño que las tarjetas del inicio (Notificaciones, Tableros, Visitas): 3 por fila en desktop, 2 en móvil
+        <div className="grid grid-cols-2 md:grid-cols-3 gap-x-5 gap-y-8 pt-2">
           {sites.map((s) => {
             const url = publicSiteUrl(s.path);
             const shownUrl = url.replace("https://", "").replace(/\/+$/, "");
             const live = s.status === "published";
             const isBusy = busy === s.id;
             const screen = (
-              <div className={`w-[76%] overflow-hidden rounded-[8px] transition-[transform,opacity] duration-500 ease-out ${live ? "group-hover:scale-[1.03]" : "opacity-50"} ${isDark ? "" : "shadow-[0_8px_24px_-10px_rgba(28,30,42,0.10)]"}`}>
+              <div className={`w-[76%] overflow-hidden rounded-[8px] transition-[transform,opacity] duration-500 ease-out ${live ? "group-hover:-translate-y-1" : "opacity-50"} ${isDark ? "" : "shadow-[0_8px_24px_-10px_rgba(28,30,42,0.10)]"}`}>
                 <img src={isDark ? "/studio-pages/pagina-oscuro.svg" : "/studio-pages/pagina-claro.svg"} alt="" className="block aspect-[4/3] h-auto w-full" />
               </div>
             );
             return (
               <div key={s.id} className="group">
-                {/* Contenedor con el degradado de Descubrimientos y la pantalla dentro; un clic abre la página si está visible */}
+                {/* Contenedor con el degradado de Descubrimientos y la pantalla dentro (se corta abajo); un clic abre la página si está visible */}
                 <div
-                  className="relative flex aspect-square w-full items-center justify-center overflow-hidden rounded-[24px]"
+                  className="relative flex h-[136px] w-full items-start justify-center overflow-hidden rounded-[24px] pt-14"
                   style={{
                     background: isDark
                       ? "linear-gradient(180deg, #121212 0%, #0A0A0A 100%)"
@@ -126,7 +126,7 @@ export default function MyPages() {
                   }}
                 >
                   {live ? (
-                    <a href={url} target="_blank" rel="noreferrer" aria-label={`Abrir ${s.title}`} className="absolute inset-0 flex items-center justify-center">
+                    <a href={url} target="_blank" rel="noreferrer" aria-label={`Abrir ${s.title}`} className="absolute inset-0 flex items-start justify-center pt-14">
                       {screen}
                     </a>
                   ) : screen}
