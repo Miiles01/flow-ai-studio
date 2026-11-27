@@ -393,7 +393,7 @@ function Tableros({ lang, isDark }: { lang: string; isDark: boolean }) {
     shape("lanza", 610, 70, "diamond", { es: "Lanzar", en: "Launch", pt: "Lançar", fr: "Lancer" }, 104, 104),
   ];
   const edge = (id: string, source: string, target: string) => ({
-    id, source, sourceHandle: "right", target, targetHandle: "left", animated: true,
+    id, source, sourceHandle: "right", target, targetHandle: "left", animated: false,
     style: { stroke: ink, strokeOpacity: 0.45, strokeWidth: 1.5, strokeDasharray: "4 4" },
   });
   return (
@@ -416,11 +416,11 @@ function Tableros({ lang, isDark }: { lang: string; isDark: boolean }) {
           style={{ width: "100%", height: "100%", background: "transparent" }}
         />
       </ReactFlowProvider>
-      {/* Cursor de colaboración, como en el tablero real */}
-      <motion.div className="absolute left-[20%] top-[64%] flex items-start pointer-events-none z-50" animate={{ x: [0, 22, 0], y: [0, -10, 0] }} transition={{ duration: 4, repeat: Infinity, ease: "easeInOut" }}>
+      {/* Cursor de colaboración, como en el tablero real (imagen fija, sin movimiento) */}
+      <div className="absolute left-[20%] top-[64%] flex items-start pointer-events-none z-50">
         <svg className="w-5 h-5 rotate-[-10deg]" viewBox="0 0 24 24"><path d="M4 3l16 8-8 2-6 7z" fill="#4059F1" stroke="white" strokeWidth="2" strokeLinejoin="round" /></svg>
         <span className="-ml-1.5 mt-4 rounded-full px-3 py-1 text-[10px] font-semibold bg-[#4059F1] text-white">Sofía</span>
-      </motion.div>
+      </div>
     </div>
   );
 }
