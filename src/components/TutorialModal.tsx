@@ -297,7 +297,7 @@ export default function TutorialModal({ userId, triggerOpen, isNewUser }: Props)
    ------------------------------------------------------------------------- */
 
 const TEMPLATE_THUMBS = ["ugc-v22", "ugc-v25", "ugc-v21"].map((v) => `https://wearemiiles.com/studio/thumbs/${v}.jpg`);
-const COMPONENT_SLUGS = ["carrusel-circular", "palabras-que-se-deslizan", "tarjetas-que-se-apilan"];
+const COMPONENT_SLUGS = ["cuadricula-que-se-reacomoda", "rueda-inclinada", "letras-elasticas"];   // Galería · Carrusel · Texto
 const SCENE_SLUGS = ["escena-split-rebote", "escena-grafica-curva", "escena-libro"];
 const previewOf = (slug: string) => STUDIO_COMPONENTS.find((x) => x.slug === slug);
 
