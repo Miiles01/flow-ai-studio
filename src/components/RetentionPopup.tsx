@@ -6,6 +6,7 @@ import { motion, AnimatePresence } from "framer-motion";
 
 const MotionButton = motion.create(Button);
 
+// Las gráficas llevan width/height en style: dentro de <Button>, la regla [&_svg]:size-4 las encogía a 16 px.
 const RETENTION_PATTERNS = [
   {
     id: 1,
@@ -18,10 +19,10 @@ const RETENTION_PATTERNS = [
     color: "text-red-500",
     bgBadge: "bg-[#FEEDED] dark:bg-[#FCB5B9]/10 text-[#E0787E] dark:text-[#FCB5B9]",
     svg: (
-      <svg viewBox="0 0 300 172" className="w-full h-full text-gray-400">
+      <svg viewBox="0 0 300 172" className="w-full h-full text-gray-400" style={{ width: "100%", height: "100%" }}>
         <line x1="40" y1="10" x2="40" y2="140" stroke="currentColor" strokeWidth="1"/>
         <line x1="40" y1="140" x2="280" y2="140" stroke="currentColor" strokeWidth="1"/>
-        <path d="M42,15 Q45,65 62,75" stroke="#FCB5B9" strokeWidth="3" fill="none"/>
+        <path d="M42,15 Q45,65 62,75" stroke="#E0787E" strokeWidth="3.5" fill="none"/>
         <path d="M62,75 Q100,85 280,87" stroke="currentColor" strokeWidth="2" strokeDasharray="4" fill="none"/>
       </svg>
     )
@@ -37,10 +38,10 @@ const RETENTION_PATTERNS = [
     color: "text-red-500",
     bgBadge: "bg-[#FEEDED] dark:bg-[#FCB5B9]/10 text-[#E0787E] dark:text-[#FCB5B9]",
     svg: (
-      <svg viewBox="0 0 300 172" className="w-full h-full text-gray-400">
+      <svg viewBox="0 0 300 172" className="w-full h-full text-gray-400" style={{ width: "100%", height: "100%" }}>
         <line x1="40" y1="10" x2="40" y2="140" stroke="currentColor" strokeWidth="1"/>
         <line x1="40" y1="140" x2="280" y2="140" stroke="currentColor" strokeWidth="1"/>
-        <path d="M42,15 C45,80 80,100 120,105 S200,120 280,125" stroke="#FCB5B9" strokeWidth="3" fill="none"/>
+        <path d="M42,15 C45,80 80,100 120,105 S200,120 280,125" stroke="#E0787E" strokeWidth="3.5" fill="none"/>
       </svg>
     )
   },
@@ -55,11 +56,11 @@ const RETENTION_PATTERNS = [
     color: "text-orange-500",
     bgBadge: "bg-[#FEEDED] dark:bg-[#FCB5B9]/10 text-[#E0787E] dark:text-[#FCB5B9]",
     svg: (
-      <svg viewBox="0 0 300 172" className="w-full h-full text-gray-400">
+      <svg viewBox="0 0 300 172" className="w-full h-full text-gray-400" style={{ width: "100%", height: "100%" }}>
         <line x1="40" y1="10" x2="40" y2="140" stroke="currentColor" strokeWidth="1"/>
         <line x1="40" y1="140" x2="280" y2="140" stroke="currentColor" strokeWidth="1"/>
         <path d="M42,20 Q150,40 210,52" stroke="currentColor" strokeWidth="2" strokeDasharray="4" fill="none"/>
-        <path d="M210,52 Q260,60 280,130" stroke="#FCB5B9" strokeWidth="3" fill="none"/>
+        <path d="M210,52 Q260,60 280,130" stroke="#E0787E" strokeWidth="3.5" fill="none"/>
       </svg>
     )
   },
@@ -74,10 +75,10 @@ const RETENTION_PATTERNS = [
     color: "text-orange-500",
     bgBadge: "bg-[#FEEDED] dark:bg-[#FCB5B9]/10 text-[#E0787E] dark:text-[#FCB5B9]",
     svg: (
-      <svg viewBox="0 0 300 172" className="w-full h-full text-gray-400">
+      <svg viewBox="0 0 300 172" className="w-full h-full text-gray-400" style={{ width: "100%", height: "100%" }}>
         <line x1="40" y1="10" x2="40" y2="140" stroke="currentColor" strokeWidth="1"/>
         <line x1="40" y1="140" x2="280" y2="140" stroke="currentColor" strokeWidth="1"/>
-        <path d="M42,20 C100,30 200,110 280,128" stroke="#FCB5B9" strokeWidth="3" fill="none"/>
+        <path d="M42,20 C100,30 200,110 280,128" stroke="#E0787E" strokeWidth="3.5" fill="none"/>
       </svg>
     )
   },
@@ -92,10 +93,10 @@ const RETENTION_PATTERNS = [
     color: "text-green-500",
     bgBadge: "bg-[#E8ECFE] dark:bg-[#4059F1]/20 text-[#4059F1] dark:text-[#9DA9F9]",
     svg: (
-      <svg viewBox="0 0 300 172" className="w-full h-full text-gray-400">
+      <svg viewBox="0 0 300 172" className="w-full h-full text-gray-400" style={{ width: "100%", height: "100%" }}>
         <line x1="40" y1="10" x2="40" y2="140" stroke="currentColor" strokeWidth="1"/>
         <line x1="40" y1="140" x2="280" y2="140" stroke="currentColor" strokeWidth="1"/>
-        <path d="M42,18 Q50,35 100,38 T280,45" stroke="#4059F1" strokeWidth="3" fill="none"/>
+        <path d="M42,18 Q50,35 100,38 T280,45" stroke="#4059F1" strokeWidth="3.5" fill="none"/>
       </svg>
     )
   }
