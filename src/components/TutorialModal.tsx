@@ -234,6 +234,16 @@ export default function TutorialModal({ userId, triggerOpen, isNewUser }: Props)
               </div>
 
               <div className="p-6 md:px-10 md:pt-8 md:pb-8 flex flex-col flex-grow">
+                {/* puntos de navegación: arriba del título y la descripción */}
+                <div className="flex gap-1.5 mb-4">
+                  {STEPS.map((s, i) => (
+                    <span
+                      key={s.key}
+                      className={`h-1.5 rounded-full transition-all ${i === active ? "w-6" : "w-1.5"}`}
+                      style={{ background: i === active ? c.fg : c.line }}
+                    />
+                  ))}
+                </div>
                 <AnimatePresence mode="wait">
                   <motion.div
                     key={step.key}
@@ -247,15 +257,6 @@ export default function TutorialModal({ userId, triggerOpen, isNewUser }: Props)
                   </motion.div>
                 </AnimatePresence>
 
-                <div className="flex gap-1.5 mt-5">
-                  {STEPS.map((s, i) => (
-                    <span
-                      key={s.key}
-                      className={`h-1.5 rounded-full transition-all ${i === active ? "w-6" : "w-1.5"}`}
-                      style={{ background: i === active ? c.fg : c.line }}
-                    />
-                  ))}
-                </div>
 
                 <div className="mt-6 md:mt-auto pt-6 flex items-center justify-end gap-3">
                   <button
