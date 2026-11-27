@@ -1,5 +1,5 @@
 # Objetivo actual
-- [ ] Eliminar definitivamente los datos y funciones de Programas: programas de marcas, solicitudes y tokens.
+- [x] Eliminar definitivamente los datos de Programas: programas de marcas, solicitudes, tokens, avisos y visitas; estructuras vacías bloqueadas.
 - [x] Quitar la sección de Prospectos del panel de administración.
 - [x] Integrar recorrido de usuarios encima de Plantillas más vistas: diagrama, filtros, contadores y detalles con datos protegidos.
 - [x] Registrar visitas anónimas y pasos de onboarding; verificar consultas y recorrido en administración.
