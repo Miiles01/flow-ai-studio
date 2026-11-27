@@ -66,6 +66,8 @@ const ReferralTracker = () => {
     if (!route) return;
     // Signed-in sections redirect visitors to log in, so they only count when someone is signed in.
     if (!user && ["dashboard", "boards", "programs", "studio", "architecture", "onboarding"].includes(route)) return;
+    // Someone already signed in is bounced off the log-in page, so that visit is not a real log-in attempt.
+    if (user && route === "login") return;
     try {
       void supabase.rpc("record_user_flow", { p_session: getFlowSession(), p_route: route }).then(() => {});
     } catch { /* Metrics must never interrupt navigation. */ }

@@ -9,12 +9,13 @@ import { USER_FLOW, type FlowStep, type UserFlowData } from "@/lib/userFlow";
 import { langOf } from "@/i18n";
 
 type Point = { x: number; y: number };
-function elbow(a: Point, b: Point) {
+function elbow(a: Point, b: Point, midX?: number) {
   if (Math.abs(a.y - b.y) < 1) return `M${a.x},${a.y} H${b.x}`;
-  const mid = (a.x + b.x) / 2;
+  const mid = midX ?? (a.x + b.x) / 2;
   const dir = Math.sign(b.y - a.y);
   const r = Math.min(12, Math.abs(b.y - a.y) / 2);
-  return `M${a.x},${a.y} H${mid - r} Q${mid},${a.y} ${mid},${a.y + dir * r} V${b.y - dir * r} Q${mid},${b.y} ${mid + r},${b.y} H${b.x}`;
+  const left = mid >= a.x;
+  return `M${a.x},${a.y} H${left ? mid - r : mid + r} Q${mid},${a.y} ${mid},${a.y + dir * r} V${b.y - dir * r} Q${mid},${b.y} ${left ? mid + r : mid - r},${b.y} H${b.x}`;
 }
 
 export default function UserFlowDiagram({ refreshKey }: { refreshKey: boolean }) {
@@ -54,13 +55,18 @@ export default function UserFlowDiagram({ refreshKey }: { refreshKey: boolean })
         return { x: (side === "left" ? box.left : side === "right" ? box.right : box.left + box.width / 2) - base.left,
           y: (side === "bottom" ? box.bottom : box.top + box.height / 2 + offset) - base.top };
       };
-      const connections: [string, string, number, boolean?][] = [
-        ["home", "signup", -20], ["affiliates", "signup", 20], ["signup", "onboarding", 0],
-        ["onboarding", "dashboard", 0], ["dashboard", "upgrade", 0, true],
+      const connections: [string, string, number, boolean?, number?][] = [
+        ["home", "signup", -20], ["affiliates", "signup", 20],
+        ["home", "login", -20], ["affiliates", "login", 20],
+        ["signup", "onboarding", 0],
+        ["onboarding", "dashboard", 0],
+        // Returning users go straight to the dashboard: the turn sits in the gap after Onboarding.
+        ["login", "dashboard", 0, false, 548],
+        ["dashboard", "upgrade", 0, true],
       ];
-      const next = connections.flatMap(([from, to, offset, dashed]) => {
+      const next = connections.flatMap(([from, to, offset, dashed, midX]) => {
         const a = point(from, "right"); const b = point(to, "left", offset);
-        return a && b ? [{ d: elbow(a, b), dashed }] : [];
+        return a && b ? [{ d: elbow(a, b, midX), dashed }] : [];
       });
       const a = point("dashboard", "bottom"); const target = group.current?.getBoundingClientRect();
       if (a && target) next.push({ d: `M${a.x},${a.y} V${target.top - base.top}`, dashed: false });
@@ -94,8 +100,13 @@ export default function UserFlowDiagram({ refreshKey }: { refreshKey: boolean })
       </> : <dl className="space-y-3 text-sm font-light">
         <div className="flex justify-between gap-4"><dt>{text("visits")}</dt><dd>{number(data?.visits[step.id] ?? (data ? 0 : undefined))}</dd></div>
         {step.id === "affiliates" && <><div className="flex justify-between gap-4"><dt>{text("popup")}</dt><dd>{number(data?.popup ?? (data ? 0 : undefined))}</dd></div><div className="flex justify-between gap-4"><dt>{text("trials")}</dt><dd>{number(data?.trials)}</dd></div></>}
-        <div className="flex justify-between gap-4"><dt>{text("wentSignup")}</dt><dd>{number(step.id === "home" ? data?.homeSignup : data?.affiliatesSignup)}</dd></div>
+        {(step.id === "home" || step.id === "affiliates") && <div className="flex justify-between gap-4"><dt>{text("wentSignup")}</dt><dd>{number(step.id === "home" ? data?.homeSignup : data?.affiliatesSignup)}</dd></div>}
         {step.id === "home" && <div className="flex justify-between gap-4"><dt>{text("conversion")}</dt><dd>{percent(data?.homeConversion)}</dd></div>}
+        {step.id === "login" && <>
+          <div className="flex justify-between gap-4"><dt>{text("wentDashboard")}</dt><dd>{number(data?.loginDashboard ?? (data ? 0 : undefined))}</dd></div>
+          <div className="flex justify-between gap-4"><dt>{text("signedIn")}</dt><dd>{number(data?.logins ?? (data ? 0 : undefined))}</dd></div>
+          <div className="flex justify-between gap-4"><dt>{text("conversion")}</dt><dd>{percent(data?.loginConversion)}</dd></div>
+        </>}
       </dl>}
     </div>
   );
@@ -112,14 +123,14 @@ export default function UserFlowDiagram({ refreshKey }: { refreshKey: boolean })
     </div>
     {error && <div className="px-6 pt-4 flex items-center gap-2 text-sm" role="alert"><span>{text("error")}</span><Button variant="ghost" size="icon" aria-label={text("retry")} onClick={() => setReload((n) => n + 1)}><RefreshCw className="h-4 w-4" /></Button></div>}
     <div className="overflow-x-auto pb-2">
-      <div ref={canvas} className="user-flow-canvas relative min-w-[960px] h-[590px]">
+      <div ref={canvas} className="user-flow-canvas relative min-w-[960px] h-[650px]">
         <div className="user-flow-dots absolute inset-0 pointer-events-none" />
         <svg className="user-flow-connectors absolute inset-0 w-full h-full pointer-events-none" aria-hidden>
           <defs><marker id={marker} markerWidth="5" markerHeight="5" refX="4.5" refY="2.5" orient="auto"><path d="M0,0 L5,2.5 L0,5 Z" fill="currentColor" /></marker></defs>
           {paths.map((p, i) => <path key={i} d={p.d} stroke="currentColor" strokeWidth="1.5" fill="none" strokeDasharray={p.dashed ? "5 5" : undefined} markerEnd={`url(#${marker})`} />)}
         </svg>
         <span className="user-flow-mail absolute left-[352px] top-[136px] flex items-center justify-center w-8 h-8 rounded-md" title={text("accountCreated")}><Mail className="h-4 w-4" /></span>
-        <div ref={group} className="user-flow-explore absolute left-[300px] top-[350px] w-[640px] h-[210px] rounded-[24px]">
+        <div ref={group} className="user-flow-explore absolute left-[300px] top-[410px] w-[640px] h-[210px] rounded-[24px]">
           <span className="absolute left-5 top-3 text-[13px] font-medium user-flow-secondary">{text("explore")}</span>
         </div>
         {USER_FLOW.map((step) => {

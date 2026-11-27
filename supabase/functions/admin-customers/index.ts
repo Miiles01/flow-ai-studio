@@ -116,6 +116,8 @@ Deno.serve(async (req) => {
       const { data: pops, error: popError } = await pq.limit(10000);
       if (popError) throw popError;
       data.popup = new Set((pops ?? []).filter((r: any) => !ex.has(r.user_id)).map((r: any) => r.session_id)).size;
+      // Real accounts that signed in during the period, so the log-in stage is not only page visits.
+      data.logins = users.filter((u) => inRange(u.last_sign_in_at)).length;
       // Onboarding progress per new account: furthest tracked screen, or all 7 when they finished before tracking existed.
       const { data: obEv, error: obErr } = await sb.from("user_flow_events").select("user_id, step").eq("route", "onboarding").not("step", "is", null).limit(10000);
       if (obErr) throw obErr;
