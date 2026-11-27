@@ -110,12 +110,20 @@ Deno.serve(async (req) => {
       const signedUp = users.filter((u) => inRange(u.created_at));
       // Only real, current customers count as claimed Pro months (deleted test accounts are left out).
       const trials = await fetchAll(sb, "pro_trials", "user_id, started_at");
-      data.trials = uniq(trials.filter((t) => inRange(t.started_at)));
       let pq = sb.from("user_flow_events").select("session_id, user_id").eq("route", "trial_popup");
       if (since) pq = pq.gte("created_at", since);
       const { data: pops, error: popError } = await pq.limit(10000);
       if (popError) throw popError;
       data.popup = new Set((pops ?? []).filter((r: any) => !ex.has(r.user_id)).map((r: any) => r.session_id)).size;
+      // Of the people who opened the free-Pro pop-up, how many then claimed the gift (same browser session, any later account).
+      const popSessions = [...new Set((pops ?? []).filter((r: any) => !ex.has(r.user_id)).map((r: any) => r.session_id))];
+      const popUsers = new Set<string>();
+      for (let i = 0; i < popSessions.length; i += 200) {
+        const { data: rows, error: e } = await sb.from("user_flow_events").select("user_id").in("session_id", popSessions.slice(i, i + 200)).not("user_id", "is", null).limit(10000);
+        if (e) throw e;
+        for (const r of rows ?? []) popUsers.add(r.user_id);
+      }
+      data.trials = uniq(trials.filter((t) => inRange(t.started_at) && popUsers.has(t.user_id)));
       // Real accounts that signed in during the period, so the log-in stage is not only page visits.
       data.logins = users.filter((u) => inRange(u.last_sign_in_at)).length;
       // Onboarding progress per new account: furthest tracked screen, or all 7 when they finished before tracking existed.
