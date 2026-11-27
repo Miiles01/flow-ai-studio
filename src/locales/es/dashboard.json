@@ -293,5 +293,7 @@
   "statBoards": "Tableros",
   "statVisits": "Visitas a tu página · 30 días",
   "statVisitsShort": "Visitas",
-  "statNoPage": "Publica tu página en Studio para ver sus visitas."
+  "statNoPage": "Publica tu página en Studio para ver sus visitas.",
+  "statComponents": "Componentes",
+  "statPortfolio": "Plantillas de portafolio"
 }

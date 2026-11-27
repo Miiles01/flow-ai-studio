@@ -293,5 +293,7 @@
   "statBoards": "Quadros",
   "statVisits": "Visitas à sua página · 30 dias",
   "statVisitsShort": "Visitas",
-  "statNoPage": "Publique sua página no Studio para ver as visitas."
+  "statNoPage": "Publique sua página no Studio para ver as visitas.",
+  "statComponents": "Componentes",
+  "statPortfolio": "Modelos de portfólio"
 }

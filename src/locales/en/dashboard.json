@@ -293,5 +293,7 @@
   "statBoards": "Boards",
   "statVisits": "Page visits · 30 days",
   "statVisitsShort": "Visits",
-  "statNoPage": "Publish your page in Studio to see its visits."
+  "statNoPage": "Publish your page in Studio to see its visits.",
+  "statComponents": "Components",
+  "statPortfolio": "Portfolio templates"
 }

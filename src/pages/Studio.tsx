@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { useEffect, useState } from "react";
 import { motion } from "framer-motion";
+import { useLocation } from "react-router-dom";
 import dashboardI18n from "@/i18n";
 const dt = (key: string, options?: Record<string, unknown>): string => dashboardI18n.t(key, options) as string;
 import { StudioGridSkeleton } from "@/components/PageSkeletons";
@@ -113,6 +114,13 @@ function SeccionAnimaciones({ items, categorias, titulo, subtitulo, etiqueta }: 
 export default function Studio() {
   useTranslation();
   const { templates, loading } = useStudioTemplates();
+  // Desde el inicio: /studio#componentes o /studio#portafolio baja a esa sección (cuando ya cargaron las plantillas)
+  const { hash } = useLocation();
+  useEffect(() => {
+    if (!hash || loading) return;
+    const id = window.setTimeout(() => document.getElementById(hash.slice(1))?.scrollIntoView({ behavior: "smooth", block: "start" }), 120);
+    return () => window.clearTimeout(id);
+  }, [hash, loading]);
   const list = templates;
   // Escenas (partes de un Reel) van en su propia sección, antes de Componentes
   const escenas = STUDIO_COMPONENTS.filter((c) => c.category === "Escena");
@@ -143,16 +151,18 @@ export default function Studio() {
         </div>
       )}
 
-      {/* Componentes: animaciones de video y otros assets que se copian como prompt */}
+      {/* Componentes: animaciones de video y otros assets que se copian como prompt (ancla #componentes desde el inicio) */}
+      <div id="componentes" className="scroll-mt-24">
       <SeccionAnimaciones
         items={componentes}
         categorias={COMPONENT_CATEGORIES.filter((cat) => cat.id !== "Escena")}
         titulo={{ es: "Componentes", en: "Components", pt: "Componentes", fr: "Composants" }}
         subtitulo={{ es: "Animaciones de video listas para copiar y pegar en tu asistente de IA", en: "Video animations ready to copy and paste into your AI assistant", pt: "Animações de vídeo prontas para copiar e colar no seu assistente de IA", fr: "Des animations vidéo prêtes à copier-coller dans votre assistant IA" }}
       />
+      </div>
 
-      {/* Librería */}
-      <section className="space-y-6">
+      {/* Librería: plantillas de portafolio (ancla #portafolio desde el inicio) */}
+      <section id="portafolio" className="space-y-6 scroll-mt-24">
         <div className="flex flex-wrap gap-4 justify-between items-end">
           <div>
             <h2 className="text-xl md:text-2xl font-medium text-foreground">{dt("dashboard.text67")}</h2>

@@ -13,6 +13,7 @@ import { NavLink } from "@/components/NavLink";
 import { toast } from "sonner";
 import { ThemeProvider, useTheme } from "@/contexts/ThemeContext";
 import { QuickSettings } from "@/components/QuickSettings";
+import { NotificationsBell } from "@/components/NotificationsBell";
 // import { InstallAppBanner } from "@/components/InstallAppBanner"; // oculto a pedido de Manuel: el aviso "Instala Miiles" no debe aparecer
 import {
   Sidebar,
@@ -242,7 +243,9 @@ function DashboardContent({ children }: { children: ReactNode }) {
             <SidebarTrigger className={isDark ? "text-white hover:bg-white/10" : ""} />
           </header>
           {/* Ajustes rápidos — fixed top-right of the page area */}
-          <div className="fixed top-5 right-6 z-50">
+          <div className="fixed top-5 right-6 z-50 flex items-center gap-2">
+            {/* campana de notificaciones junto al botón de ajustes */}
+            <NotificationsBell />
             <QuickSettings />
           </div>
             <main className="dashboard-scope flex-1 overflow-y-auto">

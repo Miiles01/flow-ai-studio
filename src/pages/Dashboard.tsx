@@ -4,11 +4,11 @@ const dt = (key: string, options?: Record<string, unknown>): string => dashboard
 import { DashboardSkeleton } from "@/components/PageSkeletons";
 import { pageCache } from "@/lib/pageCache";
 import { useEffect, useState } from "react";
-import { Link, useSearchParams } from "react-router-dom";
+import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { supabase } from "@/integrations/supabase/client";
 import { useAuth } from "@/contexts/AuthContext";
 import { useTheme } from "@/contexts/ThemeContext";
-import { Bell, Heart, ArrowRight, LayoutGrid, Loader2, Send, X, LayoutDashboard } from "lucide-react";
+import { Bell, Heart, ArrowRight, Blocks, LayoutTemplate, Loader2, Send, X, LayoutDashboard } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -17,7 +17,9 @@ import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
 import TutorialModal from "@/components/TutorialModal";
 import { UpgradeProDialog } from "@/components/UpgradeProDialog";
-import { SiteVisitsCard } from "@/components/dashboard/SiteVisitsCard";
+import { NOTIFS_CHANGED } from "@/components/NotificationsBell";
+import { STUDIO_COMPONENTS } from "@/lib/studioComponents";
+import studioTemplates from "@/data/studio-templates.json";
 
 type Notification = {
   id: string;
@@ -46,7 +48,7 @@ export default function Dashboard() {
   const cached = pageCache.get<any>(`dashboard:${user?.id}`);
   const [displayName, setDisplayName] = useState(cached?.displayName ?? "");
   const [flows, setFlows] = useState<any[]>(cached?.flows ?? []);
-  const [boardsCount, setBoardsCount] = useState<number>(cached?.boardsCount ?? 0);
+  const navigate = useNavigate();
   const [loading, setLoading] = useState(!cached);
   const [canScrollLeft, setCanScrollLeft] = useState(false);
   const [notifications, setNotifications] = useState<Notification[]>(cached?.notifications ?? []);
@@ -68,6 +70,12 @@ export default function Dashboard() {
   const [upgradeOpen, setUpgradeOpen] = useState(false);
 
   useEffect(() => {
+    // la campana de arriba abre la lista de notificaciones aquí
+    if (searchParams.get("notificaciones") === "1") {
+      setNotifOpen(true);
+      searchParams.delete("notificaciones");
+      setSearchParams(searchParams, { replace: true });
+    }
     if (searchParams.get("upgrade") === "true") {
       setUpgradeOpen(true);
       searchParams.delete("upgrade");
@@ -83,20 +91,17 @@ export default function Dashboard() {
       supabase.from("flows").select("id, name, updated_at").eq("user_id", user.id).order("updated_at", { ascending: false }).limit(5),
       supabase.from("notifications").select("*").eq("recipient_id", user.id).order("created_at", { ascending: false }).limit(50),
       supabase.from("user_roles").select("role").eq("user_id", user.id).eq("role", "admin").maybeSingle(),
-      supabase.from("flows").select("id", { count: "exact", head: true }).eq("user_id", user.id),
-    ]).then(([profileRes, flowsRes, notifRes, roleRes, boardsRes]) => {
+    ]).then(([profileRes, flowsRes, notifRes, roleRes]) => {
       const snap: any = {
         displayName: profileRes.data?.display_name || user.email?.split("@")[0] || "",
         flows: flowsRes.data || [],
         notifications: (notifRes.data as Notification[]) || [],
         isAdmin: !!roleRes.data,
-        boardsCount: boardsRes.count || 0,
       };
       setDisplayName(snap.displayName);
       setFlows(snap.flows);
       setNotifications(snap.notifications);
       setIsAdmin(snap.isAdmin);
-      setBoardsCount(snap.boardsCount);
       pageCache.set(`dashboard:${user.id}`, snap);
       setLoading(false);
     });
@@ -109,6 +114,7 @@ export default function Dashboard() {
     if (!notif.read) {
       await supabase.from("notifications").update({ read: true }).eq("id", notif.id);
       setNotifications((prev) => prev.map((n) => (n.id === notif.id ? { ...n, read: true } : n)));
+      window.dispatchEvent(new Event(NOTIFS_CHANGED));   // actualiza el número de la campana
     }
   }
 
@@ -223,12 +229,30 @@ export default function Dashboard() {
         <p className="text-miiles-gray-400 mt-2 text-sm font-light">
            {dt("dashboard.text15")} </p>
       </motion.div>
-      {/* Stats */}
+      {/* Tres tarjetas del mismo tamaño: Componentes y Portafolio llevan a su sección en Studio; Notificaciones abre la lista */}
       <motion.div variants={sectionVariants} className="grid grid-cols-2 gap-5 md:grid-cols-3">
-        {/* Notifications card */}
-        <motion.div
+        {[
+          { key: "componentes", icon: <Blocks size={16} className={isDark ? "text-white" : "text-black"} />, n: STUDIO_COMPONENTS.filter((c) => c.category !== "Escena").length, label: dt("dashboard.statComponents"), go: () => navigate("/studio#componentes") },
+          { key: "portafolio", icon: <LayoutTemplate size={16} className={isDark ? "text-white" : "text-black"} />, n: (studioTemplates as unknown[]).length, label: dt("dashboard.statPortfolio"), go: () => navigate("/studio#portafolio") },
+        ].map((c) => (
+          <motion.button
+            key={c.key}
+            type="button"
+            whileHover={{ y: -4, transition: { duration: 0.2 } }}
+            className={`p-5 rounded-lg shadow-md cursor-pointer text-left ${isDark ? 'bg-white/5' : 'bg-white'}`}
+            onClick={c.go}
+          >
+            <div className="w-8 h-8 rounded-sm bg-background shadow-sm flex items-center justify-center mb-3">{c.icon}</div>
+            <p className="text-2xl font-normal text-foreground">{c.n}</p>
+            <p className="text-xs text-miiles-gray-400 font-light mt-1">{c.label}</p>
+          </motion.button>
+        ))}
+
+        {/* Notificaciones */}
+        <motion.button
+          type="button"
           whileHover={{ y: -4, transition: { duration: 0.2 } }}
-          className={`p-5 rounded-lg shadow-md cursor-pointer ${isDark ? 'bg-white/5' : 'bg-white'}`}
+          className={`col-span-2 md:col-span-1 p-5 rounded-lg shadow-md cursor-pointer text-left ${isDark ? 'bg-white/5' : 'bg-white'}`}
           onClick={() => setNotifOpen(true)}
         >
           <div className="w-8 h-8 rounded-sm bg-background shadow-sm flex items-center justify-center mb-3 relative">
@@ -241,24 +265,7 @@ export default function Dashboard() {
           </div>
           <p className="text-2xl font-normal text-foreground">{unreadCount}</p>
           <p className="text-xs text-miiles-gray-400 font-light mt-1">{dt("dashboard.text16")}</p>
-        </motion.div>
-
-        {/* Boards card */}
-        <Link to="/boards" className="block">
-          <motion.div
-            whileHover={{ y: -4, transition: { duration: 0.2 } }}
-            className={`h-full p-5 rounded-lg shadow-md cursor-pointer ${isDark ? 'bg-white/5' : 'bg-white'}`}
-          >
-            <div className="w-8 h-8 rounded-sm bg-background shadow-sm flex items-center justify-center mb-3">
-              <LayoutGrid size={16} className={isDark ? "text-white" : "text-black"} />
-            </div>
-            <p className="text-2xl font-normal text-foreground">{boardsCount}</p>
-            <p className="text-xs text-miiles-gray-400 font-light mt-1">{dt("dashboard.statBoards")}</p>
-          </motion.div>
-        </Link>
-
-        {/* Visits to the user's published page */}
-        {user && <div className="col-span-2 md:col-span-1"><SiteVisitsCard userId={user.id} isDark={isDark} /></div>}
+        </motion.button>
       </motion.div>
 
       {/* Admin: send notification button */}
