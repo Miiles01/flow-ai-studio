@@ -313,7 +313,7 @@ function Plantillas({ c }: { c: P }) {
             alt=""
             loading="eager"
             className="absolute top-1/2 left-1/2 w-[58%] aspect-[16/10] object-cover object-top rounded-xl"
-            style={{ border: `1px solid ${c.line}`, boxShadow: "0 18px 40px rgba(0,0,0,0.18)", zIndex: i === 1 ? 3 : 1 }}
+            style={{ border: `1px solid ${c.line}`, boxShadow: "0 18px 40px rgba(0,0,0,0.09)", zIndex: i === 1 ? 3 : 1 }}
             initial={{ x: "-50%", y: "-50%", rotate: 0 }}
             animate={{ x: `calc(-50% + ${r * 9}px)`, y: i === 1 ? "-54%" : "-46%", rotate: r }}
             transition={{ delay: 0.05 + i * 0.06, type: "spring", stiffness: 160, damping: 18 }}
@@ -335,7 +335,7 @@ function Videos({ c, slugs }: { c: P; slugs: string[] }) {
           <motion.div
             key={slug}
             className={`rounded-2xl overflow-hidden aspect-[9/16] ${mid ? "h-[150px] md:h-[230px]" : "h-[125px] md:h-[190px]"}`}
-            style={{ border: `1px solid ${c.line}`, boxShadow: "0 18px 40px rgba(0,0,0,0.18)", background: c.card }}
+            style={{ border: `1px solid ${c.line}`, boxShadow: "0 18px 40px rgba(0,0,0,0.09)", background: c.card }}
             initial={{ opacity: 0, y: 12 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.05 + i * 0.08 }}
@@ -357,7 +357,7 @@ function Arquitectura({ c, isDark }: { c: P; isDark: boolean }) {
           key={src}
           className="absolute rounded-2xl overflow-hidden"
           style={{
-            background: c.card, border: `1px solid ${c.line}`, boxShadow: "0 18px 40px rgba(0,0,0,0.12)",
+            background: c.card, border: `1px solid ${c.line}`, boxShadow: "0 18px 40px rgba(0,0,0,0.06)",
             width: i === 0 ? "62%" : "42%", aspectRatio: "1104 / 693",
             left: i === 0 ? "19%" : i === 1 ? "-14%" : "72%", top: i === 0 ? "14%" : "26%", zIndex: i === 0 ? 2 : 1, opacity: i === 0 ? 1 : 0.55,
           }}
