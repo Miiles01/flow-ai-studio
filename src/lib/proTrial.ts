@@ -34,7 +34,7 @@ export async function checkProTrialCode(code: string): Promise<boolean> {
   return data === true;
 }
 
-/** Grants the free Pro month to the signed-in user (valid code, once per account — decided by the server). */
+/** Grants the free Pro trial to the signed-in user (valid code, once per account — decided by the server). */
 export async function claimProTrial(code: string): Promise<ProTrialResult | null> {
   const { data, error } = await supabase.rpc("claim_pro_trial", { p_code: normalizeCode(code) });
   if (error) {

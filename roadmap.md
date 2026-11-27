@@ -2,7 +2,7 @@
 - [x] Quitar la sección de Prospectos del panel de administración.
 - [x] Integrar recorrido de usuarios encima de Plantillas más vistas: diagrama, filtros, contadores y detalles con datos protegidos.
 - [x] Registrar visitas anónimas y pasos de onboarding; verificar consultas y recorrido en administración.
-- [x] Afiliados: «Crear cuenta» → «Obtener Plan Pro», que abre un acceso especial que da Plan Pro gratis 30 días.
+- [x] Afiliados: «Crear cuenta» → «Obtener Plan Pro», que abre un acceso especial que da Plan Pro gratis un año.
 - [x] Ese botón abre primero un pop-up que pide el código de invitación 20CREATOR26; con el código correcto se entra o registra; regalo una vez por cuenta.
 - [x] Completar español e inglés en Arquitectura algorítmica: cuatro diagramas, detalles, títulos y controles de video, retención y sugerencias; selector probado con sesión y 16 pruebas pasando.
 - [x] Titular de la home: «Todo creador necesita una base» + «Descubre cómo los creadores crean sistemas que funcionan.»; verificado en español e inglés y con espacio visible tras la palabra en cursiva.
@@ -31,3 +31,5 @@
 - [x] Sustituir el ícono de IA del botón y del pop-up por la estrella de Miiles; verificado en escritorio.
 - [ ] Verificar autorización y rechazo reales desde un agente externo; requiere republicar esta revisión e iniciar una solicitud OAuth real.
 - [ ] Activar creación, edición y publicación de páginas propias (Free: una; Pro: ilimitadas); falta conectar un servicio de publicación autorizado para wearemiiles.com.
+
+- [x] Cambiar el regalo Pro para creadores a un año; pruebas existentes ampliadas y acceso real verificado hasta 27/11/2027.
