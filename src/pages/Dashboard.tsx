@@ -18,8 +18,6 @@ import { toast } from "sonner";
 import TutorialModal from "@/components/TutorialModal";
 import { UpgradeProDialog } from "@/components/UpgradeProDialog";
 import { NOTIFS_CHANGED } from "@/components/NotificationsBell";
-import { STUDIO_COMPONENTS } from "@/lib/studioComponents";
-import studioTemplates from "@/data/studio-templates.json";
 
 type Notification = {
   id: string;
@@ -243,8 +241,8 @@ export default function Dashboard() {
       {/* Tres tarjetas del mismo tamaño: Componentes y Portafolio llevan a su sección en Studio; Notificaciones abre la lista */}
       <motion.div variants={sectionVariants} className="grid grid-cols-2 gap-5 md:grid-cols-3">
         {[
-          { key: "componentes", icon: <Blocks size={16} className={isDark ? "text-white" : "text-black"} />, n: STUDIO_COMPONENTS.filter((c) => c.category !== "Escena").length, label: dt("dashboard.statComponents"), go: () => navigate("/studio#componentes") },
-          { key: "portafolio", icon: <LayoutTemplate size={16} className={isDark ? "text-white" : "text-black"} />, n: (studioTemplates as unknown[]).length, label: dt("dashboard.statPortfolio"), go: () => navigate("/studio#portafolio") },
+          { key: "componentes", icon: <Blocks size={16} className={isDark ? "text-white" : "text-black"} />, label: dt("dashboard.statComponents"), go: () => navigate("/studio#componentes") },
+          { key: "portafolio", icon: <LayoutTemplate size={16} className={isDark ? "text-white" : "text-black"} />, label: dt("dashboard.statPortfolio"), go: () => navigate("/studio#portafolio") },
         ].map((c) => (
           <motion.button
             key={c.key}
@@ -253,9 +251,9 @@ export default function Dashboard() {
             className={`p-5 rounded-lg shadow-md cursor-pointer text-left ${isDark ? 'bg-white/5' : 'bg-white'}`}
             onClick={c.go}
           >
-            <div className="w-8 h-8 rounded-sm bg-background shadow-sm flex items-center justify-center mb-3">{c.icon}</div>
-            <p className="text-2xl font-normal text-foreground">{c.n}</p>
-            <p className="text-xs text-miiles-gray-400 font-light mt-1">{c.label}</p>
+            <div className="w-8 h-8 rounded-sm bg-background shadow-sm flex items-center justify-center mb-4">{c.icon}</div>
+            {/* solo texto, destacado (sin contador) */}
+            <p className="text-xl md:text-2xl font-normal leading-tight text-foreground">{c.label}</p>
           </motion.button>
         ))}
 
@@ -266,7 +264,7 @@ export default function Dashboard() {
           className={`col-span-2 md:col-span-1 p-5 rounded-lg shadow-md cursor-pointer text-left ${isDark ? 'bg-white/5' : 'bg-white'}`}
           onClick={() => setNotifOpen(true)}
         >
-          <div className="w-8 h-8 rounded-sm bg-background shadow-sm flex items-center justify-center mb-3 relative">
+          <div className="w-8 h-8 rounded-sm bg-background shadow-sm flex items-center justify-center mb-4 relative">
             <Bell size={16} className={isDark ? "text-white" : "text-black"} />
             {unreadCount > 0 && (
               <span className={`absolute -top-1 -right-1 w-4 h-4 rounded-full text-[9px] flex items-center justify-center ${isDark ? "bg-white text-black" : "bg-black text-white"}`}>
@@ -274,8 +272,8 @@ export default function Dashboard() {
               </span>
             )}
           </div>
-          <p className="text-2xl font-normal text-foreground">{unreadCount}</p>
-          <p className="text-xs text-miiles-gray-400 font-light mt-1">{dt("dashboard.text16")}</p>
+          {/* solo texto, destacado; las no leídas se ven en el globito del ícono */}
+          <p className="text-xl md:text-2xl font-normal leading-tight text-foreground">{dt("dashboard.text16")}</p>
         </motion.button>
       </motion.div>
 
