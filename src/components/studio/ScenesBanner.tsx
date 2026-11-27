@@ -2,8 +2,16 @@ import { useEffect, useRef } from "react";
 import { useTranslation } from "react-i18next";
 import { useTheme } from "@/contexts/ThemeContext";
 import { pickLang } from "@/i18n";
+import { AvatarGroup } from "@/components/AvatarGroup";
 
 type L = { es: string; en: string; pt: string; fr: string };
+
+// Asistentes de IA con los que se editan las escenas (logos en public/logos/)
+const ASISTENTES = [
+  { nombre: "Claude", logo: "/logos/claude.svg" },
+  { nombre: "Gemini", logo: "/logos/gemini.svg" },
+  { nombre: "ChatGPT", logo: "/logos/chatgpt.svg" },
+];
 
 // Video de referencia: una edición completa hecha combinando escenas.
 const REFERENCIA = {
@@ -92,7 +100,23 @@ export function ScenesBanner() {
       <Dots isDark={isDark} />
       <div className="scenes-banner__inner relative z-10">
         <div className="scenes-banner__text min-w-0">
-          <span className={`inline-flex rounded-full px-3 py-1 text-xs font-normal ${isDark ? "bg-white text-black" : "bg-black text-white"}`}>{t(REFERENCIA.tag)}</span>
+          {/* etiqueta Nuevo y, junto, los logos de IA: arriba del título */}
+          <div className="flex items-center gap-3">
+            <span className={`inline-flex rounded-full px-3 py-1 text-xs font-normal ${isDark ? "bg-white text-black" : "bg-black text-white"}`}>{t(REFERENCIA.tag)}</span>
+            {/* logos de IA con la transición «Avatar group hover» de transitions.dev */}
+            <AvatarGroup
+              className="flex items-center"
+              items={ASISTENTES.map((a, i) => (
+                <span
+                  key={a.nombre}
+                  title={a.nombre}
+                  className={`flex h-9 w-9 items-center justify-center rounded-full border bg-white ${isDark ? "border-white/10" : "border-[#E5E7EB]"} ${i > 0 ? "-ml-2" : ""}`}
+                >
+                  <img src={a.logo} alt={a.nombre} className="h-4 w-4" />
+                </span>
+              ))}
+            />
+          </div>
           <h2 className="scenes-banner__title mt-4 font-normal leading-[1.05] text-foreground">{t(REFERENCIA.title)}</h2>
           <p className="mt-4 max-w-md text-sm md:text-base font-light leading-relaxed text-muted-foreground">{t(REFERENCIA.sub)}</p>
         </div>
